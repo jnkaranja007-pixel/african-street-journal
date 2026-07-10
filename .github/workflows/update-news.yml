@@ -1,0 +1,49 @@
+name: Update AI Desk
+
+# Each morning, Claude searches the web for the top stories per country and writes
+# data/briefs.js (ranked, neutral, with source citations), then commits it.
+# Runs in the cloud — no PC needed. Also triggerable by hand from the Actions tab.
+
+on:
+  schedule:
+    - cron: '0 5 * * *'   # 05:00 UTC daily (~08:00 EAT)
+  workflow_dispatch: {}    # manual "Run workflow" button
+
+permissions:
+  contents: write          # allow the action to commit briefs.js back to the repo
+
+concurrency:
+  group: update-ai-desk
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: windows-latest   # matches the local dev env (curl.exe + PowerShell)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build AI Desk briefs (web-searched, ranked)
+        shell: pwsh
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if ($env:ANTHROPIC_API_KEY) { ./scripts/build-briefs.ps1 }
+          else { Write-Host 'ANTHROPIC_API_KEY secret not set - add it under Settings > Secrets and variables > Actions.'; exit 0 }
+
+      - name: Commit refreshed briefs
+        shell: pwsh
+        run: |
+          if (-not (Test-Path data/briefs.js)) { Write-Host 'No briefs.js produced; nothing to commit.'; exit 0 }
+          git config user.name  "asj-news-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/briefs.js
+          $changed = -not (git diff --staged --quiet; $LASTEXITCODE -eq 0)
+          if ($changed) {
+            $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')
+            git commit -m "chore(ai-desk): refresh briefs ($stamp)"
+            git push
+            Write-Host "Pushed refreshed briefs.js"
+          } else {
+            Write-Host "No brief changes this run."
+          }
