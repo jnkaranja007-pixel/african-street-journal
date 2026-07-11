@@ -1,8 +1,8 @@
 /* The African Street Journal — service worker.
    Network-first for everything same-origin (dev and daily data never go stale),
    cache fallback so the journal still opens offline. */
-const CACHE = 'asj-v1';
-const SHELL = ['./', 'index.html', 'data/app-data.js', 'data/briefs.js', 'manifest.json', 'icon.svg'];
+const CACHE = 'asj-v3';
+const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'data/app-core.js', 'data/briefs.js', 'data/archive/index.js', 'manifest.json', 'icon.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
