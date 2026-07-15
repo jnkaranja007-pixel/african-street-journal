@@ -207,10 +207,12 @@ const INVESTOR_INFO = {
 };
 
 const FARM_EXPORTS = {
+  so: ['Sesame', 'Banana', 'Beef'],
   ug: ['Coffee', 'Fish', 'Tea'],
   ke: ['Tea', 'Cut flowers', 'Coffee'],
   tz: ['Tobacco', 'Coffee', 'Cashew'],
   et: ['Coffee', 'Sesame', 'Pulses'],
+  er: ['Sorghum', 'Millet', 'Sesame'],
   ci: ['Cocoa', 'Cashew', 'Coffee'],
   gh: ['Cocoa', 'Cashew', 'Shea'],
   sn: ['Groundnuts', 'Fish', 'Cotton'],
@@ -219,25 +221,47 @@ const FARM_EXPORTS = {
   za: ['Citrus', 'Grapes', 'Wine'],
   eg: ['Citrus', 'Potatoes', 'Cotton'],
   dz: ['Dates', 'Citrus', 'Olive oil'],
+  ly: ['Dates', 'Olives', 'Citrus'],
   ao: ['Coffee', 'Cassava', 'Sesame'],
   cd: ['Palm oil', 'Coffee', 'Cocoa'],
+  cg: ['Cassava', 'Palm oil', 'Cocoa'],
+  ga: ['Palm oil', 'Cocoa', 'Rubber'],
+  gq: ['Cocoa', 'Cassava', 'Palm oil'],
+  cf: ['Cotton', 'Coffee', 'Cassava'],
   rw: ['Coffee', 'Tea', 'Pyrethrum'],
+  ss: ['Sorghum', 'Sesame', 'Maize'],
+  sd: ['Sesame', 'Groundnuts', 'Cotton'],
+  td: ['Cotton', 'Sesame', 'Groundnuts'],
   zm: ['Tobacco', 'Maize', 'Sugar'],
   zw: ['Tobacco', 'Soya', 'Cotton'],
   mz: ['Cashew', 'Prawns', 'Tobacco'],
   bw: ['Beef', 'Sorghum', 'Pulses'],
+  na: ['Beef', 'Grapes', 'Fish'],
+  sz: ['Sugar', 'Citrus', 'Maize'],
+  ls: ['Maize', 'Sorghum', 'Wool'],
   cm: ['Cocoa', 'Coffee', 'Banana'],
+  eh: ['Fish', 'Dates', 'Beef'],
   ml: ['Cotton', 'Millet', 'Shea'],
   ne: ['Cowpea', 'Millet', 'Onion'],
+  mr: ['Fish', 'Dates', 'Millet'],
   bf: ['Cotton', 'Sesame', 'Shea'],
   gn: ['Coffee', 'Groundnuts', 'Cashew'],
+  gw: ['Cashew', 'Rice', 'Groundnuts'],
+  gm: ['Groundnuts', 'Fish', 'Millet'],
   mg: ['Vanilla', 'Cloves', 'Coffee'],
   mw: ['Tobacco', 'Sugar', 'Tea'],
   tn: ['Olive oil', 'Dates', 'Citrus'],
   lr: ['Rubber', 'Cocoa', 'Coffee'],
   sl: ['Coffee', 'Cocoa', 'Palm oil'],
   bi: ['Coffee', 'Tea', 'Cotton'],
-  tg: ['Cotton', 'Cocoa', 'Coffee']
+  bj: ['Cotton', 'Cashew', 'Pineapple'],
+  tg: ['Cotton', 'Cocoa', 'Coffee'],
+  st: ['Cocoa', 'Coffee', 'Palm oil'],
+  cv: ['Fish', 'Banana', 'Sugar'],
+  dj: ['Beef', 'Sorghum', 'Millet'],
+  km: ['Cloves', 'Vanilla', 'Banana'],
+  mu: ['Sugar', 'Tea', 'Fish'],
+  sc: ['Fish', 'Vanilla', 'Banana']
 };
 
 const CRITICAL_INFRA_SEEDS = {
@@ -1015,9 +1039,74 @@ function setPanel(index) {
   activePanelIndex = Math.max(0, Math.min(2, Number(index) || 0));
   updateSlidePos();
   updateAudienceMeta();
+  if (activePanelIndex === 1) requestAnimationFrame(updateInfoNavState);
 }
 
 window.__resetPanel = () => setPanel(0);
+
+function activeInfoGrid() {
+  const mode = audienceSelect?.value || 'farmers';
+  return document.querySelector('.audience-mode.cv-info-grid[data-mode="' + mode + '"]');
+}
+
+function resetInfoGridScroll() {
+  document.querySelectorAll('.audience-mode.cv-info-grid').forEach(grid => {
+    grid.scrollLeft = 0;
+  });
+  requestAnimationFrame(updateInfoNavState);
+}
+
+function updateInfoNavState() {
+  const grid = activeInfoGrid();
+  const canScroll = !!grid && grid.scrollWidth > grid.clientWidth + 2;
+  document.querySelectorAll('.cv-carousel-arrow[data-carousel="cv-info-grid"]').forEach(button => {
+    button.disabled = !canScroll;
+    if (!grid || !canScroll) {
+      button.removeAttribute('data-edge');
+      return;
+    }
+    const max = grid.scrollWidth - grid.clientWidth - 2;
+    const atStart = grid.scrollLeft <= 2;
+    const atEnd = grid.scrollLeft >= max;
+    button.dataset.edge = button.dataset.direction === 'prev'
+      ? String(atStart)
+      : String(atEnd);
+  });
+}
+
+function scrollActiveInfoGrid(direction) {
+  const grid = activeInfoGrid();
+  if (!grid) return;
+  const firstCard = grid.children[0];
+  const gap = parseFloat(getComputedStyle(grid).columnGap) || 14;
+  const step = (firstCard?.getBoundingClientRect().width || grid.clientWidth) + gap;
+  const max = Math.max(0, grid.scrollWidth - grid.clientWidth);
+  const next = direction === 'prev'
+    ? Math.max(0, grid.scrollLeft - step)
+    : Math.min(max, grid.scrollLeft + step);
+  animateScrollLeft(grid, next);
+  setTimeout(updateInfoNavState, 420);
+}
+
+// Native smooth scrollTo() proved unreliable here (throttled frames abandon the animation and
+// the grid never moves). This tween writes scrollLeft directly and a timeout guarantees arrival.
+function animateScrollLeft(el, to, ms = 260) {
+  const from = el.scrollLeft;
+  if (Math.abs(to - from) < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.scrollLeft = to;
+    return;
+  }
+  const t0 = performance.now();
+  let done = false;
+  const tick = now => {
+    if (done) return;
+    const t = Math.min(1, (now - t0) / ms);
+    el.scrollLeft = from + (to - from) * (1 - Math.pow(1 - t, 3));
+    if (t < 1) requestAnimationFrame(tick); else done = true;
+  };
+  requestAnimationFrame(tick);
+  setTimeout(() => { if (!done) { done = true; el.scrollLeft = to; } }, ms + 120);
+}
 
 for (const pill of layerPills) {
   pill.addEventListener('click', () => {
@@ -1093,6 +1182,7 @@ function openCountry(countryId, sourceElement = document.activeElement) {
   document.getElementById('cv-capital').textContent = info.capital;
   document.getElementById('cv-iso').textContent = info.cc.toUpperCase();
   renderAnthem(countryId, info);
+  renderHeaderMeta(countryId, info);
 
   const flag = document.getElementById('cv-flag');
   flag.hidden = false;
@@ -1112,6 +1202,7 @@ function openCountry(countryId, sourceElement = document.activeElement) {
   currentSlideIndex = sortedCountryIds.indexOf(countryId);
   if (currentSlideIndex < 0) currentSlideIndex = 0;
   updateSlidePos();
+  resetInfoGridScroll();
   if (!wasOpen && window.__resetPanel) window.__resetPanel();
   renderCountryDesk(countryId, countryPath);
   updateStarButton(countryId);
@@ -1123,6 +1214,40 @@ function openCountry(countryId, sourceElement = document.activeElement) {
   updateMapToolbarTitle();
   updateMapPortalChrome();
   backBtn.focus();
+}
+
+// Header meta line: growth (with vintage), live USD reference rate, and market code.
+// FX may arrive after open — the fx-ready listener re-runs this.
+function renderHeaderMeta(countryId, info) {
+  const inv = investorForCountry(countryId, info);
+  const growthEl = document.getElementById('cv-growth');
+  if (growthEl) {
+    growthEl.textContent = Number.isFinite(inv.gdp_growth)
+      ? (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%' + (inv.growthYear ? ' · ' + inv.growthYear : '/yr')
+      : '—';
+  }
+  const fxWrap = document.getElementById('cv-fx');
+  if (fxWrap) {
+    const ccy = inv.currency;
+    const rate = (window.__FX || {})[ccy];
+    if (ccy && Number.isFinite(rate)) {
+      document.getElementById('cv-fx-rate').textContent = formatFxRate(rate);
+      document.getElementById('cv-fx-ccy').textContent = ccy;
+      fxWrap.style.display = '';
+    } else {
+      fxWrap.style.display = 'none';
+    }
+  }
+  const exWrap = document.getElementById('cv-exch');
+  if (exWrap) {
+    const profile = marketProfileForCountry(countryId);
+    if (profile.exchange) {
+      document.getElementById('cv-exch-code').textContent = profile.exchange;
+      exWrap.style.display = '';
+    } else {
+      exWrap.style.display = 'none';
+    }
+  }
 }
 
 function renderAnthem(countryId, info) {
@@ -1200,6 +1325,7 @@ function updateAudienceMeta() {
   document.body.dataset.audience = mode;
   audienceTabs.forEach(tab => tab.setAttribute('aria-pressed', String(tab.dataset.audience === mode)));
   if (meta) meta.textContent = mode === 'investors' ? 'capital lens' : mode === 'diaspora' ? 'diaspora lens' : 'farmer lens';
+  requestAnimationFrame(updateInfoNavState);
 }
 
 backBtn.addEventListener('click', closeCountry);
@@ -1208,8 +1334,15 @@ document.getElementById('cv-next')?.addEventListener('click', () => openCountryB
 document.getElementById('cv-map-prev')?.addEventListener('click', () => openCountryByOffset(-1));
 document.getElementById('cv-map-next')?.addEventListener('click', () => openCountryByOffset(1));
 dots.forEach(dot => dot.addEventListener('click', () => setPanel(Number(dot.dataset.panel))));
+document.querySelectorAll('.cv-carousel-arrow[data-carousel="cv-info-grid"]').forEach(button => {
+  button.addEventListener('click', () => scrollActiveInfoGrid(button.dataset.direction || 'next'));
+});
+document.querySelectorAll('.audience-mode.cv-info-grid').forEach(grid => {
+  grid.addEventListener('scroll', updateInfoNavState, { passive: true });
+});
 audienceSelect?.addEventListener('change', () => {
   updateAudienceMeta();
+  resetInfoGridScroll();
   if (!activeCountryMap) { syncRoute(); return; }
   const countryId = activeCountryMap.countryId;
   const info = COUNTRY_INFO[countryId];
@@ -1226,6 +1359,7 @@ document.addEventListener('fx-ready', () => {
   const countryId = activeCountryMap.countryId;
   const info = COUNTRY_INFO[countryId];
   renderDiasporaPanel(countryId, info);
+  renderHeaderMeta(countryId, info);
 });
 document.getElementById('cv-copy-brief')?.addEventListener('click', async event => {
   if (!activeCountryMap) return;
@@ -1300,13 +1434,12 @@ function renderBriefDesk(countryId) {
   cards.classList.add('news-brief');
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline && b.body);
   const sourceCount = uniqueSourceCount(briefs);
-  if (meta) meta.textContent = briefs.length ? (briefs.length + ' AI stories · ranked') : 'AI desk';
   if (meta && briefs.length) meta.textContent = briefs.length + ' stories · ' + sourceCount + ' sources';
+  else if (meta) meta.textContent = 'AI desk';
   if (!briefs.length) {
     cards.innerHTML =
       '<div class="cv-brief-desk"><div class="cv-brief-empty">' +
-        'The AI desk writes the top stories for this country, ranked by usefulness. ' +
-        'It fills in once the daily generator runs with an API key.' +
+        'No brief loaded yet. Run the daily desk to fill this country.' +
       '</div></div>';
     return;
   }
@@ -1314,7 +1447,7 @@ function renderBriefDesk(countryId) {
   cards.innerHTML =
     '<div class="cv-brief-desk">' +
       '<div class="cv-brief-head"><span class="t">Country <b>brief</b></span>' +
-        '<span class="m">' + briefs.length + ' stories · ' + sourceCount + ' sources' + (when ? ' · ' + escapeHtml(when) : '') + '</span></div>' +
+        '<span class="m">' + (when ? escapeHtml(when) : 'Top story first') + '</span></div>' +
       briefs.map((b, i) =>
         '<article class="cv-news-row' + (i === 0 ? ' is-open' : '') + '">' +
           '<button class="cv-news-summary" type="button" aria-expanded="' + (i === 0 ? 'true' : 'false') + '">' +
@@ -1537,25 +1670,25 @@ function renderFarmerSignals(countryId, stats) {
     {
       kicker: 'Crop read',
       title: (exports[0] || 'Food') + ' pricing window',
-      copy: 'Track farmgate price movement through ' + firstMarket + ' before the ' + farmSeasonLabel(countryId) + ' planting window closes.',
+      copy: 'Watch ' + firstMarket + ' quotes during ' + farmSeasonLabel(countryId) + '. Treat it as a crop window, not a national forecast.',
       metric: stats.dominantLabel + ' profile'
     },
     {
       kicker: 'Water risk',
       title: waterCount + ' mapped water points',
-      copy: 'Use lake and river proximity as the first stress test for irrigation, flood exposure, and storage siting.',
+      copy: 'Use rivers and lakes as the first irrigation and flood check. Live gauge data still needs local sourcing.',
       metric: 'Hydrology'
     },
     {
       kicker: 'Route watch',
       title: route ? route.name : 'Nearest market corridor',
-      copy: route ? route.note + ' The farmer desk should watch dwell time, fuel cost, and road disruption here.' : 'No corridor lead is tagged yet; start with the capital market and nearest border route.',
+      copy: route ? route.note + ' Watch dwell time, fuel cost, and road disruption here.' : 'No corridor lead is tagged yet; start with the capital market and nearest border route.',
       metric: route ? infraKindMeta(route.kind).label : 'Needs survey'
     },
     {
       kicker: 'Agtech wedge',
       title: 'Mechanization + market proof',
-      copy: 'The useful product is not another dashboard. It is a field tool that tells growers when to plant, where to sell, and what transport will actually arrive.',
+      copy: 'Best wedge: planting timing, buyer access, and transport reliability in one simple grower workflow.',
       metric: 'Operator angle'
     }
   ];
@@ -1614,7 +1747,7 @@ function renderInvestorSignals(countryId, inv, info) {
     {
       kicker: 'Entry point',
       title: topSector + ' first',
-      copy: topSector + ' has the clearest country-file signal right now. Pair it with local operators before pricing the whole market.',
+      copy: 'Start where the country file is strongest. Pair the sector read with local operators before pricing the market.',
       metric: 'Primary sector lens'
     },
     {
@@ -1626,13 +1759,13 @@ function renderInvestorSignals(countryId, inv, info) {
     {
       kicker: 'Risk filter',
       title: riskLabel + ' / ' + inv.access + ' access',
-      copy: 'The first diligence pass should pressure-test currency convertibility, permitting, political calendar, and contract enforcement.',
+      copy: 'Before pricing: test FX movement, permits, political calendar, and contract enforcement.',
       metric: inv.currency + ' exposure'
     },
     {
       kicker: 'Ground truth',
       title: stats.markets.length + ' market hubs mapped',
-      copy: 'Treat mapped hubs, corridors, ports, and air gateways as the operating proof behind the investment story.',
+      copy: 'Mapped hubs and gateways show where goods, people, and capital can actually move.',
       metric: info.region || 'Country file'
     }
   ]);
@@ -3412,6 +3545,9 @@ const CROP_SEASONS = {
   'Banana': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
   'Cowpea': { s: [6,7], h: [9,10] },
   'Onion': { h: [2,3,4] },
+  'Rice': { s: [5,6,7], h: [9,10,11], south: { s: [11,12], h: [4,5,6] } },
+  'Pineapple': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Wool': { h: [9,10,11,12] },
   'Vanilla': { h: [6,7,8] },
   'Cloves': { h: [10,11,12,1] },
   'Rubber': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
@@ -3422,22 +3558,28 @@ function renderCropCalendar(countryId) {
   if (!el) return;
   const info = COUNTRY_INFO[countryId] || {};
   const southern = /southern/i.test(info.region || '');
-  const crops = (FARM_EXPORTS[countryId] || []).filter(crop => CROP_SEASONS[crop]);
-  if (!crops.length) { el.innerHTML = '<div class="cv-heat-empty">No export crops on file yet.</div>'; return; }
+  const stats = countryDeskStats(countryId);
+  const dominant = Object.entries(stats.agCounts || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
+  const crops = farmExportsForCountry(countryId, dominant).slice(0, 3);
+  if (!crops.length) { el.innerHTML = '<div class="cv-heat-empty">No crop calendar on file yet.</div>'; return; }
   const months = ['J','F','M','A','M','J','J','A','S','O','N','D'];
   let html = '<div class="cv-cal-months"><i></i>' + months.map(m => '<u>' + m + '</u>').join('') + '</div>';
   for (const crop of crops) {
     const base = CROP_SEASONS[crop];
-    const spec = southern && base.south ? base.south : base;
-    const sow = new Set(spec.s || []);
-    const harvest = new Set(spec.h || []);
-    html += '<div class="cv-cal-row"><i>' + escapeHtml(crop) + '</i>' + Array.from({ length: 12 }, (_, idx) => {
+    const spec = base ? (southern && base.south ? { ...base, ...base.south } : base) : null;
+    const note = !spec ? 'No season file' : !(spec.s || []).length ? 'Harvest only' : '';
+    const sow = new Set(spec?.s || []);
+    const harvest = new Set(spec?.h || []);
+    html += '<div class="cv-cal-row' + (note ? ' has-note' : '') + '"><i><b>' + escapeHtml(crop) + '</b>' + (note ? '<small>' + note + '</small>' : '') + '</i>' + Array.from({ length: 12 }, (_, idx) => {
       const m = idx + 1;
-      const cls = harvest.has(m) ? (sow.has(m) ? 'cv-cal-cell hs' : 'cv-cal-cell h') : sow.has(m) ? 'cv-cal-cell s' : 'cv-cal-cell';
+      const cls = !spec ? 'cv-cal-cell empty'
+        : harvest.has(m) ? (sow.has(m) ? 'cv-cal-cell hs' : 'cv-cal-cell h')
+        : sow.has(m) ? 'cv-cal-cell s'
+        : 'cv-cal-cell';
       return '<span class="' + cls + '"></span>';
     }).join('') + '</div>';
   }
-  html += '<div class="cv-cal-legend"><span><em class="h"></em>Harvest</span><span><em class="s"></em>Planting</span></div>';
+  html += '<div class="cv-cal-legend"><span><em class="h"></em>Harvest</span><span><em class="s"></em>Planting</span><span>Perennial crops show harvest windows only</span></div>';
   el.innerHTML = html;
 }
 
