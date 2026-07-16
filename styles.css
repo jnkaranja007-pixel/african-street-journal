@@ -250,6 +250,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-brief-rank{font:700 10px/1 var(--mono);letter-spacing:.06em;color:var(--text-dim)}
 .cv-news-summary-main{min-width:0}
 .cv-news-summary-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;font:700 10px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.cv-news-country{color:var(--text)}
 .cv-brief-topic{color:var(--green-bright)}
 .cv-news-source{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cv-brief-title{font:600 clamp(17px,1.55vw,21px)/1.2 var(--serif);color:var(--text);letter-spacing:0;margin:0}

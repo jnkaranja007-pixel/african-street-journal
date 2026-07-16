@@ -1494,6 +1494,65 @@ function renderCountryFile(countryId) {
   '</div>';
 }
 
+function briefRowHtml(b, i, countryTag) {
+  return '<article class="cv-news-row' + (i === 0 ? ' is-open' : '') + '">' +
+    '<button class="cv-news-summary" type="button" aria-expanded="' + (i === 0 ? 'true' : 'false') + '">' +
+      '<span class="cv-brief-rank">' + String(i + 1).padStart(2, '0') + '</span>' +
+      '<div class="cv-news-summary-main">' +
+        '<div class="cv-news-summary-meta">' +
+          (countryTag ? '<span class="cv-news-country">' + escapeHtml(countryTag) + '</span><span>·</span>' : '') +
+          '<span class="cv-brief-topic">' + escapeHtml(b.topic || 'News') + '</span>' +
+          '<span>·</span><span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span></div>' +
+        '<h4 class="cv-brief-title">' + escapeHtml(b.headline) + '</h4>' +
+      '</div>' +
+      '<span class="cv-news-toggle" aria-hidden="true"></span>' +
+    '</button>' +
+    '<div class="cv-brief-main"' + (i === 0 ? '' : ' hidden') + '>' +
+      '<p class="cv-brief-body">' + escapeHtml(b.body) + '</p>' +
+      '<p class="cv-brief-why"><b>Context</b>' + escapeHtml(briefWhy(b)) + '</p>' +
+      '<div class="cv-brief-src">' +
+        (Array.isArray(b.sources) ? b.sources.filter(s => s && s.url).map(s =>
+          '<a href="' + escapeHtml(safeUrl(s.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(s.name || 'Source') + ' ↗</a>'
+        ).join('') : '') +
+      '</div>' +
+    '</div>' +
+  '</article>';
+}
+
+// News must stay news: when the desk hasn't filed from a country, its News panel carries the
+// REGION's current wire stories (continental fallback), each tagged with its origin country.
+// The data prose lives in Signals; the Country File renders only if no briefs exist anywhere.
+function regionalWireFor(countryId) {
+  const info = COUNTRY_INFO[countryId] || {};
+  const pool = Object.entries(AI_BRIEFS).filter(([id, list]) => id !== countryId && Array.isArray(list) && list.some(b => b && b.headline && b.body));
+  if (!pool.length) return null;
+  const same = pool.filter(([id]) => (COUNTRY_INFO[id] || {}).region === info.region);
+  const chosen = same.length ? same : pool;
+  const scope = same.length ? info.region : 'Across the continent';
+  const picks = [];
+  for (let i = 0; picks.length < 6; i++) {
+    let any = false;
+    for (const [id, list] of chosen) {
+      const b = list[i];
+      if (b && b.headline && b.body) {
+        picks.push({ brief: b, country: (COUNTRY_INFO[id] || {}).name || id.toUpperCase() });
+        any = true;
+        if (picks.length >= 6) break;
+      }
+    }
+    if (!any) break;
+  }
+  if (!picks.length) return null;
+  const html = '<div class="cv-brief-desk">' +
+    '<div class="cv-brief-head"><span class="t">' + escapeHtml(scope) + ' <b>wire</b></span>' +
+      '<span class="m">' + escapeHtml(info.name || '') + ' file pending</span></div>' +
+    picks.map((p, i) => briefRowHtml(p.brief, i, p.country)).join('') +
+    '<div class="cv-df-note">The AI desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — these are current stories from the ' +
+      escapeHtml(scope === 'Across the continent' ? 'continental' : scope) + ' wire. ' + escapeHtml(info.name || 'Its') + '&rsquo;s data file lives under Signals.</div>' +
+  '</div>';
+  return { html, label: scope === 'Across the continent' ? 'Continental wire' : scope + ' wire' };
+}
+
 function renderBriefDesk(countryId) {
   const cards = document.getElementById('cv-cards');
   const meta = document.getElementById('cv-story-meta');
@@ -1502,9 +1561,16 @@ function renderBriefDesk(countryId) {
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline && b.body);
   const sourceCount = uniqueSourceCount(briefs);
   if (meta && briefs.length) meta.textContent = briefs.length + ' stories · ' + sourceCount + ' sources';
-  else if (meta) meta.textContent = 'Desk file · no wire stories yet';
   if (!briefs.length) {
-    cards.innerHTML = renderCountryFile(countryId);
+    const wire = regionalWireFor(countryId);
+    if (wire) {
+      if (meta) meta.textContent = wire.label + ' · no local stories yet';
+      cards.innerHTML = wire.html;
+      wireBriefAccordion(cards);
+    } else {
+      if (meta) meta.textContent = 'Desk file · no wire stories yet';
+      cards.innerHTML = renderCountryFile(countryId);
+    }
     return;
   }
   const when = relativeDateLabel(String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || '').slice(0,10));
@@ -1512,29 +1578,12 @@ function renderBriefDesk(countryId) {
     '<div class="cv-brief-desk">' +
       '<div class="cv-brief-head"><span class="t">Country <b>brief</b></span>' +
         '<span class="m">' + (when ? escapeHtml(when) : 'Top story first') + '</span></div>' +
-      briefs.map((b, i) =>
-        '<article class="cv-news-row' + (i === 0 ? ' is-open' : '') + '">' +
-          '<button class="cv-news-summary" type="button" aria-expanded="' + (i === 0 ? 'true' : 'false') + '">' +
-            '<span class="cv-brief-rank">' + String(i + 1).padStart(2, '0') + '</span>' +
-            '<div class="cv-news-summary-main">' +
-              '<div class="cv-news-summary-meta"><span class="cv-brief-topic">' + escapeHtml(b.topic || 'News') + '</span>' +
-                '<span>·</span><span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span></div>' +
-              '<h4 class="cv-brief-title">' + escapeHtml(b.headline) + '</h4>' +
-            '</div>' +
-            '<span class="cv-news-toggle" aria-hidden="true"></span>' +
-          '</button>' +
-          '<div class="cv-brief-main"' + (i === 0 ? '' : ' hidden') + '>' +
-            '<p class="cv-brief-body">' + escapeHtml(b.body) + '</p>' +
-            '<p class="cv-brief-why"><b>Context</b>' + escapeHtml(briefWhy(b)) + '</p>' +
-            '<div class="cv-brief-src">' +
-              (Array.isArray(b.sources) ? b.sources.filter(s => s && s.url).map(s =>
-                '<a href="' + escapeHtml(safeUrl(s.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(s.name || 'Source') + ' ↗</a>'
-              ).join('') : '') +
-            '</div>' +
-          '</div>' +
-        '</article>'
-      ).join('') +
+      briefs.map((b, i) => briefRowHtml(b, i)).join('') +
     '</div>';
+  wireBriefAccordion(cards);
+}
+
+function wireBriefAccordion(cards) {
   cards.onclick = event => {
     const summary = event.target.closest('.cv-news-summary');
     if (!summary) return;
@@ -3752,9 +3801,11 @@ async function runSelfTest() {
     closeCountry();
     await new Promise(r => setTimeout(r, 200));
     add('smoke: route cleared on close', !location.hash, location.hash);
-    openCountry('bw'); // a briefless country must show the Country File, never a dead end
+    openCountry('bw'); // a briefless country must show real wire stories (or the Country File fallback), never a dead end
     await new Promise(r => setTimeout(r, 900));
-    add('smoke: Country File for briefless country', !!document.querySelector('#cv-cards .cv-deskfile') && document.querySelectorAll('#cv-cards .cv-df-row').length >= 3, document.querySelectorAll('#cv-cards .cv-df-row').length + ' rows');
+    const wireRows = document.querySelectorAll('#cv-cards .cv-news-row').length;
+    const fileRows = document.querySelectorAll('#cv-cards .cv-df-row').length;
+    add('smoke: briefless country News shows wire or file', wireRows >= 2 || fileRows >= 3, wireRows + ' wire rows, ' + fileRows + ' file rows');
     closeCountry();
   } catch (e) {
     add('smoke: dossier flow threw', false, e.message);
