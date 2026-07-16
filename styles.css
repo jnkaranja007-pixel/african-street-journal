@@ -646,7 +646,11 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 @media (max-width:720px){
   .cv-identity{grid-template-columns:1fr;gap:10px}
   .cv-flag{order:-1;justify-self:start;width:72px;height:48px}
+  /* Star pins top-right opposite the flag instead of orphaning below the meta line */
+  .cv-star{position:absolute;top:0;right:0;margin:0}
   .cv-id-meta{flex-wrap:wrap;white-space:normal;overflow:visible}
+  .cv-cal-months,.cv-cal-row{grid-template-columns:64px repeat(12,1fr);gap:2px}
+  .cv-cal-row i{font-size:8px;letter-spacing:0.08em}
   .cv-anthem{flex-basis:100%;max-width:100%}
   .cv-gdp-chart-head{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .cv-gdp-chart-title{grid-column:1/-1}
