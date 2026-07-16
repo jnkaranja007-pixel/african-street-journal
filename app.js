@@ -1,6 +1,9 @@
 const APP_DATA = window.UNITED_AFRICA_DATA || {};
 const AI_BRIEFS = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.byCountry) || {};
 const AI_BRIEFS_AT = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.generated) || null;
+// Per-country brief dates: the pipeline carries a country's last good briefs through failed
+// runs, so its stories can be older than the edition date — show the honest per-country stamp.
+const AI_BRIEFS_DATES = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.dates) || {};
 // Live market heat data (top listed companies) written daily by build-briefs.ps1.
 const LIVE_MARKETS = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.markets) || {};
 const COUNTRY_CURRENCY = {
@@ -1427,6 +1430,70 @@ function renderNewsPanel(countryId, stories) {
   renderBriefDesk(countryId);
 }
 
+// The AI desk hasn't filed from most countries yet. Rather than a dead-end placeholder, the
+// News panel opens on a "Country File": a desk briefing composed from the layers we already
+// source and label — every line traceable, nothing invented, and the season line is computed
+// against today's date. Replaced automatically by ranked stories once the daily desk files.
+function renderCountryFile(countryId) {
+  const info = COUNTRY_INFO[countryId] || {};
+  const inv = investorForCountry(countryId, info);
+  const rows = [];
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  let econ = '';
+  if (inv.gdp) {
+    econ = 'GDP <b>' + escapeHtml(inv.gdp) + '</b>' +
+      (Number.isFinite(inv.gdp_growth) ? ', growing <b>' + (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%</b> a year' : '') + '.';
+    if (Array.isArray(inv.gdpSeries) && inv.gdpSeries.length >= 2) {
+      const s = economySeriesSummary(inv);
+      if (s && s.hasTrend) econ += ' Up from <b>$' + Math.round(s.first.value) + 'B</b> in ' + s.first.year + '.';
+    }
+    rows.push({ tag: inv.source === 'World Bank' ? 'World Bank ' + (inv.gdpYear || '') : 'Desk file', text: econ });
+  }
+
+  const profile = marketProfileForCountry(countryId);
+  rows.push(profile.exchange
+    ? { tag: 'Exchange directory', text: 'Listed market: <b>' + escapeHtml(profile.exchange) + '</b> · ' + escapeHtml(profile.name) + (profile.market?.companies?.length ? ', tracking <b>' + profile.market.companies.length + '</b> listings.' : '.') }
+    : { tag: 'Exchange directory', text: 'No verified domestic securities exchange.' });
+
+  const rate = (window.__FX || {})[inv.currency];
+  if (Number.isFinite(rate)) {
+    rows.push({ tag: 'Live FX reference', text: '$1 buys <b>' + formatFxRate(rate) + ' ' + escapeHtml(inv.currency) + '</b> at the automatic reference rate.' });
+  }
+
+  const stats = countryDeskStats(countryId);
+  const dominant = Object.entries(stats.agCounts || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
+  const crops = farmExportsForCountry(countryId, dominant).slice(0, 3).filter(c => CROP_SEASONS[c]);
+  if (crops.length) {
+    const month = new Date().getMonth() + 1;
+    const southern = /southern/i.test(info.region || '');
+    const status = crops.map(crop => {
+      const base = CROP_SEASONS[crop];
+      const spec = southern && base.south ? { ...base, ...base.south } : base;
+      const h = spec.h || [], s = spec.s || [];
+      if (h.includes(month)) return '<b>' + escapeHtml(crop) + '</b> harvest window open';
+      if (s.includes(month)) return '<b>' + escapeHtml(crop) + '</b> planting window open';
+      const nextH = h.length ? h.find(m => m > month) || h[0] : null;
+      return nextH ? '<b>' + escapeHtml(crop) + '</b> harvest opens ' + MONTHS[nextH - 1] : '<b>' + escapeHtml(crop) + '</b>';
+    });
+    rows.push({ tag: 'Crop calendar · indicative', text: status.join(' · ') + '.' });
+  }
+
+  const dia = DIASPORA[countryId];
+  if (dia && dia.remit) {
+    rows.push({ tag: 'WB / KNOMAD 2024', text: 'Remittance inflows around <b>' + escapeHtml(dia.remit) + '</b> a year' + (dia.dia ? ', diaspora roughly <b>' + escapeHtml(dia.dia) + '</b> abroad.' : '.') });
+  }
+
+  const infra = criticalInfraForCountry(countryId).slice(0, 2).map(item => item.name).filter(Boolean);
+  rows.push({ tag: 'GIS layer', text: 'Capital <b>' + escapeHtml(info.capital || '—') + '</b>' + (infra.length ? '; watching <b>' + infra.map(escapeHtml).join('</b> and <b>') + '</b>.' : '.') });
+
+  return '<div class="cv-brief-desk cv-deskfile">' +
+    '<div class="cv-brief-head"><span class="t">Country <b>file</b></span><span class="m">Compiled from sourced desk layers</span></div>' +
+    rows.map(r => '<div class="cv-df-row"><span class="cv-df-tag">' + r.tag + '</span><p>' + r.text + '</p></div>').join('') +
+    '<div class="cv-df-note">The AI news desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — ranked, source-cited stories replace this file after the next daily run.</div>' +
+  '</div>';
+}
+
 function renderBriefDesk(countryId) {
   const cards = document.getElementById('cv-cards');
   const meta = document.getElementById('cv-story-meta');
@@ -1435,15 +1502,12 @@ function renderBriefDesk(countryId) {
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline && b.body);
   const sourceCount = uniqueSourceCount(briefs);
   if (meta && briefs.length) meta.textContent = briefs.length + ' stories · ' + sourceCount + ' sources';
-  else if (meta) meta.textContent = 'AI desk';
+  else if (meta) meta.textContent = 'Desk file · no wire stories yet';
   if (!briefs.length) {
-    cards.innerHTML =
-      '<div class="cv-brief-desk"><div class="cv-brief-empty">' +
-        'No brief loaded yet. Run the daily desk to fill this country.' +
-      '</div></div>';
+    cards.innerHTML = renderCountryFile(countryId);
     return;
   }
-  const when = relativeDateLabel(AI_BRIEFS_AT ? String(AI_BRIEFS_AT).slice(0,10) : '');
+  const when = relativeDateLabel(String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || '').slice(0,10));
   cards.innerHTML =
     '<div class="cv-brief-desk">' +
       '<div class="cv-brief-head"><span class="t">Country <b>brief</b></span>' +
@@ -3648,4 +3712,60 @@ if (location.hash) applyRoute();
 /* ── PWA: installable shell, offline fallback (https/localhost only) ── */
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname))) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
+
+/* ── Self-test harness: open ?selftest=1 to run data-integrity + render-smoke checks.
+   Every regression this project has hit was found by hand; this is the standing net.
+   Results land in console.table, window.__selftest, and a corner badge. ── */
+if (new URLSearchParams(location.search).has('selftest')) {
+  window.addEventListener('load', () => setTimeout(runSelfTest, 800));
+}
+async function runSelfTest() {
+  const checks = [];
+  const add = (name, pass, note = '') => checks.push({ name, pass: !!pass, note: String(note) });
+  const D = window.UNITED_AFRICA_DATA || {};
+  add('core: 55 landing countries', (D.countries || []).length === 55, (D.countries || []).length);
+  add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);
+  const badIds = obj => Object.keys(obj || {}).filter(id => !COUNTRY_INFO[id]);
+  add('INVESTOR_INFO ids valid', badIds(INVESTOR_INFO).length === 0, badIds(INVESTOR_INFO).join(','));
+  add('DIASPORA ids valid', badIds(DIASPORA).length === 0, badIds(DIASPORA).join(','));
+  add('FARM_EXPORTS ids valid', badIds(FARM_EXPORTS).length === 0, badIds(FARM_EXPORTS).join(','));
+  add('MARKETS_SEED ids valid', badIds(MARKETS_SEED).length === 0, badIds(MARKETS_SEED).join(','));
+  const noSeason = Array.from(new Set([].concat(...Object.values(FARM_EXPORTS)))).filter(c => !CROP_SEASONS[c]);
+  add('CROP_SEASONS covers every export crop', noSeason.length === 0, noSeason.join(','));
+  const briefProblems = [];
+  Object.entries(AI_BRIEFS).forEach(([c, list]) => (list || []).forEach((b, i) => {
+    if (!b || !b.headline || !b.body) briefProblems.push(c + '#' + i);
+    (b && b.sources || []).forEach(s => { if (s && s.url && !/^https?:\/\//i.test(s.url)) briefProblems.push(c + ':' + s.url); });
+  }));
+  add('briefs schema + https sources', briefProblems.length === 0, briefProblems.slice(0, 3).join(' '));
+  add('archive index present', Array.isArray(window.UNITED_AFRICA_ARCHIVE_INDEX));
+
+  try {
+    openCountry('ke');
+    await new Promise(r => setTimeout(r, 900));
+    add('smoke: Kenya dossier opens', countryView.classList.contains('open') && document.getElementById('cv-name').textContent === 'Kenya');
+    add('smoke: header growth/vintage', /%/.test(document.getElementById('cv-growth')?.textContent || ''));
+    add('smoke: news panel has content', (document.getElementById('cv-cards').innerHTML || '').length > 400);
+    add('smoke: crop calendar rows', document.querySelectorAll('#cv-crop-cal .cv-cal-row').length > 0, document.querySelectorAll('#cv-crop-cal .cv-cal-row').length);
+    add('smoke: route set', location.hash.indexOf('#/ke') === 0, location.hash);
+    closeCountry();
+    await new Promise(r => setTimeout(r, 200));
+    add('smoke: route cleared on close', !location.hash, location.hash);
+    openCountry('bw'); // a briefless country must show the Country File, never a dead end
+    await new Promise(r => setTimeout(r, 900));
+    add('smoke: Country File for briefless country', !!document.querySelector('#cv-cards .cv-deskfile') && document.querySelectorAll('#cv-cards .cv-df-row').length >= 3, document.querySelectorAll('#cv-cards .cv-df-row').length + ' rows');
+    closeCountry();
+  } catch (e) {
+    add('smoke: dossier flow threw', false, e.message);
+  }
+
+  const failed = checks.filter(c => !c.pass);
+  console.table(checks);
+  window.__selftest = { total: checks.length, failed: failed.map(f => f.name + (f.note ? ' (' + f.note + ')' : '')), checks };
+  const box = document.createElement('div');
+  box.style.cssText = 'position:fixed;z-index:9999;bottom:12px;right:12px;max-width:360px;background:#111;border:1px solid ' + (failed.length ? '#c0392b' : '#2e7d32') + ';padding:12px 14px;font:11px/1.7 ui-monospace,monospace;color:#e8e6e3;white-space:pre-wrap';
+  box.textContent = 'ASJ SELF-TEST  ' + (checks.length - failed.length) + '/' + checks.length + ' passed' +
+    (failed.length ? '\n' + failed.map(f => '✗ ' + f.name + (f.note ? ' — ' + f.note : '')).join('\n') : '  ✓');
+  document.body.appendChild(box);
 }

@@ -264,6 +264,13 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-brief-src a{font:700 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);border:1px solid rgba(232,230,227,0.14);padding:6px 10px;border-radius:999px;text-decoration:none;transition:all 140ms}
 .cv-brief-src a:hover{border-color:rgba(76,175,80,0.5);color:var(--green-bright)}
 .cv-brief-empty{padding:50px 22px;text-align:center;color:var(--text-dim);font:400 14px/1.6 var(--sans)}
+/* Country File — the honest no-briefs-yet desk briefing */
+.cv-deskfile{padding-bottom:8px}
+.cv-df-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:13px 16px;border-bottom:1px solid rgba(232,230,227,0.06);align-items:baseline}
+.cv-df-tag{font:700 9px/1.5 var(--mono);letter-spacing:0.14em;color:var(--green);text-transform:uppercase}
+.cv-df-row p{margin:0;font:400 14px/1.55 var(--sans);color:var(--text-muted)}
+.cv-df-row p b{color:var(--text);font-weight:600}
+.cv-df-note{padding:14px 16px 6px;font:700 9px/1.6 var(--mono);letter-spacing:0.12em;color:var(--text-dim);text-transform:uppercase}
 .cv-story-sort{appearance:none;-webkit-appearance:none;font:700 10px/1 var(--mono);letter-spacing:0.14em;color:var(--green-bright);text-transform:uppercase;background:rgba(76,175,80,0.08) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 5" fill="%2366bb6a"><path d="M0 0l4 5 4-5z"/></svg>') no-repeat right 9px center/8px 5px;border:1px solid rgba(76,175,80,0.58);border-radius:999px;padding:7px 24px 7px 10px;cursor:pointer}
 .cv-story-sort:focus-visible{outline:1px solid var(--green-bright);outline-offset:2px}
 .cv-story-sort option{background:#131313;color:var(--text)}
@@ -651,6 +658,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .cv-id-meta{flex-wrap:wrap;white-space:normal;overflow:visible}
   .cv-cal-months,.cv-cal-row{grid-template-columns:64px repeat(12,1fr);gap:2px}
   .cv-cal-row i{font-size:8px;letter-spacing:0.08em}
+  .cv-df-row{grid-template-columns:1fr;gap:4px}
   .cv-anthem{flex-basis:100%;max-width:100%}
   .cv-gdp-chart-head{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .cv-gdp-chart-title{grid-column:1/-1}
