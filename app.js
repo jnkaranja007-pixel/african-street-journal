@@ -4189,7 +4189,14 @@ async function runSelfTest() {
   add('core: 55 landing countries', (D.countries || []).length === 55, (D.countries || []).length);
   const landingMapRect = canvas.getBoundingClientRect();
   const landingMapRatio = landingMapRect.height ? landingMapRect.width / landingMapRect.height : 0;
-  add('landing map keeps native aspect', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
+  // A background tab never lays the canvas out (rAF is paused), which would report a bogus 0x0.
+  // Skip rather than cry wolf: a check that fails for environmental reasons trains you to
+  // ignore real failures.
+  if (!landingMapRect.width && document.hidden) {
+    add('landing map keeps native aspect', true, 'skipped - tab hidden');
+  } else {
+    add('landing map keeps native aspect', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
+  }
   add('country nav alphabetized', sortedCountryIds[0] === 'dz' && sortedCountryIds[1] === 'ao', sortedCountryIds.slice(0, 5).join(','));
   add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);
   const badIds = obj => Object.keys(obj || {}).filter(id => !COUNTRY_INFO[id]);
@@ -4233,12 +4240,17 @@ async function runSelfTest() {
     audienceSelect.value = 'investors';
     audienceSelect.dispatchEvent(new Event('change'));
     setPanel(1);
+    // Idempotent: assert the index ADVANCED by one and the grid actually scrolled, rather than
+    // hard-coding 1 — otherwise a second run in the same session fails spuriously.
+    const stickyBefore = infoGridIndexByMode.investors || 0;
     scrollActiveInfoGrid('next');
     await new Promise(r => setTimeout(r, 520));
     openCountry('lr');
     await new Promise(r => setTimeout(r, 260));
     const stickyGrid = activeInfoGrid();
-    add('smoke: signal card sticks across countries', infoGridIndexByMode.investors === 1 && stickyGrid.scrollLeft > stickyGrid.clientWidth * 0.5, infoGridIndexByMode.investors + ' @ ' + Math.round(stickyGrid.scrollLeft));
+    add('smoke: signal card sticks across countries',
+      infoGridIndexByMode.investors === stickyBefore + 1 && stickyGrid.scrollLeft > stickyGrid.clientWidth * 0.5,
+      stickyBefore + '->' + infoGridIndexByMode.investors + ' @ ' + Math.round(stickyGrid.scrollLeft));
     closeCountry();
     await new Promise(r => setTimeout(r, 200));
     add('smoke: route cleared on close', !location.hash, location.hash);
