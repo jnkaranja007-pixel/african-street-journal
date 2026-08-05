@@ -31,7 +31,7 @@ const MARKET_DIRECTORY = {
   sz:{exchange:'ESE',name:'Eswatini Stock Exchange',scope:'Domestic',url:'https://www.ese.co.sz/'},
   sl:{exchange:'SLSE',name:'Sierra Leone Stock Exchange',scope:'Limited',url:'https://slssec.com/'},
   sn:{exchange:'BRVM',name:'Regional Securities Exchange',scope:'Regional',url:'https://www.brvm.org/'},
-  sd:{exchange:'KSE',name:'Khartoum Stock Exchange',scope:'Disrupted',url:'https://www.kse.com.sd/'},
+  sd:{exchange:'KSE',name:'Khartoum Stock Exchange',scope:'Disrupted',url:''},
   rw:{exchange:'RSE',name:'Rwanda Stock Exchange',scope:'Domestic',url:'https://www.rse.rw/'},
   ng:{exchange:'NGX',name:'Nigerian Exchange',scope:'Domestic',url:'https://ngxgroup.com/'},
   ne:{exchange:'BRVM',name:'Regional Securities Exchange',scope:'Regional',url:'https://www.brvm.org/'},
@@ -163,6 +163,29 @@ function formatFxDate(value) {
   return new Intl.DateTimeFormat('en-US', {
     month:'short', day:'numeric', year:'numeric', timeZone:'UTC'
   }).format(date);
+}
+
+function formatShortDate(value) {
+  const date = new Date(value || '');
+  if (!Number.isFinite(date.getTime())) return '';
+  return new Intl.DateTimeFormat('en-US', {
+    month:'short', day:'numeric', year:'numeric', timeZone:'UTC'
+  }).format(date);
+}
+
+function latestBriefDate() {
+  const dates = Object.values(AI_BRIEFS_DATES || {})
+    .concat(AI_BRIEFS_AT || [])
+    .map(value => String(value || '').slice(0, 10))
+    .filter(Boolean)
+    .sort();
+  return dates[dates.length - 1] || '';
+}
+
+function isStaleDate(value, days = 3) {
+  const date = new Date(String(value || '').slice(0, 10) + 'T00:00:00Z');
+  if (!Number.isFinite(date.getTime())) return false;
+  return (Date.now() - date.getTime()) > days * 86400000;
 }
 
 const COUNTRIES = APP_DATA.countries || [];
@@ -503,7 +526,9 @@ function renderTicker() {
     segment.className = 'ticker-segment';
     if (copy > 0) segment.setAttribute('aria-hidden', 'true');
     for (const item of cities) {
-      segment.appendChild(makeCountryButton(item.city, item.id));
+      const button = makeCountryButton(item.city, item.id);
+      if (copy > 0) button.tabIndex = -1;
+      segment.appendChild(button);
       const dot = document.createElement('span');
       dot.className = 'dot';
       dot.setAttribute('aria-hidden', 'true');
@@ -607,7 +632,6 @@ setInterval(() => {
       // The cached or bundled snapshot has already rendered.
     });
 })();
-
 
 const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
@@ -1016,13 +1040,19 @@ let storySlideTimer = null;
 let activeStoryIndex = 0;
 let activeStoryFeed = [];
 let storyQueueOpen = true;
-const sortedCountryIds = paths.map(path => path.id);
+const countryNameCollator = new Intl.Collator('en', { sensitivity: 'base' });
+const sortedCountryIds = paths.map(path => path.id).sort((a, b) => {
+  const nameA = COUNTRY_INFO[a]?.name || a;
+  const nameB = COUNTRY_INFO[b]?.name || b;
+  return countryNameCollator.compare(nameA, nameB) || a.localeCompare(b);
+});
 const track = document.getElementById('cv-track');
 const dots = Array.from(document.querySelectorAll('.cv-dot'));
 const audienceSelect = document.getElementById('cv-audience');
 const audienceTabs = Array.from(document.querySelectorAll('.cv-audience-tab'));
 let currentSlideIndex = 0;
 let activePanelIndex = 0;
+const infoGridIndexByMode = { farmers: 0, investors: 0, diaspora: 0 };
 const countryCarousel = track?.parentElement;
 countryCarousel?.addEventListener('scroll', () => {
   if (countryCarousel.scrollLeft !== 0) countryCarousel.scrollLeft = 0;
@@ -1032,7 +1062,17 @@ function updateSlidePos() {
   if (countryCarousel) countryCarousel.scrollLeft = 0;
   if (track) track.style.transform = 'translateX(-' + (activePanelIndex * 33.333333) + '%)';
   document.body.dataset.panel = String(activePanelIndex);
-  dots.forEach(dot => dot.setAttribute('aria-current', String(Number(dot.dataset.panel) === activePanelIndex)));
+  dots.forEach(dot => {
+    const selected = Number(dot.dataset.panel) === activePanelIndex;
+    dot.setAttribute('aria-current', String(selected));
+    dot.setAttribute('aria-selected', String(selected));
+    dot.tabIndex = selected ? 0 : -1;
+  });
+  document.querySelectorAll('.cv-panel').forEach(panel => {
+    const selected = Number(panel.dataset.panel) === activePanelIndex;
+    panel.setAttribute('aria-hidden', String(!selected));
+    if ('inert' in panel) panel.inert = !selected;
+  });
   const pos = document.getElementById('cv-pos');
   if (pos && sortedCountryIds.length) pos.textContent = String(currentSlideIndex + 1).padStart(2, '0') + '/' + String(sortedCountryIds.length).padStart(2, '0');
   if (activeCountryMap) requestAnimationFrame(() => drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks));
@@ -1043,6 +1083,9 @@ function setPanel(index) {
   updateSlidePos();
   updateAudienceMeta();
   if (activePanelIndex === 1) requestAnimationFrame(updateInfoNavState);
+  if (activePanelIndex === 2 && activeCountryMap) {
+    preloadAdjacentCountryData(activeCountryMap.countryId);
+  }
 }
 
 window.__resetPanel = () => setPanel(0);
@@ -1052,15 +1095,36 @@ function activeInfoGrid() {
   return document.querySelector('.audience-mode.cv-info-grid[data-mode="' + mode + '"]');
 }
 
-function resetInfoGridScroll() {
-  document.querySelectorAll('.audience-mode.cv-info-grid').forEach(grid => {
-    grid.scrollLeft = 0;
+function infoGridMetrics(grid) {
+  const firstCard = grid?.children[0];
+  const gap = grid ? (parseFloat(getComputedStyle(grid).columnGap) || 14) : 14;
+  const step = grid ? ((firstCard?.getBoundingClientRect().width || grid.clientWidth) + gap) : 1;
+  const maxIndex = Math.max(0, (grid?.children.length || 1) - 1);
+  return { step, maxIndex };
+}
+
+function rememberInfoGridPosition(grid = activeInfoGrid()) {
+  if (!grid) return;
+  const mode = grid.dataset.mode || 'farmers';
+  const { step, maxIndex } = infoGridMetrics(grid);
+  infoGridIndexByMode[mode] = Math.max(0, Math.min(maxIndex, Math.round(grid.scrollLeft / step)));
+}
+
+function restoreInfoGridPosition(mode = audienceSelect?.value || 'farmers') {
+  requestAnimationFrame(() => {
+    const grid = document.querySelector('.audience-mode.cv-info-grid[data-mode="' + mode + '"]');
+    if (!grid) return;
+    const { step, maxIndex } = infoGridMetrics(grid);
+    const index = Math.max(0, Math.min(maxIndex, infoGridIndexByMode[mode] || 0));
+    infoGridIndexByMode[mode] = index;
+    grid.scrollLeft = index * step;
+    updateInfoNavState();
   });
-  requestAnimationFrame(updateInfoNavState);
 }
 
 function updateInfoNavState() {
   const grid = activeInfoGrid();
+  rememberInfoGridPosition(grid);
   const canScroll = !!grid && grid.scrollWidth > grid.clientWidth + 2;
   document.querySelectorAll('.cv-carousel-arrow[data-carousel="cv-info-grid"]').forEach(button => {
     button.disabled = !canScroll;
@@ -1075,19 +1139,31 @@ function updateInfoNavState() {
       ? String(atStart)
       : String(atEnd);
   });
+  const meta = document.getElementById('cv-audience-meta');
+  if (meta && grid) {
+    const mode = audienceSelect?.value || 'farmers';
+    const lens = mode === 'investors' ? 'capital lens' : mode === 'diaspora' ? 'diaspora lens' : 'farmer lens';
+    const total = grid.children.length;
+    const current = Math.min(total, (infoGridIndexByMode[mode] || 0) + 1);
+    meta.textContent = total > 1 ? lens + ' · ' + current + '/' + total : lens;
+  }
 }
 
 function scrollActiveInfoGrid(direction) {
   const grid = activeInfoGrid();
   if (!grid) return;
-  const firstCard = grid.children[0];
-  const gap = parseFloat(getComputedStyle(grid).columnGap) || 14;
-  const step = (firstCard?.getBoundingClientRect().width || grid.clientWidth) + gap;
-  const max = Math.max(0, grid.scrollWidth - grid.clientWidth);
-  const next = direction === 'prev'
-    ? Math.max(0, grid.scrollLeft - step)
-    : Math.min(max, grid.scrollLeft + step);
-  animateScrollLeft(grid, next);
+  rememberInfoGridPosition(grid);
+  const mode = grid.dataset.mode || 'farmers';
+  const { step, maxIndex } = infoGridMetrics(grid);
+  const delta = direction === 'prev' ? -1 : 1;
+  const nextIndex = Math.max(0, Math.min(maxIndex, (infoGridIndexByMode[mode] || 0) + delta));
+  infoGridIndexByMode[mode] = nextIndex;
+  const next = nextIndex * step;
+  if (window.matchMedia('(max-width: 720px)').matches) {
+    grid.scrollLeft = next;
+  } else {
+    animateScrollLeft(grid, next);
+  }
   setTimeout(updateInfoNavState, 420);
 }
 
@@ -1144,6 +1220,17 @@ function updateMapToolbarTitle() {
 const mapFsBtn = document.getElementById('cv-map-fs');
 const mapPortal = document.getElementById('cv-map-portal');
 let mapOriginalParent = null;
+let countryNavSerial = 0;
+let countryNavBusy = false;
+
+function setCountryNavBusy(busy) {
+  countryNavBusy = !!busy;
+  ['cv-prev', 'cv-next', 'cv-map-prev', 'cv-map-next'].forEach(id => {
+    const button = document.getElementById(id);
+    if (button) button.disabled = countryNavBusy;
+  });
+  if (mapPortal) mapPortal.setAttribute('aria-busy', String(countryNavBusy));
+}
 
 function updateMapPortalChrome() {
   updateMapToolbarTitle();
@@ -1157,6 +1244,7 @@ mapFsBtn.addEventListener('click', () => {
     mapPortal.classList.add('active');
     mapPortal.appendChild(wrap);
     updateMapPortalChrome();
+    if (activeCountryMap) preloadAdjacentCountryData(activeCountryMap.countryId);
   } else {
     mapPortal.classList.remove('active');
     if (mapOriginalParent) mapOriginalParent.appendChild(wrap);
@@ -1173,11 +1261,12 @@ mapFsBtn.addEventListener('click', () => {
   }
 });
 
-function openCountry(countryId, sourceElement = document.activeElement) {
+function openCountry(countryId, sourceElement = document.activeElement, options = {}) {
   const info = COUNTRY_INFO[countryId];
   const countryPath = pathById[countryId];
   if (!info) return;
   const wasOpen = countryView.classList.contains('open');
+  if (ROUTE_AUDIENCES.includes(options.audience) && audienceSelect) audienceSelect.value = options.audience;
   ensureCountryData(countryId);
   lastFocus = sourceElement;
   document.getElementById('cv-region').textContent = info.region;
@@ -1202,13 +1291,19 @@ function openCountry(countryId, sourceElement = document.activeElement) {
 
   countryView.classList.add('open');
   document.body.style.overflow = 'hidden';
+  updateOverlayAccessibility();
   currentSlideIndex = sortedCountryIds.indexOf(countryId);
   if (currentSlideIndex < 0) currentSlideIndex = 0;
   updateSlidePos();
-  resetInfoGridScroll();
-  if (!wasOpen && window.__resetPanel) window.__resetPanel();
+  restoreInfoGridPosition();
+  if (Number.isInteger(options.panel)) setPanel(options.panel);
+  else if (!wasOpen && window.__resetPanel) window.__resetPanel();
   renderCountryDesk(countryId, countryPath);
   updateStarButton(countryId);
+  if (getWatchlist().includes(countryId)) {
+    markCountrySeen(countryId);
+    renderYourDesk();
+  }
   syncRoute();
   renderInvestorPanel(countryId, info);
   renderDiasporaPanel(countryId, info);
@@ -1231,25 +1326,11 @@ function renderHeaderMeta(countryId, info) {
   }
   const fxWrap = document.getElementById('cv-fx');
   if (fxWrap) {
-    const ccy = inv.currency;
-    const rate = (window.__FX || {})[ccy];
-    if (ccy && Number.isFinite(rate)) {
-      document.getElementById('cv-fx-rate').textContent = formatFxRate(rate);
-      document.getElementById('cv-fx-ccy').textContent = ccy;
-      fxWrap.style.display = '';
-    } else {
-      fxWrap.style.display = 'none';
-    }
+    fxWrap.style.display = 'none';
   }
   const exWrap = document.getElementById('cv-exch');
   if (exWrap) {
-    const profile = marketProfileForCountry(countryId);
-    if (profile.exchange) {
-      document.getElementById('cv-exch-code').textContent = profile.exchange;
-      exWrap.style.display = '';
-    } else {
-      exWrap.style.display = 'none';
-    }
+    exWrap.style.display = 'none';
   }
 }
 
@@ -1305,9 +1386,12 @@ async function playAnthemPreview(countryId) {
 }
 
 function closeCountry() {
+  countryNavSerial += 1;
+  setCountryNavBusy(false);
   stopAudioChannel();
   countryView.classList.remove('open');
   document.body.style.overflow = '';
+  updateOverlayAccessibility();
   if (countryPopTimer) clearInterval(countryPopTimer);
   if (countryUtilityTimer) clearInterval(countryUtilityTimer);
   countryPopTimer = null;
@@ -1316,10 +1400,33 @@ function closeCountry() {
   syncRoute();
 }
 
-function openCountryByOffset(offset) {
+async function openCountryByOffset(offset) {
   if (!sortedCountryIds.length) return;
   const next = (currentSlideIndex + offset + sortedCountryIds.length) % sortedCountryIds.length;
-  openCountry(sortedCountryIds[next], document.activeElement);
+  const countryId = sortedCountryIds[next];
+  const sourceElement = document.activeElement;
+  const fromCountryId = activeCountryMap?.countryId;
+  const serial = ++countryNavSerial;
+
+  // Detailed country chunks replace the intentionally simplified landing-map outline.
+  // In fullscreen that swap reads as a deformed intermediate shape, so keep the current
+  // completed atlas on screen until the destination's final geometry is ready.
+  if (mapPortal?.classList.contains('active') && !COUNTRY_DETAIL[countryId]) {
+    setCountryNavBusy(true);
+    try {
+      await loadCountryData(countryId);
+      if (
+        serial !== countryNavSerial ||
+        !countryView.classList.contains('open') ||
+        activeCountryMap?.countryId !== fromCountryId
+      ) return;
+    } finally {
+      if (serial === countryNavSerial) setCountryNavBusy(false);
+    }
+  }
+
+  if (serial !== countryNavSerial) return;
+  openCountry(countryId, sourceElement);
 }
 
 function updateAudienceMeta() {
@@ -1328,7 +1435,7 @@ function updateAudienceMeta() {
   document.body.dataset.audience = mode;
   audienceTabs.forEach(tab => tab.setAttribute('aria-pressed', String(tab.dataset.audience === mode)));
   if (meta) meta.textContent = mode === 'investors' ? 'capital lens' : mode === 'diaspora' ? 'diaspora lens' : 'farmer lens';
-  requestAnimationFrame(updateInfoNavState);
+  restoreInfoGridPosition(mode);
 }
 
 backBtn.addEventListener('click', closeCountry);
@@ -1336,16 +1443,31 @@ document.getElementById('cv-prev')?.addEventListener('click', () => openCountryB
 document.getElementById('cv-next')?.addEventListener('click', () => openCountryByOffset(1));
 document.getElementById('cv-map-prev')?.addEventListener('click', () => openCountryByOffset(-1));
 document.getElementById('cv-map-next')?.addEventListener('click', () => openCountryByOffset(1));
-dots.forEach(dot => dot.addEventListener('click', () => setPanel(Number(dot.dataset.panel))));
+dots.forEach(dot => dot.addEventListener('click', () => {
+  setPanel(Number(dot.dataset.panel));
+  syncRoute();
+}));
+document.getElementById('cv-dots')?.addEventListener('keydown', event => {
+  if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+  event.preventDefault();
+  const next = event.key === 'Home' ? 0
+    : event.key === 'End' ? dots.length - 1
+    : (activePanelIndex + (event.key === 'ArrowLeft' ? -1 : 1) + dots.length) % dots.length;
+  setPanel(next);
+  dots[next]?.focus();
+  syncRoute();
+});
 document.querySelectorAll('.cv-carousel-arrow[data-carousel="cv-info-grid"]').forEach(button => {
   button.addEventListener('click', () => scrollActiveInfoGrid(button.dataset.direction || 'next'));
 });
 document.querySelectorAll('.audience-mode.cv-info-grid').forEach(grid => {
-  grid.addEventListener('scroll', updateInfoNavState, { passive: true });
+  grid.addEventListener('scroll', () => {
+    rememberInfoGridPosition(grid);
+    updateInfoNavState();
+  }, { passive: true });
 });
 audienceSelect?.addEventListener('change', () => {
   updateAudienceMeta();
-  resetInfoGridScroll();
   if (!activeCountryMap) { syncRoute(); return; }
   const countryId = activeCountryMap.countryId;
   const info = COUNTRY_INFO[countryId];
@@ -1363,6 +1485,7 @@ document.addEventListener('fx-ready', () => {
   const info = COUNTRY_INFO[countryId];
   renderDiasporaPanel(countryId, info);
   renderHeaderMeta(countryId, info);
+  renderAudienceKpis(countryId, info);
 });
 document.getElementById('cv-copy-brief')?.addEventListener('click', async event => {
   if (!activeCountryMap) return;
@@ -1390,6 +1513,16 @@ function trapFocus(container) {
 }
 trapFocus(countryView);
 trapFocus(document.getElementById('wire-view'));
+
+function updateOverlayAccessibility() {
+  const main = document.querySelector('main');
+  if (!main) return;
+  const wireOpen = document.getElementById('wire-view')?.classList.contains('open');
+  const countryOpen = countryView.classList.contains('open');
+  const blocked = wireOpen || countryOpen;
+  main.setAttribute('aria-hidden', String(blocked));
+  if ('inert' in main) main.inert = blocked;
+}
 window.addEventListener('resize', () => {
   if (!activeCountryMap) return;
   requestAnimationFrame(() => drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks));
@@ -1423,7 +1556,15 @@ function renderCountryDesk(countryId, countryPath) {
   renderNewsPanel(countryId, stories);
   renderCropCalendar(countryId);
   renderAtlasAltText(countryId, landmarks);
-  requestAnimationFrame(() => drawCountryMap(countryId, countryPath, mapPins, landmarks));
+  if (activePanelIndex === 2 || mapPortal?.classList.contains('active')) {
+    preloadAdjacentCountryData(countryId);
+  }
+  // Fullscreen country changes must replace the header and final map in the same paint.
+  if (mapPortal?.classList.contains('active')) {
+    drawCountryMap(countryId, countryPath, mapPins, landmarks);
+  } else {
+    requestAnimationFrame(() => drawCountryMap(countryId, countryPath, mapPins, landmarks));
+  }
 }
 
 function renderNewsPanel(countryId, stories) {
@@ -1466,15 +1607,13 @@ function renderCountryFile(countryId) {
   const crops = farmExportsForCountry(countryId, dominant).slice(0, 3).filter(c => CROP_SEASONS[c]);
   if (crops.length) {
     const month = new Date().getMonth() + 1;
-    const southern = /southern/i.test(info.region || '');
     const status = crops.map(crop => {
-      const base = CROP_SEASONS[crop];
-      const spec = southern && base.south ? { ...base, ...base.south } : base;
+      const spec = seasonSpecForCountry(countryId, crop);
       const h = spec.h || [], s = spec.s || [];
-      if (h.includes(month)) return '<b>' + escapeHtml(crop) + '</b> harvest window open';
-      if (s.includes(month)) return '<b>' + escapeHtml(crop) + '</b> planting window open';
+      if (h.includes(month)) return '<b>' + escapeHtml(crop) + '</b> ' + seasonHarvestLabel(spec).toLowerCase() + ' window open';
+      if (s.includes(month)) return '<b>' + escapeHtml(crop) + '</b> ' + seasonPlantLabel(spec).toLowerCase() + ' window open';
       const nextH = h.length ? h.find(m => m > month) || h[0] : null;
-      return nextH ? '<b>' + escapeHtml(crop) + '</b> harvest opens ' + MONTHS[nextH - 1] : '<b>' + escapeHtml(crop) + '</b>';
+      return nextH ? '<b>' + escapeHtml(crop) + '</b> ' + seasonHarvestLabel(spec).toLowerCase() + ' opens ' + MONTHS[nextH - 1] : '<b>' + escapeHtml(crop) + '</b>';
     });
     rows.push({ tag: 'Crop calendar · indicative', text: status.join(' · ') + '.' });
   }
@@ -1753,20 +1892,28 @@ function countryDeskStats(countryId) {
   return { gis, places, agCounts, agTotal, dominantLabel, markets, infraCounts };
 }
 
+function signalCardHtml(card) {
+  const actionUrl = card.actionUrl ? safeUrl(card.actionUrl) : '';
+  const action = actionUrl && actionUrl !== '#'
+    ? '<a class="cv-signal-action" href="' + escapeHtml(actionUrl) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(card.actionLabel || 'Open source') + ' <span aria-hidden="true">↗</span></a>'
+    : '';
+  return (
+    '<article class="cv-signal-card">' +
+      '<div class="cv-signal-kicker">' + escapeHtml(card.kicker) + '</div>' +
+      '<h5 class="cv-signal-title">' + escapeHtml(card.title) + '</h5>' +
+      '<p class="cv-signal-copy">' + escapeHtml(card.copy) + '</p>' +
+      '<div class="cv-signal-footer"><span>' + escapeHtml(card.metric || 'Desk signal') + '</span>' + action + '</div>' +
+    '</article>'
+  );
+}
+
 function renderSignalCards(target, cards) {
   if (!target) return;
   if (!cards.length) {
     target.innerHTML = '<div class="cv-signal-empty">No decision signals generated yet.</div>';
     return;
   }
-  target.innerHTML = '<div class="cv-signal-grid">' + cards.map(card =>
-    '<article class="cv-signal-card">' +
-      '<div class="cv-signal-kicker">' + escapeHtml(card.kicker) + '</div>' +
-      '<h5 class="cv-signal-title">' + escapeHtml(card.title) + '</h5>' +
-      '<p class="cv-signal-copy">' + escapeHtml(card.copy) + '</p>' +
-      '<div class="cv-signal-meter"><i></i><span>' + escapeHtml(card.metric || 'Desk signal') + '</span></div>' +
-    '</article>'
-  ).join('') + '</div>';
+  target.innerHTML = '<div class="cv-signal-grid">' + cards.map(signalCardHtml).join('') + '</div>';
 }
 
 function renderFarmerSignals(countryId, stats) {
@@ -1810,14 +1957,7 @@ function renderFarmerSignals(countryId, stats) {
 
 function signalCardsHtml(cards) {
   if (!cards.length) return '<div class="cv-signal-empty">No decision signals generated yet.</div>';
-  return '<div class="cv-signal-grid">' + cards.map(card =>
-    '<article class="cv-signal-card">' +
-      '<div class="cv-signal-kicker">' + escapeHtml(card.kicker) + '</div>' +
-      '<h5 class="cv-signal-title">' + escapeHtml(card.title) + '</h5>' +
-      '<p class="cv-signal-copy">' + escapeHtml(card.copy) + '</p>' +
-      '<div class="cv-signal-meter"><i></i><span>' + escapeHtml(card.metric || 'Desk signal') + '</span></div>' +
-    '</article>'
-  ).join('') + '</div>';
+  return '<div class="cv-signal-grid">' + cards.map(signalCardHtml).join('') + '</div>';
 }
 
 function sectorInsight(sector, inv, countryId) {
@@ -1851,35 +1991,58 @@ function sectorInsight(sector, inv, countryId) {
 
 function renderInvestorSignals(countryId, inv, info) {
   const stats = countryDeskStats(countryId);
-  const market = marketsForCountry(countryId);
+  const profile = marketProfileForCountry(countryId);
+  const market = profile.market;
   const sectors = (inv.sectors || []).slice(0, 4);
   const topSector = sectors[0] || 'Growth sectors';
-  const growth = Number(inv.gdp_growth) || 0;
-  const riskLabel = inv.risk === 'low' ? 'Low risk' : inv.risk === 'med' ? 'Medium risk' : 'High risk';
+  const insight = sectorInsight(topSector, inv, countryId);
+  const access = inv.access || 'Unrated';
+  const currency = inv.currency || 'local currency';
+  const countryName = info.name || 'This country';
+  const capital = info.capital || countryName;
+  const mappedMarkets = stats.markets || [];
+  const mappedNames = mappedMarkets.slice(0, 2).map(place => place.name).join(' + ');
+  const marketTitle = profile.exchange
+    ? profile.exchange + ' · ' + profile.scope
+    : 'No domestic exchange verified';
+  const marketCopy = profile.exchange
+    ? profile.name + ' is verified in the market directory. ' +
+      (market?.companies?.length
+        ? market.companies.length + ' reference listings are loaded; verify current prices, filings, liquidity, and free float before acting.'
+        : 'Company-level data is not loaded here, so use the official venue for current listings, filings, and broker requirements.')
+    : 'The directory has no verified domestic venue for ' + countryName + '. Check regional exchanges, licensed banks, and private financing instead.';
   return signalCardsHtml([
     {
-      kicker: 'Entry point',
-      title: topSector + ' first',
-      copy: 'Start where the country file is strongest. Pair the sector read with local operators before pricing the market.',
-      metric: 'Primary sector lens'
+      kicker: 'Sector hypothesis',
+      title: topSector,
+      copy: 'Demand lens: ' + insight.demand + '. Test ' + insight.risk.toLowerCase() + ', unit economics, and the route to market with customers and local operators.',
+      metric: insight.route + ' · validate locally'
     },
     {
-      kicker: 'Market depth',
-      title: market ? market.exchange : 'Private-market read',
-      copy: market ? 'Use the market profile to identify the venue and leading listed companies, then verify liquidity, free float, filings, and current prices before acting.' : 'No verified public exchange is tied to this country, so the better lens is private operators, banks, and regional listings.',
-      metric: market ? String(market.companies.length) + ' tracked names' : 'No listed market'
+      kicker: 'Capital route',
+      title: marketTitle,
+      copy: marketCopy,
+      metric: profile.exchange
+        ? (market?.companies?.length ? market.companies.length + ' reference listings' : 'Official venue · current data')
+        : 'Regional · bank · private capital',
+      actionUrl: profile.url,
+      actionLabel: profile.exchange ? 'Open ' + profile.exchange : ''
     },
     {
-      kicker: 'Risk filter',
-      title: riskLabel + ' / ' + inv.access + ' access',
-      copy: 'Before pricing: test FX movement, permits, political calendar, and contract enforcement.',
-      metric: inv.currency + ' exposure'
+      kicker: 'Entry checks',
+      title: access + ' access flag',
+      copy: 'This is a screening label, not clearance. Confirm ownership rules, permits, tax treatment, and ' + currency + ' capital repatriation with licensed local advisers.',
+      metric: 'Legal · tax · currency'
     },
     {
-      kicker: 'Ground truth',
-      title: stats.markets.length + ' market hubs mapped',
-      copy: 'Mapped hubs and gateways show where goods, people, and capital can actually move.',
-      metric: info.region || 'Country file'
+      kicker: 'Local evidence',
+      title: mappedMarkets.length
+        ? mappedMarkets.length + ' mapped market hub' + (mappedMarkets.length === 1 ? '' : 's')
+        : 'Atlas coverage gap',
+      copy: mappedMarkets.length
+        ? mappedNames + ' are starting points, not proof of distribution. Confirm transport time, warehousing, customs, and counterparties locally.'
+        : 'No market hub is verified in the ' + countryName + ' Atlas file yet. Start with ' + capital + ', then confirm distributors, warehousing, and transport routes locally.',
+      metric: mappedMarkets.length ? 'Mapped lead · verify locally' : 'Missing data · verify locally'
     }
   ]);
 }
@@ -1894,32 +2057,37 @@ function setKpiCells(items) {
   refs.forEach(([keyId, valId, subId], index) => {
     const item = items[index] || { key: '—', value: '—', sub: '—' };
     const valueEl = document.getElementById(valId);
+    const cell = valueEl?.closest('.cv-alm-cell');
     document.getElementById(keyId).textContent = item.key;
     valueEl.textContent = item.value;
     valueEl.className = 'cv-alm-val' + (item.green ? ' green' : '');
     document.getElementById(subId).textContent = item.sub || '';
+    if (cell) cell.title = item.explain || item.sub || item.key || '';
   });
 }
 
 function renderAudienceKpis(countryId, info) {
-  const inv = investorForCountry(countryId, info);
-  const growth = Number.isFinite(inv.gdp_growth) ? formatPct(inv.gdp_growth) : '—';
-  setKpiCells([
-    { key: 'Population', value: formatCompactPop(livePopulation(info.pop, info.gr)), sub: '2026 estimate' },
-    { key: 'GDP', value: inv.gdp || '—', sub: gdpSubLabel(inv), green: true },
-    { key: 'GDP growth', value: growth, sub: growthSubLabel(inv), green: inv.gdp_growth >= 4 },
-    { key: 'Currency', value: inv.currency || '—', sub: 'Local tender' }
-  ]);
+  const mode = audienceSelect?.value || document.body.dataset.audience || 'farmers';
+  if (mode === 'farmers') {
+    renderFarmerKpis(countryId);
+    loadCountryUtility(countryId, info);
+    return;
+  }
+  if (mode === 'diaspora') {
+    renderDiasporaKpis(countryId, info);
+    return;
+  }
+  renderInvestorKpis(countryId, info);
 }
 
 function renderDiasporaKpis(countryId, info) {
   const inv = investorForCountry(countryId, info);
   const dia = DIASPORA[countryId] || {};
   setKpiCells([
-    { key: 'Population', value: formatPop(livePopulation(info.pop, info.gr)), sub: 'At home' },
-    { key: 'Remittances', value: dia.remit || '—', sub: 'World Bank/KNOMAD 2024' },
-    { key: 'Abroad', value: dia.dia || '—', sub: 'People in diaspora' },
-    { key: 'Payout rail', value: inv.currency || '—', sub: 'Local currency' }
+    { key: 'Population', value: formatPop(livePopulation(info.pop, info.gr)), sub: 'At home', explain: 'Resident population estimate for the country.' },
+    { key: 'Remittances', value: dia.remit || '—', sub: 'World Bank/KNOMAD 2024', explain: 'Annual inbound remittance scale where a sourced estimate is available.' },
+    { key: 'Abroad', value: dia.dia || '—', sub: 'People in diaspora', explain: 'Approximate diaspora size where a sourced estimate is available.' },
+    { key: 'Payout rail', value: inv.currency || '—', sub: 'Local currency', explain: 'Currency families and payout quotes should be checked against providers.' }
   ]);
 }
 
@@ -1930,10 +2098,10 @@ function renderFarmerKpis(countryId) {
   const infraKinds = countInfraKinds(criticalInfra);
   const waterCount = (stats.gis.rivers || []).length + (stats.gis.lakes || []).length;
   setKpiCells([
-    { key: 'Weather · Live', value: '—', sub: 'Fetching station data' },
-    { key: 'Market hubs', value: String(stats.markets.length), sub: stats.markets.length === 1 ? 'Designated hub' : 'Designated hubs' },
-    { key: 'Critical infra', value: String(infraTotal), sub: infraKinds.port + ' ports · ' + infraKinds.rail + ' rail · ' + infraKinds.dry_port + ' dry ports' },
-    { key: 'Water registry', value: String(waterCount), sub: (stats.gis.rivers || []).length + ' rivers · ' + (stats.gis.lakes || []).length + ' lakes' }
+    { key: 'Weather · Live', value: '—', sub: 'Fetching station data', explain: 'Live weather is fetched for the capital or closest mapped reference point.' },
+    { key: 'Market hubs', value: String(stats.markets.length), sub: stats.markets.length === 1 ? 'Designated hub' : 'Designated hubs', explain: 'Mapped market hubs from the country atlas layer.' },
+    { key: 'Critical infra', value: String(infraTotal), sub: infraKinds.port + ' ports · ' + infraKinds.rail + ' rail · ' + infraKinds.dry_port + ' dry ports', explain: 'Tagged infrastructure nodes that matter for movement, trade, and access.' },
+    { key: 'Water registry', value: String(waterCount), sub: (stats.gis.rivers || []).length + ' rivers · ' + (stats.gis.lakes || []).length + ' lakes', explain: 'Mapped rivers and lakes from the GIS country file.' }
   ]);
 }
 
@@ -2001,10 +2169,10 @@ function renderInvestorKpis(countryId, info) {
   const inv = investorForCountry(countryId, info);
   const riskLabel = inv.risk === 'low' ? 'Low' : inv.risk === 'med' ? 'Medium' : 'High';
   setKpiCells([
-    { key: 'GDP', value: inv.gdp, sub: gdpSubLabel(inv), green: true },
-    { key: 'GDP growth', value: (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%', sub: growthSubLabel(inv), green: inv.gdp_growth >= 4 },
-    { key: 'FDI inflows', value: inv.fdi, sub: inv.fdiYear ? 'World Bank ' + inv.fdiYear : (inv.estimated ? 'Desk model estimate' : 'Desk file · UNCTAD 2023-24') },
-    { key: 'Risk / access', value: riskLabel, sub: inv.access + ' · ' + inv.currency }
+    { key: 'GDP', value: inv.gdp, sub: gdpSubLabel(inv), green: true, explain: 'Nominal GDP in current US dollars from the latest available economy file.' },
+    { key: 'GDP growth', value: (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%', sub: growthSubLabel(inv), green: inv.gdp_growth >= 4, explain: 'Latest annual real GDP growth rate available in the country file.' },
+    { key: 'FDI inflows', value: inv.fdi, sub: inv.fdiYear ? 'World Bank ' + inv.fdiYear : (inv.estimated ? 'Desk model estimate' : 'Desk file · UNCTAD 2023-24'), explain: 'Foreign direct investment inflows where a sourced estimate is available.' },
+    { key: 'Risk / access', value: riskLabel, sub: inv.access + ' · ' + inv.currency, explain: 'Qualitative access flag used to prompt due diligence, not an investment recommendation.' }
   ]);
 }
 
@@ -2058,13 +2226,6 @@ function economySeriesSummary(inv) {
   };
 }
 
-function investorDiligenceFocus(inv) {
-  if (inv.risk === 'high') return { value: 'Permits', sub: 'FX + contract pressure' };
-  if (inv.access && /restricted|selective/i.test(inv.access)) return { value: 'Access', sub: 'Licensing + capital movement' };
-  if (inv.risk === 'low') return { value: 'Scale', sub: 'Operator quality + valuation' };
-  return { value: 'Policy', sub: 'Rates + political calendar' };
-}
-
 function investorEstimate(countryId, info = COUNTRY_INFO[countryId]) {
   const region = (info?.region || '').toLowerCase();
   const popM = Math.max(0.4, (info?.pop || 8000000) / 1000000);
@@ -2080,7 +2241,6 @@ function investorEstimate(countryId, info = COUNTRY_INFO[countryId]) {
     currency: COUNTRY_CURRENCY[countryId] || '',
     sectors: inferredSectors(countryId, region),
     risk,
-    climate: inferredClimateRank(countryId, region, growthPct),
     access: gdpB > 8 ? 'Open' : 'Selective',
     gdpSeries: null,
     estimated: true
@@ -2118,14 +2278,6 @@ function inferredSectors(countryId, region) {
   return ['Agriculture', 'Services', 'Logistics', 'Energy'];
 }
 
-function inferredClimateRank(countryId, region, growthPct) {
-  if (['mu','sc','km','cv','st'].includes(countryId)) return 74;
-  if (region.includes('north')) return 108;
-  if (region.includes('southern')) return 96;
-  if (region.includes('west')) return 122;
-  if (region.includes('east')) return growthPct > 2.5 ? 132 : 101;
-  return 118;
-}
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
@@ -2178,7 +2330,7 @@ function uniqueSourceCount(briefs) {
 function countryBriefText(countryId) {
   const info = COUNTRY_INFO[countryId] || {};
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline);
-  const date = AI_BRIEFS_AT ? String(AI_BRIEFS_AT).slice(0, 10) : new Date().toISOString().slice(0, 10);
+  const date = String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || latestBriefDate() || new Date().toISOString()).slice(0, 10);
   const lines = ['The African Street Journal', (info.name || 'Country') + ' brief - ' + date, ''];
   if (!briefs.length) {
     lines.push('No AI Desk brief is loaded for this country yet.');
@@ -2414,6 +2566,27 @@ function drawSmartLabel(text, x, y, color, placed, width, height, anchor = 'righ
   const labelHeight = 12;
   const margin = 10;
 
+  // Capital labels are orientation anchors. Pin them before collision checks so
+  // a resize cannot make nearby labels push the capital name into another slot.
+  if (force) {
+    const [dx, dy] = order[0];
+    const alignLeft = dx >= 0;
+    let left = alignLeft ? x + dx : x + dx - labelWidth;
+    let top = y + dy - labelHeight / 2;
+    left = Math.max(margin, Math.min(width - margin - labelWidth, left));
+    top = Math.max(margin, Math.min(height - margin - labelHeight, top));
+    const drawX = alignLeft ? left : left + labelWidth;
+    const drawY = top + labelHeight / 2;
+    countryMapCtx.textAlign = alignLeft ? 'left' : 'right';
+    countryMapCtx.strokeStyle = 'rgba(8,15,10,0.9)';
+    countryMapCtx.lineWidth = 3;
+    countryMapCtx.strokeText(text, drawX, drawY);
+    countryMapCtx.fillStyle = color;
+    countryMapCtx.fillText(text, drawX, drawY);
+    placed.push({ left: left - 3, top: top - 2, right: left + labelWidth + 3, bottom: top + labelHeight + 2 });
+    return true;
+  }
+
   for (const [dx, dy] of order) {
     const alignLeft = dx >= 0;
     const left = alignLeft ? x + dx : x + dx - labelWidth;
@@ -2429,23 +2602,6 @@ function drawSmartLabel(text, x, y, color, placed, width, height, anchor = 'righ
     countryMapCtx.fillStyle = color;
     countryMapCtx.fillText(text, alignLeft ? left : left + labelWidth, y + dy);
     placed.push(box);
-    return true;
-  }
-  // Priority labels (capitals) must never vanish: when every candidate slot is taken or
-  // off-canvas, clamp the first slot into the canvas and draw anyway, accepting overlap.
-  if (force) {
-    const [dx, dy] = order[0];
-    let left = dx >= 0 ? x + dx : x + dx - labelWidth;
-    let top = y + dy - labelHeight / 2;
-    left = Math.max(margin, Math.min(width - margin - labelWidth, left));
-    top = Math.max(margin, Math.min(height - margin - labelHeight, top));
-    countryMapCtx.textAlign = 'left';
-    countryMapCtx.strokeStyle = 'rgba(8,15,10,0.9)';
-    countryMapCtx.lineWidth = 3;
-    countryMapCtx.strokeText(text, left, top + labelHeight / 2);
-    countryMapCtx.fillStyle = color;
-    countryMapCtx.fillText(text, left, top + labelHeight / 2);
-    placed.push({ left: left - 3, top: top - 2, right: left + labelWidth + 3, bottom: top + labelHeight + 2 });
     return true;
   }
   return false;
@@ -2494,7 +2650,10 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
   }
 
   if (mapLayers.places) {
-    const places = (gis.places || []).slice(0, 35);
+    const places = (gis.places || [])
+      .slice()
+      .sort((a, b) => Number(!!b.capital) - Number(!!a.capital) || (b.pop || 0) - (a.pop || 0))
+      .slice(0, 35);
     for (const place of places) {
       const [x, y] = project(place.lon, place.lat);
       let labelDrawn = false;
@@ -3015,17 +3174,7 @@ function renderInvestorPanel(countryId, info) {
   }
   ).join('');
 
-  const riskClass = inv.risk === 'low' ? 'low' : inv.risk === 'med' ? 'med' : 'high';
-  const riskLabel = inv.risk === 'low' ? 'Low' : inv.risk === 'med' ? 'Medium' : 'High';
-  const climateClass = inv.climate <= 60 ? 'low' : inv.climate <= 120 ? 'med' : 'high';
-  const diligence = investorDiligenceFocus(inv);
-  briefWrap.innerHTML =
-    '<div class="cv-brief">' +
-      '<div class="cv-brief-cell"><div class="cv-brief-val ' + riskClass + '">' + escapeHtml(diligence.value) + '</div><div class="cv-brief-key">Diligence Focus</div><div class="cv-brief-sub">' + escapeHtml(diligence.sub) + '</div></div>' +
-      '<div class="cv-brief-cell"><div class="cv-brief-val ' + climateClass + '">#' + inv.climate + '</div><div class="cv-brief-key">Climate Index</div><div class="cv-brief-sub">ND-GAIN rank of 181</div></div>' +
-      '<div class="cv-brief-cell"><div class="cv-brief-val">' + inv.currency + '</div><div class="cv-brief-key">Currency</div><div class="cv-brief-sub">Local tender</div></div>' +
-    '</div>' +
-    '<div style="margin-top:12px">' + renderInvestorSignals(countryId, inv, info) + '</div>';
+  briefWrap.innerHTML = renderInvestorSignals(countryId, inv, info);
   loadGdpHistory(countryId, info);
 }
 
@@ -3187,6 +3336,9 @@ canvas.addEventListener('touchstart', (e) => {
   const topicsEl = document.getElementById('wire-topics');
   const resultsEl = document.getElementById('wire-results');
   const trustEl = document.getElementById('wire-trust');
+  const resultCountEl = document.getElementById('wire-result-count');
+  const mobileActionsToggle = document.getElementById('wire-mobile-actions-toggle');
+  const actionsEl = document.getElementById('wire-actions');
   const copyBtn = document.getElementById('wire-copy');
   const shareBtn = document.getElementById('wire-share');
   const compareToggle = document.getElementById('wire-compare-toggle');
@@ -3195,7 +3347,7 @@ canvas.addEventListener('touchstart', (e) => {
   const comparePanel = document.getElementById('wire-compare-panel');
   const compareSelects = ['wire-compare-a','wire-compare-b','wire-compare-c'].map(id => document.getElementById(id)).filter(Boolean);
   if (!view || !entry) return;
-  let activeTopic = 'All', query = '', wireLastFocus = null, INDEX = [], previousSnapshot = null, compareOpen = false;
+  let activeTopic = 'All', query = '', wireLastFocus = null, INDEX = [], previousSnapshot = null, compareOpen = false, mobileActionsOpen = false;
   let editionDate = null, editionBriefs = null;
   const editionCache = {};
 
@@ -3269,16 +3421,14 @@ canvas.addEventListener('touchstart', (e) => {
         return prev && prev.title !== current.topByCountry[code].title;
       }).length;
     }
-    const countries = new Set(items.map(item => item.code)).size;
-    const copy = previousSnapshot
-      ? 'Compared with the last brief opened in this browser. It catches changed country leads, new story fingerprints, and new topic coverage.'
-      : 'Baseline saved for this browser. On the next refresh or visit, this panel will show what changed.';
+    if (!previousSnapshot || (!changed && !newStories && !newTopics)) return '';
+    const copy = 'Compared with the last brief opened in this browser. It catches changed country leads, new story fingerprints, and new topic coverage.';
     return '<section class="wire-movement">' +
       '<div><h3>What Changed</h3><p>' + escapeHtml(copy) + '</p></div>' +
       '<div class="wire-movement-grid">' +
         '<div class="wire-move-cell"><b>' + changed + '</b><span>Country leads changed</span></div>' +
         '<div class="wire-move-cell"><b>' + newStories + '</b><span>New story fingerprints</span></div>' +
-        '<div class="wire-move-cell"><b>' + (previousSnapshot ? newTopics : countries) + '</b><span>' + (previousSnapshot ? 'New topics' : 'Countries in brief') + '</span></div>' +
+        '<div class="wire-move-cell"><b>' + newTopics + '</b><span>New topics</span></div>' +
       '</div>' +
     '</section>';
   }
@@ -3289,12 +3439,27 @@ canvas.addEventListener('touchstart', (e) => {
     INDEX.forEach(item => (item.sources?.length ? item.sources : [{ name: item.source }]).forEach(source => {
       if (source && (source.url || source.name)) sources.add(source.url || source.name);
     }));
-    const at = editionDate || (AI_BRIEFS_AT ? String(AI_BRIEFS_AT).slice(0, 10) : 'seed');
     trustEl.innerHTML =
       '<span><b>' + INDEX.length + '</b> stories</span>' +
       '<span><b>' + countries + '</b> countries</span>' +
-      '<span><b>' + sources.size + '</b> cited sources</span>' +
-      '<span>' + (editionDate ? 'Edition' : 'Updated') + ' <b>' + escapeHtml(at) + '</b></span>';
+      '<span><b>' + sources.size + '</b> sources</span>';
+  }
+  function updateResultCount(items) {
+    if (!resultCountEl) return;
+    const q = query.trim();
+    const isDefaultView = activeTopic === 'All' && !q;
+    resultCountEl.hidden = isDefaultView;
+    if (isDefaultView) {
+      resultCountEl.textContent = '';
+      return;
+    }
+    if (!INDEX.length) {
+      resultCountEl.textContent = 'No stories loaded';
+      return;
+    }
+    resultCountEl.textContent = items.length + ' ' + (items.length === 1 ? 'story' : 'stories') +
+      (activeTopic !== 'All' ? ' in ' + activeTopic : '') +
+      (q ? ' matching "' + q + '"' : '');
   }
   function storyLine(item, index){
     return (index + 1) + '. ' + item.country + ' - ' + item.title + '\n' +
@@ -3302,8 +3467,8 @@ canvas.addEventListener('touchstart', (e) => {
       (item.source ? '   Source: ' + item.source + '\n' : '');
   }
   function dailyBriefText(items){
-    const date = AI_BRIEFS_AT ? String(AI_BRIEFS_AT).slice(0, 10) : new Date().toISOString().slice(0, 10);
-    return ['The African Street Journal - Daily Africa Brief', date, '']
+    const date = latestBriefDate() || new Date().toISOString().slice(0, 10);
+    return ['The African Street Journal - Africa Brief', date, '']
       .concat(items.slice(0, 12).map(storyLine))
       .join('\n')
       .trim();
@@ -3332,6 +3497,11 @@ canvas.addEventListener('touchstart', (e) => {
     if (!compareSummary) return;
     const names = compareNames();
     compareSummary.textContent = compareOpen && names.length ? names.slice(0, 3).join(' / ') : 'Optional';
+  }
+  function setMobileActionsOpen(open){
+    mobileActionsOpen = !!open;
+    actionsEl?.classList.toggle('mobile-open', mobileActionsOpen);
+    mobileActionsToggle?.setAttribute('aria-expanded', String(mobileActionsOpen));
   }
   function setCompareOpen(open){
     compareOpen = !!open;
@@ -3425,8 +3595,9 @@ canvas.addEventListener('touchstart', (e) => {
     '</a>';
   }
   function renderResults(){
-    if (!INDEX.length){ resultsEl.innerHTML = '<div class="wire-empty">No stories loaded yet. The desk refreshes every morning.</div>'; return; }
+    if (!INDEX.length){ updateResultCount([]); resultsEl.innerHTML = '<div class="wire-empty">No stories loaded yet. The desk has not published a brief file.</div>'; return; }
     const items = filtered();
+    updateResultCount(items);
     if (!items.length){ resultsEl.innerHTML = '<div class="wire-meta">0 stories</div><div class="wire-empty">No headlines match your search.</div>'; return; }
     const frontPage = (activeTopic==='All' && !query.trim());
     const hero = frontPage ? items[0] : null;
@@ -3439,6 +3610,7 @@ canvas.addEventListener('touchstart', (e) => {
           (hero ? heroMarkup(hero) : '') +
           '<div class="wire-meta">Highlights</div>' +
           '<div class="wire-front-grid">' + frontCards.map(frontCardMarkup).join('') + '</div>' +
+          movementMarkup(items) +
           (more.length ? '<div class="wire-meta">More across the continent</div>' + more.slice(0, 200).map(itemMarkup).join('') : '') +
         '</div>';
       return;
@@ -3467,18 +3639,23 @@ canvas.addEventListener('touchstart', (e) => {
     editionDate = null; editionBriefs = null; populateEditions();
     INDEX = buildIndex(); activeTopic = topic||'All'; query=''; searchInput.value='';
     const dateEl = document.getElementById('wire-date');
-    if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long' });
+    const briefDate = latestBriefDate();
+    if (dateEl) dateEl.textContent = briefDate ? 'Latest available · ' + formatShortDate(briefDate + 'T00:00:00Z') : 'Brief pending';
     wireLastFocus = document.activeElement;
     previousSnapshot = readWireSnapshot();
+    setMobileActionsOpen(false);
     renderTopics(); renderTrust(); populateCompare(); renderResults();
+    resultsEl.scrollTop = 0;
     if (!editionDate) saveWireSnapshot(INDEX);
     view.classList.add('open'); document.body.style.overflow='hidden';
+    updateOverlayAccessibility();
     syncRoute();
     setTimeout(()=>searchInput.focus(), 60);
   }
   function closeWire(){
     view.classList.remove('open');
     if (!document.getElementById('country-view').classList.contains('open')) document.body.style.overflow='';
+    updateOverlayAccessibility();
     if (wireLastFocus && wireLastFocus.focus) wireLastFocus.focus();
     syncRoute();
   }
@@ -3490,13 +3667,18 @@ canvas.addEventListener('touchstart', (e) => {
   function populateEditions(){
     if (!editionSel) return;
     const dates = Array.isArray(window.UNITED_AFRICA_ARCHIVE_INDEX) ? window.UNITED_AFRICA_ARCHIVE_INDEX : [];
-    if (!dates.length) { editionSel.hidden = true; return; }
+    const currentDate = latestBriefDate();
+    const pastDates = dates.filter(date => date && date !== currentDate);
+    if (!pastDates.length) { editionSel.hidden = true; return; }
     editionSel.hidden = false;
-    editionSel.innerHTML = '<option value="">Today</option>' + dates.map(d => '<option value="' + escapeHtml(d) + '">' + escapeHtml(d) + '</option>').join('');
+    editionSel.innerHTML = '<option value="">Latest</option>' + pastDates.map(d => '<option value="' + escapeHtml(d) + '">' + escapeHtml(d) + '</option>').join('');
     editionSel.value = editionDate || '';
   }
   function applyEdition(){
     INDEX = buildIndex();
+    const dateEl = document.getElementById('wire-date');
+    const d = editionDate || latestBriefDate();
+    if (dateEl) dateEl.textContent = d ? (editionDate ? 'Edition · ' : 'Latest available · ') + formatShortDate(d + 'T00:00:00Z') : 'Brief pending';
     renderTopics(); renderTrust(); renderResults();
   }
   editionSel?.addEventListener('change', () => {
@@ -3518,6 +3700,7 @@ canvas.addEventListener('touchstart', (e) => {
   });
   entry.addEventListener('click', ()=>openWire('All'));
   closeBtn.addEventListener('click', closeWire);
+  mobileActionsToggle?.addEventListener('click', () => setMobileActionsOpen(!mobileActionsOpen));
   compareToggle?.addEventListener('click', () => setCompareOpen(!compareOpen));
   compareSelects.forEach(select => select.addEventListener('change', renderCompare));
   comparePanel?.addEventListener('click', event => {
@@ -3548,35 +3731,79 @@ canvas.addEventListener('touchstart', (e) => {
     activeTopic = b.dataset.topic;
     topicsEl.querySelectorAll('.wire-topic').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.topic===activeTopic)));
     renderResults();
+    resultsEl.scrollTop = 0;
   });
-  searchInput.addEventListener('input', ()=>{ query = searchInput.value; renderResults(); });
+  searchInput.addEventListener('input', ()=>{ query = searchInput.value; renderResults(); resultsEl.scrollTop = 0; });
   document.addEventListener('keydown', e=>{ if (e.key==='Escape' && view.classList.contains('open')) closeWire(); });
   const n = Object.values(AI_BRIEFS||{}).reduce((a,arr)=>a+arr.length,0);
   if (entryCount) entryCount.textContent = n ? (n+' stories') : 'The Wire';
 })();
 
 /* ── Lazy country data: detail outline + GIS load per country, on demand ──
-   app-core.js ships only the landing map + economy layer (~15% of the old bundle);
-   each country's heavy geometry arrives as data/countries/<id>.js the moment its
-   dossier opens. The atlas draws immediately from the landing outline, then
-   re-renders sharper when the chunk lands. */
+   app-core.js ships only the landing map + economy layer (~15% of the old bundle).
+   Country dossiers may use that lightweight outline while their chunk arrives, but
+   fullscreen navigation waits for final geometry and preloads adjacent countries. */
 const COUNTRY_CHUNK_PENDING = {};
+const COUNTRY_CHUNK_REFRESH_PENDING = {};
+
+function loadCountryData(countryId) {
+  if (!/^[a-z]{2}$/.test(String(countryId))) return Promise.resolve(false);
+  if (COUNTRY_DETAIL[countryId]) return Promise.resolve(true);
+  if (COUNTRY_CHUNK_PENDING[countryId]) return COUNTRY_CHUNK_PENDING[countryId];
+
+  const pending = new Promise(resolve => {
+    const chunk = document.createElement('script');
+    chunk.src = 'data/countries/' + countryId + '.js';
+    chunk.dataset.countryChunk = countryId;
+    chunk.onload = () => {
+      delete COUNTRY_CHUNK_PENDING[countryId];
+      resolve(!!COUNTRY_DETAIL[countryId]);
+    };
+    chunk.onerror = () => {
+      delete COUNTRY_CHUNK_PENDING[countryId];
+      resolve(false);
+    };
+    document.head.appendChild(chunk);
+  });
+  COUNTRY_CHUNK_PENDING[countryId] = pending;
+  return pending;
+}
+
 function ensureCountryData(countryId) {
-  if (!/^[a-z]{2}$/.test(String(countryId))) return;
-  if (COUNTRY_DETAIL[countryId] || COUNTRY_CHUNK_PENDING[countryId]) return;
-  COUNTRY_CHUNK_PENDING[countryId] = true;
-  const chunk = document.createElement('script');
-  chunk.src = 'data/countries/' + countryId + '.js';
-  chunk.onload = () => {
-    delete COUNTRY_CHUNK_PENDING[countryId];
-    if (activeCountryMap && activeCountryMap.countryId === countryId) openCountry(countryId, lastFocus);
-  };
-  chunk.onerror = () => { delete COUNTRY_CHUNK_PENDING[countryId]; };
-  document.head.appendChild(chunk);
+  if (!/^[a-z]{2}$/.test(String(countryId))) return Promise.resolve(false);
+  if (COUNTRY_DETAIL[countryId]) return Promise.resolve(true);
+  const pending = loadCountryData(countryId);
+  if (!COUNTRY_CHUNK_REFRESH_PENDING[countryId]) {
+    COUNTRY_CHUNK_REFRESH_PENDING[countryId] = pending;
+    pending.then(loaded => {
+      if (COUNTRY_CHUNK_REFRESH_PENDING[countryId] !== pending) return;
+      delete COUNTRY_CHUNK_REFRESH_PENDING[countryId];
+      if (
+        loaded &&
+        !countryNavBusy &&
+        countryView.classList.contains('open') &&
+        activeCountryMap &&
+        activeCountryMap.countryId === countryId
+      ) {
+        openCountry(countryId, lastFocus);
+      }
+    });
+  }
+  return pending;
+}
+
+function preloadAdjacentCountryData(countryId) {
+  const index = sortedCountryIds.indexOf(countryId);
+  if (index < 0 || sortedCountryIds.length < 2) return;
+  const previous = sortedCountryIds[(index - 1 + sortedCountryIds.length) % sortedCountryIds.length];
+  const next = sortedCountryIds[(index + 1) % sortedCountryIds.length];
+  loadCountryData(previous);
+  loadCountryData(next);
 }
 
 /* ── Watchlist: follow countries, "Your desk" strip on the landing ────── */
 const WATCHLIST_KEY = 'asj:watchlist';
+const WATCHLIST_SEEN_KEY = 'asj:watchlist-seen:v1';
 function getWatchlist() {
   try {
     const list = JSON.parse(localStorage.getItem(WATCHLIST_KEY));
@@ -3586,39 +3813,184 @@ function getWatchlist() {
 function saveWatchlist(list) {
   try { localStorage.setItem(WATCHLIST_KEY, JSON.stringify(list)); } catch {}
 }
+function readWatchlistSeen() {
+  try {
+    const seen = JSON.parse(localStorage.getItem(WATCHLIST_SEEN_KEY) || '{}');
+    return seen && typeof seen === 'object' ? seen : {};
+  } catch { return {}; }
+}
+function saveWatchlistSeen(seen) {
+  try { localStorage.setItem(WATCHLIST_SEEN_KEY, JSON.stringify(seen || {})); } catch {}
+}
+function countryStoryFingerprint(countryId) {
+  const top = (AI_BRIEFS[countryId] || []).find(brief => brief && brief.headline);
+  const date = String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || '').slice(0, 10);
+  return top ? [date, top.topic || '', top.headline || ''].join('|') : '';
+}
+function markCountrySeen(countryId) {
+  const fp = countryStoryFingerprint(countryId);
+  if (!fp) return;
+  const seen = readWatchlistSeen();
+  seen[countryId] = fp;
+  saveWatchlistSeen(seen);
+}
 function updateStarButton(countryId) {
   const btn = document.getElementById('cv-star');
   if (!btn) return;
   const on = getWatchlist().includes(countryId);
+  const countryName = COUNTRY_INFO[countryId]?.name || 'this country';
   btn.setAttribute('aria-pressed', String(on));
   btn.textContent = on ? '★' : '☆';
-  btn.title = on ? 'Unfollow this country' : 'Follow this country';
+  btn.title = on ? 'Unfollow ' + countryName : 'Follow ' + countryName;
+  btn.setAttribute('aria-label', btn.title);
 }
+
+let yourDeskIndex = 0;
+let yourDeskScrollFrame = 0;
+let yourDeskExpanded = false;
+
+function setYourDeskExpanded(expanded) {
+  const el = document.getElementById('your-desk');
+  if (!el) return;
+  yourDeskExpanded = !!expanded;
+  el.classList.toggle('is-collapsed', !yourDeskExpanded);
+  const toggle = el.querySelector('[data-desk-toggle]');
+  const rail = el.querySelector('.yd-list');
+  const nav = el.querySelector('.yd-nav');
+  const cardCount = rail?.querySelectorAll('.yd-country-card').length || 0;
+  if (toggle) {
+    toggle.setAttribute('aria-expanded', String(yourDeskExpanded));
+    toggle.setAttribute('aria-label', (yourDeskExpanded ? 'Collapse' : 'Expand') + ' My Africa');
+  }
+  if (rail) rail.hidden = !yourDeskExpanded;
+  if (nav) nav.hidden = !yourDeskExpanded || cardCount < 2;
+  if (yourDeskExpanded) requestAnimationFrame(() => setYourDeskIndex(yourDeskIndex, 'auto'));
+}
+
+function updateYourDeskNav() {
+  const el = document.getElementById('your-desk');
+  const rail = el?.querySelector('.yd-list');
+  const cards = Array.from(rail?.querySelectorAll('.yd-country-card') || []);
+  if (!rail || !cards.length) return;
+
+  const railLeft = rail.getBoundingClientRect().left;
+  let nearest = 0;
+  let nearestDistance = Infinity;
+  cards.forEach((card, index) => {
+    const distance = Math.abs(card.getBoundingClientRect().left - railLeft);
+    if (distance < nearestDistance) {
+      nearest = index;
+      nearestDistance = distance;
+    }
+  });
+  yourDeskIndex = nearest;
+
+  const position = el.querySelector('.yd-pos');
+  const previous = el.querySelector('[data-desk-nav="prev"]');
+  const next = el.querySelector('[data-desk-nav="next"]');
+  if (position) position.textContent = (nearest + 1) + '/' + cards.length;
+  if (previous) previous.disabled = nearest === 0;
+  if (next) next.disabled = nearest === cards.length - 1;
+}
+
+function setYourDeskIndex(index, behavior = 'smooth') {
+  const el = document.getElementById('your-desk');
+  const rail = el?.querySelector('.yd-list');
+  const cards = Array.from(rail?.querySelectorAll('.yd-country-card') || []);
+  if (!rail || !cards.length) return;
+
+  yourDeskIndex = Math.max(0, Math.min(cards.length - 1, index));
+  const railRect = rail.getBoundingClientRect();
+  const cardRect = cards[yourDeskIndex].getBoundingClientRect();
+  const left = rail.scrollLeft + cardRect.left - railRect.left;
+  rail.scrollTo({
+    left,
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : behavior
+  });
+  requestAnimationFrame(updateYourDeskNav);
+}
+
 function renderYourDesk() {
   const el = document.getElementById('your-desk');
   if (!el) return;
   const list = getWatchlist();
-  if (!list.length) { el.hidden = true; el.innerHTML = ''; return; }
+  if (!list.length) {
+    yourDeskIndex = 0;
+    yourDeskExpanded = false;
+    el.hidden = true;
+    el.innerHTML = '';
+    return;
+  }
+  const seen = readWatchlistSeen();
+  yourDeskIndex = Math.max(0, Math.min(list.length - 1, yourDeskIndex));
   el.hidden = false;
-  el.innerHTML = '<span class="yd-key">Your desk</span>' + list.map(id => {
+  el.classList.toggle('is-collapsed', !yourDeskExpanded);
+  el.innerHTML = '<div class="yd-head"><button class="yd-toggle" type="button" data-desk-toggle aria-expanded="' +
+    String(yourDeskExpanded) + '" aria-controls="your-desk-list" aria-label="' + (yourDeskExpanded ? 'Collapse' : 'Expand') +
+    ' My Africa"><span class="yd-head-copy"><span class="yd-key">My Africa</span><span class="yd-sub">' +
+    list.length + ' followed</span></span><svg class="yd-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>' +
+    '<div class="yd-nav"' + (yourDeskExpanded && list.length > 1 ? '' : ' hidden') + '>' +
+    '<button class="yd-nav-btn" type="button" data-desk-nav="prev" aria-label="Previous followed country" disabled>' +
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>' +
+    '<span class="yd-pos" aria-live="polite">' + (yourDeskIndex + 1) + '/' + list.length + '</span>' +
+    '<button class="yd-nav-btn" type="button" data-desk-nav="next" aria-label="Next followed country">' +
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>' +
+    '</div></div><div class="yd-list" id="your-desk-list" role="group" aria-label="Followed country files"' +
+    (yourDeskExpanded ? '' : ' hidden') + '>' + list.map(id => {
+    const info = COUNTRY_INFO[id] || {};
     const inv = investorForCountry(id);
     const growth = Number.isFinite(inv.gdp_growth) ? (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%' : '';
-    return '<button type="button" data-country="' + id + '">' + escapeHtml(COUNTRY_INFO[id].name) + (growth ? '<b>' + growth + '</b>' : '') + '</button>';
-  }).join('');
+    const top = (AI_BRIEFS[id] || []).find(brief => brief && brief.headline);
+    const fp = countryStoryFingerprint(id);
+    const isNew = !!fp && seen[id] && seen[id] !== fp;
+    const name = info.name || id.toUpperCase();
+    const story = top ? (top.topic || 'News') + ' ' + String.fromCharCode(183) + ' ' + top.headline : 'Open country file';
+    return '<button class="yd-country-card" type="button" data-country="' + id +
+      '" aria-label="Open ' + escapeHtml(name) + ' country file">' +
+      '<span class="yd-country"><span>' + escapeHtml(name) + '</span><span class="yd-country-meta">' +
+        (isNew ? '<span class="yd-new">New</span>' : (growth ? '<b>' + escapeHtml(growth) + '</b>' : '')) +
+        '<svg class="yd-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>' +
+      '</span></span><small>' + escapeHtml(story) + '</small></button>';
+  }).join('') + '</div>';
+
+  const rail = el.querySelector('.yd-list');
+  rail?.addEventListener('scroll', () => {
+    if (yourDeskScrollFrame) cancelAnimationFrame(yourDeskScrollFrame);
+    yourDeskScrollFrame = requestAnimationFrame(() => {
+      yourDeskScrollFrame = 0;
+      updateYourDeskNav();
+    });
+  }, { passive: true });
+  if (yourDeskExpanded) requestAnimationFrame(() => setYourDeskIndex(yourDeskIndex, 'auto'));
 }
 document.getElementById('cv-star')?.addEventListener('click', () => {
   if (!activeCountryMap) return;
   const id = activeCountryMap.countryId;
   const list = getWatchlist();
   const at = list.indexOf(id);
-  if (at >= 0) list.splice(at, 1); else list.push(id);
+  if (at >= 0) list.splice(at, 1); else { list.push(id); markCountrySeen(id); }
   saveWatchlist(list);
   updateStarButton(id);
   renderYourDesk();
 });
 document.getElementById('your-desk')?.addEventListener('click', e => {
+  const toggle = e.target.closest('button[data-desk-toggle]');
+  if (toggle) {
+    setYourDeskExpanded(!yourDeskExpanded);
+    return;
+  }
+  const nav = e.target.closest('button[data-desk-nav]');
+  if (nav) {
+    setYourDeskIndex(yourDeskIndex + (nav.dataset.deskNav === 'prev' ? -1 : 1));
+    return;
+  }
   const btn = e.target.closest('button[data-country]');
-  if (btn) openCountry(btn.dataset.country, btn);
+  if (btn) {
+    markCountrySeen(btn.dataset.country);
+    yourDeskExpanded = false;
+    renderYourDesk();
+    openCountry(btn.dataset.country, btn);
+  }
 });
 renderYourDesk();
 
@@ -3626,51 +3998,77 @@ renderYourDesk();
 // Continental norms, not local gospel — the card is labeled "indicative" on purpose.
 // s = planting months, h = harvest months (1-12); `south` overrides for Southern Africa.
 const CROP_SEASONS = {
-  'Coffee': { s: [3,4,5], h: [10,11,12,1] },
-  'Tea': { h: [3,4,5,10,11,12] },
-  'Cut flowers': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
-  'Cocoa': { s: [4,5,6], h: [10,11,12,1,2] },
-  'Cashew': { h: [1,2,3,4,5] },
+  'Coffee': { kind:'perennial', plantLabel:'Establish', s: [3,4,5,10,11], h: [10,11,12,1] },
+  'Tea': { kind:'perennial', plantLabel:'Establish', s: [3,4,5,10,11], h: [3,4,5,10,11,12] },
+  'Cut flowers': { kind:'protected', plantLabel:'Plant', s: [1,2,3,4,5,6,7,8,9,10,11,12], h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Cocoa': { kind:'perennial', plantLabel:'Establish', s: [4,5,6,9,10], h: [10,11,12,1,2] },
+  'Cashew': { kind:'perennial', plantLabel:'Establish', s: [5,6,7], h: [1,2,3,4,5] },
   'Sesame': { s: [6,7], h: [10,11,12] },
   'Pulses': { s: [6,7], h: [10,11,12] },
-  'Fish': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Fish': { kind:'fishery', h: [1,2,3,4,5,6,7,8,9,10,11,12] },
   'Tobacco': { s: [9,10,11], h: [1,2,3,4] },
   'Groundnuts': { s: [5,6,7], h: [9,10,11] },
   'Cotton': { s: [5,6,7], h: [10,11,12,1] },
-  'Citrus': { h: [11,12,1,2,3], south: { h: [4,5,6,7,8] } },
-  'Tomatoes': { h: [10,11,12,1,2,3,4,5] },
-  'Olives': { h: [10,11,12,1] },
-  'Olive oil': { h: [10,11,12,1] },
-  'Grapes': { h: [8,9,10], south: { h: [1,2,3,4] } },
-  'Wine': { h: [8,9,10], south: { h: [1,2,3,4] } },
-  'Potatoes': { h: [11,12,1,2,3] },
-  'Dates': { h: [9,10,11] },
-  'Cassava': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
-  'Palm oil': { h: [2,3,4,5] },
-  'Pyrethrum': { h: [6,7,8,9] },
+  'Citrus': { kind:'perennial', plantLabel:'Plant', s: [2,3,4,10,11], h: [11,12,1,2,3], south: { s: [8,9,10], h: [4,5,6,7,8] } },
+  'Tomatoes': { s: [8,9,10,11,12,1,2,3], h: [10,11,12,1,2,3,4,5] },
+  'Olives': { kind:'perennial', plantLabel:'Plant', s: [2,3,4,10,11], h: [10,11,12,1] },
+  'Olive oil': { kind:'perennial', plantLabel:'Plant', s: [2,3,4,10,11], h: [10,11,12,1] },
+  'Grapes': { kind:'perennial', plantLabel:'Plant', s: [2,3,4], h: [8,9,10], south: { s: [8,9,10], h: [1,2,3,4] } },
+  'Wine': { kind:'perennial', plantLabel:'Plant', s: [2,3,4], h: [8,9,10], south: { s: [8,9,10], h: [1,2,3,4] } },
+  'Potatoes': { s: [8,9,10,1,2], h: [11,12,1,2,3], south: { s: [6,7,8,1,2], h: [10,11,12,4,5] } },
+  'Dates': { kind:'perennial', plantLabel:'Plant', s: [2,3,4], h: [9,10,11] },
+  'Cassava': { s: [3,4,5,9,10,11], h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Palm oil': { kind:'perennial', plantLabel:'Establish', s: [3,4,5,9,10], h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Pyrethrum': { kind:'perennial', plantLabel:'Transplant', s: [3,4,5,10,11], h: [6,7,8,9] },
   'Maize': { s: [3,4,5], h: [8,9,10], south: { s: [10,11,12], h: [4,5,6,7] } },
-  'Sugar': { h: [6,7,8,9,10,11] },
+  'Sugar': { plantLabel:'Plant cane', s: [3,4,5,10,11], h: [6,7,8,9,10,11], south: { s: [8,9,10,11], h: [4,5,6,7,8,9,10,11] } },
   'Soya': { s: [6,7], h: [10,11], south: { s: [11,12], h: [4,5] } },
-  'Prawns': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
-  'Beef': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Prawns': { kind:'fishery', h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Beef': { kind:'livestock', h: [1,2,3,4,5,6,7,8,9,10,11,12] },
   'Sorghum': { s: [6,7], h: [10,11] },
   'Millet': { s: [6,7], h: [9,10,11] },
-  'Banana': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Banana': { kind:'perennial', plantLabel:'Plant suckers', s: [3,4,5,9,10,11], h: [1,2,3,4,5,6,7,8,9,10,11,12] },
   'Cowpea': { s: [6,7], h: [9,10] },
-  'Onion': { h: [2,3,4] },
+  'Onion': { s: [10,11,12], h: [2,3,4] },
   'Rice': { s: [5,6,7], h: [9,10,11], south: { s: [11,12], h: [4,5,6] } },
-  'Pineapple': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
-  'Wool': { h: [9,10,11,12] },
-  'Vanilla': { h: [6,7,8] },
-  'Cloves': { h: [10,11,12,1] },
-  'Rubber': { h: [1,2,3,4,5,6,7,8,9,10,11,12] },
-  'Shea': { h: [5,6,7,8] }
+  'Pineapple': { kind:'perennial', plantLabel:'Plant slips', s: [1,2,3,4,5,6,7,8,9,10,11,12], h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Wool': { kind:'fiber', h: [9,10,11,12] },
+  'Vanilla': { kind:'perennial', plantLabel:'Plant cuttings', s: [9,10,11], h: [6,7,8] },
+  'Cloves': { kind:'perennial', plantLabel:'Plant seedlings', s: [11,12,1], h: [10,11,12,1] },
+  'Rubber': { kind:'perennial', plantLabel:'Plant seedlings', s: [4,5,6,7], h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Shea': { kind:'perennial', plantLabel:'Establish', s: [5,6,7], h: [5,6,7,8] }
 };
+function seasonSpecForCountry(countryId, crop) {
+  const base = CROP_SEASONS[crop];
+  if (!base) return null;
+  const info = COUNTRY_INFO[countryId] || {};
+  const southern = /southern/i.test(info.region || '');
+  return southern && base.south ? { ...base, ...base.south } : base;
+}
+function seasonPlantLabel(spec) {
+  if (!spec) return 'Planting';
+  if (spec.plantLabel) return spec.plantLabel;
+  if (spec.kind === 'perennial') return 'Establish';
+  return 'Planting';
+}
+function seasonHarvestLabel(spec) {
+  if (!spec) return 'Harvest';
+  if (spec.kind === 'fishery') return 'Landing';
+  if (spec.kind === 'livestock') return 'Market';
+  if (spec.kind === 'fiber') return 'Shearing';
+  return 'Harvest';
+}
+function seasonRowNote(spec) {
+  if (!spec) return 'No season file';
+  if (spec.kind === 'fishery') return 'Landing';
+  if (spec.kind === 'livestock') return 'Market';
+  if (spec.kind === 'fiber') return 'Shearing';
+  if ((spec.s || []).length && spec.kind === 'perennial') return seasonPlantLabel(spec);
+  return '';
+}
 function renderCropCalendar(countryId) {
   const el = document.getElementById('cv-crop-cal');
   if (!el) return;
-  const info = COUNTRY_INFO[countryId] || {};
-  const southern = /southern/i.test(info.region || '');
   const stats = countryDeskStats(countryId);
   const dominant = Object.entries(stats.agCounts || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
   const crops = farmExportsForCountry(countryId, dominant).slice(0, 3);
@@ -3678,9 +4076,8 @@ function renderCropCalendar(countryId) {
   const months = ['J','F','M','A','M','J','J','A','S','O','N','D'];
   let html = '<div class="cv-cal-months"><i></i>' + months.map(m => '<u>' + m + '</u>').join('') + '</div>';
   for (const crop of crops) {
-    const base = CROP_SEASONS[crop];
-    const spec = base ? (southern && base.south ? { ...base, ...base.south } : base) : null;
-    const note = !spec ? 'No season file' : !(spec.s || []).length ? 'Harvest only' : '';
+    const spec = seasonSpecForCountry(countryId, crop);
+    const note = seasonRowNote(spec);
     const sow = new Set(spec?.s || []);
     const harvest = new Set(spec?.h || []);
     html += '<div class="cv-cal-row' + (note ? ' has-note' : '') + '"><i><b>' + escapeHtml(crop) + '</b>' + (note ? '<small>' + note + '</small>' : '') + '</i>' + Array.from({ length: 12 }, (_, idx) => {
@@ -3692,7 +4089,7 @@ function renderCropCalendar(countryId) {
       return '<span class="' + cls + '"></span>';
     }).join('') + '</div>';
   }
-  html += '<div class="cv-cal-legend"><span><em class="h"></em>Harvest</span><span><em class="s"></em>Planting</span><span>Perennial crops show harvest windows only</span></div>';
+  html += '<div class="cv-cal-legend"><span><em class="h"></em>Harvest / market</span><span><em class="s"></em>Planting / establish</span><span>Indicative; rainfall and irrigation shift timing</span></div>';
   el.innerHTML = html;
 }
 
@@ -3715,8 +4112,9 @@ function renderAtlasAltText(countryId, landmarks) {
   el.textContent = 'Stylized map of ' + (info.name || countryId) + '. ' + (parts.length ? parts.join('. ') + '.' : 'Feature data is still being compiled.');
 }
 
-/* ── Deep links: #/ke, #/ke/farmers, #/wire — shareable, back/forward ── */
+/* ── Deep links: #/ke/news, #/ke/farmers, #/ke/investors, #/ke/diaspora, #/ke/atlas ── */
 const ROUTE_AUDIENCES = ['farmers', 'investors', 'diaspora'];
+const ROUTE_PANELS = { news: 0, signals: 1, atlas: 2 };
 let routeApplying = false;
 function syncRoute() {
   if (routeApplying) return;
@@ -3725,8 +4123,12 @@ function syncRoute() {
   if (wireView?.classList.contains('open')) hash = '#/wire';
   else if (countryView.classList.contains('open') && activeCountryMap) {
     hash = '#/' + activeCountryMap.countryId;
-    const audience = document.body.dataset.audience;
-    if (ROUTE_AUDIENCES.includes(audience)) hash += '/' + audience;
+    if (activePanelIndex === 0) hash += '/news';
+    else if (activePanelIndex === 2) hash += '/atlas';
+    else {
+      const audience = audienceSelect?.value || document.body.dataset.audience;
+      hash += '/' + (ROUTE_AUDIENCES.includes(audience) ? audience : 'farmers');
+    }
   }
   if ((location.hash || '') === hash) return;
   if (hash) location.hash = hash;
@@ -3745,13 +4147,18 @@ function applyRoute() {
       if (window.__wireOpen && wireView && !wireView.classList.contains('open')) window.__wireOpen('All');
     } else if (COUNTRY_INFO[parts[0]]) {
       if (wireView?.classList.contains('open') && window.__wireClose) window.__wireClose();
-      if (ROUTE_AUDIENCES.includes(parts[1]) && audienceSelect) {
-        audienceSelect.value = parts[1];
-        updateAudienceMeta();
-      }
+      const routeKey = parts[1] || '';
+      const audience = ROUTE_AUDIENCES.includes(routeKey) ? routeKey : '';
+      const panel = audience ? 1 : (Object.prototype.hasOwnProperty.call(ROUTE_PANELS, routeKey) ? ROUTE_PANELS[routeKey] : 0);
+      if (audience && audienceSelect) audienceSelect.value = audience;
       const alreadyOpen = countryView.classList.contains('open') && activeCountryMap?.countryId === parts[0];
-      if (!alreadyOpen) openCountry(parts[0]);
-      else if (ROUTE_AUDIENCES.includes(parts[1])) renderAudienceKpis(parts[0], COUNTRY_INFO[parts[0]]);
+      if (!alreadyOpen) openCountry(parts[0], document.activeElement, { panel, audience });
+      else {
+        if (audience && audienceSelect) audienceSelect.value = audience;
+        setPanel(panel);
+        updateAudienceMeta();
+        renderAudienceKpis(parts[0], COUNTRY_INFO[parts[0]]);
+      }
     }
   } finally { routeApplying = false; }
 }
@@ -3767,21 +4174,44 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || ['localho
    Every regression this project has hit was found by hand; this is the standing net.
    Results land in console.table, window.__selftest, and a corner badge. ── */
 if (new URLSearchParams(location.search).has('selftest')) {
-  window.addEventListener('load', () => setTimeout(runSelfTest, 800));
+  const startSelfTest = () => {
+    if (window.__selftestStarting) return;
+    window.__selftestStarting = true;
+    setTimeout(runSelfTest, 800);
+  };
+  setTimeout(startSelfTest, 0);
+  window.addEventListener('load', startSelfTest, { once: true });
 }
 async function runSelfTest() {
   const checks = [];
   const add = (name, pass, note = '') => checks.push({ name, pass: !!pass, note: String(note) });
   const D = window.UNITED_AFRICA_DATA || {};
   add('core: 55 landing countries', (D.countries || []).length === 55, (D.countries || []).length);
+  const landingMapRect = canvas.getBoundingClientRect();
+  const landingMapRatio = landingMapRect.height ? landingMapRect.width / landingMapRect.height : 0;
+  add('landing map keeps native aspect', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
+  add('country nav alphabetized', sortedCountryIds[0] === 'dz' && sortedCountryIds[1] === 'ao', sortedCountryIds.slice(0, 5).join(','));
   add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);
   const badIds = obj => Object.keys(obj || {}).filter(id => !COUNTRY_INFO[id]);
   add('INVESTOR_INFO ids valid', badIds(INVESTOR_INFO).length === 0, badIds(INVESTOR_INFO).join(','));
   add('DIASPORA ids valid', badIds(DIASPORA).length === 0, badIds(DIASPORA).join(','));
   add('FARM_EXPORTS ids valid', badIds(FARM_EXPORTS).length === 0, badIds(FARM_EXPORTS).join(','));
   add('MARKETS_SEED ids valid', badIds(MARKETS_SEED).length === 0, badIds(MARKETS_SEED).join(','));
+  const investorSignalProblems = sortedCountryIds.filter(id => {
+    const profile = marketProfileForCountry(id);
+    const html = renderInvestorSignals(id, investorForCountry(id, COUNTRY_INFO[id]), COUNTRY_INFO[id]);
+    return (profile.exchange && !html.includes(profile.exchange)) ||
+      /0 market hubs mapped|Pair the sector read|ND-GAIN rank/i.test(html);
+  });
+  add('investor checklist honors market directory', investorSignalProblems.length === 0, investorSignalProblems.join(','));
+  const malawiInvestorHtml = renderInvestorSignals('mw', investorForCountry('mw', COUNTRY_INFO.mw), COUNTRY_INFO.mw);
+  add('Malawi investor route uses verified MSE', /Malawi Stock Exchange/.test(malawiInvestorHtml) && /Open MSE/.test(malawiInvestorHtml), malawiInvestorHtml.includes('MSE') ? 'MSE present' : 'MSE missing');
   const noSeason = Array.from(new Set([].concat(...Object.values(FARM_EXPORTS)))).filter(c => !CROP_SEASONS[c]);
   add('CROP_SEASONS covers every export crop', noSeason.length === 0, noSeason.join(','));
+  const noPlantingKinds = new Set(['fishery', 'livestock', 'fiber']);
+  const noPlanting = Array.from(new Set([].concat(...Object.values(FARM_EXPORTS))))
+    .filter(c => CROP_SEASONS[c] && !(CROP_SEASONS[c].s || []).length && !noPlantingKinds.has(CROP_SEASONS[c].kind));
+  add('crop calendar planting coverage', noPlanting.length === 0, noPlanting.join(','));
   const briefProblems = [];
   Object.entries(AI_BRIEFS).forEach(([c, list]) => (list || []).forEach((b, i) => {
     if (!b || !b.headline || !b.body) briefProblems.push(c + '#' + i);
@@ -3798,6 +4228,17 @@ async function runSelfTest() {
     add('smoke: news panel has content', (document.getElementById('cv-cards').innerHTML || '').length > 400);
     add('smoke: crop calendar rows', document.querySelectorAll('#cv-crop-cal .cv-cal-row').length > 0, document.querySelectorAll('#cv-crop-cal .cv-cal-row').length);
     add('smoke: route set', location.hash.indexOf('#/ke') === 0, location.hash);
+    add('a11y: one country panel exposed', document.querySelectorAll('.cv-panel[aria-hidden="false"]').length === 1, document.querySelectorAll('.cv-panel[aria-hidden="false"]').length);
+    add('a11y: ticker clones skip keyboard', !document.querySelector('.ticker-segment[aria-hidden="true"] button:not([tabindex="-1"])'));
+    audienceSelect.value = 'investors';
+    audienceSelect.dispatchEvent(new Event('change'));
+    setPanel(1);
+    scrollActiveInfoGrid('next');
+    await new Promise(r => setTimeout(r, 520));
+    openCountry('lr');
+    await new Promise(r => setTimeout(r, 260));
+    const stickyGrid = activeInfoGrid();
+    add('smoke: signal card sticks across countries', infoGridIndexByMode.investors === 1 && stickyGrid.scrollLeft > stickyGrid.clientWidth * 0.5, infoGridIndexByMode.investors + ' @ ' + Math.round(stickyGrid.scrollLeft));
     closeCountry();
     await new Promise(r => setTimeout(r, 200));
     add('smoke: route cleared on close', !location.hash, location.hash);
@@ -3807,6 +4248,14 @@ async function runSelfTest() {
     const fileRows = document.querySelectorAll('#cv-cards .cv-df-row').length;
     add('smoke: briefless country News shows wire or file', wireRows >= 2 || fileRows >= 3, wireRows + ' wire rows, ' + fileRows + ' file rows');
     closeCountry();
+    window.__wireOpen('All');
+    await new Promise(r => setTimeout(r, 260));
+    const wireTrust = document.getElementById('wire-trust');
+    const wireResultCount = document.getElementById('wire-result-count');
+    const wireResults = document.getElementById('wire-results');
+    add('smoke: wire summary stays concise', wireTrust?.children.length === 3 && wireResultCount?.hidden, (wireTrust?.textContent || '').trim());
+    add('smoke: wire opens at the lead story', wireResults?.scrollTop === 0, wireResults?.scrollTop);
+    window.__wireClose();
   } catch (e) {
     add('smoke: dossier flow threw', false, e.message);
   }

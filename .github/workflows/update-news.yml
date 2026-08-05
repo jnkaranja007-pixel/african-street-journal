@@ -31,13 +31,23 @@ jobs:
           if ($env:ANTHROPIC_API_KEY) { ./scripts/build-briefs.ps1 }
           else { Write-Host 'ANTHROPIC_API_KEY secret not set - add it under Settings > Secrets and variables > Actions.'; exit 0 }
 
+      - name: Validate before publishing
+        shell: pwsh
+        run: |
+          # Publication gate: a malformed or empty run must fail the job (GitHub emails you)
+          # rather than pushing broken data to the live journal overnight.
+          if (Test-Path data/briefs.js) { ./scripts/validate-briefs.ps1 }
+          else { Write-Host 'No briefs.js produced; nothing to validate.' }
+
       - name: Commit refreshed briefs
         shell: pwsh
         run: |
           if (-not (Test-Path data/briefs.js)) { Write-Host 'No briefs.js produced; nothing to commit.'; exit 0 }
           git config user.name  "asj-news-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/briefs.js data/archive
+          # briefs-state.json MUST be committed: it is the merge memory that lets a country
+          # keep its last good briefs when a daily run partially fails.
+          git add data/briefs.js data/briefs-state.json data/archive
           $changed = -not (git diff --staged --quiet; $LASTEXITCODE -eq 0)
           if ($changed) {
             $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')

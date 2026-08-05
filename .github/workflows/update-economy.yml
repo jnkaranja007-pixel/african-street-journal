@@ -1,0 +1,45 @@
+name: Update Economy Layer
+
+# Monthly: pull fresh World Bank GDP/growth/series for all 55 countries, patch the
+# compiled data bundle, regenerate app-core.js + country chunks, commit. The script
+# aborts (exit 1) if the API returns fewer than 40 countries, so a flaky month can
+# never wipe good data. No API key needed — the World Bank API is open.
+
+on:
+  schedule:
+    - cron: '0 4 3 * *'    # 04:00 UTC on the 3rd of each month
+  workflow_dispatch: {}     # manual "Run workflow" button
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-economy
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Refresh World Bank economy layer
+        shell: pwsh
+        run: ./scripts/build-economy.ps1
+
+      - name: Commit refreshed economy data
+        shell: pwsh
+        run: |
+          git config user.name  "asj-economy-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/app-data.js data/app-core.js data/countries
+          $changed = -not (git diff --staged --quiet; $LASTEXITCODE -eq 0)
+          if ($changed) {
+            $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM')
+            git commit -m "chore(economy): refresh World Bank layer ($stamp)"
+            git push
+            Write-Host "Pushed refreshed economy layer"
+          } else {
+            Write-Host "No economy changes this run."
+          }

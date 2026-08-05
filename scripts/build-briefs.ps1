@@ -50,12 +50,23 @@ Rules:
 - Neutral tone. Report what happened and attribute claims ("according to ..."). No opinion, no
   loaded adjectives, no speculation, no sensationalism. Cover politics, economy, business, health,
   climate, tech, sport, and culture as the news warrants - not just one topic.
+- WRITE IN THE HOUSE STYLE OF A MAJOR FINANCIAL DAILY (Wall Street Journal / Yahoo Finance
+  register), while staying strictly neutral:
+  * Headlines: specific actor + active verb + the key figure when one exists
+    ("Kenya holds base rate at 12.5% as shilling steadies", never "Interest rate news" or
+    a vague label). No colons-as-drama, no questions, no all-caps words.
+  * Ledes: the single most important fact AND its number in the first sentence; context and
+    attribution in the second. Never bury the figure.
+  * Numbers carry units, direction, and comparison where the source reports one (percent,
+    year-on-year, versus the prior reading). Give the USD equivalent for large local-currency
+    figures when the source supports the conversion.
+  * Active voice, short plain verbs, no bureaucratic phrasing, no "recently", no exclamation.
 - Skip celebrity gossip, "net worth", betting/odds, and adult content entirely.
-- Each brief: headline (<= 90 chars), body (2-4 plain sentences), why (one practical sentence
-  explaining what the story could affect for citizens, businesses, diaspora, safety, food, money,
-  or movement), topic (one of: Politics, Business, Sport, Tech, Climate, Agriculture, Culture,
-  Health, Education, News), and 1-3 sources (the outlet name + the real article URL from your
-  search results).
+- Each brief: headline (<= 90 chars), body (2-4 sentences in the style above), why (one crisp
+  takeaway sentence in desk-note register: what this changes for money, food, safety, business,
+  or movement - concrete, never moralizing), topic (one of: Politics, Business, Sport, Tech,
+  Climate, Agriculture, Culture, Health, Education, News), and 1-3 sources (the outlet name +
+  the real article URL from your search results).
 - ALSO build a "markets" object only when an active domestic or regional exchange can be verified
   from the exchange, regulator, or another primary source. Include the exchange short code (e.g.
   NGX, JSE, NSE), its name, sourceUrl, asOf date, and up to 10 companies as {t: ticker, name:

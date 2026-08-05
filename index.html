@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The African Street Journal</title>
-<meta name="description" content="Daily AI-researched briefs, market heat, farm signals and diaspora tools for all 55 African countries. Neutral, sourced, updated every morning — from the streets, for the streets.">
+<meta name="description" content="AI-researched briefs, market heat, farm signals and diaspora tools for all 55 African countries, with visible freshness and source labels.">
 <meta name="theme-color" content="#131313">
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:title" content="The African Street Journal">
-<meta property="og:description" content="Daily AI-researched briefs, market heat, farm signals and diaspora tools for all 55 African countries — neutral, sourced, updated every morning.">
+<meta property="og:description" content="AI-researched briefs, market heat, farm signals and diaspora tools for all 55 African countries, with visible freshness and source labels.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <!-- At hosting time, uncomment with the real domain (scrapers require absolute https URLs; og-image.png is ready in the repo root):
@@ -20,7 +20,7 @@
 -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The African Street Journal">
-<meta name="twitter:description" content="Daily briefs, market heat and diaspora tools for all 55 African countries.">
+<meta name="twitter:description" content="Briefs, market heat and diaspora tools for all 55 African countries.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23131313'/%3E%3Ctext x='32' y='47' font-family='Georgia,serif' font-size='46' font-weight='700' fill='%234caf50' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
 <!-- Analytics (enable at hosting): create a free account at goatcounter.com — privacy-respecting, no cookies:
@@ -29,7 +29,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
 
@@ -46,9 +46,10 @@
     <div class="title-block">
       <h1><em>The</em> African Street <span class="g">Journal</span></h1>
       <p class="tagline">Culture &middot; Politics &middot; People</p>
-      <button class="wire-entry" id="wire-entry" type="button" aria-label="Read today's top stories across Africa">
-        <span class="wire-entry-label">Read today&rsquo;s brief</span>
+      <button class="wire-entry" id="wire-entry" type="button" aria-label="Open the latest Africa news brief" title="Open latest Africa news brief">
+        <span class="wire-entry-label">Open news brief</span>
         <span class="wire-entry-count" id="wire-entry-count">The Continent</span>
+        <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
       </button>
     </div>
 
@@ -129,7 +130,7 @@
       <div class="cv-carousel-track" id="cv-track">
 
         <!-- PANEL 1: NEWS -->
-        <article class="cv-panel" data-panel="0" aria-label="News">
+        <article class="cv-panel" id="cv-panel-news" data-panel="0" aria-label="News">
           <header class="cv-panel-head">
             <h3>News</h3>
             <div class="cv-news-tools">
@@ -143,7 +144,7 @@
         </article>
 
         <!-- PANEL 2: MORE INFO -->
-        <article class="cv-panel" data-panel="1" aria-label="Signals">
+        <article class="cv-panel" id="cv-panel-signals" data-panel="1" aria-label="Signals">
           <header class="cv-panel-head">
             <div style="display:flex;align-items:center;gap:8px;min-width:0">
             <h3>Signals</h3>
@@ -195,7 +196,7 @@
                 <div class="cv-sectors" id="cv-sectors"></div>
               </div>
               <div>
-                <header class="cv-section-head"><h4>Investor Brief</h4><span class="meta">Risk · climate · access</span></header>
+                <header class="cv-section-head"><h4>Investor Checklist</h4><span class="meta">Facts · gaps · next checks</span></header>
                 <div id="cv-brief-wrap"></div>
               </div>
             </div>
@@ -213,7 +214,7 @@
         </article>
 
         <!-- PANEL 3: ATLAS -->
-        <article class="cv-panel" data-panel="2" aria-label="Atlas">
+        <article class="cv-panel" id="cv-panel-atlas" data-panel="2" aria-label="Atlas">
           <header class="cv-panel-head">
             <h3>Atlas</h3>
             <span class="meta">Stylized relief · Markets · GIS</span>
@@ -256,31 +257,35 @@
     </section>
 
     <nav class="cv-dots" id="cv-dots" role="tablist" aria-label="Country sections">
-      <button class="cv-dot" type="button" data-panel="0" aria-current="false" role="tab"><i></i>News</button>
-      <button class="cv-dot" type="button" data-panel="1" aria-current="false" role="tab"><i></i>Signals</button>
-      <button class="cv-dot" type="button" data-panel="2" aria-current="false" role="tab"><i></i>Atlas</button>
+      <button class="cv-dot" type="button" data-panel="0" aria-current="false" aria-selected="false" aria-controls="cv-panel-news" role="tab"><i></i>News</button>
+      <button class="cv-dot" type="button" data-panel="1" aria-current="false" aria-selected="false" aria-controls="cv-panel-signals" role="tab"><i></i>Signals</button>
+      <button class="cv-dot" type="button" data-panel="2" aria-current="false" aria-selected="false" aria-controls="cv-panel-atlas" role="tab"><i></i>Atlas</button>
     </nav>
 
   </div>
   <div id="cv-map-portal" class="cv-map-portal"></div>
 </div>
 
-<div id="wire-view" role="dialog" aria-modal="true" aria-label="The Continent — today's top stories across Africa">
+<div id="wire-view" role="dialog" aria-modal="true" aria-label="The Continent — latest top stories across Africa">
   <div class="wire-head">
     <h2>The <span class="g">Continent</span><span class="wire-sub" id="wire-date"></span></h2>
     <div class="wire-search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
-      <input type="search" id="wire-search-input" placeholder="Search headlines, sources, countries…" aria-label="Search headlines" autocomplete="off">
+      <input type="search" id="wire-search-input" placeholder="Search the brief…" aria-label="Search headlines" autocomplete="off">
     </div>
     <button class="wire-close" id="wire-close" type="button">Close ✕</button>
   </div>
   <div class="wire-topics" id="wire-topics" role="group" aria-label="Filter by topic"></div>
   <div class="wire-tools" id="wire-tools">
     <div class="wire-trust" id="wire-trust"></div>
-    <div class="wire-actions">
+    <div class="wire-result-count" id="wire-result-count" aria-live="polite"></div>
+    <button class="wire-mobile-actions-toggle" id="wire-mobile-actions-toggle" type="button" aria-expanded="false" aria-controls="wire-actions">
+      <span>More</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </button>
+    <div class="wire-actions" id="wire-actions">
       <select class="wire-edition" id="wire-edition" aria-label="Edition" hidden></select>
       <button class="wire-action wire-compare-toggle" id="wire-compare-toggle" type="button" aria-expanded="false" aria-controls="wire-compare-body"><span>Compare</span><b id="wire-compare-summary">Optional</b></button>
-      <button class="wire-action" id="wire-copy" type="button">Copy Daily Brief</button>
+      <button class="wire-action" id="wire-copy" type="button">Copy Brief</button>
       <button class="wire-action" id="wire-share" type="button">Share</button>
     </div>
     <div class="wire-compare-body" id="wire-compare-body" hidden>
@@ -296,10 +301,10 @@
   <div class="wire-results" id="wire-results"></div>
 </div>
 
-<script src="data/app-core.js"></script>
-<script src="data/briefs.js" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/app-core.js?v=15"></script>
+<script src="data/briefs.js?v=15" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=15" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
 
-<script src="app.js"></script>
+<script src="app.js?v=15"></script>
 </body>
 </html>

@@ -20,11 +20,27 @@ $ISO2 = @('dz','ao','bj','bw','bf','bi','cm','cv','cf','td','km','cg','cd','ci',
 
 function Get-Indicator($iso, $indicator, $range) {
   $url = "https://api.worldbank.org/v2/country/$iso/indicator/$indicator" + "?format=json&per_page=40&date=$range"
-  try {
-    $resp = Invoke-RestMethod -Uri $url -TimeoutSec 30
-    if ($resp -and $resp.Count -ge 2 -and $resp[1]) { return @($resp[1]) }
-  } catch { Write-Host "    $iso $indicator failed: $($_.Exception.Message)" -ForegroundColor Yellow }
+  for ($attempt = 1; $attempt -le 3; $attempt++) {
+    try {
+      $resp = Invoke-RestMethod -Uri $url -TimeoutSec 45
+      if ($resp -and $resp.Count -ge 2 -and $resp[1]) { return @($resp[1]) }
+    } catch {
+      Write-Host "    $iso $indicator attempt $attempt failed: $($_.Exception.Message)" -ForegroundColor Yellow
+      Start-Sleep -Milliseconds (400 * $attempt)
+    }
+  }
   return @()
+}
+
+$appData = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\data\app-data.js'))
+$marker = 'window.UNITED_AFRICA_DATA.worldBankEconomy'
+$previous = @{}
+$s = [IO.File]::ReadAllText($appData)
+$m = [regex]::Match($s, [regex]::Escape($marker) + '\s*=\s*(\{.*?\});', [Text.RegularExpressions.RegexOptions]::Singleline)
+if ($m.Success) {
+  $prevJson = $m.Groups[1].Value
+  $prevObj = $prevJson | ConvertFrom-Json
+  foreach ($p in $prevObj.PSObject.Properties) { $previous[$p.Name] = $p.Value }
 }
 
 $economy = [ordered]@{}
@@ -34,12 +50,26 @@ foreach ($iso in $ISO2) {
   $series = @($gdpRows | Where-Object { $_.value -ne $null } |
     ForEach-Object { [pscustomobject]@{ year = [int]$_.date; value = [math]::Round([double]$_.value / 1e9, 3) } } |
     Sort-Object year)
-  if (-not $series.Count) { Write-Host "    no GDP data; keeping previous entry" -ForegroundColor DarkYellow; continue }
+  if (-not $series.Count) {
+    if ($previous.ContainsKey($iso)) {
+      Write-Host "    no GDP data; keeping previous entry" -ForegroundColor DarkYellow
+      $economy[$iso] = $previous[$iso]
+    } else {
+      Write-Host "    no GDP data; no previous entry available" -ForegroundColor DarkYellow
+    }
+    continue
+  }
   $latest = $series[-1]
   $growthRows = Get-Indicator $iso 'NY.GDP.MKTP.KD.ZG' '2019:2026'
   $g = $growthRows | Where-Object { $_.value -ne $null } | Sort-Object { [int]$_.date } | Select-Object -Last 1
   $entry = [ordered]@{ gdp = $latest.value; gdpYear = $latest.year }
-  if ($g) { $entry.gdp_growth = [math]::Round([double]$g.value, 1); $entry.growthYear = [int]$g.date }
+  if ($g) {
+    $entry.gdp_growth = [math]::Round([double]$g.value, 1); $entry.growthYear = [int]$g.date
+  } elseif ($previous.ContainsKey($iso) -and $previous[$iso].gdp_growth -ne $null) {
+    Write-Host "    no growth data; keeping previous growth entry" -ForegroundColor DarkYellow
+    $entry.gdp_growth = $previous[$iso].gdp_growth
+    $entry.growthYear = $previous[$iso].growthYear
+  }
   $entry.gdpSeries = $series
   $economy[$iso] = $entry
   Start-Sleep -Milliseconds 150
@@ -48,9 +78,6 @@ foreach ($iso in $ISO2) {
 if ($economy.Count -lt 40) { Write-Host "[economy] only $($economy.Count) countries fetched - aborting patch (API trouble?)" -ForegroundColor Red; exit 1 }
 
 $json = $economy | ConvertTo-Json -Depth 6 -Compress
-$appData = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\data\app-data.js'))
-$s = [IO.File]::ReadAllText($appData)
-$marker = 'window.UNITED_AFRICA_DATA.worldBankEconomy'
 $idx = $s.IndexOf($marker)
 if ($idx -lt 0) { Write-Host '[economy] marker not found in app-data.js' -ForegroundColor Red; exit 1 }
 $patched = $s.Substring(0, $idx) + "$marker = $json;`n"
