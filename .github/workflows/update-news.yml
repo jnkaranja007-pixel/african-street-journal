@@ -54,6 +54,16 @@ jobs:
           if (Test-Path data/briefs.js) { ./scripts/validate-briefs.ps1 }
           else { Write-Host 'No briefs.js produced; nothing to validate.' }
 
+      - name: Audit sources and quality
+        shell: pwsh
+        run: |
+          # Fetches every source URL. Only a 404/410 fails the run - that is a citation
+          # with nothing behind it, which is the one error this paper must never publish.
+          # Unreachable hosts only add a quality penalty, so a flaky network cannot block
+          # the desk. Prints a REWRITE line naming the weakest countries for a later pass.
+          if (Test-Path data/briefs.js) { ./scripts/audit-briefs.ps1 -CheckLinks -Worst 8 }
+          else { Write-Host 'No briefs.js produced; nothing to audit.' }
+
       - name: Commit refreshed briefs
         shell: pwsh
         run: |
