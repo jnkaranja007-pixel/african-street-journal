@@ -48,12 +48,14 @@ jobs:
           # briefs-state.json MUST be committed: it is the merge memory that lets a country
           # keep its last good briefs when a daily run partially fails.
           git add data/briefs.js data/briefs-state.json data/archive
-          $changed = -not (git diff --staged --quiet; $LASTEXITCODE -eq 0)
-          if ($changed) {
-            $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')
-            git commit -m "chore(ai-desk): refresh briefs ($stamp)"
-            git push
-            Write-Host "Pushed refreshed briefs.js"
-          } else {
-            Write-Host "No brief changes this run."
-          }
+          # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError — a grouping
+          # expression cannot contain a statement separator. Run the check, then read
+          # the exit code on its own line.
+          git diff --staged --quiet
+          if ($LASTEXITCODE -eq 0) { Write-Host 'No brief changes this run.'; exit 0 }
+          $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')
+          git commit -m "chore(ai-desk): refresh briefs ($stamp)"
+          if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
+          git push
+          if ($LASTEXITCODE -ne 0) { Write-Host 'Push failed.'; exit 1 }
+          Write-Host 'Pushed refreshed briefs.js'
