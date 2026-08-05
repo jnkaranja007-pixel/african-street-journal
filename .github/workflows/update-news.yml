@@ -56,6 +56,16 @@ jobs:
           $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')
           git commit -m "chore(ai-desk): refresh briefs ($stamp)"
           if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
-          git push
-          if ($LASTEXITCODE -ne 0) { Write-Host 'Push failed.'; exit 1 }
+          # The desk runs 25+ minutes, so main can move while it works. A plain push
+          # would then be rejected as non-fast-forward and the whole run's briefs are
+          # lost with the workspace. Rebase onto the current main and retry instead.
+          $pushed = $false
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            git push
+            if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
+            Write-Host "Push rejected (attempt $attempt) - rebasing onto origin/main and retrying."
+            git pull --rebase origin main
+            if ($LASTEXITCODE -ne 0) { Write-Host 'Rebase failed - resolve by hand.'; exit 1 }
+          }
+          if (-not $pushed) { Write-Host 'Push failed after 3 attempts.'; exit 1 }
           Write-Host 'Pushed refreshed briefs.js'

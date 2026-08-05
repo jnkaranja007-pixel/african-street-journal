@@ -40,6 +40,15 @@ jobs:
           $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM')
           git commit -m "chore(economy): refresh World Bank layer ($stamp)"
           if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
-          git push
-          if ($LASTEXITCODE -ne 0) { Write-Host 'Push failed.'; exit 1 }
+          # See update-news.yml: main can move during a long run, so rebase and retry
+          # rather than losing the work to a rejected non-fast-forward push.
+          $pushed = $false
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            git push
+            if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
+            Write-Host "Push rejected (attempt $attempt) - rebasing onto origin/main and retrying."
+            git pull --rebase origin main
+            if ($LASTEXITCODE -ne 0) { Write-Host 'Rebase failed - resolve by hand.'; exit 1 }
+          }
+          if (-not $pushed) { Write-Host 'Push failed after 3 attempts.'; exit 1 }
           Write-Host 'Pushed refreshed economy layer'
