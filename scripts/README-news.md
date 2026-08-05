@@ -31,10 +31,21 @@ powershell -ExecutionPolicy Bypass -File scripts/build-briefs.ps1               
 powershell -ExecutionPolicy Bypass -File scripts/build-briefs.ps1 -Only ng,ke,za  # a few
 ```
 
-- **Model**: defaults to `claude-haiku-4-5` (cheap/fast). For higher search + writing quality:
-  `-Model claude-sonnet-4-6`.
-- **Cost**: tokens are pennies; web search adds a small per-search fee. Budget on the order of a
-  dollar or two per full daily run with Haiku - well within a launch budget.
+- **Model**: defaults to `claude-sonnet-5` - the quality tier. It follows the house style spec
+  much more faithfully than Haiku and is a better judge of which sources to trust, which is the
+  whole job here. `-Model claude-haiku-4-5` cuts cost at the price of writing quality;
+  `-Model claude-opus-4-8` buys maximum capability at roughly 2.5x Sonnet's token rate.
+- **Cost**: two parts, and the search fee is the one people forget.
+  - **Web search: $10 per 1,000 searches.** With `max_uses: 6` across 55 countries that is up to
+    330 searches, so **about $3.30 per run** - charged the same whatever model you use.
+  - **Tokens**: search results come back as input tokens, so input dominates. On Sonnet 5
+    (`$3/$15` per Mtok; introductory `$2/$10` through 2026-08-31) budget roughly **$10-15 per
+    full run**, or **$300-450/month** on a daily cron. Haiku 4.5 (`$1/$5`) runs about half that.
+  - These are estimates with real uncertainty on the input side. **Check
+    <https://console.anthropic.com/settings/usage> after your first run for the actual number**
+    before committing to a daily schedule.
+- **Cheaper without gutting quality**: run every other day (`0 5 */2 * *`) rather than dropping
+  to a weaker model - stories stay under 48h old and the bill halves.
 
 ## Daily auto-update (GitHub Actions - already wired)
 

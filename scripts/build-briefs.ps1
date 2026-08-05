@@ -6,8 +6,11 @@
   with real source citations. Writes data/briefs.js. No RSS aggregator needed.
 .DESCRIPTION
   Requires env var ANTHROPIC_API_KEY. Runs daily in GitHub Actions.
-  Default model is the cheap/fast tier (Haiku 4.5); pass -Model claude-sonnet-4-6 for
-  higher writing/search quality. Web search adds a small per-search fee on top of tokens.
+  Default model is Claude Sonnet 5: the quality tier for this job - it follows the house
+  style spec far more faithfully than Haiku and judges source quality better, which is the
+  whole product here. Pass -Model claude-haiku-4-5 to cut cost at the price of writing
+  quality, or -Model claude-opus-4-8 for maximum capability at ~2.5x Sonnet's token rate.
+  Web search is billed separately at $10 per 1,000 searches, regardless of model.
 .USAGE
   $env:ANTHROPIC_API_KEY='sk-ant-...'; powershell -File scripts/build-briefs.ps1
   powershell -File scripts/build-briefs.ps1 -Only ng,ke,za     # limit (for testing)
@@ -15,7 +18,7 @@
 param(
   [string[]]$Only,
   [int]$PerCountry = 8,
-  [string]$Model = 'claude-haiku-4-5'
+  [string]$Model = 'claude-sonnet-5'
 )
 
 $ErrorActionPreference = 'Stop'
