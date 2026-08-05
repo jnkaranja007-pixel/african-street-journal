@@ -3,7 +3,7 @@
 .SYNOPSIS
   Refreshes the World Bank economy layer (GDP, growth, 2011+ GDP series) for all 55
   countries, patches it into data/app-data.js, then re-runs split-app-data.ps1 so
-  data/app-core.js picks it up. No API key needed — the World Bank API is open.
+  data/app-core.js picks it up. No API key needed - the World Bank API is open.
 .USAGE
   powershell -ExecutionPolicy Bypass -File scripts/build-economy.ps1
 .NOTES

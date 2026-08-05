@@ -2,7 +2,7 @@ name: Update AI Desk
 
 # Each morning, Claude searches the web for the top stories per country and writes
 # data/briefs.js (ranked, neutral, with source citations), then commits it.
-# Runs in the cloud — no PC needed. Also triggerable by hand from the Actions tab.
+# Runs in the cloud - no PC needed. Also triggerable by hand from the Actions tab.
 
 on:
   schedule:
@@ -48,7 +48,7 @@ jobs:
           # briefs-state.json MUST be committed: it is the merge memory that lets a country
           # keep its last good briefs when a daily run partially fails.
           git add data/briefs.js data/briefs-state.json data/archive
-          # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError — a grouping
+          # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError - a grouping
           # expression cannot contain a statement separator. Run the check, then read
           # the exit code on its own line.
           git diff --staged --quiet

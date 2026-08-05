@@ -1,0 +1,64 @@
+name: Checks
+
+# Catches malformed PowerShell inside workflow `run:` blocks before it can reach
+# main. Run 30972262339 lost a completed 55-country desk run to a ParserError in
+# the commit step - the API work was already paid for by the time it surfaced.
+
+on:
+  push:
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/**'
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/**'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  syntax:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Workflow PowerShell parses
+        shell: pwsh
+        run: ./scripts/check-workflows.ps1
+
+      - name: Pipeline scripts parse
+        shell: pwsh
+        run: |
+          $failed = 0
+          foreach ($f in Get-ChildItem scripts -Filter '*.ps1') {
+            $errors = $null
+            [void][System.Management.Automation.PSParser]::Tokenize(
+              (Get-Content $f.FullName -Raw), [ref]$errors)
+            if ($errors.Count) {
+              $failed++
+              Write-Host "FAIL $($f.Name): line $($errors[0].Token.StartLine) $($errors[0].Message)"
+            } else {
+              Write-Host "OK   $($f.Name)"
+            }
+          }
+          if ($failed) { exit 1 }
+
+      - name: Scripts and workflows are ASCII-only
+        shell: pwsh
+        run: |
+          # Windows PowerShell 5.1 reads a UTF-8 file with no BOM as ANSI, which
+          # mangles multi-byte characters and can break string parsing. Keep build
+          # files ASCII; non-ASCII belongs in content files, not tooling.
+          $bad = 0
+          foreach ($f in @(Get-ChildItem scripts -Filter '*.ps1') + @(Get-ChildItem .github/workflows -Filter '*.yml')) {
+            $hits = [regex]::Matches([IO.File]::ReadAllText($f.FullName), '[^\x00-\x7F]')
+            if ($hits.Count) {
+              $bad++
+              Write-Host "FAIL $($f.Name): $($hits.Count) non-ASCII char(s), first is U+$('{0:X4}' -f [int][char]$hits[0].Value)"
+            }
+          }
+          if ($bad) { Write-Host 'Replace with ASCII equivalents (em dash -> hyphen).'; exit 1 }
+          Write-Host 'OK - all build files are ASCII'

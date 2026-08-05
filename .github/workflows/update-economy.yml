@@ -3,7 +3,7 @@ name: Update Economy Layer
 # Monthly: pull fresh World Bank GDP/growth/series for all 55 countries, patch the
 # compiled data bundle, regenerate app-core.js + country chunks, commit. The script
 # aborts (exit 1) if the API returns fewer than 40 countries, so a flaky month can
-# never wipe good data. No API key needed — the World Bank API is open.
+# never wipe good data. No API key needed - the World Bank API is open.
 
 on:
   schedule:
