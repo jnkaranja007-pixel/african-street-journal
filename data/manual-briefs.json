@@ -1,0 +1,205 @@
+{
+  "et": [
+    {
+      "headline": "Fighting erupts in western Tigray as federal forces and TPLF trade blame",
+      "body": "Ethiopian federal forces and the TPLF clashed on 1 August near the Sudanese border, the most serious breach of the 2022 peace deal since it was signed, Al Jazeera reported. Tigray authorities accused federal troops of opening an offensive against their positions; Addis Ababa has not formally responded, though Minister Abraham Belay blamed the TPLF for triggering the fighting. Hundreds of civilians have fled into Sudan.",
+      "why": "A return to fighting in Tigray puts aid corridors, cross-border movement and the 2022 settlement itself at risk.",
+      "topic": "Politics",
+      "sources": [
+        { "name": "Al Jazeera", "url": "https://www.aljazeera.com/news/2026/8/1/fighting-breaks-out-in-western-tigray-as-ethiopia-and-tplf-trade-blame" }
+      ]
+    },
+    {
+      "headline": "Amnesty warns Tigray civilians face renewed rights violations as violence returns",
+      "body": "Amnesty International said residents of Tigray are at renewed risk of human rights violations as violence returns to the region. The warning follows the resumption of fighting between federal forces and the TPLF.",
+      "why": "Rights monitoring shapes donor pressure and the protection civilians can expect if fighting widens.",
+      "topic": "News",
+      "sources": [
+        { "name": "Amnesty International", "url": "https://www.amnesty.org/en/latest/news/2026/08/ethiopia-tigray-residents-at-renewed-risk-of-human-rights-violations-as-violence-returns-to-the-region/" }
+      ]
+    },
+    {
+      "headline": "Ethiopia builds $12bn Bishoftu airport to handle 110 million passengers a year",
+      "body": "Ethiopia is constructing the Bishoftu International Airport at a cost of more than $12 billion, CNN reported. The facility is designed for 110 million passengers and about 4 million tonnes of cargo a year, expanding Ethiopian Airlines and the country's role as a continental transport hub.",
+      "why": "Airport capacity sets the ceiling on Ethiopia's air freight, tourism and transit-hub ambitions for a decade.",
+      "topic": "Business",
+      "sources": [
+        { "name": "CNN", "url": "https://www.cnn.com/2026/08/03/world/video/ethiopia-connecting-africa-trade-intl-spc" }
+      ]
+    }
+  ],
+  "gh": [
+    {
+      "headline": "Bank of Ghana to sell up to $1bn in August as cedi faces fresh dollar demand",
+      "body": "The Bank of Ghana will inject up to $1 billion into the foreign exchange market in August through its Forex Intermediation Programme, MyJoyOnline reported. Dollar auctions will run every two weeks and are open to licensed commercial banks. Energy firms buying crude, refined products and settling arrears with power producers are among the main sources of demand.",
+      "why": "Central bank dollar sales set the rate importers pay, feeding through to fuel and food prices.",
+      "topic": "Business",
+      "sources": [
+        { "name": "MyJoyOnline", "url": "https://www.myjoyonline.com/bog-to-sell-up-to-1bn-in-august-as-cedi-faces-fresh-dollar-demand-pressure/" },
+        { "name": "The Ghana Report", "url": "https://theghanareport.com/business/bog-to-sell-up-to-1bn-in-august-as-cedi-faces-fresh-dollar-demand-pressure/" }
+      ]
+    },
+    {
+      "headline": "Cedi sells at GHS12.30 on the forex market, GHS11.68 interbank",
+      "body": "The cedi traded at an average buying rate of GHS11.58 and a selling rate of GHS12.12 on 3 August, Modern Ghana reported, with the forex market rate at GHS12.30 against GHS11.68 on the Bank of Ghana interbank window.",
+      "why": "The gap between interbank and street rates is what importers and remittance recipients actually pay.",
+      "topic": "Business",
+      "sources": [
+        { "name": "Modern Ghana", "url": "https://www.modernghana.com/news/1515955/august-3-cedi-sells-at-ghs1230-on-forex-market.html" }
+      ]
+    },
+    {
+      "headline": "Cedi has shed 10.61% in 2026 as dollar demand outstrips supply",
+      "body": "The cedi had depreciated cumulatively by 10.61% by the end of July, reversing a run that had made it one of Africa's stronger performers, according to reporting on Bank of Ghana figures. Dollar demand has persistently outstripped market supply through the year.",
+      "why": "A double-digit slide raises the local-currency cost of imported goods and dollar-denominated debt.",
+      "topic": "Business",
+      "sources": [
+        { "name": "YEN.com.gh", "url": "https://yen.com.gh/business-economy/money/308314-ghana-cedi-loses-889-2026-dollar-demand-outstrips-market-supply/" }
+      ]
+    },
+    {
+      "headline": "Ghana growth projected to slow to 4.8% in 2026 as inflation eases",
+      "body": "Ghana's economic growth is projected to slow to 4.8% in 2026 even as inflation continues to recover from earlier highs, FX Leaders reported.",
+      "why": "Slower growth alongside a weaker cedi narrows the room for wage gains and new hiring.",
+      "topic": "Business",
+      "sources": [
+        { "name": "FX Leaders", "url": "https://www.fxleaders.com/news/2026/06/01/ghana-2026-growth-slowdown-cedi-traders/" }
+      ]
+    }
+  ],
+  "cd": [
+    {
+      "headline": "M23 holds Goma and Bukavu as US-brokered peace deal stalls",
+      "body": "Rwanda-backed M23 rebels continue to hold Goma and Bukavu, seized in early 2025, despite a US-brokered peace agreement and continuing Qatar-mediated talks, the Council on Foreign Relations reported. Rwandan troops remain on the ground and key provisions of the deal are unimplemented.",
+      "why": "Control of Goma and Bukavu governs trade routes, mineral flows and whether displaced families can return.",
+      "topic": "Politics",
+      "sources": [
+        { "name": "Council on Foreign Relations", "url": "https://www.cfr.org/global-conflict-tracker/conflict/violence-democratic-republic-congo" }
+      ]
+    },
+    {
+      "headline": "More than seven million people displaced by eastern DRC conflict",
+      "body": "Over seven million people have been displaced by the conflict in eastern DRC, according to the Council on Foreign Relations, one of the largest displacement crises in the world.",
+      "why": "Displacement on this scale drives food demand, shelter needs and pressure on neighbouring borders.",
+      "topic": "News",
+      "sources": [
+        { "name": "Council on Foreign Relations", "url": "https://www.cfr.org/global-conflict-tracker/conflict/violence-democratic-republic-congo" }
+      ]
+    },
+    {
+      "headline": "Human Rights Watch reports surge in enforced disappearances around Kinshasa",
+      "body": "Congolese security forces have carried out numerous enforced disappearances in and around Kinshasa since March 2025, Human Rights Watch reported, saying the government has used the National Cyber Defence Council to arrest and detain political opponents on questionable grounds.",
+      "why": "Detention practices in the capital shape political risk for anyone organising or reporting there.",
+      "topic": "Politics",
+      "sources": [
+        { "name": "Human Rights Watch", "url": "https://www.hrw.org/news/2026/03/10/dr-congo-enforced-disappearances-surge-in-kinshasa" }
+      ]
+    },
+    {
+      "headline": "ADF attacks drive sharp rise in security incidents across Ituri and North Kivu",
+      "body": "An ISIS-affiliated armed group with roots in Uganda operating in Ituri and North Kivu carried out some of the region's deadliest attacks on civilians and accounted for a sharp rise in security incidents in mid-2026, the Council on Foreign Relations reported.",
+      "why": "Attack patterns in Ituri and North Kivu determine which roads and markets stay usable.",
+      "topic": "News",
+      "sources": [
+        { "name": "Council on Foreign Relations", "url": "https://www.cfr.org/global-conflict-tracker/conflict/violence-democratic-republic-congo" }
+      ]
+    }
+  ],
+  "tz": [
+    {
+      "headline": "Samia says economy grew 6% last year and projects 6.3% for 2026",
+      "body": "President Samia Suluhu Hassan said Tanzania maintained strong economic performance with growth of 6% last year, and projected expansion of 6.3% this year.",
+      "why": "Growth at this pace is the base case behind government revenue and hiring plans.",
+      "topic": "Business",
+      "sources": [
+        { "name": "Daily News Tanzania", "url": "https://dailynews.co.tz/dr-samia-opens-africa50-forum-insisting-on-visionary-strategies-that-improve-peoples-lives/" }
+      ]
+    },
+    {
+      "headline": "Tanzania targets $7,000 GDP per capita by 2050, up from $1,318",
+      "body": "Tanzania has set out a blueprint to grow its economy tenfold by 2050 and lift GDP per capita to $7,000 from $1,318, African Business reported, a path that would move it into upper-middle-income status.",
+      "why": "The 2050 target frames which sectors and infrastructure the state will back for a generation.",
+      "topic": "Business",
+      "sources": [
+        { "name": "African Business", "url": "https://african.business/2026/08/economy/can-tanzania-become-an-upper-middle-income-country" }
+      ]
+    },
+    {
+      "headline": "Russian agribusiness Betaren enters Tanzanian market after Samia's Moscow visit",
+      "body": "Russian companies including Betaren have begun entering the Tanzanian market following President Samia's three-day working visit to Russia in June, allAfrica reported. Sky Business and Investment Company has partnered with Betaren to distribute hybrid seeds, fertilisers and crop protection products to farmers.",
+      "why": "New input suppliers affect seed and fertiliser prices for farmers in the coming season.",
+      "topic": "Agriculture",
+      "sources": [
+        { "name": "allAfrica", "url": "https://allafrica.com/stories/202608040268.html" }
+      ]
+    },
+    {
+      "headline": "Tanzania to co-host AFCON 2027 with Kenya and Uganda",
+      "body": "Tanzania will host AFCON Pamoja 2027 alongside Kenya and Uganda, President Samia said, the first Africa Cup of Nations to be held in East Africa and the first jointly hosted by three countries.",
+      "why": "Tournament hosting drives hotel, transport and stadium spending across the three countries.",
+      "topic": "Sport",
+      "sources": [
+        { "name": "The Citizen", "url": "https://www.thecitizen.co.tz/tanzania/news/national/samia-tanzania-open-for-tourism-investment-partnerships-5547546" }
+      ]
+    }
+  ],
+  "ma": [
+    {
+      "headline": "Morocco prepares to loosen the dirham peg and move to a flexible exchange rate",
+      "body": "Morocco is preparing to shift the dirham from its peg to a euro and dollar basket toward a flexible exchange rate regime, Morocco World News reported. The authorities have framed the change as a way to strengthen economic resilience, attract foreign investment and integrate further into global financial markets.",
+      "why": "A floating dirham changes import costs, remittance value and hedging for every business holding foreign currency.",
+      "topic": "Business",
+      "sources": [
+        { "name": "Morocco World News", "url": "https://www.moroccoworldnews.com/2024/12/166631/floating-the-moroccan-dirham-challenges-and-opportunities-in-2026/" },
+        { "name": "Daba Finance", "url": "https://www.dabafinance.com/en/news/morocco-to-loosen-dirham-peg-in-2026-in-currency-reforms" }
+      ]
+    },
+    {
+      "headline": "Moroccan economy projected to grow 5% in 2026 with inflation near 1.3%",
+      "body": "Morocco's economy is projected to expand by about 5% in 2026, up from an estimated 4.6% in 2025, with inflation running near 1.3%.",
+      "why": "Low inflation alongside faster growth is a favourable backdrop for borrowing and investment.",
+      "topic": "Business",
+      "sources": [
+        { "name": "Economy of Morocco (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Economy_of_Morocco" }
+      ]
+    }
+  ],
+  "ug": [
+    {
+      "headline": "Museveni wins seventh term with 71.65% of valid votes",
+      "body": "President Yoweri Museveni won the presidential election held on 15 January 2026 with 7,946,772 votes, or 71.65% of valid votes cast, extending his leadership to a seventh term, allAfrica reported.",
+      "why": "Continuity at the top sets the policy direction on land, oil revenue and public spending.",
+      "topic": "Politics",
+      "sources": [
+        { "name": "allAfrica", "url": "https://allafrica.com/stories/202601180054.html" }
+      ]
+    },
+    {
+      "headline": "Uganda targets first oil from Lake Albert late in 2026 as EACOP advances",
+      "body": "Uganda is preparing for first oil production and revenues in 2026-27, with production at the Lake Albert basin scheduled for late 2026 and construction continuing on the East African Crude Oil Pipeline to the Tanzanian coast, despite financing difficulties and environmental objections.",
+      "why": "First oil would reshape government revenue, the shilling and the jobs available around Hoima.",
+      "topic": "Business",
+      "sources": [
+        { "name": "Chatham House", "url": "https://www.chathamhouse.org/2026/01/uganda-election-musevenis-expected-win-will-deepen-succession-and-gen-z-challenges" }
+      ]
+    },
+    {
+      "headline": "Youth unemployment at 43% as 90,000 of 700,000 graduates find formal work",
+      "body": "Uganda's overall unemployment rate stands at 12.6% while youth unemployment is 43%, with only about 90,000 of the roughly 700,000 graduates each year finding formal-sector employment. Unemployment and corruption rank as the leading concerns among voters.",
+      "why": "The graduate-to-job gap is the central pressure behind migration, informal work and political discontent.",
+      "topic": "Business",
+      "sources": [
+        { "name": "allAfrica", "url": "https://allafrica.com/stories/202601260257.html" }
+      ]
+    },
+    {
+      "headline": "Museveni sets out five-year agenda amid crackdown on opposition",
+      "body": "Museveni has outlined priorities for his new term including safeguarding peace and security, eradicating household poverty, strengthening national unity, enforcing discipline in governance and supporting wealth creators, allAfrica reported, against a backdrop of a deadly crackdown on opposition figures.",
+      "why": "The stated agenda signals where budget and enforcement attention will fall over five years.",
+      "topic": "Politics",
+      "sources": [
+        { "name": "allAfrica", "url": "https://allafrica.com/stories/202601260257.html" }
+      ]
+    }
+  ]
+}
