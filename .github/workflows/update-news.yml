@@ -7,7 +7,12 @@ name: Update AI Desk
 on:
   schedule:
     - cron: '0 5 * * *'   # 05:00 UTC daily (~08:00 EAT)
-  workflow_dispatch: {}    # manual "Run workflow" button
+  workflow_dispatch:       # manual "Run workflow" button
+    inputs:
+      only:
+        description: 'Limit to these ISO-2 codes, e.g. ng,ke,za. Empty runs all 55. Use a short list to smoke-test the pipeline for pennies before a full run.'
+        required: false
+        default: ''
 
 permissions:
   contents: write          # allow the action to commit briefs.js back to the repo
@@ -28,8 +33,18 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          if ($env:ANTHROPIC_API_KEY) { ./scripts/build-briefs.ps1 }
-          else { Write-Host 'ANTHROPIC_API_KEY secret not set - add it under Settings > Secrets and variables > Actions.'; exit 0 }
+          if (-not $env:ANTHROPIC_API_KEY) {
+            Write-Host 'ANTHROPIC_API_KEY secret not set - add it under Settings > Secrets and variables > Actions.'
+            exit 0
+          }
+          $only = '${{ github.event.inputs.only }}'
+          if ($only.Trim()) {
+            $codes = $only -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+            Write-Host "Limited run: $($codes -join ', ')"
+            ./scripts/build-briefs.ps1 -Only $codes
+          } else {
+            ./scripts/build-briefs.ps1
+          }
 
       - name: Validate before publishing
         shell: pwsh
