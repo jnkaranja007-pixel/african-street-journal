@@ -1,0 +1,165 @@
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+  Generate a crawlable HTML page per country, plus sitemap.xml and robots.txt.
+.DESCRIPTION
+  The app routes on hash fragments (#/ke). Search engines discard everything after
+  the '#', so the entire journal is one URL to a crawler, and that URL is a near-empty
+  shell because all content renders client-side from JS. Every country is invisible.
+
+  This writes a real page per country at /<iso>/ containing the actual brief text as
+  HTML, with its own title, description and canonical link. Crawlers get text; readers
+  get a link through to the interactive dossier. The app itself is untouched.
+
+  Re-run after every desk run so the static pages track the briefs.
+.USAGE
+  powershell -ExecutionPolicy Bypass -File scripts/build-static-pages.ps1
+  powershell -ExecutionPolicy Bypass -File scripts/build-static-pages.ps1 -BaseUrl https://africanstreetjournal.com
+.NOTES
+  -BaseUrl must be the live origin with no trailing slash. It is the one thing to
+  change on the day a custom domain goes live.
+#>
+param(
+  [string]$BaseUrl = 'https://jnkaranja007-pixel.github.io/african-street-journal'
+)
+
+$ErrorActionPreference = 'Stop'
+$root = Split-Path $PSScriptRoot -Parent
+$BaseUrl = $BaseUrl.TrimEnd('/')
+
+# --- country metadata out of app.js -----------------------------------------
+$appJs = [IO.File]::ReadAllText((Join-Path $root 'app.js'))
+$info = @{}
+foreach ($m in [regex]::Matches($appJs, "(?m)^\s{2}([a-z]{2}):\s*\{\s*name:\s*'([^']*)',\s*region:\s*'([^']*)',\s*capital:\s*'([^']*)'")) {
+  $info[$m.Groups[1].Value] = @{
+    name = $m.Groups[2].Value; region = $m.Groups[3].Value; capital = $m.Groups[4].Value
+  }
+}
+if ($info.Count -lt 40) { Write-Host "[static] only parsed $($info.Count) countries from app.js" -ForegroundColor Red; exit 1 }
+
+# --- briefs -----------------------------------------------------------------
+$raw = [IO.File]::ReadAllText((Join-Path $root 'data\briefs.js'))
+$m = [regex]::Match($raw, 'byCountry:\s*(\{[\s\S]*?\}),\s*markets:')
+if (-not $m.Success) { Write-Host '[static] cannot read byCountry' -ForegroundColor Red; exit 1 }
+$byCountry = $m.Groups[1].Value | ConvertFrom-Json
+$dm = [regex]::Match($raw, 'dates:\s*(\{[\s\S]*?\}),\s*byCountry:')
+$dates = if ($dm.Success) { $dm.Groups[1].Value | ConvertFrom-Json } else { $null }
+
+function Esc($s) {
+  if ($null -eq $s) { return '' }
+  ([string]$s).Replace('&','&amp;').Replace('<','&lt;').Replace('>','&gt;').Replace('"','&quot;')
+}
+
+$css = @'
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#131313;color:#e8e6e3;font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;padding:0 20px}
+.wrap{max-width:760px;margin:0 auto;padding:48px 0 80px}
+a{color:#66bb6a}
+.masthead{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.24em;text-transform:uppercase;color:#8a847b;padding-bottom:28px;border-bottom:1px solid #2a2a2a}
+.masthead a{color:#8a847b;text-decoration:none}
+h1{font:700 clamp(34px,7vw,56px)/1 Georgia,'Times New Roman',serif;margin:34px 0 10px;letter-spacing:-.02em}
+.meta{font:700 11px/1.7 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a847b;margin-bottom:8px}
+.open{display:inline-block;margin:18px 0 6px;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid #4caf50;padding-bottom:5px}
+article{padding:26px 0;border-bottom:1px solid #232323}
+h2{font:600 clamp(20px,3.2vw,26px)/1.25 Georgia,'Times New Roman',serif;margin:0 0 12px;color:#f2f0ed}
+.kicker{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#66bb6a;margin-bottom:9px}
+p{margin:0 0 12px;color:#c9c5c0}
+.why{color:#8a847b;font-size:14.5px}
+.why b{color:#e8e6e3;font-weight:600;margin-right:8px}
+.src{font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase}
+.src a{margin-right:14px;text-decoration:none;border-bottom:1px solid #2f5c33}
+footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:#66615b}
+'@
+
+$built = 0
+$urls = New-Object System.Collections.Generic.List[string]
+$urls.Add($BaseUrl + '/')
+
+foreach ($prop in $byCountry.PSObject.Properties) {
+  $code = $prop.Name
+  $briefs = @($prop.Value | Where-Object { $_.headline -and $_.body })
+  if (-not $briefs.Count) { continue }
+  $meta = $info[$code]
+  if (-not $meta) { continue }
+
+  $name = $meta.name
+  $when = if ($dates -and $dates.PSObject.Properties[$code]) { ([string]$dates.$code).Substring(0,10) } else { '' }
+  $lead = ([string]$briefs[0].headline)
+  $desc = "$name news: $lead. Sourced daily briefs, market data and country profile from The African Street Journal."
+  if ($desc.Length -gt 300) { $desc = $desc.Substring(0,297) + '...' }
+
+  $body = New-Object System.Text.StringBuilder
+  foreach ($b in $briefs) {
+    [void]$body.Append("<article>`n")
+    [void]$body.Append("<div class=""kicker"">$(Esc $b.topic)$(if($when){" &middot; $when"})</div>`n")
+    [void]$body.Append("<h2>$(Esc $b.headline)</h2>`n")
+    [void]$body.Append("<p>$(Esc $b.body)</p>`n")
+    if ($b.why) { [void]$body.Append("<p class=""why""><b>Why it matters</b>$(Esc $b.why)</p>`n") }
+    $srcs = @($b.sources | Where-Object { $_ -and $_.url -and $_.url -match '^https?://' })
+    if ($srcs.Count) {
+      [void]$body.Append('<div class="src">')
+      foreach ($s in $srcs) { [void]$body.Append("<a href=""$(Esc $s.url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $s.name)</a>") }
+      [void]$body.Append("</div>`n")
+    }
+    [void]$body.Append("</article>`n")
+  }
+
+  $canonical = "$BaseUrl/$code/"
+  $html = @"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>$(Esc $name) news and country file | The African Street Journal</title>
+<meta name="description" content="$(Esc $desc)">
+<link rel="canonical" href="$canonical">
+<meta name="theme-color" content="#131313">
+<meta property="og:site_name" content="The African Street Journal">
+<meta property="og:title" content="$(Esc $name) news and country file">
+<meta property="og:description" content="$(Esc $desc)">
+<meta property="og:type" content="article">
+<meta property="og:url" content="$canonical">
+<meta property="og:image" content="$BaseUrl/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="$BaseUrl/og-image.png">
+<style>$css</style>
+</head>
+<body>
+<div class="wrap">
+<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a></div>
+<div class="meta">$(Esc $meta.region)$(if($meta.capital){" &middot; Capital $(Esc $meta.capital)"})</div>
+<h1>$(Esc $name)</h1>
+<div class="meta">$($briefs.Count) briefs$(if($when){" &middot; updated $when"})</div>
+<a class="open" href="$BaseUrl/#/$code">Open the interactive $(Esc $name) dossier &rarr;</a>
+$($body.ToString())
+<footer>The African Street Journal &middot; from the streets, for the streets<br>Every brief carries its sources. Figures are labelled with their origin and date.</footer>
+</div>
+</body>
+</html>
+"@
+
+  $dir = Join-Path $root $code
+  if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir | Out-Null }
+  [IO.File]::WriteAllText((Join-Path $dir 'index.html'), $html, (New-Object Text.UTF8Encoding($false)))
+  $urls.Add($canonical)
+  $built++
+}
+
+# --- sitemap ----------------------------------------------------------------
+$today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+$sm = New-Object System.Text.StringBuilder
+[void]$sm.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
+[void]$sm.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+foreach ($u in $urls) {
+  [void]$sm.AppendLine("  <url><loc>$u</loc><lastmod>$today</lastmod><changefreq>daily</changefreq></url>")
+}
+[void]$sm.AppendLine('</urlset>')
+[IO.File]::WriteAllText((Join-Path $root 'sitemap.xml'), $sm.ToString(), (New-Object Text.UTF8Encoding($false)))
+
+# --- robots -----------------------------------------------------------------
+$robots = "User-agent: *`nAllow: /`n`nSitemap: $BaseUrl/sitemap.xml`n"
+[IO.File]::WriteAllText((Join-Path $root 'robots.txt'), $robots, (New-Object Text.UTF8Encoding($false)))
+
+Write-Host "[static] built $built country pages, sitemap with $($urls.Count) URLs, robots.txt" -ForegroundColor Green
+Write-Host "[static] base URL: $BaseUrl" -ForegroundColor DarkGray

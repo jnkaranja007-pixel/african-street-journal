@@ -64,6 +64,16 @@ jobs:
           if (Test-Path data/briefs.js) { ./scripts/audit-briefs.ps1 -CheckLinks -Worst 8 }
           else { Write-Host 'No briefs.js produced; nothing to audit.' }
 
+      - name: Rebuild crawlable pages and sitemap
+        shell: pwsh
+        run: |
+          # The app routes on hash fragments, which crawlers discard, so these static
+          # pages are the only version of the journal a search engine can read. They
+          # must be regenerated whenever the briefs change or they go stale.
+          # Change -BaseUrl here on the day a custom domain goes live.
+          if (Test-Path data/briefs.js) { ./scripts/build-static-pages.ps1 }
+          else { Write-Host 'No briefs.js produced; nothing to build.' }
+
       - name: Commit refreshed briefs
         shell: pwsh
         run: |
@@ -72,7 +82,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # briefs-state.json MUST be committed: it is the merge memory that lets a country
           # keep its last good briefs when a daily run partially fails.
-          git add data/briefs.js data/briefs-state.json data/archive
+          git add data/briefs.js data/briefs-state.json data/archive sitemap.xml robots.txt
+          # Country page directories: two-letter dirs holding a generated index.html.
+          Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object { git add "$($_.Name)/index.html" }
           # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError - a grouping
           # expression cannot contain a statement separator. Run the check, then read
           # the exit code on its own line.
