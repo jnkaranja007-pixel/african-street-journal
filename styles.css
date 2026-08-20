@@ -36,7 +36,14 @@ main{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;align-ite
 .pop-number{font:700 clamp(34px,4.9vw,56px)/0.98 var(--serif);color:var(--green);letter-spacing:0.02em;font-variant-numeric:tabular-nums}
 .pop-label{font:10px/1 var(--mono);letter-spacing:0.22em;color:var(--text-dim);text-transform:uppercase;margin-top:4px}
 
-.stage{position:relative;width:min(86vw,50svh,760px);height:auto;aspect-ratio:1000/1001;flex:none;min-height:0;margin:clamp(1px,0.25svh,5px) auto 1px}
+/* The stage must stay exactly the size of the canvas: the tooltip is absolutely
+   positioned inside it and its coordinates come from canvas.getBoundingClientRect(),
+   so any padding here would offset every tooltip. That rules out centring a smaller
+   canvas in a larger box - the stage itself has to be the right size.
+   Sizing is width-driven with a height budget: 50svh left ~80px of dead space below
+   the map at 1280x800 and far more on tall screens. The subtracted constant is the
+   header stack (masthead, rule, title, counter) plus the ticker. */
+.stage{position:relative;width:min(92vw,calc(100svh - 350px),1040px);height:auto;aspect-ratio:1000/1001;flex:none;min-height:0;margin:clamp(1px,0.25svh,5px) auto 1px}
 canvas{width:100%;height:100%;display:block}
 #map:focus-visible{outline:2px solid var(--green-bright);outline-offset:6px}
 #tooltip{position:absolute;pointer-events:none;padding:7px 14px;background:rgba(0,0,0,0.88);color:#fff;border-radius:4px;font:600 13px/1.2 var(--sans);white-space:nowrap;opacity:0;transform:translate(-50%,-140%);transition:opacity 100ms;z-index:2;border:1px solid rgba(76,175,80,0.3)}
