@@ -1,0 +1,76 @@
+name: Verify news sources
+
+# The source registry is the desk's foundation and it rots quietly: papers move CMS,
+# drop RSS, or let a domain lapse. botswanaguardian.co.bw now serves a betting site.
+# Without a scheduled check the nightly desk keeps reporting success while countries
+# go dark one by one.
+#
+# Runs weekly, repairs what it can, and fails loudly if any country is left with no
+# usable source - that is the one state the journal cannot publish through.
+
+on:
+  schedule:
+    - cron: '0 4 * * 0'   # Sundays 04:00 UTC, an hour before the desk run
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Limit to these ISO-2 codes, e.g. ng,ke,za. Empty checks all 55.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verify-sources
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check and repair feeds
+        id: check
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          # continue-on-error so the repaired registry still gets committed even when a
+          # country ends up empty. The job is failed explicitly at the end instead, so
+          # the fix is not lost along with the alert.
+          $only = '${{ github.event.inputs.only }}'
+          if ($only.Trim()) { ./scripts/check-sources.ps1 -Fix -Only $only.Trim() }
+          else { ./scripts/check-sources.ps1 -Fix }
+
+      - name: Commit registry updates
+        shell: pwsh
+        run: |
+          git config user.name  "asj-news-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/sources.json
+          git diff --staged --quiet
+          if ($LASTEXITCODE -eq 0) { Write-Host 'Registry unchanged.'; exit 0 }
+          $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+          git commit -m "chore(sources): weekly feed verification ($stamp)"
+          if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            git push
+            if ($LASTEXITCODE -eq 0) { Write-Host 'Pushed registry updates.'; exit 0 }
+            Write-Host "Push rejected (attempt $attempt) - rebasing and retrying."
+            git pull --rebase origin main
+            if ($LASTEXITCODE -ne 0) { Write-Host 'Rebase failed - resolve by hand.'; exit 1 }
+          }
+          Write-Host 'Push failed after 3 attempts.'
+          exit 1
+
+      - name: Fail if any country lost all its sources
+        if: steps.check.outcome == 'failure'
+        shell: pwsh
+        run: |
+          Write-Host 'check-sources reported a country with no usable feed.'
+          Write-Host 'Read the "Check and repair feeds" step above for the country list,'
+          Write-Host 'then register a replacement outlet in data/sources.json.'
+          exit 1

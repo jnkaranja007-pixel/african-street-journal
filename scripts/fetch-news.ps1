@@ -256,7 +256,6 @@ foreach ($code in $codes) {
       $items = Read-Feed $s.feed
       if ($items.Count) { $liveSources++ }
       foreach ($it in $items) {
-        if ($it.published -and $it.published -lt $cutoff) { continue }
         $pool.Add([pscustomobject]@{
           title     = $it.title
           url       = $it.url
@@ -273,13 +272,31 @@ foreach ($code in $codes) {
   }
 
   if (-not $pool.Count) {
-    Write-Host ("  {0}  {1,-26} nothing in the last $Days days" -f $code, $name) -ForegroundColor DarkYellow
+    Write-Host ("  {0}  {1,-26} every feed returned empty" -f $code, $name) -ForegroundColor DarkYellow
+    continue
+  }
+
+  # --- freshness window, widened for quiet countries -------------------------
+  # Lesotho has one working feed and filed nothing inside two days, so its page went
+  # blank. A country with a thin press should run slightly older news rather than
+  # nothing; recency is still scored below, so fresh items keep winning where they exist.
+  $fresh = @($pool | Where-Object { -not $_.published -or $_.published -ge $cutoff })
+  if ($fresh.Count -lt 3) {
+    $wide = $now.AddDays(-($Days * 4))
+    $widened = @($pool | Where-Object { -not $_.published -or $_.published -ge $wide })
+    if ($widened.Count -gt $fresh.Count) {
+      Write-Host ("      {0}: only {1} item(s) in {2}d, widening to {3}d" -f $code, $fresh.Count, $Days, ($Days * 4)) -ForegroundColor DarkGray
+      $fresh = $widened
+    }
+  }
+  if (-not $fresh.Count) {
+    Write-Host ("  {0}  {1,-26} nothing published recently" -f $code, $name) -ForegroundColor DarkYellow
     continue
   }
 
   # --- cluster the same story across outlets --------------------------------
   $clusters = New-Object System.Collections.Generic.List[object]
-  foreach ($item in $pool) {
+  foreach ($item in $fresh) {
     $sig = Get-Signature $item.title
     if ($sig.Count -lt 2) { continue }
     $placed = $false
@@ -327,13 +344,27 @@ foreach ($code in $codes) {
     $score += [Math]::Min($hard, 3) * 1.2
     if ($soft) { $score -= 3.0 }
 
+    # Carry the corroborating outlets' own URLs, not just their names. A story three
+    # papers ran should be published with three citations: it is the best-evidenced
+    # item of the day, and dropping the extras made it look single-sourced to the audit.
+    $others = New-Object System.Collections.Generic.List[object]
+    $seenOutlet = @{}
+    $seenOutlet[$best.source] = $true
+    foreach ($m in @($c.members | Sort-Object -Property @{ Expression = { $_.tier } })) {
+      if ($seenOutlet.ContainsKey($m.source)) { continue }
+      if ($m.url -notmatch '^https?://') { continue }
+      $seenOutlet[$m.source] = $true
+      $others.Add([pscustomobject]@{ name = $m.source; url = $m.url })
+      if ($others.Count -ge 2) { break }
+    }
+
     $scored.Add([pscustomobject]@{
       title         = $best.title
       url           = $best.url
       summary       = $best.summary
       source        = $best.source
       corroboration = $outlets.Count
-      alsoIn        = @($outlets | Where-Object { $_ -ne $best.source } | Select-Object -First 3)
+      alsoSources   = $others.ToArray()
       published     = if ($best.published) { $best.published.ToString('yyyy-MM-ddTHH:mm:ssZ') } else { '' }
       score         = [Math]::Round($score, 2)
     })

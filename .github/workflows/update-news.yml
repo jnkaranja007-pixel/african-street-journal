@@ -1,21 +1,25 @@
 name: Update AI Desk
 
-# Each morning, Claude searches the web for the top stories per country and writes
-# data/briefs.js (ranked, neutral, with source citations), then commits it.
-# Runs in the cloud - no PC needed. Also triggerable by hand from the Actions tab.
+# Each morning the desk reads ~150 verified African news feeds, clusters the same story
+# across outlets, ranks on corroboration, and has a cheap model rewrite the top items
+# into house style. Runs in the cloud - no PC needed. Also triggerable by hand.
+#
+# The model never sees a URL. It is handed numbered items and returns an index; the
+# citation is attached from the feed afterwards, so a fabricated source is structurally
+# impossible rather than something the audit has to catch.
 
 on:
   schedule:
     - cron: '0 5 * * *'   # 05:00 UTC daily (~08:00 EAT)
-  workflow_dispatch:       # manual "Run workflow" button
+  workflow_dispatch:
     inputs:
       only:
-        description: 'Limit to these ISO-2 codes, e.g. ng,ke,za. Empty runs all 55. Use a short list to smoke-test the pipeline for pennies before a full run.'
+        description: 'Limit to these ISO-2 codes, e.g. ng,ke,za. Empty runs all 55.'
         required: false
         default: ''
 
 permissions:
-  contents: write          # allow the action to commit briefs.js back to the repo
+  contents: write
 
 concurrency:
   group: update-ai-desk
@@ -23,67 +27,71 @@ concurrency:
 
 jobs:
   refresh:
-    runs-on: windows-latest   # matches the local dev env (curl.exe + PowerShell)
+    runs-on: windows-latest
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build AI Desk briefs (web-searched, ranked)
+      - name: Gather and rank today's stories
+        shell: pwsh
+        run: |
+          # No API key needed for this step. Feeds are public RSS, spread across ~200
+          # domains so no single host sees more than a handful of requests.
+          $only = '${{ github.event.inputs.only }}'
+          if ($only.Trim()) { ./scripts/fetch-news.ps1 -Only $only.Trim() }
+          else { ./scripts/fetch-news.ps1 }
+
+      - name: Write briefs
         shell: pwsh
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          if (-not $env:ANTHROPIC_API_KEY) {
-            Write-Host 'ANTHROPIC_API_KEY secret not set - add it under Settings > Secrets and variables > Actions.'
-            exit 0
+          if (-not $env:OPENROUTER_API_KEY) {
+            # Failing loudly on purpose. Exiting 0 here would let the journal quietly
+            # go stale for weeks with every run reporting success.
+            Write-Host 'OPENROUTER_API_KEY secret is not set.'
+            Write-Host 'Add it with: gh secret set OPENROUTER_API_KEY'
+            exit 1
           }
           $only = '${{ github.event.inputs.only }}'
-          if ($only.Trim()) {
-            $codes = $only -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-            Write-Host "Limited run: $($codes -join ', ')"
-            ./scripts/build-briefs.ps1 -Only $codes
-          } else {
-            ./scripts/build-briefs.ps1
-          }
+          if ($only.Trim()) { ./scripts/write-briefs.ps1 -Only $only.Trim() -OutFile data/auto-briefs.json }
+          else { ./scripts/write-briefs.ps1 -OutFile data/auto-briefs.json }
+
+      - name: Merge into the journal
+        shell: pwsh
+        run: |
+          # add-briefs writes BOTH data/briefs.js and data/briefs-state.json. The state
+          # file is the merge memory that lets a country keep its last good briefs when
+          # a run covers only part of the map.
+          ./scripts/add-briefs.ps1 -InFile data/auto-briefs.json
 
       - name: Validate before publishing
         shell: pwsh
-        run: |
-          # Publication gate: a malformed or empty run must fail the job (GitHub emails you)
-          # rather than pushing broken data to the live journal overnight.
-          if (Test-Path data/briefs.js) { ./scripts/validate-briefs.ps1 }
-          else { Write-Host 'No briefs.js produced; nothing to validate.' }
+        run: ./scripts/validate-briefs.ps1
 
       - name: Audit sources and quality
         shell: pwsh
         run: |
-          # Fetches every source URL. Only a 404/410 fails the run - that is a citation
-          # with nothing behind it, which is the one error this paper must never publish.
-          # Unreachable hosts only add a quality penalty, so a flaky network cannot block
-          # the desk. Prints a REWRITE line naming the weakest countries for a later pass.
-          if (Test-Path data/briefs.js) { ./scripts/audit-briefs.ps1 -CheckLinks -Worst 8 }
-          else { Write-Host 'No briefs.js produced; nothing to audit.' }
+          # Fetches every cited URL. Only 404/410 fails the run - that is a citation with
+          # nothing behind it. 401/403 are bot walls on live pages and must not fail the
+          # desk, or Cloudflare-fronted outlets would block publication every night.
+          ./scripts/audit-briefs.ps1 -CheckLinks -Worst 8
 
       - name: Rebuild crawlable pages and sitemap
         shell: pwsh
         run: |
           # The app routes on hash fragments, which crawlers discard, so these static
-          # pages are the only version of the journal a search engine can read. They
-          # must be regenerated whenever the briefs change or they go stale.
-          # Change -BaseUrl here on the day a custom domain goes live.
-          if (Test-Path data/briefs.js) { ./scripts/build-static-pages.ps1 }
-          else { Write-Host 'No briefs.js produced; nothing to build.' }
+          # pages are the only version a search engine can read. Change -BaseUrl here on
+          # the day a custom domain goes live.
+          ./scripts/build-static-pages.ps1
 
       - name: Commit refreshed briefs
         shell: pwsh
         run: |
-          if (-not (Test-Path data/briefs.js)) { Write-Host 'No briefs.js produced; nothing to commit.'; exit 0 }
           git config user.name  "asj-news-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # briefs-state.json MUST be committed: it is the merge memory that lets a country
-          # keep its last good briefs when a daily run partially fails.
           git add data/briefs.js data/briefs-state.json data/archive sitemap.xml robots.txt
-          # Country page directories: two-letter dirs holding a generated index.html.
           Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object { git add "$($_.Name)/index.html" }
           # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError - a grouping
           # expression cannot contain a statement separator. Run the check, then read
@@ -93,9 +101,9 @@ jobs:
           $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')
           git commit -m "chore(ai-desk): refresh briefs ($stamp)"
           if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
-          # The desk runs 25+ minutes, so main can move while it works. A plain push
-          # would then be rejected as non-fast-forward and the whole run's briefs are
-          # lost with the workspace. Rebase onto the current main and retry instead.
+          # The desk runs long enough that main can move while it works. A plain push
+          # would then be rejected as non-fast-forward and the whole run's briefs lost
+          # with the workspace. Rebase onto current main and retry instead.
           $pushed = $false
           for ($attempt = 1; $attempt -le 3; $attempt++) {
             git push

@@ -31,7 +31,9 @@ param(
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
   [int]$MaxBriefs     = 5,
-  [int]$MinBriefs     = 2,
+  # One well-sourced brief beats a blank country page. Six countries have only a single
+  # working feed, and a floor of 2 would keep them permanently empty.
+  [int]$MinBriefs     = 1,
   [int]$Retries       = 2,
   [int]$DelayMs       = 300,
   [double]$Temperature = 0.3,
@@ -84,11 +86,15 @@ Rules:
 - Body: 2 to 4 sentences. The most important fact AND its number in the first
   sentence. Attribution in the second. Never bury the figure.
 - Figures carry units and direction, and a comparison where the item gives one.
-- "why": one concrete sentence on what this changes for money, food, safety, business
-  or movement. It must add information the headline does not already carry. Restating
-  the event in other words is a failure: "The appointment changes the leadership of the
-  company" says nothing. Name who is affected and how. If the item genuinely supports
-  no such sentence, leave "why" empty rather than padding it.
+- "why": required on every brief. One concrete sentence on what this changes for money,
+  food, safety, business or movement, naming who is affected and how. It must add
+  information the headline does not already carry.
+    good: "Parents already on grants must now supply their own paper and cleaning
+           materials for classrooms."
+    bad:  "The appointment changes the leadership of the company." (restates)
+    bad:  "This could affect the economy." (says nothing)
+  If the only "why" you can write is a restatement, that item is not worth a brief.
+  Drop it and use a different item. Never return an empty "why".
 - Neutral. Report what happened and attribute claims. No opinion, no loaded
   adjectives, no speculation, no calls to action.
 - Cover what the items warrant across politics, economy, health, climate,
@@ -103,13 +109,35 @@ If you cannot write a brief from an item without inventing something, omit it.
 '@
 
 function Get-JsonBlock([string]$text) {
-  # Small models wrap JSON in prose or ```json fences. Take the outermost braces.
+  # Small models wrap JSON in prose or ```json fences, and sometimes return a bare
+  # array instead of the requested object. Take whichever structure starts first.
   if (-not $text) { return $null }
   $t = $text -replace '(?s)^\s*```(?:json)?\s*', '' -replace '(?s)\s*```\s*$', ''
-  $start = $t.IndexOf('{')
-  $end   = $t.LastIndexOf('}')
-  if ($start -lt 0 -or $end -le $start) { return $null }
-  return $t.Substring($start, $end - $start + 1)
+  $ob = $t.IndexOf('{'); $oa = $t.IndexOf('[')
+  $useArray = ($oa -ge 0 -and ($ob -lt 0 -or $oa -lt $ob))
+  if ($useArray) {
+    $end = $t.LastIndexOf(']')
+    if ($end -gt $oa) { return $t.Substring($oa, $end - $oa + 1) }
+  }
+  if ($ob -lt 0) { return $null }
+  $end = $t.LastIndexOf('}')
+  if ($end -le $ob) { return $null }
+  return $t.Substring($ob, $end - $ob + 1)
+}
+
+function Get-BriefArray($parsed) {
+  # Accept the requested {"briefs":[...]}, a bare [...], or any other single-key
+  # wrapper the model invents. Botswana was dropped entirely because one response
+  # used a different key - a country should not be lost to a naming whim.
+  if ($null -eq $parsed) { return $null }
+  if ($parsed -is [array]) { return @($parsed) }
+  if ($parsed.briefs) { return @($parsed.briefs) }
+  foreach ($p in $parsed.PSObject.Properties) {
+    if ($p.Value -is [array] -and @($p.Value).Count) { return @($p.Value) }
+  }
+  # A single brief returned unwrapped.
+  if ($parsed.headline -and $parsed.body) { return @($parsed) }
+  return $null
 }
 
 function Invoke-OpenRouter([string]$prompt) {
@@ -136,9 +164,25 @@ function Invoke-OpenRouter([string]$prompt) {
 
   # Invoke-WebRequest with manual UTF-8 decoding. Invoke-RestMethod in PS 5.1 decodes
   # by the response charset header and mangles accented names into mojibake.
-  $resp = Invoke-WebRequest -Uri 'https://openrouter.ai/api/v1/chat/completions' `
-            -Method Post -Headers $headers -Body $bytes -TimeoutSec 120 `
-            -UseBasicParsing -ErrorAction Stop
+  try {
+    $resp = Invoke-WebRequest -Uri 'https://openrouter.ai/api/v1/chat/completions' `
+              -Method Post -Headers $headers -Body $bytes -TimeoutSec 120 `
+              -UseBasicParsing -ErrorAction Stop
+  } catch [Net.WebException] {
+    # Without this the caller sees only "The remote server returned an error: (400)"
+    # and loses OpenRouter's actual explanation - wrong model slug, no credit, bad
+    # parameter - which is the only thing that makes the failure diagnosable.
+    $status = 0; $detail = ''
+    if ($_.Exception.Response) {
+      $status = [int]$_.Exception.Response.StatusCode
+      try {
+        $sr = New-Object IO.StreamReader($_.Exception.Response.GetResponseStream(), [Text.Encoding]::UTF8)
+        $detail = $sr.ReadToEnd()
+      } catch { }
+    }
+    if ($detail.Length -gt 300) { $detail = $detail.Substring(0, 300) }
+    throw "HTTP $status $detail"
+  }
   $text = [Text.Encoding]::UTF8.GetString($resp.RawContentStream.ToArray())
   $obj  = $text | ConvertFrom-Json
   if ($obj.error) { throw "API error: $($obj.error.message)" }
@@ -169,7 +213,8 @@ foreach ($code in $codes) {
     # Corroboration tells the model which stories the country's press treated as the
     # day's real news, so the lead brief is not whichever item happened to be first.
     if ($it.corroboration -gt 1) {
-      $also = if ($it.alsoIn) { " (also in $(@($it.alsoIn) -join ', '))" } else { '' }
+      $names = @(@($it.alsoSources) | ForEach-Object { [string]$_.name } | Where-Object { $_ })
+      $also = if ($names.Count) { " (also in $($names -join ', '))" } else { '' }
       [void]$lines.AppendLine("    corroborated by $($it.corroboration) outlets$also")
     }
     [void]$lines.AppendLine('')
@@ -205,12 +250,16 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
       $blk = Get-JsonBlock $raw
       if (-not $blk) { $lastErr = 'no JSON object in response'; continue }
       $parsed = $blk | ConvertFrom-Json
-      if (-not $parsed.briefs) { $lastErr = 'no briefs array'; continue }
-      $briefs = @($parsed.briefs)
+      $briefs = Get-BriefArray $parsed
+      if (-not $briefs) { $lastErr = 'no brief array in response'; $briefs = $null; continue }
       break
     } catch {
       $lastErr = $_.Exception.Message.Split("`n")[0]
-      Start-Sleep -Milliseconds (500 * $attempt)
+      # A rate limit needs real time, not a 500ms nudge. Cheap and free-tier models
+      # throttle hard partway through a 55-country run, and retrying immediately just
+      # burns the remaining attempts and drops the country.
+      if ($lastErr -match '429|rate.?limit') { Start-Sleep -Seconds (20 * $attempt) }
+      else { Start-Sleep -Milliseconds (500 * $attempt) }
     }
   }
 
@@ -246,12 +295,21 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
 
     $why = ([string]$b.why).Trim()
 
+    # Cite every outlet that carried the story, not just the one whose text was used.
+    $srcList = New-Object System.Collections.Generic.List[object]
+    $srcList.Add(@{ name = [string]$src.source; url = [string]$src.url })
+    foreach ($o in @($src.alsoSources)) {
+      if ($o -and ([string]$o.url) -match '^https?://') {
+        $srcList.Add(@{ name = [string]$o.name; url = [string]$o.url })
+      }
+    }
+
     $clean.Add([ordered]@{
       headline = $headline
       body     = ([string]$b.body).Trim()
       why      = $why
       topic    = $topic
-      sources  = @(@{ name = [string]$src.source; url = [string]$src.url })
+      sources  = $srcList.ToArray()
     })
   }
 
