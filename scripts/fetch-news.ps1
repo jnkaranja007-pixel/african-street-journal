@@ -181,7 +181,29 @@ function Read-Feed([string]$url) {
       if (-not $link) { $link = Get-NodeText $n.guid }
     }
     $link = $link.Trim()
+
+    # Some feeds put markup inside <link>. Politico SL serves
+    # "https://politicosl.com/<a href="/articles/...">view</a>", and serves it already
+    # percent-encoded (%3Ca%20href%3D%22), so there is no literal angle bracket to
+    # catch. Decode first, then recover the href. Left alone this surfaces in the audit
+    # as a fabricated 404, blaming the model for the publisher's malformed XML.
+    if ($link -match '(?i)%3C') {
+      try { $link = [Uri]::UnescapeDataString($link) } catch { }
+    }
+    if ($link -match '<') {
+      $anchor = [regex]::Match($link, '(?i)<a[^>]+href\s*=\s*["'']?([^"''>\s]+)')
+      $base   = $link.Substring(0, $link.IndexOf('<')).Trim()
+      if ($anchor.Success) {
+        $href = $anchor.Groups[1].Value
+        if ($href -match '^https?://') { $link = $href }
+        elseif ($base) { try { $link = ([Uri]::new([Uri]$base, $href)).AbsoluteUri } catch { $link = $base } }
+        else { $link = '' }
+      } else { $link = $base }
+    }
+
+    # A URL carrying markup, quotes or whitespace is not a citation anyone can follow.
     if ($link -notmatch '^https?://') { continue }
+    if ($link -match '[<>"\s]') { continue }
 
     $summary = Clear-Html (Get-NodeText $n.description)
     if (-not $summary) { $summary = Clear-Html (Get-NodeText $n.summary) }
