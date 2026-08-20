@@ -20,7 +20,9 @@
   change on the day a custom domain goes live.
 #>
 param(
-  [string]$BaseUrl = 'https://jnkaranja007-pixel.github.io/african-street-journal'
+  # The live origin, no trailing slash. Every canonical, og:url and sitemap entry is
+  # built from this, so it is the one value to change if the domain ever moves again.
+  [string]$BaseUrl = 'https://africanstreetjournal.com'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -30,12 +32,17 @@ $BaseUrl = $BaseUrl.TrimEnd('/')
 # --- country metadata out of app.js -----------------------------------------
 $appJs = [IO.File]::ReadAllText((Join-Path $root 'app.js'))
 $info = @{}
-foreach ($m in [regex]::Matches($appJs, "(?m)^\s{2}([a-z]{2}):\s*\{\s*name:\s*'([^']*)',\s*region:\s*'([^']*)',\s*capital:\s*'([^']*)'")) {
+# Accept either quote style. Entries whose name or capital contains an apostrophe are
+# written with double quotes in app.js ("Cote d'Ivoire", "N'Djamena"), and a
+# single-quote-only pattern skipped them silently - Ivory Coast and Chad had briefs but
+# no crawlable page at all, which is invisible unless you count pages against briefs.
+$q = "(?m)^\s{2}([a-z]{2}):\s*\{\s*name:\s*(['""])(.*?)\2,\s*region:\s*(['""])(.*?)\4,\s*capital:\s*(['""])(.*?)\6"
+foreach ($m in [regex]::Matches($appJs, $q)) {
   $info[$m.Groups[1].Value] = @{
-    name = $m.Groups[2].Value; region = $m.Groups[3].Value; capital = $m.Groups[4].Value
+    name = $m.Groups[3].Value; region = $m.Groups[5].Value; capital = $m.Groups[7].Value
   }
 }
-if ($info.Count -lt 40) { Write-Host "[static] only parsed $($info.Count) countries from app.js" -ForegroundColor Red; exit 1 }
+if ($info.Count -lt 55) { Write-Host "[static] only parsed $($info.Count) countries from app.js (expected 55)" -ForegroundColor Red; exit 1 }
 
 # --- briefs -----------------------------------------------------------------
 $raw = [IO.File]::ReadAllText((Join-Path $root 'data\briefs.js'))
