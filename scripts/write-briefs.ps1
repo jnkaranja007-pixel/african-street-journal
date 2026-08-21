@@ -37,9 +37,9 @@ param(
   [int]$Retries       = 2,
   [int]$DelayMs       = 300,
   [double]$Temperature = 0.3,
-  [int]$MinStoryWords = 110,
-  [int]$MaxStoryWords = 280,
-  [string]$PromptVersion = 'story-v2-lenses',
+  [int]$MinStoryWords = 70,
+  [int]$MaxStoryWords = 220,
+  [string]$PromptVersion = 'story-v3-concise-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -98,8 +98,9 @@ sound like a press release, and never send the reader away to understand the eve
 Rules:
 - Headline: actor + active verb + material result. Maximum 90 characters.
 - Dek: one specific sentence that advances the headline, maximum 180 characters.
-- Paragraphs: 3 to 6 short paragraphs, 110 to 280 words total. Lead with what changed,
-  then attribution, scale, affected people and useful context present in the evidence.
+- Paragraphs: exactly 3 short paragraphs, 70 to 220 words total; aim for 90 to 160.
+  Lead with what changed, then attribution, scale, affected people and useful context
+  present in the evidence. Count the story words before returning the JSON.
 - "why": one concrete sentence naming who is affected and how. No generic importance.
 - Lenses: score the story's direct relevance from 0 to 100 for farmers, investors and
   diaspora readers. A score measures audience fit, not truth, certainty or overall importance.
@@ -119,7 +120,7 @@ Rules:
 
 Hard limit: use ONLY facts present in that assignment's evidence packet. Never add a
 figure, name, quote, date, cause, reaction or historical claim from outside it. Do not
-mix facts between assignments. If the evidence cannot support 110 useful words, omit it.
+mix facts between assignments. If the evidence cannot support 70 useful words, omit it.
 '@
 
 function Get-JsonBlock([string]$text) {
@@ -443,7 +444,12 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
     }
 
     $paragraphs = New-Object System.Collections.Generic.List[string]
-    foreach ($paragraph in @($b.paragraphs)) {
+    $rawParagraphs = if ($b.paragraphs -is [string]) {
+      @(([string]$b.paragraphs) -split '(?:\r?\n)+')
+    } else {
+      @($b.paragraphs)
+    }
+    foreach ($paragraph in $rawParagraphs) {
       $text = ([string]$paragraph).Trim()
       if ($text) { $paragraphs.Add($text) }
     }
@@ -453,11 +459,34 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
         if ($text) { $paragraphs.Add($text) }
       }
     }
-    if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) { $rejectReasons.Add('paragraph count outside 3-6'); continue }
+    # Some providers serialize the requested paragraph array as one long string. Split
+    # that prose at sentence boundaries rather than rejecting grounded copy for shape alone.
+    if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) {
+      $paragraphText = ($paragraphs.ToArray() -join ' ').Trim()
+      $sentences = @([regex]::Matches($paragraphText, '[^.!?]+(?:[.!?]+|$)') |
+        ForEach-Object { $_.Value.Trim() } | Where-Object { $_ })
+      if ($sentences.Count -ge 3) {
+        $paragraphs.Clear()
+        $baseSize = [int][Math]::Floor($sentences.Count / 3)
+        $extra = $sentences.Count % 3
+        $cursor = 0
+        for ($group = 0; $group -lt 3; $group++) {
+          $groupSize = $baseSize
+          if ($group -lt $extra) { $groupSize++ }
+          $part = ($sentences[$cursor..($cursor + $groupSize - 1)] -join ' ').Trim()
+          if ($part) { $paragraphs.Add($part) }
+          $cursor += $groupSize
+        }
+      }
+    }
+    if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) {
+      $rejectReasons.Add("story has $($paragraphs.Count) paragraphs, need 3-6")
+      continue
+    }
     $body = $paragraphs.ToArray() -join "`n`n"
     $wordCount = Get-WordCount $body
     if ($wordCount -lt $MinStoryWords -or $wordCount -gt $MaxStoryWords) {
-      $rejectReasons.Add("story outside $MinStoryWords-$MaxStoryWords words")
+      $rejectReasons.Add("story has $wordCount words, need $MinStoryWords-$MaxStoryWords")
       continue
     }
 

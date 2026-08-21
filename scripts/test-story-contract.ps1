@@ -13,13 +13,17 @@ $metricsFixture = [IO.Path]::Combine([IO.Path]::GetTempPath(), 'asj-thin-metrics
 $outFixture = [IO.Path]::Combine([IO.Path]::GetTempPath(), 'asj-thin-output-' + [guid]::NewGuid().ToString('N') + '.json')
 $utf8 = New-Object Text.UTF8Encoding($false)
 
-function Write-Fixture([int]$ParagraphCount, [switch]$BadLens) {
+function Write-Fixture([int]$ParagraphCount, [switch]$BadLens, [switch]$ShortStory) {
   $allParagraphs = @(
     'The transport ministry opened a new freight checkpoint on Tuesday after a month-long trial. Officials said the site will inspect trucks moving between the capital and the northern farming corridor, where delays had pushed delivery times beyond two days during the busiest market weeks.',
     'The ministry said forty inspectors will work in rotating teams and publish daily queue estimates. Two trade groups that monitored the trial reported shorter waits, although both said the test covered fewer vehicles than a normal harvest-season day and should not be treated as a final measure.',
     'Drivers can continue using the older crossing while the new lane is assessed. The ministry has not announced a permanent timetable. Farmers and wholesalers will be watching whether the added capacity lowers spoilage risk and transport costs once crop volumes rise later in the season.'
   )
-  $paragraphs = @($allParagraphs | Select-Object -First $ParagraphCount)
+  $paragraphs = if ($ShortStory) {
+    @('Officials opened the checkpoint.', 'Truck inspections started on Tuesday.', 'Daily queue estimates will be published.')
+  } else {
+    @($allParagraphs | Select-Object -First $ParagraphCount)
+  }
   $story = [ordered]@{
     articleId = 'fixture-story-1'
     headline = 'New freight checkpoint targets farm corridor delays'
@@ -72,6 +76,11 @@ try {
   if ($LASTEXITCODE -eq 0) { throw 'invalid two-paragraph story was accepted' }
   Write-Host 'PASS undersized two-paragraph story is rejected'
 
+  Write-Fixture 3 -ShortStory
+  & powershell -NoProfile -ExecutionPolicy Bypass -File $validator -BriefsFile $fixture -MinStoryPackages 1 *> $null
+  if ($LASTEXITCODE -eq 0) { throw 'invalid short story was accepted' }
+  Write-Host 'PASS story below the concise floor is rejected'
+
   $thinFeed = [ordered]@{
     fetched = '2026-08-20T09:00:00Z'
     byCountry = @{ xx = @{ country = 'Fixtureland'; items = @(1..4 | ForEach-Object { @{ title = "Candidate $_"; url = "https://example.com/$_" } }) } }
@@ -91,5 +100,5 @@ try {
   }
 }
 
-Write-Host '[story-contract] OK - 4 checks'
+Write-Host '[story-contract] OK - 5 checks'
 exit 0

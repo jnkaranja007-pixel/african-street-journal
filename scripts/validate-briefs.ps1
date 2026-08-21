@@ -14,8 +14,8 @@ param(
   [int]$MinCountries = 1,
   [int]$MinBriefs = 1,
   [int]$MinStoryPackages = 0,
-  [int]$MinStoryWords = 110,
-  [int]$MaxStoryWords = 280,
+  [int]$MinStoryWords = 70,
+  [int]$MaxStoryWords = 220,
   [string]$BriefsFile = ''
 )
 
