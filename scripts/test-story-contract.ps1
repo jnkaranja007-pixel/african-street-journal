@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy')) {
+foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -155,6 +155,13 @@ try {
   if ($band.Mode -ne 'direct' -or $band.Min -ne 75) { throw 'ferry travel missed direct diaspora band' }
   Write-Host 'PASS ferry travel enters direct diaspora band'
 
+  $longDek = ('The transport authority changed the passenger reporting window after publishing a detailed operational notice for every ticket holder. ' * 2).Trim()
+  $limitedDek = Limit-DeskSentence $longDek 180
+  if ($limitedDek.Length -gt 180 -or -not $limitedDek.EndsWith('.') -or $limitedDek -match ' tick\.$') {
+    throw 'long dek was not trimmed cleanly at a word boundary'
+  }
+  Write-Host 'PASS long dek is trimmed at a sentence boundary'
+
   $thinFeed = [ordered]@{
     fetched = '2026-08-20T09:00:00Z'
     byCountry = @{ xx = @{ country = 'Fixtureland'; items = @(1..4 | ForEach-Object { @{ title = "Candidate $_"; url = "https://example.com/$_" } }) } }
@@ -174,5 +181,5 @@ try {
   }
 }
 
-Write-Host '[story-contract] OK - 17 checks'
+Write-Host '[story-contract] OK - 18 checks'
 exit 0

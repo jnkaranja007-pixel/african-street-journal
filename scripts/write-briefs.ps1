@@ -215,6 +215,15 @@ function Get-WordCount([string]$Text) {
   return ([regex]::Matches($Text, "[\p{L}\p{N}]+(?:[''\u2019-][\p{L}\p{N}]+)*")).Count
 }
 
+function Limit-DeskSentence([string]$Text, [int]$MaxChars) {
+  $clean = ([string]$Text).Trim()
+  if ($clean.Length -le $MaxChars) { return $clean }
+  $cut = $clean.Substring(0, $MaxChars - 1)
+  $lastSpace = $cut.LastIndexOf(' ')
+  if ($lastSpace -ge [int]($MaxChars * 0.72)) { $cut = $cut.Substring(0, $lastSpace) }
+  return $cut.TrimEnd([char[]]' ,;:.') + '.'
+}
+
 function Convert-NumberScanText([string]$Text) {
   if (-not $Text) { return '' }
   $normalized = New-Object System.Text.StringBuilder
@@ -637,7 +646,8 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
     if ($headline.Length -gt 100) { $rejectReasons.Add('headline over 100 chars'); continue }
     if ($headline.Length -gt 90) { $headline = $headline.Substring(0, 87).TrimEnd() + '...' }
     $dek = ([string]$b.dek).Trim()
-    if (-not $dek -or $dek.Length -gt 180) { $rejectReasons.Add('invalid dek'); continue }
+    if (-not $dek) { $rejectReasons.Add('invalid dek'); continue }
+    $dek = Limit-DeskSentence $dek 180
     $why = ([string]$b.why).Trim()
     $whyWords = Get-WordCount $why
     if ($whyWords -lt 8 -or $whyWords -gt 50) { $rejectReasons.Add('why line outside 8-50 words'); continue }
