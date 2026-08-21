@@ -26,7 +26,7 @@
   as a failed desk run rather than quietly publishing yesterday's paper again.
 #>
 param(
-  [string]$Model      = 'openai/gpt-oss-20b',
+  [string]$Model      = 'google/gemini-2.5-flash-lite',
   [string[]]$Only,
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
@@ -39,7 +39,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v5-isolated-lenses',
+  [string]$PromptVersion = 'story-v6-flash-isolated-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -217,7 +217,6 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1) {
     )
     temperature = $Temperature
     max_tokens  = 3200
-    reasoning   = @{ effort = 'low'; exclude = $true }
   }
   if ($JsonMode) {
     $lensEntrySchema = [ordered]@{
@@ -267,7 +266,11 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1) {
       }
     }
     # Do not silently route to a provider that ignores the schema.
-    $body['provider'] = @{ require_parameters = $true }
+    $body['provider'] = @{
+      require_parameters = $true
+      order = @('google-vertex','google-ai-studio')
+      allow_fallbacks = $true
+    }
   }
 
   $json  = $body | ConvertTo-Json -Depth 20 -Compress
