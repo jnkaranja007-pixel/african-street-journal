@@ -515,7 +515,10 @@ function makeCountryButton(label, id) {
   button.type = 'button';
   button.textContent = label;
   button.dataset.country = id;
-  button.addEventListener('click', () => openCountry(id, button));
+  button.addEventListener('click', () => {
+    if (isTouchLikePointer()) button.blur();
+    openCountry(id, button);
+  });
   return button;
 }
 
@@ -1396,8 +1399,22 @@ function closeCountry() {
   if (countryUtilityTimer) clearInterval(countryUtilityTimer);
   countryPopTimer = null;
   countryUtilityTimer = null;
-  if (lastFocus && lastFocus.focus) lastFocus.focus();
+  if (shouldRestoreCountryFocus(lastFocus)) {
+    lastFocus.focus();
+  } else if (document.activeElement && document.activeElement.blur) {
+    document.activeElement.blur();
+  }
   syncRoute();
+}
+
+function isTouchLikePointer() {
+  return window.matchMedia('(pointer:coarse)').matches || window.matchMedia('(hover:none)').matches;
+}
+
+function shouldRestoreCountryFocus(element) {
+  if (!element || !element.focus) return false;
+  if (isTouchLikePointer() && element.closest && element.closest('.ticker')) return false;
+  return true;
 }
 
 async function openCountryByOffset(offset) {
@@ -3804,6 +3821,7 @@ function preloadAdjacentCountryData(countryId) {
 /* ── Watchlist: follow countries, "Your desk" strip on the landing ────── */
 const WATCHLIST_KEY = 'asj:watchlist';
 const WATCHLIST_SEEN_KEY = 'asj:watchlist-seen:v1';
+const DESK_SIGNUP_KEY = 'asj:desk-signup:v1';
 function getWatchlist() {
   try {
     const list = JSON.parse(localStorage.getItem(WATCHLIST_KEY));
@@ -3812,6 +3830,15 @@ function getWatchlist() {
 }
 function saveWatchlist(list) {
   try { localStorage.setItem(WATCHLIST_KEY, JSON.stringify(list)); } catch {}
+}
+function getDeskSignup() {
+  try {
+    const signup = JSON.parse(localStorage.getItem(DESK_SIGNUP_KEY) || 'null');
+    return signup && typeof signup === 'object' ? signup : {};
+  } catch { return {}; }
+}
+function saveDeskSignup(signup) {
+  try { localStorage.setItem(DESK_SIGNUP_KEY, JSON.stringify(signup || {})); } catch {}
 }
 function readWatchlistSeen() {
   try {
@@ -3910,6 +3937,72 @@ function setYourDeskIndex(index, behavior = 'smooth') {
   requestAnimationFrame(updateYourDeskNav);
 }
 
+function deskSignupConfig() {
+  const cfg = window.ASJ_SUPABASE_CONFIG || null;
+  const url = String(cfg?.url || '').replace(/\/+$/, '');
+  const anonKey = String(cfg?.anonKey || '');
+  const table = String(cfg?.table || 'asj_signups');
+  if (!/^https:\/\/[a-z0-9.-]+\.supabase\.co$/i.test(url) || anonKey.length < 20) return null;
+  return { url, anonKey, table };
+}
+function preferredDeskAudience() {
+  const mode = audienceSelect?.value || document.body.dataset.audience || '';
+  return ROUTE_AUDIENCES.includes(mode) ? mode : 'general';
+}
+function signupWatchlistPayload() {
+  return getWatchlist().map(id => ({
+    id,
+    name: COUNTRY_INFO[id]?.name || id.toUpperCase()
+  }));
+}
+async function syncDeskSignup(email, audience) {
+  const cfg = deskSignupConfig();
+  if (!cfg) return { synced: false, reason: 'missing-config' };
+  const payload = {
+    email,
+    watchlist: signupWatchlistPayload(),
+    preferred_audience: audience,
+    source: 'my_africa',
+    user_agent: navigator.userAgent || ''
+  };
+  const res = await fetch(cfg.url + '/rest/v1/' + encodeURIComponent(cfg.table), {
+    method: 'POST',
+    headers: {
+      apikey: cfg.anonKey,
+      Authorization: 'Bearer ' + cfg.anonKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    },
+    body: JSON.stringify(payload)
+  });
+  if (res.ok) return { synced: true };
+  if (res.status === 409) return { synced: true, duplicate: true };
+  let detail = '';
+  try { detail = await res.text(); } catch {}
+  throw new Error('Supabase signup failed: ' + res.status + (detail ? ' ' + detail.slice(0, 160) : ''));
+}
+function deskSignupHtml(list) {
+  if (list.length < 2) return '';
+  const signup = getDeskSignup();
+  const savedEmail = String(signup.email || '');
+  const savedAudience = String(signup.audience || preferredDeskAudience());
+  const savedState = signup.synced ? 'Synced' : (savedEmail ? 'Saved on this device' : 'Email only for now');
+  const selected = value => value === savedAudience ? ' selected' : '';
+  return '<form class="yd-signup" data-desk-signup>' +
+    '<div class="yd-signup-copy"><b>Save this desk</b><span>Keep these countries across devices.</span></div>' +
+    '<label class="sr-only" for="yd-signup-email">Email address</label>' +
+    '<input id="yd-signup-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="' + escapeHtml(savedEmail) + '" required>' +
+    '<label class="sr-only" for="yd-signup-audience">Desk lens</label>' +
+    '<select id="yd-signup-audience" name="audience" aria-label="Desk lens">' +
+      '<option value="general"' + selected('general') + '>Morning desk</option>' +
+      '<option value="farmers"' + selected('farmers') + '>Farmers</option>' +
+      '<option value="investors"' + selected('investors') + '>Investors</option>' +
+      '<option value="diaspora"' + selected('diaspora') + '>Diaspora</option>' +
+    '</select>' +
+    '<button type="submit">Save</button>' +
+    '<p class="yd-signup-status" data-signup-status aria-live="polite">' + escapeHtml(savedState) + '</p>' +
+  '</form>';
+}
 function renderYourDesk() {
   const el = document.getElementById('your-desk');
   if (!el) return;
@@ -3951,7 +4044,7 @@ function renderYourDesk() {
         (isNew ? '<span class="yd-new">New</span>' : (growth ? '<b>' + escapeHtml(growth) + '</b>' : '')) +
         '<svg class="yd-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>' +
       '</span></span><small>' + escapeHtml(story) + '</small></button>';
-  }).join('') + '</div>';
+  }).join('') + '</div>' + (yourDeskExpanded ? deskSignupHtml(list) : '');
 
   const rail = el.querySelector('.yd-list');
   rail?.addEventListener('scroll', () => {
@@ -3969,6 +4062,7 @@ document.getElementById('cv-star')?.addEventListener('click', () => {
   const list = getWatchlist();
   const at = list.indexOf(id);
   if (at >= 0) list.splice(at, 1); else { list.push(id); markCountrySeen(id); }
+  if (at < 0 && list.length >= 2 && !getDeskSignup().email) yourDeskExpanded = true;
   saveWatchlist(list);
   updateStarButton(id);
   renderYourDesk();
@@ -3990,6 +4084,32 @@ document.getElementById('your-desk')?.addEventListener('click', e => {
     yourDeskExpanded = false;
     renderYourDesk();
     openCountry(btn.dataset.country, btn);
+  }
+});
+document.getElementById('your-desk')?.addEventListener('submit', async e => {
+  const form = e.target.closest('form[data-desk-signup]');
+  if (!form) return;
+  e.preventDefault();
+  const status = form.querySelector('[data-signup-status]');
+  const button = form.querySelector('button[type="submit"]');
+  const email = String(new FormData(form).get('email') || '').trim().toLowerCase();
+  const audience = String(new FormData(form).get('audience') || preferredDeskAudience());
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    if (status) status.textContent = 'Enter a valid email.';
+    return;
+  }
+  if (status) status.textContent = 'Saving...';
+  if (button) button.disabled = true;
+  saveDeskSignup({ email, audience, synced: false, watchlist: getWatchlist(), savedAt: new Date().toISOString() });
+  try {
+    const result = await syncDeskSignup(email, audience);
+    saveDeskSignup({ email, audience, synced: !!result.synced, duplicate: !!result.duplicate, watchlist: getWatchlist(), savedAt: new Date().toISOString() });
+    if (status) status.textContent = result.synced ? (result.duplicate ? 'Already saved.' : 'Desk saved.') : 'Saved on this device.';
+  } catch (err) {
+    console.warn(err);
+    if (status) status.textContent = 'Saved here. Server sync needs Supabase access.';
+  } finally {
+    if (button) button.disabled = false;
   }
 });
 renderYourDesk();
@@ -4189,13 +4309,19 @@ async function runSelfTest() {
   add('core: 55 landing countries', (D.countries || []).length === 55, (D.countries || []).length);
   const landingMapRect = canvas.getBoundingClientRect();
   const landingMapRatio = landingMapRect.height ? landingMapRect.width / landingMapRect.height : 0;
+  const mobileLanding = window.matchMedia('(max-width: 640px)').matches;
   // A background tab never lays the canvas out (rAF is paused), which would report a bogus 0x0.
   // Skip rather than cry wolf: a check that fails for environmental reasons trains you to
   // ignore real failures.
   if (!landingMapRect.width && document.hidden) {
-    add('landing map keeps native aspect', true, 'skipped - tab hidden');
+    add('landing masthead renders', true, 'skipped - tab hidden');
+  } else if (mobileLanding) {
+    const stageHidden = getComputedStyle(document.querySelector('.stage')).display === 'none';
+    const continentLabel = document.querySelector('.wire-entry-label')?.textContent || '';
+    const continentCount = document.querySelector('.wire-entry-count')?.textContent || '';
+    add('landing masthead renders', stageHidden && /Continent/.test(continentLabel) && /\d+ stories/.test(continentCount), continentLabel + ' · ' + continentCount);
   } else {
-    add('landing map keeps native aspect', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
+    add('landing masthead renders', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
   }
   add('country nav alphabetized', sortedCountryIds[0] === 'dz' && sortedCountryIds[1] === 'ao', sortedCountryIds.slice(0, 5).join(','));
   add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);

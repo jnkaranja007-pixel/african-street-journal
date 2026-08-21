@@ -52,7 +52,10 @@ canvas{width:100%;height:100%;display:block}
 .ticker-wrap{width:100vw;max-width:none;overflow:hidden;margin:2px 0;border-block:1px solid rgba(232,230,227,.08);background:rgba(0,0,0,.12)}
 .ticker{display:flex;gap:0;align-items:center;animation:scroll 150s linear infinite;width:max-content}
 .ticker-segment{display:flex;align-items:center;flex:0 0 auto}
-.ticker:hover,.ticker:focus-within{animation-play-state:paused}
+.ticker:focus-within{animation-play-state:paused}
+@media (hover:hover){
+  .ticker:hover{animation-play-state:paused}
+}
 .ticker span{font:11px/1 var(--mono);letter-spacing:0.18em;color:var(--text);text-transform:uppercase;white-space:nowrap;padding:0 2px}
 .ticker button{font:11px/1 var(--mono);letter-spacing:0.18em;color:var(--green);text-transform:uppercase;white-space:nowrap;padding:3px 18px;text-decoration:none;cursor:pointer;transition:color 150ms;background:none;border:0;border-radius:0;position:relative}
 .ticker button::after{content:"";position:absolute;bottom:-1px;left:18px;right:18px;height:1px;background:var(--green-bright);transform:scaleX(0);transition:transform 200ms ease}
@@ -405,6 +408,17 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .yd-country-card .yd-new{color:var(--green-bright);font:800 8px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase}
 .yd-country-card:hover,.yd-country-card:focus-visible{color:var(--text);border-color:rgba(76,175,80,.42);background:rgba(76,175,80,.045);outline:none}
 .yd-country-card:focus-visible{box-shadow:inset 0 0 0 1px var(--green-bright)}
+.yd-signup{grid-column:2;display:grid;grid-template-columns:minmax(150px,1fr) minmax(180px,1.1fr) minmax(120px,.75fr) auto;align-items:center;gap:8px;padding:4px 0 0;min-width:0}
+.yd-signup-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.yd-signup-copy b{font:800 9px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--green-bright)}
+.yd-signup-copy span,.yd-signup-status{font:500 11px/1.25 var(--sans);letter-spacing:0;text-transform:none;color:var(--text-muted)}
+.yd-signup input,.yd-signup select{min-width:0;height:40px;border:1px solid rgba(232,230,227,.14);background:rgba(255,255,255,.024);color:var(--text);border-radius:0;padding:0 11px;font:600 13px/1 var(--sans)}
+.yd-signup select{font:700 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);color-scheme:dark}
+.yd-signup input:focus,.yd-signup select:focus{border-color:rgba(102,187,106,.75);outline:none;background:rgba(76,175,80,.045)}
+.yd-signup button{height:40px;min-width:64px;border:1px solid rgba(76,175,80,.46);background:rgba(76,175,80,.09);color:var(--green-bright);font:800 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.yd-signup button:hover,.yd-signup button:focus-visible{border-color:var(--green-bright);background:rgba(76,175,80,.16);outline:none}
+.yd-signup button:disabled{opacity:.55;cursor:wait}
+.yd-signup-status{grid-column:2/-1;margin:0;min-height:14px;color:rgba(232,230,227,.42)}
 .cv-dia-calc{display:flex;align-items:baseline;gap:9px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(232,230,227,0.08);font:700 10px/1 var(--mono);letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);flex-wrap:wrap}
 .cv-dia-calc input{width:92px;background:rgba(255,255,255,0.03);border:1px solid rgba(232,230,227,0.2);color:var(--text);font:700 15px/1 var(--mono);padding:7px 8px;border-radius:0;-moz-appearance:textfield}
 .cv-dia-calc input:focus{outline:none;border-color:rgba(76,175,80,0.6)}
@@ -743,24 +757,30 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .audience-mode[data-mode="investors"] .cv-econ-val{font-size:20px;overflow:visible;text-overflow:clip}
 }
 @media (max-width:640px){
-  main{padding-top:8px}
-  .masthead{display:flex;padding:9px 18px 2px;justify-content:center;gap:0}
-  .masthead>span{display:none}
-  .masthead-kicker{display:flex;width:100%;align-items:center;justify-content:center;gap:14px;font-size:10px;letter-spacing:.14em}
-  .masthead-kicker span:first-child,.masthead-kicker span:last-child{justify-self:auto}
-  .rule{margin-top:8px}
-  .title-block{padding:18px 18px 6px}
-  .title-block h1{font-size:clamp(32px,9vw,48px);line-height:1.03}
+  main{padding-top:0}
+  .masthead,.masthead+.rule{display:none}
+  .sub-rule{padding:14px 18px 10px;border-bottom:1px solid rgba(232,230,227,.1)}
+  .sub-rule .tagline-footer{display:none}
+  .sub-rule .wire-entry{width:min(100%,360px);justify-content:center;gap:12px;min-height:48px;padding:0 14px;border:1px solid rgba(76,175,80,.32);border-inline:0;color:var(--green-bright);letter-spacing:.18em}
+  .sub-rule .wire-entry-count{padding-left:12px;color:var(--text-muted);letter-spacing:.12em}
+  .sub-rule .wire-entry-icon{width:18px;height:18px}
+  .landing-core{justify-content:flex-start;padding:clamp(72px,14svh,112px) 0 0}
+  .title-block{padding:0 18px}
+  .title-block h1{font-size:clamp(39px,11vw,52px);line-height:1.02}
+  .title-block h1 em{font-size:.5em;margin-bottom:5px}
   .title-block h1 .g{display:inline-block}
-  .pop-counter{margin-top:10px}
+  .tagline,.pop-counter,.stage{display:none}
   .your-desk{grid-template-columns:minmax(0,1fr);align-items:stretch;gap:7px;width:calc(100% - 28px);margin-left:14px;padding:5px 0}
   .your-desk.is-collapsed{width:auto;margin-left:14px;padding:4px 0}
   .your-desk .yd-head{min-width:0;width:100%;justify-content:space-between}
   .your-desk .yd-head-copy{flex-direction:row;align-items:baseline;gap:9px}
-  .yd-toggle{min-height:40px}
-  .yd-nav-btn{width:40px;height:40px}
+  .yd-toggle{min-height:44px}
+  .yd-nav-btn{width:44px;height:44px}
   .yd-list{width:100%;touch-action:pan-x}
   .yd-country-card{flex-basis:100%;min-width:100%;min-height:48px}
+  .yd-signup{grid-column:1;grid-template-columns:1fr;gap:7px;padding-top:2px}
+  .yd-signup input,.yd-signup select,.yd-signup button{width:100%;min-height:44px}
+  .yd-signup-status{grid-column:1;margin-top:1px}
 }
 @media (max-height:760px){
   main{justify-content:flex-start}
