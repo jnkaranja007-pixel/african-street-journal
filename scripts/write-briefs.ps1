@@ -39,7 +39,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v9-enriched-evidence-lenses',
+  [string]$PromptVersion = 'story-v10-enriched-number-words-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -113,6 +113,8 @@ Rules:
   and 81-100 only when that audience is central to the event. When there is no direct effect,
   say so plainly. Never invent an "if" scenario or a hypothetical link to force audience fit.
 - Attribute disputed claims. Carry units, direction and comparisons exactly as supplied.
+- When the source writes a number or time in words, translate it into English words.
+  Never convert a written number into digits that do not appear in the evidence.
 - Paraphrase. Do not copy a source sentence or use a quotation longer than 12 words.
 - Neutral. Report what happened and attribute claims. No opinion, no loaded
   adjectives, no speculation, no calls to action.
@@ -545,7 +547,8 @@ Keep the canonical story unchanged and repair the three lens scores and reasons.
 REPAIR: The previous draft introduced or reformatted unsupported figures: $badFigures.
 Rewrite from the same packet. Copy every number, magnitude word, date, time and unit
 exactly as it appears. Do not convert 1000 billion to 1 trillion or change numeric
-formatting. If a figure is not needed, omit it. Do not add facts while repairing.
+formatting. When the source gives a number in words, translate it into English words
+rather than digits. If a figure is not needed, omit it. Do not add facts while repairing.
 "@
           continue
         }
