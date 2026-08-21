@@ -36,10 +36,11 @@ param(
   [int]$MinBriefs     = 5,
   [int]$Retries       = 2,
   [int]$DelayMs       = 300,
+  [int]$MaxOutputTokens = 1400,
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v11-flash-enriched-banded-lenses',
+  [string]$PromptVersion = 'story-v12-flash-compact-banded-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -294,7 +295,7 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
       @{ role = 'user'; content = $prompt }
     )
     temperature = $Temperature
-    max_tokens  = 3200
+    max_tokens  = $MaxOutputTokens
     reasoning   = @{ effort = 'none' }
   }
   if ($JsonMode) {
@@ -369,16 +370,21 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
     $resp = Invoke-WebRequest -Uri 'https://openrouter.ai/api/v1/chat/completions' `
               -Method Post -Headers $headers -Body $bytes -TimeoutSec 120 `
               -UseBasicParsing -ErrorAction Stop
-  } catch [Net.WebException] {
+  } catch {
     # Without this the caller sees only "The remote server returned an error: (400)"
     # and loses OpenRouter's actual explanation - wrong model slug, no credit, bad
     # parameter - which is the only thing that makes the failure diagnosable.
     $status = 0; $detail = ''
     if ($_.Exception.Response) {
-      $status = [int]$_.Exception.Response.StatusCode
+      try { $status = [int]$_.Exception.Response.StatusCode } catch { $status = 0 }
+      if ($_.ErrorDetails -and $_.ErrorDetails.Message) {
+        $detail = [string]$_.ErrorDetails.Message
+      }
       try {
-        $sr = New-Object IO.StreamReader($_.Exception.Response.GetResponseStream(), [Text.Encoding]::UTF8)
-        $detail = $sr.ReadToEnd()
+        if (-not $detail -and $_.Exception.Response.GetResponseStream) {
+          $sr = New-Object IO.StreamReader($_.Exception.Response.GetResponseStream(), [Text.Encoding]::UTF8)
+          $detail = $sr.ReadToEnd()
+        }
       } catch { }
     }
     if ($detail.Length -gt 300) { $detail = $detail.Substring(0, 300) }
