@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Get-NumberKeys','Get-UngroundedNumbers')) {
+foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -119,6 +119,16 @@ try {
   if ($missing.Count) { throw 'numbered outlet attribution was rejected' }
   Write-Host 'PASS numbered outlet attribution is grounded'
 
+  $arabicAnd = [string][char]0x0648
+  $missing = @(Get-UngroundedNumbers 'The league moved the start to September 12.' ("The league moved to 11 and $arabicAnd" + '12 September.'))
+  if ($missing.Count) { throw 'Arabic conjunction-attached figure was rejected' }
+  Write-Host 'PASS Arabic conjunction-attached figure is grounded'
+
+  $arabicTwelve = ([string][char]0x0661) + ([string][char]0x0662)
+  $missing = @(Get-UngroundedNumbers 'The league moved the start to September 12.' ("The league moved to $arabicAnd$arabicTwelve September."))
+  if ($missing.Count) { throw 'Arabic-Indic figure was rejected' }
+  Write-Host 'PASS Arabic-Indic figure is grounded'
+
   $thinFeed = [ordered]@{
     fetched = '2026-08-20T09:00:00Z'
     byCountry = @{ xx = @{ country = 'Fixtureland'; items = @(1..4 | ForEach-Object { @{ title = "Candidate $_"; url = "https://example.com/$_" } }) } }
@@ -138,5 +148,5 @@ try {
   }
 }
 
-Write-Host '[story-contract] OK - 10 checks'
+Write-Host '[story-contract] OK - 12 checks'
 exit 0

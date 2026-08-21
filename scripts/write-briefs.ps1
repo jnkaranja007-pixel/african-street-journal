@@ -39,7 +39,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v7-number-repair-lenses',
+  [string]$PromptVersion = 'story-v8-multilingual-number-repair-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -170,15 +170,33 @@ function Get-WordCount([string]$Text) {
   return @(($Text -replace '\s+', ' ').Trim() -split ' ' | Where-Object { $_ }).Count
 }
 
+function Convert-NumberScanText([string]$Text) {
+  if (-not $Text) { return '' }
+  $normalized = New-Object System.Text.StringBuilder
+  foreach ($char in $Text.ToCharArray()) {
+    $category = [Globalization.CharUnicodeInfo]::GetUnicodeCategory($char)
+    if ($category -eq [Globalization.UnicodeCategory]::DecimalDigitNumber) {
+      $digit = [int][char]::GetNumericValue($char)
+      [void]$normalized.Append([char]([int][char]'0' + $digit))
+    } else {
+      [void]$normalized.Append($char)
+    }
+  }
+  # Arabic conjunctions and articles are commonly joined directly to a numeral.
+  # Insert a scan-only boundary without changing the source or published copy.
+  return [regex]::Replace($normalized.ToString(), '(?<=[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF])(?=\d)', ' ')
+}
+
 function Get-NumberKeys([string]$Text) {
   $keys = @{}
   if (-not $Text) { return $keys }
-  foreach ($time in [regex]::Matches($Text, '(?<!\d)(\d{1,2})\s*(?::|h)\s*(\d{2})(?!\d)', 'IgnoreCase')) {
+  $scanText = Convert-NumberScanText $Text
+  foreach ($time in [regex]::Matches($scanText, '(?<!\d)(\d{1,2})\s*(?::|h)\s*(\d{2})(?!\d)', 'IgnoreCase')) {
     $hour = [int]$time.Groups[1].Value
     $minute = [int]$time.Groups[2].Value
     if ($hour -le 23 -and $minute -le 59) { $keys[("time{0:D2}{1:D2}" -f $hour, $minute)] = $true }
   }
-  foreach ($match in [regex]::Matches($Text, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
+  foreach ($match in [regex]::Matches($scanText, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
     $key = ($match.Value.ToLowerInvariant() -replace '[^a-z0-9%]', '')
     $key = $key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent'
     if ($key) { $keys[$key] = $true }
@@ -189,8 +207,9 @@ function Get-NumberKeys([string]$Text) {
 function Get-UngroundedNumbers([string]$StoryText, [string]$EvidenceText) {
   $evidence = Get-NumberKeys $EvidenceText
   $missing = New-Object System.Collections.Generic.List[string]
+  $storyScanText = Convert-NumberScanText $StoryText
   $timePattern = '(?<!\d)(\d{1,2})\s*(?::|h)\s*(\d{2})(?!\d)'
-  foreach ($time in [regex]::Matches($StoryText, $timePattern, 'IgnoreCase')) {
+  foreach ($time in [regex]::Matches($storyScanText, $timePattern, 'IgnoreCase')) {
     $hour = [int]$time.Groups[1].Value
     $minute = [int]$time.Groups[2].Value
     $key = "time{0:D2}{1:D2}" -f $hour, $minute
@@ -198,7 +217,7 @@ function Get-UngroundedNumbers([string]$StoryText, [string]$EvidenceText) {
   }
   # Mask complete times before scanning generic numbers so the minutes in "6:00"
   # are not mistaken for a separate unsupported figure.
-  $numberText = [regex]::Replace($StoryText, $timePattern, ' TIME ', 'IgnoreCase')
+  $numberText = [regex]::Replace($storyScanText, $timePattern, ' TIME ', 'IgnoreCase')
   foreach ($match in [regex]::Matches($numberText, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
     $key = ($match.Value.ToLowerInvariant() -replace '[^a-z0-9%]', '')
     $key = $key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent'
