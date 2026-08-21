@@ -1055,13 +1055,40 @@ const track = document.getElementById('cv-track');
 const dots = Array.from(document.querySelectorAll('.cv-dot'));
 const audienceSelect = document.getElementById('cv-audience');
 const audienceTabs = Array.from(document.querySelectorAll('.cv-audience-tab'));
+const mobileDossierMedia = window.matchMedia('(max-width: 720px)');
+const countryFile = document.getElementById('cv-country-file');
+const countryFileToggle = document.getElementById('cv-file-toggle');
+const countryFileContent = document.getElementById('cv-file-content');
 let currentSlideIndex = 0;
 let activePanelIndex = 0;
 const infoGridIndexByMode = { farmers: 0, investors: 0, diaspora: 0 };
+let countryFileExpanded = false;
 const countryCarousel = track?.parentElement;
 countryCarousel?.addEventListener('scroll', () => {
   if (countryCarousel.scrollLeft !== 0) countryCarousel.scrollLeft = 0;
 }, { passive: true });
+
+function setCountryFileExpanded(expanded) {
+  countryFileExpanded = !!expanded;
+  countryFile?.classList.toggle('is-expanded', countryFileExpanded);
+  countryFileToggle?.setAttribute('aria-expanded', String(countryFileExpanded));
+  if (countryFileContent) {
+    const collapsed = mobileDossierMedia.matches && !countryFileExpanded;
+    countryFileContent.hidden = collapsed;
+    countryFileContent.setAttribute('aria-hidden', String(collapsed));
+  }
+}
+
+function syncCountryFileViewport() {
+  setCountryFileExpanded(countryFileExpanded);
+  updateSlidePos();
+}
+
+countryFileToggle?.addEventListener('click', () => {
+  setCountryFileExpanded(!countryFileExpanded);
+});
+if (mobileDossierMedia.addEventListener) mobileDossierMedia.addEventListener('change', syncCountryFileViewport);
+else mobileDossierMedia.addListener?.(syncCountryFileViewport);
 
 function updateSlidePos() {
   if (countryCarousel) countryCarousel.scrollLeft = 0;
@@ -1111,6 +1138,10 @@ function infoGridMetrics(grid) {
 function rememberInfoGridPosition(grid = activeInfoGrid()) {
   if (!grid) return;
   const mode = grid.dataset.mode || 'farmers';
+  if (mobileDossierMedia.matches) {
+    infoGridIndexByMode[mode] = 0;
+    return;
+  }
   const { step, maxIndex } = infoGridMetrics(grid);
   infoGridIndexByMode[mode] = Math.max(0, Math.min(maxIndex, Math.round(grid.scrollLeft / step)));
 }
@@ -1119,6 +1150,12 @@ function restoreInfoGridPosition(mode = audienceSelect?.value || 'farmers') {
   requestAnimationFrame(() => {
     const grid = document.querySelector('.audience-mode.cv-info-grid[data-mode="' + mode + '"]');
     if (!grid) return;
+    if (mobileDossierMedia.matches) {
+      infoGridIndexByMode[mode] = 0;
+      grid.scrollLeft = 0;
+      updateInfoNavState();
+      return;
+    }
     const { step, maxIndex } = infoGridMetrics(grid);
     const index = Math.max(0, Math.min(maxIndex, infoGridIndexByMode[mode] || 0));
     infoGridIndexByMode[mode] = index;
@@ -1157,6 +1194,12 @@ function updateInfoNavState() {
 function scrollActiveInfoGrid(direction) {
   const grid = activeInfoGrid();
   if (!grid) return;
+  if (mobileDossierMedia.matches) {
+    grid.scrollLeft = 0;
+    infoGridIndexByMode[grid.dataset.mode || 'farmers'] = 0;
+    updateInfoNavState();
+    return;
+  }
   rememberInfoGridPosition(grid);
   const mode = grid.dataset.mode || 'farmers';
   const { step, maxIndex } = infoGridMetrics(grid);
@@ -1164,11 +1207,7 @@ function scrollActiveInfoGrid(direction) {
   const nextIndex = Math.max(0, Math.min(maxIndex, (infoGridIndexByMode[mode] || 0) + delta));
   infoGridIndexByMode[mode] = nextIndex;
   const next = nextIndex * step;
-  if (window.matchMedia('(max-width: 720px)').matches) {
-    grid.scrollLeft = next;
-  } else {
-    animateScrollLeft(grid, next);
-  }
+  animateScrollLeft(grid, next);
   setTimeout(updateInfoNavState, 420);
 }
 
@@ -1243,6 +1282,7 @@ function updateMapPortalChrome() {
 
 mapFsBtn.addEventListener('click', () => {
   const wrap = document.querySelector('.cv-map-wrap');
+  document.getElementById('cv-layer-menu')?.removeAttribute('open');
   const isFs = !mapPortal.classList.contains('active');
   if (isFs) {
     mapOriginalParent = wrap.parentElement;
@@ -1266,6 +1306,16 @@ mapFsBtn.addEventListener('click', () => {
   }
 });
 
+function updateCountryFileSummary(info) {
+  if (!info) return;
+  const name = document.getElementById('cv-file-name');
+  const capital = document.getElementById('cv-file-capital');
+  const population = document.getElementById('cv-file-pop');
+  if (name) name.textContent = info.name;
+  if (capital) capital.textContent = info.capital;
+  if (population) population.textContent = formatCompactPop(livePopulation(info.pop, info.gr)) + ' people';
+}
+
 function openCountry(countryId, sourceElement = document.activeElement, options = {}) {
   const info = COUNTRY_INFO[countryId];
   const countryPath = pathById[countryId];
@@ -1278,6 +1328,7 @@ function openCountry(countryId, sourceElement = document.activeElement, options 
   document.getElementById('cv-name').textContent = info.name;
   document.getElementById('cv-capital').textContent = info.capital;
   document.getElementById('cv-iso').textContent = info.cc.toUpperCase();
+  updateCountryFileSummary(info);
   renderAnthem(countryId, info);
   renderHeaderMeta(countryId, info);
 
@@ -1289,12 +1340,20 @@ function openCountry(countryId, sourceElement = document.activeElement, options 
 
   renderAlmanacFromGis(countryId, info);
   if (countryPopTimer) clearInterval(countryPopTimer);
-  countryPopTimer = null;
+  countryPopTimer = setInterval(() => {
+    if (!document.hidden && activeCountryMap?.countryId === countryId) updateCountryFileSummary(info);
+  }, 5000);
   if (countryUtilityTimer) clearInterval(countryUtilityTimer);
   countryUtilityTimer = null;
   stopAudioChannel();
 
   countryView.classList.add('open');
+  if (!wasOpen) {
+    setCountryFileExpanded(false);
+    if (mobileDossierMedia.matches) countryView.scrollTop = 0;
+  } else {
+    syncCountryFileViewport();
+  }
   document.body.style.overflow = 'hidden';
   updateOverlayAccessibility();
   currentSlideIndex = sortedCountryIds.indexOf(countryId);
@@ -1470,6 +1529,22 @@ function updateAudienceMeta() {
   restoreInfoGridPosition(mode);
 }
 
+function showMobilePanelStart() {
+  if (!mobileDossierMedia.matches || !countryView.classList.contains('open')) return;
+  const body = document.querySelector('.cv-body');
+  const carousel = document.querySelector('.cv-carousel');
+  const headerHeight = document.querySelector('.cv-header')?.offsetHeight || 0;
+  const navHeight = document.getElementById('cv-dots')?.offsetHeight || 0;
+  requestAnimationFrame(() => {
+    const top = Math.max(0, (body?.offsetTop || 0) + (carousel?.offsetTop || 0) - headerHeight - navHeight);
+    countryView.scrollTo({ top, behavior: 'auto' });
+  });
+}
+
+function showMobileSignalStart() {
+  showMobilePanelStart();
+}
+
 backBtn.addEventListener('click', closeCountry);
 document.getElementById('cv-prev')?.addEventListener('click', () => openCountryByOffset(-1));
 document.getElementById('cv-next')?.addEventListener('click', () => openCountryByOffset(1));
@@ -1478,6 +1553,7 @@ document.getElementById('cv-map-next')?.addEventListener('click', () => openCoun
 dots.forEach(dot => dot.addEventListener('click', () => {
   setPanel(Number(dot.dataset.panel));
   syncRoute();
+  showMobilePanelStart();
 }));
 document.getElementById('cv-dots')?.addEventListener('keydown', event => {
   if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
@@ -1508,8 +1584,11 @@ audienceSelect?.addEventListener('change', () => {
 });
 audienceTabs.forEach(tab => tab.addEventListener('click', () => {
   if (!audienceSelect) return;
-  audienceSelect.value = tab.dataset.audience || 'farmers';
+  const mode = tab.dataset.audience || 'farmers';
+  audienceSelect.value = mode;
+  if (mobileDossierMedia.matches) infoGridIndexByMode[mode] = 0;
   audienceSelect.dispatchEvent(new Event('change'));
+  showMobileSignalStart();
 }));
 document.addEventListener('fx-ready', () => {
   if (!activeCountryMap) return;
@@ -4650,6 +4729,16 @@ async function runSelfTest() {
     add('smoke: crop calendar rows', document.querySelectorAll('#cv-crop-cal .cv-cal-row').length > 0, document.querySelectorAll('#cv-crop-cal .cv-cal-row').length);
     add('smoke: route set', location.hash.indexOf('#/ke') === 0, location.hash);
     add('a11y: one country panel exposed', document.querySelectorAll('.cv-panel[aria-hidden="false"]').length === 1, document.querySelectorAll('.cv-panel[aria-hidden="false"]').length);
+    const fileContent = document.getElementById('cv-file-content');
+    const sectionTabsRect = document.getElementById('cv-dots')?.getBoundingClientRect();
+    const carouselRect = document.querySelector('.cv-carousel')?.getBoundingClientRect();
+    const mobileDossierLayoutOk = !mobileDossierMedia.matches || (
+      fileContent?.hidden &&
+      sectionTabsRect?.bottom <= (carouselRect?.top || 0) + 1 &&
+      Array.from(document.querySelectorAll('.cv-panel[aria-hidden="true"]')).every(panel => getComputedStyle(panel).display === 'none')
+    );
+    add('mobile dossier starts compact with sections above content', mobileDossierLayoutOk,
+      mobileDossierMedia.matches ? Math.round(sectionTabsRect?.bottom || 0) + '/' + Math.round(carouselRect?.top || 0) : 'desktop skipped');
     add('a11y: ticker clones skip keyboard', !document.querySelector('.ticker-segment[aria-hidden="true"] button:not([tabindex="-1"])'));
     audienceSelect.value = 'investors';
     audienceSelect.dispatchEvent(new Event('change'));
@@ -4662,9 +4751,25 @@ async function runSelfTest() {
     openCountry('lr');
     await new Promise(r => setTimeout(r, 260));
     const stickyGrid = activeInfoGrid();
+    const mobileSignalFlow = mobileDossierMedia.matches;
     add('smoke: signal card sticks across countries',
-      infoGridIndexByMode.investors === stickyBefore + 1 && stickyGrid.scrollLeft > stickyGrid.clientWidth * 0.5,
-      stickyBefore + '->' + infoGridIndexByMode.investors + ' @ ' + Math.round(stickyGrid.scrollLeft));
+      mobileSignalFlow
+        ? getComputedStyle(stickyGrid).flexDirection === 'column' && stickyGrid.scrollWidth <= stickyGrid.clientWidth + 2 && infoGridIndexByMode.investors === 0
+        : infoGridIndexByMode.investors === stickyBefore + 1 && stickyGrid.scrollLeft > stickyGrid.clientWidth * 0.5,
+      mobileSignalFlow
+        ? 'vertical · ' + stickyGrid.scrollWidth + '/' + stickyGrid.clientWidth
+        : stickyBefore + '->' + infoGridIndexByMode.investors + ' @ ' + Math.round(stickyGrid.scrollLeft));
+    setPanel(2);
+    await new Promise(r => setTimeout(r, 160));
+    const atlasRect = countryMapCanvas.getBoundingClientRect();
+    add('mobile atlas viewport is bounded and page-width safe',
+      !mobileDossierMedia.matches || (
+        atlasRect.width >= Math.min(272, window.innerWidth - 48) &&
+        atlasRect.height >= 300 &&
+        atlasRect.height <= window.innerHeight * 0.62 + 1 &&
+        countryView.scrollWidth <= countryView.clientWidth + 1
+      ),
+      Math.round(atlasRect.width) + 'x' + Math.round(atlasRect.height) + ' / root ' + countryView.scrollWidth + '/' + countryView.clientWidth);
     const tickerAnimation = tickerEl.getAnimations?.()[0];
     const tickerTimeBeforeClose = Number(tickerAnimation?.currentTime || 0);
     closeCountry();

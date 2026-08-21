@@ -161,6 +161,8 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-empty-note{padding:14px 16px;font:italic 13px/1.4 var(--serif);color:var(--text-dim);border:1px dashed var(--rule);background:rgba(0,0,0,0.12)}
 
 .cv-body{position:relative;z-index:1;flex:1;min-height:0;width:min(100%,1280px);margin:0 auto;padding:clamp(12px,1.5vw,20px) clamp(16px,3vw,40px) 8px;display:flex;flex-direction:column;gap:clamp(10px,1vw,14px)}
+.cv-country-file,.cv-file-content{display:contents}
+.cv-file-toggle{display:none}
 
 /* Identity — compact for no-scroll */
 .cv-identity{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:20px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--rule);flex-shrink:0;position:relative}
@@ -190,7 +192,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-alm-sub{font:10px/1.25 var(--sans);letter-spacing:0;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* Carousel container */
-.cv-carousel{flex:1;min-height:0;position:relative;overflow:hidden;border:1px solid var(--rule);background:var(--surface);border-radius:0}
+.cv-carousel{order:2;flex:1;min-height:0;position:relative;overflow:hidden;border:1px solid var(--rule);background:var(--surface);border-radius:0}
 .cv-carousel-track{display:flex;height:100%;width:300%;transition:transform 360ms cubic-bezier(0.4,0,0.2,1);will-change:transform;touch-action:pan-y pinch-zoom}
 .cv-carousel-track.no-tx{transition:none}
 .cv-carousel-track.drag{cursor:grabbing}
@@ -301,7 +303,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 /* Atlas panel body fills, map fills its panel */
 .cv-panel[data-panel="2"] .cv-panel-body{overflow:hidden}
 .cv-panel[data-panel="1"] .cv-panel-body{overflow:hidden;padding:14px 18px 16px}
-.cv-dots{flex-shrink:0;display:flex;justify-content:center;align-items:center;gap:0;padding:0;position:relative;border-top:1px solid var(--rule);background:var(--surface)}
+.cv-dots{order:3;flex-shrink:0;display:flex;justify-content:center;align-items:center;gap:0;padding:0;position:relative;border-top:1px solid var(--rule);background:var(--surface)}
 .cv-dot{display:inline-flex;align-items:center;justify-content:center;gap:0;background:none;border:0;padding:12px 24px 10px;cursor:pointer;font:700 11px/1 var(--mono);letter-spacing:0.1em;color:var(--text-muted);text-transform:uppercase;transition:color 200ms;position:relative;flex:1}
 .cv-dot:hover{color:var(--text-muted)}
 .cv-dot i{display:none}
@@ -512,6 +514,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-layer-pill[aria-pressed="true"]{background:rgba(76,175,80,0.105);border-color:rgba(102,187,106,0.62);color:var(--green-bright);box-shadow:0 0 12px rgba(76,175,80,0.06)}
 .cv-layer-pill::before{content:"";width:9px;height:9px;border-radius:50%;border:1px solid currentColor;opacity:0.58;box-shadow:inset 0 0 0 2px rgba(0,0,0,0.55)}
 .cv-layer-pill[aria-pressed="true"]::before{background:currentColor;opacity:1;box-shadow:inset 0 0 0 2px rgba(0,0,0,0.72),0 0 6px currentColor}
+.cv-map-stage{position:relative;flex:1;min-height:0;display:flex}
 .cv-country-map{position:relative;width:100%;aspect-ratio:var(--map-aspect,4/3);min-height:var(--map-minh,320px);display:block;background:linear-gradient(145deg,#141714,#101210)}
 .cv-map-portal{display:none}
 .cv-map-portal.active{display:flex;position:absolute;inset:0;z-index:100;background:#131313}
@@ -1080,6 +1083,66 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .cv-carousel-arrow{width:44px;height:44px}
   .cv-layer-pill{min-height:44px}
   .cv-brief-desk .src a,.cv-story-sources a{display:inline-block;padding:11px 0;margin-right:14px}
+}
+
+/* On phones the dossier is a document, not three competing app panes. Only the
+   selected section participates in layout, so a long Signal lens cannot resize
+   News or Atlas. The country file stays available without blocking the desk. */
+@media (max-width:720px){
+  #country-view{scroll-padding-top:110px}
+  .cv-header{position:sticky;top:0;z-index:30}
+  .cv-body{width:100%;padding:10px 12px 18px;gap:10px}
+
+  .cv-country-file{display:block;order:0;min-width:0}
+  .cv-file-toggle{width:100%;min-height:60px;display:grid;grid-template-columns:minmax(0,1fr) minmax(92px,auto) 18px;align-items:center;gap:12px;padding:9px 12px;border:1px solid rgba(232,230,227,.14);background:linear-gradient(90deg,rgba(76,175,80,.07),rgba(255,255,255,.018));color:var(--text);text-align:left;cursor:pointer}
+  .cv-file-toggle:hover,.cv-file-toggle:focus-visible{border-color:rgba(76,175,80,.55);outline:none;background:rgba(76,175,80,.08)}
+  .cv-file-title{display:flex;min-width:0;flex-direction:column;gap:5px}
+  .cv-file-kicker{font:700 8px/1 var(--mono);letter-spacing:.18em;color:var(--green);text-transform:uppercase}
+  .cv-file-title strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 22px/1 var(--serif);letter-spacing:0;color:var(--text)}
+  .cv-file-facts{display:flex;min-width:0;flex-direction:column;gap:5px;text-align:right;font:700 9px/1.1 var(--mono);letter-spacing:.08em;color:var(--text-muted);text-transform:uppercase}
+  .cv-file-facts span{max-width:128px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cv-file-facts span:last-child{color:var(--green-bright);font-variant-numeric:tabular-nums}
+  .cv-file-toggle svg{width:18px;height:18px;fill:none;stroke:var(--green-bright);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 150ms}
+  .cv-file-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+  .cv-file-content{display:grid;gap:10px;padding-top:10px}
+  .cv-file-content[hidden]{display:none}
+  .cv-identity::before{display:none}
+
+  .cv-dots{order:1;position:sticky;top:65px;z-index:20;border:1px solid var(--rule);background:rgba(19,19,19,.98);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+  .cv-dot{padding:0 12px;min-height:46px}
+  .cv-carousel{order:2;min-height:0;overflow:visible}
+  .cv-carousel-track{display:block;width:100%;height:auto;transform:none!important;overflow:visible}
+  .cv-panel{display:none;width:100%;height:auto;min-height:calc(100svh - 176px);overflow:visible}
+  .cv-panel[aria-hidden="false"]{display:flex}
+  .cv-panel-body{overflow:visible}
+
+  #cv-panel-signals .cv-panel-head{position:sticky;top:111px;z-index:15;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px;padding:7px 10px;background:rgba(24,24,24,.98);box-shadow:0 8px 18px rgba(0,0,0,.26)}
+  #cv-panel-signals .cv-panel-head>div:first-child{grid-column:auto;grid-row:auto}
+  #cv-panel-signals .cv-news-tools{display:block;min-width:0;width:100%}
+  #cv-panel-signals #cv-audience-meta{display:none}
+  #cv-panel-signals .cv-audience-tabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:2px;padding:2px;justify-self:stretch}
+  #cv-panel-signals .cv-audience-tab{min-width:0;min-height:44px;padding:0 4px;font-size:8px;letter-spacing:.08em}
+  #cv-panel-signals .cv-panel-body{padding:10px;overflow:visible}
+  body[data-panel="1"] .audience-mode.cv-info-grid{height:auto;flex-direction:column!important;gap:10px;overflow:visible!important;scroll-snap-type:none;padding:0}
+  body[data-panel="1"] .cv-info-grid>div,body[data-panel="1"] .cv-info-grid>div:first-child{width:100%;flex:0 0 auto;min-height:0;overflow:visible;padding:16px 14px 22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+  body[data-panel="1"] .cv-info-grid>div::before{margin:-16px 0 13px -14px}
+  body[data-panel="1"] .cv-sectors{grid-template-columns:1fr}
+  body[data-panel="1"] .cv-dia-facts{grid-template-columns:repeat(2,minmax(0,1fr));min-width:0}
+  body[data-panel="1"] .cv-dia-fact{min-width:0;padding:14px 10px}
+  body[data-panel="1"] .cv-dia-fact span{overflow-wrap:anywhere}
+
+  #cv-panel-atlas .cv-panel-head .meta{display:none}
+  #cv-panel-atlas .cv-panel-body{padding:10px!important;overflow:visible}
+  #cv-panel-atlas .cv-map-wrap{height:auto;min-height:0;overflow:visible}
+  #cv-panel-atlas .cv-map-toolbar{grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:7px 8px}
+  #cv-panel-atlas .cv-map-title{min-width:0}
+  #cv-panel-atlas .cv-map-title b,#cv-panel-atlas .cv-map-title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #cv-panel-atlas .cv-layers{flex-wrap:nowrap;gap:4px}
+  #cv-panel-atlas .cv-layer-menu summary{min-height:44px;padding:0 9px}
+  #cv-panel-atlas .cv-map-stage{height:clamp(320px,52svh,460px);min-height:0;flex:0 0 auto}
+  #cv-panel-atlas .cv-country-map{width:100%;height:100%;min-height:0;aspect-ratio:auto;flex:1}
+  #cv-panel-atlas .cv-map-fs{left:8px;right:auto}
+  #cv-panel-atlas .cv-map-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;padding:10px 12px;font-size:8px;letter-spacing:.1em}
 }
 
 /* Remaining sub-44px controls, by their real selectors. Measured on a phone, not

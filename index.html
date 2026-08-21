@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=33">
+<link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
 
@@ -94,45 +94,68 @@
   </div>
   <div class="cv-body">
 
-    <section class="cv-identity">
-      <div class="cv-id-main">
-        <div class="cv-region" id="cv-region"></div>
-        <h2 class="cv-name" id="cv-name"></h2>
-        <div class="cv-id-meta">
-          <span>Capital <b id="cv-capital"></b></span>
-          <span>ISO <b id="cv-iso"></b></span>
-          <span>Growth <b id="cv-growth">—</b></span>
-          <span class="cv-fx" id="cv-fx" style="display:none">$1 = <b id="cv-fx-rate"></b> <small id="cv-fx-ccy"></small></span>
-          <span class="cv-exch" id="cv-exch" style="display:none">Market <b id="cv-exch-code"></b></span>
-          <span class="cv-anthem" id="cv-anthem-wrap">Anthem <b id="cv-anthem"></b><button id="cv-anthem-btn" type="button" aria-label="National anthem preview">♪</button></span>
-        </div>
-      </div>
-      <button class="cv-star" id="cv-star" type="button" aria-pressed="false" title="Follow this country">☆</button>
-      <img class="cv-flag" id="cv-flag" alt="">
-    </section>
+    <div class="cv-country-file" id="cv-country-file">
+      <button class="cv-file-toggle" id="cv-file-toggle" type="button" aria-expanded="false" aria-controls="cv-file-content">
+        <span class="cv-file-title">
+          <span class="cv-file-kicker">Country file</span>
+          <strong id="cv-file-name"></strong>
+        </span>
+        <span class="cv-file-facts">
+          <span id="cv-file-capital"></span>
+          <span id="cv-file-pop"></span>
+        </span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+      </button>
 
-    <section class="cv-almanac" aria-label="Live almanac">
-      <div class="cv-alm-cell">
-        <div class="cv-alm-key" id="cv-pop-key">Population · Live</div>
-        <div class="cv-alm-val green" id="cv-pop">—</div>
-        <div class="cv-alm-sub" id="cv-pop-sub">Ticking by birthrate</div>
+      <div class="cv-file-content" id="cv-file-content">
+
+        <section class="cv-identity">
+          <div class="cv-id-main">
+            <div class="cv-region" id="cv-region"></div>
+            <h2 class="cv-name" id="cv-name"></h2>
+            <div class="cv-id-meta">
+              <span>Capital <b id="cv-capital"></b></span>
+              <span>ISO <b id="cv-iso"></b></span>
+              <span>Growth <b id="cv-growth">—</b></span>
+              <span class="cv-fx" id="cv-fx" style="display:none">$1 = <b id="cv-fx-rate"></b> <small id="cv-fx-ccy"></small></span>
+              <span class="cv-exch" id="cv-exch" style="display:none">Market <b id="cv-exch-code"></b></span>
+              <span class="cv-anthem" id="cv-anthem-wrap">Anthem <b id="cv-anthem"></b><button id="cv-anthem-btn" type="button" aria-label="National anthem preview">♪</button></span>
+            </div>
+          </div>
+          <button class="cv-star" id="cv-star" type="button" aria-pressed="false" title="Follow this country">☆</button>
+          <img class="cv-flag" id="cv-flag" alt="">
+        </section>
+
+        <section class="cv-almanac" aria-label="Live almanac">
+          <div class="cv-alm-cell">
+            <div class="cv-alm-key" id="cv-pop-key">Population · Live</div>
+            <div class="cv-alm-val green" id="cv-pop">—</div>
+            <div class="cv-alm-sub" id="cv-pop-sub">Ticking by birthrate</div>
+          </div>
+          <div class="cv-alm-cell">
+            <div class="cv-alm-key" id="cv-weather-key">Weather</div>
+            <div class="cv-alm-val" id="cv-weather">Loading</div>
+            <div class="cv-alm-sub" id="cv-weather-sub">—</div>
+          </div>
+          <div class="cv-alm-cell">
+            <div class="cv-alm-key" id="cv-time-key">Local time</div>
+            <div class="cv-alm-val" id="cv-time">--:--</div>
+            <div class="cv-alm-sub" id="cv-time-sub">Capital reference</div>
+          </div>
+          <div class="cv-alm-cell">
+            <div class="cv-alm-key" id="cv-daylight-key">Daylight window</div>
+            <div class="cv-alm-val" id="cv-daylight">—</div>
+            <div class="cv-alm-sub" id="cv-daylight-sub">Sunrise &rarr; sunset</div>
+          </div>
+        </section>
       </div>
-      <div class="cv-alm-cell">
-        <div class="cv-alm-key" id="cv-weather-key">Weather</div>
-        <div class="cv-alm-val" id="cv-weather">Loading</div>
-        <div class="cv-alm-sub" id="cv-weather-sub">—</div>
-      </div>
-      <div class="cv-alm-cell">
-        <div class="cv-alm-key" id="cv-time-key">Local time</div>
-        <div class="cv-alm-val" id="cv-time">--:--</div>
-        <div class="cv-alm-sub" id="cv-time-sub">Capital reference</div>
-      </div>
-      <div class="cv-alm-cell">
-        <div class="cv-alm-key" id="cv-daylight-key">Daylight window</div>
-        <div class="cv-alm-val" id="cv-daylight">—</div>
-        <div class="cv-alm-sub" id="cv-daylight-sub">Sunrise &rarr; sunset</div>
-      </div>
-    </section>
+    </div>
+
+    <nav class="cv-dots" id="cv-dots" role="tablist" aria-label="Country sections">
+      <button class="cv-dot" type="button" data-panel="0" aria-current="false" aria-selected="false" aria-controls="cv-panel-news" role="tab"><i></i>News</button>
+      <button class="cv-dot" type="button" data-panel="1" aria-current="false" aria-selected="false" aria-controls="cv-panel-signals" role="tab"><i></i>Signals</button>
+      <button class="cv-dot" type="button" data-panel="2" aria-current="false" aria-selected="false" aria-controls="cv-panel-atlas" role="tab"><i></i>Atlas</button>
+    </nav>
 
     <section class="cv-carousel" aria-label="Country sections">
       <div class="cv-carousel-track" id="cv-track">
@@ -246,7 +269,7 @@
                   </details>
                 </div>
               </div>
-              <div style="position:relative;flex:1;min-height:0;display:flex">
+              <div class="cv-map-stage">
                 <canvas class="cv-country-map" id="cv-country-map" aria-label="Country atlas map" aria-describedby="cv-atlas-alt"></canvas>
                 <p class="sr-only" id="cv-atlas-alt"></p>
                 <button class="cv-map-fs" id="cv-map-fs" type="button" title="Toggle fullscreen" aria-label="Toggle fullscreen map">⛶</button>
@@ -263,12 +286,6 @@
 
       </div>
     </section>
-
-    <nav class="cv-dots" id="cv-dots" role="tablist" aria-label="Country sections">
-      <button class="cv-dot" type="button" data-panel="0" aria-current="false" aria-selected="false" aria-controls="cv-panel-news" role="tab"><i></i>News</button>
-      <button class="cv-dot" type="button" data-panel="1" aria-current="false" aria-selected="false" aria-controls="cv-panel-signals" role="tab"><i></i>Signals</button>
-      <button class="cv-dot" type="button" data-panel="2" aria-current="false" aria-selected="false" aria-controls="cv-panel-atlas" role="tab"><i></i>Atlas</button>
-    </nav>
 
   </div>
   <div id="cv-map-portal" class="cv-map-portal"></div>
@@ -331,11 +348,11 @@
   </div>
 </article>
 
-<script src="data/app-core.js?v=33"></script>
-<script src="data/briefs.js?v=33" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=33" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=33" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/app-core.js?v=34"></script>
+<script src="data/briefs.js?v=34" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=34" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=34" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
 
-<script src="app.js?v=33"></script>
+<script src="app.js?v=34"></script>
 </body>
 </html>
