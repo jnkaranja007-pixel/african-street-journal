@@ -2810,8 +2810,11 @@ function drawCountryMap(countryId, countryPath) {
   // country than fullscreen does. Supersample it (render above display resolution, let the
   // browser downscale) so labels and contour lines are as crisp as the fullscreen view.
   const mapDpr = isFs ? baseDpr : Math.min(3, baseDpr * 2);
-  const width = Math.max(520, Math.min(2600, Math.round(rect.width || 720)));
-  const height = Math.max(420, Math.min(1600, Math.round(rect.height || 560)));
+  // Keep the backing bitmap and its CSS box at the same aspect ratio. Independent minimum
+  // dimensions made the tall mobile Atlas squeeze a desktop-shaped bitmap horizontally.
+  // mapDpr already supplies the extra pixels needed for crisp embedded-map rendering.
+  const width = Math.max(1, Math.min(2600, Math.round(rect.width || 720)));
+  const height = Math.max(1, Math.min(1600, Math.round(rect.height || 560)));
   countryMapCanvas.width = width * mapDpr;
   countryMapCanvas.height = height * mapDpr;
   countryMapCtx.setTransform(mapDpr, 0, 0, mapDpr, 0, 0);
@@ -2823,7 +2826,11 @@ function drawCountryMap(countryId, countryPath) {
     : countryPath;
   if (!mapPath) return;
 
-  const bounds = mapViewBounds(countryId, mapPath.bbox, isFs);
+  // Seychelles spans widely scattered outer islands, which makes the inhabited Mahe cluster
+  // effectively disappear in the narrow embedded map. Reuse its established detail bounds on
+  // mobile while leaving every desktop country view unchanged.
+  const useIslandFocus = isFs || (mobileDossierMedia.matches && countryId === 'sc');
+  const bounds = mapViewBounds(countryId, mapPath.bbox, useIslandFocus);
   // Padding scales with the canvas so small embedded maps don't spend ~18% of their width on
   // margin: ~5.5% of the short side, clamped to 28-72px (island focus crops keep extra room).
   const pad = isFs && ISLAND_FULLSCREEN_BOUNDS[countryId]
@@ -2865,8 +2872,8 @@ function islandFullscreenZoom(countryId, isFullscreen) {
   return ({ cv: 1.15, km: 1.15, st: 1.15 })[countryId] || 1;
 }
 
-function mapViewBounds(countryId, bounds, isFullscreen) {
-  const focus = isFullscreen ? ISLAND_FULLSCREEN_BOUNDS[countryId] : null;
+function mapViewBounds(countryId, bounds, useIslandFocus) {
+  const focus = useIslandFocus ? ISLAND_FULLSCREEN_BOUNDS[countryId] : null;
   if (!focus) return bounds;
   return {
     minX: focus.minX,
@@ -4770,6 +4777,11 @@ async function runSelfTest() {
         countryView.scrollWidth <= countryView.clientWidth + 1
       ),
       Math.round(atlasRect.width) + 'x' + Math.round(atlasRect.height) + ' / root ' + countryView.scrollWidth + '/' + countryView.clientWidth);
+    const atlasCssRatio = atlasRect.width / Math.max(1, atlasRect.height);
+    const atlasBitmapRatio = countryMapCanvas.width / Math.max(1, countryMapCanvas.height);
+    add('atlas country geometry keeps its display proportions',
+      Math.abs(atlasCssRatio - atlasBitmapRatio) < 0.01,
+      atlasCssRatio.toFixed(3) + ' css / ' + atlasBitmapRatio.toFixed(3) + ' bitmap');
     const tickerAnimation = tickerEl.getAnimations?.()[0];
     const tickerTimeBeforeClose = Number(tickerAnimation?.currentTime || 0);
     closeCountry();
