@@ -26,7 +26,7 @@
   as a failed desk run rather than quietly publishing yesterday's paper again.
 #>
 param(
-  [string]$Model      = 'google/gemini-2.5-flash-lite',
+  [string]$Model      = 'google/gemini-2.5-flash',
   [string[]]$Only,
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
@@ -39,7 +39,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v10-enriched-number-words-lenses',
+  [string]$PromptVersion = 'story-v11-flash-enriched-banded-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -77,6 +77,41 @@ function Get-LensFallbackScore([string]$Lens, [string]$Topic) {
   $byLens = $LENS_FALLBACK_SCORES[$Lens]
   if ($byLens -and $byLens.ContainsKey($Topic)) { return [int]$byLens[$Topic] }
   return 50
+}
+
+function Get-LensRelevanceBand([string]$Lens, [string]$Topic, [string]$StoryText) {
+  $text = ([string]$StoryText).ToLowerInvariant()
+  if ($Lens -eq 'farmers') {
+    $direct = $Topic -in @('Agriculture','Climate') -or $text -match '\b(agricultur|farm|crop|harvest|livestock|irrigat|fertili[sz]|seed|rural|food secur|fisher|drought|rainfall|soil|water supply)\w*'
+    if ($direct) { return [pscustomobject]@{ Min = 75; Max = 100; Mode = 'direct' } }
+    return [pscustomobject]@{ Min = 0; Max = 20; Mode = 'none' }
+  }
+  if ($Lens -eq 'investors') {
+    $direct = $text -match '\b(invest|capital|bank|currency|exchange rate|interest rate|stock|bond|debt|trade|tariff|export|import|regulat|tax|budget|infrastructure|industry|industrial|enterprise|business|firm|market|energy|mining|telecom|technology)\w*'
+    if ($direct) { return [pscustomobject]@{ Min = 65; Max = 100; Mode = 'direct' } }
+    return [pscustomobject]@{ Min = 0; Max = 20; Mode = 'none' }
+  }
+  if ($Lens -eq 'diaspora') {
+    $direct = $text -match '\b(diaspora|remittance|visa|passport|consular|migration|migrant|travel|travell|passenger|ferry|flight|airline|border crossing|cross-border|overseas|abroad|family reunif)\w*'
+    if ($direct) { return [pscustomobject]@{ Min = 75; Max = 100; Mode = 'direct' } }
+    if ($Topic -in @('Sport','Culture','Education','Politics')) {
+      return [pscustomobject]@{ Min = 30; Max = 60; Mode = 'identity' }
+    }
+    return [pscustomobject]@{ Min = 0; Max = 20; Mode = 'none' }
+  }
+  return [pscustomobject]@{ Min = 0; Max = 100; Mode = 'direct' }
+}
+
+function Get-LensBandWhy([string]$Lens, [string]$Topic, [string]$Mode) {
+  if ($Mode -eq 'identity') {
+    if ($Topic -eq 'Sport') { return 'This national sports report may interest diaspora readers following teams and players from abroad.' }
+    if ($Topic -eq 'Culture') { return 'This culture report may interest diaspora readers maintaining ties to national life from abroad.' }
+    if ($Topic -eq 'Education') { return 'This education report may interest diaspora readers following institutions and opportunities from abroad.' }
+    return 'This politics report may interest diaspora readers following national public affairs from abroad.'
+  }
+  if ($Lens -eq 'farmers') { return 'This report establishes no direct effect on farming, food markets or rural livelihoods.' }
+  if ($Lens -eq 'investors') { return 'This report establishes no direct effect on firms, markets, regulation, infrastructure or capital.' }
+  return 'This report establishes no direct effect on diaspora travel, families or cross-border money.'
 }
 
 $codes = @($feed.byCountry.PSObject.Properties.Name)
@@ -260,6 +295,7 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
     )
     temperature = $Temperature
     max_tokens  = 3200
+    reasoning   = @{ effort = 'none' }
   }
   if ($JsonMode) {
     $lensEntrySchema = [ordered]@{
@@ -414,17 +450,9 @@ function Get-LensGroundingIssues($Brief) {
   foreach ($lens in $STORY_LENSES) {
     $lensProperty = if ($Brief.lenses) { $Brief.lenses.PSObject.Properties[$lens] } else { $null }
     if (-not $lensProperty) { $issues.Add("$lens missing"); continue }
-    $lensWhy = ([string]$lensProperty.Value.why).Trim()
     $lensScore = 0
     if (-not [int]::TryParse([string]$lensProperty.Value.score, [ref]$lensScore)) {
       $issues.Add("$lens score invalid")
-      continue
-    }
-    if ($lensWhy -match '(?i)\bif\b|\bcould be indirectly\b|\bmay be indirectly\b|\bmight be indirectly\b|\bpotentially\b') {
-      $issues.Add("$lens uses a hypothetical link")
-    }
-    if ($lensScore -gt 20 -and $lensWhy -match '(?i)\bno direct\b|\bdoes not directly\b|\bnot directly\b|\blimited direct\b') {
-      $issues.Add("$lens score conflicts with no direct impact")
     }
   }
   return $issues.ToArray()
@@ -612,6 +640,7 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
     # Normalize a malformed or missing model field to a deterministic topic score and the
     # canonical grounded why line so one bad sub-object cannot drop an otherwise valid story.
     $lensData = [ordered]@{}
+    $lensStoryText = $headline + "`n" + $dek + "`n" + (@($b.paragraphs) -join "`n")
     foreach ($lens in $STORY_LENSES) {
       $lensEntry = $null
       if ($b.lenses) {
@@ -626,6 +655,9 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
       $lensWhy = if ($lensEntry) { ([string]$lensEntry.why).Trim() } else { '' }
       $lensWhyWords = Get-WordCount $lensWhy
       if ($lensWhyWords -lt 8 -or $lensWhyWords -gt 50) { $lensWhy = $why }
+      $band = Get-LensRelevanceBand $lens $topic $lensStoryText
+      $lensScore = [int][Math]::Max($band.Min, [Math]::Min($band.Max, $lensScore))
+      if ($band.Mode -ne 'direct') { $lensWhy = Get-LensBandWhy $lens $topic $band.Mode }
       $lensData[$lens] = [ordered]@{ score = $lensScore; why = $lensWhy }
     }
 

@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues')) {
+foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -131,23 +131,29 @@ try {
   Write-Host 'PASS Arabic-Indic figure is grounded'
 
   $lensFixture = [pscustomobject]@{ lenses = [pscustomobject]@{
-    farmers = [pscustomobject]@{ score = 55; why = 'Farmers could be indirectly affected if the network traded agricultural goods.' }
+    farmers = [pscustomobject]@{ score = 12; why = 'The report establishes no direct effect on farmers or agricultural markets.' }
     investors = [pscustomobject]@{ score = 70; why = 'The report names a direct change to company licensing and capital requirements.' }
     diaspora = [pscustomobject]@{ score = 10; why = 'The report establishes no direct effect on diaspora travel, families or money.' }
   } }
   $lensIssues = @(Get-LensGroundingIssues $lensFixture)
-  if ($lensIssues -notcontains 'farmers uses a hypothetical link') { throw 'hypothetical audience link was accepted' }
-  Write-Host 'PASS hypothetical audience link is rejected'
-
-  $lensFixture.lenses.farmers = [pscustomobject]@{ score = 60; why = 'The report establishes no direct effect on farmers or agricultural markets.' }
-  $lensIssues = @(Get-LensGroundingIssues $lensFixture)
-  if ($lensIssues -notcontains 'farmers score conflicts with no direct impact') { throw 'no-impact score conflict was accepted' }
-  Write-Host 'PASS no-impact score conflict is rejected'
-
-  $lensFixture.lenses.farmers = [pscustomobject]@{ score = 12; why = 'The report establishes no direct effect on farmers or agricultural markets.' }
-  $lensIssues = @(Get-LensGroundingIssues $lensFixture)
   if ($lensIssues.Count) { throw "grounded lens package was rejected: $($lensIssues -join '; ')" }
-  Write-Host 'PASS grounded lens package is accepted'
+  Write-Host 'PASS structurally complete lens package is accepted'
+
+  $band = Get-LensRelevanceBand 'farmers' 'Business' 'Italian firms will modernize agricultural machinery and farming methods.'
+  if ($band.Mode -ne 'direct' -or $band.Min -ne 75) { throw 'agriculture did not enter the strong farmer band' }
+  Write-Host 'PASS agricultural story enters strong farmer band'
+
+  $band = Get-LensRelevanceBand 'investors' 'Sport' 'The national football team begins its tournament on Saturday.'
+  if ($band.Mode -ne 'none' -or $band.Max -ne 20) { throw 'sports story escaped the low investor band' }
+  Write-Host 'PASS sports story stays in low investor band'
+
+  $band = Get-LensRelevanceBand 'diaspora' 'Sport' 'The national football team begins its tournament on Saturday.'
+  if ($band.Mode -ne 'identity' -or $band.Min -ne 30 -or $band.Max -ne 60) { throw 'sports story missed diaspora identity band' }
+  Write-Host 'PASS national sports story enters diaspora identity band'
+
+  $band = Get-LensRelevanceBand 'diaspora' 'Business' 'Ferry passengers traveling abroad must report to the port early.'
+  if ($band.Mode -ne 'direct' -or $band.Min -ne 75) { throw 'ferry travel missed direct diaspora band' }
+  Write-Host 'PASS ferry travel enters direct diaspora band'
 
   $thinFeed = [ordered]@{
     fetched = '2026-08-20T09:00:00Z'
@@ -168,5 +174,5 @@ try {
   }
 }
 
-Write-Host '[story-contract] OK - 15 checks'
+Write-Host '[story-contract] OK - 17 checks'
 exit 0
