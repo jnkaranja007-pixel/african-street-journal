@@ -13,7 +13,7 @@ $metricsFixture = [IO.Path]::Combine([IO.Path]::GetTempPath(), 'asj-thin-metrics
 $outFixture = [IO.Path]::Combine([IO.Path]::GetTempPath(), 'asj-thin-output-' + [guid]::NewGuid().ToString('N') + '.json')
 $utf8 = New-Object Text.UTF8Encoding($false)
 
-function Write-Fixture([int]$ParagraphCount) {
+function Write-Fixture([int]$ParagraphCount, [switch]$BadLens) {
   $allParagraphs = @(
     'The transport ministry opened a new freight checkpoint on Tuesday after a month-long trial. Officials said the site will inspect trucks moving between the capital and the northern farming corridor, where delays had pushed delivery times beyond two days during the busiest market weeks.',
     'The ministry said forty inspectors will work in rotating teams and publish daily queue estimates. Two trade groups that monitored the trial reported shorter waits, although both said the test covered fewer vehicles than a normal harvest-season day and should not be treated as a final measure.',
@@ -27,6 +27,12 @@ function Write-Fixture([int]$ParagraphCount) {
     paragraphs = $paragraphs
     body = $paragraphs -join "`n`n"
     why = 'Shorter queues could reduce spoilage and transport costs for farmers and wholesalers.'
+    lensVersion = 1
+    lenses = @{
+      farmers = @{ score = 94; why = 'Shorter freight queues could reduce spoilage and transport costs for farmers moving harvests.' }
+      investors = @{ score = $(if ($BadLens) { 140 } else { 66 }); why = 'Published queue estimates give logistics operators a clearer measure of freight delays and capacity.' }
+      diaspora = @{ score = 28; why = 'The checkpoint has limited direct diaspora impact unless household deliveries use this northern corridor.' }
+    }
     topic = 'Business'
     published = '2026-08-20T08:00:00Z'
     editorialScore = 8.4
@@ -56,6 +62,11 @@ try {
   if ($LASTEXITCODE -ne 0) { throw 'valid full story was rejected' }
   Write-Host 'PASS valid three-paragraph story is publishable'
 
+  Write-Fixture 3 -BadLens
+  & powershell -NoProfile -ExecutionPolicy Bypass -File $validator -BriefsFile $fixture -MinStoryPackages 1 *> $null
+  if ($LASTEXITCODE -eq 0) { throw 'invalid lens package was accepted' }
+  Write-Host 'PASS out-of-range lens score is rejected'
+
   Write-Fixture 2
   & powershell -NoProfile -ExecutionPolicy Bypass -File $validator -BriefsFile $fixture -MinStoryPackages 1 *> $null
   if ($LASTEXITCODE -eq 0) { throw 'invalid two-paragraph story was accepted' }
@@ -80,5 +91,5 @@ try {
   }
 }
 
-Write-Host '[story-contract] OK - 3 checks'
+Write-Host '[story-contract] OK - 4 checks'
 exit 0

@@ -27,19 +27,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=35">
+<link rel="stylesheet" href="styles.css?v=36">
 </head>
 <body>
 
 <div class="masthead">
   <span>VOL. I &middot; EST. 2026 &middot; AFRICA</span>
-  <div class="masthead-kicker"><span>INDEPENDENT</span><span class="kicker-dot" aria-hidden="true">&middot;</span><span>FOR THE CONTINENT</span></div>
+  <div class="masthead-kicker"><span>INDEPENDENT</span><span class="kicker-dot" aria-hidden="true">&middot;</span><span>AFRICAN JOURNALISM</span></div>
   <span>EFFICIENT JOURNALISM</span>
   <div class="mobile-masthead">
     <a class="mobile-wordmark" href="./" aria-label="The African Street Journal home">ASJ</a>
     <span class="mobile-wordmark-name">African Street<br>Journal</span>
     <button class="wire-entry mobile-wire-entry" data-wire-entry type="button" aria-label="Open today's Africa desk" title="Open today's Africa desk">
-      <span class="wire-entry-count">The Continent</span>
+      <span class="wire-entry-count">ASJ Wire</span>
       <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
     </button>
   </div>
@@ -49,7 +49,7 @@
   <p class="tagline-footer">&mdash; from the streets, for the streets &mdash;</p>
   <button class="wire-entry" id="wire-entry" type="button" aria-label="Open today's Africa desk" title="Open today's Africa desk">
     <span class="wire-entry-label">Open today's desk</span>
-    <span class="wire-entry-count" id="wire-entry-count">The Continent</span>
+    <span class="wire-entry-count" id="wire-entry-count">ASJ Wire</span>
     <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
   </button>
 </div>
@@ -63,7 +63,7 @@
 
     <div class="pop-counter" aria-live="polite">
       <div class="pop-number" id="africa-pop"></div>
-      <div class="pop-label">PEOPLE &middot; ONE CONTINENT</div>
+      <div class="pop-label">PEOPLE &middot; 55 COUNTRIES</div>
     </div>
 
     <div class="stage">
@@ -169,6 +169,12 @@
               <span class="meta" id="cv-story-meta">AI desk · ranked by usefulness</span>
             </div>
           </header>
+          <div class="cv-news-lenses" id="cv-news-lenses" role="group" aria-label="Rank stories for a reader lens">
+            <button class="cv-news-lens" type="button" data-story-lens="general" aria-pressed="true">Top</button>
+            <button class="cv-news-lens" type="button" data-story-lens="farmers" aria-pressed="false">Farmers</button>
+            <button class="cv-news-lens" type="button" data-story-lens="investors" aria-pressed="false">Investors</button>
+            <button class="cv-news-lens" type="button" data-story-lens="diaspora" aria-pressed="false">Diaspora</button>
+          </div>
           <div class="cv-panel-body">
             <div class="cv-cards" id="cv-cards"></div>
           </div>
@@ -291,16 +297,24 @@
   <div id="cv-map-portal" class="cv-map-portal"></div>
 </div>
 
-<div id="wire-view" role="dialog" aria-modal="true" aria-label="The Continent — latest top stories across Africa">
+<div id="wire-view" role="dialog" aria-modal="true" aria-label="ASJ Wire — latest top stories across Africa">
   <div class="wire-head">
-    <h2>The <span class="g">Continent</span><span class="wire-sub" id="wire-date"></span></h2>
+    <h2>ASJ <span class="g">Wire</span><span class="wire-sub" id="wire-date"></span></h2>
     <div class="wire-search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
       <input type="search" id="wire-search-input" placeholder="Search stories…" aria-label="Search stories" autocomplete="off">
     </div>
     <button class="wire-close" id="wire-close" type="button">Close ✕</button>
   </div>
-  <div class="wire-topics" id="wire-topics" role="group" aria-label="Filter by topic"></div>
+  <div class="wire-filter-bar">
+    <div class="wire-lenses" id="wire-lenses" role="group" aria-label="Rank stories for a reader lens">
+      <button class="wire-lens" type="button" data-story-lens="general" aria-pressed="true">Top</button>
+      <button class="wire-lens" type="button" data-story-lens="farmers" aria-pressed="false">Farmers</button>
+      <button class="wire-lens" type="button" data-story-lens="investors" aria-pressed="false">Investors</button>
+      <button class="wire-lens" type="button" data-story-lens="diaspora" aria-pressed="false">Diaspora</button>
+    </div>
+    <div class="wire-topics" id="wire-topics" role="group" aria-label="Filter by topic"></div>
+  </div>
   <div class="wire-tools" id="wire-tools">
     <div class="wire-trust" id="wire-trust"></div>
     <div class="wire-result-count" id="wire-result-count" aria-live="polite"></div>
@@ -348,11 +362,11 @@
   </div>
 </article>
 
-<script src="data/app-core.js?v=35"></script>
-<script src="data/briefs.js?v=35" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=35" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=35" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/app-core.js?v=36"></script>
+<script src="data/briefs.js?v=36" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=36" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=36" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
 
-<script src="app.js?v=35"></script>
+<script src="app.js?v=36"></script>
 </body>
 </html>

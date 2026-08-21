@@ -39,7 +39,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 110,
   [int]$MaxStoryWords = 280,
-  [string]$PromptVersion = 'story-v1',
+  [string]$PromptVersion = 'story-v2-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -66,6 +66,18 @@ $feed = [IO.File]::ReadAllText($inPath, [Text.Encoding]::UTF8) | ConvertFrom-Jso
 if (-not $feed.byCountry) { Write-Host '[write] feed has no byCountry block' -ForegroundColor Red; exit 1 }
 
 $VALID_TOPICS = @('Politics','Business','Sport','Tech','Climate','Agriculture','Culture','Health','Education','News')
+$STORY_LENSES = @('farmers','investors','diaspora')
+$LENS_FALLBACK_SCORES = @{
+  farmers = @{ Politics=48; Business=62; Sport=24; Tech=52; Climate=88; Agriculture=96; Culture=30; Health=58; Education=54; News=44 }
+  investors = @{ Politics=72; Business=96; Sport=35; Tech=88; Climate=62; Agriculture=68; Culture=38; Health=54; Education=58; News=48 }
+  diaspora = @{ Politics=78; Business=72; Sport=68; Tech=58; Climate=52; Agriculture=48; Culture=88; Health=66; Education=74; News=56 }
+}
+
+function Get-LensFallbackScore([string]$Lens, [string]$Topic) {
+  $byLens = $LENS_FALLBACK_SCORES[$Lens]
+  if ($byLens -and $byLens.ContainsKey($Topic)) { return [int]$byLens[$Topic] }
+  return 50
+}
 
 $codes = @($feed.byCountry.PSObject.Properties.Name)
 if ($Only) {
@@ -89,6 +101,12 @@ Rules:
 - Paragraphs: 3 to 6 short paragraphs, 110 to 280 words total. Lead with what changed,
   then attribution, scale, affected people and useful context present in the evidence.
 - "why": one concrete sentence naming who is affected and how. No generic importance.
+- Lenses: score the story's direct relevance from 0 to 100 for farmers, investors and
+  diaspora readers. A score measures audience fit, not truth, certainty or overall importance.
+  Give each lens one grounded "why" sentence using only the supplied evidence. Farmers covers
+  production, food markets, rural livelihoods, land, water and inputs. Investors covers firms,
+  rates, currency, trade, regulation, infrastructure and capital. Diaspora covers remittances,
+  travel, visas, family safety, education, culture and cross-border money.
 - Attribute disputed claims. Carry units, direction and comparisons exactly as supplied.
 - Paraphrase. Do not copy a source sentence or use a quotation longer than 12 words.
 - Neutral. Report what happened and attribute claims. No opinion, no loaded
@@ -315,11 +333,13 @@ stories, ordered by their original desk rank.
 
 Return ONLY a JSON object, no prose before or after, in exactly this shape:
 
-{"stories":[{"item":0,"topic":"Business","headline":"...","dek":"...","paragraphs":["...","...","..."],"why":"..."}]}
+{"stories":[{"item":0,"topic":"Business","headline":"...","dek":"...","paragraphs":["...","...","..."],"why":"...","lenses":{"farmers":{"score":60,"why":"..."},"investors":{"score":90,"why":"..."},"diaspora":{"score":45,"why":"..."}}}]}
 
 - "item" is the index of the item the brief is based on. It must be one of the
   indexes listed above.
 - "topic" must be exactly one of: $($VALID_TOPICS -join ', ').
+- Every story must include all three lens objects. Each score must be a whole number
+  from 0 to 100, and each lens "why" must be one specific evidence-grounded sentence.
 - Do not include any URL. Sources are attached automatically from the item.
 - Do not combine two item indexes into one story.
 "@
@@ -401,6 +421,27 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
     $whyWords = Get-WordCount $why
     if ($whyWords -lt 8 -or $whyWords -gt 50) { $rejectReasons.Add('why line outside 8-50 words'); continue }
 
+    # Lens metadata changes discovery and the displayed relevance note, never the facts.
+    # Normalize a malformed or missing model field to a deterministic topic score and the
+    # canonical grounded why line so one bad sub-object cannot drop an otherwise valid story.
+    $lensData = [ordered]@{}
+    foreach ($lens in $STORY_LENSES) {
+      $lensEntry = $null
+      if ($b.lenses) {
+        $lensProperty = $b.lenses.PSObject.Properties[$lens]
+        if ($lensProperty) { $lensEntry = $lensProperty.Value }
+      }
+      $lensScore = Get-LensFallbackScore $lens $topic
+      $parsedScore = 0.0
+      if ($lensEntry -and [double]::TryParse([string]$lensEntry.score, [ref]$parsedScore)) {
+        $lensScore = [int][Math]::Round([Math]::Max(0.0, [Math]::Min(100.0, $parsedScore)))
+      }
+      $lensWhy = if ($lensEntry) { ([string]$lensEntry.why).Trim() } else { '' }
+      $lensWhyWords = Get-WordCount $lensWhy
+      if ($lensWhyWords -lt 8 -or $lensWhyWords -gt 50) { $lensWhy = $why }
+      $lensData[$lens] = [ordered]@{ score = $lensScore; why = $lensWhy }
+    }
+
     $paragraphs = New-Object System.Collections.Generic.List[string]
     foreach ($paragraph in @($b.paragraphs)) {
       $text = ([string]$paragraph).Trim()
@@ -424,7 +465,8 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
     foreach ($other in @($src.alsoSources)) {
       $evidence += "`n" + ([string]$other.title) + "`n" + ([string]$other.summary) + "`n" + ([string]$other.published)
     }
-    $ungrounded = @(Get-UngroundedNumbers ($headline + "`n" + $dek + "`n" + $body + "`n" + $why) $evidence)
+    $lensWhyText = @($lensData.Values | ForEach-Object { [string]$_.why }) -join "`n"
+    $ungrounded = @(Get-UngroundedNumbers ($headline + "`n" + $dek + "`n" + $body + "`n" + $why + "`n" + $lensWhyText) $evidence)
     if ($ungrounded.Count) {
       $rejectReasons.Add('unsupported number: ' + (($ungrounded | Select-Object -First 2) -join ', '))
       continue
@@ -446,6 +488,8 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
       paragraphs      = $paragraphs.ToArray()
       body            = $body
       why             = $why
+      lensVersion     = 1
+      lenses          = $lensData
       topic           = $topic
       published       = [string]$src.published
       sourceTitle     = [string]$src.title

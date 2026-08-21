@@ -6,6 +6,130 @@ const AI_BRIEFS_AT = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS
 const AI_BRIEFS_DATES = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.dates) || {};
 // Live market heat data (top listed companies) written daily by build-briefs.ps1.
 const LIVE_MARKETS = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.markets) || {};
+const STORY_LENS_KEY = 'asj:story-lens:v1';
+const STORY_READ_KEY = 'asj:story-read:v1';
+const STORY_LENSES = ['general','farmers','investors','diaspora'];
+const STORY_LENS_LABELS = { general:'Top', farmers:'Farmer', investors:'Investor', diaspora:'Diaspora' };
+const STORY_LENS_TOPIC_SCORES = {
+  farmers: { Politics:48, Business:62, Sport:24, Tech:52, Climate:88, Agriculture:96, Culture:30, Health:58, Education:54, News:44 },
+  investors: { Politics:72, Business:96, Sport:35, Tech:88, Climate:62, Agriculture:68, Culture:38, Health:54, Education:58, News:48 },
+  diaspora: { Politics:78, Business:72, Sport:68, Tech:58, Climate:52, Agriculture:48, Culture:88, Health:66, Education:74, News:56 }
+};
+
+function normalizeStoryLens(value) {
+  const lens = String(value || '').toLowerCase();
+  return STORY_LENSES.includes(lens) ? lens : 'general';
+}
+
+function readStoryLens() {
+  try { return normalizeStoryLens(localStorage.getItem(STORY_LENS_KEY)); }
+  catch { return 'general'; }
+}
+
+let activeStoryLens = readStoryLens();
+document.body.dataset.storyLens = activeStoryLens;
+
+function readStoryHistory() {
+  try {
+    const value = JSON.parse(localStorage.getItem(STORY_READ_KEY) || '{}');
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  } catch { return {}; }
+}
+
+let storyReadHistory = readStoryHistory();
+
+function isStoryReadKey(key) {
+  return !!storyReadHistory[String(key || '')];
+}
+
+function markStoryReadKey(key) {
+  const id = String(key || '');
+  if (!id) return;
+  storyReadHistory[id] = new Date().toISOString();
+  const recent = Object.entries(storyReadHistory)
+    .sort((a, b) => String(b[1]).localeCompare(String(a[1])))
+    .slice(0, 500);
+  storyReadHistory = Object.fromEntries(recent);
+  try { localStorage.setItem(STORY_READ_KEY, JSON.stringify(storyReadHistory)); } catch {}
+}
+
+function storyLensData(story, lens = activeStoryLens) {
+  const mode = normalizeStoryLens(lens);
+  if (mode === 'general') return { score:100, why:briefWhy(story), explicit:true };
+  const raw = story?.lenses?.[mode];
+  const parsed = Number(raw?.score);
+  const fallback = STORY_LENS_TOPIC_SCORES[mode]?.[story?.topic || 'News'] ?? 50;
+  const score = Number.isFinite(parsed) ? Math.round(Math.max(0, Math.min(100, parsed))) : fallback;
+  const why = String(raw?.why || '').trim() || briefWhy(story);
+  return { score, why, explicit:!!raw };
+}
+
+function storyFreshnessScore(story) {
+  const published = Date.parse(story?.published || '');
+  if (!Number.isFinite(published)) return 55;
+  const ageHours = Math.max(0, (Date.now() - published) / 3600000);
+  if (ageHours <= 18) return 100;
+  if (ageHours <= 36) return 82;
+  if (ageHours <= 60) return 64;
+  if (ageHours <= 96) return 42;
+  return 20;
+}
+
+function storyLensRank(story, lens = activeStoryLens, sourceIndex = 0) {
+  const rawEditorial = Number(story?.selectionScore ?? story?.editorialScore);
+  const editorial = Number.isFinite(rawEditorial) && rawEditorial > 0
+    ? Math.max(0, Math.min(100, rawEditorial * 4))
+    : Math.max(30, 92 - sourceIndex * 10);
+  const mode = normalizeStoryLens(lens);
+  if (mode === 'general') return editorial;
+  return editorial * 0.60 + storyLensData(story, mode).score * 0.30 + storyFreshnessScore(story) * 0.10;
+}
+
+function rankStoryEntries(stories, lens = activeStoryLens) {
+  const mode = normalizeStoryLens(lens);
+  const entries = (stories || []).map((story, sourceIndex) => ({
+    story,
+    sourceIndex,
+    lensRank:storyLensRank(story, mode, sourceIndex)
+  }));
+  if (mode === 'general') return entries;
+  return entries.sort((a, b) => b.lensRank - a.lensRank || a.sourceIndex - b.sourceIndex);
+}
+
+function updateStoryLensControls() {
+  document.querySelectorAll('[data-story-lens]').forEach(button => {
+    button.setAttribute('aria-pressed', String(normalizeStoryLens(button.dataset.storyLens) === activeStoryLens));
+  });
+}
+
+function persistStoryLens(lens) {
+  try { localStorage.setItem(STORY_LENS_KEY, lens); } catch {}
+  // Keep the existing saved-desk form aligned on this device. Cross-device updates still
+  // require an authenticated profile; the public signup table is intentionally insert-only.
+  try {
+    const signup = JSON.parse(localStorage.getItem('asj:desk-signup:v1') || 'null');
+    if (signup && typeof signup === 'object') {
+      signup.audience = lens;
+      if (signup.email) signup.synced = false;
+      localStorage.setItem('asj:desk-signup:v1', JSON.stringify(signup));
+    }
+  } catch {}
+}
+
+function setStoryLens(lens, options = {}) {
+  activeStoryLens = normalizeStoryLens(lens);
+  document.body.dataset.storyLens = activeStoryLens;
+  persistStoryLens(activeStoryLens);
+  updateStoryLensControls();
+  if (options.syncSignals !== false && activeStoryLens !== 'general' && audienceSelect) {
+    audienceSelect.value = activeStoryLens;
+    updateAudienceMeta();
+    if (activeCountryMap) renderAudienceKpis(activeCountryMap.countryId, COUNTRY_INFO[activeCountryMap.countryId]);
+  }
+  if (activeCountryMap) renderNewsPanel(activeCountryMap.countryId, activeStoryFeed);
+  renderYourDesk();
+  window.dispatchEvent(new CustomEvent('asj:lenschange', { detail:{ lens:activeStoryLens } }));
+}
 const COUNTRY_CURRENCY = {
   dz:'DZD',so:'SOS',zw:'ZWG',zm:'ZMW',za:'ZAR',ug:'UGX',tz:'TZS',tn:'TND',tg:'XOF',td:'XAF',
   sz:'SZL',sl:'SLE',sn:'XOF',ss:'SSP',sd:'SDG',eh:'MAD',rw:'RWF',ng:'NGN',ne:'XOF',na:'NAD',
@@ -1055,6 +1179,8 @@ const track = document.getElementById('cv-track');
 const dots = Array.from(document.querySelectorAll('.cv-dot'));
 const audienceSelect = document.getElementById('cv-audience');
 const audienceTabs = Array.from(document.querySelectorAll('.cv-audience-tab'));
+if (audienceSelect && activeStoryLens !== 'general') audienceSelect.value = activeStoryLens;
+updateStoryLensControls();
 const mobileDossierMedia = window.matchMedia('(max-width: 720px)');
 const countryFile = document.getElementById('cv-country-file');
 const countryFileToggle = document.getElementById('cv-file-toggle');
@@ -1555,6 +1681,11 @@ dots.forEach(dot => dot.addEventListener('click', () => {
   syncRoute();
   showMobilePanelStart();
 }));
+document.addEventListener('click', event => {
+  const lensButton = event.target.closest('button[data-story-lens]');
+  if (!lensButton) return;
+  setStoryLens(lensButton.dataset.storyLens);
+});
 document.getElementById('cv-dots')?.addEventListener('keydown', event => {
   if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
   event.preventDefault();
@@ -1575,6 +1706,7 @@ document.querySelectorAll('.audience-mode.cv-info-grid').forEach(grid => {
   }, { passive: true });
 });
 audienceSelect?.addEventListener('change', () => {
+  setStoryLens(audienceSelect.value, { syncSignals:false });
   updateAudienceMeta();
   if (!activeCountryMap) { syncRoute(); return; }
   const countryId = activeCountryMap.countryId;
@@ -1846,8 +1978,13 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   sources.forEach(source => sourceMap.set(source.url, source));
   const uniqueSources = Array.from(sourceMap.values());
   const confidence = String(story.confidence || '').trim();
+  const readerLens = normalizeStoryLens(activeStoryLens);
+  const lensData = storyLensData(story, readerLens);
+  const clientId = storyClientId(story, context);
 
-  activeReaderRecord = { story, context: { ...context, country, topic, published }, clientId: storyClientId(story, context) };
+  activeReaderRecord = { story, context: { ...context, country, topic, published }, clientId };
+  markStoryReadKey(clientId);
+  sourceElement?.closest?.('.cv-news-row,.wire-item,.wire-brief-card,.wire-hero')?.classList.add('is-read');
   storyReaderLastFocus = sourceElement;
   document.getElementById('story-reader-kicker').textContent = [topic, country].filter(Boolean).join(' · ');
   document.getElementById('story-reader-title').textContent = story.headline;
@@ -1859,12 +1996,16 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   meta.push('<span><b>' + readMinutes + ' min</b> read</span>');
   if (uniqueSources.length) meta.push('<span><b>' + uniqueSources.length + '</b> ' + (uniqueSources.length === 1 ? 'source' : 'sources') + '</span>');
   if (confidence) meta.push('<span><b>' + escapeHtml(confidence) + '</b> confidence</span>');
+  if (readerLens !== 'general') meta.push('<span><b>' + escapeHtml(STORY_LENS_LABELS[readerLens]) + '</b> lens</span>');
   document.getElementById('story-reader-meta').innerHTML = meta.join('');
   document.getElementById('story-reader-copy').innerHTML = paragraphs
     .map(paragraph => '<p>' + escapeHtml(paragraph) + '</p>').join('');
   const why = document.getElementById('story-reader-why');
-  const whyText = briefWhy(story);
-  why.innerHTML = '<b>Why it matters</b>' + escapeHtml(whyText);
+  const whyText = lensData.why;
+  const whyLabel = readerLens === 'general'
+    ? 'Why it matters'
+    : STORY_LENS_LABELS[readerLens] + ' lens · relevance ' + lensData.score;
+  why.innerHTML = '<b>' + escapeHtml(whyLabel) + '</b>' + escapeHtml(whyText);
   why.hidden = !whyText;
   const sourcesEl = document.getElementById('story-reader-sources');
   sourcesEl.innerHTML = uniqueSources.length
@@ -1881,6 +2022,7 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   const scroll = storyReader.querySelector('.story-reader-scroll');
   if (scroll) scroll.scrollTop = 0;
   document.getElementById('story-reader-back').focus();
+  renderYourDesk();
 }
 
 function closeStoryReader() {
@@ -1929,24 +2071,30 @@ document.addEventListener('keydown', event => {
   closeStoryReader();
 }, true);
 
-function briefRowHtml(b, i, countryTag, countryCode, published) {
+function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) {
   const domId = 'cv-brief-' + String(countryCode || 'wire').replace(/[^a-z0-9-]/gi, '') + '-' + i;
   const storyKey = registerStory(b, {
     countryCode,
     country: countryTag || COUNTRY_INFO[countryCode]?.name || '',
     published,
-    rank: i
+    rank: sourceRank
   });
   const preview = b.dek || storyParagraphs(b)[0] || '';
   const readMinutes = Math.max(1, Number(b.readMinutes) || Math.ceil(storyWordCount(b) / 210));
-  return '<article class="cv-news-row">' +
+  const lens = normalizeStoryLens(activeStoryLens);
+  const lensData = storyLensData(b, lens);
+  const read = isStoryReadKey(storyKey);
+  const whyLabel = lens === 'general' ? 'Why it matters' : STORY_LENS_LABELS[lens] + ' lens';
+  return '<article class="cv-news-row' + (read ? ' is-read' : '') + '">' +
     '<button class="cv-news-summary" id="' + domId + '-summary" type="button" aria-expanded="false" aria-controls="' + domId + '-detail">' +
       '<span class="cv-brief-rank">' + String(i + 1).padStart(2, '0') + '</span>' +
       '<div class="cv-news-summary-main">' +
         '<div class="cv-news-summary-meta">' +
           (countryTag ? '<span class="cv-news-country">' + escapeHtml(countryTag) + '</span><span>·</span>' : '') +
           '<span class="cv-brief-topic">' + escapeHtml(b.topic || 'News') + '</span>' +
-          '<span>·</span><span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span></div>' +
+          '<span>·</span><span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span>' +
+          (lens !== 'general' ? '<span>·</span><span class="cv-news-lens-fit">' + escapeHtml(STORY_LENS_LABELS[lens]) + ' fit ' + lensData.score + '</span>' : '') +
+          (read ? '<span>·</span><span class="cv-news-read-state">Read</span>' : '') + '</div>' +
         '<h4 class="cv-brief-title">' + escapeHtml(b.headline) + '</h4>' +
         (b.dek ? '<p class="cv-brief-dek">' + escapeHtml(b.dek) + '</p>' : '') +
       '</div>' +
@@ -1954,7 +2102,7 @@ function briefRowHtml(b, i, countryTag, countryCode, published) {
     '</button>' +
     '<div class="cv-brief-main" id="' + domId + '-detail" role="region" aria-labelledby="' + domId + '-summary" hidden>' +
       '<p class="cv-brief-body">' + escapeHtml(preview) + '</p>' +
-      '<p class="cv-brief-why"><b>Why it matters</b>' + escapeHtml(briefWhy(b)) + '</p>' +
+      '<p class="cv-brief-why"><b>' + escapeHtml(whyLabel) + '</b>' + escapeHtml(lensData.why) + '</p>' +
       '<div class="cv-brief-actions">' +
         '<span>' + readMinutes + ' min read</span>' +
         '<button class="cv-read-story" type="button" data-story-key="' + escapeHtml(storyKey) + '">Read on ASJ <span aria-hidden="true">→</span></button>' +
@@ -1972,7 +2120,7 @@ function regionalWireFor(countryId) {
   if (!pool.length) return null;
   const same = pool.filter(([id]) => (COUNTRY_INFO[id] || {}).region === info.region);
   const chosen = same.length ? same : pool;
-  const scope = same.length ? info.region : 'Across the continent';
+  const scope = same.length ? info.region : 'Across Africa';
   const picks = [];
   for (let i = 0; picks.length < 6; i++) {
     let any = false;
@@ -1983,7 +2131,8 @@ function regionalWireFor(countryId) {
           brief: b,
           countryCode: id,
           country: (COUNTRY_INFO[id] || {}).name || id.toUpperCase(),
-          published: b.published || AI_BRIEFS_DATES[id] || AI_BRIEFS_AT
+          published: b.published || AI_BRIEFS_DATES[id] || AI_BRIEFS_AT,
+          sourceRank: i
         });
         any = true;
         if (picks.length >= 6) break;
@@ -1992,14 +2141,20 @@ function regionalWireFor(countryId) {
     if (!any) break;
   }
   if (!picks.length) return null;
+  if (activeStoryLens !== 'general') {
+    picks.sort((a, b) =>
+      storyLensRank(b.brief, activeStoryLens, b.sourceRank) - storyLensRank(a.brief, activeStoryLens, a.sourceRank) ||
+      a.sourceRank - b.sourceRank
+    );
+  }
   const html = '<div class="cv-brief-desk">' +
     '<div class="cv-brief-head"><span class="t">' + escapeHtml(scope) + ' <b>wire</b></span>' +
       '<span class="m">' + escapeHtml(info.name || '') + ' file pending</span></div>' +
-    picks.map((p, i) => briefRowHtml(p.brief, i, p.country, p.countryCode, p.published)).join('') +
+    picks.map((p, i) => briefRowHtml(p.brief, i, p.country, p.countryCode, p.published, p.sourceRank)).join('') +
     '<div class="cv-df-note">The AI desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — these are current stories from the ' +
-      escapeHtml(scope === 'Across the continent' ? 'continental' : scope) + ' wire. ' + escapeHtml(info.name || 'Its') + '&rsquo;s data file lives under Signals.</div>' +
+      escapeHtml(scope === 'Across Africa' ? 'Africa-wide' : scope) + ' wire. ' + escapeHtml(info.name || 'Its') + '&rsquo;s data file lives under Signals.</div>' +
   '</div>';
-  return { html, label: scope === 'Across the continent' ? 'Continental wire' : scope + ' wire' };
+  return { html, label: scope === 'Across Africa' ? 'Africa-wide wire' : scope + ' wire' };
 }
 
 function renderBriefDesk(countryId) {
@@ -2009,9 +2164,14 @@ function renderBriefDesk(countryId) {
   cards.onkeydown = null;
   cards.classList.remove('queue-collapsed', 'card-open');
   cards.classList.add('news-brief');
+  updateStoryLensControls();
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline && b.body);
+  const rankedBriefs = rankStoryEntries(briefs, activeStoryLens);
   const sourceCount = uniqueSourceCount(briefs);
-  if (meta && briefs.length) meta.textContent = briefs.length + ' stories · ' + sourceCount + ' sources';
+  if (meta && briefs.length) {
+    const lensLabel = activeStoryLens === 'general' ? '' : STORY_LENS_LABELS[activeStoryLens] + ' lens · ';
+    meta.textContent = lensLabel + briefs.length + ' stories · ' + sourceCount + ' sources';
+  }
   if (!briefs.length) {
     const wire = regionalWireFor(countryId);
     if (wire) {
@@ -2026,7 +2186,14 @@ function renderBriefDesk(countryId) {
   }
   cards.innerHTML =
     '<div class="cv-brief-desk">' +
-      briefs.map((b, i) => briefRowHtml(b, i, '', countryId, b.published || AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT)).join('') +
+      rankedBriefs.map((entry, i) => briefRowHtml(
+        entry.story,
+        i,
+        '',
+        countryId,
+        entry.story.published || AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT,
+        entry.sourceIndex
+      )).join('') +
     '</div>';
   wireBriefAccordion(cards);
 }
@@ -2672,17 +2839,20 @@ function uniqueSourceCount(briefs) {
 function countryBriefText(countryId) {
   const info = COUNTRY_INFO[countryId] || {};
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline);
+  const rankedBriefs = rankStoryEntries(briefs, activeStoryLens);
   const date = String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || latestBriefDate() || new Date().toISOString()).slice(0, 10);
-  const lines = ['The African Street Journal', (info.name || 'Country') + ' brief - ' + date, ''];
+  const lensName = activeStoryLens === 'general' ? '' : ' · ' + STORY_LENS_LABELS[activeStoryLens] + ' lens';
+  const lines = ['The African Street Journal', (info.name || 'Country') + ' brief - ' + date + lensName, ''];
   if (!briefs.length) {
     lines.push('No AI Desk brief is loaded for this country yet.');
     return lines.join('\n');
   }
-  briefs.slice(0, 6).forEach((brief, index) => {
+  rankedBriefs.slice(0, 6).forEach((entry, index) => {
+    const brief = entry.story;
     const sources = (brief.sources || []).map(source => source.name || source.url).filter(Boolean).join(', ');
     lines.push((index + 1) + '. ' + brief.headline);
     lines.push('   ' + (brief.body || ''));
-    lines.push('   Why it matters: ' + briefWhy(brief));
+    lines.push('   Why it matters: ' + storyLensData(brief, activeStoryLens).why);
     if (sources) lines.push('   Sources: ' + sources);
     lines.push('');
   });
@@ -3711,9 +3881,11 @@ canvas.addEventListener('touchstart', (e) => {
       (briefsByCountry[code] || []).forEach((b, rank) => {
         const src = (Array.isArray(b.sources) && b.sources[0]) || {};
         const sources = Array.isArray(b.sources) ? b.sources.filter(s => s && (s.name || s.url)) : [];
-        const why = briefWhy(b);
+        const lensData = storyLensData(b, activeStoryLens);
+        const why = lensData.why;
         const date = b.published || AI_BRIEFS_DATES[code] || at;
-        const score = Number(b.selectionScore ?? b.editorialScore ?? 0) || 0;
+        const editorialScore = Number(b.selectionScore ?? b.editorialScore ?? 0) || 0;
+        const score = storyLensRank(b, activeStoryLens, rank);
         const storyKey = registerStory(b, { countryCode: code, country: info.name, published: date, rank });
         out.push({
           code,
@@ -3729,13 +3901,15 @@ canvas.addEventListener('touchstart', (e) => {
           type: b.topic || 'News',
           rank,
           score,
+          editorialScore,
+          lensScore:lensData.score,
           storyKey,
           story: b
         });
       });
     }
-    // The assignment score chooses the continental lead; rank remains the fallback for
-    // legacy editions that predate scored story packages.
+    // The assignment meter remains the strongest component. A selected reader lens adds
+    // audience fit and freshness without changing the canonical story or its source rank.
     out.sort((a, b) => b.score - a.score || a.rank - b.rank || a.country.localeCompare(b.country));
     return out;
   }
@@ -3811,6 +3985,7 @@ canvas.addEventListener('touchstart', (e) => {
       if (source && (source.url || source.name)) sources.add(source.url || source.name);
     }));
     trustEl.innerHTML =
+      (activeStoryLens !== 'general' ? '<span class="wire-trust-lens"><b>' + escapeHtml(STORY_LENS_LABELS[activeStoryLens]) + '</b> lens</span>' : '') +
       '<span><b>' + INDEX.length + '</b> stories</span>' +
       '<span><b>' + countries + '</b> countries</span>' +
       '<span><b>' + sources.size + '</b> sources</span>';
@@ -3927,13 +4102,16 @@ canvas.addEventListener('touchstart', (e) => {
     updateCompareSummary();
   }
   function itemMarkup(it){
-    return '<button class="wire-item" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
+    const lensMeta = activeStoryLens === 'general' ? '' :
+      '<span class="dot"></span><span class="wire-item-lens">' + escapeHtml(STORY_LENS_LABELS[activeStoryLens]) + ' fit ' + it.lensScore + '</span>';
+    return '<button class="wire-item' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
       '<div class="wire-item-body">' +
         '<div class="wire-item-kicker">' +
           '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
           '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
           '<span class="wire-item-src">'+escapeHtml(it.source)+'</span>' +
+          lensMeta +
           (relativeDateLabel(it.date)?'<span class="dot"></span><span class="wire-item-when">'+escapeHtml(relativeDateLabel(it.date))+'</span>':'') +
         '</div>' +
         '<div class="wire-item-title">'+escapeHtml(it.title)+'</div>' +
@@ -3943,11 +4121,13 @@ canvas.addEventListener('touchstart', (e) => {
     '</button>';
   }
   function frontCardMarkup(it){
-    return '<button class="wire-brief-card" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
+    const lensMeta = activeStoryLens === 'general' ? '' :
+      '<span class="dot"></span><span class="wire-item-lens">' + escapeHtml(STORY_LENS_LABELS[activeStoryLens]) + ' fit ' + it.lensScore + '</span>';
+    return '<button class="wire-brief-card' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<div class="wire-item-kicker">' +
         '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
         '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
-        '<span class="wire-item-src">'+escapeHtml(it.source)+'</span>' +
+        '<span class="wire-item-src">'+escapeHtml(it.source)+'</span>' + lensMeta +
       '</div>' +
       '<div>' +
         '<div class="wire-item-title">'+escapeHtml(it.title)+'</div>' +
@@ -3955,8 +4135,9 @@ canvas.addEventListener('touchstart', (e) => {
     '</button>';
   }
   function heroMarkup(it){
-    return '<button class="wire-hero" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
-      '<div class="wire-hero-kicker"><span class="wire-hero-lead">Lead story</span>' +
+    const lensLead = activeStoryLens === 'general' ? 'Lead story' : STORY_LENS_LABELS[activeStoryLens] + ' lead · fit ' + it.lensScore;
+    return '<button class="wire-hero' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
+      '<div class="wire-hero-kicker"><span class="wire-hero-lead">' + escapeHtml(lensLead) + '</span>' +
         '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
         '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
         '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
@@ -3988,14 +4169,14 @@ canvas.addEventListener('touchstart', (e) => {
           '<div class="wire-meta">Highlights</div>' +
           '<div class="wire-front-grid">' + frontCards.map(frontCardMarkup).join('') + '</div>' +
           movementMarkup(items) +
-          (more.length ? '<div class="wire-meta">More across the continent</div>' + visibleMore.map(itemMarkup).join('') + loadMoreMarkup(more.length, visibleMore.length) : '') +
+          (more.length ? '<div class="wire-meta">More across Africa</div>' + visibleMore.map(itemMarkup).join('') + loadMoreMarkup(more.length, visibleMore.length) : '') +
         '</div>';
       return;
     }
     const visibleItems = list.slice(0, visibleCount);
     resultsEl.innerHTML =
       (hero ? heroMarkup(hero) : '') +
-      '<div class="wire-meta">'+(frontPage?'More across the continent':items.length+' '+(items.length===1?'story':'stories')+(activeTopic!=='All'?' · '+escapeHtml(activeTopic):'')+(query?' · “'+escapeHtml(query.trim())+'”':''))+'</div>' +
+      '<div class="wire-meta">'+(frontPage?'More across Africa':items.length+' '+(items.length===1?'story':'stories')+(activeTopic!=='All'?' · '+escapeHtml(activeTopic):'')+(query?' · “'+escapeHtml(query.trim())+'”':''))+'</div>' +
       visibleItems.map(itemMarkup).join('') +
       loadMoreMarkup(list.length, visibleItems.length);
   }
@@ -4008,7 +4189,7 @@ canvas.addEventListener('touchstart', (e) => {
     wireLastFocus = document.activeElement;
     previousSnapshot = readWireSnapshot();
     setMobileActionsOpen(false);
-    renderTopics(); renderTrust(); populateCompare(); renderResults();
+    updateStoryLensControls(); renderTopics(); renderTrust(); populateCompare(); renderResults();
     resultsEl.scrollTop = 0;
     if (!editionDate) saveWireSnapshot(INDEX);
     view.classList.add('open'); document.body.style.overflow='hidden';
@@ -4104,6 +4285,13 @@ canvas.addEventListener('touchstart', (e) => {
     renderResults();
     resultsEl.scrollTop = 0;
   });
+  window.addEventListener('asj:lenschange', () => {
+    if (!view.classList.contains('open')) return;
+    INDEX = buildIndex();
+    visibleCount = 60;
+    renderTopics(); renderTrust(); renderResults();
+    resultsEl.scrollTop = 0;
+  });
   searchInput.addEventListener('input', ()=>{ query = searchInput.value; visibleCount = 60; renderResults(); resultsEl.scrollTop = 0; });
   resultsEl.addEventListener('click', event => {
     const loadMore = event.target.closest('[data-wire-load-more]');
@@ -4121,7 +4309,7 @@ canvas.addEventListener('touchstart', (e) => {
     if (e.key==='Escape' && view.classList.contains('open') && !storyReader?.classList.contains('open')) closeWire();
   });
   const n = Object.values(AI_BRIEFS||{}).reduce((a,arr)=>a+arr.length,0);
-  entryCounts.forEach(el => { el.textContent = n ? (n+' stories') : 'The Wire'; });
+  entryCounts.forEach(el => { el.textContent = n ? (n+' stories') : 'ASJ Wire'; });
 })();
 
 /* ── Lazy country data: detail outline + GIS load per country, on demand ──
@@ -4314,8 +4502,7 @@ function deskSignupConfig() {
   return { url, anonKey, table };
 }
 function preferredDeskAudience() {
-  const mode = audienceSelect?.value || document.body.dataset.audience || '';
-  return ROUTE_AUDIENCES.includes(mode) ? mode : 'general';
+  return normalizeStoryLens(activeStoryLens);
 }
 function signupWatchlistPayload() {
   return getWatchlist().map(id => ({
@@ -4371,6 +4558,19 @@ function deskSignupHtml(list) {
     '<p class="yd-signup-status" data-signup-status aria-live="polite">' + escapeHtml(savedState) + '</p>' +
   '</form>';
 }
+
+function deskStoryEntry(countryId) {
+  const entries = rankStoryEntries(
+    (AI_BRIEFS[countryId] || []).filter(brief => brief && brief.headline),
+    activeStoryLens
+  );
+  if (!entries.length) return null;
+  return entries.find(entry => !isStoryReadKey(storyClientId(entry.story, {
+    countryCode:countryId,
+    rank:entry.sourceIndex
+  }))) || entries[0];
+}
+
 function renderYourDesk() {
   const el = document.getElementById('your-desk');
   if (!el) return;
@@ -4386,10 +4586,11 @@ function renderYourDesk() {
   yourDeskIndex = Math.max(0, Math.min(list.length - 1, yourDeskIndex));
   el.hidden = false;
   el.classList.toggle('is-collapsed', !yourDeskExpanded);
+  const deskLensLabel = activeStoryLens === 'general' ? '' : ' · ' + STORY_LENS_LABELS[activeStoryLens];
   el.innerHTML = '<div class="yd-head"><button class="yd-toggle" type="button" data-desk-toggle aria-expanded="' +
     String(yourDeskExpanded) + '" aria-controls="your-desk-list" aria-label="' + (yourDeskExpanded ? 'Collapse' : 'Expand') +
     ' My Africa"><span class="yd-head-copy"><span class="yd-key">My Africa</span><span class="yd-sub">' +
-    list.length + ' followed</span></span><svg class="yd-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>' +
+    list.length + ' followed' + deskLensLabel + '</span></span><svg class="yd-toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>' +
     '<div class="yd-nav"' + (yourDeskExpanded && list.length > 1 ? '' : ' hidden') + '>' +
     '<button class="yd-nav-btn" type="button" data-desk-nav="prev" aria-label="Previous followed country" disabled>' +
       '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>' +
@@ -4401,15 +4602,18 @@ function renderYourDesk() {
     const info = COUNTRY_INFO[id] || {};
     const inv = investorForCountry(id);
     const growth = Number.isFinite(inv.gdp_growth) ? (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%' : '';
-    const top = (AI_BRIEFS[id] || []).find(brief => brief && brief.headline);
+    const topEntry = deskStoryEntry(id);
+    const top = topEntry?.story;
+    const unread = !!topEntry && !isStoryReadKey(storyClientId(top, { countryCode:id, rank:topEntry.sourceIndex }));
     const fp = countryStoryFingerprint(id);
     const isNew = !!fp && seen[id] && seen[id] !== fp;
     const name = info.name || id.toUpperCase();
-    const story = top ? (top.topic || 'News') + ' ' + String.fromCharCode(183) + ' ' + top.headline : 'Open country file';
+    const storyLabel = activeStoryLens === 'general' ? (top?.topic || 'News') : STORY_LENS_LABELS[activeStoryLens] + ' lens';
+    const story = top ? storyLabel + ' ' + String.fromCharCode(183) + ' ' + top.headline : 'Open country file';
     return '<button class="yd-country-card" type="button" data-country="' + id +
       '" aria-label="Open ' + escapeHtml(name) + ' country file">' +
       '<span class="yd-country"><span>' + escapeHtml(name) + '</span><span class="yd-country-meta">' +
-        (isNew ? '<span class="yd-new">New</span>' : (growth ? '<b>' + escapeHtml(growth) + '</b>' : '')) +
+        (isNew ? '<span class="yd-new">New</span>' : (unread ? '<span class="yd-new">Unread</span>' : (growth ? '<b>' + escapeHtml(growth) + '</b>' : ''))) +
         '<svg class="yd-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>' +
       '</span></span><small>' + escapeHtml(story) + '</small></button>';
   }).join('') + '</div>' + (yourDeskExpanded ? deskSignupHtml(list) : '');
@@ -4681,6 +4885,25 @@ async function runSelfTest() {
   const checks = [];
   const add = (name, pass, note = '') => checks.push({ name, pass: !!pass, note: String(note) });
   const D = window.UNITED_AFRICA_DATA || {};
+  const originalStoryLens = activeStoryLens;
+  const lensFixture = [
+    {
+      headline:'Harvest desk', body:'The harvest desk keeps one canonical story body.', topic:'Agriculture',
+      selectionScore:20, published:new Date().toISOString(), why:'The harvest affects household and export income.',
+      lenses:{ farmers:{ score:96, why:'The harvest directly affects growers and farm income.' }, investors:{ score:44, why:'The harvest has a secondary effect on listed businesses.' }, diaspora:{ score:40, why:'The harvest has a secondary effect on families abroad.' } }
+    },
+    {
+      headline:'Markets desk', body:'The markets desk keeps one canonical story body.', topic:'Business',
+      selectionScore:20, published:new Date().toISOString(), why:'The market move affects capital and company planning.',
+      lenses:{ farmers:{ score:42, why:'The market move has an indirect effect on farm finance.' }, investors:{ score:98, why:'The market move directly affects capital allocation decisions.' }, diaspora:{ score:58, why:'The market move may affect savings and remittance choices.' } }
+    }
+  ];
+  const farmerFixture = rankStoryEntries(lensFixture, 'farmers');
+  const investorFixture = rankStoryEntries(lensFixture, 'investors');
+  add('story lenses reorder one canonical desk',
+    farmerFixture[0]?.story === lensFixture[0] && investorFixture[0]?.story === lensFixture[1] &&
+      lensFixture[0].body === 'The harvest desk keeps one canonical story body.',
+    farmerFixture[0]?.story?.headline + ' / ' + investorFixture[0]?.story?.headline);
   add('core: 55 landing countries', (D.countries || []).length === 55, (D.countries || []).length);
   const landingMapRect = canvas.getBoundingClientRect();
   const landingMapRatio = landingMapRect.height ? landingMapRect.width / landingMapRect.height : 0;
@@ -4749,6 +4972,15 @@ async function runSelfTest() {
     add('a11y: ticker clones skip keyboard', !document.querySelector('.ticker-segment[aria-hidden="true"] button:not([tabindex="-1"])'));
     audienceSelect.value = 'investors';
     audienceSelect.dispatchEvent(new Event('change'));
+    const pressedCountryLenses = Array.from(document.querySelectorAll('#cv-news-lenses [data-story-lens][aria-pressed="true"]'));
+    add('news lens persists and keeps one active control',
+      activeStoryLens === 'investors' && localStorage.getItem(STORY_LENS_KEY) === 'investors' &&
+        pressedCountryLenses.length === 1 && pressedCountryLenses[0]?.dataset.storyLens === 'investors',
+      activeStoryLens + ' / ' + pressedCountryLenses.length);
+    add('news desk labels lens-ranked stories',
+      /^Investor lens/.test(document.getElementById('cv-story-meta')?.textContent || '') &&
+        document.querySelectorAll('#cv-cards .cv-news-lens-fit').length > 0,
+      document.getElementById('cv-story-meta')?.textContent || 'missing');
     setPanel(1);
     // Idempotent: assert the index ADVANCED by one and the grid actually scrolled, rather than
     // hard-coding 1 — otherwise a second run in the same session fails spuriously.
@@ -4802,9 +5034,11 @@ async function runSelfTest() {
     const wireTrust = document.getElementById('wire-trust');
     const wireResultCount = document.getElementById('wire-result-count');
     const wireResults = document.getElementById('wire-results');
-    add('smoke: wire summary stays concise', wireTrust?.children.length === 3 && wireResultCount?.hidden, (wireTrust?.textContent || '').trim());
+    const expectedWireTrustCells = activeStoryLens === 'general' ? 3 : 4;
+    add('smoke: wire summary stays concise', wireTrust?.children.length === expectedWireTrustCells && wireResultCount?.hidden, (wireTrust?.textContent || '').trim());
     add('smoke: wire opens at the lead story', wireResults?.scrollTop === 0, wireResults?.scrollTop);
     const storyTrigger = wireResults?.querySelector('[data-story-key]');
+    const openedStoryKey = storyTrigger?.dataset.storyKey || '';
     add('smoke: wire uses on-site story buttons', storyTrigger instanceof HTMLButtonElement, storyTrigger?.tagName || 'missing');
     storyTrigger?.click();
     await new Promise(r => setTimeout(r, 80));
@@ -4812,6 +5046,14 @@ async function runSelfTest() {
     add('smoke: story reader carries copy and citations',
       document.querySelectorAll('#story-reader-copy p').length > 0 && document.querySelectorAll('#story-reader-sources a').length > 0,
       document.querySelectorAll('#story-reader-copy p').length + ' paragraphs, ' + document.querySelectorAll('#story-reader-sources a').length + ' sources');
+    add('story reader uses the active lens without rewriting copy',
+      /Investor lens/.test(document.getElementById('story-reader-why')?.textContent || '') &&
+        document.querySelector('#story-reader-copy p')?.textContent === storyParagraphs(findPublishedStory(openedStoryKey)?.story)[0],
+      document.getElementById('story-reader-why')?.textContent || 'missing');
+    add('opened story is saved as read',
+      !!openedStoryKey && isStoryReadKey(openedStoryKey) &&
+        !!JSON.parse(localStorage.getItem(STORY_READ_KEY) || '{}')[openedStoryKey],
+      openedStoryKey || 'missing');
     add('a11y: story reader hides underlying wire', document.getElementById('wire-view')?.getAttribute('aria-hidden') === 'true');
     closeStoryReader();
     add('a11y: wire returns after story close', document.getElementById('wire-view')?.getAttribute('aria-hidden') === 'false');
@@ -4820,6 +5062,7 @@ async function runSelfTest() {
     add('smoke: dossier flow threw', false, e.message);
   }
 
+  setStoryLens(originalStoryLens);
   const failed = checks.filter(c => !c.pass);
   console.table(checks);
   window.__selftest = { total: checks.length, failed: failed.map(f => f.name + (f.note ? ' (' + f.note + ')' : '')), checks };

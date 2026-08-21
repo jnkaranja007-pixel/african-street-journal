@@ -82,6 +82,32 @@ foreach ($c in $countries) {
       if (@($b.sources | Where-Object { $_ -and $_.url }).Count -lt 1) {
         $badShape.Add("$($c.Name):story has no reporting source")
       }
+
+      # Lens metadata is optional for editions published before story-v2-lenses. Once a
+      # story declares it, require the complete package so personalization cannot silently
+      # rank on a missing audience or display an empty impact note.
+      $hasLensMetadata = $null -ne $b.PSObject.Properties['lensVersion'] -or $null -ne $b.PSObject.Properties['lenses']
+      if ($hasLensMetadata) {
+        if (-not $b.lenses) {
+          $badShape.Add("$($c.Name):story declares lenses but has no lens package")
+        } else {
+          foreach ($lens in @('farmers','investors','diaspora')) {
+            $lensProperty = $b.lenses.PSObject.Properties[$lens]
+            if (-not $lensProperty) { $badShape.Add("$($c.Name):story missing $lens lens"); continue }
+            $lensEntry = $lensProperty.Value
+            $lensScore = -1.0
+            if (-not [double]::TryParse([string]$lensEntry.score, [ref]$lensScore) -or
+                $lensScore -lt 0 -or $lensScore -gt 100 -or [Math]::Floor($lensScore) -ne $lensScore) {
+              $badShape.Add("$($c.Name):story has invalid $lens lens score")
+            }
+            $lensWhy = ([string]$lensEntry.why).Trim()
+            $lensWhyWords = if ($lensWhy) { ([regex]::Matches($lensWhy, "[\p{L}\p{N}]+(?:[''-][\p{L}\p{N}]+)*")).Count } else { 0 }
+            if ($lensWhyWords -lt 8 -or $lensWhyWords -gt 50) {
+              $badShape.Add("$($c.Name):story has invalid $lens lens why")
+            }
+          }
+        }
+      }
     }
     foreach ($s in @($b.sources)) {
       if ($s -and $s.url -and $s.url -notmatch '^https?://') { $badUrls.Add("$($c.Name):$($s.url)") }
