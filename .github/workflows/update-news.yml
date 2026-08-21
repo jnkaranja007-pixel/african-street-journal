@@ -68,8 +68,8 @@ jobs:
             exit 1
           }
           $only = '${{ github.event.inputs.only }}'
-          if ($only.Trim()) { ./scripts/write-briefs.ps1 -Only $only.Trim() -OutFile data/auto-briefs.json }
-          else { ./scripts/write-briefs.ps1 -OutFile data/auto-briefs.json }
+          if ($only.Trim()) { ./scripts/write-briefs.ps1 -Only $only.Trim() -JsonMode -OutFile data/auto-briefs.json }
+          else { ./scripts/write-briefs.ps1 -JsonMode -OutFile data/auto-briefs.json }
 
       - name: Merge into the journal
         shell: pwsh

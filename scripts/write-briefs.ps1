@@ -26,7 +26,7 @@
   as a failed desk run rather than quietly publishing yesterday's paper again.
 #>
 param(
-  [string]$Model      = 'google/gemma-4-31b-it',
+  [string]$Model      = 'openai/gpt-oss-20b',
   [string[]]$Only,
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
@@ -39,7 +39,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v3-concise-lenses',
+  [string]$PromptVersion = 'story-v4-structured-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -215,14 +215,61 @@ function Invoke-OpenRouter([string]$prompt) {
       @{ role = 'user'; content = $prompt }
     )
     temperature = $Temperature
-    max_tokens  = 2600
+    max_tokens  = 3200
+    reasoning   = @{ effort = 'low'; exclude = $true }
   }
-  # response_format is not honoured by every provider behind a given model slug, and a
-  # rejected request costs the whole country. Off by default; the prompt plus
-  # Get-JsonBlock handles fenced or chatty output anyway.
-  if ($JsonMode) { $body['response_format'] = @{ type = 'json_object' } }
+  if ($JsonMode) {
+    $lensEntrySchema = [ordered]@{
+      type = 'object'
+      properties = [ordered]@{
+        score = @{ type = 'integer'; minimum = 0; maximum = 100 }
+        why = @{ type = 'string'; minLength = 20; maxLength = 320 }
+      }
+      required = @('score','why')
+      additionalProperties = $false
+    }
+    $lensProperties = [ordered]@{}
+    foreach ($lens in $STORY_LENSES) { $lensProperties[$lens] = $lensEntrySchema }
+    $storySchema = [ordered]@{
+      type = 'object'
+      properties = [ordered]@{
+        item = @{ type = 'integer'; minimum = 0 }
+        topic = @{ type = 'string'; enum = $VALID_TOPICS }
+        headline = @{ type = 'string'; minLength = 12; maxLength = 100 }
+        dek = @{ type = 'string'; minLength = 20; maxLength = 180 }
+        paragraphs = @{ type = 'array'; minItems = 3; maxItems = 3; items = @{ type = 'string'; minLength = 20 } }
+        wordCount = @{ type = 'integer'; minimum = $MinStoryWords; maximum = $MaxStoryWords }
+        why = @{ type = 'string'; minLength = 20; maxLength = 320 }
+        lenses = [ordered]@{
+          type = 'object'
+          properties = $lensProperties
+          required = $STORY_LENSES
+          additionalProperties = $false
+        }
+      }
+      required = @('item','topic','headline','dek','paragraphs','wordCount','why','lenses')
+      additionalProperties = $false
+    }
+    $body['response_format'] = [ordered]@{
+      type = 'json_schema'
+      json_schema = [ordered]@{
+        name = 'asj_country_desk'
+        strict = $true
+        schema = [ordered]@{
+          type = 'object'
+          properties = [ordered]@{
+            stories = @{ type = 'array'; minItems = $MinBriefs; maxItems = $MaxBriefs; items = $storySchema }
+          }
+          required = @('stories')
+          additionalProperties = $false
+        }
+      }
+    }
+    # Do not silently route to a provider that ignores the schema.
+    $body['provider'] = @{ require_parameters = $true }
+  }
 
-  $json  = $body | ConvertTo-Json -Depth 8 -Compress
+  $json  = $body | ConvertTo-Json -Depth 20 -Compress
   $bytes = [Text.Encoding]::UTF8.GetBytes($json)
   $headers = @{
     'Authorization' = "Bearer $apiKey"
@@ -334,11 +381,13 @@ stories, ordered by their original desk rank.
 
 Return ONLY a JSON object, no prose before or after, in exactly this shape:
 
-{"stories":[{"item":0,"topic":"Business","headline":"...","dek":"...","paragraphs":["...","...","..."],"why":"...","lenses":{"farmers":{"score":60,"why":"..."},"investors":{"score":90,"why":"..."},"diaspora":{"score":45,"why":"..."}}}]}
+{"stories":[{"item":0,"topic":"Business","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":120,"why":"...","lenses":{"farmers":{"score":60,"why":"..."},"investors":{"score":90,"why":"..."},"diaspora":{"score":45,"why":"..."}}}]}
 
 - "item" is the index of the item the brief is based on. It must be one of the
   indexes listed above.
 - "topic" must be exactly one of: $($VALID_TOPICS -join ', ').
+- "wordCount" is the number of words across the three paragraph strings. Count it;
+  do not estimate it from the headline, dek, why lines or lens notes.
 - Every story must include all three lens objects. Each score must be a whole number
   from 0 to 100, and each lens "why" must be one specific evidence-grounded sentence.
 - Do not include any URL. Sources are attached automatically from the item.
