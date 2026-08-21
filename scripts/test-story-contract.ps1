@@ -81,3 +81,4 @@ try {
 }
 
 Write-Host '[story-contract] OK - 3 checks'
+exit 0
