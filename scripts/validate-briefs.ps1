@@ -6,17 +6,25 @@
   pushing broken data to the live journal overnight.
 .USAGE
   powershell -ExecutionPolicy Bypass -File scripts/validate-briefs.ps1
-  powershell -ExecutionPolicy Bypass -File scripts/validate-briefs.ps1 -MinCountries 30
+  powershell -ExecutionPolicy Bypass -File scripts/validate-briefs.ps1 -MinCountries 30 -MinStoryPackages 5
 .NOTES
   Exit 0 = safe to publish. Exit 1 = do not publish.
 #>
 param(
   [int]$MinCountries = 1,
-  [int]$MinBriefs = 1
+  [int]$MinBriefs = 1,
+  [int]$MinStoryPackages = 0,
+  [int]$MinStoryWords = 110,
+  [int]$MaxStoryWords = 280,
+  [string]$BriefsFile = ''
 )
 
 $ErrorActionPreference = 'Stop'
-$briefsPath = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\data\briefs.js'))
+$briefsPath = if ($BriefsFile) {
+  [IO.Path]::GetFullPath($BriefsFile)
+} else {
+  [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\data\briefs.js'))
+}
 $problems = New-Object System.Collections.Generic.List[string]
 
 if (-not (Test-Path $briefsPath)) { Write-Host '[validate] FAIL: data/briefs.js missing' -ForegroundColor Red; exit 1 }
@@ -41,21 +49,47 @@ if ($obj.byCountry) { $countries = @($obj.byCountry.PSObject.Properties) }
 if ($countries.Count -lt $MinCountries) { $problems.Add("only $($countries.Count) countries (need >= $MinCountries)") }
 
 $totalBriefs = 0
+$storyPackages = 0
 $badShape = New-Object System.Collections.Generic.List[string]
 $badUrls = New-Object System.Collections.Generic.List[string]
+$storyIds = New-Object 'System.Collections.Generic.HashSet[string]'
 foreach ($c in $countries) {
   $list = @($c.Value)
   if ($list.Count -eq 0) { $badShape.Add("$($c.Name):empty"); continue }
   foreach ($b in $list) {
     $totalBriefs++
     if (-not $b.headline -or -not $b.body) { $badShape.Add("$($c.Name):missing headline/body") }
-    elseif ($b.headline.Length -gt 160) { $badShape.Add("$($c.Name):headline too long") }
+    elseif ($b.headline.Length -gt 100) { $badShape.Add("$($c.Name):headline over 100 chars") }
+
+    $hasParagraphs = $null -ne $b.PSObject.Properties['paragraphs']
+    if ($hasParagraphs) {
+      $storyPackages++
+      $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
+      $bodyText = ($paragraphs -join ' ').Trim()
+      $wordCount = if ($bodyText) { ([regex]::Matches($bodyText, "[\p{L}\p{N}]+(?:[''-][\p{L}\p{N}]+)*")).Count } else { 0 }
+      if (-not $b.articleId) { $badShape.Add("$($c.Name):story missing articleId") }
+      elseif (-not $storyIds.Add([string]$b.articleId)) { $badShape.Add("$($c.Name):duplicate articleId $($b.articleId)") }
+      if (-not $b.dek) { $badShape.Add("$($c.Name):story missing dek") }
+      elseif (([string]$b.dek).Length -gt 200) { $badShape.Add("$($c.Name):dek over 200 chars") }
+      if (-not $b.why) { $badShape.Add("$($c.Name):story missing why") }
+      if (-not $b.published) { $badShape.Add("$($c.Name):story missing published time") }
+      if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) {
+        $badShape.Add("$($c.Name):story has $($paragraphs.Count) paragraphs")
+      }
+      if ($wordCount -lt $MinStoryWords -or $wordCount -gt $MaxStoryWords) {
+        $badShape.Add("$($c.Name):story has $wordCount words")
+      }
+      if (@($b.sources | Where-Object { $_ -and $_.url }).Count -lt 1) {
+        $badShape.Add("$($c.Name):story has no reporting source")
+      }
+    }
     foreach ($s in @($b.sources)) {
       if ($s -and $s.url -and $s.url -notmatch '^https?://') { $badUrls.Add("$($c.Name):$($s.url)") }
     }
   }
 }
 if ($totalBriefs -lt $MinBriefs) { $problems.Add("only $totalBriefs briefs total (need >= $MinBriefs)") }
+if ($storyPackages -lt $MinStoryPackages) { $problems.Add("only $storyPackages full story packages (need >= $MinStoryPackages)") }
 if ($badShape.Count) { $problems.Add("$($badShape.Count) malformed briefs: $(($badShape | Select-Object -First 3) -join '; ')") }
 if ($badUrls.Count)  { $problems.Add("$($badUrls.Count) non-http source URLs: $(($badUrls | Select-Object -First 3) -join '; ')") }
 
@@ -65,5 +99,5 @@ if ($problems.Count) {
   exit 1
 }
 
-Write-Host "[validate] OK - $totalBriefs briefs across $($countries.Count) countries, generated $($obj.generated)" -ForegroundColor Green
+Write-Host "[validate] OK - $totalBriefs entries ($storyPackages full stories) across $($countries.Count) countries, generated $($obj.generated)" -ForegroundColor Green
 exit 0

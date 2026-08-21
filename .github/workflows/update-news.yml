@@ -1,12 +1,11 @@
 name: Update AI Desk
 
-# Each morning the desk reads ~150 verified African news feeds, clusters the same story
-# across outlets, ranks on corroboration, and has a cheap model rewrite the top items
-# into house style. Runs in the cloud - no PC needed. Also triggerable by hand.
+# Each morning the desk reads verified African news feeds, clusters the same event
+# across outlets, scores six candidates, and turns five assignments into original
+# on-site stories. Runs in the cloud - no PC needed. Also triggerable by hand.
 #
-# The model never sees a URL. It is handed numbered items and returns an index; the
-# citation is attached from the feed afterwards, so a fabricated source is structurally
-# impossible rather than something the audit has to catch.
+# The model receives numbered evidence packets and returns only those item indexes.
+# Citations are attached from feed records afterwards, so it cannot invent an outlet URL.
 
 on:
   schedule:
@@ -33,6 +32,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Test assignment ranking
+        shell: pwsh
+        run: |
+          ./scripts/test-news-ranking.ps1
+          ./scripts/test-story-contract.ps1
+
       - name: Gather and rank today's stories
         shell: pwsh
         run: |
@@ -42,7 +47,15 @@ jobs:
           if ($only.Trim()) { ./scripts/fetch-news.ps1 -Only $only.Trim() }
           else { ./scripts/fetch-news.ps1 }
 
-      - name: Write briefs
+      - name: Restore story cache
+        uses: actions/cache@v4
+        with:
+          path: data/story-cache.json
+          key: ${{ runner.os }}-asj-story-v1-${{ hashFiles('scripts/write-briefs.ps1', 'scripts/news-ranking.ps1') }}
+          restore-keys: |
+            ${{ runner.os }}-asj-story-v1-
+
+      - name: Write on-site stories
         shell: pwsh
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -68,7 +81,7 @@ jobs:
 
       - name: Validate before publishing
         shell: pwsh
-        run: ./scripts/validate-briefs.ps1
+        run: ./scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages 5
 
       - name: Audit sources and quality
         shell: pwsh
@@ -86,6 +99,15 @@ jobs:
           # the day a custom domain goes live.
           ./scripts/build-static-pages.ps1
 
+      - name: Save desk efficiency metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: desk-run-metrics
+          path: data/desk-run-metrics.json
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: Commit refreshed briefs
         shell: pwsh
         run: |
@@ -97,7 +119,7 @@ jobs:
           # expression cannot contain a statement separator. Run the check, then read
           # the exit code on its own line.
           git diff --staged --quiet
-          if ($LASTEXITCODE -eq 0) { Write-Host 'No brief changes this run.'; exit 0 }
+          if ($LASTEXITCODE -eq 0) { Write-Host 'No story changes this run.'; exit 0 }
           $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')
           git commit -m "chore(ai-desk): refresh briefs ($stamp)"
           if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
@@ -113,4 +135,4 @@ jobs:
             if ($LASTEXITCODE -ne 0) { Write-Host 'Rebase failed - resolve by hand.'; exit 1 }
           }
           if (-not $pushed) { Write-Host 'Push failed after 3 attempts.'; exit 1 }
-          Write-Host 'Pushed refreshed briefs.js'
+          Write-Host 'Pushed refreshed stories'

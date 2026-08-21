@@ -11,8 +11,8 @@ Three steps, nightly at 05:00 UTC, entirely in GitHub Actions. No PC needed.
 
 | Step | Script | What it does |
 |---|---|---|
-| 1. Gather | `scripts/fetch-news.ps1` | Reads ~150 verified feeds from `data/sources.json`, clusters the same story across outlets, ranks on corroboration, tier, recency and subject matter. No API key. |
-| 2. Write | `scripts/write-briefs.ps1` | Sends the ranked items to a cheap model on OpenRouter and gets briefs back in house style. |
+| 1. Gather | `scripts/fetch-news.ps1` | Reads verified feeds, clusters the same event across languages, and scores six candidates on relevance, corroboration, source quality, freshness, impact and evidence. No API key. |
+| 2. Write | `scripts/write-briefs.ps1` | Turns the five assignments into original 110-280 word on-site stories. The sixth candidate is reserve. |
 | 3. Publish | `add-briefs` -> `validate-briefs` -> `audit-briefs` -> `build-static-pages` | Merges, gates, verifies every citation resolves, rebuilds the crawlable pages and sitemap, commits. |
 
 **The model never sees a URL.** It is handed numbered items and returns an index; the citation
@@ -23,11 +23,10 @@ than something the audit has to catch.
 
 ## Cost
 
-About **$0.70/month** on `google/gemma-4-31b-it` at 55 countries a day. Fetching is free.
-
-Do not trust that number without checking openrouter.ai Activity - an earlier estimate on this
-project ("a dollar or two") was off by 10x. The key has a $5/month cap, so a runaway loop costs
-five dollars, not a surprise.
+Do not estimate cost from the old short-brief workflow. Every run now writes exact usage and
+reported cost to `data/desk-run-metrics.json`, and CI uploads that file as a 30-day artifact.
+Story caching avoids paying twice for unchanged candidate sets, while countries with fewer than
+five credible candidates are skipped before any model call. Set a hard monthly cap in OpenRouter.
 
 To change model, edit the `-Model` default in `scripts/write-briefs.ps1`. Any OpenRouter slug
 works; the writing step only rewrites supplied facts, so a small instruction-following model is
@@ -41,7 +40,7 @@ enough.
 |---|---|---|
 | `OPENROUTER_API_KEY` | Repo secret | Required. Without it the nightly run fails loudly rather than going stale in silence. |
 | `ANTHROPIC_API_KEY` | Repo secret | Legacy. Nothing calls it. Safe to delete. |
-| Workflow permissions | Settings -> Actions -> General | Read and write, so the bot can commit briefs. |
+| Workflow permissions | Settings -> Actions -> General | Read and write, so the bot can commit stories. |
 | Pages | Settings -> Pages | Deploy from `main` / root, custom domain `africanstreetjournal.com`, Enforce HTTPS on. |
 | DNS | Cloudflare | Four apex A records to GitHub Pages, `www` CNAME, **all DNS-only (grey cloud)**. SSL/TLS mode **Full**. |
 
@@ -65,7 +64,9 @@ the `only` input (`ng,ke,za`) limits it to a few countries for a quick test.
 ## Checking on it
 
 ```powershell
-powershell -File serve.ps1          # then open http://localhost:5733/?selftest=1  (26 checks)
+powershell -File serve.ps1          # then open http://localhost:5733/?selftest=1  (33 checks)
+powershell -File scripts/test-news-ranking.ps1           # assignment behavior (11 checks)
+powershell -File scripts/test-story-contract.ps1          # story + cost gates (3 checks)
 powershell -File scripts/validate-briefs.ps1              # is the current data publishable?
 powershell -File scripts/audit-briefs.ps1 -CheckLinks     # does every citation resolve?
 powershell -File scripts/check-sources.ps1                # which feeds have rotted?

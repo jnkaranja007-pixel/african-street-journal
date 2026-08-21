@@ -1,10 +1,10 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Turn data/feed-items.json into house-style briefs using a cheap OpenRouter model.
+  Turn ranked assignments into original, on-site ASJ stories using OpenRouter.
 .DESCRIPTION
-  Step 2 of the daily desk. Reads the RSS items fetched by scripts/fetch-news.ps1 and
-  rewrites them into the journal's voice, then writes data/manual-briefs.json so the
+  Step 2 of the daily desk. Reads the ranked assignments from scripts/fetch-news.ps1
+  and writes grounded stories in the journal's voice, then writes JSON so the
   existing publish path (add-briefs -> validate -> audit -> static pages) picks it up
   unchanged.
 
@@ -22,7 +22,7 @@
   powershell -ExecutionPolicy Bypass -File scripts/write-briefs.ps1
   powershell -ExecutionPolicy Bypass -File scripts/write-briefs.ps1 -Only ng,ke -Model google/gemma-4-31b-it
 .NOTES
-  Exit 0 if any country produced briefs. Exit 1 if none did, which the workflow treats
+  Exit 0 if any country produced a complete five-story desk. Exit 1 if none did, which the workflow treats
   as a failed desk run rather than quietly publishing yesterday's paper again.
 #>
 param(
@@ -31,12 +31,18 @@ param(
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
   [int]$MaxBriefs     = 5,
-  # One well-sourced brief beats a blank country page. Six countries have only a single
-  # working feed, and a floor of 2 would keep them permanently empty.
-  [int]$MinBriefs     = 1,
+  # Five stories make a country desk worth returning to. Thin countries keep their last
+  # complete edition and use the regional wire instead of publishing a partial desk.
+  [int]$MinBriefs     = 5,
   [int]$Retries       = 2,
   [int]$DelayMs       = 300,
   [double]$Temperature = 0.3,
+  [int]$MinStoryWords = 110,
+  [int]$MaxStoryWords = 280,
+  [string]$PromptVersion = 'story-v1',
+  [string]$CacheFile = 'data/story-cache.json',
+  [string]$MetricsFile = 'data/desk-run-metrics.json',
+  [switch]$NoCache,
   [switch]$JsonMode,
   [switch]$Merge
 )
@@ -47,14 +53,10 @@ $ErrorActionPreference = 'Stop'
 $root    = Split-Path $PSScriptRoot -Parent
 $inPath  = if ([IO.Path]::IsPathRooted($InFile))  { $InFile }  else { Join-Path $root $InFile }
 $outPath = if ([IO.Path]::IsPathRooted($OutFile)) { $OutFile } else { Join-Path $root $OutFile }
+$cachePath = if ([IO.Path]::IsPathRooted($CacheFile)) { $CacheFile } else { Join-Path $root $CacheFile }
+$metricsPath = if ([IO.Path]::IsPathRooted($MetricsFile)) { $MetricsFile } else { Join-Path $root $MetricsFile }
 
 $apiKey = $env:OPENROUTER_API_KEY
-if (-not $apiKey) {
-  Write-Host '[write] OPENROUTER_API_KEY is not set.' -ForegroundColor Red
-  Write-Host '        Local:  $env:OPENROUTER_API_KEY = "sk-or-v1-..."' -ForegroundColor DarkGray
-  Write-Host '        CI:     gh secret set OPENROUTER_API_KEY' -ForegroundColor DarkGray
-  exit 1
-}
 if (-not (Test-Path $inPath)) {
   Write-Host "[write] $InFile not found - run scripts/fetch-news.ps1 first." -ForegroundColor Red
   exit 1
@@ -74,43 +76,32 @@ if ($Only) {
 }
 
 # --- house style -------------------------------------------------------------
-# Kept in one string so the weekly quality pass can tune voice in a single place.
+# The assignment meter decides what deserves coverage. The model's only editorial job
+# is to turn each assigned evidence packet into an original, readable ASJ story.
 $STYLE = @'
-You are the overnight wire editor for The African Street Journal. You rewrite news
-items into short, factual briefs in the style of the Wall Street Journal and Yahoo
-Finance: plain, specific, numbers first, no hype.
+You are the overnight desk writer for The African Street Journal. Write original,
+on-site news stories from the supplied evidence. Be plain, specific and useful. Never
+sound like a press release, and never send the reader away to understand the event.
 
 Rules:
-- Headline: actor + active verb + the key figure. "Kenya holds base rate at 12.5% as
-  shilling steadies", never "Interest rate news". Maximum 90 characters.
-- Body: 2 to 4 sentences. The most important fact AND its number in the first
-  sentence. Attribution in the second. Never bury the figure.
-- Figures carry units and direction, and a comparison where the item gives one.
-- "why": required on every brief. One concrete sentence on what this changes for money,
-  food, safety, business or movement, naming who is affected and how. It must add
-  information the headline does not already carry.
-    good: "Parents already on grants must now supply their own paper and cleaning
-           materials for classrooms."
-    bad:  "The appointment changes the leadership of the company." (restates)
-    bad:  "This could affect the economy." (says nothing)
-  If the only "why" you can write is a restatement, that item is not worth a brief.
-  Drop it and use a different item. Never return an empty "why".
+- Headline: actor + active verb + material result. Maximum 90 characters.
+- Dek: one specific sentence that advances the headline, maximum 180 characters.
+- Paragraphs: 3 to 6 short paragraphs, 110 to 280 words total. Lead with what changed,
+  then attribution, scale, affected people and useful context present in the evidence.
+- "why": one concrete sentence naming who is affected and how. No generic importance.
+- Attribute disputed claims. Carry units, direction and comparisons exactly as supplied.
+- Paraphrase. Do not copy a source sentence or use a quotation longer than 12 words.
 - Neutral. Report what happened and attribute claims. No opinion, no loaded
   adjectives, no speculation, no calls to action.
-- Cover what the items warrant across politics, economy, health, climate,
-  agriculture, sport and culture. Do not file five versions of one story.
-- Skip celebrity gossip, net worth, betting and adult content. Skip any item that is
-  not actually about this country.
+- Do not pad thin evidence. Omit an assignment rather than repeat a fact or invent
+  context. The reserve item may replace one assignment that cannot support a story.
 - Items arrive in whatever language the outlet publishes in: English, French,
-  Portuguese or Arabic. ALWAYS write the brief in English, translating the facts
-  faithfully. Never skip an item because it is not in English - four of Sudan's five
-  stories were dropped that way. Keep place and person names in the form English
-  readers will recognise.
+  Portuguese, Spanish, Arabic or another local language. Write in English and translate
+  faithfully. Keep place and person names in the form English readers recognise.
 
-Hard limit: use ONLY facts present in the item you are given. You have no other
-knowledge of these events. If an item is only a headline, write only what the
-headline supports. Never add a figure, name, quote or date that is not in the item.
-If you cannot write a brief from an item without inventing something, omit it.
+Hard limit: use ONLY facts present in that assignment's evidence packet. Never add a
+figure, name, quote, date, cause, reaction or historical claim from outside it. Do not
+mix facts between assignments. If the evidence cannot support 110 useful words, omit it.
 '@
 
 function Get-JsonBlock([string]$text) {
@@ -136,6 +127,7 @@ function Get-BriefArray($parsed) {
   # used a different key - a country should not be lost to a naming whim.
   if ($null -eq $parsed) { return $null }
   if ($parsed -is [array]) { return @($parsed) }
+  if ($parsed.stories) { return @($parsed.stories) }
   if ($parsed.briefs) { return @($parsed.briefs) }
   foreach ($p in $parsed.PSObject.Properties) {
     if ($p.Value -is [array] -and @($p.Value).Count) { return @($p.Value) }
@@ -145,13 +137,66 @@ function Get-BriefArray($parsed) {
   return $null
 }
 
+function Get-TextHash([string]$Text) {
+  $sha = [Security.Cryptography.SHA256]::Create()
+  try {
+    $bytes = [Text.Encoding]::UTF8.GetBytes($Text)
+    return ([BitConverter]::ToString($sha.ComputeHash($bytes))).Replace('-', '').ToLowerInvariant()
+  } finally { $sha.Dispose() }
+}
+
+function Get-WordCount([string]$Text) {
+  if (-not $Text) { return 0 }
+  return @(($Text -replace '\s+', ' ').Trim() -split ' ' | Where-Object { $_ }).Count
+}
+
+function Get-NumberKeys([string]$Text) {
+  $keys = @{}
+  if (-not $Text) { return $keys }
+  foreach ($match in [regex]::Matches($Text, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
+    $key = ($match.Value.ToLowerInvariant() -replace '[^a-z0-9%]', '')
+    $key = $key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent'
+    if ($key) { $keys[$key] = $true }
+  }
+  return $keys
+}
+
+function Get-UngroundedNumbers([string]$StoryText, [string]$EvidenceText) {
+  $evidence = Get-NumberKeys $EvidenceText
+  $missing = New-Object System.Collections.Generic.List[string]
+  foreach ($match in [regex]::Matches($StoryText, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
+    $key = ($match.Value.ToLowerInvariant() -replace '[^a-z0-9%]', '')
+    $key = $key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent'
+    if ($key -and -not $evidence.ContainsKey($key)) { $missing.Add($match.Value) }
+  }
+  return @($missing | Select-Object -Unique)
+}
+
+$storyCache = @{}
+if (-not $NoCache -and (Test-Path $cachePath)) {
+  try {
+    $cacheObj = [IO.File]::ReadAllText($cachePath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+    if ($cacheObj.entries) {
+      foreach ($property in $cacheObj.entries.PSObject.Properties) { $storyCache[$property.Name] = $property.Value }
+    }
+  } catch {
+    Write-Host '[write] story cache is unreadable; continuing without it' -ForegroundColor DarkYellow
+    $storyCache = @{}
+  }
+}
+
 function Invoke-OpenRouter([string]$prompt) {
-  $msg = @{ role = 'user'; content = $prompt }
+  if (-not $apiKey) {
+    throw 'OPENROUTER_API_KEY is not set (local: $env:OPENROUTER_API_KEY; CI: gh secret set OPENROUTER_API_KEY)'
+  }
   $body = [ordered]@{
     model       = $Model
-    messages    = @($msg)
+    messages    = @(
+      @{ role = 'system'; content = $STYLE },
+      @{ role = 'user'; content = $prompt }
+    )
     temperature = $Temperature
-    max_tokens  = 2000
+    max_tokens  = 2600
   }
   # response_format is not honoured by every provider behind a given model slug, and a
   # rejected request costs the whole country. Off by default; the prompt plus
@@ -191,35 +236,59 @@ function Invoke-OpenRouter([string]$prompt) {
   $text = [Text.Encoding]::UTF8.GetString($resp.RawContentStream.ToArray())
   $obj  = $text | ConvertFrom-Json
   if ($obj.error) { throw "API error: $($obj.error.message)" }
-  return [string]$obj.choices[0].message.content
+  return [pscustomobject]@{
+    Content          = [string]$obj.choices[0].message.content
+    PromptTokens     = if ($obj.usage.prompt_tokens) { [int]$obj.usage.prompt_tokens } else { 0 }
+    CompletionTokens = if ($obj.usage.completion_tokens) { [int]$obj.usage.completion_tokens } else { 0 }
+    TotalTokens      = if ($obj.usage.total_tokens) { [int]$obj.usage.total_tokens } else { 0 }
+    Cost             = if ($obj.usage.cost) { [double]$obj.usage.cost } else { 0.0 }
+  }
 }
 
 $result  = [ordered]@{}
 $stories = 0
 $skipped = New-Object System.Collections.Generic.List[string]
+$usagePrompt = 0
+$usageCompletion = 0
+$usageTotal = 0
+$usageCost = 0.0
+$apiCalls = 0
+$cacheHits = 0
+$insufficientCandidates = 0
+$countriesEligibleForWriting = 0
 
 foreach ($code in $codes) {
   $entry = $feed.byCountry.$code
   $items = @($entry.items)
   if ($items.Count -eq 0) { $skipped.Add("$code (no items)"); continue }
+  if ($items.Count -lt $MinBriefs) {
+    $insufficientCandidates++
+    $skipped.Add("$code (only $($items.Count) ranked candidates)")
+    Write-Host ("  {0}  {1,-30} SKIPPED BEFORE MODEL: {2} candidates, need {3}" -f `
+                $code, [string]$entry.country, $items.Count, $MinBriefs) -ForegroundColor DarkYellow
+    continue
+  }
+  $countriesEligibleForWriting++
 
   $name = [string]$entry.country
-  # Ask for one brief per available item, capped. The old formula halved the item
-  # count, so a five-item country was only ever asked for two briefs and filed one -
-  # which read as the model refusing Arabic when it was really this arithmetic.
-  # The prompt already tells it fewer good briefs beat padded ones, so the ceiling
-  # can be generous.
+  # The meter has already done the assigning. The first five are assignments; a sixth
+  # is reserve evidence if one assignment is too thin to support an on-site story.
   $n    = [Math]::Min($MaxBriefs, [Math]::Max(1, $items.Count))
 
   $lines = New-Object System.Text.StringBuilder
   for ($i = 0; $i -lt $items.Count; $i++) {
     $it = $items[$i]
-    [void]$lines.AppendLine("[$i] $($it.title)")
+    $slot = if ($i -lt $n) { 'ASSIGNED' } else { 'RESERVE' }
+    [void]$lines.AppendLine("[$i] $slot - $($it.title)")
     [void]$lines.AppendLine("    outlet: $($it.source)")
     if ($it.published) { [void]$lines.AppendLine("    published: $($it.published)") }
+    if ($it.editorialScore) {
+      [void]$lines.AppendLine("    desk meter: $($it.editorialScore)/$($it.confidence); topic hint: $($it.topicHint)")
+    }
+    if ($it.rankReasons) { [void]$lines.AppendLine("    assignment reasons: $(@($it.rankReasons) -join '; ')") }
     # The lede is the only place a real figure comes from. Without it the model can
-    # honour the no-invention rule only by writing an empty brief.
-    if ($it.summary) { [void]$lines.AppendLine("    lede: $($it.summary)") }
+    # honour the no-invention rule only by writing an empty story.
+    if ($it.summary) { [void]$lines.AppendLine("    primary evidence: $($it.summary)") }
     # Corroboration tells the model which stories the country's press treated as the
     # day's real news, so the lead brief is not whichever item happened to be first.
     if ($it.corroboration -gt 1) {
@@ -227,51 +296,71 @@ foreach ($code in $codes) {
       $also = if ($names.Count) { " (also in $($names -join ', '))" } else { '' }
       [void]$lines.AppendLine("    corroborated by $($it.corroboration) outlets$also")
     }
+    foreach ($other in @($it.alsoSources)) {
+      if ($other.title) { [void]$lines.AppendLine("    additional source title: $($other.title)") }
+      if ($other.summary) { [void]$lines.AppendLine("    additional evidence: $($other.summary)") }
+    }
     [void]$lines.AppendLine('')
   }
 
   $prompt = @"
-$STYLE
-
 Country: $name
 
-Today's items. The number in brackets is the item index.
+Today's ranked assignments. The number in brackets is the item index.
 
 $($lines.ToString())
-Write $n briefs if the items support it. Only file fewer when the remaining items are
-another angle on a story you have already filed, or genuinely cannot carry a "why"
-that adds information. Items marked as corroborated by several outlets are the day's
-significant news and should lead.
+Write one story for each ASSIGNED item. Use the RESERVE only to replace an assigned
+item whose evidence cannot support $MinStoryWords useful words. Return at most $n
+stories, ordered by their original desk rank.
 
 Return ONLY a JSON object, no prose before or after, in exactly this shape:
 
-{"briefs":[{"item":0,"topic":"Business","headline":"...","body":"...","why":"..."}]}
+{"stories":[{"item":0,"topic":"Business","headline":"...","dek":"...","paragraphs":["...","...","..."],"why":"..."}]}
 
 - "item" is the index of the item the brief is based on. It must be one of the
   indexes listed above.
 - "topic" must be exactly one of: $($VALID_TOPICS -join ', ').
 - Do not include any URL. Sources are attached automatically from the item.
-- Fewer good briefs beats more padded ones. Omit any item you cannot write cleanly.
+- Do not combine two item indexes into one story.
 "@
 
   $briefs = $null
   $lastErr = ''
-  for ($attempt = 1; $attempt -le ($Retries + 1); $attempt++) {
-    try {
-      $raw = Invoke-OpenRouter $prompt
-      $blk = Get-JsonBlock $raw
-      if (-not $blk) { $lastErr = 'no JSON object in response'; continue }
-      $parsed = $blk | ConvertFrom-Json
-      $briefs = Get-BriefArray $parsed
-      if (-not $briefs) { $lastErr = 'no brief array in response'; $briefs = $null; continue }
-      break
-    } catch {
-      $lastErr = $_.Exception.Message.Split("`n")[0]
-      # A rate limit needs real time, not a 500ms nudge. Cheap and free-tier models
-      # throttle hard partway through a 55-country run, and retrying immediately just
-      # burns the remaining attempts and drops the country.
-      if ($lastErr -match '429|rate.?limit') { Start-Sleep -Seconds (20 * $attempt) }
-      else { Start-Sleep -Milliseconds (500 * $attempt) }
+  $itemKeys = @($items | ForEach-Object {
+    if ($_.itemId) { [string]$_.itemId } else { Get-TextHash (([string]$_.url) + "`n" + ([string]$_.title) + "`n" + ([string]$_.summary)) }
+  })
+  $cacheKey = Get-TextHash (($PromptVersion, $Model, (Get-TextHash $STYLE), $code, $MaxBriefs, $MinBriefs, `
+                            $MinStoryWords, $MaxStoryWords, ($itemKeys -join ',')) -join "`n")
+  $fromCache = $false
+  if (-not $NoCache -and $storyCache.ContainsKey($cacheKey)) {
+    $briefs = @($storyCache[$cacheKey].stories)
+    $fromCache = ($briefs.Count -gt 0)
+    if ($fromCache) { $cacheHits++; Write-Host ("      {0}: story cache hit" -f $code) -ForegroundColor DarkGray }
+  }
+
+  if (-not $fromCache) {
+    for ($attempt = 1; $attempt -le ($Retries + 1); $attempt++) {
+      try {
+        $response = Invoke-OpenRouter $prompt
+        $apiCalls++
+        $usagePrompt += $response.PromptTokens
+        $usageCompletion += $response.CompletionTokens
+        $usageTotal += $response.TotalTokens
+        $usageCost += $response.Cost
+        $blk = Get-JsonBlock $response.Content
+        if (-not $blk) { $lastErr = 'no JSON object in response'; continue }
+        $parsed = $blk | ConvertFrom-Json
+        $briefs = Get-BriefArray $parsed
+        if (-not $briefs) { $lastErr = 'no story array in response'; $briefs = $null; continue }
+        break
+      } catch {
+        $lastErr = $_.Exception.Message.Split("`n")[0]
+        # A rate limit needs real time, not a 500ms nudge. Cheap and free-tier models
+        # throttle hard partway through a 55-country run, and retrying immediately just
+        # burns the remaining attempts and drops the country.
+        if ($lastErr -match '429|rate.?limit') { Start-Sleep -Seconds (20 * $attempt) }
+        else { Start-Sleep -Milliseconds (500 * $attempt) }
+      }
     }
   }
 
@@ -285,43 +374,91 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
   # --- everything below treats model output as untrusted ---------------------
   $clean = New-Object System.Collections.Generic.List[object]
   $usedItems = @{}
+  $rejectReasons = New-Object System.Collections.Generic.List[string]
   foreach ($b in $briefs) {
-    if (-not $b.headline -or -not $b.body) { continue }
+    if (-not $b.headline -or -not $b.dek -or -not $b.why) { $rejectReasons.Add('missing headline/dek/why'); continue }
 
     # The index must exist. This is the anti-fabrication gate: no valid index means
-    # no source, and a brief with no source is not published.
+    # no source, and a story with no source is not published.
     $idx = -1
-    if ($null -ne $b.item -and [int]::TryParse([string]$b.item, [ref]$idx)) { } else { continue }
-    if ($idx -lt 0 -or $idx -ge $items.Count) { continue }
-    if ($usedItems.ContainsKey($idx)) { continue }   # one brief per story
+    if ($null -ne $b.item -and [int]::TryParse([string]$b.item, [ref]$idx)) { } else { $rejectReasons.Add('invalid item index'); continue }
+    if ($idx -lt 0 -or $idx -ge $items.Count) { $rejectReasons.Add('item index out of range'); continue }
+    if ($usedItems.ContainsKey($idx)) { $rejectReasons.Add('duplicate item index'); continue }
     $usedItems[$idx] = $true
 
     $src = $items[$idx]
-    if (-not $src.url -or $src.url -notmatch '^https?://') { continue }
+    if (-not $src.url -or $src.url -notmatch '^https?://') { $rejectReasons.Add('missing source URL'); continue }
 
     $topic = [string]$b.topic
     if ($VALID_TOPICS -notcontains $topic) { $topic = 'News' }
 
     $headline = ([string]$b.headline).Trim()
-    if ($headline.Length -gt 155) { $headline = $headline.Substring(0, 152).TrimEnd() + '...' }
-
+    if ($headline.Length -gt 100) { $rejectReasons.Add('headline over 100 chars'); continue }
+    if ($headline.Length -gt 90) { $headline = $headline.Substring(0, 87).TrimEnd() + '...' }
+    $dek = ([string]$b.dek).Trim()
+    if (-not $dek -or $dek.Length -gt 180) { $rejectReasons.Add('invalid dek'); continue }
     $why = ([string]$b.why).Trim()
+    $whyWords = Get-WordCount $why
+    if ($whyWords -lt 8 -or $whyWords -gt 50) { $rejectReasons.Add('why line outside 8-50 words'); continue }
+
+    $paragraphs = New-Object System.Collections.Generic.List[string]
+    foreach ($paragraph in @($b.paragraphs)) {
+      $text = ([string]$paragraph).Trim()
+      if ($text) { $paragraphs.Add($text) }
+    }
+    if (-not $paragraphs.Count -and $b.body) {
+      foreach ($paragraph in @(([string]$b.body) -split '(?:\r?\n){2,}')) {
+        $text = $paragraph.Trim()
+        if ($text) { $paragraphs.Add($text) }
+      }
+    }
+    if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) { $rejectReasons.Add('paragraph count outside 3-6'); continue }
+    $body = $paragraphs.ToArray() -join "`n`n"
+    $wordCount = Get-WordCount $body
+    if ($wordCount -lt $MinStoryWords -or $wordCount -gt $MaxStoryWords) {
+      $rejectReasons.Add("story outside $MinStoryWords-$MaxStoryWords words")
+      continue
+    }
+
+    $evidence = ([string]$src.title) + "`n" + ([string]$src.summary) + "`n" + ([string]$src.published)
+    foreach ($other in @($src.alsoSources)) {
+      $evidence += "`n" + ([string]$other.title) + "`n" + ([string]$other.summary) + "`n" + ([string]$other.published)
+    }
+    $ungrounded = @(Get-UngroundedNumbers ($headline + "`n" + $dek + "`n" + $body + "`n" + $why) $evidence)
+    if ($ungrounded.Count) {
+      $rejectReasons.Add('unsupported number: ' + (($ungrounded | Select-Object -First 2) -join ', '))
+      continue
+    }
 
     # Cite every outlet that carried the story, not just the one whose text was used.
     $srcList = New-Object System.Collections.Generic.List[object]
-    $srcList.Add(@{ name = [string]$src.source; url = [string]$src.url })
+    $srcList.Add(@{ name = [string]$src.source; url = [string]$src.url; published = [string]$src.published })
     foreach ($o in @($src.alsoSources)) {
       if ($o -and ([string]$o.url) -match '^https?://') {
-        $srcList.Add(@{ name = [string]$o.name; url = [string]$o.url })
+        $srcList.Add(@{ name = [string]$o.name; url = [string]$o.url; published = [string]$o.published })
       }
     }
 
     $clean.Add([ordered]@{
-      headline = $headline
-      body     = ([string]$b.body).Trim()
-      why      = $why
-      topic    = $topic
-      sources  = $srcList.ToArray()
+      articleId       = if ($src.itemId) { [string]$src.itemId } else { Get-TextHash ([string]$src.url) }
+      headline        = $headline
+      dek             = $dek
+      paragraphs      = $paragraphs.ToArray()
+      body            = $body
+      why             = $why
+      topic           = $topic
+      published       = [string]$src.published
+      sourceTitle     = [string]$src.title
+      editorialScore  = if ($src.editorialScore) { [double]$src.editorialScore } else { 0.0 }
+      selectionScore  = if ($src.selectionScore) { [double]$src.selectionScore } else { 0.0 }
+      confidence      = [string]$src.confidence
+      corroboration   = if ($src.corroboration) { [int]$src.corroboration } else { 1 }
+      scoreBreakdown  = $src.scoreBreakdown
+      rankReasons     = @($src.rankReasons)
+      countryMatch    = [string]$src.countryMatch
+      wordCount       = $wordCount
+      readMinutes     = [Math]::Max(1, [int][Math]::Ceiling($wordCount / 220.0))
+      sources         = $srcList.ToArray()
     })
   }
 
@@ -331,12 +468,22 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
   if ($clean.Count -lt @($briefs).Count) {
     Write-Host ("      {0}: model returned {1}, kept {2} (items available {3})" -f `
                 $code, @($briefs).Count, $clean.Count, $items.Count) -ForegroundColor DarkGray
+    if ($rejectReasons.Count) { Write-Host ("      rejected: {0}" -f (($rejectReasons | Select-Object -Unique -First 4) -join '; ')) -ForegroundColor DarkGray }
   }
   if ($clean.Count -lt $MinBriefs) {
-    Write-Host ("  {0}  {1,-30} SKIPPED: only {2} usable brief(s)" -f $code, $name, $clean.Count) -ForegroundColor DarkYellow
+    Write-Host ("  {0}  {1,-30} SKIPPED: only {2} usable story/stories" -f $code, $name, $clean.Count) -ForegroundColor DarkYellow
     $skipped.Add("$code (only $($clean.Count) usable)")
     Start-Sleep -Milliseconds $DelayMs
     continue
+  }
+
+  if (-not $NoCache -and -not $fromCache) {
+    $storyCache[$cacheKey] = [ordered]@{
+      generated = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+      model = $Model
+      promptVersion = $PromptVersion
+      stories = @($briefs)
+    }
   }
 
   # .ToArray(), not @($clean). Assigning @(<List[object]>) into an ordered dictionary
@@ -344,13 +491,42 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
   # Item[int] / Item[object] overload pair. An Object[] binds cleanly.
   $result[[string]$code] = $clean.ToArray()
   $stories += $clean.Count
-  Write-Host ("  {0}  {1,-30} {2} briefs" -f $code, $name, $clean.Count) -ForegroundColor Green
+  Write-Host ("  {0}  {1,-30} {2} on-site stories" -f $code, $name, $clean.Count) -ForegroundColor Green
   Start-Sleep -Milliseconds $DelayMs
 }
 
+if (-not $NoCache -and $storyCache.Count) {
+  $cacheEntries = [ordered]@{}
+  foreach ($key in @($storyCache.Keys | Sort-Object)) { $cacheEntries[[string]$key] = $storyCache[$key] }
+  $cachePayload = [ordered]@{ version = $PromptVersion; entries = $cacheEntries }
+  [IO.File]::WriteAllText($cachePath, ($cachePayload | ConvertTo-Json -Depth 12), (New-Object Text.UTF8Encoding($false)))
+}
+
+$metrics = [ordered]@{
+  generated = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+  model = $Model
+  promptVersion = $PromptVersion
+  countriesAttempted = $codes.Count
+  countriesEligibleForWriting = $countriesEligibleForWriting
+  countriesSkippedBeforeModel = $insufficientCandidates
+  countriesWritten = $result.Count
+  storiesWritten = $stories
+  apiCalls = $apiCalls
+  cacheHits = $cacheHits
+  promptTokens = $usagePrompt
+  completionTokens = $usageCompletion
+  totalTokens = $usageTotal
+  reportedCostUsd = [Math]::Round($usageCost, 6)
+}
+[IO.File]::WriteAllText($metricsPath, ($metrics | ConvertTo-Json -Depth 4), (New-Object Text.UTF8Encoding($false)))
+
 if ($result.Count -eq 0) {
-  Write-Host "[write] FAIL: no country produced usable briefs across $($codes.Count) attempted." -ForegroundColor Red
-  Write-Host '        Check the model slug, the key, and the first SKIPPED reason above.' -ForegroundColor DarkGray
+  Write-Host "[write] FAIL: no country produced usable stories across $($codes.Count) attempted." -ForegroundColor Red
+  if ($countriesEligibleForWriting -eq 0) {
+    Write-Host '        No model call was made because no country met the candidate floor.' -ForegroundColor DarkGray
+  } else {
+    Write-Host '        Check the model slug, the key, and the first SKIPPED reason above.' -ForegroundColor DarkGray
+  }
   exit 1
 }
 
@@ -367,8 +543,10 @@ if ($Merge -and (Test-Path $outPath)) {
 [IO.File]::WriteAllText($outPath, ($result | ConvertTo-Json -Depth 10), (New-Object Text.UTF8Encoding($false)))
 
 Write-Host ''
-Write-Host "[write] $stories briefs across $($result.Count) countries -> $OutFile" -ForegroundColor Green
+Write-Host "[write] $stories on-site stories across $($result.Count) countries -> $OutFile" -ForegroundColor Green
 Write-Host "[write] model: $Model" -ForegroundColor DarkGray
+Write-Host ("[write] usage: {0} input + {1} output = {2} tokens; {3} API calls; {4} cache hits; reported cost `${5}" -f `
+           $usagePrompt, $usageCompletion, $usageTotal, $apiCalls, $cacheHits, ([Math]::Round($usageCost, 4))) -ForegroundColor DarkGray
 if ($skipped.Count) {
   Write-Host "[write] $($skipped.Count) country(ies) skipped: $(($skipped | Select-Object -First 6) -join ', ')" -ForegroundColor DarkYellow
 }

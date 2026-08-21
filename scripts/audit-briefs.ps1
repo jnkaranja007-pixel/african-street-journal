@@ -1,15 +1,15 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Score every brief for quality. Ranks the worst so a reviewer fixes those, not all 55.
+  Score every published entry for quality. Ranks the weakest country desks for review.
 .DESCRIPTION
   A cheap model writes most of the paper; this decides where that shows. Two kinds
   of finding:
 
     CRITICAL - publishing this would be dishonest. Fabricated or dead source URLs,
                missing sources, empty bodies. Fails the run.
-    WEAK     - dull but not dishonest. No figure in the headline, filler "why",
-               single source, near-duplicate stories. Ranked, not fatal.
+    WEAK     - thin but not dishonest. Filler "why", weak evidence for a high-risk
+               claim, incomplete story package, or near-duplicate assignment.
 
   Fabricated citations are the danger with a weak writer: a plausible URL with
   nothing behind it. -CheckLinks fetches every source and is the only check that
@@ -50,6 +50,7 @@ $scores   = @{}
 $seen     = @{}
 $linkCache = @{}
 $totalBriefs = 0
+$fullStories = 0
 
 foreach ($prop in $byCountry.PSObject.Properties) {
   $code = $prop.Name
@@ -98,18 +99,35 @@ foreach ($prop in $byCountry.PSObject.Properties) {
       }
     }
 
-    # --- weak signals: dull, not dishonest ---
+    # --- weak signals: thin, not dishonest ---
     if ($head.Length -gt 90) { $penalty += 1; $notes.Add('headline over 90 chars') }
-    if ($head -notmatch '\d') { $penalty += 2; $notes.Add('headline carries no figure') }
-    $sentences = ($body -split '(?<=[.!?])\s+' | Where-Object { $_.Trim() }).Count
-    if ($sentences -lt 2) { $penalty += 2; $notes.Add('body under 2 sentences') }
-    if ($sentences -gt 5) { $penalty += 1; $notes.Add('body over 5 sentences') }
+    $isStoryPackage = $null -ne $b.PSObject.Properties['paragraphs']
+    if ($isStoryPackage) {
+      $fullStories++
+      $paragraphs = @($b.paragraphs | Where-Object { ([string]$_).Trim() })
+      $wordCount = ([regex]::Matches(($paragraphs -join ' '), "[\p{L}\p{N}]+(?:[''-][\p{L}\p{N}]+)*")).Count
+      if (-not $b.dek) { $penalty += 2; $notes.Add('story missing dek') }
+      if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) { $penalty += 3; $notes.Add('story outside 3-6 paragraphs') }
+      if ($wordCount -lt 110 -or $wordCount -gt 280) { $penalty += 3; $notes.Add("story outside 110-280 words ($wordCount)") }
+      if (-not $b.articleId -or -not $b.published) { $penalty += 2; $notes.Add('story metadata incomplete') }
+      if ($null -eq $b.PSObject.Properties['editorialScore']) { $penalty += 2; $notes.Add('assignment score missing') }
+      elseif ([double]$b.editorialScore -lt 6.0) { $penalty += 3; $notes.Add('assignment score below 6.0') }
+      if (-not @($b.rankReasons).Count) { $penalty += 1; $notes.Add('ranking rationale missing') }
+    } else {
+      $sentences = ($body -split '(?<=[.!?])\s+' | Where-Object { $_.Trim() }).Count
+      if ($sentences -lt 2) { $penalty += 2; $notes.Add('legacy body under 2 sentences') }
+    }
     if (-not $b.why) { $penalty += 2; $notes.Add('no why line') }
     else {
       $w = ([string]$b.why).ToLower()
       foreach ($f in $fillerWhy) { if ($w.StartsWith($f)) { $penalty += 2; $notes.Add('filler why line'); break } }
     }
-    if ($srcs.Count -eq 1) { $penalty += 1 }
+    $riskText = ($head + ' ' + $body + ' ' + [string]$b.topic).ToLowerInvariant()
+    $highRisk = $riskText -match 'politic|election|court|arrest|detain|corrupt|kill|death|fatal|war|conflict|military|health|disease|outbreak|vaccine'
+    if ($srcs.Count -eq 1) {
+      if ($highRisk) { $penalty += 3; $notes.Add('high-risk story has one source') }
+      else { $penalty += 1; $notes.Add('single-source story') }
+    }
 
     # near-duplicate across the whole paper
     $key = ($head.ToLower() -replace '[^a-z0-9 ]','' -split '\s+' | Where-Object { $_.Length -gt 4 } | Sort-Object | Select-Object -First 6) -join ' '
@@ -118,7 +136,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
     } elseif ($key) { $seen[$key] = $code }
   }
 
-  if ($list.Count -lt 3) { $penalty += 3; $notes.Add("only $($list.Count) briefs") }
+  if ($list.Count -lt 5) { $penalty += (5 - $list.Count); $notes.Add("only $($list.Count) of 5 story slots") }
   $scores[$code] = [pscustomobject]@{
     Code = $code; Briefs = $list.Count; Penalty = $penalty
     Notes = (($notes | Select-Object -Unique) -join '; ')
@@ -126,7 +144,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 }
 
 Write-Host ''
-Write-Host "[audit] $totalBriefs briefs across $($scores.Count) countries" -ForegroundColor Cyan
+Write-Host "[audit] $totalBriefs entries ($fullStories full stories) across $($scores.Count) countries" -ForegroundColor Cyan
 if (-not $CheckLinks) { Write-Host '[audit] source URLs NOT verified - rerun with -CheckLinks to catch fabricated citations' -ForegroundColor DarkYellow }
 
 $ranked = $scores.Values | Sort-Object -Property Penalty -Descending

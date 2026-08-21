@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The African Street Journal</title>
-<meta name="description" content="AI-researched briefs, market heat, farm signals and diaspora tools for all 55 African countries, with visible freshness and source labels.">
+<meta name="description" content="Original, source-cited reporting plus market, farm and diaspora signals for all 55 African countries.">
 <meta name="theme-color" content="#131313">
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:title" content="The African Street Journal">
-<meta property="og:description" content="AI-researched briefs, market heat, farm signals and diaspora tools for all 55 African countries, with visible freshness and source labels.">
+<meta property="og:description" content="Original, source-cited reporting plus market, farm and diaspora signals for all 55 African countries.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://africanstreetjournal.com/">
@@ -18,7 +18,7 @@
 <meta name="twitter:image" content="https://africanstreetjournal.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The African Street Journal">
-<meta name="twitter:description" content="Briefs, market heat and diaspora tools for all 55 African countries.">
+<meta name="twitter:description" content="Original, source-cited stories and practical signals from all 55 African countries.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23131313'/%3E%3Ctext x='32' y='47' font-family='Georgia,serif' font-size='46' font-weight='700' fill='%234caf50' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
 <!-- Analytics (enable at hosting): create a free account at goatcounter.com — privacy-respecting, no cookies:
@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=32">
+<link rel="stylesheet" href="styles.css?v=33">
 </head>
 <body>
 
@@ -38,7 +38,7 @@
   <div class="mobile-masthead">
     <a class="mobile-wordmark" href="./" aria-label="The African Street Journal home">ASJ</a>
     <span class="mobile-wordmark-name">African Street<br>Journal</span>
-    <button class="wire-entry mobile-wire-entry" data-wire-entry type="button" aria-label="Open the latest Africa news brief" title="Open latest Africa news brief">
+    <button class="wire-entry mobile-wire-entry" data-wire-entry type="button" aria-label="Open today's Africa desk" title="Open today's Africa desk">
       <span class="wire-entry-count">The Continent</span>
       <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
     </button>
@@ -47,8 +47,8 @@
 <div class="rule"></div>
 <div class="sub-rule">
   <p class="tagline-footer">&mdash; from the streets, for the streets &mdash;</p>
-  <button class="wire-entry" id="wire-entry" type="button" aria-label="Open the latest Africa news brief" title="Open latest Africa news brief">
-    <span class="wire-entry-label">Open news brief</span>
+  <button class="wire-entry" id="wire-entry" type="button" aria-label="Open today's Africa desk" title="Open today's Africa desk">
+    <span class="wire-entry-label">Open today's desk</span>
     <span class="wire-entry-count" id="wire-entry-count">The Continent</span>
     <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
   </button>
@@ -142,7 +142,7 @@
           <header class="cv-panel-head">
             <h3>News</h3>
             <div class="cv-news-tools">
-              <button class="cv-utility-btn" id="cv-copy-brief" type="button">Copy Brief</button>
+              <button class="cv-utility-btn" id="cv-copy-brief" type="button">Copy Desk</button>
               <span class="meta" id="cv-story-meta">AI desk · ranked by usefulness</span>
             </div>
           </header>
@@ -279,7 +279,7 @@
     <h2>The <span class="g">Continent</span><span class="wire-sub" id="wire-date"></span></h2>
     <div class="wire-search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
-      <input type="search" id="wire-search-input" placeholder="Search the brief…" aria-label="Search headlines" autocomplete="off">
+      <input type="search" id="wire-search-input" placeholder="Search stories…" aria-label="Search stories" autocomplete="off">
     </div>
     <button class="wire-close" id="wire-close" type="button">Close ✕</button>
   </div>
@@ -293,7 +293,7 @@
     <div class="wire-actions" id="wire-actions">
       <select class="wire-edition" id="wire-edition" aria-label="Edition" hidden></select>
       <button class="wire-action wire-compare-toggle" id="wire-compare-toggle" type="button" aria-expanded="false" aria-controls="wire-compare-body"><span>Compare</span><b id="wire-compare-summary">Optional</b></button>
-      <button class="wire-action" id="wire-copy" type="button">Copy Brief</button>
+      <button class="wire-action" id="wire-copy" type="button">Copy Desk</button>
       <button class="wire-action" id="wire-share" type="button">Share</button>
     </div>
     <div class="wire-compare-body" id="wire-compare-body" hidden>
@@ -309,11 +309,33 @@
   <div class="wire-results" id="wire-results"></div>
 </div>
 
-<script src="data/app-core.js?v=32"></script>
-<script src="data/briefs.js?v=32" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=32" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=32" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<article id="story-reader" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="story-reader-title">
+  <header class="story-reader-head">
+    <button class="story-reader-back" id="story-reader-back" type="button" aria-label="Back to stories">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back
+    </button>
+    <span class="story-reader-brand">The African Street <b>Journal</b></span>
+    <button class="story-reader-share" id="story-reader-share" type="button">Share</button>
+  </header>
+  <div class="story-reader-scroll">
+    <div class="story-reader-inner">
+      <div class="story-reader-kicker" id="story-reader-kicker"></div>
+      <h2 id="story-reader-title"></h2>
+      <p class="story-reader-dek" id="story-reader-dek"></p>
+      <div class="story-reader-meta" id="story-reader-meta"></div>
+      <div class="story-reader-copy" id="story-reader-copy"></div>
+      <aside class="story-reader-why" id="story-reader-why"></aside>
+      <footer class="story-reader-sources" id="story-reader-sources"></footer>
+    </div>
+  </div>
+</article>
 
-<script src="app.js?v=32"></script>
+<script src="data/app-core.js?v=33"></script>
+<script src="data/briefs.js?v=33" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=33" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=33" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+
+<script src="app.js?v=33"></script>
 </body>
 </html>

@@ -31,7 +31,7 @@
 .USAGE
   powershell -ExecutionPolicy Bypass -File scripts/fetch-news.ps1
   powershell -ExecutionPolicy Bypass -File scripts/fetch-news.ps1 -Only ng,ke,za
-  powershell -ExecutionPolicy Bypass -File scripts/fetch-news.ps1 -Days 2 -PerCountry 12
+  powershell -ExecutionPolicy Bypass -File scripts/fetch-news.ps1 -Days 2 -PerCountry 6
 .NOTES
   Exit 0 if any country returned items, 1 if every feed failed, which means something
   systemic rather than a quiet news day. Run scripts/check-sources.ps1 first if the
@@ -41,10 +41,10 @@
 param(
   [string[]]$Only,
   [int]$Days = 2,
-  # 16, not 10: the writer files up to 5 briefs and rejects duplicates of a story it has
-  # already used, so a 10-item pool with three angles on one event left it filing 4.
-  # More candidates cost a few hundred prompt tokens and buy genuine editorial choice.
-  [int]$PerCountry = 16,
+  # Six ranked candidates for five briefs. Relevance and event uniqueness are hard
+  # gates before selection, so the writer gets a tight desk rather than a noisy inbox.
+  [int]$PerCountry = 6,
+  [double]$MinCandidateScore = 6.0,
   [int]$DelayMs = 150,
   [int]$TimeoutSec = 20
 )
@@ -62,29 +62,7 @@ if (-not (Test-Path $srcPath)) { Write-Host '[fetch] data/sources.json not found
 $registry = [IO.File]::ReadAllText($srcPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
 
 $UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36'
-
-# Words that carry no topical signal, so clustering is not fooled by shared grammar.
-$STOP = @{}
-foreach ($w in @('about','after','against','among','announced','around','because','been','before','being','between',
-                 'could','during','from','have','into','more','most','over','said','says','should','since','than',
-                 'that','their','them','then','there','these','they','this','those','through','under','until','were',
-                 'what','when','where','which','while','will','with','would','your','news','report','reports','new')) {
-  $STOP[$w] = $true
-}
-
-# Topical weighting. The desk is a business and current-affairs paper, so a story about
-# the charcoal price outranks a comedy festival even when both are fresh and tier 1.
-# Matched against the lowercased headline as substrings, so stems catch their variants.
-$HARD_NEWS = @('inflation','price','prices','rate','rates','bank','budget','tax','levy','tariff','debt','bond',
-               'gdp','growth','economy','economic','currency','exchange','shilling','naira','rand','cedi','birr',
-               'kwacha','dinar','dirham','franc','export','import','trade','investment','investor','imf','world bank',
-               'harvest','crop','maize','wheat','cocoa','coffee','drought','flood','famine','fuel','diesel','petrol',
-               'power','electricity','mine','mining','oil','gas','election','parliament','minister','president',
-               'court','ruling','strike','protest','security','attack','health','hospital','outbreak','cholera',
-               'school','university','unemployment','jobs','wage','census','refugee','summit','treaty','sanctions')
-$SOFT_NEWS = @('comedy','festival','celebrity','wedding','romance','dating','gossip','horoscope','recipe','fashion',
-               'red carpet','sex ','lingerie','net worth','betting','odds','jackpot','lottery','showbiz','soap opera',
-               'reality tv','pageant','miss ','bouquet','valentine','lifestyle','review: ','opinion: ','my take')
+. (Join-Path $PSScriptRoot 'news-ranking.ps1')
 
 function Get-NodeText($node) {
   # PowerShell surfaces an XML element as a string when it is simple and as an object
@@ -146,8 +124,16 @@ function Clear-Html([string]$s) {
   if (-not $s) { return '' }
   $s = $s -replace '(?s)<script.*?</script>', ' ' -replace '(?s)<style.*?</style>', ' '
   $s = $s -replace '<[^>]+>', ' '
-  $s = $s -replace '&nbsp;', ' ' -replace '&amp;', '&' -replace '&quot;', '"' -replace '&#8217;', "'" -replace '&#039;', "'" -replace '&lt;', '<' -replace '&gt;', '>'
+  $s = [Net.WebUtility]::HtmlDecode($s)
   $s = Repair-Mojibake $s
+  # RSS plugins append the outlet name after the actual lede. Besides wasting prompt
+  # tokens, "appeared first on Premium Times Nigeria" made a Cameroon story pass the
+  # Nigeria relevance gate. Strip these generated trailers before any ranking signal.
+  $s = $s -replace '(?is)\s+the post\s+.*$', ' '
+  $s = $s -replace '(?is)\s+l.article\s+.*$', ' '
+  $s = $s -replace '(?is)\s+la entrada\s+.*$', ' '
+  $s = $s -replace '(?is)\s+o post\s+.*$', ' '
+  $s = $s -replace '(?is)\s+read more:\s*https?://\S+.*$', ' '
   return ($s -replace '\s+', ' ').Trim()
 }
 
@@ -220,9 +206,15 @@ function Read-Feed([string]$url) {
     if ($link -notmatch '^https?://') { continue }
     if ($link -match '[<>"\s]') { continue }
 
-    $summary = Clear-Html (Get-NodeText $n.description)
-    if (-not $summary) { $summary = Clear-Html (Get-NodeText $n.summary) }
-    if (-not $summary) { $summary = Clear-Html (Get-NodeText $n.encoded) }
+    # Many publishers expose both a short teaser and richer content:encoded text.
+    # Choose the strongest evidence already inside the feed instead of fetching every
+    # article page, then cap it so six-candidate prompts stay predictable and cheap.
+    $summary = @(
+      (Clear-Html (Get-NodeText $n.description)),
+      (Clear-Html (Get-NodeText $n.summary)),
+      (Clear-Html (Get-NodeText $n.encoded))
+    ) | Where-Object { $_ } | Sort-Object -Property Length -Descending | Select-Object -First 1
+    $summary = [string]$summary
     if ($summary.Length -gt 600) { $summary = $summary.Substring(0, 600) }
 
     $when = Get-NodeText $n.pubDate
@@ -235,37 +227,6 @@ function Read-Feed([string]$url) {
     $out.Add([pscustomobject]@{ title = $title; url = $link; summary = $summary; published = $pub })
   }
   return $out
-}
-
-function Get-Signature([string]$title) {
-  # Significant words only, deduped. Clustering compares these sets, so two outlets
-  # writing different headlines about one event still land together.
-  #
-  # Unicode-aware on purpose. Stripping to [a-z0-9] erased Arabic headlines entirely:
-  # Sudan War Monitor publishes in Arabic, every title reduced to an empty signature,
-  # and the caller dropped them - four of Sudan's five stories disappeared without a
-  # trace. \p{L}\p{N} keeps Arabic, Amharic and accented Latin alike.
-  $words = ($title.ToLower() -replace '[^\p{L}\p{N} ]', ' ') -split '\s+'
-  $set = @{}
-  foreach ($w in $words) {
-    # Arabic carries more meaning per character than English, so a flat 4-character
-    # floor would throw most of a headline away.
-    $min = if ($w -match '[\p{IsArabic}\p{IsEthiopic}]') { 2 } else { 3 }
-    if ($w.Length -le $min) { continue }
-    if ($STOP.ContainsKey($w)) { continue }
-    $set[$w] = $true
-  }
-  return $set
-}
-
-function Get-Overlap($a, $b) {
-  # Jaccard similarity of two word sets.
-  if ($a.Count -eq 0 -or $b.Count -eq 0) { return 0.0 }
-  $shared = 0
-  foreach ($k in $a.Keys) { if ($b.ContainsKey($k)) { $shared++ } }
-  $union = $a.Count + $b.Count - $shared
-  if ($union -le 0) { return 0.0 }
-  return [double]$shared / [double]$union
 }
 
 $codes = @($registry.PSObject.Properties.Name | Where-Object { $_ -ne '_comment' })
@@ -294,16 +255,14 @@ foreach ($code in $codes) {
     continue
   }
 
-  # Regional sources cover a whole bloc, not one country, so their items must be
-  # filtered or Angola would inherit Mozambique's news. A source marked
-  # "scope": "regional" only contributes items that actually name this country - by
-  # name, demonym or capital, listed per country as "match" in the registry.
-  # This is what makes thin markets viable: Eritrea and Western Sahara have almost no
-  # domestic press, but they are covered by outlets that report the whole region.
+  # Explicit country terms serve two jobs: regional-feed admission and a relevance
+  # component in the editorial meter. Matching uses Unicode word boundaries, so Niger
+  # no longer matches the first five letters of Nigeria.
   $matchTerms = @($name)
   if ($entry.match) { $matchTerms = @($entry.match) }
-  $matchRx = ($matchTerms | Where-Object { $_ } | ForEach-Object { [regex]::Escape([string]$_) }) -join '|'
-
+  $foreignTerms = @($registry.PSObject.Properties |
+                    Where-Object { $_.Name -ne '_comment' -and $_.Name -ne $code } |
+                    ForEach-Object { [string]$_.Value.name } | Where-Object { $_ })
 
   $pool = New-Object System.Collections.Generic.List[object]
   $liveSources = 0
@@ -314,16 +273,12 @@ foreach ($code in $codes) {
       # here is not a source for this country, and the diversity cap divides by it.
       $kept = 0
       foreach ($it in $items) {
-        # Regional feeds only contribute stories that are ABOUT this country, not ones
-        # that merely mention it. Matching the whole summary let a BBC Africa piece
-        # through on a passing reference, and the writer then correctly refused it
-        # under "skip any item not actually about this country" - Niger fetched 16
-        # stories and filed 2. The subject of a news item is named in its headline or
-        # its opening clause, so match those and nothing further.
-        if ($s.scope -eq 'regional' -and $matchRx) {
-          $lede = if ($it.summary) { $it.summary.Substring(0, [Math]::Min(140, $it.summary.Length)) } else { '' }
-          if (($it.title + ' ' + $lede) -notmatch $matchRx) { continue }
-        }
+        # Regional sources and outlets explicitly tagged requireMatch must name the
+        # country in the headline or opening. Domestic outlets may use local shorthand,
+        # but implicit relevance receives only a small score and cannot dominate.
+        $requireMatch = ($s.scope -eq 'regional' -or [bool]$s.requireMatch)
+        $relevance = Get-CountryRelevance $it.title $it.summary $matchTerms ([string]$s.scope) $requireMatch $foreignTerms
+        if ($relevance.HardReject) { continue }
         $kept++
         $pool.Add([pscustomobject]@{
           title     = $it.title
@@ -332,6 +287,9 @@ foreach ($code in $codes) {
           published = $it.published
           source    = $s.name
           tier      = [int]$s.tier
+          scope     = [string]$s.scope
+          countryMatch = [string]$relevance.Match
+          countryScore = [double]$relevance.Score
         })
       }
       if ($kept) { $liveSources++ }
@@ -364,130 +322,121 @@ foreach ($code in $codes) {
     continue
   }
 
-  # --- cluster the same story across outlets --------------------------------
+  # --- cluster the same event across languages and outlets ------------------
   $clusters = New-Object System.Collections.Generic.List[object]
   foreach ($item in $fresh) {
-    $sig = Get-Signature $item.title
-    # Never discard an item for having a weak signature - that is how a whole language
-    # went missing. A headline we cannot tokenise still gets published; it just becomes
-    # its own cluster and never merges with anything.
-    if ($sig.Count -lt 2) {
-      $solo = @{}
-      $solo[('__solo_' + $clusters.Count + '_' + $item.title.Length)] = $true
-      $m = New-Object System.Collections.Generic.List[object]
-      $m.Add($item)
-      $clusters.Add([pscustomobject]@{ sig = $solo; members = $m })
-      continue
-    }
+    $eventText = $item.title + ' ' + $(if ($item.summary) { $item.summary.Substring(0, [Math]::Min(420, $item.summary.Length)) } else { '' })
+    $item | Add-Member -NotePropertyName _titleSig -NotePropertyValue (Get-NewsSignature $item.title $matchTerms) -Force
+    $item | Add-Member -NotePropertyName _eventSig -NotePropertyValue (Get-NewsSignature $eventText $matchTerms) -Force
+
     $placed = $false
-    foreach ($c in $clusters) {
-      if ((Get-Overlap $sig $c.sig) -ge 0.4) {
-        $c.members.Add($item)
-        $placed = $true
-        break
+    foreach ($cluster in $clusters) {
+      foreach ($member in $cluster.members) {
+        if (Test-SameNewsEvent $item._titleSig $item._eventSig $member._titleSig $member._eventSig) {
+          $cluster.members.Add($item)
+          $placed = $true
+          break
+        }
       }
+      if ($placed) { break }
     }
     if (-not $placed) {
-      $m = New-Object System.Collections.Generic.List[object]
-      $m.Add($item)
-      $clusters.Add([pscustomobject]@{ sig = $sig; members = $m })
+      $members = New-Object System.Collections.Generic.List[object]
+      $members.Add($item)
+      $clusters.Add([pscustomobject]@{ members = $members })
     }
   }
 
-  # --- score ----------------------------------------------------------------
+  # --- score with a visible editorial meter ---------------------------------
   $scored = New-Object System.Collections.Generic.List[object]
-  foreach ($c in $clusters) {
-    $outlets = @($c.members | ForEach-Object { $_.source } | Sort-Object -Unique)
-    # Best representative: highest tier, then the fullest lede, since that is what
-    # gives the writer a figure to lead with.
-    $best = @($c.members | Sort-Object -Property @{ Expression = { $_.tier } },
-                                                 @{ Expression = { $_.summary.Length }; Descending = $true })[0]
-
-    $score = 0.0
-    # Corroboration dominates. Two outlets on a story is a strong signal; the cap stops
-    # a wire pickup echoed by every paper from crowding out everything else.
-    $score += [Math]::Min($outlets.Count - 1, 3) * 3.0
-    $score += switch ($best.tier) { 1 { 2.0 } 2 { 1.0 } default { 0.0 } }
-    if ($best.summary) { $score += 1.5 }
-    if ($best.summary.Length -gt 180) { $score += 0.5 }
-    if ($best.published) {
-      $ageH = ($now - $best.published).TotalHours
-      if ($ageH -le 24) { $score += 2.0 } elseif ($ageH -le 48) { $score += 1.0 }
+  foreach ($cluster in $clusters) {
+    $outlets = @($cluster.members | ForEach-Object { $_.source } | Sort-Object -Unique)
+    $choices = foreach ($member in $cluster.members) {
+      [pscustomobject]@{ Item = $member; Meter = Get-EditorialScore $member $outlets.Count $now }
     }
+    # The representative is the member with the strongest complete evidence, not
+    # automatically the longest lede or the first feed fetched.
+    $choice = @($choices | Sort-Object -Property @{ Expression = { $_.Meter.Score }; Descending = $true },
+                                                    @{ Expression = { $_.Item.published }; Descending = $true })[0]
+    $best = $choice.Item
+    $meter = $choice.Meter
 
-    # Subject matter. Without this every tier-1 item ties on score and the quota fills
-    # with whatever that outlet happened to publish, comedy listings included.
-    $hl = $best.title.ToLower()
-    $hard = 0; $soft = 0
-    foreach ($k in $HARD_NEWS) { if ($hl.Contains($k)) { $hard++; if ($hard -ge 3) { break } } }
-    foreach ($k in $SOFT_NEWS) { if ($hl.Contains($k)) { $soft++; break } }
-    $score += [Math]::Min($hard, 3) * 1.2
-    if ($soft) { $score -= 3.0 }
-
-    # Carry the corroborating outlets' own URLs, not just their names. A story three
-    # papers ran should be published with three citations: it is the best-evidenced
-    # item of the day, and dropping the extras made it look single-sourced to the audit.
     $others = New-Object System.Collections.Generic.List[object]
     $seenOutlet = @{}
     $seenOutlet[$best.source] = $true
-    foreach ($m in @($c.members | Sort-Object -Property @{ Expression = { $_.tier } })) {
-      if ($seenOutlet.ContainsKey($m.source)) { continue }
-      if ($m.url -notmatch '^https?://') { continue }
-      $seenOutlet[$m.source] = $true
-      $others.Add([pscustomobject]@{ name = $m.source; url = $m.url })
+    foreach ($member in @($cluster.members | Sort-Object -Property @{ Expression = { $_.tier } })) {
+      if ($seenOutlet.ContainsKey($member.source)) { continue }
+      if ($member.url -notmatch '^https?://') { continue }
+      $seenOutlet[$member.source] = $true
+      $others.Add([pscustomobject]@{
+        name      = $member.source
+        url       = $member.url
+        title     = $member.title
+        summary   = $member.summary
+        published = if ($member.published) { $member.published.ToString('yyyy-MM-ddTHH:mm:ssZ') } else { '' }
+      })
       if ($others.Count -ge 2) { break }
     }
 
+    $eventKey = @($best._eventSig.Keys | Sort-Object | Select-Object -First 6) -join '-'
     $scored.Add([pscustomobject]@{
-      title         = $best.title
-      url           = $best.url
-      summary       = $best.summary
-      source        = $best.source
-      corroboration = $outlets.Count
-      alsoSources   = $others.ToArray()
-      published     = if ($best.published) { $best.published.ToString('yyyy-MM-ddTHH:mm:ssZ') } else { '' }
-      score         = [Math]::Round($score, 2)
+      title          = $best.title
+      url            = $best.url
+      summary        = $best.summary
+      source         = $best.source
+      sourceTier     = [int]$best.tier
+      corroboration  = $outlets.Count
+      alsoSources    = $others.ToArray()
+      published      = if ($best.published) { $best.published.ToString('yyyy-MM-ddTHH:mm:ssZ') } else { '' }
+      score          = [double]$meter.Score
+      scoreBreakdown = $meter.Breakdown
+      rankReasons    = $meter.Reasons
+      topicHint      = [string]$meter.Topic
+      confidence     = [string]$meter.Confidence
+      ageHours       = $meter.AgeHours
+      countryMatch   = [string]$best.countryMatch
+      eventKey       = $eventKey
+      itemId         = Get-NewsItemId $best.url $best.title $best.summary
+      _titleSig      = $best._titleSig
+      _eventSig      = $best._eventSig
     })
   }
 
-  # Diversity-capped selection. Straight score ordering let one tier-1 outlet take every
-  # slot - Kenya published ten Business Daily items while three other papers sat unused -
-  # because tier is a per-source constant, so all its stories tie above everyone else's.
-  # Cap each outlet, then top up from the leftovers if the quota is short.
-  $ordered = @($scored | Sort-Object -Property score -Descending)
-  $cap = [Math]::Max(2, [int][Math]::Ceiling($PerCountry / [Math]::Max(1, $liveSources)))
-  $picked = New-Object System.Collections.Generic.List[object]
-  $usedBy = @{}
-  foreach ($s in $ordered) {
-    if ($picked.Count -ge $PerCountry) { break }
-    $n = 0
-    if ($usedBy.ContainsKey($s.source)) { $n = $usedBy[$s.source] }
-    if ($n -ge $cap) { continue }
-    $picked.Add($s)
-    $usedBy[$s.source] = $n + 1
-  }
-  # Top up to the quota, but keep a ceiling: an unlimited top-up handed Zimbabwe eight
-  # of ten slots to one paper once the other two ran dry. Publishing eight good stories
-  # from three outlets beats ten from one.
-  if ($picked.Count -lt $PerCountry) {
-    foreach ($s in $ordered) {
-      if ($picked.Count -ge $PerCountry) { break }
-      if ($picked -contains $s) { continue }
-      $n = 0
-      if ($usedBy.ContainsKey($s.source)) { $n = $usedBy[$s.source] }
-      if ($n -ge ($cap * 2)) { continue }
-      $picked.Add($s)
-      $usedBy[$s.source] = $n + 1
+  # Selection applies outlet and topic diversity after base scoring and never admits
+  # two candidates judged to be the same event. A relaxed pass fills thin countries
+  # without relaxing event uniqueness.
+  $eligible = @($scored.ToArray() | Where-Object { $_.score -ge $MinCandidateScore })
+  $selected = @(Select-NewsCandidates $eligible $PerCountry $liveSources)
+  $ranked = @($selected | ForEach-Object {
+    [pscustomobject][ordered]@{
+      title             = $_.title
+      url               = $_.url
+      summary           = $_.summary
+      source            = $_.source
+      sourceTier        = $_.sourceTier
+      corroboration     = $_.corroboration
+      alsoSources       = $_.alsoSources
+      published         = $_.published
+      editorialScore    = $_.score
+      selectionScore    = $_.selectionScore
+      diversityPenalty  = $_.diversityPenalty
+      scoreBreakdown    = $_.scoreBreakdown
+      rankReasons       = $_.rankReasons
+      topicHint         = $_.topicHint
+      confidence        = $_.confidence
+      ageHours          = $_.ageHours
+      countryMatch      = $_.countryMatch
+      eventKey          = $_.eventKey
+      itemId            = $_.itemId
     }
-  }
-  $ranked = $picked.ToArray()
+  })
 
   # When a country comes out thin, say where the items went. Sudan filed one story from
   # three healthy feeds and there was no way to tell whether the feeds, the freshness
   # window, the clustering or the selection ate them without adding prints by hand.
   if ($ranked.Count -lt 3) {
-    Write-Host ("      {0}: pool={1} fresh={2} clusters={3} scored={4} picked={5} cap={6}" -f `
-                $code, $pool.Count, $fresh.Count, $clusters.Count, $scored.Count, $picked.Count, $cap) -ForegroundColor DarkGray
+    Write-Host ("      {0}: pool={1} fresh={2} clusters={3} eligible={4} selected={5}" -f `
+                $code, $pool.Count, $fresh.Count, $clusters.Count, $eligible.Count, $ranked.Count) -ForegroundColor DarkGray
   }
   if (-not $ranked.Count) {
     Write-Host ("  {0}  {1,-26} nothing usable after clustering" -f $code, $name) -ForegroundColor DarkYellow

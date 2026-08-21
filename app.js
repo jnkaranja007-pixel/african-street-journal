@@ -923,6 +923,7 @@ canvas.addEventListener('mouseleave', () => {
 });
 
 const countryView = document.getElementById('country-view');
+const storyReader = document.getElementById('story-reader');
 const backBtn = document.getElementById('back-btn');
 const countryMapCanvas = document.getElementById('cv-country-map');
 const countryMapCtx = countryMapCanvas.getContext('2d');
@@ -1394,7 +1395,8 @@ function closeCountry() {
   setCountryNavBusy(false);
   stopAudioChannel();
   countryView.classList.remove('open');
-  document.body.style.overflow = '';
+  const wireOpen = document.getElementById('wire-view')?.classList.contains('open');
+  if (!wireOpen && !storyReader?.classList.contains('open')) document.body.style.overflow = '';
   updateOverlayAccessibility();
   if (countryPopTimer) clearInterval(countryPopTimer);
   if (countryUtilityTimer) clearInterval(countryUtilityTimer);
@@ -1405,7 +1407,19 @@ function closeCountry() {
   } else if (document.activeElement && document.activeElement.blur) {
     document.activeElement.blur();
   }
+  if (isTouchLikePointer()) resumeCityTicker();
   syncRoute();
+}
+
+function resumeCityTicker() {
+  if (!tickerEl) return;
+  requestAnimationFrame(() => {
+    const focused = document.activeElement;
+    if (focused?.closest?.('#ticker')) focused.blur();
+    tickerEl.style.animationPlayState = 'running';
+    tickerEl.getAnimations?.().forEach(animation => animation.play());
+    window.setTimeout(() => tickerEl.style.removeProperty('animation-play-state'), 240);
+  });
 }
 
 function isTouchLikePointer() {
@@ -1511,7 +1525,7 @@ document.getElementById('cv-copy-brief')?.addEventListener('click', async event 
   pulseButtonLabel(event.currentTarget, ok ? 'Copied' : 'Copy Failed');
 });
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && countryView.classList.contains('open')) closeCountry();
+  if (event.key === 'Escape' && countryView.classList.contains('open') && !storyReader?.classList.contains('open')) closeCountry();
 });
 
 // aria-modal promises focus stays inside the dialog; without a trap, Tab walks out into the
@@ -1531,16 +1545,27 @@ function trapFocus(container) {
 }
 trapFocus(countryView);
 trapFocus(document.getElementById('wire-view'));
+trapFocus(storyReader);
 
 function updateOverlayAccessibility() {
   const main = document.querySelector('main');
-  if (!main) return;
-  const wireOpen = document.getElementById('wire-view')?.classList.contains('open');
+  const wireView = document.getElementById('wire-view');
+  const wireOpen = wireView?.classList.contains('open');
   const countryOpen = countryView.classList.contains('open');
-  const blocked = wireOpen || countryOpen;
-  main.setAttribute('aria-hidden', String(blocked));
-  if ('inert' in main) main.inert = blocked;
+  const storyOpen = storyReader?.classList.contains('open');
+  const setBlocked = (element, blocked) => {
+    if (!element) return;
+    element.setAttribute('aria-hidden', String(blocked));
+    if ('inert' in element) element.inert = blocked;
+  };
+  setBlocked(main, wireOpen || countryOpen || storyOpen);
+  setBlocked(document.querySelector('.masthead'), wireOpen || countryOpen || storyOpen);
+  setBlocked(document.querySelector('.sub-rule'), wireOpen || countryOpen || storyOpen);
+  setBlocked(countryView, !countryOpen || wireOpen || storyOpen);
+  setBlocked(wireView, !wireOpen || storyOpen);
+  setBlocked(storyReader, !storyOpen);
 }
+updateOverlayAccessibility();
 window.addEventListener('resize', () => {
   if (!activeCountryMap) return;
   requestAnimationFrame(() => drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks));
@@ -1651,8 +1676,190 @@ function renderCountryFile(countryId) {
   '</div>';
 }
 
-function briefRowHtml(b, i, countryTag) {
-  const domId = 'cv-brief-' + i;
+const STORY_REGISTRY = new Map();
+let storyReaderLastFocus = null;
+let activeReaderRecord = null;
+
+function storyParagraphs(story) {
+  const filed = Array.isArray(story?.paragraphs)
+    ? story.paragraphs.map(paragraph => String(paragraph || '').trim()).filter(Boolean)
+    : [];
+  if (filed.length) return filed;
+  const body = String(story?.body || '').trim();
+  if (!body) return [];
+  const paragraphs = body.split(/\n\s*\n/).map(paragraph => paragraph.trim()).filter(Boolean);
+  return paragraphs.length ? paragraphs : [body];
+}
+
+function storyWordCount(story) {
+  const filed = Number(story?.wordCount);
+  if (Number.isFinite(filed) && filed > 0) return Math.round(filed);
+  return storyParagraphs(story).join(' ').split(/\s+/).filter(Boolean).length;
+}
+
+function storyClientId(story, context = {}) {
+  if (story?.articleId) return 'id:' + String(story.articleId);
+  const code = String(context.countryCode || 'africa').toLowerCase();
+  const rank = Number.isInteger(context.rank) ? context.rank : 0;
+  return 'slot:' + code + ':' + rank;
+}
+
+function registerStory(story, context = {}) {
+  const key = storyClientId(story, context);
+  STORY_REGISTRY.set(key, { story, context });
+  return key;
+}
+
+function findPublishedStory(clientId) {
+  const id = String(clientId || '');
+  if (STORY_REGISTRY.has(id)) return STORY_REGISTRY.get(id);
+  const slot = /^slot:([a-z]{2}):(\d+)$/.exec(id);
+  if (slot) {
+    const story = AI_BRIEFS[slot[1]]?.[Number(slot[2])];
+    if (story) return {
+      story,
+      context: {
+        countryCode: slot[1],
+        country: COUNTRY_INFO[slot[1]]?.name || slot[1].toUpperCase(),
+        published: story.published || AI_BRIEFS_DATES[slot[1]] || AI_BRIEFS_AT,
+        rank: Number(slot[2])
+      }
+    };
+  }
+  if (id.startsWith('id:')) {
+    const wanted = id.slice(3);
+    for (const [countryCode, stories] of Object.entries(AI_BRIEFS)) {
+      const rank = (stories || []).findIndex(story => String(story?.articleId || '') === wanted);
+      if (rank >= 0) {
+        const story = stories[rank];
+        return {
+          story,
+          context: {
+            countryCode,
+            country: COUNTRY_INFO[countryCode]?.name || countryCode.toUpperCase(),
+            published: story.published || AI_BRIEFS_DATES[countryCode] || AI_BRIEFS_AT,
+            rank
+          }
+        };
+      }
+    }
+  }
+  return null;
+}
+
+function openRegisteredStory(key, sourceElement = document.activeElement) {
+  const record = STORY_REGISTRY.get(String(key || ''));
+  if (record) openStoryReader(record.story, record.context, sourceElement);
+}
+
+function openStoryReader(story, context = {}, sourceElement = document.activeElement) {
+  if (!storyReader || !story?.headline) return;
+  const country = context.country || COUNTRY_INFO[context.countryCode]?.name || '';
+  const topic = story.topic || context.topic || 'News';
+  const paragraphs = storyParagraphs(story);
+  const wordCount = storyWordCount(story);
+  const readMinutes = Math.max(1, Number(story.readMinutes) || Math.ceil(wordCount / 210));
+  const published = story.published || context.published || '';
+  const sources = Array.isArray(story.sources)
+    ? story.sources.filter(source => source && source.url)
+    : [];
+  const sourceMap = new Map();
+  sources.forEach(source => sourceMap.set(source.url, source));
+  const uniqueSources = Array.from(sourceMap.values());
+  const confidence = String(story.confidence || '').trim();
+
+  activeReaderRecord = { story, context: { ...context, country, topic, published }, clientId: storyClientId(story, context) };
+  storyReaderLastFocus = sourceElement;
+  document.getElementById('story-reader-kicker').textContent = [topic, country].filter(Boolean).join(' · ');
+  document.getElementById('story-reader-title').textContent = story.headline;
+  const dek = document.getElementById('story-reader-dek');
+  dek.textContent = story.dek || '';
+  dek.hidden = !story.dek;
+  const meta = [];
+  if (published) meta.push('<span><b>' + escapeHtml(formatShortDate(published) || String(published).slice(0, 10)) + '</b></span>');
+  meta.push('<span><b>' + readMinutes + ' min</b> read</span>');
+  if (uniqueSources.length) meta.push('<span><b>' + uniqueSources.length + '</b> ' + (uniqueSources.length === 1 ? 'source' : 'sources') + '</span>');
+  if (confidence) meta.push('<span><b>' + escapeHtml(confidence) + '</b> confidence</span>');
+  document.getElementById('story-reader-meta').innerHTML = meta.join('');
+  document.getElementById('story-reader-copy').innerHTML = paragraphs
+    .map(paragraph => '<p>' + escapeHtml(paragraph) + '</p>').join('');
+  const why = document.getElementById('story-reader-why');
+  const whyText = briefWhy(story);
+  why.innerHTML = '<b>Why it matters</b>' + escapeHtml(whyText);
+  why.hidden = !whyText;
+  const sourcesEl = document.getElementById('story-reader-sources');
+  sourcesEl.innerHTML = uniqueSources.length
+    ? '<span>Reporting sources</span><div class="story-reader-source-list">' + uniqueSources.map(source =>
+        '<a href="' + escapeHtml(safeUrl(source.url)) + '" target="_blank" rel="noopener noreferrer">' +
+          escapeHtml(source.name || 'Source') + ' ↗</a>'
+      ).join('') + '</div>'
+    : '';
+  sourcesEl.hidden = !uniqueSources.length;
+  document.getElementById('story-reader-share').textContent = 'Share';
+  storyReader.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  updateOverlayAccessibility();
+  const scroll = storyReader.querySelector('.story-reader-scroll');
+  if (scroll) scroll.scrollTop = 0;
+  document.getElementById('story-reader-back').focus();
+}
+
+function closeStoryReader() {
+  if (!storyReader?.classList.contains('open')) return;
+  storyReader.classList.remove('open');
+  const wireOpen = document.getElementById('wire-view')?.classList.contains('open');
+  const countryOpen = countryView.classList.contains('open');
+  if (!wireOpen && !countryOpen) document.body.style.overflow = '';
+  updateOverlayAccessibility();
+  if (storyReaderLastFocus?.isConnected && storyReaderLastFocus.focus) storyReaderLastFocus.focus();
+  else if (wireOpen) document.getElementById('wire-close')?.focus();
+  else if (countryOpen) backBtn.focus();
+  const currentUrl = new URL(window.location.href);
+  if (currentUrl.searchParams.has('story')) {
+    currentUrl.searchParams.delete('story');
+    history.replaceState(null, '', currentUrl.pathname + currentUrl.search + currentUrl.hash);
+  }
+  activeReaderRecord = null;
+}
+
+document.getElementById('story-reader-back')?.addEventListener('click', closeStoryReader);
+document.getElementById('story-reader-share')?.addEventListener('click', async event => {
+  if (!activeReaderRecord) return;
+  const story = activeReaderRecord.story;
+  const country = activeReaderRecord.context.country;
+  const shareUrl = new URL(window.location.href);
+  shareUrl.searchParams.delete('selftest');
+  shareUrl.searchParams.set('story', activeReaderRecord.clientId);
+  shareUrl.hash = '';
+  const text = [story.headline, story.dek || storyParagraphs(story)[0] || '', country ? 'The African Street Journal · ' + country : 'The African Street Journal']
+    .filter(Boolean).join('\n\n');
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: story.headline, text, url: shareUrl.href });
+      pulseButtonLabel(event.currentTarget, 'Shared');
+      return;
+    } catch {}
+  }
+  const ok = await copyPlainText(text + '\n\n' + shareUrl.href);
+  pulseButtonLabel(event.currentTarget, ok ? 'Copied' : 'Share Failed');
+});
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape' || !storyReader?.classList.contains('open')) return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  closeStoryReader();
+}, true);
+
+function briefRowHtml(b, i, countryTag, countryCode, published) {
+  const domId = 'cv-brief-' + String(countryCode || 'wire').replace(/[^a-z0-9-]/gi, '') + '-' + i;
+  const storyKey = registerStory(b, {
+    countryCode,
+    country: countryTag || COUNTRY_INFO[countryCode]?.name || '',
+    published,
+    rank: i
+  });
+  const preview = b.dek || storyParagraphs(b)[0] || '';
+  const readMinutes = Math.max(1, Number(b.readMinutes) || Math.ceil(storyWordCount(b) / 210));
   return '<article class="cv-news-row">' +
     '<button class="cv-news-summary" id="' + domId + '-summary" type="button" aria-expanded="false" aria-controls="' + domId + '-detail">' +
       '<span class="cv-brief-rank">' + String(i + 1).padStart(2, '0') + '</span>' +
@@ -1662,16 +1869,16 @@ function briefRowHtml(b, i, countryTag) {
           '<span class="cv-brief-topic">' + escapeHtml(b.topic || 'News') + '</span>' +
           '<span>·</span><span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span></div>' +
         '<h4 class="cv-brief-title">' + escapeHtml(b.headline) + '</h4>' +
+        (b.dek ? '<p class="cv-brief-dek">' + escapeHtml(b.dek) + '</p>' : '') +
       '</div>' +
       '<span class="cv-news-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9l6 6 6-6"/></svg></span>' +
     '</button>' +
     '<div class="cv-brief-main" id="' + domId + '-detail" role="region" aria-labelledby="' + domId + '-summary" hidden>' +
-      '<p class="cv-brief-body">' + escapeHtml(b.body) + '</p>' +
+      '<p class="cv-brief-body">' + escapeHtml(preview) + '</p>' +
       '<p class="cv-brief-why"><b>Why it matters</b>' + escapeHtml(briefWhy(b)) + '</p>' +
-      '<div class="cv-brief-src"><span class="cv-brief-src-label">Sources</span>' +
-        (Array.isArray(b.sources) ? b.sources.filter(s => s && s.url).map(s =>
-          '<a href="' + escapeHtml(safeUrl(s.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(s.name || 'Source') + ' ↗</a>'
-        ).join('') : '') +
+      '<div class="cv-brief-actions">' +
+        '<span>' + readMinutes + ' min read</span>' +
+        '<button class="cv-read-story" type="button" data-story-key="' + escapeHtml(storyKey) + '">Read on ASJ <span aria-hidden="true">→</span></button>' +
       '</div>' +
     '</div>' +
   '</article>';
@@ -1693,7 +1900,12 @@ function regionalWireFor(countryId) {
     for (const [id, list] of chosen) {
       const b = list[i];
       if (b && b.headline && b.body) {
-        picks.push({ brief: b, country: (COUNTRY_INFO[id] || {}).name || id.toUpperCase() });
+        picks.push({
+          brief: b,
+          countryCode: id,
+          country: (COUNTRY_INFO[id] || {}).name || id.toUpperCase(),
+          published: b.published || AI_BRIEFS_DATES[id] || AI_BRIEFS_AT
+        });
         any = true;
         if (picks.length >= 6) break;
       }
@@ -1704,7 +1916,7 @@ function regionalWireFor(countryId) {
   const html = '<div class="cv-brief-desk">' +
     '<div class="cv-brief-head"><span class="t">' + escapeHtml(scope) + ' <b>wire</b></span>' +
       '<span class="m">' + escapeHtml(info.name || '') + ' file pending</span></div>' +
-    picks.map((p, i) => briefRowHtml(p.brief, i, p.country)).join('') +
+    picks.map((p, i) => briefRowHtml(p.brief, i, p.country, p.countryCode, p.published)).join('') +
     '<div class="cv-df-note">The AI desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — these are current stories from the ' +
       escapeHtml(scope === 'Across the continent' ? 'continental' : scope) + ' wire. ' + escapeHtml(info.name || 'Its') + '&rsquo;s data file lives under Signals.</div>' +
   '</div>';
@@ -1735,7 +1947,7 @@ function renderBriefDesk(countryId) {
   }
   cards.innerHTML =
     '<div class="cv-brief-desk">' +
-      briefs.map((b, i) => briefRowHtml(b, i)).join('') +
+      briefs.map((b, i) => briefRowHtml(b, i, '', countryId, b.published || AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT)).join('') +
     '</div>';
   wireBriefAccordion(cards);
 }
@@ -1751,6 +1963,11 @@ function wireBriefAccordion(cards) {
   };
 
   cards.onclick = event => {
+    const readerButton = event.target.closest('[data-story-key]');
+    if (readerButton) {
+      openRegisteredStory(readerButton.dataset.storyKey, readerButton);
+      return;
+    }
     const summary = event.target.closest('.cv-news-summary');
     if (!summary) return;
     const row = summary.closest('.cv-news-row');
@@ -3395,6 +3612,7 @@ canvas.addEventListener('touchstart', (e) => {
   const compareSelects = ['wire-compare-a','wire-compare-b','wire-compare-c'].map(id => document.getElementById(id)).filter(Boolean);
   if (!view || !entries.length) return;
   let activeTopic = 'All', query = '', wireLastFocus = null, INDEX = [], previousSnapshot = null, compareOpen = false, mobileActionsOpen = false;
+  let visibleCount = 60;
   let editionDate = null, editionBriefs = null;
   const editionCache = {};
 
@@ -3408,11 +3626,31 @@ canvas.addEventListener('touchstart', (e) => {
         const src = (Array.isArray(b.sources) && b.sources[0]) || {};
         const sources = Array.isArray(b.sources) ? b.sources.filter(s => s && (s.name || s.url)) : [];
         const why = briefWhy(b);
-        out.push({ code, country: info.name, cc: info.cc, title: b.headline||'', summary: b.body||'', why, source: src.name||'', sources, url: src.url||'', date: at, type: b.topic||'News', rank });
+        const date = b.published || AI_BRIEFS_DATES[code] || at;
+        const score = Number(b.selectionScore ?? b.editorialScore ?? 0) || 0;
+        const storyKey = registerStory(b, { countryCode: code, country: info.name, published: date, rank });
+        out.push({
+          code,
+          country: info.name,
+          cc: info.cc,
+          title: b.headline || '',
+          summary: b.dek || storyParagraphs(b)[0] || '',
+          why,
+          source: src.name || '',
+          sources,
+          url: src.url || '',
+          date,
+          type: b.topic || 'News',
+          rank,
+          score,
+          storyKey,
+          story: b
+        });
       });
     }
-    // Surface each country's top story first (continental front-page ranking)
-    out.sort((a, b) => a.rank - b.rank || a.country.localeCompare(b.country));
+    // The assignment score chooses the continental lead; rank remains the fallback for
+    // legacy editions that predate scored story packages.
+    out.sort((a, b) => b.score - a.score || a.rank - b.rank || a.country.localeCompare(b.country));
     return out;
   }
   function topicCounts(){
@@ -3603,7 +3841,7 @@ canvas.addEventListener('touchstart', (e) => {
     updateCompareSummary();
   }
   function itemMarkup(it){
-    return '<a class="wire-item" href="'+escapeHtml(safeUrl(it.url))+'" target="_blank" rel="noopener noreferrer">' +
+    return '<button class="wire-item" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
       '<div class="wire-item-body">' +
         '<div class="wire-item-kicker">' +
@@ -3615,11 +3853,11 @@ canvas.addEventListener('touchstart', (e) => {
         '<div class="wire-item-title">'+escapeHtml(it.title)+'</div>' +
         (it.summary?'<div class="wire-item-sum">'+escapeHtml(it.summary)+'</div>':'') +
       '</div>' +
-      '<span class="wire-item-go" aria-hidden="true">↗</span>' +
-    '</a>';
+      '<span class="wire-item-go" aria-hidden="true">→</span>' +
+    '</button>';
   }
   function frontCardMarkup(it){
-    return '<a class="wire-brief-card" href="'+escapeHtml(safeUrl(it.url))+'" target="_blank" rel="noopener noreferrer">' +
+    return '<button class="wire-brief-card" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<div class="wire-item-kicker">' +
         '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
         '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
@@ -3628,10 +3866,10 @@ canvas.addEventListener('touchstart', (e) => {
       '<div>' +
         '<div class="wire-item-title">'+escapeHtml(it.title)+'</div>' +
       '</div>' +
-    '</a>';
+    '</button>';
   }
   function heroMarkup(it){
-    return '<a class="wire-hero" href="'+escapeHtml(safeUrl(it.url))+'" target="_blank" rel="noopener noreferrer">' +
+    return '<button class="wire-hero" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<div class="wire-hero-kicker"><span class="wire-hero-lead">Lead story</span>' +
         '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
         '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
@@ -3639,7 +3877,12 @@ canvas.addEventListener('touchstart', (e) => {
         '<span class="wire-item-src">'+escapeHtml(it.source)+'</span></div>' +
       '<div class="wire-hero-title">'+escapeHtml(it.title)+'</div>' +
       (it.summary?'<div class="wire-hero-sum">'+escapeHtml(it.summary)+'</div>':'') +
-    '</a>';
+    '</button>';
+  }
+  function loadMoreMarkup(total, shown){
+    if (shown >= total) return '';
+    return '<div class="wire-load-wrap"><button class="wire-load-more" type="button" data-wire-load-more>Load more <span>' +
+      Math.min(60, total - shown) + '</span></button></div>';
   }
   function renderResults(){
     if (!INDEX.length){ updateResultCount([]); resultsEl.innerHTML = '<div class="wire-empty">No stories loaded yet. The desk has not published a brief file.</div>'; return; }
@@ -3652,39 +3895,27 @@ canvas.addEventListener('touchstart', (e) => {
     if (frontPage) {
       const frontCards = list.slice(0, 6);
       const more = list.slice(6);
+      const visibleMore = more.slice(0, visibleCount);
       resultsEl.innerHTML =
         '<div class="wire-front">' +
           (hero ? heroMarkup(hero) : '') +
           '<div class="wire-meta">Highlights</div>' +
           '<div class="wire-front-grid">' + frontCards.map(frontCardMarkup).join('') + '</div>' +
           movementMarkup(items) +
-          (more.length ? '<div class="wire-meta">More across the continent</div>' + more.slice(0, 200).map(itemMarkup).join('') : '') +
+          (more.length ? '<div class="wire-meta">More across the continent</div>' + visibleMore.map(itemMarkup).join('') + loadMoreMarkup(more.length, visibleMore.length) : '') +
         '</div>';
       return;
     }
+    const visibleItems = list.slice(0, visibleCount);
     resultsEl.innerHTML =
       (hero ? heroMarkup(hero) : '') +
       '<div class="wire-meta">'+(frontPage?'More across the continent':items.length+' '+(items.length===1?'story':'stories')+(activeTopic!=='All'?' · '+escapeHtml(activeTopic):'')+(query?' · “'+escapeHtml(query.trim())+'”':''))+'</div>' +
-      list.slice(0,200).map(it=>
-        '<a class="wire-item" href="'+escapeHtml(safeUrl(it.url))+'" target="_blank" rel="noopener noreferrer">' +
-          '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
-          '<div class="wire-item-body">' +
-            '<div class="wire-item-kicker">' +
-              '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
-              '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
-              '<span class="wire-item-src">'+escapeHtml(it.source)+'</span>' +
-              (relativeDateLabel(it.date)?'<span class="dot"></span><span class="wire-item-when">'+escapeHtml(relativeDateLabel(it.date))+'</span>':'') +
-            '</div>' +
-            '<div class="wire-item-title">'+escapeHtml(it.title)+'</div>' +
-            (it.summary?'<div class="wire-item-sum">'+escapeHtml(it.summary)+'</div>':'') +
-          '</div>' +
-          '<span class="wire-item-go" aria-hidden="true">↗</span>' +
-        '</a>'
-      ).join('');
+      visibleItems.map(itemMarkup).join('') +
+      loadMoreMarkup(list.length, visibleItems.length);
   }
   function openWire(topic){
     editionDate = null; editionBriefs = null; populateEditions();
-    INDEX = buildIndex(); activeTopic = topic||'All'; query=''; searchInput.value='';
+    INDEX = buildIndex(); activeTopic = topic||'All'; query=''; visibleCount = 60; searchInput.value='';
     const dateEl = document.getElementById('wire-date');
     const briefDate = latestBriefDate();
     if (dateEl) dateEl.textContent = briefDate ? 'Latest available · ' + formatShortDate(briefDate + 'T00:00:00Z') : 'Brief pending';
@@ -3697,13 +3928,18 @@ canvas.addEventListener('touchstart', (e) => {
     view.classList.add('open'); document.body.style.overflow='hidden';
     updateOverlayAccessibility();
     syncRoute();
-    setTimeout(()=>searchInput.focus(), 60);
+    setTimeout(() => {
+      if (window.matchMedia('(max-width:720px)').matches) closeBtn.focus();
+      else searchInput.focus();
+    }, 60);
   }
   function closeWire(){
+    if (storyReader?.classList.contains('open')) closeStoryReader();
     view.classList.remove('open');
     if (!document.getElementById('country-view').classList.contains('open')) document.body.style.overflow='';
     updateOverlayAccessibility();
     if (wireLastFocus && wireLastFocus.focus) wireLastFocus.focus();
+    if (isTouchLikePointer()) resumeCityTicker();
     syncRoute();
   }
   window.__wireOpen = openWire;
@@ -3723,6 +3959,7 @@ canvas.addEventListener('touchstart', (e) => {
   }
   function applyEdition(){
     INDEX = buildIndex();
+    visibleCount = 60;
     const dateEl = document.getElementById('wire-date');
     const d = editionDate || latestBriefDate();
     if (dateEl) dateEl.textContent = d ? (editionDate ? 'Edition · ' : 'Latest available · ') + formatShortDate(d + 'T00:00:00Z') : 'Brief pending';
@@ -3776,12 +4013,27 @@ canvas.addEventListener('touchstart', (e) => {
   topicsEl.addEventListener('click', e=>{
     const b = e.target.closest('.wire-topic'); if (!b) return;
     activeTopic = b.dataset.topic;
+    visibleCount = 60;
     topicsEl.querySelectorAll('.wire-topic').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.topic===activeTopic)));
     renderResults();
     resultsEl.scrollTop = 0;
   });
-  searchInput.addEventListener('input', ()=>{ query = searchInput.value; renderResults(); resultsEl.scrollTop = 0; });
-  document.addEventListener('keydown', e=>{ if (e.key==='Escape' && view.classList.contains('open')) closeWire(); });
+  searchInput.addEventListener('input', ()=>{ query = searchInput.value; visibleCount = 60; renderResults(); resultsEl.scrollTop = 0; });
+  resultsEl.addEventListener('click', event => {
+    const loadMore = event.target.closest('[data-wire-load-more]');
+    if (loadMore) {
+      const scrollTop = resultsEl.scrollTop;
+      visibleCount += 60;
+      renderResults();
+      resultsEl.scrollTop = scrollTop;
+      return;
+    }
+    const storyButton = event.target.closest('[data-story-key]');
+    if (storyButton) openRegisteredStory(storyButton.dataset.storyKey, storyButton);
+  });
+  document.addEventListener('keydown', e=>{
+    if (e.key==='Escape' && view.classList.contains('open') && !storyReader?.classList.contains('open')) closeWire();
+  });
   const n = Object.values(AI_BRIEFS||{}).reduce((a,arr)=>a+arr.length,0);
   entryCounts.forEach(el => { el.textContent = n ? (n+' stories') : 'The Wire'; });
 })();
@@ -4314,6 +4566,13 @@ function applyRoute() {
 }
 window.addEventListener('hashchange', applyRoute);
 if (location.hash) applyRoute();
+const directStoryId = new URLSearchParams(location.search).get('story');
+if (directStoryId) {
+  const directStory = findPublishedStory(directStoryId);
+  if (directStory) {
+    requestAnimationFrame(() => openStoryReader(directStory.story, directStory.context, document.body));
+  }
+}
 
 /* ── PWA: installable shell, offline fallback (https/localhost only) ── */
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname))) {
@@ -4347,6 +4606,11 @@ async function runSelfTest() {
   } else {
     add('landing map keeps native aspect', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
   }
+  const populationRect = africaPopEl?.getBoundingClientRect();
+  const populationVisible = !!populationRect && populationRect.width > 0 && populationRect.height > 0;
+  const populationLargeEnough = window.innerWidth > 620 || (populationRect.width > 150 && populationRect.height > 25);
+  add('landing population counter visible', populationVisible && populationLargeEnough,
+    populationRect ? populationRect.width.toFixed(0) + 'x' + populationRect.height.toFixed(0) : 'missing');
   add('country nav alphabetized', sortedCountryIds[0] === 'dz' && sortedCountryIds[1] === 'ao', sortedCountryIds.slice(0, 5).join(','));
   add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);
   const badIds = obj => Object.keys(obj || {}).filter(id => !COUNTRY_INFO[id]);
@@ -4374,7 +4638,7 @@ async function runSelfTest() {
     if (!b || !b.headline || !b.body) briefProblems.push(c + '#' + i);
     (b && b.sources || []).forEach(s => { if (s && s.url && !/^https?:\/\//i.test(s.url)) briefProblems.push(c + ':' + s.url); });
   }));
-  add('briefs schema + https sources', briefProblems.length === 0, briefProblems.slice(0, 3).join(' '));
+  add('published entries schema + https sources', briefProblems.length === 0, briefProblems.slice(0, 3).join(' '));
   add('archive index present', Array.isArray(window.UNITED_AFRICA_ARCHIVE_INDEX));
 
   try {
@@ -4401,9 +4665,15 @@ async function runSelfTest() {
     add('smoke: signal card sticks across countries',
       infoGridIndexByMode.investors === stickyBefore + 1 && stickyGrid.scrollLeft > stickyGrid.clientWidth * 0.5,
       stickyBefore + '->' + infoGridIndexByMode.investors + ' @ ' + Math.round(stickyGrid.scrollLeft));
+    const tickerAnimation = tickerEl.getAnimations?.()[0];
+    const tickerTimeBeforeClose = Number(tickerAnimation?.currentTime || 0);
     closeCountry();
     await new Promise(r => setTimeout(r, 200));
     add('smoke: route cleared on close', !location.hash, location.hash);
+    const tickerTimeAfterClose = Number(tickerAnimation?.currentTime || 0);
+    add('smoke: city ticker resumes after country close',
+      !tickerAnimation || (tickerAnimation.playState === 'running' && tickerTimeAfterClose > tickerTimeBeforeClose + 80),
+      tickerAnimation ? tickerAnimation.playState + ' ' + Math.round(tickerTimeBeforeClose) + '->' + Math.round(tickerTimeAfterClose) : 'reduced motion');
     openCountry('bw'); // a briefless country must show real wire stories (or the Country File fallback), never a dead end
     await new Promise(r => setTimeout(r, 900));
     const wireRows = document.querySelectorAll('#cv-cards .cv-news-row').length;
@@ -4417,6 +4687,17 @@ async function runSelfTest() {
     const wireResults = document.getElementById('wire-results');
     add('smoke: wire summary stays concise', wireTrust?.children.length === 3 && wireResultCount?.hidden, (wireTrust?.textContent || '').trim());
     add('smoke: wire opens at the lead story', wireResults?.scrollTop === 0, wireResults?.scrollTop);
+    const storyTrigger = wireResults?.querySelector('[data-story-key]');
+    add('smoke: wire uses on-site story buttons', storyTrigger instanceof HTMLButtonElement, storyTrigger?.tagName || 'missing');
+    storyTrigger?.click();
+    await new Promise(r => setTimeout(r, 80));
+    add('smoke: on-site story reader opens', storyReader?.classList.contains('open') && !!document.getElementById('story-reader-title')?.textContent);
+    add('smoke: story reader carries copy and citations',
+      document.querySelectorAll('#story-reader-copy p').length > 0 && document.querySelectorAll('#story-reader-sources a').length > 0,
+      document.querySelectorAll('#story-reader-copy p').length + ' paragraphs, ' + document.querySelectorAll('#story-reader-sources a').length + ' sources');
+    add('a11y: story reader hides underlying wire', document.getElementById('wire-view')?.getAttribute('aria-hidden') === 'true');
+    closeStoryReader();
+    add('a11y: wire returns after story close', document.getElementById('wire-view')?.getAttribute('aria-hidden') === 'false');
     window.__wireClose();
   } catch (e) {
     add('smoke: dossier flow threw', false, e.message);

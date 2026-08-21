@@ -9,10 +9,18 @@ on:
     paths:
       - '.github/workflows/**'
       - 'scripts/**'
+      - 'app.js'
+      - 'index.html'
+      - 'styles.css'
+      - 'data/**'
   pull_request:
     paths:
       - '.github/workflows/**'
       - 'scripts/**'
+      - 'app.js'
+      - 'index.html'
+      - 'styles.css'
+      - 'data/**'
   workflow_dispatch: {}
 
 permissions:
@@ -24,6 +32,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Browser script parses
+        shell: pwsh
+        run: node --check app.js
 
       - name: Workflow PowerShell parses
         shell: pwsh
@@ -45,6 +57,16 @@ jobs:
             }
           }
           if ($failed) { exit 1 }
+
+      - name: Ranking behavior
+        shell: pwsh
+        run: |
+          ./scripts/test-news-ranking.ps1
+          ./scripts/test-story-contract.ps1
+
+      - name: Published payload validates
+        shell: pwsh
+        run: ./scripts/validate-briefs.ps1
 
       - name: Scripts and workflows are ASCII-only
         shell: pwsh

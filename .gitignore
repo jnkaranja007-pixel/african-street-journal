@@ -2,3 +2,5 @@ data/app-data.js.bak
 Thumbs.db
 data/feed-items.json
 data/auto-briefs.json
+data/story-cache.json
+data/desk-run-metrics.json

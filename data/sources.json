@@ -3905,6 +3905,7 @@
                                    "home":  "https://www.ecsaharaui.com/",
                                    "feed":  "https://www.ecsaharaui.com/feed/",
                                    "tier":  2,
+                                   "requireMatch":  true,
                                    "state":  "ok"
                                },
                                {
