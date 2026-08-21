@@ -1,88 +1,97 @@
-# Go live
+# Running the journal
 
-Two things need your accounts: an Anthropic API key (the journal's writing) and a GitHub
-account (hosting + the daily refresh). Everything else is scripted.
-
----
-
-## Step 1 — Fill the journal (~20 min)
-
-Get a key at **https://console.anthropic.com/settings/keys**.
-
-Taste test first — 3 countries, a few cents, so you can read the writing before paying for 55:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/go-live.ps1 -Key 'sk-ant-...' -Only ng,ke,za
-```
-
-Open `http://localhost:5733` (run `powershell -File serve.ps1` first) and read a few briefs.
-Headlines should look like *"Kenya holds base rate at 12.5% as shilling steadies"* — actor,
-active verb, the number. If the tone is off, that's a prompt edit in
-`scripts/build-briefs.ps1` (the `$SYSTEM` block), not a rebuild.
-
-Happy? Fill the continent:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/go-live.ps1 -Key 'sk-ant-...'
-```
-
-Cost is roughly a dollar or two with Haiku. For sharper writing, add `-Model claude-sonnet-4-6`.
-Nothing is committed unless the publication gate passes, so a bad run can't damage good data.
+The site is live at **https://africanstreetjournal.com** and refreshes itself. This is the
+operations note: how the desk works, what to do when it breaks, and what it costs.
 
 ---
 
-## Step 2 — Publish (~10 min)
+## How the desk works
 
-**a. Create an empty repo** at https://github.com/new — name it whatever you like, no README,
-no .gitignore (you already have both).
+Three steps, nightly at 05:00 UTC, entirely in GitHub Actions. No PC needed.
 
-**b. Push:**
+| Step | Script | What it does |
+|---|---|---|
+| 1. Gather | `scripts/fetch-news.ps1` | Reads ~150 verified feeds from `data/sources.json`, clusters the same story across outlets, ranks on corroboration, tier, recency and subject matter. No API key. |
+| 2. Write | `scripts/write-briefs.ps1` | Sends the ranked items to a cheap model on OpenRouter and gets briefs back in house style. |
+| 3. Publish | `add-briefs` -> `validate-briefs` -> `audit-briefs` -> `build-static-pages` | Merges, gates, verifies every citation resolves, rebuilds the crawlable pages and sitemap, commits. |
 
-```bash
-git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
-git push -u origin main
-```
-
-**c. Add the key as a secret** so the journal refreshes itself:
-Settings → Secrets and variables → Actions → New repository secret
-Name `ANTHROPIC_API_KEY`, paste your key.
-
-**d. Let the bots commit:**
-Settings → Actions → General → Workflow permissions → **Read and write**
-
-**e. Turn on hosting:**
-Settings → Pages → Source: Deploy from a branch → `main` / root.
-Your URL will be `https://YOUR-USERNAME.github.io/YOUR-REPO/`.
-
-**f. Make links unfurl properly:** in `index.html`, uncomment the `og:url` / `og:image` block
-(around line 14) and replace `YOUR-DOMAIN` with your Pages URL. Commit and push.
+**The model never sees a URL.** It is handed numbered items and returns an index; the citation
+is attached afterwards from the feed. A fabricated source is structurally impossible rather
+than something the audit has to catch.
 
 ---
 
-## After that it runs itself
+## Cost
 
-| When | What happens |
+About **$0.70/month** on `google/gemma-4-31b-it` at 55 countries a day. Fetching is free.
+
+Do not trust that number without checking openrouter.ai Activity - an earlier estimate on this
+project ("a dollar or two") was off by 10x. The key has a $5/month cap, so a runaway loop costs
+five dollars, not a surprise.
+
+To change model, edit the `-Model` default in `scripts/write-briefs.ps1`. Any OpenRouter slug
+works; the writing step only rewrites supplied facts, so a small instruction-following model is
+enough.
+
+---
+
+## Secrets and settings
+
+| Thing | Where | Value |
+|---|---|---|
+| `OPENROUTER_API_KEY` | Repo secret | Required. Without it the nightly run fails loudly rather than going stale in silence. |
+| `ANTHROPIC_API_KEY` | Repo secret | Legacy. Nothing calls it. Safe to delete. |
+| Workflow permissions | Settings -> Actions -> General | Read and write, so the bot can commit briefs. |
+| Pages | Settings -> Pages | Deploy from `main` / root, custom domain `africanstreetjournal.com`, Enforce HTTPS on. |
+| DNS | Cloudflare | Four apex A records to GitHub Pages, `www` CNAME, **all DNS-only (grey cloud)**. SSL/TLS mode **Full**. |
+
+`CNAME` is committed to the repo so a workflow run cannot drop the custom domain.
+
+---
+
+## Scheduled work
+
+| When | What |
 |---|---|
-| Daily, 05:00 UTC | Claude searches the web, writes ranked briefs for all 55 countries, validates, commits, redeploys |
-| Monthly, 3rd | World Bank GDP/growth refresh for all 55 countries |
-| Every run | Publication gate blocks malformed data; a country that fails keeps its last good briefs |
+| Daily 05:00 UTC | The desk: gather, write, gate, publish |
+| Sundays 04:00 UTC | `check-sources.yml` verifies every feed and repairs the registry |
+| Monthly, 3rd | World Bank GDP/growth refresh |
 
-You get an email from GitHub only when something fails. Otherwise there is nothing to manage.
-
-To trigger a run by hand: **Actions → Update AI Desk → Run workflow**.
+GitHub emails you only on failure. Trigger by hand at **Actions -> Update AI Desk -> Run workflow**;
+the `only` input (`ng,ke,za`) limits it to a few countries for a quick test.
 
 ---
 
 ## Checking on it
 
-- `http://localhost:5733/?selftest=1` — 26 automated checks, green badge bottom-right
-- `powershell -File scripts/validate-briefs.ps1` — is the current data publishable?
-- The wire's "Past editions" picker shows every archived day
+```powershell
+powershell -File serve.ps1          # then open http://localhost:5733/?selftest=1  (26 checks)
+powershell -File scripts/validate-briefs.ps1              # is the current data publishable?
+powershell -File scripts/audit-briefs.ps1 -CheckLinks     # does every citation resolve?
+powershell -File scripts/check-sources.ps1                # which feeds have rotted?
+```
 
-## If something looks wrong
+`audit-briefs` prints a `REWRITE:` line naming the weakest countries. That is the input to the
+weekly quality pass in `scripts/ROUTINE.md`.
 
-- **A country shows its region's wire instead of its own stories** — normal until the desk files
-  from there; it fills in on the next run.
-- **Stories look stale** — check Actions for a failed run. Each country shows its own date, so
-  the site never claims data is fresher than it is.
-- **A bad run got committed** — `git revert <sha>` and push; the site redeploys.
+---
+
+## When something looks wrong
+
+**Stories are stale.** Check Actions for a failed run. Every country carries its own date, so
+the site never claims data is fresher than it is.
+
+**A country is thin or empty.** Run `scripts/check-sources.ps1 -Only <code>`. Feeds rot: papers
+move CMS, drop RSS, or let a domain lapse. The checker separates `blocked` (Cloudflare refuses
+automated readers - replace the source, CI is blocked harder than your laptop), `missing` (the
+outlet genuinely has no RSS) and `hijacked` (the domain now serves someone else).
+
+**The audit reports a FABRICATED source.** Check the URL before blaming the model, which never
+sees one. Some feeds publish markup inside `<link>`; that surfaced once as a 404 that looked
+like invention and was actually a publisher's malformed XML.
+
+**A bad run got committed.** `git revert <sha>` and push; the site redeploys.
+
+**HTTPS stops working after a domain change.** GitHub only provisions a certificate once DNS
+resolves. If it stalls, remove and re-add the custom domain via the API - re-saving the same
+value clears the error without triggering issuance.

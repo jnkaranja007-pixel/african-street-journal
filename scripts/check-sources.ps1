@@ -59,7 +59,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $srcPath = Join-Path $root 'data\sources.json'
 if (-not (Test-Path $srcPath)) { Write-Host '[sources] data/sources.json not found' -ForegroundColor Red; exit 1 }
-$registry = Get-Content $srcPath -Raw | ConvertFrom-Json
+$registry = [IO.File]::ReadAllText($srcPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
 
 $UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36'
 # Ordered by how often they actually work, because every miss costs a timeout.

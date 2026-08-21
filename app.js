@@ -2001,7 +2001,7 @@ function renderInvestorSignals(countryId, inv, info) {
   const countryName = info.name || 'This country';
   const capital = info.capital || countryName;
   const mappedMarkets = stats.markets || [];
-  const mappedNames = mappedMarkets.slice(0, 2).map(place => place.name).join(' + ');
+  const mappedNames = mappedMarkets.slice(0, 2).map(place => place.name).join(' and ');
   const marketTitle = profile.exchange
     ? profile.exchange + ' · ' + profile.scope
     : 'No domestic exchange verified';
@@ -2040,7 +2040,7 @@ function renderInvestorSignals(countryId, inv, info) {
         ? mappedMarkets.length + ' mapped market hub' + (mappedMarkets.length === 1 ? '' : 's')
         : 'Atlas coverage gap',
       copy: mappedMarkets.length
-        ? mappedNames + ' are starting points, not proof of distribution. Confirm transport time, warehousing, customs, and counterparties locally.'
+        ? mappedNames + (mappedMarkets.length === 1 ? ' is a starting point' : ' are starting points') + ', not proof of distribution. Confirm transport time, warehousing, customs, and counterparties locally.'
         : 'No market hub is verified in the ' + countryName + ' Atlas file yet. Start with ' + capital + ', then confirm distributors, warehousing, and transport routes locally.',
       metric: mappedMarkets.length ? 'Mapped lead · verify locally' : 'Missing data · verify locally'
     }

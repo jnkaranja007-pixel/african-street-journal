@@ -165,7 +165,7 @@ $statePath = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\data\bri
 $briefDates = [ordered]@{}
 foreach ($code in @($result.Keys)) { $briefDates[$code] = $generated }
 $prev = $null
-if (Test-Path $statePath) { try { $prev = Get-Content $statePath -Raw | ConvertFrom-Json } catch { $prev = $null } }
+if (Test-Path $statePath) { try { $prev = [IO.File]::ReadAllText($statePath, [Text.Encoding]::UTF8) | ConvertFrom-Json } catch { $prev = $null } }
 if ($prev -and $prev.byCountry) {
   foreach ($p in $prev.byCountry.PSObject.Properties) {
     if (-not $result.Contains($p.Name)) {

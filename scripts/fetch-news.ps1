@@ -56,7 +56,7 @@ $root = Split-Path $PSScriptRoot -Parent
 $srcPath = Join-Path $root 'data\sources.json'
 $outPath = Join-Path $root 'data\feed-items.json'
 if (-not (Test-Path $srcPath)) { Write-Host '[fetch] data/sources.json not found' -ForegroundColor Red; exit 1 }
-$registry = Get-Content $srcPath -Raw | ConvertFrom-Json
+$registry = [IO.File]::ReadAllText($srcPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
 
 $UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36'
 
@@ -110,20 +110,32 @@ $MOJI_PATTERN = ([string][char]0x00C3) + '|' + ([string][char]0x00E2) + ([string
 $REPL_CHAR    = [string][char]0xFFFD
 
 function Repair-Mojibake([string]$s) {
-  # Several outlets publish UTF-8 bytes their own CMS already decoded as Windows-1252
-  # once, so a curly quote arrives as three Latin-1 characters. Round-tripping back
-  # through 1252 recovers the original. Only kept when it actually reduces the damage,
-  # since CP1252 cannot represent every character and would otherwise insert filler.
+  # Several outlets publish UTF-8 bytes their own CMS already decoded as Windows-1252,
+  # so a curly quote or an accent arrives as a run of Latin-1 characters. Round-tripping
+  # back through 1252 recovers the original.
+  #
+  # It has to LOOP: some feeds have been through the mangle more than once. Journal du
+  # Cameroun served "Yaounde" with four layers of it, and a single pass turned
+  # 12 corrupt characters into 6 rather than fixing the word. Four passes recover it.
+  #
+  # Each pass must strictly reduce the damage, and any pass that produces the Unicode
+  # replacement character is discarded - that is the signal the text was never
+  # double-encoded and we are now destroying legitimate characters.
   if (-not $s) { return $s }
-  if ($s -notmatch $MOJI_PATTERN) { return $s }
-  try {
-    $bytes = [Text.Encoding]::GetEncoding(1252).GetBytes($s)
-    $fixed = [Text.Encoding]::UTF8.GetString($bytes)
-    if ($fixed.Contains($REPL_CHAR)) { return $s }
+  for ($pass = 0; $pass -lt 6; $pass++) {
+    # -cnotmatch, not -notmatch: PowerShell's -match is case-insensitive and U+00C2 is the
+    # uppercase pair of U+00E2, so a plain -match flags legitimate French "cable" and
+    # Portuguese "nao" as corruption. Case-sensitivity is the whole signal here.
+    if ($s -cnotmatch $MOJI_PATTERN) { break }
+    try {
+      $fixed = [Text.Encoding]::UTF8.GetString([Text.Encoding]::GetEncoding(1252).GetBytes($s))
+    } catch { break }
+    if ($fixed.Contains($REPL_CHAR)) { break }
     $before = ([regex]::Matches($s,     $MOJI_PATTERN)).Count
     $after  = ([regex]::Matches($fixed, $MOJI_PATTERN)).Count
-    if ($after -lt $before) { return $fixed }
-  } catch { }
+    if ($after -ge $before) { break }
+    $s = $fixed
+  }
   return $s
 }
 
@@ -225,10 +237,18 @@ function Read-Feed([string]$url) {
 function Get-Signature([string]$title) {
   # Significant words only, deduped. Clustering compares these sets, so two outlets
   # writing different headlines about one event still land together.
-  $words = ($title.ToLower() -replace '[^a-z0-9 ]', ' ') -split '\s+'
+  #
+  # Unicode-aware on purpose. Stripping to [a-z0-9] erased Arabic headlines entirely:
+  # Sudan War Monitor publishes in Arabic, every title reduced to an empty signature,
+  # and the caller dropped them - four of Sudan's five stories disappeared without a
+  # trace. \p{L}\p{N} keeps Arabic, Amharic and accented Latin alike.
+  $words = ($title.ToLower() -replace '[^\p{L}\p{N} ]', ' ') -split '\s+'
   $set = @{}
   foreach ($w in $words) {
-    if ($w.Length -le 3) { continue }
+    # Arabic carries more meaning per character than English, so a flat 4-character
+    # floor would throw most of a headline away.
+    $min = if ($w -match '[\p{IsArabic}\p{IsEthiopic}]') { 2 } else { 3 }
+    if ($w.Length -le $min) { continue }
     if ($STOP.ContainsKey($w)) { continue }
     $set[$w] = $true
   }
@@ -320,7 +340,17 @@ foreach ($code in $codes) {
   $clusters = New-Object System.Collections.Generic.List[object]
   foreach ($item in $fresh) {
     $sig = Get-Signature $item.title
-    if ($sig.Count -lt 2) { continue }
+    # Never discard an item for having a weak signature - that is how a whole language
+    # went missing. A headline we cannot tokenise still gets published; it just becomes
+    # its own cluster and never merges with anything.
+    if ($sig.Count -lt 2) {
+      $solo = @{}
+      $solo[('__solo_' + $clusters.Count + '_' + $item.title.Length)] = $true
+      $m = New-Object System.Collections.Generic.List[object]
+      $m.Add($item)
+      $clusters.Add([pscustomobject]@{ sig = $solo; members = $m })
+      continue
+    }
     $placed = $false
     foreach ($c in $clusters) {
       if ((Get-Overlap $sig $c.sig) -ge 0.4) {
@@ -423,6 +453,14 @@ foreach ($code in $codes) {
     }
   }
   $ranked = $picked.ToArray()
+
+  # When a country comes out thin, say where the items went. Sudan filed one story from
+  # three healthy feeds and there was no way to tell whether the feeds, the freshness
+  # window, the clustering or the selection ate them without adding prints by hand.
+  if ($ranked.Count -lt 3) {
+    Write-Host ("      {0}: pool={1} fresh={2} clusters={3} scored={4} picked={5} cap={6}" -f `
+                $code, $pool.Count, $fresh.Count, $clusters.Count, $scored.Count, $picked.Count, $cap) -ForegroundColor DarkGray
+  }
   if (-not $ranked.Count) {
     Write-Host ("  {0}  {1,-26} nothing usable after clustering" -f $code, $name) -ForegroundColor DarkYellow
     continue

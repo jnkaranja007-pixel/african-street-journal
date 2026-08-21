@@ -57,6 +57,13 @@ function Esc($s) {
   ([string]$s).Replace('&','&amp;').Replace('<','&lt;').Replace('>','&gt;').Replace('"','&quot;')
 }
 
+function JsonEsc($s) {
+  # For values going inside the JSON-LD block. '<' is escaped as \u003c so a headline
+  # containing markup cannot close the script element early.
+  if ($null -eq $s) { return '' }
+  ([string]$s).Replace('\','\\').Replace('"','\"').Replace("`r",' ').Replace("`n",' ').Replace('<','\u003c')
+}
+
 $css = @'
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:#131313;color:#e8e6e3;font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;padding:0 20px}
@@ -76,11 +83,31 @@ p{margin:0 0 12px;color:#c9c5c0}
 .src{font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase}
 .src a{margin-right:14px;text-decoration:none;border-bottom:1px solid #2f5c33}
 footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:#66615b}
+.morenav{margin-top:34px;padding-top:20px;border-top:1px solid #232323}
+.morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8a847b;margin:0 0 12px}
+.morenav a{display:inline-block;margin:0 14px 7px 0;font:400 13px/1.5 Georgia,'Times New Roman',serif;color:#9a958e;text-decoration:none;border-bottom:1px solid transparent}
+.morenav a:hover{color:#66bb6a;border-bottom-color:#2f5c33}
 '@
 
 $built = 0
 $urls = New-Object System.Collections.Generic.List[string]
 $urls.Add($BaseUrl + '/')
+
+# Which countries will actually get a page. Needed up front so every page can link to
+# every other one: without this the pages are orphaned, reachable only through
+# sitemap.xml. Internal links are how a crawler understands the set is one publication
+# rather than 55 unrelated documents, and these pages are the only version of the
+# journal a search engine can read at all.
+$pageCodes = New-Object System.Collections.Generic.List[string]
+foreach ($prop in $byCountry.PSObject.Properties) {
+  if (-not @($prop.Value | Where-Object { $_.headline -and $_.body }).Count) { continue }
+  if (-not $info[$prop.Name]) { continue }
+  $pageCodes.Add($prop.Name)
+}
+$navLinks = New-Object System.Text.StringBuilder
+foreach ($c in ($pageCodes | Sort-Object { $info[$_].name })) {
+  [void]$navLinks.Append("<a href=""$BaseUrl/$c/"">$(Esc $info[$c].name)</a>")
+}
 
 foreach ($prop in $byCountry.PSObject.Properties) {
   $code = $prop.Name
@@ -112,13 +139,40 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   }
 
   $canonical = "$BaseUrl/$code/"
+  # Google shows roughly 60 characters of a title. "Central African Republic news and
+  # country file | The African Street Journal" is 75, so the masthead - the part that
+  # builds recognition in a results page - was the half being cut. Long names drop the
+  # "and country file" clause and keep the brand.
+  $titleText = if ($name.Length -gt 10) { "$name news | The African Street Journal" }
+               else { "$name news and country file | The African Street Journal" }
+
+  # Structured data. Deliberately a CollectionPage listing headlines rather than a set of
+  # NewsArticle objects: we did not write those articles, and marking them up as ours
+  # would be a false authorship claim to every crawler that reads it.
+  $ld = New-Object System.Text.StringBuilder
+  [void]$ld.Append('{"@context":"https://schema.org","@type":"CollectionPage",')
+  [void]$ld.Append("""name"":""$(JsonEsc ("$name news and country file"))"",")
+  [void]$ld.Append("""url"":""$canonical"",")
+  [void]$ld.Append("""description"":""$(JsonEsc $desc)"",")
+  if ($when) { [void]$ld.Append("""dateModified"":""$when"",") }
+  [void]$ld.Append("""about"":{""@type"":""Country"",""name"":""$(JsonEsc $name)""},")
+  [void]$ld.Append('"isPartOf":{"@type":"Periodical","name":"The African Street Journal","url":"' + $BaseUrl + '/"},')
+  [void]$ld.Append('"mainEntity":{"@type":"ItemList","itemListElement":[')
+  $li = 0
+  foreach ($b in $briefs) {
+    if ($li -gt 0) { [void]$ld.Append(',') }
+    $li++
+    [void]$ld.Append("{""@type"":""ListItem"",""position"":$li,""name"":""$(JsonEsc $b.headline)""}")
+  }
+  [void]$ld.Append(']}}')
+
   $html = @"
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>$(Esc $name) news and country file | The African Street Journal</title>
+<title>$(Esc $titleText)</title>
 <meta name="description" content="$(Esc $desc)">
 <link rel="canonical" href="$canonical">
 <meta name="theme-color" content="#131313">
@@ -130,6 +184,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <meta property="og:image" content="$BaseUrl/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="$BaseUrl/og-image.png">
+<script type="application/ld+json">$($ld.ToString())</script>
 <style>$css</style>
 </head>
 <body>
@@ -140,6 +195,10 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <div class="meta">$($briefs.Count) briefs$(if($when){" &middot; updated $when"})</div>
 <a class="open" href="$BaseUrl/#/$code">Open the interactive $(Esc $name) dossier &rarr;</a>
 $($body.ToString())
+<nav class="morenav">
+<h2>The rest of the continent</h2>
+$($navLinks.ToString())
+</nav>
 <footer>The African Street Journal &middot; from the streets, for the streets<br>Every brief carries its sources. Figures are labelled with their origin and date.</footer>
 </div>
 </body>

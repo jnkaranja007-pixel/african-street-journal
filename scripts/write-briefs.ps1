@@ -60,7 +60,7 @@ if (-not (Test-Path $inPath)) {
   exit 1
 }
 
-$feed = Get-Content $inPath -Raw | ConvertFrom-Json
+$feed = [IO.File]::ReadAllText($inPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
 if (-not $feed.byCountry) { Write-Host '[write] feed has no byCountry block' -ForegroundColor Red; exit 1 }
 
 $VALID_TOPICS = @('Politics','Business','Sport','Tech','Climate','Agriculture','Culture','Health','Education','News')
@@ -101,6 +101,11 @@ Rules:
   agriculture, sport and culture. Do not file five versions of one story.
 - Skip celebrity gossip, net worth, betting and adult content. Skip any item that is
   not actually about this country.
+- Items arrive in whatever language the outlet publishes in: English, French,
+  Portuguese or Arabic. ALWAYS write the brief in English, translating the facts
+  faithfully. Never skip an item because it is not in English - four of Sudan's five
+  stories were dropped that way. Keep place and person names in the form English
+  readers will recognise.
 
 Hard limit: use ONLY facts present in the item you are given. You have no other
 knowledge of these events. If an item is only a headline, write only what the
@@ -199,7 +204,12 @@ foreach ($code in $codes) {
   if ($items.Count -eq 0) { $skipped.Add("$code (no items)"); continue }
 
   $name = [string]$entry.country
-  $n    = [Math]::Min($MaxBriefs, [Math]::Max(2, [int][Math]::Floor($items.Count / 2)))
+  # Ask for one brief per available item, capped. The old formula halved the item
+  # count, so a five-item country was only ever asked for two briefs and filed one -
+  # which read as the model refusing Arabic when it was really this arithmetic.
+  # The prompt already tells it fewer good briefs beat padded ones, so the ceiling
+  # can be generous.
+  $n    = [Math]::Min($MaxBriefs, [Math]::Max(1, $items.Count))
 
   $lines = New-Object System.Text.StringBuilder
   for ($i = 0; $i -lt $items.Count; $i++) {
@@ -313,6 +323,13 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
     })
   }
 
+  # Say how many the model returned versus how many survived validation. Sudan filed
+  # one brief while the model was returning five, and there was no way to see that the
+  # loss was here rather than in the model without adding prints by hand.
+  if ($clean.Count -lt @($briefs).Count) {
+    Write-Host ("      {0}: model returned {1}, kept {2} (items available {3})" -f `
+                $code, @($briefs).Count, $clean.Count, $items.Count) -ForegroundColor DarkGray
+  }
   if ($clean.Count -lt $MinBriefs) {
     Write-Host ("  {0}  {1,-30} SKIPPED: only {2} usable brief(s)" -f $code, $name, $clean.Count) -ForegroundColor DarkYellow
     $skipped.Add("$code (only $($clean.Count) usable)")
@@ -338,7 +355,7 @@ if ($result.Count -eq 0) {
 # -Merge keeps countries already in the output file that this run did not cover, so a
 # partial run tops up the paper instead of shrinking it.
 if ($Merge -and (Test-Path $outPath)) {
-  $prev = Get-Content $outPath -Raw | ConvertFrom-Json
+  $prev = [IO.File]::ReadAllText($outPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
   $merged = [ordered]@{}
   foreach ($p in $prev.PSObject.Properties) { $merged[[string]$p.Name] = $p.Value }
   foreach ($k in @($result.Keys)) { $merged[[string]$k] = $result[[string]$k] }

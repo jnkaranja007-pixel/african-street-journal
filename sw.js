@@ -1,8 +1,15 @@
-/* The African Street Journal — service worker.
+/* The African Street Journal - service worker.
    Network-first for everything same-origin (dev and daily data never go stale),
    cache fallback so the journal still opens offline. */
-const CACHE = 'asj-v18';
-const SHELL = ['./', 'index.html', 'styles.css?v=16', 'app.js?v=16', 'data/app-core.js?v=16', 'data/briefs.js?v=16', 'data/archive/index.js?v=16', 'manifest.json', 'icon.svg'];
+
+// One version constant drives both the cache name and every precached URL. They used
+// to be separate strings and drifted: the cache said v18 while SHELL still asked for
+// v16. Nothing broke - the fetch handler matches with ignoreSearch, and GitHub Pages
+// ignores query strings - but the numbers lied, and a version that lies is worse than
+// no version. Bump V alone; index.html's ?v= must match it.
+const V = '19';
+const CACHE = 'asj-v' + V;
+const SHELL = ['./', 'index.html', 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/archive/index.js?v=' + V, 'manifest.json', 'icon.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(

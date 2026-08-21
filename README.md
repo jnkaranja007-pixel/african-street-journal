@@ -1,6 +1,6 @@
 # The African Street Journal
 
-**[Read it →](https://jnkaranja007-pixel.github.io/african-street-journal/)**
+**[Read it →](https://africanstreetjournal.com/)**
 
 A daily newspaper for all 55 African countries. Every morning an AI desk searches the web,
 writes ranked and source-cited briefs for each country, and publishes them. Alongside the
@@ -60,13 +60,17 @@ powershell -File serve.ps1        # then open http://localhost:5733
 No build step and no dependencies — plain HTML, CSS and JavaScript. Add `?selftest=1` to the
 URL to run 26 built-in integrity and render checks.
 
-To fill the journal from your own machine:
+To run the desk from your own machine (gather is free; writing needs an OpenRouter key):
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/go-live.ps1 -Key 'sk-ant-...' -Only ng,ke,za
+powershell -File scripts/fetch-news.ps1 -Only ng,ke,za
+$env:OPENROUTER_API_KEY = 'sk-or-v1-...'
+powershell -File scripts/write-briefs.ps1 -Only ng,ke,za -OutFile data/auto-briefs.json
+powershell -File scripts/add-briefs.ps1 -InFile data/auto-briefs.json
 ```
 
-See **[GO-LIVE.md](GO-LIVE.md)** for the full setup.
+See **[GO-LIVE.md](GO-LIVE.md)** for how the nightly desk works, what it costs, and what to do
+when a feed rots.
 
 ## Layout
 
