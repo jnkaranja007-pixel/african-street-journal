@@ -41,7 +41,7 @@
                                    "home":  "https://www.angop.ao/en/",
                                    "feed":  "https://www.angop.ao/en/rss/",
                                    "tier":  1,
-                                   "state":  "missing"
+                                   "state":  "error"
                                },
                                {
                                    "name":  "Jornal de Angola",
@@ -91,8 +91,92 @@
                                    "feed":  "https://camundanews.com/feed/",
                                    "tier":  3,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa PT",
+                                   "home":  "https://www.dw.com/pt-002/",
+                                   "feed":  "https://rss.dw.com/rdf/rss-pt-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "Macauhub",
+                                   "home":  "https://macauhub.com.mo/",
+                                   "feed":  "https://macauhub.com.mo/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "error"
+                               },
+                               {
+                                   "name":  "Rede Angola",
+                                   "home":  "https://www.redeangola.info/",
+                                   "feed":  "https://www.redeangola.info/feed/",
+                                   "tier":  3,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "RFI Portugues Africa",
+                                   "home":  "https://www.rfi.fr/pt/",
+                                   "feed":  "https://www.rfi.fr/pt/africa/rss",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Portugues",
+                                   "home":  "https://feeds.bbci.co.uk/portuguese/",
+                                   "feed":  "https://feeds.bbci.co.uk/portuguese/rss.xml",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Portugues",
+                                   "home":  "https://www.voaportugues.com/",
+                                   "feed":  "https://www.voaportugues.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Angola",
+                             "Angolan",
+                             "Luanda"
+                         ]
            },
     "bj":  {
                "name":  "Benin",
@@ -138,8 +222,78 @@
                                    "feed":  "https://beninwebtv.com/feed.xml",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Benin",
+                             "Beninese",
+                             "Cotonou",
+                             "Porto-Novo"
+                         ]
            },
     "bw":  {
                "name":  "Botswana",
@@ -197,8 +351,77 @@
                                    "feed":  "https://www.sidwaya.info/feed/",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Burkina Faso",
+                             "Burkinabe",
+                             "Ouagadougou"
+                         ]
            },
     "bi":  {
                "name":  "Burundi",
@@ -296,8 +519,92 @@
                                    "feed":  "https://santiagomagazine.cv/feed/",
                                    "tier":  3,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa PT",
+                                   "home":  "https://www.dw.com/pt-002/",
+                                   "feed":  "https://rss.dw.com/rdf/rss-pt-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "Macauhub",
+                                   "home":  "https://macauhub.com.mo/",
+                                   "feed":  "https://macauhub.com.mo/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "error"
+                               },
+                               {
+                                   "name":  "Noticias do Norte",
+                                   "home":  "https://noticiasdonorte.cv/",
+                                   "feed":  "https://noticiasdonorte.cv/feed/",
+                                   "tier":  3,
+                                   "state":  "error"
+                               },
+                               {
+                                   "name":  "RFI Portugues Africa",
+                                   "home":  "https://www.rfi.fr/pt/",
+                                   "feed":  "https://www.rfi.fr/pt/africa/rss",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Portugues",
+                                   "home":  "https://feeds.bbci.co.uk/portuguese/",
+                                   "feed":  "https://feeds.bbci.co.uk/portuguese/rss.xml",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Portugues",
+                                   "home":  "https://www.voaportugues.com/",
+                                   "feed":  "https://www.voaportugues.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Cape Verde",
+                             "Cabo Verde",
+                             "Praia"
+                         ]
            },
     "cf":  {
                "name":  "Central African Republic",
@@ -329,8 +636,76 @@
                                    "feed":  "https://letsunami.net/feed/",
                                    "tier":  3,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Central African Republic",
+                             "Bangui"
+                         ]
            },
     "td":  {
                "name":  "Chad",
@@ -362,8 +737,77 @@
                                    "feed":  "https://tchadactuel.com/feed/",
                                    "tier":  3,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Chad",
+                             "Chadian",
+                             "Ndjamena"
+                         ]
            },
     "km":  {
                "name":  "Comoros",
@@ -409,8 +853,85 @@
                                    "feed":  "https://masiwa.info/feed/",
                                    "tier":  3,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Comoros Times",
+                                   "home":  "https://comorostimes.com/",
+                                   "feed":  "https://comorostimes.com/feed/",
+                                   "tier":  3,
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Comoros",
+                             "Comorian",
+                             "Moroni",
+                             "Comores"
+                         ]
            },
     "cg":  {
                "name":  "Republic of Congo",
@@ -529,8 +1050,79 @@
                                    "feed":  "https://www.afrique-sur7.fr/feed/",
                                    "tier":  3,
                                    "state":  "blocked"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Ivory Coast",
+                             "Cote d",
+                             "Ivorian",
+                             "Abidjan",
+                             "Yamoussoukro"
+                         ]
            },
     "dj":  {
                "name":  "Djibouti",
@@ -555,8 +1147,131 @@
                                    "feed":  "https://www.djiboutiactu.com/feed/",
                                    "tier":  3,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "African Arguments",
+                                   "home":  "https://africanarguments.org/",
+                                   "feed":  "https://africanarguments.org/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "The Africa Report",
+                                   "home":  "https://www.theafricareport.com/",
+                                   "feed":  "https://www.theafricareport.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "ISS Africa",
+                                   "home":  "https://issafrica.org/",
+                                   "feed":  "https://issafrica.org/rss",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa",
+                                   "home":  "https://www.dw.com/en/africa/s-12756",
+                                   "feed":  "https://rss.dw.com/rdf/rss-en-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Horn Diplomat",
+                                   "home":  "https://www.horndiplomat.com/",
+                                   "feed":  "https://www.horndiplomat.com/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Radio Tamazuj",
+                                   "home":  "https://www.radiotamazuj.org/en",
+                                   "feed":  "https://www.radiotamazuj.org/en/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "HCH24",
+                                   "home":  "https://www.hch24.com/",
+                                   "feed":  "https://www.hch24.com/feed/",
+                                   "tier":  3,
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Djibouti",
+                             "Djiboutian"
+                         ]
            },
     "eg":  {
                "name":  "Egypt",
@@ -647,8 +1362,100 @@
                                    "feed":  "https://tesfanews.net/feed/",
                                    "tier":  3,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "African Arguments",
+                                   "home":  "https://africanarguments.org/",
+                                   "feed":  "https://africanarguments.org/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "The Africa Report",
+                                   "home":  "https://www.theafricareport.com/",
+                                   "feed":  "https://www.theafricareport.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "ISS Africa",
+                                   "home":  "https://issafrica.org/",
+                                   "feed":  "https://issafrica.org/rss",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa",
+                                   "home":  "https://www.dw.com/en/africa/s-12756",
+                                   "feed":  "https://rss.dw.com/rdf/rss-en-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Horn Diplomat",
+                                   "home":  "https://www.horndiplomat.com/",
+                                   "feed":  "https://www.horndiplomat.com/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Radio Tamazuj",
+                                   "home":  "https://www.radiotamazuj.org/en",
+                                   "feed":  "https://www.radiotamazuj.org/en/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Madote",
+                                   "home":  "https://www.madote.com/",
+                                   "feed":  "https://www.madote.com/feeds/posts/default?alt=rss",
+                                   "tier":  3,
+                                   "state":  "error"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Eritrea",
+                             "Eritrean",
+                             "Asmara"
+                         ]
            },
     "sz":  {
                "name":  "Eswatini",
@@ -696,7 +1503,7 @@
                                {
                                    "name":  "The Reporter Ethiopia",
                                    "home":  "https://www.thereporterethiopia.com/",
-                                   "feed":  "https://www.thereporterethiopia.com/feed/",
+                                   "feed":  "https://www.thereporterethiopia.com/homepage/feed/",
                                    "tier":  1,
                                    "state":  "ok"
                                },
@@ -720,8 +1527,93 @@
                                    "feed":  "https://borkena.com/feed/",
                                    "tier":  3,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "African Arguments",
+                                   "home":  "https://africanarguments.org/",
+                                   "feed":  "https://africanarguments.org/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "The Africa Report",
+                                   "home":  "https://www.theafricareport.com/",
+                                   "feed":  "https://www.theafricareport.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "ISS Africa",
+                                   "home":  "https://issafrica.org/",
+                                   "feed":  "https://issafrica.org/rss",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa",
+                                   "home":  "https://www.dw.com/en/africa/s-12756",
+                                   "feed":  "https://rss.dw.com/rdf/rss-en-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Horn Diplomat",
+                                   "home":  "https://www.horndiplomat.com/",
+                                   "feed":  "https://www.horndiplomat.com/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Radio Tamazuj",
+                                   "home":  "https://www.radiotamazuj.org/en",
+                                   "feed":  "https://www.radiotamazuj.org/en/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Ethiopia",
+                             "Ethiopian",
+                             "Addis Ababa"
+                         ]
            },
     "ga":  {
                "name":  "Gabon",
@@ -793,8 +1685,77 @@
                                    "feed":  "https://chronicle.gm/feed/",
                                    "tier":  3,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "African Arguments",
+                                   "home":  "https://africanarguments.org/",
+                                   "feed":  "https://africanarguments.org/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "The Africa Report",
+                                   "home":  "https://www.theafricareport.com/",
+                                   "feed":  "https://www.theafricareport.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "ISS Africa",
+                                   "home":  "https://issafrica.org/",
+                                   "feed":  "https://issafrica.org/rss",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa",
+                                   "home":  "https://www.dw.com/en/africa/s-12756",
+                                   "feed":  "https://rss.dw.com/rdf/rss-en-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Gambia",
+                             "Gambian",
+                             "Banjul"
+                         ]
            },
     "gh":  {
                "name":  "Ghana",
@@ -892,8 +1853,84 @@
                                    "feed":  "https://guinecontba.com/feed/",
                                    "tier":  2,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "DW Africa PT",
+                                   "home":  "https://www.dw.com/pt-002/",
+                                   "feed":  "https://rss.dw.com/rdf/rss-pt-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "Macauhub",
+                                   "home":  "https://macauhub.com.mo/",
+                                   "feed":  "https://macauhub.com.mo/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "error"
+                               },
+                               {
+                                   "name":  "RFI Portugues Africa",
+                                   "home":  "https://www.rfi.fr/pt/",
+                                   "feed":  "https://www.rfi.fr/pt/africa/rss",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Portugues",
+                                   "home":  "https://feeds.bbci.co.uk/portuguese/",
+                                   "feed":  "https://feeds.bbci.co.uk/portuguese/rss.xml",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Portugues",
+                                   "home":  "https://www.voaportugues.com/",
+                                   "feed":  "https://www.voaportugues.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Guinea-Bissau",
+                             "Bissau"
+                         ]
            },
     "ke":  {
                "name":  "Kenya",
@@ -931,7 +1968,7 @@
                                    "home":  "https://www.businessdailyafrica.com/",
                                    "feed":  "https://www.businessdailyafrica.com/bd/rss.xml",
                                    "tier":  1,
-                                   "state":  "ok"
+                                   "state":  "missing"
                                },
                                {
                                    "name":  "Kenyans.co.ke",
@@ -939,8 +1976,45 @@
                                    "feed":  "https://www.kenyans.co.ke/feeds/news",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Kenya",
+                             "Kenyan",
+                             "Nairobi"
+                         ]
            },
     "ls":  {
                "name":  "Lesotho",
@@ -1137,8 +2211,77 @@
                                    "feed":  "https://bamada.net/feed",
                                    "tier":  3,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Mali",
+                             "Malian",
+                             "Bamako"
+                         ]
            },
     "mr":  {
                "name":  "Mauritania",
@@ -1363,8 +2506,77 @@
                                    "feed":  "https://nigerdiaspora.net/feed/",
                                    "tier":  3,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Niger",
+                             "Niamey",
+                             "Nigerien"
+                         ]
            },
     "ng":  {
                "name":  "Nigeria",
@@ -1410,8 +2622,46 @@
                                    "feed":  "https://nairametrics.com/feed/",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Nigeria",
+                             "Nigerian",
+                             "Abuja",
+                             "Lagos"
+                         ]
            },
     "rw":  {
                "name":  "Rwanda",
@@ -1476,8 +2726,91 @@
                                    "feed":  "https://jornaltropical.st/feed/",
                                    "tier":  3,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "DW Africa PT",
+                                   "home":  "https://www.dw.com/pt-002/",
+                                   "feed":  "https://rss.dw.com/rdf/rss-pt-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "Macauhub",
+                                   "home":  "https://macauhub.com.mo/",
+                                   "feed":  "https://macauhub.com.mo/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "error"
+                               },
+                               {
+                                   "name":  "STP Press",
+                                   "home":  "https://www.stp-press.st/",
+                                   "feed":  "https://www.stp-press.st/feed/",
+                                   "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "RFI Portugues Africa",
+                                   "home":  "https://www.rfi.fr/pt/",
+                                   "feed":  "https://www.rfi.fr/pt/africa/rss",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Portugues",
+                                   "home":  "https://feeds.bbci.co.uk/portuguese/",
+                                   "feed":  "https://feeds.bbci.co.uk/portuguese/rss.xml",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Portugues",
+                                   "home":  "https://www.voaportugues.com/",
+                                   "feed":  "https://www.voaportugues.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Sao Tome",
+                             "Principe"
+                         ]
            },
     "sn":  {
                "name":  "Senegal",
@@ -1509,8 +2842,77 @@
                                    "feed":  "https://www.dakaractu.com/xml/syndication.rss",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Senegal",
+                             "Senegalese",
+                             "Dakar"
+                         ]
            },
     "sc":  {
                "name":  "Seychelles",
@@ -1549,8 +2951,77 @@
                                    "feed":  "https://www.seychellesweekly.com/feed/",
                                    "tier":  3,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "African Arguments",
+                                   "home":  "https://africanarguments.org/",
+                                   "feed":  "https://africanarguments.org/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "The Africa Report",
+                                   "home":  "https://www.theafricareport.com/",
+                                   "feed":  "https://www.theafricareport.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "ISS Africa",
+                                   "home":  "https://issafrica.org/",
+                                   "feed":  "https://issafrica.org/rss",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa",
+                                   "home":  "https://www.dw.com/en/africa/s-12756",
+                                   "feed":  "https://rss.dw.com/rdf/rss-en-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Seychelles",
+                             "Seychellois",
+                             "Victoria"
+                         ]
            },
     "sl":  {
                "name":  "Sierra Leone",
@@ -1669,8 +3140,47 @@
                                    "feed":  "https://www.groundup.org.za/sitenews/rss/",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "South Africa",
+                             "South African",
+                             "Pretoria",
+                             "Johannesburg",
+                             "Cape Town"
+                         ]
            },
     "ss":  {
                "name":  "South Sudan",
@@ -1702,8 +3212,84 @@
                                    "feed":  "https://cityreviewss.com/feed/",
                                    "tier":  2,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "African Arguments",
+                                   "home":  "https://africanarguments.org/",
+                                   "feed":  "https://africanarguments.org/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "The Africa Report",
+                                   "home":  "https://www.theafricareport.com/",
+                                   "feed":  "https://www.theafricareport.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "ISS Africa",
+                                   "home":  "https://issafrica.org/",
+                                   "feed":  "https://issafrica.org/rss",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa",
+                                   "home":  "https://www.dw.com/en/africa/s-12756",
+                                   "feed":  "https://rss.dw.com/rdf/rss-en-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Horn Diplomat",
+                                   "home":  "https://www.horndiplomat.com/",
+                                   "feed":  "https://www.horndiplomat.com/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "South Sudan",
+                             "Juba"
+                         ]
            },
     "sd":  {
                "name":  "Sudan",
@@ -1742,8 +3328,109 @@
                                    "feed":  "https://sudanpost.net/feed/",
                                    "tier":  3,
                                    "state":  "blocked"
+                               },
+                               {
+                                   "name":  "African Arguments",
+                                   "home":  "https://africanarguments.org/",
+                                   "feed":  "https://africanarguments.org/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "The Africa Report",
+                                   "home":  "https://www.theafricareport.com/",
+                                   "feed":  "https://www.theafricareport.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "ISS Africa",
+                                   "home":  "https://issafrica.org/",
+                                   "feed":  "https://issafrica.org/rss",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa",
+                                   "home":  "https://www.dw.com/en/africa/s-12756",
+                                   "feed":  "https://rss.dw.com/rdf/rss-en-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Horn Diplomat",
+                                   "home":  "https://www.horndiplomat.com/",
+                                   "feed":  "https://www.horndiplomat.com/feed/",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Radio Tamazuj",
+                                   "home":  "https://www.radiotamazuj.org/en",
+                                   "feed":  "https://www.radiotamazuj.org/en/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Sudanow",
+                                   "home":  "https://sudanow-magazine.net/",
+                                   "feed":  "https://sudanow-magazine.net/feed/",
+                                   "tier":  3,
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "Altaghyeer",
+                                   "home":  "https://www.altaghyeer.info/",
+                                   "feed":  "https://www.altaghyeer.info/ar/feed/",
+                                   "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Sudan",
+                             "Sudanese",
+                             "Khartoum",
+                             "Darfur",
+                             "Kordofan"
+                         ]
            },
     "tz":  {
                "name":  "Tanzania",
@@ -1782,8 +3469,46 @@
                                    "feed":  "https://habarileo.co.tz/feed/",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Tanzania",
+                             "Tanzanian",
+                             "Dodoma",
+                             "Dar es Salaam"
+                         ]
            },
     "tg":  {
                "name":  "Togo",
@@ -1829,8 +3554,77 @@
                                    "feed":  "https://www.l-frii.com/feed/",
                                    "tier":  3,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Togo",
+                             "Togolese",
+                             "Lome"
+                         ]
            },
     "tn":  {
                "name":  "Tunisia",
@@ -1949,8 +3743,77 @@
                                    "feed":  "https://www.mwebantu.com/feed/",
                                    "tier":  3,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "African Arguments",
+                                   "home":  "https://africanarguments.org/",
+                                   "feed":  "https://africanarguments.org/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "The Africa Report",
+                                   "home":  "https://www.theafricareport.com/",
+                                   "feed":  "https://www.theafricareport.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "ISS Africa",
+                                   "home":  "https://issafrica.org/",
+                                   "feed":  "https://issafrica.org/rss",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "missing"
+                               },
+                               {
+                                   "name":  "DW Africa",
+                                   "home":  "https://www.dw.com/en/africa/s-12756",
+                                   "feed":  "https://rss.dw.com/rdf/rss-en-africa",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Zambia",
+                             "Zambian",
+                             "Lusaka"
+                         ]
            },
     "zw":  {
                "name":  "Zimbabwe",
@@ -2050,7 +3913,85 @@
                                    "feed":  "https://saharaquestion.com/feed/",
                                    "tier":  3,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "RFI Afrique",
+                                   "home":  "https://www.rfi.fr/fr/afrique/",
+                                   "feed":  "https://www.rfi.fr/fr/afrique/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Agence Ecofin",
+                                   "home":  "https://www.agenceecofin.com/",
+                                   "feed":  "https://www.agenceecofin.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Afrik.com",
+                                   "home":  "https://www.afrik.com/",
+                                   "feed":  "https://www.afrik.com/feed",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Western Sahara Resource Watch",
+                                   "home":  "https://wsrw.org/en",
+                                   "feed":  "https://wsrw.org/feed/",
+                                   "tier":  3,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Jeune Afrique",
+                                   "home":  "https://www.jeuneafrique.com/",
+                                   "feed":  "https://www.jeuneafrique.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Africanews",
+                                   "home":  "https://www.africanews.com/",
+                                   "feed":  "https://www.africanews.com/feed/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "BBC Africa",
+                                   "home":  "https://feeds.bbci.co.uk/news/world/africa/",
+                                   "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
+                                   "tier":  1,
+                                   "scope":  "regional",
+                                   "state":  null
+                               },
+                               {
+                                   "name":  "VOA Africa",
+                                   "home":  "https://www.voaafrica.com/",
+                                   "feed":  "https://www.voaafrica.com/api/epiqq",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Anadolu Africa",
+                                   "home":  "https://www.aa.com.tr/en/africa",
+                                   "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
+                                   "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
-                           ]
+                           ],
+               "match":  [
+                             "Western Sahara",
+                             "Sahrawi",
+                             "Saharawi",
+                             "Polisario",
+                             "Laayoune"
+                         ]
            }
 }

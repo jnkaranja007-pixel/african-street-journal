@@ -41,7 +41,10 @@
 param(
   [string[]]$Only,
   [int]$Days = 2,
-  [int]$PerCountry = 10,
+  # 16, not 10: the writer files up to 5 briefs and rejects duplicates of a story it has
+  # already used, so a 10-item pool with three angles on one event left it filing 4.
+  # More candidates cost a few hundred prompt tokens and buy genuine editorial choice.
+  [int]$PerCountry = 16,
   [int]$DelayMs = 150,
   [int]$TimeoutSec = 20
 )
@@ -291,13 +294,37 @@ foreach ($code in $codes) {
     continue
   }
 
+  # Regional sources cover a whole bloc, not one country, so their items must be
+  # filtered or Angola would inherit Mozambique's news. A source marked
+  # "scope": "regional" only contributes items that actually name this country - by
+  # name, demonym or capital, listed per country as "match" in the registry.
+  # This is what makes thin markets viable: Eritrea and Western Sahara have almost no
+  # domestic press, but they are covered by outlets that report the whole region.
+  $matchTerms = @($name)
+  if ($entry.match) { $matchTerms = @($entry.match) }
+  $matchRx = ($matchTerms | Where-Object { $_ } | ForEach-Object { [regex]::Escape([string]$_) }) -join '|'
+
+
   $pool = New-Object System.Collections.Generic.List[object]
   $liveSources = 0
   foreach ($s in $usable) {
     try {
       $items = Read-Feed $s.feed
-      if ($items.Count) { $liveSources++ }
+      # liveSources is counted after filtering: a regional feed that named no story
+      # here is not a source for this country, and the diversity cap divides by it.
+      $kept = 0
       foreach ($it in $items) {
+        # Regional feeds only contribute stories that are ABOUT this country, not ones
+        # that merely mention it. Matching the whole summary let a BBC Africa piece
+        # through on a passing reference, and the writer then correctly refused it
+        # under "skip any item not actually about this country" - Niger fetched 16
+        # stories and filed 2. The subject of a news item is named in its headline or
+        # its opening clause, so match those and nothing further.
+        if ($s.scope -eq 'regional' -and $matchRx) {
+          $lede = if ($it.summary) { $it.summary.Substring(0, [Math]::Min(140, $it.summary.Length)) } else { '' }
+          if (($it.title + ' ' + $lede) -notmatch $matchRx) { continue }
+        }
+        $kept++
         $pool.Add([pscustomobject]@{
           title     = $it.title
           url       = $it.url
@@ -307,6 +334,7 @@ foreach ($code in $codes) {
           tier      = [int]$s.tier
         })
       }
+      if ($kept) { $liveSources++ }
     } catch {
       $deadFeeds.Add("$code/$($s.name)")
     }

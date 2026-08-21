@@ -238,8 +238,10 @@ Country: $name
 Today's items. The number in brackets is the item index.
 
 $($lines.ToString())
-Write up to $n briefs from the items above, best story first. Items marked as
-corroborated by several outlets are the day's significant news and should lead.
+Write $n briefs if the items support it. Only file fewer when the remaining items are
+another angle on a story you have already filed, or genuinely cannot carry a "why"
+that adds information. Items marked as corroborated by several outlets are the day's
+significant news and should lead.
 
 Return ONLY a JSON object, no prose before or after, in exactly this shape:
 

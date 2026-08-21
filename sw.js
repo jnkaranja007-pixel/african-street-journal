@@ -7,7 +7,7 @@
 // v16. Nothing broke - the fetch handler matches with ignoreSearch, and GitHub Pages
 // ignores query strings - but the numbers lied, and a version that lies is worse than
 // no version. Bump V alone; index.html's ?v= must match it.
-const V = '19';
+const V = '20';
 const CACHE = 'asj-v' + V;
 const SHELL = ['./', 'index.html', 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/archive/index.js?v=' + V, 'manifest.json', 'icon.svg'];
 

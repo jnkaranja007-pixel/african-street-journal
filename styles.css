@@ -736,7 +736,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   #cv-panel-signals #cv-audience-meta{grid-column:2;grid-row:1;min-width:0;pointer-events:none}
   #cv-panel-signals .cv-audience-tabs{grid-column:1/-1;grid-row:2;justify-self:end}
   #cv-panel-signals .cv-carousel-arrow{min-width:32px;height:32px}
-  #cv-panel-signals .cv-audience-tab{min-height:36px}
+  #cv-panel-signals .cv-audience-tab{min-height:44px}
   .audience-mode[data-mode="investors"] .cv-econ{grid-template-columns:repeat(2,minmax(0,1fr))}
   .audience-mode[data-mode="investors"] .cv-econ-cell{padding:12px 10px}
   .audience-mode[data-mode="investors"] .cv-econ-cell:nth-child(2n){border-right:0}
@@ -949,4 +949,105 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .cv-news-summary{grid-template-columns:28px minmax(0,1fr) auto;padding:12px}
   .cv-brief-main{padding:0 12px 14px 52px}
   .cv-news-summary-meta{font-size:9px}
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile touch and spacing pass.
+   Measured on a 375x812 viewport: 165 ticker buttons rendered 78x17, well under
+   the 44px minimum a finger needs, and the map left a 142px dead band above the
+   ticker because a square map on a narrow screen is width-bound and cannot grow
+   into spare height.
+   --------------------------------------------------------------------------- */
+@media (max-width:720px){
+  /* Taller hit area without changing the type size or the rhythm of the strip. */
+  .ticker button{padding:17px 16px}
+  .ticker button::after{left:16px;right:16px}
+  .ticker .dot{padding:0 1px}
+
+  /* Auto margins absorb the leftover column space, so the map sits centred
+     between the counter and the ticker instead of hugging the headline with a
+     band of black beneath it. */
+  .stage{margin-block:auto}
+
+  /* The brief link is the primary action on the landing screen; 26px was not a
+     comfortable target. Padding only - the type stays the same size. */
+  .wire-entry{min-height:44px;padding:10px 0}
+}
+
+/* Coarse pointers get the same treatment regardless of width: a tablet in
+   landscape is still a finger, not a mouse. */
+@media (pointer:coarse){
+  .ticker button{padding:17px 16px}
+  .cv-nav-btn,.cv-star,.cv-utility-btn{min-height:44px;min-width:44px}
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile dossier: let the page scroll instead of trapping the reader in a box.
+   #country-view is a fixed, full-height app shell with internal scrolling, which
+   is right on a desktop. On a 375x812 phone the identity block and almanac eat
+   most of the screen, leaving the brief list scrolling inside a 257px window on
+   an 812px display - the reader scrolls a small box inside a page that does not
+   move. Here the shell scrolls, the panels take their natural height, and the
+   carousel track is untouched, so swipe, the tab bar and the route still work.
+   --------------------------------------------------------------------------- */
+@media (max-width:720px){
+  #country-view{overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .cv-body{flex:0 0 auto}
+  .cv-carousel{flex:0 0 auto;min-height:68svh}
+  .cv-panel{height:auto;min-height:68svh}
+  .cv-panel-body{overflow:visible}
+  .cv-brief-desk{overflow:visible}
+  .cv-story-rail{max-height:none}
+
+  /* Reading size. 14px is a desktop density; on a phone held at arm's length it
+     is the difference between reading and squinting. */
+  .cv-brief-desk p,.cv-story-body,.cv-panel-body p{font-size:15.5px;line-height:1.62}
+
+  /* Remaining sub-44px controls in the dossier. Padding and min-size only - no
+     type changes, so the layout keeps its proportions. */
+  .back-btn{min-height:44px}
+  .cv-anthem-btn,#cv-anthem-btn{min-width:34px;min-height:34px;padding:8px}
+  .cv-carousel-arrow{width:44px;height:44px}
+  .cv-layer-pill{min-height:44px}
+  .cv-brief-desk .src a,.cv-story-sources a{display:inline-block;padding:11px 0;margin-right:14px}
+}
+
+/* Remaining sub-44px controls, by their real selectors. Measured on a phone, not
+   assumed: the earlier pass guessed at class names and missed these six. */
+@media (max-width:720px){
+  .cv-brief-src{display:inline-block;padding:11px 0;margin-right:16px}
+  .cv-carousel-arrow{width:44px;height:44px;min-height:44px}
+  .cv-audience-tab{min-height:44px}
+  .cv-map-fs{min-width:44px;min-height:44px}
+  .cv-dot{min-width:44px;min-height:44px}
+}
+
+/* ---------------------------------------------------------------------------
+   Density pass. Measured, not guessed: one country screen carried 66 uppercase
+   letter-spaced labels and four separate navigation affordances, two of which
+   (the panel arrows and the bottom tab bar) move the same carousel.
+   The house style depends on the loud element being rare. When every label is
+   uppercase mono with wide tracking, none of them leads, and the reader has to
+   parse the whole screen to find the one number that matters.
+   --------------------------------------------------------------------------- */
+
+/* One control per job. The bottom tab bar names the panels; the floating arrows
+   duplicate it while costing a row of vertical space on the screen with least
+   of it. Desktop keeps both - a mouse benefits from the arrows and has room. */
+@media (max-width:720px){
+  .cv-carousel-nav{display:none!important}  /* beats the !important at line 316 */
+}
+
+/* Secondary metadata steps back so the country name and its headline figure can
+   lead. Same family, same tracking - only weight and value, so the industrial
+   register survives. */
+.cv-id-meta{opacity:.78}
+.cv-id-meta b{opacity:1}
+.cv-alm-sub{opacity:.72}
+
+/* ISO codes are developer trivia on a reader's screen. Kept in the DOM for the
+   self-test and for anyone who wants it on a wide display; hidden where space
+   is the scarcest resource. */
+@media (max-width:720px){
+  .cv-id-meta > span:nth-child(2){display:none}
 }
