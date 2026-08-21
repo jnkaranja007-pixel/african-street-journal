@@ -21,7 +21,7 @@ main{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;align-ite
 .masthead-kicker span:first-child{justify-self:end}
 .masthead-kicker span:last-child{justify-self:start}
 .masthead-kicker .kicker-dot{color:var(--text-dim)}
-.mobile-masthead,.mobile-continent-heading{display:none}
+.mobile-masthead{display:none}
 .rule{width:100vw;max-width:none;height:1px;background:var(--rule);margin:6px calc(50% - 50vw) 0;flex-shrink:0}
 
 .title-block{width:100%;text-align:center;padding:0 20px 2px;display:flex;flex-direction:column;align-items:center;position:relative;flex-shrink:0}
@@ -1077,12 +1077,12 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .masthead{display:block;max-width:none;padding:0}
   .masthead>span,.masthead-kicker{display:none}
   .mobile-masthead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;min-height:70px;padding:10px 14px 9px;gap:11px}
-  .mobile-wordmark{align-self:stretch;display:flex;align-items:center;color:var(--text);font:900 54px/.82 var(--sans);letter-spacing:0;text-decoration:none;text-transform:uppercase}
-  .mobile-wordmark:hover,.mobile-wordmark:focus-visible{color:var(--green-bright);outline:none}
-  .mobile-wordmark-name{align-self:center;color:var(--text-muted);font:800 10px/1.05 var(--sans);letter-spacing:0;text-transform:uppercase}
-  .mobile-wire-entry{justify-self:end;min-height:44px;margin:0;padding:0 0 0 12px;gap:8px;border:0;border-left:1px solid rgba(232,230,227,.2);border-bottom:0;color:var(--green-bright)}
-  .mobile-wire-entry .wire-entry-count{display:block;max-width:78px;padding:0;border:0;color:inherit;font:800 11px/1.05 var(--sans);letter-spacing:0;text-align:right;white-space:normal}
-  .mobile-wire-entry .wire-entry-icon{width:22px;height:22px;color:var(--green-bright)}
+  .mobile-wordmark{align-self:stretch;display:flex;align-items:center;color:var(--text);font:700 54px/.82 var(--serif);letter-spacing:0;text-decoration:none;text-transform:uppercase}
+  .mobile-wordmark:hover,.mobile-wordmark:focus-visible{color:var(--green);outline:none}
+  .mobile-wordmark-name{align-self:center;color:var(--text-muted);font:700 9px/1.12 var(--mono);letter-spacing:0;text-transform:uppercase}
+  .mobile-wire-entry{justify-self:end;min-height:44px;margin:0;padding:0 0 0 12px;gap:8px;border:0;border-left:1px solid rgba(232,230,227,.2);border-bottom:0;color:var(--green)}
+  .mobile-wire-entry .wire-entry-count{display:block;max-width:78px;padding:0;border:0;color:inherit;font:700 11px/1.05 var(--mono);letter-spacing:0;text-align:right;white-space:normal}
+  .mobile-wire-entry .wire-entry-icon{width:22px;height:22px;color:var(--green)}
   .mobile-wire-entry svg{width:20px;height:20px}
 
   .rule{margin-top:0;background:rgba(232,230,227,.18)}
@@ -1090,17 +1090,11 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   main{padding-top:0}
   .landing-core{padding-top:0}
   .title-block{display:none}
-  .mobile-continent-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;width:100%;padding:11px 14px 8px;border-bottom:1px solid rgba(232,230,227,.1)}
-  .mobile-continent-name{color:var(--text);font:900 clamp(36px,11vw,46px)/.86 var(--sans);letter-spacing:0;text-transform:uppercase}
-  .mobile-continent-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding-bottom:1px;text-align:right;text-transform:uppercase}
-  .mobile-continent-meta b{color:var(--green-bright);font:800 11px/1 var(--sans);letter-spacing:0}
-  .mobile-continent-meta b::before,.mobile-continent-meta b::after{content:'"'}
-  .mobile-continent-meta small{color:var(--text-dim);font:700 9px/1 var(--mono);letter-spacing:0}
 
   .stage{left:50%;width:min(102vw,calc(100svh - 190px),520px);margin-block:auto;transform:translateX(-50%)}
   #map{cursor:crosshair;touch-action:manipulation}
   .ticker-wrap{min-height:56px;margin:0;border-block-color:rgba(232,230,227,.16);background:#101010}
-  .ticker button{min-height:55px;padding:0 18px;color:var(--green-bright);font:800 12px/1 var(--sans);letter-spacing:0}
+  .ticker button{min-height:55px;padding:0 18px;color:var(--green);font:700 12px/1 var(--mono);letter-spacing:0}
   .ticker button::after{left:18px;right:18px;bottom:8px}
   .ticker .dot{padding:0 2px;color:var(--text-dim);font-size:11px}
 }
