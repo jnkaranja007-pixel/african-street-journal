@@ -1,7 +1,7 @@
 {
-  "generated": "2026-08-21T05:41:15+00:00",
+  "generated": "2026-08-21T19:18:29+00:00",
   "dates": {
-    "dz": "2026-08-21T05:41:15+00:00",
+    "dz": "2026-08-21T19:18:29+00:00",
     "ao": "2026-08-21T05:41:15+00:00",
     "bj": "2026-08-21T05:41:15+00:00",
     "bw": "2026-08-21T05:41:15+00:00",
@@ -60,62 +60,290 @@
   "byCountry": {
     "dz": [
       {
-        "headline": "Algeria targets 20,000 investment projects by 2029",
-        "body": "The government aims to realize 20,000 investment projects by 2029. The plan relies on a comprehensive census of available land.",
-        "why": "The initiative seeks to expand industrial capacity and create new business opportunities through increased land availability.",
-        "topic": "Business",
-        "sources": [
-          {
-            "url": "https://www.algerie360.com/20-000-projets-dinvestissement-promis-en-algerie-dici-2029-le-plan-du-gouvernement-devoile/",
-            "name": "Algerie360"
+        "articleId": "f821460545f3e037d1c2",
+        "headline": "Authorities Seize 1000 Billion Centimes From Criminal Network",
+        "dek": "A major operation targeting organized crime has resulted in the confiscation of a significant amount of currency following an investigation that began in January.",
+        "paragraphs": [
+          "Authorities have successfully dismantled a criminal network, seizing 1000 billion centimes in an operation described as a major blow against organized crime. The confiscation is the result of meticulous investigative work that commenced in January.",
+          "The operation, which is being hailed as a landmark event in the fight against major banditry, involved extensive efforts to uncover illicit activities. Details regarding the specific nature of the criminal enterprise or the individuals involved were not immediately released.",
+          "This significant seizure represents a substantial financial recovery and a victory for law enforcement agencies in their ongoing efforts to combat criminal organizations operating within the country. The full impact of this operation on the broader criminal landscape is yet to be determined."
+        ],
+        "body": "Authorities have successfully dismantled a criminal network, seizing 1000 billion centimes in an operation described as a major blow against organized crime. The confiscation is the result of meticulous investigative work that commenced in January.\n\nThe operation, which is being hailed as a landmark event in the fight against major banditry, involved extensive efforts to uncover illicit activities. Details regarding the specific nature of the criminal enterprise or the individuals involved were not immediately released.\n\nThis significant seizure represents a substantial financial recovery and a victory for law enforcement agencies in their ongoing efforts to combat criminal organizations operating within the country. The full impact of this operation on the broader criminal landscape is yet to be determined.",
+        "why": "The seizure of 1000 billion centimes impacts investors by potentially disrupting illicit financial flows and indicating a crackdown on criminal economic activities.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 60,
+            "why": "Farmers could be indirectly affected if the criminal network was involved in illicit trade impacting agricultural markets or input distribution."
+          },
+          "investors": {
+            "score": 90,
+            "why": "Investors are directly impacted as the seizure of 1000 billion centimes suggests a significant disruption in illicit financial activities and potential recovery of assets."
+          },
+          "diaspora": {
+            "score": 45,
+            "why": "The diaspora may be indirectly affected if the criminal network was involved in activities that could impact cross-border financial transactions or family remittances."
           }
-        ]
-      },
-      {
-        "headline": "STI opens smartphone plant in Oran with 6,000 daily unit capacity",
-        "body": "A new smartphone assembly plant operated by STI in partnership with China's vivo has opened in the Senia industrial zone. The 7,000-square-meter facility currently employs approximately 200 workers.",
-        "why": "The plant will increase the local supply of mobile devices once it reaches its maximum production capacity.",
-        "topic": "Tech",
-        "sources": [
-          {
-            "url": "https://www.echoroukonline.com/%d8%aa%d8%b5%d9%86%d9%8a%d8%b9-6000-%d9%87%d8%a7%d8%aa%d9%81-%d8%b0%d9%83%d9%8a-%d9%8a%d9%88%d9%85%d9%8a%d8%a7-%d9%81%d9%8a-%d9%88%d9%87%d8%b1%d8%a7%d9%86-%d8%b5%d9%88%d8%b1",
-            "name": "Echorouk Online"
-          }
-        ]
-      },
-      {
-        "headline": "ONAB sells frozen chicken at 350 dinars per kilogram",
-        "body": "The National Office of Livestock Feed (ONAB) is distributing frozen chicken at 350 dinars per kilogram. The product is available across 143 sales points nationwide.",
-        "why": "The daily injection of stock aims to stabilize poultry prices for consumers across various provinces.",
-        "topic": "Agriculture",
-        "sources": [
-          {
-            "url": "https://www.echoroukonline.com/%d8%a8%d8%af%d8%a7%d9%8a%d8%a9-%d8%aa%d8%b3%d9%88%d9%8a%d9%82-%d8%a7%d9%84%d8%af%d8%ac%d8%a7%d8%ac-%d8%a7%d9%84%d9%85%d8%ac%d9%85%d9%91%d8%af-%d8%a8%d8%b3%d8%b9%d8%b1-350-%d8%af%d9%8a%d9%86%d8%a7",
-            "name": "Echorouk Online"
-          }
-        ]
-      },
-      {
-        "headline": "Algeria adds 6 digital services to government portal",
-        "body": "The High Commissioner for Digitization introduced six new digital services to the national government portal. The rollout was conducted in cooperation with the Ministry of Energy and Renewable Energies.",
-        "why": "The E-SANED platform now allows businesses to process requests for operating licenses and declarations for production facilities digitally.",
-        "topic": "Tech",
-        "sources": [
-          {
-            "url": "https://www.echoroukonline.com/%d8%a5%d8%af%d8%b1%d8%a7%d8%ac-6-%d8%ae%d8%af%d9%85%d8%a7%d8%aa-%d8%b1%d9%82%d9%85%d9%8a%d8%a9-%d8%ac%d8%af%d9%8a%d8%af%d8%a9-%d8%b9%d8%a8%d8%b1-%d8%a8%d9%88%d8%a7%d8%a8%d8%a9-%d8%a7%d9%84%d8%ae%d8%af",
-            "name": "Echorouk Online"
-          }
-        ]
-      },
-      {
-        "headline": "Algiers authorities revoke 12 transport operating licenses",
-        "body": "The Direction of Transport, Mobility, and Logistics has withdrawn 12 operating authorizations for transport lines in the capital. The move follows increased surveillance of city transit lines.",
-        "why": "The revocations reduce the number of authorized operators on capital routes to enforce stricter regulatory compliance.",
+        },
         "topic": "News",
+        "published": "08/21/2026 10:17:54",
+        "sourceTitle": "Saisie d’une valeur de 1000 milliards de centimes : coup de filet majeur contre un réseau criminel",
+        "editorialScore": 9.1,
+        "selectionScore": 9.1,
+        "confidence": "low",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 0.0,
+          "sourceQuality": 0.5,
+          "freshness": 3.5,
+          "publicImpact": 2.6,
+          "evidence": 2.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "published within 18h",
+          "urgent public consequence",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 118,
+        "readMinutes": 1,
         "sources": [
           {
-            "url": "https://www.algerie360.com/transport-a-alger-les-autorites-retirent-12-autorisations-dexploitation-pour-ces-raisons/",
-            "name": "Algerie360"
+            "name": "Algerie360",
+            "published": "08/21/2026 10:17:54",
+            "url": "https://www.algerie360.com/saisie-dune-valeur-de-1000-milliards-de-centimes-coup-de-filet-majeur-contre-un-reseau-criminel/"
+          }
+        ]
+      },
+      {
+        "articleId": "edd59afcee511b837c55",
+        "headline": "Algerian Player Scores in 11-0 German Cup Victory",
+        "dek": "Faris Chaibi contributed to Eintracht Frankfurt's dominant win in the German Cup, advancing them to the next round.",
+        "paragraphs": [
+          "Algerian international Faris Chaibi played his first official match of the new season, contributing to Eintracht Frankfurt's overwhelming 11-0 victory against fifth-tier side TuS Bingen in the German Cup. The win secured the club a spot in the Round of 16.",
+          "Chaibi, a midfielder, entered the match as a substitute in the 69th minute. He scored the final goal of the game, capping off the team's dominant performance. The club's decisive win marks a strong start to their cup campaign.",
+          "The comprehensive victory demonstrates Eintracht Frankfurt's strength in the early stages of the competition. The team's ability to score eleven goals highlights their offensive prowess as they move forward in the tournament."
+        ],
+        "body": "Algerian international Faris Chaibi played his first official match of the new season, contributing to Eintracht Frankfurt's overwhelming 11-0 victory against fifth-tier side TuS Bingen in the German Cup. The win secured the club a spot in the Round of 16.\n\nChaibi, a midfielder, entered the match as a substitute in the 69th minute. He scored the final goal of the game, capping off the team's dominant performance. The club's decisive win marks a strong start to their cup campaign.\n\nThe comprehensive victory demonstrates Eintracht Frankfurt's strength in the early stages of the competition. The team's ability to score eleven goals highlights their offensive prowess as they move forward in the tournament.",
+        "why": "Investors may see potential for increased team performance and market value following a decisive victory.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "The evidence provided does not contain any information relevant to farming activities or agricultural markets."
+          },
+          "investors": {
+            "score": 70,
+            "why": "A decisive victory and advancement in a major cup competition can signal positive momentum for a sports club's financial prospects."
+          },
+          "diaspora": {
+            "score": 30,
+            "why": "Diaspora members may follow the success of national players abroad, potentially impacting their interest in the team or player."
+          }
+        },
+        "topic": "Sport",
+        "published": "08/21/2026 19:10:55",
+        "sourceTitle": "شعيبي يُدشّن الموسم بـ (11-0)",
+        "editorialScore": 8.25,
+        "selectionScore": 8.25,
+        "confidence": "low",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 0.0,
+          "sourceQuality": 1.75,
+          "freshness": 3.5,
+          "publicImpact": 0.0,
+          "evidence": 2.5,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "published within 18h",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 112,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Echorouk Online",
+            "published": "08/21/2026 19:10:55",
+            "url": "https://www.echoroukonline.com/%d8%b4%d8%b9%d9%8a%d8%a8%d9%8a-%d9%8a%d9%8f%d8%af%d8%b4%d9%91%d9%86-%d8%a7%d9%84%d9%85%d9%88%d8%b3%d9%85-%d8%a8%d9%80-11-0"
+          }
+        ]
+      },
+      {
+        "articleId": "5416d8e71bd97253774a",
+        "headline": "Algeria Seeks Italian Firms for Agricultural Modernization",
+        "dek": "Fifteen Italian companies are expected in Algiers to help boost the nation's food sovereignty and transform agricultural practices.",
+        "paragraphs": [
+          "Algeria is intensifying its pursuit of food sovereignty, with an upcoming influx of fifteen Italian companies poised to redefine agricultural work in the country. This initiative signals a significant shift in the nation's approach to farming and food production.",
+          "The arrival of these Italian firms represents a key opportunity for modernization within Algeria's agricultural sector. Their expertise is anticipated to introduce new methods and technologies aimed at enhancing efficiency and output.",
+          "This collaboration is part of a broader economic strategy to strengthen domestic food security and reduce reliance on imports. The engagement with foreign expertise underscores Algeria's commitment to transforming its agricultural landscape."
+        ],
+        "body": "Algeria is intensifying its pursuit of food sovereignty, with an upcoming influx of fifteen Italian companies poised to redefine agricultural work in the country. This initiative signals a significant shift in the nation's approach to farming and food production.\n\nThe arrival of these Italian firms represents a key opportunity for modernization within Algeria's agricultural sector. Their expertise is anticipated to introduce new methods and technologies aimed at enhancing efficiency and output.\n\nThis collaboration is part of a broader economic strategy to strengthen domestic food security and reduce reliance on imports. The engagement with foreign expertise underscores Algeria's commitment to transforming its agricultural landscape.",
+        "why": "Algerian farmers may gain access to new technologies and methods through the arrival of fifteen Italian companies focused on agricultural modernization.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 60,
+            "why": "Italian companies are expected to bring modernization solutions that could change farming practices and improve agricultural output."
+          },
+          "investors": {
+            "score": 90,
+            "why": "The arrival of fifteen Italian companies signals potential new investment and business opportunities in Algeria's agricultural sector."
+          },
+          "diaspora": {
+            "score": 45,
+            "why": "The focus on food sovereignty and agricultural modernization may indirectly impact the diaspora through economic stability and food security."
+          }
+        },
+        "topic": "Business",
+        "published": "08/21/2026 12:49:01",
+        "sourceTitle": "Modernisation agricole : quelles solutions apportent les 15 entreprises italiennes attendues à Alger ?",
+        "editorialScore": 7.35,
+        "selectionScore": 6.1,
+        "confidence": "low",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 0.0,
+          "sourceQuality": 0.5,
+          "freshness": 3.5,
+          "publicImpact": 0.85,
+          "evidence": 2.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "published within 18h",
+          "economic consequence",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 103,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Algerie360",
+            "published": "08/21/2026 12:49:01",
+            "url": "https://www.algerie360.com/modernisation-agricole-quelles-solutions-apportent-les-15-entreprises-italiennes-attendues-a-alger/"
+          }
+        ]
+      },
+      {
+        "articleId": "daf1ce445db84e8f84fa",
+        "headline": "Amateur Football League Postpones Season Start to September 11-12",
+        "dek": "The National Amateur Football League has rescheduled the opening of the Second League season by one week, citing organizational and preparatory needs for the new sporting year.",
+        "paragraphs": [
+          "The National Amateur Football League announced on Friday that the 2026-2027 Second League season will now commence on September 11 and 12, a shift from its originally planned September 4 start. This decision is part of the league's organizational and preparatory measures for the upcoming season.",
+          "According to a statement released on the league's official website, the postponement is intended to facilitate the implementation of directives aimed at supporting clubs and ensuring thorough administrative and sporting preparations. The league management emphasized the importance of these steps for a smooth competition launch.",
+          "In conjunction with the schedule change, the player registration period has been extended until September 26, 2026. This extension provides clubs with additional time to finalize player signings and complete necessary administrative procedures before the season officially begins."
+        ],
+        "body": "The National Amateur Football League announced on Friday that the 2026-2027 Second League season will now commence on September 11 and 12, a shift from its originally planned September 4 start. This decision is part of the league's organizational and preparatory measures for the upcoming season.\n\nAccording to a statement released on the league's official website, the postponement is intended to facilitate the implementation of directives aimed at supporting clubs and ensuring thorough administrative and sporting preparations. The league management emphasized the importance of these steps for a smooth competition launch.\n\nIn conjunction with the schedule change, the player registration period has been extended until September 26, 2026. This extension provides clubs with additional time to finalize player signings and complete necessary administrative procedures before the season officially begins.",
+        "why": "The postponement of the football season and extension of player registration directly affects clubs and players by altering their timelines for preparation and team finalization.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This event concerns professional sports leagues and has no direct impact on agricultural activities or rural livelihoods."
+          },
+          "investors": {
+            "score": 70,
+            "why": "Changes in sports league schedules and registration periods can affect betting markets, sports merchandise sales, and related advertising revenues."
+          },
+          "diaspora": {
+            "score": 30,
+            "why": "The postponement may affect diaspora members who follow Algerian football or have family involved in the sport, altering their viewing or participation plans."
+          }
+        },
+        "topic": "Sport",
+        "published": "08/21/2026 18:24:10",
+        "sourceTitle": "تأجيل انطلاق البطولة إلى 11 و12 سبتمبر القادم",
+        "editorialScore": 8.25,
+        "selectionScore": 6.0,
+        "confidence": "low",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 0.0,
+          "sourceQuality": 1.75,
+          "freshness": 3.5,
+          "publicImpact": 0.0,
+          "evidence": 2.5,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "published within 18h",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 129,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Echorouk Online",
+            "published": "08/21/2026 18:24:10",
+            "url": "https://www.echoroukonline.com/%d8%aa%d8%a3%d8%ac%d9%8a%d9%84-%d8%a7%d9%86%d8%b7%d9%84%d8%a7%d9%82-%d8%a7%d9%84%d8%a8%d8%b7%d9%88%d9%84%d8%a9-%d8%a5%d9%84%d9%89-11-%d9%8812-%d8%b3%d8%a8%d8%aa%d9%85%d8%a8%d8%b1-%d8%a7%d9%84%d9%82"
+          }
+        ]
+      },
+      {
+        "articleId": "964fbb912912af2958b0",
+        "headline": "Algerie Ferries Adjusts Passenger Schedule for August 25th",
+        "dek": "Passengers booked on the Alger-Marseille route for Tuesday, August 25, 2026, are instructed to arrive at the Port of Algiers by 6:00 AM.",
+        "paragraphs": [
+          "Algerie Ferries has issued a specific instruction to passengers booked on the Alger-Marseille ferry service scheduled for Tuesday, August 25, 2026. The company is asking all affected travelers to present themselves at the Port of Algiers earlier than usual.",
+          "The directive specifies that passengers should arrive at the port starting from 6:00 AM on the day of departure. This change in arrival time is communicated to ensure smooth operations and timely boarding for the intended crossing.",
+          "This announcement directly impacts individuals holding tickets for the Alger-Marseille route on the specified date. No further details regarding the reason for the early arrival request were provided by the ferry operator."
+        ],
+        "body": "Algerie Ferries has issued a specific instruction to passengers booked on the Alger-Marseille ferry service scheduled for Tuesday, August 25, 2026. The company is asking all affected travelers to present themselves at the Port of Algiers earlier than usual.\n\nThe directive specifies that passengers should arrive at the port starting from 6:00 AM on the day of departure. This change in arrival time is communicated to ensure smooth operations and timely boarding for the intended crossing.\n\nThis announcement directly impacts individuals holding tickets for the Alger-Marseille route on the specified date. No further details regarding the reason for the early arrival request were provided by the ferry operator.",
+        "why": "This affects passengers traveling between Algeria and France, requiring them to adjust their travel plans and arrive at the port earlier.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "The announcement concerns passenger ferry travel and does not directly relate to agricultural production, markets, or rural livelihoods."
+          },
+          "investors": {
+            "score": 70,
+            "why": "This operational update from Algerie Ferries could signal logistical challenges or changes in demand affecting the transport sector and its investors."
+          },
+          "diaspora": {
+            "score": 80,
+            "why": "This directly impacts diaspora members traveling between Algeria and Marseille, requiring them to adjust their travel arrangements and schedules."
+          }
+        },
+        "topic": "Business",
+        "published": "08/21/2026 14:08:24",
+        "sourceTitle": "Traversée Alger-Marseille : Algérie Ferries adresse un important message aux passagers",
+        "editorialScore": 8.2,
+        "selectionScore": 4.7,
+        "confidence": "low",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 0.0,
+          "sourceQuality": 0.5,
+          "freshness": 3.5,
+          "publicImpact": 1.7,
+          "evidence": 2.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "published within 18h",
+          "economic consequence",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 108,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Algerie360",
+            "published": "08/21/2026 14:08:24",
+            "url": "https://www.algerie360.com/traversee-alger-marseille-algerie-ferries-adresse-un-important-message-aux-passagers/"
           }
         ]
       }
