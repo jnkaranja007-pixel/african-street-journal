@@ -1,7 +1,7 @@
 *,*::before,*::after{box-sizing:border-box}
 :root{
   --bg:#131313;--surface:#1a1a1a;--surface-raised:#202020;--rule:#2a2a2a;
-  --green:#4caf50;--green-dim:#2e7d32;--green-bright:#66bb6a;
+  --green:#4caf50;--green-dim:#2e7d32;--green-bright:#66bb6a;--front-green:#3d8b40;
   --text:#e8e6e3;--text-muted:#a8a39d;--text-dim:#8a847b;--paper:#d8d3c8;--amber:#c9a44a;
   --serif:'Playfair Display',Georgia,'Times New Roman',serif;
   --mono:ui-monospace,'SF Mono','Cascadia Code','Consolas',monospace;
@@ -17,7 +17,7 @@ main{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;align-ite
 .masthead{width:100%;max-width:1400px;padding:10px 28px 0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
 .masthead > span{font:11px/1 var(--mono);letter-spacing:0.18em;color:var(--text-dim);text-transform:uppercase}
 .masthead > span:last-child{text-align:right}
-.masthead-kicker{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;justify-content:center;width:min(470px,42vw);gap:clamp(18px,2.4vw,38px);font:11px/1 var(--mono);letter-spacing:0.24em;color:var(--green);text-transform:uppercase;white-space:nowrap}
+.masthead-kicker{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;justify-content:center;width:min(470px,42vw);gap:clamp(18px,2.4vw,38px);font:11px/1 var(--mono);letter-spacing:0.24em;color:var(--front-green);text-transform:uppercase;white-space:nowrap}
 .masthead-kicker span:first-child{justify-self:end}
 .masthead-kicker span:last-child{justify-self:start}
 .masthead-kicker .kicker-dot{color:var(--text-dim)}
@@ -27,14 +27,14 @@ main{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;align-ite
 .title-block{width:100%;text-align:center;padding:0 20px 2px;display:flex;flex-direction:column;align-items:center;position:relative;flex-shrink:0}
 .title-block h1{margin:0;max-width:min(100%,1240px);font:700 clamp(44px,6.4vw,86px)/0.98 var(--serif);color:var(--text);letter-spacing:0;text-wrap:balance}
 .title-block h1 em{font-style:italic;font-weight:400;display:block;font-size:0.48em;margin-bottom:2px;color:var(--text-muted)}
-.title-block h1 .g{color:var(--green)}
+.title-block h1 .g{color:var(--front-green)}
 .tagline{font:italic 400 clamp(14px,1.55vw,18px)/1.2 var(--serif);color:var(--text-muted);margin:clamp(6px,0.9svh,10px) 0 0;letter-spacing:0.02em}
 
 .pop-counter{text-align:center;margin:clamp(4px,0.8svh,9px) 0 clamp(1px,0.35svh,4px);position:relative;padding:0 18px}
 .pop-counter::before,.pop-counter::after{content:"";position:absolute;top:50%;width:42px;height:1px;background:linear-gradient(90deg,transparent,rgba(76,175,80,.55))}
 .pop-counter::before{right:100%;transform:translateY(-50%)}
 .pop-counter::after{left:100%;transform:translateY(-50%) scaleX(-1)}
-.pop-number{font:700 clamp(34px,4.9vw,56px)/0.98 var(--serif);color:var(--green);letter-spacing:0.02em;font-variant-numeric:tabular-nums}
+.pop-number{font:700 clamp(34px,4.9vw,56px)/0.98 var(--serif);color:var(--front-green);letter-spacing:0.02em;font-variant-numeric:tabular-nums}
 .pop-label{font:10px/1 var(--mono);letter-spacing:0.22em;color:var(--text-dim);text-transform:uppercase;margin-top:4px}
 
 /* The stage must stay exactly the size of the canvas: the tooltip is absolutely
@@ -46,7 +46,7 @@ main{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;align-ite
    header stack (masthead, rule, title, counter) plus the ticker. */
 .stage{position:relative;width:min(92vw,calc(100svh - 350px),1040px);height:auto;aspect-ratio:1000/1001;flex:none;min-height:0;margin:clamp(1px,0.25svh,5px) auto 1px}
 canvas{width:100%;height:100%;display:block}
-#map:focus-visible{outline:2px solid var(--green-bright);outline-offset:6px}
+#map:focus-visible{outline:2px solid var(--front-green);outline-offset:6px}
 #tooltip{position:absolute;pointer-events:none;padding:7px 14px;background:rgba(0,0,0,0.88);color:#fff;border-radius:4px;font:600 13px/1.2 var(--sans);white-space:nowrap;opacity:0;transform:translate(-50%,-140%);transition:opacity 100ms;z-index:2;border:1px solid rgba(76,175,80,0.3)}
 #tooltip.show{opacity:1}
 
@@ -58,14 +58,14 @@ canvas{width:100%;height:100%;display:block}
   .ticker:hover{animation-play-state:paused}
 }
 .ticker span{font:11px/1 var(--mono);letter-spacing:0.18em;color:var(--text);text-transform:uppercase;white-space:nowrap;padding:0 2px}
-.ticker button{font:11px/1 var(--mono);letter-spacing:0.18em;color:var(--green);text-transform:uppercase;white-space:nowrap;padding:3px 18px;text-decoration:none;cursor:pointer;transition:color 150ms;background:none;border:0;border-radius:0;position:relative}
-.ticker button::after{content:"";position:absolute;bottom:-1px;left:18px;right:18px;height:1px;background:var(--green-bright);transform:scaleX(0);transition:transform 200ms ease}
-.ticker button:hover,.ticker button:focus-visible{color:var(--green-bright);outline:none}
+.ticker button{font:11px/1 var(--mono);letter-spacing:0.18em;color:var(--front-green);text-transform:uppercase;white-space:nowrap;padding:3px 18px;text-decoration:none;cursor:pointer;transition:color 150ms;background:none;border:0;border-radius:0;position:relative}
+.ticker button::after{content:"";position:absolute;bottom:-1px;left:18px;right:18px;height:1px;background:var(--front-green);transform:scaleX(0);transition:transform 200ms ease}
+.ticker button:hover,.ticker button:focus-visible{color:var(--front-green);outline:none}
 .ticker button:hover::after,.ticker button:focus-visible::after{transform:scaleX(1)}
 .ticker .dot{color:var(--text-dim);font-size:9px;line-height:1;display:inline-flex;align-items:center;padding:0 2px;position:relative;top:-1px}
 @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-33.333333%)}}
 .rule--bottom{flex-shrink:0}
-.tagline-footer{font:italic 400 12px/1 var(--serif);color:var(--green-dim);margin:clamp(5px,.8svh,9px) 0 0;letter-spacing:0.04em;flex-shrink:0}
+.tagline-footer{font:italic 400 12px/1 var(--serif);color:var(--front-green);margin:clamp(5px,.8svh,9px) 0 0;letter-spacing:0.04em;flex-shrink:0}
 /* The strip under the masthead rule. The brief link used to sit between the wordmark
    and the population counter, which crowded the one part of the page that should be
    quiet. Here it reads as a utility link - visible above the fold, out of the centre.
@@ -377,7 +377,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-star{flex:none;align-self:flex-start;width:36px;height:36px;margin:6px 14px 0 0;background:none;border:1px solid rgba(232,230,227,0.16);color:var(--text-dim);font-size:17px;line-height:1;cursor:pointer;border-radius:0;transition:all 150ms;padding:0}
 .cv-star:hover{color:var(--text);border-color:rgba(232,230,227,0.34)}
 .cv-star[aria-pressed="true"]{color:var(--green-bright);border-color:rgba(76,175,80,0.55)}
-.your-desk{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px;align-self:flex-start;width:min(720px,calc(100% - 40px));margin-left:max(20px,calc((100vw - 1400px)/2 + 20px));padding:5px 0 4px;font:700 9px/1 var(--mono);letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);overflow:hidden}
+.your-desk{--green:var(--front-green);--green-bright:var(--front-green);--green-dim:var(--front-green);display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px;align-self:flex-start;width:min(720px,calc(100% - 40px));margin-left:max(20px,calc((100vw - 1400px)/2 + 20px));padding:5px 0 4px;font:700 9px/1 var(--mono);letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);overflow:hidden}
 .your-desk.is-collapsed{display:flex;width:auto;gap:0;padding:4px 0}
 .your-desk::-webkit-scrollbar{display:none}
 .your-desk .yd-head{display:flex;align-items:center;gap:10px;min-width:170px}
@@ -800,12 +800,12 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 /* Quiet utility link, not a boxed call-to-action. The panel, gradient and drop shadow
    read as the loudest thing on the page when the link sits in the masthead strip, so
    only the underline and the arrow carry it. */
-.wire-entry{margin:0;display:inline-flex;align-items:center;gap:10px;min-height:26px;padding:2px 0 3px;border:0;border-bottom:1px solid rgba(76,175,80,.32);background:none;box-shadow:none;color:var(--green-dim);font:700 10px/1 var(--mono);letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:color 150ms,border-color 150ms;position:relative}
-.wire-entry:hover,.wire-entry:focus-visible{border-bottom-color:var(--green-bright);color:var(--green-bright);outline:none}
+.wire-entry{margin:0;display:inline-flex;align-items:center;gap:10px;min-height:26px;padding:2px 0 3px;border:0;border-bottom:1px solid rgba(61,139,64,.4);background:none;box-shadow:none;color:var(--front-green);font:700 10px/1 var(--mono);letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:color 150ms,border-color 150ms;position:relative}
+.wire-entry:hover,.wire-entry:focus-visible{border-bottom-color:var(--front-green);color:var(--front-green);outline:none}
 .wire-entry:active{transform:translateY(1px)}
 .wire-entry .wire-entry-label{white-space:nowrap}
-.wire-entry .wire-entry-count{display:inline-flex;align-items:center;padding:0 0 0 10px;border-left:1px solid rgba(232,230,227,.14);color:var(--green-bright);white-space:nowrap}
-.wire-entry .wire-entry-icon{display:inline-grid;place-items:center;width:16px;height:16px;border:0;background:none;color:var(--green-bright);transition:transform 150ms}
+.wire-entry .wire-entry-count{display:inline-flex;align-items:center;padding:0 0 0 10px;border-left:1px solid rgba(232,230,227,.14);color:var(--front-green);white-space:nowrap}
+.wire-entry .wire-entry-icon{display:inline-grid;place-items:center;width:16px;height:16px;border:0;background:none;color:var(--front-green);transition:transform 150ms}
 .wire-entry:hover .wire-entry-icon,.wire-entry:focus-visible .wire-entry-icon{transform:translateX(3px)}
 /* Narrow screens: the three-column strip cannot hold the tagline and the link side by
    side, so stack them and centre both rather than letting the link overflow the rule. */
@@ -1073,16 +1073,21 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 
 /* Mobile front: a compact identity bar leaves the map and city index as the
    two dominant interactive surfaces. Desktop keeps the full masthead. */
+@media (min-width:641px){
+  .landing-core{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);justify-items:center;align-items:start}
+  .stage{align-self:center;width:auto;height:100%;max-width:min(92vw,1040px);max-height:1040px;margin:0 auto}
+}
+
 @media (max-width:640px){
   .masthead{display:block;max-width:none;padding:0}
   .masthead>span,.masthead-kicker{display:none}
   .mobile-masthead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;min-height:70px;padding:10px 14px 9px;gap:11px}
   .mobile-wordmark{align-self:stretch;display:flex;align-items:center;color:var(--text);font:700 54px/.82 var(--serif);letter-spacing:0;text-decoration:none;text-transform:uppercase}
-  .mobile-wordmark:hover,.mobile-wordmark:focus-visible{color:var(--green);outline:none}
+  .mobile-wordmark:hover,.mobile-wordmark:focus-visible{color:var(--front-green);outline:none}
   .mobile-wordmark-name{align-self:center;color:var(--text-muted);font:700 9px/1.12 var(--mono);letter-spacing:0;text-transform:uppercase}
-  .mobile-wire-entry{justify-self:end;min-height:44px;margin:0;padding:0 0 0 12px;gap:8px;border:0;border-left:1px solid rgba(232,230,227,.2);border-bottom:0;color:var(--green)}
+  .mobile-wire-entry{justify-self:end;min-height:44px;margin:0;padding:0 0 0 12px;gap:8px;border:0;border-left:1px solid rgba(232,230,227,.2);border-bottom:0;color:var(--front-green)}
   .mobile-wire-entry .wire-entry-count{display:block;max-width:78px;padding:0;border:0;color:inherit;font:700 11px/1.05 var(--mono);letter-spacing:0;text-align:right;white-space:normal}
-  .mobile-wire-entry .wire-entry-icon{width:22px;height:22px;color:var(--green)}
+  .mobile-wire-entry .wire-entry-icon{width:22px;height:22px;color:var(--front-green)}
   .mobile-wire-entry svg{width:20px;height:20px}
 
   .rule{margin-top:0;background:rgba(232,230,227,.18)}
@@ -1094,7 +1099,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .stage{left:50%;width:min(102vw,calc(100svh - 190px),520px);margin-block:auto;transform:translateX(-50%)}
   #map{cursor:crosshair;touch-action:manipulation}
   .ticker-wrap{min-height:56px;margin:0;border-block-color:rgba(232,230,227,.16);background:#101010}
-  .ticker button{min-height:55px;padding:0 18px;color:var(--green);font:700 12px/1 var(--mono);letter-spacing:0}
+  .ticker button{min-height:55px;padding:0 18px;color:var(--front-green);font:700 12px/1 var(--mono);letter-spacing:0}
   .ticker button::after{left:18px;right:18px;bottom:8px}
   .ticker .dot{padding:0 2px;color:var(--text-dim);font-size:11px}
 }

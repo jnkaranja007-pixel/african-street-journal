@@ -639,6 +639,7 @@ setInterval(() => {
 const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('tooltip');
+const FRONT_GREEN = getComputedStyle(document.documentElement).getPropertyValue('--front-green').trim() || '#3d8b40';
 
 const dpr = Math.min(2, window.devicePixelRatio || 1);
 canvas.width = 1000 * dpr;
@@ -746,12 +747,12 @@ function drawIslandMarkers(elapsed) {
     const hovered = hoveredIdx === t.idx;
     ctx.beginPath();
     ctx.arc(t.cx, t.cy, 9, 0, Math.PI * 2);
-    ctx.strokeStyle = hovered ? 'rgba(102,187,106,0.95)' : 'rgba(76,175,80,0.55)';
+    ctx.strokeStyle = hovered ? 'rgba(102,187,106,0.95)' : 'rgba(61,139,64,0.55)';
     ctx.lineWidth = hovered ? 1.6 : 1;
     ctx.stroke();
     ctx.beginPath();
     ctx.arc(t.cx, t.cy, 2.2, 0, Math.PI * 2);
-    ctx.fillStyle = hovered ? '#8fd694' : '#4caf50';
+    ctx.fillStyle = hovered ? '#8fd694' : FRONT_GREEN;
     ctx.fill();
     ctx.textAlign = t.side === 'left' ? 'right' : 'left';
     ctx.fillStyle = hovered ? 'rgba(220,240,222,0.95)' : 'rgba(160,190,165,0.7)';
@@ -816,7 +817,7 @@ function render(elapsed) {
     else if (pulsing) { ctx.shadowColor = 'rgba(102,187,106,' + (0.45 * pulse).toFixed(3) + ')'; ctx.shadowBlur = 22 * pulse; }
     ctx.fillStyle = isHover ? '#66bb6a'
       : pulsing ? 'rgb(' + Math.round(61 + 41 * pulse) + ',' + Math.round(139 + 48 * pulse) + ',' + Math.round(64 + 42 * pulse) + ')'
-      : '#3d8b40';
+      : FRONT_GREEN;
     ctx.strokeStyle = '#1a1a1a';
     ctx.fill(c.shape);
     ctx.shadowBlur = 0;
