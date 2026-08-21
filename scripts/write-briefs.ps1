@@ -601,6 +601,10 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
         break
       } catch {
         $lastErr = $_.Exception.Message.Split("`n")[0]
+        if ($lastErr -match 'HTTP 402|402 \(Payment Required\)') {
+          $lastErr = 'OpenRouter credit unavailable (HTTP 402); add credit before the next desk run'
+          break
+        }
         # A rate limit needs real time, not a 500ms nudge. Cheap and free-tier models
         # throttle hard partway through a 55-country run, and retrying immediately just
         # burns the remaining attempts and drops the country.
@@ -838,6 +842,8 @@ if ($result.Count -eq 0) {
   Write-Host "[write] FAIL: no country produced usable stories across $($codes.Count) attempted." -ForegroundColor Red
   if ($countriesEligibleForWriting -eq 0) {
     Write-Host '        No model call was made because no country met the candidate floor.' -ForegroundColor DarkGray
+  } elseif (@($skipped | Where-Object { $_ -match 'credit unavailable' }).Count) {
+    Write-Host '        Add OpenRouter credit at https://openrouter.ai/settings/credits and rerun the desk.' -ForegroundColor DarkYellow
   } else {
     Write-Host '        Check the model slug, the key, and the first SKIPPED reason above.' -ForegroundColor DarkGray
   }

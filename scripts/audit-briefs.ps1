@@ -75,13 +75,16 @@ if ($CheckLinks) {
     ForEach-Object { [string]$_.url } |
     Sort-Object -Unique)
   Write-Host "[audit] checking $($allUrls.Count) unique citation(s), throttle $LinkThrottle" -ForegroundColor DarkGray
-  if ($PSVersionTable.PSVersion.Major -ge 7 -and $LinkThrottle -gt 1) {
-    $checks = @($allUrls | ForEach-Object -Parallel {
+  if ($LinkThrottle -gt 1) {
+    $pool = [RunspaceFactory]::CreateRunspacePool(1, $LinkThrottle)
+    $pool.Open()
+    $pending = New-Object System.Collections.Generic.List[object]
+    $linkScript = {
+      param([string]$Url, [int]$TimeoutSec)
       $ProgressPreference = 'SilentlyContinue'
-      $url = [string]$_
       $status = 0
       try {
-        $response = Invoke-WebRequest -Uri $url -Method Get -TimeoutSec $using:LinkTimeoutSec -MaximumRedirection 5 `
+        $response = Invoke-WebRequest -Uri $Url -Method Get -TimeoutSec $TimeoutSec -MaximumRedirection 5 `
                       -UserAgent 'Mozilla/5.0 (compatible; ASJ-linkcheck/1.0)' -UseBasicParsing -ErrorAction Stop
         $status = [int]$response.StatusCode
       } catch {
@@ -89,9 +92,26 @@ if ($CheckLinks) {
           try { $status = [int]$_.Exception.Response.StatusCode } catch { $status = 0 }
         }
       }
-      [pscustomobject]@{ Url = $url; Status = $status }
-    } -ThrottleLimit $LinkThrottle)
-    foreach ($check in $checks) { $linkCache[[string]$check.Url] = [int]$check.Status }
+      [pscustomobject]@{ Url = $Url; Status = $status }
+    }
+    try {
+      foreach ($url in $allUrls) {
+        $pipeline = [PowerShell]::Create()
+        $pipeline.RunspacePool = $pool
+        [void]$pipeline.AddScript($linkScript.ToString()).AddArgument($url).AddArgument($LinkTimeoutSec)
+        $pending.Add([pscustomobject]@{ Pipeline = $pipeline; Handle = $pipeline.BeginInvoke() })
+      }
+      foreach ($job in $pending) {
+        try {
+          foreach ($check in @($job.Pipeline.EndInvoke($job.Handle))) {
+            $linkCache[[string]$check.Url] = [int]$check.Status
+          }
+        } finally { $job.Pipeline.Dispose() }
+      }
+    } finally {
+      $pool.Close()
+      $pool.Dispose()
+    }
   } else {
     foreach ($url in $allUrls) { $linkCache[$url] = Get-LinkStatus $url $LinkTimeoutSec }
   }
