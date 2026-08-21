@@ -143,7 +143,7 @@ try {
   if ($band.Mode -ne 'direct' -or $band.Min -ne 75) { throw 'agriculture did not enter the strong farmer band' }
   Write-Host 'PASS agricultural story enters strong farmer band'
 
-  $band = Get-LensRelevanceBand 'investors' 'Sport' 'The national football team begins its tournament on Saturday.'
+  $band = Get-LensRelevanceBand 'investors' 'Sport' 'Tournament regulations set the squad size while a player retains market value.'
   if ($band.Mode -ne 'none' -or $band.Max -ne 20) { throw 'sports story escaped the low investor band' }
   Write-Host 'PASS sports story stays in low investor band'
 

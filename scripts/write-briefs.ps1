@@ -40,7 +40,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v12-flash-compact-banded-lenses',
+  [string]$PromptVersion = 'story-v13-flash-precise-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -88,7 +88,7 @@ function Get-LensRelevanceBand([string]$Lens, [string]$Topic, [string]$StoryText
     return [pscustomobject]@{ Min = 0; Max = 20; Mode = 'none' }
   }
   if ($Lens -eq 'investors') {
-    $direct = $text -match '\b(invest|capital|bank|currency|exchange rate|interest rate|stock|bond|debt|trade|tariff|export|import|regulat|tax|budget|infrastructure|industry|industrial|enterprise|business|firm|market|energy|mining|telecom|technology)\w*'
+    $direct = $text -match '\b(invest|capital|bank|currency|exchange rate|interest rate|stock|bond|debt|trade|tariff|export|import|tax|budget|infrastructure|industry|industrial|enterprise|business|firm|energy|mining|telecom|technology)\w*'
     if ($direct) { return [pscustomobject]@{ Min = 65; Max = 100; Mode = 'direct' } }
     return [pscustomobject]@{ Min = 0; Max = 20; Mode = 'none' }
   }
@@ -149,6 +149,8 @@ Rules:
   and 81-100 only when that audience is central to the event. When there is no direct effect,
   say so plainly. Never invent an "if" scenario or a hypothetical link to force audience fit.
 - Attribute disputed claims. Carry units, direction and comparisons exactly as supplied.
+- When the source uses digits, keep them as digits in the same value and unit. Do not
+  spell a source digit out as a word or convert it to a different magnitude.
 - When the source writes a number or time in words, translate it into English words.
   Never convert a written number into digits that do not appear in the evidence.
 - Paraphrase. Do not copy a source sentence or use a quotation longer than 12 words.

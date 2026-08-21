@@ -24,7 +24,9 @@
 #>
 param(
   [switch]$CheckLinks,
-  [int]$Worst = 8
+  [int]$Worst = 8,
+  [int]$LinkTimeoutSec = 20,
+  [int]$LinkThrottle = 12
 )
 
 $ErrorActionPreference = 'Stop'
@@ -39,6 +41,19 @@ if (-not $m.Success) { Write-Host '[audit] cannot find byCountry block' -Foregro
 try { $byCountry = $m.Groups[1].Value | ConvertFrom-Json }
 catch { Write-Host "[audit] byCountry is not valid JSON: $($_.Exception.Message)" -ForegroundColor Red; exit 1 }
 
+function Get-LinkStatus([string]$Url, [int]$TimeoutSec) {
+  try {
+    $response = Invoke-WebRequest -Uri $Url -Method Get -TimeoutSec $TimeoutSec -MaximumRedirection 5 `
+                  -UserAgent 'Mozilla/5.0 (compatible; ASJ-linkcheck/1.0)' -UseBasicParsing -ErrorAction Stop
+    return [int]$response.StatusCode
+  } catch {
+    if ($_.Exception.Response) {
+      try { return [int]$_.Exception.Response.StatusCode } catch { }
+    }
+    return 0
+  }
+}
+
 # Filler openers a weak model reaches for when it has nothing specific to say.
 $fillerWhy = @(
   'this could affect', 'this may affect', 'this is important', 'it is important',
@@ -51,6 +66,36 @@ $seen     = @{}
 $linkCache = @{}
 $totalBriefs = 0
 $fullStories = 0
+
+if ($CheckLinks) {
+  $allUrls = @($byCountry.PSObject.Properties |
+    ForEach-Object { @($_.Value) } |
+    ForEach-Object { @($_.sources) } |
+    Where-Object { $_ -and ([string]$_.url) -match '^https?://' } |
+    ForEach-Object { [string]$_.url } |
+    Sort-Object -Unique)
+  Write-Host "[audit] checking $($allUrls.Count) unique citation(s), throttle $LinkThrottle" -ForegroundColor DarkGray
+  if ($PSVersionTable.PSVersion.Major -ge 7 -and $LinkThrottle -gt 1) {
+    $checks = @($allUrls | ForEach-Object -Parallel {
+      $ProgressPreference = 'SilentlyContinue'
+      $url = [string]$_
+      $status = 0
+      try {
+        $response = Invoke-WebRequest -Uri $url -Method Get -TimeoutSec $using:LinkTimeoutSec -MaximumRedirection 5 `
+                      -UserAgent 'Mozilla/5.0 (compatible; ASJ-linkcheck/1.0)' -UseBasicParsing -ErrorAction Stop
+        $status = [int]$response.StatusCode
+      } catch {
+        if ($_.Exception.Response) {
+          try { $status = [int]$_.Exception.Response.StatusCode } catch { $status = 0 }
+        }
+      }
+      [pscustomobject]@{ Url = $url; Status = $status }
+    } -ThrottleLimit $LinkThrottle)
+    foreach ($check in $checks) { $linkCache[[string]$check.Url] = [int]$check.Status }
+  } else {
+    foreach ($url in $allUrls) { $linkCache[$url] = Get-LinkStatus $url $LinkTimeoutSec }
+  }
+}
 
 foreach ($prop in $byCountry.PSObject.Properties) {
   $code = $prop.Name
@@ -70,22 +115,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
     foreach ($s in $srcs) {
       if ($s.url -notmatch '^https?://') { $critical.Add("$code : non-http source $($s.url)"); continue }
       if ($CheckLinks) {
-        if (-not $linkCache.ContainsKey($s.url)) {
-          try {
-            # -UseBasicParsing is required: without it PowerShell 5.1 hands the body to
-            # the Internet Explorer engine, which prompts on first use and throws in a
-            # non-interactive shell. Every URL then looks dead. HEAD is rejected by many
-            # news sites, so use GET with a declared agent.
-            $r = Invoke-WebRequest -Uri $s.url -Method Get -TimeoutSec 20 -MaximumRedirection 5 `
-                   -UserAgent 'Mozilla/5.0 (compatible; ASJ-linkcheck/1.0)' -UseBasicParsing -ErrorAction Stop
-            $linkCache[$s.url] = [int]$r.StatusCode
-          } catch {
-            $sc = 0
-            if ($_.Exception.Response) { try { $sc = [int]$_.Exception.Response.StatusCode } catch { $sc = 0 } }
-            $linkCache[$s.url] = $sc
-          }
-        }
-        $status = $linkCache[$s.url]
+        $status = if ($linkCache.ContainsKey([string]$s.url)) { $linkCache[[string]$s.url] } else { 0 }
         # Only 404/410 prove the page is not there - that is a fabricated citation.
         # 401/403 are live pages behind a paywall or bot wall. 0 means the request never
         # completed (DNS, TLS, timeout, egress block), which is indistinguishable from a
