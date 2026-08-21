@@ -46,7 +46,10 @@ param(
   [int]$PerCountry = 6,
   [double]$MinCandidateScore = 6.0,
   [int]$DelayMs = 150,
-  [int]$TimeoutSec = 20
+  [int]$TimeoutSec = 20,
+  [int]$ArticleTimeoutSec = 12,
+  [int]$MaxArticleEvidenceChars = 5200,
+  [switch]$SkipArticleEnrichment
 )
 
 $ErrorActionPreference = 'Stop'
@@ -137,6 +140,117 @@ function Clear-Html([string]$s) {
   return ($s -replace '\s+', ' ').Trim()
 }
 
+function Get-TextWordCount([string]$Text) {
+  if (-not $Text) { return 0 }
+  return ([regex]::Matches($Text, "[\p{L}\p{N}]+(?:[''-][\p{L}\p{N}]+)*")).Count
+}
+
+function Limit-EvidenceText([string]$Text, [int]$MaxChars) {
+  $clean = ($Text -replace '[ \t]+', ' ' -replace '(?:\r?\n){3,}', "`n`n").Trim()
+  if (-not $clean -or $clean.Length -le $MaxChars) { return $clean }
+  $cut = $clean.Substring(0, $MaxChars)
+  $lastBoundary = [Math]::Max($cut.LastIndexOf('. '), [Math]::Max($cut.LastIndexOf('? '), $cut.LastIndexOf('! ')))
+  if ($lastBoundary -ge [int]($MaxChars * 0.65)) { $cut = $cut.Substring(0, $lastBoundary + 1) }
+  return $cut.Trim()
+}
+
+function Find-JsonArticleBody($Node) {
+  if ($null -eq $Node -or $Node -is [string] -or $Node -is [ValueType]) { return '' }
+  if ($Node -is [array]) {
+    foreach ($item in $Node) {
+      $found = Find-JsonArticleBody $item
+      if ($found) { return $found }
+    }
+    return ''
+  }
+  $bodyProperty = $Node.PSObject.Properties['articleBody']
+  if ($bodyProperty -and $bodyProperty.Value) { return [string]$bodyProperty.Value }
+  foreach ($property in $Node.PSObject.Properties) {
+    if ($property.Name -eq 'articleBody') { continue }
+    $found = Find-JsonArticleBody $property.Value
+    if ($found) { return $found }
+  }
+  return ''
+}
+
+function Convert-ArticleHtmlToEvidence([string]$Html, [int]$MaxChars = 5200) {
+  if (-not $Html) { return '' }
+
+  # Prefer the publisher's structured articleBody when one is available.
+  foreach ($script in [regex]::Matches($Html, '(?is)<script\b[^>]*type\s*=\s*["'']application/ld\+json["''][^>]*>(.*?)</script>')) {
+    try {
+      $jsonText = [Net.WebUtility]::HtmlDecode($script.Groups[1].Value).Trim()
+      if ($jsonText.StartsWith('<!--')) { $jsonText = $jsonText -replace '^<!--\s*|\s*-->$', '' }
+      $json = $jsonText | ConvertFrom-Json
+      $articleBody = Clear-Html (Find-JsonArticleBody $json)
+      if ((Get-TextWordCount $articleBody) -ge 80) {
+        return Limit-EvidenceText $articleBody $MaxChars
+      }
+    } catch { }
+  }
+
+  # Most news CMSs expose the report in an article element. Choose the largest one,
+  # then retain paragraph/list text in document order and stop before related stories.
+  $scope = ''
+  foreach ($match in [regex]::Matches($Html, '(?is)<article\b[^>]*>(.*?)</article>')) {
+    if ($match.Groups[1].Value.Length -gt $scope.Length) { $scope = $match.Groups[1].Value }
+  }
+  if (-not $scope) {
+    foreach ($match in [regex]::Matches($Html, '(?is)<main\b[^>]*>(.*?)</main>')) {
+      if ($match.Groups[1].Value.Length -gt $scope.Length) { $scope = $match.Groups[1].Value }
+    }
+  }
+  if (-not $scope) { return '' }
+  $scope = [regex]::Replace($scope, '(?is)<(?<tag>script|style|noscript|svg|form|button|nav|footer|aside)\b[^>]*>.*?</\k<tag>>', ' ')
+
+  $segments = New-Object System.Collections.Generic.List[string]
+  $seen = @{}
+  $totalChars = 0
+  $relatedPattern = '(?i)^(?:[^\p{L}\p{N}]{0,8})?(?:(?:a|\u00e0)\s+)?lire\s+aussi\b|^(?:[^\p{L}\p{N}]{0,8})?(?:read|see)\s+(?:also|more)\b|^related\b'
+  $authorPattern = '(?i)\bis (?:a|an) (?:journalist|reporter)\b|\bjournaliste (?:au sein|de la redaction)\b|^about the author\b'
+  foreach ($match in [regex]::Matches($scope, '(?is)<(?<tag>p|li)\b[^>]*>(?<body>.*?)</\k<tag>>')) {
+    $text = Clear-Html $match.Groups['body'].Value
+    if (-not $text) { continue }
+    if ($text -match $relatedPattern) {
+      if ($segments.Count -ge 2) { break }
+      continue
+    }
+    if ($text -match $authorPattern) {
+      if ($segments.Count -ge 2) { break }
+      continue
+    }
+    if ($text.Length -lt 40 -or (Get-TextWordCount $text) -lt 7) { continue }
+    $key = $text.ToLowerInvariant()
+    if ($seen.ContainsKey($key)) { continue }
+    $seen[$key] = $true
+    if ($totalChars + $text.Length -gt $MaxChars -and $segments.Count -ge 3) { break }
+    $segments.Add($text)
+    $totalChars += $text.Length
+    if ($segments.Count -ge 8 -or $totalChars -ge $MaxChars) { break }
+  }
+  if ($segments.Count -lt 2) { return '' }
+  return Limit-EvidenceText ($segments.ToArray() -join "`n`n") $MaxChars
+}
+
+function Get-ArticleEvidence([string]$Url) {
+  $req = [Net.HttpWebRequest]::Create($Url)
+  $req.UserAgent = $UA
+  $req.Timeout = $ArticleTimeoutSec * 1000
+  $req.ReadWriteTimeout = $ArticleTimeoutSec * 1000
+  $req.AllowAutoRedirect = $true
+  $req.Accept = 'text/html,application/xhtml+xml'
+  $resp = $req.GetResponse()
+  try {
+    $encoding = [Text.Encoding]::UTF8
+    if ($resp.CharacterSet) {
+      try { $encoding = [Text.Encoding]::GetEncoding($resp.CharacterSet) } catch { }
+    }
+    $reader = New-Object IO.StreamReader($resp.GetResponseStream(), $encoding)
+    $html = $reader.ReadToEnd()
+    return Convert-ArticleHtmlToEvidence $html $MaxArticleEvidenceChars
+  } finally { $resp.Close() }
+}
+
 function Get-Url([string]$url) {
   $req = [Net.HttpWebRequest]::Create($url)
   $req.UserAgent = $UA
@@ -207,15 +321,16 @@ function Read-Feed([string]$url) {
     if ($link -match '[<>"\s]') { continue }
 
     # Many publishers expose both a short teaser and richer content:encoded text.
-    # Choose the strongest evidence already inside the feed instead of fetching every
-    # article page, then cap it so six-candidate prompts stay predictable and cheap.
+    # Choose the strongest evidence already inside the feed. Rich content:encoded text
+    # can save an article-page request; the final selected assignments are enriched below
+    # when this feed evidence is still too thin for an original on-site story.
     $summary = @(
       (Clear-Html (Get-NodeText $n.description)),
       (Clear-Html (Get-NodeText $n.summary)),
       (Clear-Html (Get-NodeText $n.encoded))
     ) | Where-Object { $_ } | Sort-Object -Property Length -Descending | Select-Object -First 1
     $summary = [string]$summary
-    if ($summary.Length -gt 600) { $summary = $summary.Substring(0, 600) }
+    if ($summary.Length -gt 3200) { $summary = Limit-EvidenceText $summary 3200 }
 
     $when = Get-NodeText $n.pubDate
     if (-not $when) { $when = Get-NodeText $n.published }
@@ -242,6 +357,10 @@ $now    = (Get-Date).ToUniversalTime()
 $result = [ordered]@{}
 $totalItems = 0
 $deadFeeds  = New-Object System.Collections.Generic.List[string]
+$articleCache = @{}
+$articlePagesAttempted = 0
+$articlePagesEnriched = 0
+$articlePagesFailed = 0
 
 foreach ($code in $codes) {
   $entry = $registry.$code
@@ -407,6 +526,35 @@ foreach ($code in $codes) {
   # without relaxing event uniqueness.
   $eligible = @($scored.ToArray() | Where-Object { $_.score -ge $MinCandidateScore })
   $selected = @(Select-NewsCandidates $eligible $PerCountry $liveSources)
+
+  # Ranking stays cheap and feed-based. Fetch fuller article text only for the finalists,
+  # and only when the feed did not already provide enough evidence to write from safely.
+  foreach ($candidate in $selected) {
+    $articleEvidence = ''
+    $feedWords = Get-TextWordCount ([string]$candidate.summary)
+    if (-not $SkipArticleEnrichment -and $feedWords -lt 180 -and $candidate.url -match '^https?://') {
+      $urlKey = [string]$candidate.url
+      if ($articleCache.ContainsKey($urlKey)) {
+        $articleEvidence = [string]$articleCache[$urlKey]
+      } else {
+        $articlePagesAttempted++
+        try {
+          $articleEvidence = [string](Get-ArticleEvidence $urlKey)
+          $articleCache[$urlKey] = $articleEvidence
+          if (-not $articleEvidence) { $articlePagesFailed++ }
+        } catch {
+          $articleCache[$urlKey] = ''
+          $articlePagesFailed++
+        }
+        Start-Sleep -Milliseconds ([Math]::Min(100, $DelayMs))
+      }
+    }
+    $articleWords = Get-TextWordCount $articleEvidence
+    if ($articleWords -lt 70 -or $articleWords -lt $feedWords) { $articleEvidence = '' }
+    if ($articleEvidence) { $articlePagesEnriched++ }
+    $candidate | Add-Member -NotePropertyName articleEvidence -NotePropertyValue $articleEvidence -Force
+  }
+
   $ranked = @($selected | ForEach-Object {
     [pscustomobject][ordered]@{
       title             = $_.title
@@ -428,6 +576,7 @@ foreach ($code in $codes) {
       countryMatch      = $_.countryMatch
       eventKey          = $_.eventKey
       itemId            = $_.itemId
+      articleEvidence   = $_.articleEvidence
     }
   })
 
@@ -464,6 +613,9 @@ $payload = [ordered]@{
 
 Write-Host ''
 Write-Host "[fetch] $totalItems stories across $($result.Count) countries -> data/feed-items.json" -ForegroundColor Green
+if (-not $SkipArticleEnrichment) {
+  Write-Host "[fetch] article evidence: $articlePagesEnriched assignment(s) enriched, $articlePagesFailed fetch fallback(s), $articlePagesAttempted page request(s)" -ForegroundColor DarkGray
+}
 if ($deadFeeds.Count) {
   Write-Host "[fetch] $($deadFeeds.Count) feed(s) failed this run: $(($deadFeeds | Select-Object -First 10) -join ', ')" -ForegroundColor DarkYellow
   Write-Host '[fetch] run scripts/check-sources.ps1 -Fix if that list keeps growing.' -ForegroundColor DarkGray

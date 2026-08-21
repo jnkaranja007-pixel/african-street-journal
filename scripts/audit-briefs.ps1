@@ -108,7 +108,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
       $wordCount = ([regex]::Matches(($paragraphs -join ' '), "[\p{L}\p{N}]+(?:[''-][\p{L}\p{N}]+)*")).Count
       if (-not $b.dek) { $penalty += 2; $notes.Add('story missing dek') }
       if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) { $penalty += 3; $notes.Add('story outside 3-6 paragraphs') }
-      if ($wordCount -lt 110 -or $wordCount -gt 280) { $penalty += 3; $notes.Add("story outside 110-280 words ($wordCount)") }
+      if ($wordCount -lt 70 -or $wordCount -gt 220) { $penalty += 3; $notes.Add("story outside 70-220 words ($wordCount)") }
       if (-not $b.articleId -or -not $b.published) { $penalty += 2; $notes.Add('story metadata incomplete') }
       if ($null -eq $b.PSObject.Properties['editorialScore']) { $penalty += 2; $notes.Add('assignment score missing') }
       elseif ([double]$b.editorialScore -lt 6.0) { $penalty += 3; $notes.Add('assignment score below 6.0') }

@@ -63,6 +63,7 @@ jobs:
         run: |
           ./scripts/test-news-ranking.ps1
           ./scripts/test-story-contract.ps1
+          ./scripts/test-article-evidence.ps1
 
       - name: Published payload validates
         shell: pwsh

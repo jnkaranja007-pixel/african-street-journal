@@ -66,6 +66,7 @@ To run the desk from your own machine (gather is free; writing needs an OpenRout
 powershell -File scripts/fetch-news.ps1 -Only ng,ke,za
 powershell -File scripts/test-news-ranking.ps1
 powershell -File scripts/test-story-contract.ps1
+powershell -File scripts/test-article-evidence.ps1
 $env:OPENROUTER_API_KEY = 'sk-or-v1-...'
 powershell -File scripts/write-briefs.ps1 -Only ng,ke,za -OutFile data/auto-briefs.json
 powershell -File scripts/add-briefs.ps1 -InFile data/auto-briefs.json

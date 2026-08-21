@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers')) {
+foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -30,6 +30,7 @@ foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-Ungro
   $groundingDefinitions.Add($definition.Extent.Text)
 }
 Invoke-Expression ($groundingDefinitions.ToArray() -join "`n")
+$STORY_LENSES = @('farmers','investors','diaspora')
 
 function Write-Fixture([int]$ParagraphCount, [switch]$BadLens, [switch]$ShortStory) {
   $allParagraphs = @(
@@ -129,6 +130,25 @@ try {
   if ($missing.Count) { throw 'Arabic-Indic figure was rejected' }
   Write-Host 'PASS Arabic-Indic figure is grounded'
 
+  $lensFixture = [pscustomobject]@{ lenses = [pscustomobject]@{
+    farmers = [pscustomobject]@{ score = 55; why = 'Farmers could be indirectly affected if the network traded agricultural goods.' }
+    investors = [pscustomobject]@{ score = 70; why = 'The report names a direct change to company licensing and capital requirements.' }
+    diaspora = [pscustomobject]@{ score = 10; why = 'The report establishes no direct effect on diaspora travel, families or money.' }
+  } }
+  $lensIssues = @(Get-LensGroundingIssues $lensFixture)
+  if ($lensIssues -notcontains 'farmers uses a hypothetical link') { throw 'hypothetical audience link was accepted' }
+  Write-Host 'PASS hypothetical audience link is rejected'
+
+  $lensFixture.lenses.farmers = [pscustomobject]@{ score = 60; why = 'The report establishes no direct effect on farmers or agricultural markets.' }
+  $lensIssues = @(Get-LensGroundingIssues $lensFixture)
+  if ($lensIssues -notcontains 'farmers score conflicts with no direct impact') { throw 'no-impact score conflict was accepted' }
+  Write-Host 'PASS no-impact score conflict is rejected'
+
+  $lensFixture.lenses.farmers = [pscustomobject]@{ score = 12; why = 'The report establishes no direct effect on farmers or agricultural markets.' }
+  $lensIssues = @(Get-LensGroundingIssues $lensFixture)
+  if ($lensIssues.Count) { throw "grounded lens package was rejected: $($lensIssues -join '; ')" }
+  Write-Host 'PASS grounded lens package is accepted'
+
   $thinFeed = [ordered]@{
     fetched = '2026-08-20T09:00:00Z'
     byCountry = @{ xx = @{ country = 'Fixtureland'; items = @(1..4 | ForEach-Object { @{ title = "Candidate $_"; url = "https://example.com/$_" } }) } }
@@ -148,5 +168,5 @@ try {
   }
 }
 
-Write-Host '[story-contract] OK - 12 checks'
+Write-Host '[story-contract] OK - 15 checks'
 exit 0
