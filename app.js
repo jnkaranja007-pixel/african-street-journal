@@ -3346,8 +3346,9 @@ canvas.addEventListener('touchstart', (e) => {
 (function(){
   const TOPICS = ['All','Politics','Business','Sport','Tech','Climate','Agriculture','Culture','Health','Education','News'];
   const view = document.getElementById('wire-view');
-  const entry = document.getElementById('wire-entry');
-  const entryCount = document.getElementById('wire-entry-count');
+  const entries = Array.from(document.querySelectorAll('#wire-entry,[data-wire-entry]'));
+  const entry = entries[0] || null;
+  const entryCounts = Array.from(document.querySelectorAll('.wire-entry-count'));
   const closeBtn = document.getElementById('wire-close');
   const searchInput = document.getElementById('wire-search-input');
   const topicsEl = document.getElementById('wire-topics');
@@ -3363,7 +3364,7 @@ canvas.addEventListener('touchstart', (e) => {
   const compareSummary = document.getElementById('wire-compare-summary');
   const comparePanel = document.getElementById('wire-compare-panel');
   const compareSelects = ['wire-compare-a','wire-compare-b','wire-compare-c'].map(id => document.getElementById(id)).filter(Boolean);
-  if (!view || !entry) return;
+  if (!view || !entries.length) return;
   let activeTopic = 'All', query = '', wireLastFocus = null, INDEX = [], previousSnapshot = null, compareOpen = false, mobileActionsOpen = false;
   let editionDate = null, editionBriefs = null;
   const editionCache = {};
@@ -3715,7 +3716,7 @@ canvas.addEventListener('touchstart', (e) => {
     loader.onerror = () => { editionSel.value = editionDate || ''; };
     document.head.appendChild(loader);
   });
-  entry.addEventListener('click', ()=>openWire('All'));
+  entries.forEach(button => button.addEventListener('click', () => openWire('All')));
   closeBtn.addEventListener('click', closeWire);
   mobileActionsToggle?.addEventListener('click', () => setMobileActionsOpen(!mobileActionsOpen));
   compareToggle?.addEventListener('click', () => setCompareOpen(!compareOpen));
@@ -3753,7 +3754,7 @@ canvas.addEventListener('touchstart', (e) => {
   searchInput.addEventListener('input', ()=>{ query = searchInput.value; renderResults(); resultsEl.scrollTop = 0; });
   document.addEventListener('keydown', e=>{ if (e.key==='Escape' && view.classList.contains('open')) closeWire(); });
   const n = Object.values(AI_BRIEFS||{}).reduce((a,arr)=>a+arr.length,0);
-  if (entryCount) entryCount.textContent = n ? (n+' stories') : 'The Wire';
+  entryCounts.forEach(el => { el.textContent = n ? (n+' stories') : 'The Wire'; });
 })();
 
 /* ── Lazy country data: detail outline + GIS load per country, on demand ──
@@ -4317,9 +4318,12 @@ async function runSelfTest() {
     add('landing masthead renders', true, 'skipped - tab hidden');
   } else if (mobileLanding) {
     const stageHidden = getComputedStyle(document.querySelector('.stage')).display === 'none';
-    const continentLabel = document.querySelector('.wire-entry-label')?.textContent || '';
-    const continentCount = document.querySelector('.wire-entry-count')?.textContent || '';
-    add('landing masthead renders', stageHidden && /Continent/.test(continentLabel) && /\d+ stories/.test(continentCount), continentLabel + ' · ' + continentCount);
+    const mobileEntry = document.querySelector('.mobile-wire-entry');
+    const entryRect = mobileEntry?.getBoundingClientRect();
+    const entryVisible = !!entryRect?.width && !!entryRect?.height && getComputedStyle(mobileEntry).display !== 'none';
+    const continentLabel = mobileEntry?.querySelector('.wire-entry-label')?.textContent || '';
+    const continentCount = mobileEntry?.querySelector('.wire-entry-count')?.textContent || '';
+    add('landing masthead renders', stageHidden && entryVisible && /Continent/.test(continentLabel) && /\d+ stories/.test(continentCount), continentLabel + ' · ' + continentCount);
   } else {
     add('landing masthead renders', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
   }
