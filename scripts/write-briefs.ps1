@@ -39,7 +39,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v4-structured-lenses',
+  [string]$PromptVersion = 'story-v5-isolated-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -112,15 +112,16 @@ Rules:
 - Paraphrase. Do not copy a source sentence or use a quotation longer than 12 words.
 - Neutral. Report what happened and attribute claims. No opinion, no loaded
   adjectives, no speculation, no calls to action.
-- Do not pad thin evidence. Omit an assignment rather than repeat a fact or invent
-  context. The reserve item may replace one assignment that cannot support a story.
+- Do not pad thin evidence, repeat a fact to fake length or invent context. Use the
+  supplied actor, action, attribution, scale and affected people efficiently.
 - Items arrive in whatever language the outlet publishes in: English, French,
   Portuguese, Spanish, Arabic or another local language. Write in English and translate
   faithfully. Keep place and person names in the form English readers recognise.
 
 Hard limit: use ONLY facts present in that assignment's evidence packet. Never add a
 figure, name, quote, date, cause, reaction or historical claim from outside it. Do not
-mix facts between assignments. If the evidence cannot support 70 useful words, omit it.
+mix facts between assignments. If evidence is thin, stay concise and concrete; never
+invent context or repeat a claim simply to reach the word target.
 '@
 
 function Get-JsonBlock([string]$text) {
@@ -204,7 +205,7 @@ if (-not $NoCache -and (Test-Path $cachePath)) {
   }
 }
 
-function Invoke-OpenRouter([string]$prompt) {
+function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1) {
   if (-not $apiKey) {
     throw 'OPENROUTER_API_KEY is not set (local: $env:OPENROUTER_API_KEY; CI: gh secret set OPENROUTER_API_KEY)'
   }
@@ -258,7 +259,7 @@ function Invoke-OpenRouter([string]$prompt) {
         schema = [ordered]@{
           type = 'object'
           properties = [ordered]@{
-            stories = @{ type = 'array'; minItems = $MinBriefs; maxItems = $MaxBriefs; items = $storySchema }
+            stories = @{ type = 'array'; minItems = $ExpectedStories; maxItems = $ExpectedStories; items = $storySchema }
           }
           required = @('stories')
           additionalProperties = $false
@@ -311,6 +312,28 @@ function Invoke-OpenRouter([string]$prompt) {
   }
 }
 
+function Get-EvidencePacket($Item, [int]$Index) {
+  $lines = New-Object System.Text.StringBuilder
+  [void]$lines.AppendLine("[$Index] ASSIGNED - $($Item.title)")
+  [void]$lines.AppendLine("    outlet: $($Item.source)")
+  if ($Item.published) { [void]$lines.AppendLine("    published: $($Item.published)") }
+  if ($Item.editorialScore) {
+    [void]$lines.AppendLine("    desk meter: $($Item.editorialScore)/$($Item.confidence); topic hint: $($Item.topicHint)")
+  }
+  if ($Item.rankReasons) { [void]$lines.AppendLine("    assignment reasons: $(@($Item.rankReasons) -join '; ')") }
+  if ($Item.summary) { [void]$lines.AppendLine("    primary evidence: $($Item.summary)") }
+  if ($Item.corroboration -gt 1) {
+    $names = @(@($Item.alsoSources) | ForEach-Object { [string]$_.name } | Where-Object { $_ })
+    $also = if ($names.Count) { " (also in $($names -join ', '))" } else { '' }
+    [void]$lines.AppendLine("    corroborated by $($Item.corroboration) outlets$also")
+  }
+  foreach ($other in @($Item.alsoSources)) {
+    if ($other.title) { [void]$lines.AppendLine("    additional source title: $($other.title)") }
+    if ($other.summary) { [void]$lines.AppendLine("    additional evidence: $($other.summary)") }
+  }
+  return $lines.ToString()
+}
+
 $result  = [ordered]@{}
 $stories = 0
 $skipped = New-Object System.Collections.Generic.List[string]
@@ -337,81 +360,55 @@ foreach ($code in $codes) {
   $countriesEligibleForWriting++
 
   $name = [string]$entry.country
-  # The meter has already done the assigning. The first five are assignments; a sixth
-  # is reserve evidence if one assignment is too thin to support an on-site story.
+  # The meter has already done the assigning. Keep the sixth candidate at the ranking
+  # boundary, but isolate each of the first five evidence packets in its own model call.
+  # That makes cross-story fact leakage impossible and lets unchanged assignments hit cache.
   $n    = [Math]::Min($MaxBriefs, [Math]::Max(1, $items.Count))
-
-  $lines = New-Object System.Text.StringBuilder
-  for ($i = 0; $i -lt $items.Count; $i++) {
+  $briefList = New-Object System.Collections.Generic.List[object]
+  $storyCacheKeys = @{}
+  $lastErr = ''
+  for ($i = 0; $i -lt $n; $i++) {
     $it = $items[$i]
-    $slot = if ($i -lt $n) { 'ASSIGNED' } else { 'RESERVE' }
-    [void]$lines.AppendLine("[$i] $slot - $($it.title)")
-    [void]$lines.AppendLine("    outlet: $($it.source)")
-    if ($it.published) { [void]$lines.AppendLine("    published: $($it.published)") }
-    if ($it.editorialScore) {
-      [void]$lines.AppendLine("    desk meter: $($it.editorialScore)/$($it.confidence); topic hint: $($it.topicHint)")
+    $itemKey = if ($it.itemId) { [string]$it.itemId } else {
+      Get-TextHash (([string]$it.url) + "`n" + ([string]$it.title) + "`n" + ([string]$it.summary))
     }
-    if ($it.rankReasons) { [void]$lines.AppendLine("    assignment reasons: $(@($it.rankReasons) -join '; ')") }
-    # The lede is the only place a real figure comes from. Without it the model can
-    # honour the no-invention rule only by writing an empty story.
-    if ($it.summary) { [void]$lines.AppendLine("    primary evidence: $($it.summary)") }
-    # Corroboration tells the model which stories the country's press treated as the
-    # day's real news, so the lead brief is not whichever item happened to be first.
-    if ($it.corroboration -gt 1) {
-      $names = @(@($it.alsoSources) | ForEach-Object { [string]$_.name } | Where-Object { $_ })
-      $also = if ($names.Count) { " (also in $($names -join ', '))" } else { '' }
-      [void]$lines.AppendLine("    corroborated by $($it.corroboration) outlets$also")
+    $storyCacheKey = Get-TextHash (($PromptVersion, $Model, (Get-TextHash $STYLE), $code, $i, `
+                                    $MinStoryWords, $MaxStoryWords, $itemKey) -join "`n")
+    $storyCacheKeys[[string]$i] = $storyCacheKey
+    $oneBrief = $null
+    if (-not $NoCache -and $storyCache.ContainsKey($storyCacheKey)) {
+      $cachedStories = @($storyCache[$storyCacheKey].stories)
+      if ($cachedStories.Count) {
+        $oneBrief = $cachedStories[0]
+        $cacheHits++
+        Write-Host ("      {0}#{1}: story cache hit" -f $code, $i) -ForegroundColor DarkGray
+      }
     }
-    foreach ($other in @($it.alsoSources)) {
-      if ($other.title) { [void]$lines.AppendLine("    additional source title: $($other.title)") }
-      if ($other.summary) { [void]$lines.AppendLine("    additional evidence: $($other.summary)") }
-    }
-    [void]$lines.AppendLine('')
-  }
 
-  $prompt = @"
+    if (-not $oneBrief) {
+      $packet = Get-EvidencePacket $it $i
+      $prompt = @"
 Country: $name
 
-Today's ranked assignments. The number in brackets is the item index.
+Today's ranked assignment. This packet contains the ONLY facts allowed in the story.
 
-$($lines.ToString())
-Write one story for each ASSIGNED item. Use the RESERVE only to replace an assigned
-item whose evidence cannot support $MinStoryWords useful words. Return at most $n
-stories, ordered by their original desk rank.
+$packet
+Write exactly one original on-site story from this assignment. Do not import a name,
+number, date, cause or context from any other event. Return ONLY a JSON object in this shape:
 
-Return ONLY a JSON object, no prose before or after, in exactly this shape:
+{"stories":[{"item":$i,"topic":"Business","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":120,"why":"...","lenses":{"farmers":{"score":60,"why":"..."},"investors":{"score":90,"why":"..."},"diaspora":{"score":45,"why":"..."}}}]}
 
-{"stories":[{"item":0,"topic":"Business","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":120,"why":"...","lenses":{"farmers":{"score":60,"why":"..."},"investors":{"score":90,"why":"..."},"diaspora":{"score":45,"why":"..."}}}]}
-
-- "item" is the index of the item the brief is based on. It must be one of the
-  indexes listed above.
+- "item" must be exactly $i.
 - "topic" must be exactly one of: $($VALID_TOPICS -join ', ').
-- "wordCount" is the number of words across the three paragraph strings. Count it;
-  do not estimate it from the headline, dek, why lines or lens notes.
-- Every story must include all three lens objects. Each score must be a whole number
-  from 0 to 100, and each lens "why" must be one specific evidence-grounded sentence.
-- Do not include any URL. Sources are attached automatically from the item.
-- Do not combine two item indexes into one story.
+- "wordCount" counts only the three paragraph strings and must be $MinStoryWords-$MaxStoryWords.
+- Include all three lens objects. Each score is a whole number from 0 to 100 and each
+  lens "why" is one specific sentence grounded only in this packet.
+- Do not include a URL. The source is attached automatically.
 "@
 
-  $briefs = $null
-  $lastErr = ''
-  $itemKeys = @($items | ForEach-Object {
-    if ($_.itemId) { [string]$_.itemId } else { Get-TextHash (([string]$_.url) + "`n" + ([string]$_.title) + "`n" + ([string]$_.summary)) }
-  })
-  $cacheKey = Get-TextHash (($PromptVersion, $Model, (Get-TextHash $STYLE), $code, $MaxBriefs, $MinBriefs, `
-                            $MinStoryWords, $MaxStoryWords, ($itemKeys -join ',')) -join "`n")
-  $fromCache = $false
-  if (-not $NoCache -and $storyCache.ContainsKey($cacheKey)) {
-    $briefs = @($storyCache[$cacheKey].stories)
-    $fromCache = ($briefs.Count -gt 0)
-    if ($fromCache) { $cacheHits++; Write-Host ("      {0}: story cache hit" -f $code) -ForegroundColor DarkGray }
-  }
-
-  if (-not $fromCache) {
     for ($attempt = 1; $attempt -le ($Retries + 1); $attempt++) {
       try {
-        $response = Invoke-OpenRouter $prompt
+        $response = Invoke-OpenRouter $prompt 1
         $apiCalls++
         $usagePrompt += $response.PromptTokens
         $usageCompletion += $response.CompletionTokens
@@ -420,8 +417,9 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
         $blk = Get-JsonBlock $response.Content
         if (-not $blk) { $lastErr = 'no JSON object in response'; continue }
         $parsed = $blk | ConvertFrom-Json
-        $briefs = Get-BriefArray $parsed
-        if (-not $briefs) { $lastErr = 'no story array in response'; $briefs = $null; continue }
+        $returned = @(Get-BriefArray $parsed)
+        if ($returned.Count -ne 1) { $lastErr = "expected one story, received $($returned.Count)"; continue }
+        $oneBrief = $returned[0]
         break
       } catch {
         $lastErr = $_.Exception.Message.Split("`n")[0]
@@ -432,7 +430,13 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
         else { Start-Sleep -Milliseconds (500 * $attempt) }
       }
     }
+    }
+    if (-not $oneBrief) { break }
+    $briefList.Add($oneBrief)
+    Start-Sleep -Milliseconds $DelayMs
   }
+
+  $briefs = if ($briefList.Count -eq $n) { $briefList.ToArray() } else { $null }
 
   if (-not $briefs) {
     Write-Host ("  {0}  {1,-30} SKIPPED: {2}" -f $code, $name, $lastErr) -ForegroundColor Red
@@ -599,12 +603,20 @@ Return ONLY a JSON object, no prose before or after, in exactly this shape:
     continue
   }
 
-  if (-not $NoCache -and -not $fromCache) {
-    $storyCache[$cacheKey] = [ordered]@{
-      generated = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
-      model = $Model
-      promptVersion = $PromptVersion
-      stories = @($briefs)
+  if (-not $NoCache) {
+    foreach ($brief in @($briefs)) {
+      $briefIndex = -1
+      if ($null -ne $brief.item -and [int]::TryParse([string]$brief.item, [ref]$briefIndex)) {
+        $briefCacheKey = $storyCacheKeys[[string]$briefIndex]
+        if ($briefCacheKey) {
+          $storyCache[$briefCacheKey] = [ordered]@{
+            generated = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+            model = $Model
+            promptVersion = $PromptVersion
+            stories = @($brief)
+          }
+        }
+      }
     }
   }
 
