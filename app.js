@@ -4310,23 +4310,13 @@ async function runSelfTest() {
   add('core: 55 landing countries', (D.countries || []).length === 55, (D.countries || []).length);
   const landingMapRect = canvas.getBoundingClientRect();
   const landingMapRatio = landingMapRect.height ? landingMapRect.width / landingMapRect.height : 0;
-  const mobileLanding = window.matchMedia('(max-width: 640px)').matches;
   // A background tab never lays the canvas out (rAF is paused), which would report a bogus 0x0.
   // Skip rather than cry wolf: a check that fails for environmental reasons trains you to
   // ignore real failures.
   if (!landingMapRect.width && document.hidden) {
-    add('landing masthead renders', true, 'skipped - tab hidden');
-  } else if (mobileLanding) {
-    const stageVisible = getComputedStyle(document.querySelector('.stage')).display !== 'none' && landingMapRect.width > 0 && landingMapRect.height > 0;
-    const mobileEntry = document.querySelector('.mobile-wire-entry');
-    const entryRect = mobileEntry?.getBoundingClientRect();
-    const entryVisible = !!entryRect?.width && !!entryRect?.height && getComputedStyle(mobileEntry).display !== 'none';
-    const continentLabel = mobileEntry?.querySelector('.wire-entry-label')?.textContent || '';
-    const continentCount = mobileEntry?.querySelector('.wire-entry-count')?.textContent || '';
-    const mapRatioOk = Math.abs(landingMapRatio - (1000 / 1001)) < 0.02;
-    add('landing masthead renders', stageVisible && mapRatioOk && entryVisible && /Continent/.test(continentLabel) && /\d+ stories/.test(continentCount), continentLabel + ' · ' + continentCount + ' · ' + landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
+    add('landing map keeps native aspect', true, 'skipped - tab hidden');
   } else {
-    add('landing masthead renders', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
+    add('landing map keeps native aspect', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
   }
   add('country nav alphabetized', sortedCountryIds[0] === 'dz' && sortedCountryIds[1] === 'ao', sortedCountryIds.slice(0, 5).join(','));
   add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);

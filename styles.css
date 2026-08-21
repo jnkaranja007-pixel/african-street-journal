@@ -49,7 +49,7 @@ canvas{width:100%;height:100%;display:block}
 #tooltip{position:absolute;pointer-events:none;padding:7px 14px;background:rgba(0,0,0,0.88);color:#fff;border-radius:4px;font:600 13px/1.2 var(--sans);white-space:nowrap;opacity:0;transform:translate(-50%,-140%);transition:opacity 100ms;z-index:2;border:1px solid rgba(76,175,80,0.3)}
 #tooltip.show{opacity:1}
 
-.ticker-wrap{width:100vw;max-width:none;overflow:hidden;margin:2px 0;border-block:1px solid rgba(232,230,227,.08);background:rgba(0,0,0,.12)}
+.ticker-wrap{width:100vw;max-width:none;overflow:hidden;margin:2px 0;border-block:1px solid rgba(232,230,227,.08);background:rgba(0,0,0,.12);flex-shrink:0;min-height:47px}
 .ticker{display:flex;gap:0;align-items:center;animation:scroll 150s linear infinite;width:max-content}
 .ticker-segment{display:flex;align-items:center;flex:0 0 auto}
 .ticker:focus-within{animation-play-state:paused}
@@ -72,7 +72,6 @@ canvas{width:100%;height:100%;display:block}
 .sub-rule{width:100%;max-width:1400px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;flex-shrink:0}
 .sub-rule .tagline-footer{grid-column:2;margin-top:clamp(5px,.8svh,9px)}
 .sub-rule .wire-entry{grid-column:3;justify-self:end}
-.mobile-front-actions{display:none}
 
 #country-view{display:none;position:fixed;inset:0;background:var(--bg);z-index:10;flex-direction:column;overflow:hidden}
 #country-view.open{display:flex;animation:cv-enter 320ms ease both}
@@ -758,25 +757,17 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .audience-mode[data-mode="investors"] .cv-econ-val{font-size:20px;overflow:visible;text-overflow:clip}
 }
 @media (max-width:640px){
-  main{padding-top:0}
-  .masthead,.masthead+.rule{display:none}
-  .sub-rule{display:none}
-  .landing-core{flex:0 0 auto;justify-content:flex-start;padding:clamp(36px,6svh,54px) 0 10px}
-  .title-block{padding:0 18px}
-  .title-block h1{font-size:clamp(34px,9.8vw,46px);line-height:1.02}
-  .title-block h1 em{font-size:.48em;margin-bottom:4px}
+  main{padding-top:8px}
+  .masthead{display:flex;padding:9px 18px 2px;justify-content:center;gap:0}
+  .masthead>span{display:none}
+  .masthead-kicker{display:flex;width:100%;align-items:center;justify-content:center;gap:14px;font-size:10px;letter-spacing:.14em}
+  .masthead-kicker span:first-child,.masthead-kicker span:last-child{justify-self:auto}
+  .rule{margin-top:8px}
+  .title-block{padding:18px 18px 6px}
+  .title-block h1{font-size:clamp(32px,9vw,48px);line-height:1.03}
   .title-block h1 .g{display:inline-block}
-  .mobile-front-actions{display:grid;width:min(335px,100%);margin:16px auto 0}
-  .mobile-wire-entry{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:12px;min-height:50px;padding:0 14px;border:1px solid rgba(76,175,80,.35);border-inline:0;background:rgba(76,175,80,.035);color:var(--green-bright);font:800 10px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
-  .mobile-wire-entry:focus-visible{outline:2px solid var(--green-bright);outline-offset:3px}
-  .mobile-wire-entry .wire-entry-label{justify-self:start}
-  .mobile-wire-entry .wire-entry-count{padding-left:12px;border-left:1px solid rgba(232,230,227,.14);color:var(--text-muted);letter-spacing:.1em;white-space:nowrap}
-  .mobile-wire-entry .wire-entry-icon{width:18px;height:18px;display:grid;place-items:center}
-  .mobile-wire-entry svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
-  .tagline,.pop-counter{display:none}
-  .stage{display:block;width:min(86vw,calc(100svh - 390px),390px);margin:22px auto 8px}
-  .rule--bottom{display:none}
-  .ticker-wrap{margin:0;border-top:1px solid rgba(232,230,227,.09);border-bottom:1px solid rgba(232,230,227,.09)}
+  .pop-counter{display:none}
+  .stage{width:min(96vw,calc(100svh - 300px),480px)}
   .your-desk{grid-template-columns:minmax(0,1fr);align-items:stretch;gap:7px;width:calc(100% - 28px);margin-left:14px;padding:5px 0}
   .your-desk.is-collapsed{width:auto;margin-left:14px;padding:4px 0}
   .your-desk .yd-head{min-width:0;width:100%;justify-content:space-between}
@@ -794,7 +785,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 }
 @media (max-width:640px) and (max-height:760px){
   .title-block{padding-top:10px}
-  .stage{width:min(78vw,calc(100svh - 380px))}
+  .stage{width:min(94vw,calc(100svh - 300px))}
 }
 @media (prefers-reduced-motion:reduce){
   .ticker{animation:none}
