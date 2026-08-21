@@ -213,7 +213,7 @@ $($navLinks.ToString())
 }
 
 # --- sitemap ----------------------------------------------------------------
-$today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+$today = (Get-Date).ToString('yyyy-MM-dd')
 $sm = New-Object System.Text.StringBuilder
 [void]$sm.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
 [void]$sm.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')

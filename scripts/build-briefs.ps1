@@ -156,7 +156,7 @@ foreach ($code in $codes) {
   Start-Sleep -Milliseconds 400
 }
 
-$generated = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+$generated = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
 
 # Merge with the previous run so a flaky country NEVER loses coverage: any country that
 # failed this run keeps its last successful briefs, stamped with their original date
@@ -209,7 +209,7 @@ if ($total -eq 0) {
 
 # Archive: a journal keeps a record. Save today's edition and refresh the edition index
 # (data/archive/index.js drives the "Past editions" picker on the continental wire).
-$day = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+$day = $generated.Substring(0, 10)
 $archiveDir = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\data\archive'))
 if (-not (Test-Path $archiveDir)) { New-Item -ItemType Directory -Path $archiveDir | Out-Null }
 $archPayload = "// The African Street Journal - archived edition $day (auto-generated).`r`n" +

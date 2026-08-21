@@ -1,10 +1,34 @@
 // The African Street Journal - archived edition 2026-08-20 (auto-generated).
-window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02Z', byCountry: {
+window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T18:16:33-07:00', byCountry: {
     "dz":  [
                {
-                   "headline":  "Algeria targets 20,000 investment projects by 2029",
-                   "body":  "The Algerian government aims to realize 20,000 investment projects by 2029. The plan relies on a comprehensive census of available land.",
-                   "why":  "The initiative seeks to increase national economic activity through the systematic identification of developable land.",
+                   "headline":  "Algerian security seizes 10.4 million pregabalin capsules",
+                   "body":  "Police seized 10.4 million pregabalin capsules and more than 33 kg of cocaine in a major operation. The National Security agency reported the haul followed the dismantling of an international criminal network.",
+                   "why":  "The operation disrupts the supply chain of psychotropic substances and narcotics for drug traffickers.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Echorouk Online",
+                                       "url":  "https://www.echoroukonline.com/%d8%a7%d9%84%d8%a3%d9%85%d9%86-%d9%8a%d9%86%d9%81%d9%91%d8%b0-%d8%a3%d9%83%d8%a8%d8%b1-%d8%b9%d9%85%d9%84%d9%8a%d8%a9-%d8%b6%d8%af-%d8%a8%d8%a7%d8%b1%d9%88%d9%86%d8%a7%d8%aa-%d8%a7%d9%84%d9%85"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "STI opens smartphone plant in Oran to produce 6,000 units daily",
+                   "body":  "A new smartphone assembly plant by STI, in partnership with China\u0027s vivo, aims to produce 6,000 phones per day at maximum capacity. The 7,000-square-meter facility currently employs approximately 200 workers.",
+                   "why":  "Local assembly increases the availability of vivo brand devices and creates 200 industrial jobs in the Sania industrial zone.",
+                   "topic":  "Tech",
+                   "sources":  [
+                                   {
+                                       "name":  "Echorouk Online",
+                                       "url":  "https://www.echoroukonline.com/%d8%aa%d8%b5%d9%86%d9%8a%d8%b9-6000-%d9%87%d8%a7%d8%aa%d9%81-%d8%b0%d9%83%d9%8a-%d9%8a%d9%88%d9%85%d9%8a%d8%a7-%d9%81%d9%8a-%d9%88%d9%87%d8%b1%d8%a7%d9%86-%d8%b5%d9%88%d8%b1"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Algerian government targets 20,000 investment projects by 2029",
+                   "body":  "The government set a goal to realize 20,000 investment projects by 2029. The plan relies on a comprehensive census of available land.",
+                   "why":  "The initiative seeks to expand the national industrial base by increasing the amount of land available for corporate development.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -14,59 +38,35 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Sonatrach nears LPG supply deal with top Indian refiner",
-                   "body":  "Sonatrach is preparing to sign an agreement for monthly deliveries of liquefied petroleum gas (LPG) to India\u0027s largest refiner. The deal marks the company\u0027s return to the Indian market.",
-                   "why":  "The agreement secures a consistent monthly export channel for Algerian LPG to the Indian energy sector.",
-                   "topic":  "Business",
+                   "headline":  "ONAB sells frozen chicken at 350 dinars per kilogram",
+                   "body":  "The National Office of Livestock Feed (ONAB) is selling frozen chicken at 350 dinars per kg across 143 points of sale. The agency\u0027s general administration director said supplies are being released gradually on a daily basis.",
+                   "why":  "The fixed pricing provides a lower-cost protein alternative for consumers across various provinces.",
+                   "topic":  "Agriculture",
                    "sources":  [
                                    {
-                                       "name":  "Algerie360",
-                                       "url":  "https://www.algerie360.com/hydrocarbures-sonatrach-signe-son-grand-retour-en-inde/"
+                                       "name":  "Echorouk Online",
+                                       "url":  "https://www.echoroukonline.com/%d8%a8%d8%af%d8%a7%d9%8a%d8%a9-%d8%aa%d8%b3%d9%88%d9%8a%d9%82-%d8%a7%d9%84%d8%af%d8%ac%d8%a7%d8%ac-%d8%a7%d9%84%d9%85%d8%ac%d9%85%d9%91%d8%af-%d8%a8%d8%b3%d8%b9%d8%b1-350-%d8%af%d9%8a%d9%86%d8%a7"
                                    }
                                ]
                },
                {
-                   "headline":  "Algeria launches 6 new digital government services",
-                   "body":  "The government introduced six new digital services on Wednesday to modernize administrative procedures. These include the E-SANED platform for managing student grants and scholarships.",
-                   "why":  "Students can now apply for and manage financial aid through a digital portal rather than using manual paper processes.",
-                   "topic":  "Business",
+                   "headline":  "Algeria adds 6 digital services to government portal",
+                   "body":  "The High Commissariat for Digitization introduced six new digital services to the national government portal. These services, developed with the Ministry of Energy and Renewable Energies, include the E-SANED platform for processing production facility licenses.",
+                   "why":  "Energy companies can now apply for exploitation licenses and declarations electronically rather than through manual filings.",
+                   "topic":  "Tech",
                    "sources":  [
                                    {
                                        "name":  "Echorouk Online",
                                        "url":  "https://www.echoroukonline.com/%d8%a5%d8%af%d8%b1%d8%a7%d8%ac-6-%d8%ae%d8%af%d9%85%d8%a7%d8%aa-%d8%b1%d9%82%d9%85%d9%8a%d8%a9-%d8%ac%d8%af%d9%8a%d8%af%d8%a9-%d8%b9%d8%a8%d8%b1-%d8%a8%d9%88%d8%a7%d8%a8%d8%a9-%d8%a7%d9%84%d8%ae%d8%af"
                                    }
                                ]
-               },
-               {
-                   "headline":  "Road accident injures 13 agricultural workers in Djelfa",
-                   "body":  "Thirteen agricultural workers were injured Wednesday afternoon in a road accident in Djelfa. The crash occurred on communal road No. 1.",
-                   "why":  "The incident revealed the use of underage labor in the region\u0027s agricultural sector.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Algerie360",
-                                       "url":  "https://www.algerie360.com/un-accident-de-la-route-met-au-jour-lexploitation-de-mineurs-a-djelfa/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Fire kills 14 people in Al-Maniyah",
-                   "body":  "A fire on Thursday killed 14 people in Al-Maniyah. The blaze occurred in a residential area, and civil protection units were deployed to the scene.",
-                   "why":  "The disaster resulted in significant loss of life and required the mobilization of emergency response teams.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Echorouk Online",
-                                       "url":  "https://www.echoroukonline.com/%d8%a7%d9%84%d8%ad%d8%b1%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d9%85%d8%b1%d8%aa%d9%81%d8%b9%d8%a9-%d8%aa%d9%82%d8%aa%d9%84-14-%d8%a3%d9%84%d9%81-%d8%b4%d8%ae%d8%b5-%d9%81%d9%8a-%d8%a3%d9%84%d9%85%d8%a7"
-                                   }
-                               ]
                }
            ],
     "ao":  [
                {
-                   "headline":  "Angola expels 53,000 irregular foreigners in seven months",
-                   "body":  "Angolan police expelled more than 53,000 foreign citizens in irregular situations over the last seven months. Commissioner Francisco Ribas announced the figures following a National Security Council meeting in Luanda. Many of those expelled were involved in the illicit exploitation of diamonds.",
-                   "why":  "The operational plan reduces the number of undocumented immigrants involved in illegal mining activities.",
+                   "headline":  "Angola expels 53,000 irregular foreigners over seven months",
+                   "body":  "Angolan police deported more than 53,000 foreign citizens in irregular situations over the last seven months. Commissioner Francisco Ribas announced the figures following a National Security Council meeting in Luanda. Many of those expelled were allegedly involved in the illicit exploitation of diamonds.",
+                   "why":  "The operational plan aims to reduce illegal immigration and curb the theft of national mineral resources.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -76,9 +76,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Unitel restores national communications after cyberattack",
-                   "body":  "Unitel has completed the restoration of voice, messaging, data, and internet services across Angola. The company announced the recovery in a market communiquÃ© following a total blackout that lasted more than three weeks. The call-waiting service remains offline until a later date.",
-                   "why":  "Mobile and internet users nationwide regain access to communication services after a three-week outage.",
+                   "headline":  "Unitel restores national communications after three-week outage",
+                   "body":  "Unitel has completed the restoration of voice, messaging, data, and internet services across Angola. The company stated in a market communiqué that the outage lasted more than three weeks and was caused by a cyberattack. Call-waiting services remain offline until a future date.",
+                   "why":  "The restoration returns mobile and internet connectivity to users and third-party services operating on the network.",
                    "topic":  "Tech",
                    "sources":  [
                                    {
@@ -88,9 +88,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "UNITA files criminal complaint against UÃ­ge governor and police",
-                   "body":  "The opposition party UNITA filed a criminal complaint against UÃ­ge Governor JosÃ© Carvalho da Rocha and police leadership. Vice-president Arlete Chimbinda announced the measure during a press conference. The complaint follows attacks on party militants on August 8.",
-                   "why":  "The legal action seeks to hold provincial leadership accountable for violence directed at opposition members.",
+                   "headline":  "UNITA files criminal complaint against Uíge governor and police",
+                   "body":  "The opposition party UNITA filed a criminal complaint against Uíge Governor José Carvalho da Rocha and police leadership. Vice-president Arlete Chimbinda announced the move during a press conference. The complaint follows attacks on party militants on August 8.",
+                   "why":  "The legal action seeks accountability for violence directed at opposition members in the Uíge province.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -98,13 +98,37 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://jornalf8.net/2026/para-o-pai-natal-ver-queixa-crime-contra-a-policia-e-o-governador-do-uige/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "MPLA presidential hopeful Higino Carneiro refuses to withdraw",
+                   "body":  "General Higino Carneiro stated he will not exit the race for the leadership of the MPLA. He spoke to journalists after a Supreme Court session in Luanda. Carneiro is currently contesting charges of embezzlement and money laundering.",
+                   "why":  "The general\u0027s persistence maintains a challenge to the leadership of the party that has held power for 50 years.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Folha 8",
+                                       "url":  "https://jornalf8.net/2026/desistir-nem-pensar-afirma-higino-carneiro/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "William Tonet robbed in Morro Bento",
+                   "body":  "Director William Tonet was the victim of a qualified robbery on August 19 at 9:20 p.m. The incident occurred in a side street in Morro Bento while Tonet was visiting a clinic. The Dic-Samba picket registered the case.",
+                   "why":  "The robbery occurred after Tonet had reportedly rejected police escorts provided by the CNE.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Folha 8",
+                                       "url":  "https://jornalf8.net/2026/assaltada-viatura-de-william-tonet/"
+                                   }
+                               ]
                }
            ],
     "bj":  [
                {
                    "headline":  "Benin releases cyberactivist Steve Amoussou",
-                   "body":  "Cyberactivist Steve Amoussou was released from prison on Aug. 20. He had been pursued by the CRIET for publications critical of authorities after being arrested in LomÃ© on Aug. 12, 2024.",
-                   "why":  "The release ends the detention of a critic known as \u0027FrÃ¨re Hounvi\u0027 who had been convicted in June 2025.",
+                   "body":  "Beninese cyberactivist Steve Amoussou has been released from custody. Amoussou, known as the chronicler \"Frère Hounvi,\" was prosecuted by the CRIET for publications critical of the authorities.",
+                   "why":  "The release ends the detention of a critic who had been arrested in Lomé on August 12, 2024, and transferred to Cotonou.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -114,9 +138,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
+                   "headline":  "Benin health ministry releases recruitment results August 20",
+                   "body":  "Recruitment test results for health agents at departmental health directorates are available Thursday, August 20, 2026. The results were issued by the ministry of health.",
+                   "why":  "The publication of these lists allows selected candidates to begin their appointments to health structures.",
+                   "topic":  "Health",
+                   "sources":  [
+                                   {
+                                       "name":  "Matin Libre",
+                                       "url":  "https://matinlibre.com/2026/08/20/directions-departementales-de-la-sante-les-resultats-des-recrutements-disponible-ce-jeudi/"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "Benin Sports Minister visits U20 women\u0027s team in France",
-                   "body":  "Minister BenoÃ®t Dato visited the Amazones U20 on Aug. 18 during their training camp in France. The team is preparing for the FIFA U20 Women\u0027s World Cup Poland 2026.",
-                   "why":  "The visit occurs two weeks before the start of the international tournament.",
+                   "body":  "Minister of Sports and Civic Engagement Benoît Dato visited the U20 women\u0027s national team on August 18, 2026. The team is currently in a training camp in France.",
+                   "why":  "The visit serves as preparation for the team\u0027s participation in the FIFA U20 Women\u0027s World Cup Poland 2026, starting in two weeks.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
@@ -127,8 +163,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Djougou hosts 25th national primary school championships",
-                   "body":  "The final phase of the 25th edition of the national primary school championships began Aug. 17 in Djougou. The four-day event is organized by the UASCEP and includes athletes from all Benin departments.",
-                   "why":  "The competition provides a venue for primary students from across the country to compete in sports.",
+                   "body":  "The 25th edition of the national primary school championships began on August 17, 2026, in Djougou. The event is organized by the Union of Sports and Cultural Associations of Primary Education (UASCEP).",
+                   "why":  "The four-day competition brings together young athletes from all departments of Benin to compete in sports and cultural events.",
                    "topic":  "Education",
                    "sources":  [
                                    {
@@ -138,9 +174,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "LNB S.A. launches Super Amazone scratch ticket",
-                   "body":  "LNB S.A. released a new scratch ticket priced at 200 FCFA. The game offers prizes of up to 1,000,000 FCFA.",
-                   "why":  "The new product allows consumers to gamble for a maximum prize of 1 million FCFA.",
+                   "headline":  "LNB S.A. launches \u0027Super Amazone\u0027 scratch ticket for 200 FCFA",
+                   "body":  "LNB S.A. has released a new scratch ticket called \u0027Super Amazone\u0027 priced at 200 FCFA. The ticket offers prizes of up to 1,000,000 FCFA.",
+                   "why":  "The new product allows consumers to gamble for a maximum prize of 1 million FCFA using a themed ticket.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -152,8 +188,20 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            ],
     "bw":  [
                {
+                   "headline":  "Botswana inflation falls to 9.4% in July",
+                   "body":  "Annual inflation decreased to 9.4% in July from 10.7% in June. Statistics Botswana attributed the 1.3 percentage-point decline to a 6.5% drop in the transport index.",
+                   "why":  "Lower fuel prices reduced transport costs for consumers and businesses after a price surge earlier this year.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Sunday Standard",
+                                       "url":  "https://www.sundaystandard.info/inflation-slows-to-9-4/"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "MMG finds 1.4 million tonnes of copper at Khoemacau mine",
-                   "body":  "MMG Ltd discovered a new copper-silver deposit containing an estimated 1.4 million tonnes of copper and 90 million ounces of silver. The Kgwebe deposit is located approximately six kilometres from the existing Zone 5 mine.",
+                   "body":  "MMG Ltd discovered a new copper-silver deposit containing an estimated 1.4 million tonnes of copper and 90 million ounces of silver. The Kgwebe deposit is located approximately six kilometers from the existing Zone 5 mine.",
                    "why":  "The discovery increases the long-term mineral resources and growth prospects for the Khoemacau operation.",
                    "topic":  "Business",
                    "sources":  [
@@ -164,32 +212,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Botswana inflation falls to 9.4% in July",
-                   "body":  "Annual inflation decreased to 9.4% in July from 10.7% in June. Statistics Botswana attributed the 1.3 percentage-point decline to a 6.5% drop in the transport index.",
-                   "why":  "Lower fuel prices have reduced transport costs for consumers and businesses.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Sunday Standard",
-                                       "url":  "https://www.sundaystandard.info/inflation-slows-to-9-4/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "African Development Bank values Botswana natural capital at $116 billion",
-                   "body":  "The African Development Bank estimated Botswana\u0027s natural capital, including wildlife and water, at $116 billion as of 2020. The figure represents the value of assets over time rather than available public spending.",
-                   "why":  "The government is seeking these natural assets as alternative sources of growth and financing to reduce dependence on diamonds.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Sunday Standard",
-                                       "url":  "https://www.sundaystandard.info/inside-botswanas-116-billion-natural-capital/"
-                                   }
-                               ]
-               },
-               {
                    "headline":  "Botswana retains P1,500 daily per diem for public servants",
-                   "body":  "The government maintained a P1,500 daily local per diem for public servants, according to the Hospitality and Tourism Association of Botswana. Starting Sept. 1, 2026, workers must provide receipts for up to P900 of the accommodation component.",
+                   "body":  "The government maintained a P1,500 daily local per diem for public servants, according to the Hospitality and Tourism Association of Botswana. Starting Sept. 1, 2026, officials must provide receipts for accommodation components up to P900.",
                    "why":  "The policy is expected to increase demand for the domestic hospitality industry.",
                    "topic":  "Business",
                    "sources":  [
@@ -200,9 +224,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
+                   "headline":  "African Development Bank values Botswana natural capital at $116 billion",
+                   "body":  "The African Development Bank estimated Botswana\u0027s natural capital, including wildlife and water, at $116 billion as of 2020. The figure represents the value of assets over time rather than liquid funds for spending.",
+                   "why":  "The government is looking to these assets as alternative sources of growth and financing to reduce dependence on diamonds.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Sunday Standard",
+                                       "url":  "https://www.sundaystandard.info/inside-botswanas-116-billion-natural-capital/"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "Botswana working-age population to reach 67.6% by 2038",
-                   "body":  "The population of people aged 15 to 64 is projected to rise to 67.6% by 2038. The Sunday Standard reports the trend creates a potential economic dividend.",
-                   "why":  "The government must generate more jobs and raise productivity to prevent the swelling population from becoming an economic burden.",
+                   "body":  "The population of people aged 15 to 64 is projected to rise to 67.6% by 2038. The Sunday Standard reports this demographic shift creates a potential economic dividend.",
+                   "why":  "The country must now increase productivity and generate more jobs to prevent the expanding workforce from becoming an economic burden.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -214,9 +250,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            ],
     "bf":  [
                {
-                   "headline":  "Tour du Faso 2026 sets budget at 600 million FCFA",
-                   "body":  "The 37th edition of the Tour du Faso will run from Oct. 30 to Nov. 8 with a projected budget of 600 million FCFA. Minister of Sports Annick Pikbougoum ZinguÃ© Ouattara announced the figures during a meeting with sponsors in Ouagadougou on Aug. 20.",
-                   "why":  "The event requires the mobilization of partners and sponsors to fund the cycling competition.",
+                   "headline":  "ANEVE cuts environmental permit processing from 126 to 26 days",
+                   "body":  "The National Agency for Environmental Evaluations (ANEVE) reduced dossier processing times from 126 days to 26 days. The agency announced the reform during a meeting with approved environmental and social evaluation firms on Aug. 20.",
+                   "why":  "The shorter approval window allows businesses to begin construction or operations on new projects faster.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Burkina24",
+                                       "url":  "https://burkina24.com/2026/08/20/evaluations-environnementales-laneve-reduit-les-delais-de-traitement-de-126-a-26-jours/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Tour du Faso 2026 sets 600 million FCFA budget",
+                   "body":  "The 37th edition of the Tour du Faso will run from Oct. 30 to Nov. 8 with a projected budget of 600 million FCFA. Minister of Sports Annick Pikbougoum Zingué Ouattara detailed the figures during a meeting with sponsors and partners on Aug. 20.",
+                   "why":  "The event requires increased mobilization of corporate partners to fund the cycling competition\u0027s operational costs.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
@@ -226,9 +274,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Burkina Faso police intercept 7 minors headed for gold mines",
-                   "body":  "The Regional Brigade for the Protection of Children intercepted seven minors on Aug. 18 in Koudougou. The oldest of the group is 12 years old.",
-                   "why":  "The operation prevents children from being trafficked into labor at artisanal gold mining sites.",
+                   "headline":  "Police intercept 7 minors headed for gold mines",
+                   "body":  "The Regional Brigade for Child Protection (BRPE) intercepted seven minors, the eldest aged 12, on Aug. 18. The children were stopped in Koudougou while traveling to artisanal gold mining sites.",
+                   "why":  "The operation prevents children from entering hazardous labor conditions at gold mining sites.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -239,8 +287,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Burkina Faso Foreign Minister meets UN special envoy",
-                   "body":  "Foreign Minister Karamoko Jean Marie TraorÃ© received UN Special Envoy Sahle-Work Zewde on Aug. 20. Zewde is visiting to evaluate the actions of the UN Regional Office for West Africa and the Sahel.",
-                   "why":  "The mission assesses the effectiveness of UN regional operations based in Dakar.",
+                   "body":  "Foreign Minister Karamoko Jean Marie Traoré received UN Special Envoy Sahle-Work Zewde on Aug. 20. Zewde is visiting to evaluate the actions of the UN Regional Office for West Africa and the Sahel (UNOWAS).",
+                   "why":  "The mission assesses the effectiveness of UN regional oversight and diplomatic coordination in the Sahel.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -252,13 +300,25 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://burkina24.com/2026/08/20/cooperation-on-peut-ne-pas-nous-feliciter-mais-dites-au-moins-ce-qui-est-juste-et-vrai-dans-nos-pays-karamoko-jean-marie-traore/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "AS Police trains 110 female players in Ouagadougou",
+                   "body":  "The AS Police sports association is conducting a training workshop for 110 young female players from various clubs from Aug. 20 to 21. The program focuses on female empowerment through football.",
+                   "why":  "The training provides young women with professional sports skills and tools for social autonomy.",
+                   "topic":  "Sport",
+                   "sources":  [
+                                   {
+                                       "name":  "Agence d\u0027Information du Burkina",
+                                       "url":  "https://www.aib.media/las-police-outille-110-joueuses-sur-lautonomisation-de-la-jeune-fille-a-travers-le-football/"
+                                   }
+                               ]
                }
            ],
     "bi":  [
                {
                    "headline":  "Beer prices in Gitega double official rates",
-                   "body":  "Primus and Amstel beers are currently selling at twice the official price in Gitega. Iwacu reports the price spike follows revelations that Brarudi is exporting products to the DRC to compensate for a lack of foreign currency.",
-                   "why":  "Consumers in Gitega now face doubled costs for these beverages due to market speculation.",
+                   "body":  "Primus and Amstel beers are selling at twice the official price in Gitega. Iwacu reports the price spikes follow Brarudi\u0027s decision to export products to the DRC to offset a lack of foreign currency.",
+                   "why":  "Consumers in Gitega now face inflated costs for beverages due to generalized market speculation.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -269,8 +329,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Gitega installs first functional medical scanner outside Bujumbura",
-                   "body":  "A medical scanner is now operational in Gitega. Yaga Burundi reports this is the first scanner to function outside of Bujumbura in 2026.",
-                   "why":  "Patients in the Gitega region can now access diagnostic imaging without traveling to the capital.",
+                   "body":  "A medical scanner is now operational in Gitega. Yaga Burundi reports it is the first such device to function outside the capital in 2026.",
+                   "why":  "Patients in the interior of the country can now access diagnostic imaging without traveling to Bujumbura.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -280,21 +340,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "CENI presents electoral map for Gitega province",
-                   "body":  "The Independent National Electoral Commission (CENI) presented the electoral mapping for Gitega province on Aug. 19. SOS Medias Burundi reports the move is part of preparations for the 2027 presidential election.",
-                   "why":  "The mapping defines the physical electoral boundaries where voters in Gitega will cast ballots in 2027.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "SOS Medias Burundi",
-                                       "url":  "https://www.sosmediasburundi.org/2026/08/20/presidentielle-2027-la-ceni-quadrille-gitega-et-prepare-deja-le-terrain-electoral/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Burundi beats Germany in beach volleyball opener",
-                   "body":  "The Burundi men\u0027s team defeated Germany in the opening match of the Volleyball World Beach Pro Tour Bujumbura Futures. Iwacu reports the event is running from Aug. 19 to Aug. 23.",
-                   "why":  "The victory places the home team in a winning position for the remainder of the tournament.",
+                   "headline":  "Burundi beats Germany in Beach Pro Tour opener",
+                   "body":  "The Burundi men\u0027s team defeated Germany in the opening match of the Volleyball World Beach Pro Tour Bujumbura Futures. The tournament runs from Aug. 19 to Aug. 23, 2026, according to Iwacu.",
+                   "why":  "The victory marks a successful start for the host nation in an international sporting competition.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
@@ -304,14 +352,26 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Two men and $50,000 disappear in Burundi",
-                   "body":  "Two men from Butanyerera province have been missing since Aug. 12. SOS Medias Burundi reports the disappearance involves $50,000 and an interception between Kobero and Bujumbura.",
-                   "why":  "The incident involves the loss of $50,000 and the disappearance of two citizens from the north of the country.",
-                   "topic":  "News",
+                   "headline":  "CENI presents Gitega electoral map for 2027",
+                   "body":  "The Independent National Electoral Commission (CENI) presented the electoral mapping for Gitega province on Aug. 19. SOS Médias Burundi reports the move is part of preparations for the 2027 presidential election.",
+                   "why":  "The mapping defines the geographic boundaries and organization of polling stations for voters in the province.",
+                   "topic":  "Politics",
                    "sources":  [
                                    {
                                        "name":  "SOS Medias Burundi",
-                                       "url":  "https://www.sosmediasburundi.org/2026/08/20/kobero-bujumbura-deux-hommes-disparaissent-50-000-dollars-et-une-mysterieuse-interception-au-coeur-des-interrogations/"
+                                       "url":  "https://www.sosmediasburundi.org/2026/08/20/presidentielle-2027-la-ceni-quadrille-gitega-et-prepare-deja-le-terrain-electoral/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Rusizi National Park adds biodiversity protection infrastructure",
+                   "body":  "The Rusizi National Park received new equipment and infrastructure to improve management and tourism. The handover ceremony took place Aug. 13 with representatives from the EU, UNDP, and Belgium, Iwacu reports.",
+                   "why":  "The new installations are intended to increase the protection of the reserve\u0027s biodiversity and attract more tourists.",
+                   "topic":  "Climate",
+                   "sources":  [
+                                   {
+                                       "name":  "Iwacu",
+                                       "url":  "https://www.iwacu-burundi.org/le-parc-national-de-la-rusizi-se-dote-de-nouvelles-infrastructures-pour-renforcer-sa-protection-et-son-attractivite-touristique/"
                                    }
                                ]
                }
@@ -319,8 +379,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
     "cm":  [
                {
                    "headline":  "Douala BRT project faces CFAF104.6 billion funding gap",
-                   "body":  "The Douala Urban Mobility Project requires an additional 104.6 billion CFA francs to maintain its current scope. The total cost to complete the project is estimated at 365.4 billion CFA francs, up from an initial budget of 260.8 billion CFA francs. The shortfall represents 40.1% of the original budget.",
-                   "why":  "The funding gap could lead to a downsizing of the Bus Rapid Transit system and the loss of 66 kilometers of planned feeder roads.",
+                   "body":  "The Douala Urban Mobility Project requires an additional CFAF104.6 billion to maintain its current scope, according to project estimates as of July 17, 2026. The total cost to complete the project is now estimated at CFAF365.4 billion, up from an initial budget of CFAF260.8 billion. This shortfall represents 40.1% of the original budget.",
+                   "why":  "Without new funding or tax relief, the project may be downsized, potentially removing 66 kilometers of planned feeder roads around the pilot corridor.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -331,8 +391,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "CAMWATER targets CFAF2.35 billion in monthly collections",
-                   "body":  "Cameroon Water Utilities Corporation has set a revenue collection target of CFAF2.35 billion for its Douala and YaoundÃ© operations this month. The target includes CFAF1.1 billion for Douala and CFAF1.25 billion for YaoundÃ©. Other regional divisions must increase collection performance by at least 15%.",
-                   "why":  "The state-owned utility is attempting to increase internally generated revenue to improve its financial performance.",
+                   "body":  "The state-owned Cameroon Water Utilities Corporation set a CFAF2.35 billion revenue collection target for Douala and Yaoundé for this month. The utility expects to mobilize CFAF1.25 billion from Yaoundé and CFAF1.1 billion from Douala, according to a company disclosure on August 20.",
+                   "why":  "The push aims to increase internally generated revenue to improve the utility\u0027s overall financial performance.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -342,9 +402,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
+                   "headline":  "Cameroon allocates CFAF400 million to food supply SMEs",
+                   "body":  "The government has allocated CFAF400 million to finance small and medium-sized enterprises that distribute locally produced food. The Trade Ministry announced the transfer of funds via the Cameroon Bank for Small and Medium-Sized Enterprises on August 18, 2026.",
+                   "why":  "The funding targets bottlenecks in the government\u0027s import-substitution program by helping domestic producers move products to consumers.",
+                   "topic":  "Agriculture",
+                   "sources":  [
+                                   {
+                                       "name":  "Business in Cameroon",
+                                       "url":  "https://www.businessincameroon.com/agriculture/1908-16599-cameroon-allocates-cfaf400-million-to-smes-to-strengthen-local-food-supply-chains"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "Cameroon reports 45.5% BTS and 54.79% HND pass rates",
-                   "body":  "The Ministry of Higher Education published official 2026 results showing a 45.50% success rate for the BTS and 54.79% for the HND. These figures contradict earlier reports of a 14% success rate. The results were released on Aug. 19.",
-                   "why":  "The official figures resolve a public controversy regarding the actual number of students passing the national exams.",
+                   "body":  "The Ministry of Higher Education published official 2026 results on August 19 showing national success rates of 45.50% for the BTS and 54.79% for the HND. These figures contradict earlier unofficial reports of a 14% success rate.",
+                   "why":  "The official release ends a period of public controversy regarding the accuracy of the national exam results.",
                    "topic":  "Education",
                    "sources":  [
                                    {
@@ -354,59 +426,39 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Islamic Development Bank discusses 2027-2029 framework with Cameroon",
-                   "body":  "The Islamic Development Bank will meet with Cameroon on Sept. 14 in YaoundÃ© to discuss a three-year engagement framework. The bank\u0027s active portfolio in the country was valued at nearly $1 billion as of June 2026. The meeting follows an agreement in principle reached in June.",
-                   "why":  "The talks will determine the final list of projects and the financial package available for the 2027-2029 period.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Business in Cameroon",
-                                       "url":  "https://www.businessincameroon.com/public-management/2008-16600-cameroon-isdb-head-into-2027-2029-framework-talks-with-portfolio-near-1-billion"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "President Paul Biya returns to YaoundÃ© after 73 days in Europe",
-                   "body":  "President Paul Biya and his wife returned to Cameroon on Aug. 20. The couple landed at YaoundÃ© Nsimalen International Airport. The trip lasted 73 days, marking the president\u0027s longest private stay in Europe.",
-                   "why":  "The return ends a prolonged absence of the head of state from the capital.",
-                   "topic":  "Politics",
+                   "headline":  "Landslide at Cameroon-CAR border kills 4 Cameroonians",
+                   "body":  "Four Cameroonians died following a landslide at a gold mining site in the village of Zamboi on August 18, 2026. Local administrative authorities confirmed the deaths and stated the collapse occurred within Central African Republic territory.",
+                   "why":  "The victims\u0027 bodies have been transferred to Garoua-Boulaï on the Cameroonian side of the border.",
+                   "topic":  "News",
                    "sources":  [
                                    {
                                        "name":  "Journal du Cameroun",
-                                       "url":  "https://fr.journalducameroun.com/cameroun-le-president-paul-biya-est-de-retour-a-yaounde-apres-un-sejour-de-73-jours-en-europe/"
+                                       "url":  "https://fr.journalducameroun.com/eboulement-a-la-frontiere-cameroun-rca-les-autorites-annoncent-4-deces-cote-cameroun/"
                                    }
                                ]
                }
            ],
     "cf":  [
                {
-                   "headline":  "CAR government reports 49 dead in Zamboye mine collapse",
-                   "body":  "A total of 49 people died following earth collapses on Tuesday, Aug. 18, at the \"Moscou-RCA\" mining site in Zamboye. Minister of Mines and Geology Rufin Benam-Beltoungou confirmed the figure after visiting the site in Nana-MambÃ©rÃ©.",
-                   "why":  "The disaster results in the immediate loss of 49 lives at the mining operation.",
+                   "headline":  "Gold mine collapse kills more than 100 in Central African Republic",
+                   "body":  "The death toll from a gold mine collapse in western Central African Republic has risen above 100. Africanews reports the disaster occurred at an artisanal mine near the Cameroon border, with several people still missing.",
+                   "why":  "The incident highlights the safety risks facing thousands of informal miners operating in the region.",
                    "topic":  "News",
                    "sources":  [
                                    {
-                                       "name":  "Radio Ndeke Luka",
-                                       "url":  "https://www.radiondekeluka.org/104521-drame-au-chantier-minier-de-zamboye-le-gouvernement-centrafricain-avance-un-premier-bilan-de-49-morts"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "GTSC accuses UNOPS of failing road and bridge projects",
-                   "body":  "The GTSC reported that UNOPS has not met commitments to rehabilitate the NdÃ©lÃ©-Ouadda road and build four bridges between MbrÃ©ss and NdÃ©lÃ©. Spokesperson Paul Crescent BÃ©ninga stated the failure persists despite the World Bank disbursing funds.",
-                   "why":  "The lack of completed bridges and road repairs restricts movement and transport between MbrÃ©ss and NdÃ©lÃ©.",
-                   "topic":  "Business",
-                   "sources":  [
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/20/death-toll-rises-above-100-in-central-african-republic-mine-collapse/"
+                                   },
                                    {
-                                       "name":  "Radio Ndeke Luka",
-                                       "url":  "https://www.radiondekeluka.org/104515-troncon-ndele-ouadda-le-gtsc-hausse-le-ton-et-juge-inacceptable-la-gestion-de-lunops"
+                                       "name":  "Anadolu Africa",
+                                       "url":  "https://www.aa.com.tr/en/africa/nearly-50-killed-in-gold-mine-collapse-in-central-african-republic/4032823"
                                    }
                                ]
                },
                {
-                   "headline":  "CAR presidency says courts may probe French ambassador",
-                   "body":  "The presidency responded to reports from Canard EnchaÃ®nÃ© alleging French Ambassador Bruno Foucher had sexual relations with young women at his Bangui residence. Spokesperson Albert YalokÃ© MokpÃªme stated the Central African justice system can take up the matter.",
-                   "why":  "The statement opens the door for legal proceedings against a foreign diplomat in Bangui.",
+                   "headline":  "CAR presidency says courts can probe French ambassador sex scandal",
+                   "body":  "The presidency of the Central African Republic stated that national justice can take up allegations against French Ambassador Bruno Foucher. Spokesperson Albert Yalokké Mokpême issued the statement following reports from Le Canard Enchaîné regarding Foucher\u0027s conduct in Bangui.",
+                   "why":  "The statement opens the door for legal proceedings against a foreign diplomat within the country\u0027s judicial system.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -416,23 +468,47 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "CAR Communications Minister attends China-Africa Media Forum",
-                   "body":  "Minister of State for Communication and Media Evariste Ngamana arrived in Beijing on Aug. 18. He is attending the 7th China-Africa Media Forum.",
-                   "why":  "The visit is intended to strengthen diplomatic and media cooperation between the two nations.",
-                   "topic":  "Politics",
+                   "headline":  "Village of Polonda relies on one borehole for 6,000 residents",
+                   "body":  "More than 6,000 inhabitants in the village of Polonda have access to only one functioning borehole. Radio Ndeke Luka reports that a second water point has been broken for four years.",
+                   "why":  "The lack of infrastructure forces residents in four neighborhood groups to share a single water source for their daily needs.",
+                   "topic":  "News",
                    "sources":  [
                                    {
-                                       "name":  "Oubangui Medias",
-                                       "url":  "https://oubanguimedias.com/2026/08/20/cooperation-chine-centrafrique-le-ministre-detat-dr-evariste-ngamana-au-7%e1%b5%89-forum-des-medias-chine-afrique/"
+                                       "name":  "Radio Ndeke Luka",
+                                       "url":  "https://www.radiondekeluka.org/104545-basse-kotto-un-seul-forage-pour-plus-de-6-000-habitants-au-village-polonda"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "GTSC accuses UNOPS of failing to rehabilitate Ndélé-Ouadda road",
+                   "body":  "The GTSC has denounced the UNOPS for failing to meet commitments to rehabilitate the Ndélé-Ouadda road and build four bridges. Spokesperson Paul Crescent Béninga stated that the World Bank has already disbursed the funds for the project.",
+                   "why":  "The failure to complete the road and bridges prevents the expected improvement of transport and connectivity between Mbrès and Ndélé.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Radio Ndeke Luka",
+                                       "url":  "https://www.radiondekeluka.org/104515-troncon-ndele-ouadda-le-gtsc-hausse-le-ton-et-juge-inacceptable-la-gestion-de-lunops"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Bouar hospital reports staff shortages and medicine deficits",
+                   "body":  "The Bouar health district is facing a shortage of qualified personnel and a lack of essential medicines. District chief physician Dr. Martin Zekana reported these deficiencies as factors affecting the center\u0027s operations.",
+                   "why":  "The lack of staff and supplies reduces the quality and availability of medical care for patients in the Nana-Mambéré prefecture.",
+                   "topic":  "Health",
+                   "sources":  [
+                                   {
+                                       "name":  "Radio Ndeke Luka",
+                                       "url":  "https://www.radiondekeluka.org/104543-sante-insuffisance-de-personnel-et-carence-de-medicament-a-lhopital-de-bouar"
                                    }
                                ]
                }
            ],
     "km":  [
                {
-                   "headline":  "Moroni authorities open investigation into abduction of 6-year-old girl",
-                   "body":  "A 6-year-old girl is in grave condition after being abducted and raped on Aug. 16. Comores Infos reports the child disappeared while traveling to her Quranic school.",
-                   "why":  "The incident has prompted a police investigation into the abduction and assault.",
+                   "headline":  "Moroni police open investigation into abduction of 6-year-old girl",
+                   "body":  "A 6-year-old girl is in serious condition after being abducted and raped in Moroni. Comores Infos reports the child disappeared on Aug. 16 while traveling to her Quranic school.",
+                   "why":  "The incident has prompted a formal investigation into the abduction and assault.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -445,8 +521,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
     "cg":  [
                {
                    "headline":  "Congo sets $90 per barrel threshold for oil contracts",
-                   "body":  "The Council of Ministers approved a single threshold of $90 per barrel for oil sector contracts. The measure includes amendments to permits Nanga II Bis, Nanga IV, Nangua V, and Marine XXIX. The government aims to support investment and increase production.",
-                   "why":  "The adjustment to the technical mechanism changes how the state and contractors share revenue based on global oil prices.",
+                   "body":  "The Council of Ministers approved a single threshold of $90 per barrel to adjust the contractual framework of the petroleum sector. The measures include amendments to permits Nanga II Bis, Nanga IV, Nangua V, and Marine XXIX. The government also launched a redevelopment project for the Banga Kayo permit.",
+                   "why":  "The adjustment to the technical mechanism aims to support investments and increase oil production.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -456,9 +532,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Congo maintains cement prices at 4,900 FCFA in Brazzaville",
-                   "body":  "Producers Dangote, Sonocc, and Forspak agreed on Aug. 19 to maintain 2024 prices for 50kg bags of cement. Rates remain at 4,900 FCFA in Brazzaville, 4,700 FCFA in Pointe-Noire, and up to 5,500 FCFA in Ouesso. The decision follows a meeting with the Minister of Commerce.",
-                   "why":  "The freeze prevents price hikes for construction materials despite requests from producers to increase tariffs.",
+                   "headline":  "Congo maintains cement prices for 50kg bags",
+                   "body":  "Cement prices remain unchanged at 4,900 FCFA in Brazzaville, 4,700 FCFA in Pointe-Noire, and 5,500 FCFA in Ouesso for a 50kg bag. The decision follows a meeting on Aug. 19 between the Minister of Commerce and producers Dangote, Sonocc, and Forspak. The producers had previously requested a price increase.",
+                   "why":  "The freeze prevents a price hike for construction materials despite producer demands.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -469,8 +545,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Congo police seize six firearms from poaching suspect",
-                   "body":  "Police and eco-guards from the LÃ©sio-Luna nature reserve seized six firearms and hundreds of munitions on Aug. 13. The items were found at the home of a suspected poaching network leader in Yono village. The operation took place in the DjouÃ©-LÃ©fini department.",
-                   "why":  "The seizure removes weaponry used for illegal hunting in the LÃ©sio-Luna nature reserve.",
+                   "body":  "Police and eco-guards from the Lésio-Luna nature reserve seized six firearms and hundreds of munitions on Aug. 13. The items were found during a search of a home in Yono village in the Djoué-Léfini department. Authorities identified the suspect as the alleged leader of a poaching network.",
+                   "why":  "The seizure removes weaponry used for illegal hunting in the Lésio-Luna nature reserve.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -480,21 +556,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "President Sassou-Nguesso begins 15-day stay in Turkey",
-                   "body":  "President Denis Sassou-Nguesso departed Brazzaville on Aug. 19 for Antalya, Turkey. He is accompanied by his wife, Antoinette Sassou Nguesso, for a two-week period of rest. The trip follows the president\u0027s re-election in March.",
-                   "why":  "The president is absent from the capital for two weeks following a period of dense political and institutional activity.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "Journal de Brazza",
-                                       "url":  "https://www.journaldebrazza.com/congo-denis-sassou-nguesso-saccorde-une-pause-de-quinze-jours-en-turquie/"
-                                   }
-                               ]
-               },
-               {
                    "headline":  "Congo proposes National Order of Dental Surgeons",
-                   "body":  "Health Minister Jean Rosaire Ibara presented a bill to create a national professional body for dental surgeons. The proposed structure aims to regulate the profession and standardize oral healthcare. The government intends to increase the security and quality of care for patients.",
-                   "why":  "The new regulatory body will establish mandatory professional standards for dentists providing care to patients.",
+                   "body":  "Health Minister Jean Rosaire Ibara presented a bill to create a national professional order for dental surgeons. The project aims to modernize the structure of regulated health professions. The government stated the move is a response to patient demands for safety and competence.",
+                   "why":  "The new structure will provide oversight for the profession to improve the quality of oral healthcare for patients.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -502,25 +566,49 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://www.journaldebrazza.com/congo-vers-la-creation-de-lordre-national-des-chirurgiens-dentistes/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "President Sassou-N’Guesso begins 15-day trip to Turkey",
+                   "body":  "President Denis Sassou-N’Guesso departed Brazzaville on Aug. 19 for a 15-day stay in Antalya. He is accompanied by his wife, Antoinette Sassou N’Guesso. The trip follows the president\u0027s reelection in March and recent national festivities.",
+                   "why":  "The president is taking a period of rest following a dense sequence of political and institutional activity.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Journal de Brazza",
+                                       "url":  "https://www.journaldebrazza.com/congo-denis-sassou-nguesso-saccorde-une-pause-de-quinze-jours-en-turquie/"
+                                   }
+                               ]
                }
            ],
     "ci":  [
                {
-                   "headline":  "COJEP proposes ministry to fight illegal mining",
-                   "body":  "The CongrÃ¨s panafricain pour la justice et l\u0027Ã©galitÃ© des peuples (COJEP) has proposed the creation of a government ministry dedicated to combating clandestine gold mining. Party president Charles BlÃ© GoudÃ© stated the activity is now a multidimensional threat to Ivory Coast.",
-                   "why":  "The proposal seeks to centralize government authority to stop illegal mining operations that threaten the country\u0027s land and security.",
-                   "topic":  "Politics",
+                   "headline":  "Inspection report finds 267.8 million CFA irregularity at OCPV",
+                   "body":  "Two inspection reports identified irregularities in the management of bonuses and mutual fund payments totaling 267.8 million francs CFA. The findings concern the Office d’aide à la commercialisation des produits vivriers (OCPV) in Abidjan.",
+                   "why":  "The discovery of \u0027ghost bonuses\u0027 and diverted funds exposes financial mismanagement within the agency responsible for food product marketing.",
+                   "topic":  "Business",
                    "sources":  [
                                    {
-                                       "name":  "Agence Ivoirienne de Presse",
-                                       "url":  "https://www.aip.ci/cote-divoire-aip-le-cojep-de-charles-ble-goude-propose-la-creation-dun-ministere-dedie-a-la-lutte-contre-lorpaillage-clandestin/"
+                                       "name":  "Linfodrome",
+                                       "url":  "https://www.linfodrome.com/economie/124614-primes-fantomes-fonds-devoyes-dans-les-coulisses-du-rapport-d-inspection-qui-secoue-l-ocpv"
                                    }
                                ]
                },
                {
-                   "headline":  "Sewe Sport president says Ivorian players lack living wages",
-                   "body":  "Sewe Sport de San Pedro president Ouattara Issa stated that football players in Ivory Coast do not yet live fully from their sporting activities. In an interview on Aug. 19, the Ligue 2 club leader questioned the professional status of the national championships.",
-                   "why":  "Financial difficulties are forcing professional athletes to seek secondary employment to support themselves.",
+                   "headline":  "Olympique de Marseille signs Ivorian striker Habibou Ouédraogo",
+                   "body":  "Habibou Ouédraogo joined Olympique de Marseille last week from Asec d’Abidjan. The 24-year-old attacker won the last three editions of the Ivorian Ligue 1 championship.",
+                   "why":  "The transfer moves a top-scoring player from the domestic Ivorian league to a major French club.",
+                   "topic":  "Sport",
+                   "sources":  [
+                                   {
+                                       "name":  "RFI Afrique",
+                                       "url":  "https://www.rfi.fr/fr/afrique-foot/20260820-l-attaquante-ivoirienne-habibou-ou%C3%A9draogo-buteuse-prolifique-d%C3%A9barque-%C3%A0-l-om"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Sewé Sport president says Ivorian players cannot live on football",
+                   "body":  "Ouattara Issa, president of Sewé Sport de San Pedro, stated on August 19 that Ivorian players do not yet live fully from their sporting activity. The Ligue 2 club leader questioned the professional status of the domestic championships.",
+                   "why":  "Financial difficulties are forcing professional athletes to seek secondary employment to survive.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
@@ -530,23 +618,35 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Songon awards 50 students for academic excellence",
-                   "body":  "Fifty primary and secondary students residing in the CitÃ© Arc-en-ciel de Songon KassemblÃ© received awards on Aug. 15. The prizes were given for attendance and academic results during the first \u0027Le Flambeau de lâ€™Excellence Scolaire\u0027 event.",
-                   "why":  "The awards provide recognition and incentives for students in the Songon district to maintain high academic standards.",
-                   "topic":  "Education",
+                   "headline":  "Cocody resident wins 47.4 million FCFA in PMU bets",
+                   "body":  "An entrepreneur identified as A.A. won a total of 47,442,000 FCFA. The payout followed two consecutive winning jackpots from the Loterie nationale de Côte d’Ivoire (LONACI).",
+                   "why":  "The payout represents a significant individual windfall for a resident of the Cocody district.",
+                   "topic":  "Business",
                    "sources":  [
                                    {
-                                       "name":  "Agence Ivoirienne de Presse",
-                                       "url":  "https://www.aip.ci/cote-divoire-aip-50-eleves-primes-a-la-premiere-edition-de-le-flambeau-de-lexcellence-scolaire-a-la-cite-arc-en-ciel-de-songon/"
+                                       "name":  "Ivoire Matin",
+                                       "url":  "https://www.ivoirematin.com/fr/news/People/deux-paris-gagnants-rapportent-plus-de-47-millions-fcfa-a-un-habitant-de-cocody_n_124427.html"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Grand-Bassam court sentences cannabis seller to 24 months prison",
+                   "body":  "The Tribunal de section de Grand-Bassam sentenced a drug trafficker to 24 months of firm imprisonment. The verdict follows a case involving the sale of cannabis.",
+                   "why":  "The ruling establishes a legal penalty for narcotics trafficking in the Grand-Bassam region.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Ivoire Matin",
+                                       "url":  "https://www.ivoirematin.com/fr/news/Societe/grand-bassam-un-vendeur-de-cannabis-condamne-a-24-mois-de-prison-ferme_n_124454.html"
                                    }
                                ]
                }
            ],
     "eg":  [
                {
-                   "headline":  "Egypt secures $2 billion aluminum project in Suez Canal Zone",
-                   "body":  "Egypt has reached a deal for a $2 billion investment in a high-tech aluminum project. Deputy Prime Minister for Economic Affairs Hussein Issa finalized the agreement with executives from a Chinese industrial giant.",
-                   "why":  "The investment establishes a global manufacturing engine for aluminum production within the Suez Canal Zone.",
+                   "headline":  "Egypt secures $2 billion Chinese aluminum project in Suez Canal Zone",
+                   "body":  "Egypt has reached a deal for a $2 billion investment in a high-tech aluminum manufacturing project. Deputy Prime Minister for Economic Affairs Hussein Issa finalized the agreement with a Chinese industrial firm.",
+                   "why":  "The project establishes an end-to-end manufacturing chain in the Suez Canal Zone to increase Egypt\u0027s global industrial footprint.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -557,8 +657,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Egypt launches $658m phosphoric acid complex in New Valley",
-                   "body":  "Officials began construction Wednesday on a $658 million industrial complex at the Abu Tartour plateau. The facility is designed to produce 250,000 tonnes of commercial phosphoric acid annually.",
-                   "why":  "The plant will increase mining exports of fertilizer components via Red Sea ports.",
+                   "body":  "Egyptian officials began construction of a $658 million industrial complex at the Abu Tartour plateau. The facility is designed to produce 250,000 tonnes of commercial phosphoric acid annually.",
+                   "why":  "The plant will produce a key fertilizer component for export via Red Sea ports to increase mining revenue.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -568,9 +668,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Egypt signs $168m in export contracts with Chinese importers",
-                   "body":  "Egyptian exporters signed 17 contracts totaling an estimated $168 million during the â€œExport to Chinaâ€ event. The Egyptian Commercial Service said the deals cover copper, aluminium, leather, textile yarn, flax, sugar cane and oranges.",
-                   "why":  "The agreements diversify the types of Egyptian goods sold to the Chinese market.",
+                   "headline":  "Egypt signs 17 export contracts with China worth $168m",
+                   "body":  "Egyptian exporters signed 17 contracts totaling an estimated $168 million with Chinese importers. The Egyptian Commercial Service reported the deals cover sugar cane, oranges, copper, aluminum, leather, textile yarn, and flax.",
+                   "why":  "The agreements are part of a government effort to diversify the types of goods Egypt exports to the Chinese market.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -581,8 +681,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Microbus rollover in Monufia kills 2, injures 17",
-                   "body":  "A passenger microbus overturned along the Kafr Dawood road near the village of Al-Baregat. The accident left two people dead and 17 others injured.",
-                   "why":  "The crash required multiple ambulances to transport victims for medical treatment.",
+                   "body":  "Two people died and 17 others were injured when a passenger microbus overturned on the Kafr Dawood road. The accident occurred near the village of Al-Baregat in Monufia Governorate.",
+                   "why":  "Emergency services had to deploy multiple ambulances to the scene to treat and transport the 19 casualties.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -592,23 +692,23 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Al-Sisi backs Libya\u0027s unified institutions and elections",
-                   "body":  "President Abdel Fattah Al-Sisi reiterated support for Libya\u0027s territorial unity and the holding of parliamentary and presidential elections. Al-Sisi made the statements Wednesday during talks with Libyan National Army commander Khalifa Haftar.",
-                   "why":  "The diplomatic effort seeks to establish a unified government and electoral process in Libya.",
-                   "topic":  "Politics",
+                   "headline":  "Egypt forecasts temperature spike of 2 degrees starting Friday",
+                   "body":  "The Egyptian Meteorological Authority announced temperatures will rise by up to two degrees beginning Friday. The agency forecasts extremely hot and humid conditions nationwide during the day.",
+                   "why":  "The heatwave will affect both inland governorates and coastal areas, increasing humidity levels across the country.",
+                   "topic":  "Climate",
                    "sources":  [
                                    {
-                                       "name":  "Daily News Egypt",
-                                       "url":  "https://www.dailynewsegypt.com/2026/08/19/al-sisi-reiterates-egypts-support-for-libyas-unified-institutions-elections/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=al-sisi-reiterates-egypts-support-for-libyas-unified-institutions-elections"
+                                       "name":  "Egypt Independent",
+                                       "url":  "https://www.egyptindependent.com/upcoming-heatwave-spike-in-temperatures-across-egypt-starting-friday/"
                                    }
                                ]
                }
            ],
     "gq":  [
                {
-                   "headline":  "Health Ministry leaves 65,000 patients without antiretrovirals",
-                   "body":  "Approximately 65,000 patients in Bata are without antiretroviral medications. Diario Rombe reports that Health Minister DÃ¡maso Mitoha Ondoâ€™o Ayekaba has used media outlets to blame patients for abandoning treatment.",
-                   "why":  "The shortage prevents thousands of HIV-positive individuals from accessing life-saving medication.",
+                   "headline":  "Diario Rombe reports 65,000 patients lack antiretrovirals",
+                   "body":  "Approximately 65,000 patients in Bata are without antiretroviral medications. Diario Rombe attributes the shortage to the Ministry of Health and Infrastructure, led by Dámaso Mitoha Ondo’o Ayekaba.",
+                   "why":  "The lack of medication increases the risk of death for patients who cannot maintain their viral suppression treatment.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -618,9 +718,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Secret gold contract involves 1,000 tons of gold and $30 million guarantee",
-                   "body":  "A secret contract involves 1,000 tons of gold and a $30 million bank guarantee. Diario Rombe reports the operation was controlled by a relative of Constancia Mangue and operated outside state controls.",
-                   "why":  "The use of unofficial processing facilities allows gold to be purified and sold without government oversight.",
+                   "headline":  "Diario Rombe alleges secret contract for 1,000 tons of gold",
+                   "body":  "A secret contract involving 1,000 tons of gold and a $30 million bank guarantee is allegedly controlled by a relative of Constancia Mangue. Diario Rombe reports the operation functioned outside ordinary state controls.",
+                   "why":  "The existence of an unregulated gold trade circuit bypasses official state revenue and oversight mechanisms.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -630,9 +730,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Prime Minister orders notary inspections after revenue gaps",
-                   "body":  "Prime Minister Manuel Osa ordered inspections of notary offices after detecting gaps in tax collection. The directive was issued during economic report presentations at the government headquarters in Malabo II.",
-                   "why":  "The inspections aim to identify and close leakages in the state\u0027s revenue collection process.",
+                   "headline":  "Prime Minister orders notary inspections over revenue gaps",
+                   "body":  "Prime Minister Manuel Osa has ordered inspections of notary offices after detecting gaps in tax collection. The order followed economic report presentations from the ministries of Justice, Cult, Human Rights, and Foreign Affairs.",
+                   "why":  "Increased oversight of notaries aims to recover missing government funds and close loopholes in national revenue collection.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -643,9 +743,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Scientific Committee validates V Population and I Agricultural censuses",
-                   "body":  "The Scientific Committee approved strategic documents for the fifth population census and the first agricultural census. The review took place at the Ministry of Finance, Budgets and National Planning.",
-                   "why":  "The validated technical instruments will be used to collect the first official data on the country\u0027s agricultural sector.",
-                   "topic":  "News",
+                   "body":  "The Scientific Committee has approved the strategic documents for the fifth population census and the first agricultural census. The validation took place at the Ministry of Finance, Budgets and National Planning.",
+                   "why":  "These statistical operations provide the data necessary for the government to plan infrastructure and resource allocation for farmers.",
+                   "topic":  "Agriculture",
                    "sources":  [
                                    {
                                        "name":  "Ahora EG",
@@ -654,9 +754,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Media Law proposes new information sciences internship institute",
-                   "body":  "A new Media Law includes the creation of an internship institute for Information Sciences. Government delegates presented the plan to deputies as a mechanism to strengthen journalist training.",
-                   "why":  "The institute will establish formal training and ordering mechanisms for practicing journalists in the country.",
+                   "headline":  "New Media Law proposes information sciences institute",
+                   "body":  "A proposed Media Law includes the creation of a practical institute for Information Sciences. The government detailed the plan to deputies as a mechanism to strengthen journalist training.",
+                   "why":  "The institute will establish formal standards for the professional training and certification of journalists in the country.",
                    "topic":  "Education",
                    "sources":  [
                                    {
@@ -669,8 +769,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
     "er":  [
                {
                    "headline":  "Eritrea opens National Conference on Eritrean Agricultural Studies",
-                   "body":  "The National Conference on Eritrean Agricultural Studies 2026 opened Aug. 20 at the National Confederation of Eritrean Workers Hall in Asmara. The event focuses on advancing sustainable agri-food systems for national economic growth, according to the state news agency Shabait.",
-                   "why":  "The conference brings together ministers, experts, and food processors to coordinate strategies for increasing national economic growth through food systems.",
+                   "body":  "The National Conference on Eritrean Agricultural Studies opened Aug. 20 at the National Confederation of Eritrean Workers Hall in Asmara. The event is themed “Advancing Sustainable Agri-food Systems for National Economic Growth,” according to Shabait.",
+                   "why":  "The conference brings together food processors and farmers to develop systems intended to increase national economic growth.",
                    "topic":  "Agriculture",
                    "sources":  [
                                    {
@@ -682,184 +782,212 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            ],
     "ke":  [
                {
-                   "headline":  "IEBC requires public officers to resign by Feb. 10",
-                   "body":  "Public officers seeking elective posts must resign by February 10, according to the IEBC. Campaigning for the elections will end on August 7, 2027.",
-                   "why":  "The deadline forces government employees to choose between their current salaries and running for office.",
+                   "headline":  "IEBC sets Feb. 10 resignation deadline for public officers seeking office",
+                   "body":  "Public officers eyeing elective posts must resign by February 10, according to the IEBC. Campaigning for the elections will close on August 7, 2027.",
+                   "why":  "The deadline forces government employees to choose between their current civil service roles and running for office.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
-                                       "url":  "https://www.standardmedia.co.ke/article/2001555822/public-officers-eyeing-elective-posts-to-resign-by-february-10-iebc",
-                                       "name":  "The Standard"
+                                       "name":  "The Standard",
+                                       "url":  "https://www.standardmedia.co.ke/article/2001555822/public-officers-eyeing-elective-posts-to-resign-by-february-10-iebc"
                                    },
                                    {
-                                       "url":  "https://capitalfm.africa/iebc-sets-february-10-deadline-for-public-officers-eyeing-2027-seats/",
-                                       "name":  "Capital FM"
+                                       "name":  "Capital FM",
+                                       "url":  "https://capitalfm.africa/iebc-sets-february-10-deadline-for-public-officers-eyeing-2027-seats/"
                                    }
                                ]
                },
                {
-                   "headline":  "NANIB seizes Sh3.3 million cannabis in Narok",
-                   "body":  "National Anti-Narcotics Investigations Bureau detectives seized cannabis valued at Sh3.3 million. Three suspects were arrested following intelligence on the storage and distribution of the narcotics.",
-                   "why":  "The arrests disrupt the local distribution network of narcotics in the Narok area.",
+                   "headline":  "Helicopter crash in Kenya kills 7 including Ecuador intelligence chief",
+                   "body":  "Seven people died in a helicopter crash, including Ecuador intelligence chief Michele Sensi-Contugi and his wife Stephany Hollihan. The BBC reports the victims included five Americans.",
+                   "why":  "The deaths of the intelligence chief and his spouse prompted Ecuador to issue a security directive.",
                    "topic":  "News",
                    "sources":  [
                                    {
-                                       "url":  "https://capitalfm.africa/three-arrested-as-nanib-seizes-sh3-3-million-cannabis-in-narok/",
-                                       "name":  "Capital FM"
+                                       "name":  "BBC Africa",
+                                       "url":  "https://www.bbc.co.uk/news/articles/clylkv4z59vo?at_medium=RSS\u0026at_campaign=rss"
+                                   },
+                                   {
+                                       "name":  "Anadolu Africa",
+                                       "url":  "https://www.aa.com.tr/en/africa/ecuador-intel-chief-american-television-executive-among-7-killed-in-kenya-helicopter-crash/4031698"
                                    }
                                ]
                },
                {
-                   "headline":  "Kenya schools to open for Term III on Aug. 24",
-                   "body":  "Schools will open on August 24 as scheduled, according to Education CS Julius Ogamba. The minister refuted social media reports that the date had been postponed.",
-                   "why":  "Parents must ensure students return to classrooms by the 24th despite conflicting reports on social media.",
+                   "headline":  "Swiss poll names Kalonzo as leading opposition choice with 41%",
+                   "body":  "Kalonzo leads opposition candidates with 41% support in a Swiss poll. Other results include Sifuna at 26%, Matiangi at 16%, and Gachagua at 9%.",
+                   "why":  "The figures indicate the younger electorate is becoming a central force in determining the anti-Ruto vote.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Capital FM",
+                                       "url":  "https://capitalfm.africa/kalonzo-emerges-as-leading-opposition-choice-in-2027-race-swiss-poll-shows/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Sightra app uses AI to navigate visually impaired users in Nairobi",
+                   "body":  "The Sightra web app uses AI to detect cars, trees, and furniture in real time. The tool sends spoken descriptions of obstacles through an earpiece to the user.",
+                   "why":  "The technology allows people with visual impairments to identify physical obstacles while moving through the city.",
+                   "topic":  "Tech",
+                   "sources":  [
+                                   {
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/20/phone-app-helps-kenyas-visually-impaired-get-around/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Education CS confirms schools will open August 24",
+                   "body":  "Schools are scheduled to open for Term III on August 24. Education CS Julius Ogamba refuted social media reports that the date had been postponed.",
+                   "why":  "Parents are instructed to rely on official notices rather than social media to coordinate the return of students.",
                    "topic":  "Education",
                    "sources":  [
                                    {
-                                       "url":  "https://www.standardmedia.co.ke/article/2001555746/schools-will-open-on-august-24-as-scheduled-ogamba-says",
-                                       "name":  "The Standard"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Ministry proposes split of tourism levy collection and management",
-                   "body":  "The Ministry of Tourism proposes separating the collection of the tourism levy from its funds management. Tourism PS Julius Bitok said the roles would mirror the functions of the KRA and the CBK.",
-                   "why":  "The change shifts how tourism funds are handled by introducing specialized roles for collection and management.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "url":  "https://capitalfm.africa/ministry-proposes-separation-of-tourism-levy-collection-and-funds-management/",
-                                       "name":  "Capital FM"
+                                       "name":  "The Standard",
+                                       "url":  "https://www.standardmedia.co.ke/article/2001555746/schools-will-open-on-august-24-as-scheduled-ogamba-says"
                                    }
                                ]
                }
            ],
     "za":  [
                {
-                   "headline":  "Eastern Cape Education Department withholds billions from schools",
-                   "body":  "The Eastern Cape Education Department unlawfully withheld billions in funding, affecting 1.58 million no-fee pupils over three years. The admission was reported by Daily Maverick and GroundUp.",
-                   "why":  "Parents already on grants must now supply their own toilet paper, cleaning products and copying paper for classrooms.",
+                   "headline":  "Eastern Cape Education Department admits withholding billions from schools",
+                   "body":  "The Eastern Cape Education Department admitted it unlawfully withheld billions from schools over three years. The move affected approximately 1.58 million no-fee pupils, according to Daily Maverick.",
+                   "why":  "Parents already surviving on grants must now supply their own toilet paper, cleaning products and copying paper for classrooms.",
                    "topic":  "Education",
                    "sources":  [
                                    {
-                                       "url":  "https://www.dailymaverick.co.za/article/2026-08-20-disgrace-eastern-cape-education-department-admits-it-unlawfully-withheld-billions-from-schools/",
-                                       "name":  "Daily Maverick"
+                                       "name":  "Daily Maverick",
+                                       "url":  "https://www.dailymaverick.co.za/article/2026-08-20-disgrace-eastern-cape-education-department-admits-it-unlawfully-withheld-billions-from-schools/"
                                    },
                                    {
-                                       "url":  "https://groundup.org.za/article/eastern-cape-education-department-admits-in-court-that-its-actions-were-unlawful/",
-                                       "name":  "GroundUp"
+                                       "name":  "GroundUp",
+                                       "url":  "https://groundup.org.za/article/eastern-cape-education-department-admits-in-court-that-its-actions-were-unlawful/"
                                    }
                                ]
                },
                {
                    "headline":  "MP Fadiel Adams accuses police officials of abusing power",
-                   "body":  "National Coloured Congress MP Fadiel Adams told the Madlanga Commission that KZN police commissioner Nhlanhla Mkhwanazi and Crime Intelligence head Dumisani Khumalo colluded to abuse power. Adams argued that Mkhwanazi should be investigated following reports involving Crime Intelligence.",
-                   "why":  "The testimony seeks to shift the focus of the Madlanga Commission\u0027s investigation toward high-ranking police leadership.",
+                   "body":  "National Coloured Congress MP Fadiel Adams told the Madlanga Commission that KZN police commissioner Lieutenant-General Nhlanhla Mkhwanazi and Crime Intelligence head Dumisani Khumalo colluded and abused power. Adams argued that Mkhwanazi should be investigated, according to the Mail \u0026 Guardian.",
+                   "why":  "The testimony challenges the conduct of high-ranking police officials regarding allegations involving Crime Intelligence.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
-                                       "url":  "https://mg.co.za/news/south-africa/2026-08-19-adams-accuses-mkhwanazi-and-khumalo-of-abusing-power/",
-                                       "name":  "Mail \u0026 Guardian"
+                                       "name":  "Mail \u0026 Guardian",
+                                       "url":  "https://mg.co.za/news/south-africa/2026-08-19-adams-accuses-mkhwanazi-and-khumalo-of-abusing-power/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Ndifuna Ukwazi seeks to block eviction of 160 Transnet land occupiers",
+                   "body":  "Housing activists Ndifuna Ukwazi are challenging the eviction of more than 160 people from Transnet land. The evictions are scheduled for 30 September, according to GroundUp.",
+                   "why":  "The court bid determines whether more than 160 residents will lose their current housing by the end of the month.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "GroundUp",
+                                       "url":  "https://groundup.org.za/article/transnet-land-occupiers-appeal-eviction-order/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Chidimma Adetshina challenges legal bid for deportation",
+                   "body":  "Beauty queen Chidimma Adetshina is challenging efforts to have her deported from South Africa. Adetshina claims she was born in the country, according to the BBC.",
+                   "why":  "The legal outcome will determine whether Adetshina is permitted to remain in South Africa or is forced to leave the country.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "BBC Africa",
+                                       "url":  "https://www.bbc.co.uk/news/articles/cj364xxr5ngo?at_medium=RSS\u0026at_campaign=rss"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Turkish exports to Africa exceed $13 billion",
+                   "body":  "Turkish exports to Africa have surpassed $13 billion. A sector representative stated that growth in gateway markets including South Africa could be used to turn direct sales into local joint investments, according to Anadolu Africa.",
+                   "why":  "Increased export growth may lead to the establishment of local joint investments in South Africa.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Anadolu Africa",
+                                       "url":  "https://www.aa.com.tr/en/economy/turkish-exports-to-africa-exceed-13b-amid-infrastructure-diplomatic-efforts/4031614"
                                    }
                                ]
                }
            ],
     "ng":  [
                {
-                   "headline":  "Nigeria oil output expected to exceed 1.7mbpd",
-                   "body":  "Crude oil production is projected to top 1.7 million barrels per day in the second half of 2026. The Nigerian Economic Summit Group (NESG) stated that higher crude prices could improve the country\u0027s fiscal outlook.",
-                   "why":  "Increased production and pricing provide the federal government with more revenue for national spending.",
+                   "headline":  "FAAN denies ban on e-hailing services at airports",
+                   "body":  "The Federal Airports Authority of Nigeria (FAAN) stated there is no ban on Uber, Bolt, or other e-hailing services at Nigerian airports. The agency said the clarification aims to improve safety and management.",
+                   "why":  "Passengers arriving at airports can continue to use mobile apps to book transport to their destinations.",
                    "topic":  "Business",
                    "sources":  [
                                    {
-                                       "url":  "https://nairametrics.com/2026/08/20/nigerias-oil-output-could-top-1-7mbpd-nesg-sees-fiscal-relief-from-higher-prices/",
-                                       "name":  "Nairametrics"
+                                       "name":  "The Punch",
+                                       "url":  "https://punchng.com/no-ban-on-uber-bolt-at-airports-faan/?utm_source=rss.punchng.com\u0026utm_medium=web"
+                                   },
+                                   {
+                                       "name":  "Nairametrics",
+                                       "url":  "https://nairametrics.com/2026/08/20/faan-moves-to-tighten-uber-bolt-operations-at-nigerian-airports/"
                                    }
                                ]
                },
                {
-                   "headline":  "Atiku pledges to restore petrol subsidy in 2027",
-                   "body":  "ADC presidential candidate Atiku has vowed to restore the petrol subsidy if elected president in 2027. He stated that individuals who diverted public funds from the previous scheme should be held accountable.",
-                   "why":  "A restoration of the subsidy would lower the pump price of fuel for Nigerian motorists and businesses.",
-                   "topic":  "Politics",
+                   "headline":  "NESG forecasts Nigeria oil output to exceed 1.7mbpd",
+                   "body":  "Crude oil production is expected to top 1.7 million barrels per day in the second half of 2026. The Nigerian Economic Summit Group (NESG) said higher prices could improve the country\u0027s fiscal outlook.",
+                   "why":  "Increased production and pricing would provide the government with more revenue to manage national spending.",
+                   "topic":  "Business",
                    "sources":  [
                                    {
-                                       "url":  "https://www.premiumtimesng.com/business/business-news/904324-atiku-vows-to-restore-petrol-subsidy-if-elected-president-in-2027.html",
-                                       "name":  "Premium Times"
+                                       "name":  "Nairametrics",
+                                       "url":  "https://nairametrics.com/2026/08/20/nigerias-oil-output-could-top-1-7mbpd-nesg-sees-fiscal-relief-from-higher-prices/"
                                    }
                                ]
                },
                {
-                   "headline":  "EFCC arraigns 3 for alleged visa fraud in Ibadan",
-                   "body":  "The Economic and Financial Crimes Commission (EFCC) has arraigned three individuals, including Emmanuel Serah Motunrayo, in Ibadan. The charges relate to alleged visa fraud.",
-                   "why":  "The prosecution targets fraudulent schemes that deceive citizens seeking to travel abroad.",
+                   "headline":  "Gunmen kill at least 24 people in Plateau State",
+                   "body":  "Attackers killed at least 24 people in the Bin-Per community of north-central Nigeria. A lawmaker reported that the attackers also burned 38 homes.",
+                   "why":  "The destruction of 38 homes leaves families in the Bin-Per community without shelter.",
                    "topic":  "News",
                    "sources":  [
                                    {
-                                       "url":  "https://businessday.ng/news/article/efcc-arraigns-3-alleged-visa-fraud-in-ibadan/",
-                                       "name":  "BusinessDay"
-                                   },
-                                   {
-                                       "url":  "https://www.vanguardngr.com/2026/08/efcc-arraigns-three-in-ibadan-over-alleged-n30m-canadian-visa-fraud/",
-                                       "name":  "Vanguard"
+                                       "name":  "Anadolu Africa",
+                                       "url":  "https://www.aa.com.tr/en/africa/gunmen-kill-at-least-24-people-in-attack-in-nigeria-s-plateau-state/4031155"
                                    }
                                ]
                },
                {
-                   "headline":  "Adeleke allocates N500m fund for election victims",
-                   "body":  "Governor Adeleke has established a N500 million fund to support victims of elections. The fund was praised by APC diaspora chieftain Lawal.",
-                   "why":  "The payout provides financial compensation to individuals harmed during electoral violence.",
+                   "headline":  "Boat capsizes in Sokoto state killing dozens",
+                   "body":  "Dozens of people died after a boat capsized in north-western Nigeria. The incident occurred in Sokoto state, where many of the victims are feared to be children.",
+                   "why":  "The accident results in a significant loss of life, specifically affecting children in the Sokoto region.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "BBC Africa",
+                                       "url":  "https://www.bbc.co.uk/news/articles/cj035jg256no?at_medium=RSS\u0026at_campaign=rss"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Inflation and security lead voter concerns as campaigns begin",
+                   "body":  "General election campaigning began on Wednesday. Voters are seeking specific answers from candidates on how to improve citizen lives, focusing on inflation and security.",
+                   "why":  "Candidates must now provide concrete policy plans to address the rising cost of living to win voter support.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
-                                       "url":  "https://www.vanguardngr.com/2026/08/apc-diaspora-chieftain-lauds-adelekes-n500m-fund-for-election-victims/",
-                                       "name":  "Vanguard"
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/19/inflation-and-security-top-voter-concerns-as-nigeria-election-campaign-kicks-off/"
                                    }
                                ]
                }
            ],
     "et":  [
                {
-                   "headline":  "Ethiopia\u0027s nominal GDP drops USD 50bln after currency float",
-                   "body":  "Nominal Gross Domestic Product fell by USD 50 billion following the floating of the currency. The figure is detailed in a report from the European Union Delegation to Ethiopia covering February to June.",
-                   "why":  "The drop occurs alongside high underlying growth, though the report notes single-digit inflation targets remain out of reach for the year.",
+                   "headline":  "Ethiopia joins African Circular Economy Facility implementation",
+                   "body":  "Ethiopia has entered the active implementation phase of the African Circular Economy Facility. The African Development Bank manages the multi-donor trust fund.",
+                   "why":  "The initiative aims to transform waste into economic value and foster green industrial development for domestic businesses.",
                    "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "The Reporter Ethiopia",
-                                       "url":  "https://www.thereporterethiopia.com/52319/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Ethiopia seeks USD 13.4bln in World Bank financing",
-                   "body":  "Ethiopia intends to seek USD 13.4 billion in World Bank IDA financing over the next decade. The Reporter Ethiopia reports that access to these funds is tied to reform progress and implementation capacity.",
-                   "why":  "The new Country Partnership Framework adds to a current World Bank portfolio that sits at USD 16 billion.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "The Reporter Ethiopia",
-                                       "url":  "https://www.thereporterethiopia.com/52316/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Over 82% of Ethiopian health institutions fail national standards",
-                   "body":  "More than 82% of assessed health institutions failed to meet national standards in a recent government survey. Surveyors noted that compliance has dropped significantly over the last four years.",
-                   "why":  "The failure affects adherence to standards jointly enforced by the Ministry of Health, the Institute of Ethiopian Standards, and Ethiopian Accreditation.",
-                   "topic":  "Health",
-                   "sources":  [
-                                   {
-                                       "name":  "The Reporter Ethiopia",
-                                       "url":  "https://www.thereporterethiopia.com/52322/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Ethiopia implements African circular economy facility",
-                   "body":  "Ethiopia has entered the active implementation phase of the African Circular Economy Facility (ACEF). The initiative is a multi-donor trust fund spearheaded by the African Development Bank.",
-                   "why":  "The program aims to transform waste into economic value and foster green industrial development for domestic value chains.",
-                   "topic":  "Climate",
                    "sources":  [
                                    {
                                        "name":  "Capital Ethiopia",
@@ -868,23 +996,35 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Sybrin enters Ethiopian market for digital payments",
-                   "body":  "Sybrin has launched a strategic initiative to support the modernization of digital payments in Ethiopia. The company cited rapid digital adoption and regulatory reform as drivers for the entry.",
-                   "why":  "The move targets the country\u0027s national vision for financial inclusion through the deployment of payment infrastructure.",
-                   "topic":  "Tech",
+                   "headline":  "Egypt warns Ethiopia against building new Nile dams",
+                   "body":  "Egypt has issued a warning against the construction of new Ethiopian dams on the Nile River. The warning was reported by Radio Tamazuj.",
+                   "why":  "The dispute over dam construction affects the management and distribution of water resources between the two nations.",
+                   "topic":  "Politics",
                    "sources":  [
                                    {
-                                       "name":  "Capital Ethiopia",
-                                       "url":  "https://capitalethiopia.com/2026/08/17/sybrin-deepens-east-african-expansion-with-strategic-ethiopian-market-entry/"
+                                       "name":  "Radio Tamazuj",
+                                       "url":  "https://www.radiotamazuj.org/en/news/article/egypt-warns-against-building-new-dams-on-the-nile"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Tigray rebels report drone strikes in Mekelle",
+                   "body":  "Drone strikes hit a residential area in the Tigray regional capital of Mekelle. The Africa Report stated that civilian casualty details are currently unknown.",
+                   "why":  "The air raids increase the risk of civilian casualties in residential zones of the regional capital.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "The Africa Report",
+                                       "url":  "https://www.theafricareport.com/428186/ethiopias-tigray-rebels-say-drone-hits-mekelle-residential-area/"
                                    }
                                ]
                }
            ],
     "gh":  [
                {
-                   "headline":  "Ghana bank advances rise 38.6% to GHÂ¢124.3 billion",
-                   "body":  "Total bank advances reached GHÂ¢124.3 billion in June 2026, up from GHÂ¢89.7 billion a year earlier. Private-sector credit expanded by 41.2% during the same period, according to MyJoyOnline.",
-                   "why":  "Productive sectors intended to drive the 24-Hour Economy are receiving relatively small shares of this credit.",
+                   "headline":  "Ghana bank advances rise 38.6% to GH¢124.3 billion",
+                   "body":  "Total bank advances reached GH¢124.3 billion in June 2026, up from GH¢89.7 billion a year earlier. Private-sector credit expanded by 41.2% during the same period. The data indicates that productive sectors are receiving relatively small shares of this credit.",
+                   "why":  "The current lending structure limits the growth of productive sectors intended to drive the 24-Hour Economy.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -894,20 +1034,32 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Ghana issues recapitalisation bonds equal to 2.6% of GDP",
-                   "body":  "Recapitalisation bonds equivalent to approximately 2.6% of GDP were issued to support undercapitalised banks. The move followed the Domestic Debt Exchange Programme, according to a paper cited by MyJoyOnline.",
-                   "why":  "The funding was used to strengthen the financial sector after banks were undercapitalised for much of the decade preceding 2017.",
-                   "topic":  "Business",
+                   "headline":  "Five in six Ghana health facilities miss sanitation standards",
+                   "body":  "Approximately 83% of health facilities in Ghana fail to meet the full international standard for basic sanitation. The figures were released by WHO and UNICEF.",
+                   "why":  "The lack of clean, usable toilets in these facilities hinders the ability of patients to access basic hygiene during medical care.",
+                   "topic":  "Health",
                    "sources":  [
                                    {
                                        "name":  "MyJoyOnline",
-                                       "url":  "https://www.myjoyonline.com/banking-sector-was-undercapitalised-for-much-of-decade-preceding-2017-cleanup-opoku-afari/"
+                                       "url":  "https://www.myjoyonline.com/five-in-six-ghana-health-facilities-fall-short-of-basic-sanitation-standard-who-unicef/"
                                    }
                                ]
                },
                {
-                   "headline":  "ECG schedules eight-hour power outage in Ashanti Region",
-                   "body":  "The Electricity Company of Ghana announced a planned eight-hour power outage in several Ashanti Region communities. The company stated the outage is for maintenance works.",
+                   "headline":  "Energy Ministry warns of power system vulnerability",
+                   "body":  "Ghana\u0027s electricity transmission system is currently vulnerable due to the use of a temporary control room. The Ministry of Energy expects a permanent facility to be completed by the end of September.",
+                   "why":  "The temporary arrangement increases the risk of system failures until the permanent facility is operational.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "MyJoyOnline",
+                                       "url":  "https://www.myjoyonline.com/temporary-control-room-leaves-ghanas-power-system-vulnerable-energy-ministry/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "ECG schedules eight-hour outage in Ashanti Region",
+                   "body":  "The Electricity Company of Ghana announced a planned eight-hour power outage affecting several communities in the Ashanti Region. The company stated the outage is for maintenance works.",
                    "why":  "The maintenance is intended to improve electricity service delivery for residents in the affected communities.",
                    "topic":  "News",
                    "sources":  [
@@ -918,21 +1070,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Ghana and CÃ´te dâ€™Ivoire conduct joint maritime boundary inspection",
-                   "body":  "Ghana and CÃ´te dâ€™Ivoire are performing a joint inspection of their shared maritime boundary. The action is part of a broader effort to deepen operational cooperation, according to MyJoyOnline.",
-                   "why":  "The joint inspection is intended to strengthen security within the shared maritime space.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "MyJoyOnline",
-                                       "url":  "https://www.myjoyonline.com/ghana-cote-divoire-deepen-maritime-security-cooperation-through-joint-boundary-inspection/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "GRA addresses technical failures on Ghana.gov payment platform",
-                   "body":  "The Ghana Revenue Authority is resolving intermittent technical challenges affecting tax payments. The issues impact the Ghana.gov payment platform, the agency stated.",
-                   "why":  "The technical failures are preventing taxpayers, importers, and clearing agents from completing tax payments.",
+                   "headline":  "GRA resolves technical issues on Ghana.gov payment platform",
+                   "body":  "The Ghana Revenue Authority is addressing intermittent technical challenges affecting tax payments. The issues impacted the Ghana.gov payment platform.",
+                   "why":  "The resolution allows taxpayers, importers, and clearing agents to resume the payment of taxes.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -944,9 +1084,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            ],
     "cd":  [
                {
-                   "headline":  "DR Congo launches emergency Ebola measures along Congo River",
-                   "body":  "The government launched an emergency system Thursday between Kisangani and Kinshasa to prevent the spread of the Bundibugyo virus. An official communique stated the measures target the country\u0027s primary waterway. This restricts the movement of the virus along the main fluvial transport route used by passengers and cargo.",
-                   "why":  "This restricts the movement of the virus along the main fluvial transport route used by passengers and cargo.",
+                   "headline":  "Africa CDC mobilizes $700 million for Ebola response in DRC",
+                   "body":  "Africa CDC has mobilized $700 million to combat Ebola, with $452 million already disbursed. Director General Jean Kaseya detailed the figures during a Space live interview on Wednesday.",
+                   "why":  "The funding supports the scale of the organization\u0027s role in managing the virus outbreak.",
+                   "topic":  "Health",
+                   "sources":  [
+                                   {
+                                       "name":  "Actualite.cd",
+                                       "url":  "https://actualite.cd/2026/08/20/ebola-en-rdc-jean-kaseya-annonce-700-millions-de-dollars-mobilises-dont-452-millions"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "DRC launches emergency Ebola measures along Congo River",
+                   "body":  "The DRC government launched an emergency system on Thursday between Kisangani and Kinshasa. According to an official statement, the measures aim to prevent the spread of the Bundibugyo virus along the country\u0027s main waterway.",
+                   "why":  "The restrictions target the primary fluvial transport route to stop the virus from moving between major cities.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -957,8 +1109,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "CAVB moves 2026 Men\u0027s African Volleyball Championship to Tunis",
-                   "body":  "The African Volleyball Confederation officialized the withdrawal of the DR Congo as host for the 2026 tournament on Thursday. The event was moved from Kinshasa to Tunis due to Ebola. Local organizers and athletes in Kinshasa will no longer host the competition.",
-                   "why":  "Local organizers and athletes in Kinshasa will no longer host the competition.",
+                   "body":  "The African Volleyball Confederation (CAVB) officially withdrew the organization of the 2026 Men\u0027s African Nations Championship from the DRC on Thursday. The event will now be held in Tunis.",
+                   "why":  "The relocation is a result of the Ebola outbreak in the DRC.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
@@ -968,9 +1120,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "AFC-M23 bans political broadcasts in South Kivu zones",
-                   "body":  "De facto governor Patrick Busu Bwa Ngwi Shombo banned the broadcast of political programs and information from Kinshasa in rebel-controlled areas. The order affects zones under AFC-M23 control. Residents in these areas are now blocked from accessing official government news and political discourse from the capital.",
-                   "why":  "Residents in these areas are now blocked from accessing official government news and political discourse from the capital.",
+                   "headline":  "AFC-M23 bans Kinshasa news in South Kivu zones",
+                   "body":  "De facto governor Patrick Busu Bwa Ngwi Shombo has prohibited the broadcast of political programs and news from Kinshasa. The ban applies to all areas under the rebellion\u0027s control in South Kivu.",
+                   "why":  "Residents in these zones are now blocked from accessing official government information and political broadcasts from the capital.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -980,21 +1132,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Armed men loot Birambizo General Hospital in North Kivu",
-                   "body":  "Unidentified armed men looted the Birambizo General Reference Hospital on Wednesday, August 19. Local sources report the theft of medications, medical equipment, and office supplies. Patients at the facility lose access to essential medicines and diagnostic tools.",
-                   "why":  "Patients at the facility lose access to essential medicines and diagnostic tools.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Radio Okapi",
-                                       "url":  "https://www.radiookapi.net/2026/08/20/actualite/societe/lhopital-general-de-birambizo-nouveau-pille-par-des-hommes-armes-au"
-                                   }
-                               ]
-               },
-               {
                    "headline":  "Provincial deputy seeks probe into illegal gold mining in Luiza",
-                   "body":  "Provincial deputy StÃ©phane Muanda requested a judicial investigation into mining companies and provincial officials suspected of illegal gold mining in Luiza. The request follows an investigative report published August 15. This legal action targets the illicit extraction of mineral wealth by provincial authorities and private firms.",
-                   "why":  "This legal action targets the illicit extraction of mineral wealth by provincial authorities and private firms.",
+                   "body":  "Provincial deputy Stéphane Muanda has requested a judicial investigation into several mining companies and provincial officials. The request follows an investigative report published Saturday, Aug. 15, alleging illegal gold exploitation in the Luiza territory.",
+                   "why":  "The probe targets provincial authorities and companies to address the unauthorized extraction of mineral resources in Kasaï-Central.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1006,10 +1146,22 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            ],
     "tz":  [
                {
-                   "headline":  "Hydropower generates 63.85% of Tanzania\u0027s national grid electricity",
-                   "body":  "Hydropower provided 63.85% of electricity from the National Grid in 2025, according to the Tanzania Economic Survey 2025. Natural gas accounted for 31.48% of generation. Hydropower had an installed capacity of 2,718.27 MW compared to 1,140.72 MW for natural gas.",
-                   "why":  "The energy mix supports a national target to reach 3,000 kWh per capita by 2050.",
-                   "topic":  "Business",
+                   "headline":  "Tanzania suspends weekly newspaper for six months",
+                   "body":  "The information ministry suspended a weekly newspaper for six months following a report alleging government divisions. The ministry cited alleged breaches of media law as the reason for the closure.",
+                   "why":  "The suspension prevents the outlet from publishing investigative reports on the Vice President and government internal conflicts.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/19/tanzanian-newspaper-suspended-for-six-months-over-report-on-government-divisions/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Hydropower generates 63.85% of Tanzania\u0027s grid electricity",
+                   "body":  "Hydropower provided 63.85% of electricity from the national grid in 2025, according to the Tanzania Economic Survey 2025. Natural gas accounted for 31.48% of generation.",
+                   "why":  "The government is utilizing this capacity to reach a target of 3,000 kWh per capita by 2050.",
+                   "topic":  "Climate",
                    "sources":  [
                                    {
                                        "name":  "The Chanzo",
@@ -1018,45 +1170,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Tanzania shutters Mwanahalisi news outlet for six months",
-                   "body":  "The state has suspended the Kiswahili investigative weekly Mwanahalisi for six months. The closure follows a report by the outlet regarding the Vice President, according to The Chanzo.",
-                   "why":  "The suspension restricts the availability of investigative reporting in the Kiswahili language.",
-                   "topic":  "Politics",
+                   "headline":  "DP World contracts EDECS to build seven cargo yards at Dar Port",
+                   "body":  "DP World has hired Egyptian firm EDECS to construct seven cargo yards at the Dar es Salaam port. The project includes physical infrastructure and digital yard management systems.",
+                   "why":  "The new yards will increase cargo storage capacity and automate the management of shipments at the port.",
+                   "topic":  "Business",
                    "sources":  [
                                    {
                                        "name":  "The Chanzo",
-                                       "url":  "https://thechanzo.com/2026/08/20/tanzanias-media-crackdown-intensifies-as-mwanahalisi-is-shuttered-for-six-months-over-vice-president-report/"
+                                       "url":  "https://thechanzo.com/2026/08/20/dp-world-contracts-egyptian-firm-edecs-for-construction-of-seven-cargo-yards-at-dar-port/"
                                    }
                                ]
                },
                {
-                   "headline":  "Tanzania gives cement makers eight days to cut prices",
-                   "body":  "The government has issued an eight-day ultimatum to cement manufacturers to reduce prices and improve supplies. The order was reported by The Citizen.",
-                   "why":  "Lower prices would reduce construction costs for builders and homeowners.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "The Citizen",
-                                       "url":  "https://www.thecitizen.co.tz/tanzania/business/cement-manufacturers-issued-eight-day-ultimatum-to-cut-prices-5562994"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Coop Bank opens seventh branch to target rural growth",
-                   "body":  "Coop Bank has expanded its national footprint to seven branches. The lender is accelerating growth in rural areas, according to The Citizen.",
-                   "why":  "The expansion increases access to banking services for residents in rural regions.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "The Citizen",
-                                       "url":  "https://www.thecitizen.co.tz/tanzania/business/coop-bank-opens-its-seventh-branch-targets-further-growth-in-rural-areas-5564390"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "NECTA head elected president of AEAA for 2026/2027 term",
-                   "body":  "Prof. Said Mohamed, Executive Secretary of the National Examinations Council of Tanzania, was elected president of the Association for Educational Assessment in Africa. He pledged to increase transparency and accountability within the organization.",
-                   "why":  "The appointment places a Tanzanian official in charge of coordinating educational assessment challenges across Africa.",
+                   "headline":  "NECTA chief elected president of AEAA for 2026/2027",
+                   "body":  "Prof. Said Mohamed, Executive Secretary of the National Examinations Council of Tanzania, was elected president of the Association for Educational Assessment in Africa. He will serve the 2026/2027 term.",
+                   "why":  "The appointment gives Tanzania a leadership role in coordinating educational assessment standards across African school systems.",
                    "topic":  "Education",
                    "sources":  [
                                    {
@@ -1064,13 +1192,25 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://dailynews.co.tz/newly-elected-aeaa-president-pledges-to-bolster-unity-transparency-accountability-in-the-organization/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "Police donate 100 items to Nyamagana District Hospital",
+                   "body":  "The Nyamagana District Police Force donated 50 bedsheets and 50 mosquito nets to patients at Nyamagana District Hospital. The handover took place in the Mwanza region.",
+                   "why":  "The donation provides immediate bedding and malaria prevention tools for patients receiving treatment at the facility.",
+                   "topic":  "Health",
+                   "sources":  [
+                                   {
+                                       "name":  "Daily News Tanzania",
+                                       "url":  "https://dailynews.co.tz/police-donate-humanitarian-aids-to-patients-at-nyamagana-hospital/"
+                                   }
+                               ]
                }
            ],
     "ma":  [
                {
                    "headline":  "Morocco enacts Law 66.23 regulating legal profession",
-                   "body":  "Law 66.23 took effect Thursday following its publication in Official Gazette No. 7536. The law was enacted by Royal Decree 1.26.75 on Aug. 18. A nationwide lawyers\u0027 strike against the measure has been ongoing since June 15.",
-                   "why":  "The enactment forces the legal profession to operate under new regulations despite an unresolved constitutional challenge.",
+                   "body":  "Law 66.23 took effect Thursday following its publication in the Official Gazette. The law was enacted by Royal Decree 1.26.75 on Aug. 18, according to the Official Gazette. A nationwide lawyers\u0027 strike against the regulation has been ongoing since June 15.",
+                   "why":  "The enactment proceeds despite an unresolved constitutional challenge and active industrial action by the country\u0027s lawyers.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1080,9 +1220,33 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
+                   "headline":  "Morocco plans 300km water canal to link Sebou and Oum Er Rbia",
+                   "body":  "Morocco is planning a water transfer project spanning approximately 300 kilometers. The system will have a transport capacity of 800 million cubic meters of water annually, according to the platform Al Ma Dialna.",
+                   "why":  "The project aims to improve the distribution of water resources between different regions to enhance national water security.",
+                   "topic":  "Climate",
+                   "sources":  [
+                                   {
+                                       "name":  "Barlamane",
+                                       "url":  "https://barlamane.com/%d9%85%d9%86%d8%b5%d8%a9-%d8%ad%d9%88%d8%a7%d9%84%d9%8a-300-%d9%83%d9%8a%d9%84%d9%88%d9%85%d8%aa%d8%b1-%d9%85%d9%86-%d8%a7%d9%84%d9%82%d9%86%d9%88%d8%a7%d8%aa-%d8%a7%d9%84%d9%85%d8%a7%d8%a6%d9%8a/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Moroccan mutton prices exceed 150 dirhams per kg",
+                   "body":  "Mutton prices in several Moroccan cities have risen above 150 dirhams per kilogram. Beef prices are currently ranging between 120 and 130 dirhams, according to Barlamane.",
+                   "why":  "Rising costs are reducing the purchasing power of low-income families amid criticisms that meat imports have been ineffective.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Barlamane",
+                                       "url":  "https://barlamane.com/%d8%a7%d8%b1%d8%aa%d9%81%d8%a7%d8%b9-%d8%a3%d8%b3%d8%b9%d8%a7%d8%b1-%d8%a7%d9%84%d9%84%d8%ad%d9%88%d9%85-%d8%a8%d8%a7%d9%84%d9%85%d8%ba%d8%b1%d8%a8-%d9%8a%d8%aa%d8%ac%d8%a7%d9%88%d8%b2-150-%d8%af/"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "Algeria returns 49 migrants to Morocco",
-                   "body":  "Algerian authorities handed over 49 Moroccan migrants, including two women and two minors, on Wednesday. The transfer occurred via the Oujda-Maghnia border post, according to the Association marocaine d\u0027aide aux migrants en situation vulnÃ©rable (AMSV).",
-                   "why":  "The operation returns undocumented individuals to Morocco via the Oujda-Maghnia border crossing.",
+                   "body":  "Algerian authorities handed over 49 Moroccan migrants to Moroccan officials on Wednesday. The group included two women and two minors, according to the Moroccan Association for Aid to Migrants in Vulnerable Situations (AMSV).",
+                   "why":  "The transfer took place via the Oujda-Maghnia border crossing to return the individuals to their home country.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -1092,59 +1256,23 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Morocco gas link with Nigeria gains strategic importance",
-                   "body":  "A planned gas corridor between Morocco and Nigeria is gaining importance as the EU reduces Russian energy imports, according to UNITED24 Media. The project remains under development. Morocco is not currently a major gas supplier to Europe.",
-                   "why":  "The corridor provides the EU with a potential alternative supply route for energy from Africa.",
+                   "headline":  "Lithuanian plant shutdown may boost Moroccan fertilizer demand",
+                   "body":  "European demand for Moroccan fertilizer could increase following the suspension of production at EuroChem\u0027s Lifosa plant in Lithuania. Argus Media reported the plant halted operations due to high raw-material costs.",
+                   "why":  "The shutdown occurs as shipping disruptions have already tightened global supplies of phosphate products.",
                    "topic":  "Business",
                    "sources":  [
                                    {
                                        "name":  "Hespress English",
-                                       "url":  "https://en.hespress.com/144098-moroccos-planned-gas-corridor-gains-weight-as-eu-cuts-russian-imports.html"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Gharb region reports no mosquito surge after floods",
-                   "body":  "Municipal authorities in the flood-affected Gharb region reported no unusual increase in mosquitoes during the first summer following the floods. Officials attributed the result to early drainage and pest-control operations.",
-                   "why":  "The prevention of stagnant water breeding grounds reduced the public-health risks for residents in the flood-affected region.",
-                   "topic":  "Health",
-                   "sources":  [
-                                   {
-                                       "name":  "Hespress English",
-                                       "url":  "https://en.hespress.com/144104-gharb-municipalities-report-no-unusual-mosquito-surge-after-floods.html"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "British coach Leon Baptiste imprisoned in Marrakech",
-                   "body":  "Former athletics champion Leon Baptiste is serving a prison sentence at l\u0027Oudaya in Marrakech. British media reports that Baptiste was convicted of sexual assault on a minor.",
-                   "why":  "The conviction results in the incarceration of the British national in a Marrakech prison.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Yabiladi",
-                                       "url":  "https://www.yabiladi.com/articles/details/201033/maroc-entraineur-britannique-prison-pour.html?utm_source=rss_yabiladi"
+                                       "url":  "https://en.hespress.com/144113-lithuanian-plant-shutdown-could-lift-european-demand-for-moroccan-fertilizer.html"
                                    }
                                ]
                }
            ],
     "ug":  [
                {
-                   "headline":  "Uganda trade deficit widens to $598 million in June",
-                   "body":  "Uganda\u0027s merchandise trade deficit reached approximately $598 million in June. The Nile Post reports imports grew three times faster than exports, while coffee earnings decreased by more than one-third.",
-                   "why":  "The drop in coffee earnings and surge in imports reduces the amount of foreign currency available to the state.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Nile Post",
-                                       "url":  "https://nilepost.co.ug/business/365328/ugandas-trade-deficit-widens-as-imports-surge-33-coffee-earnings-fall"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Kabalagala house attack kills two children",
-                   "body":  "Two children were killed and three people, including their mother, were injured in an early-morning attack in Kabalagala. Police are investigating the incident, which also involved the burning of a vehicle.",
-                   "why":  "The attack resulted in the deaths of two minors and the destruction of private property.",
+                   "headline":  "Police investigate Kabalagala attack that killed 2 children",
+                   "body":  "Two children were killed and three others injured during an early-morning attack in Kabalagala. Police report that a vehicle was also burnt during the incident.",
+                   "why":  "The attack left a mother among the injured and resulted in the deaths of two children.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -1158,10 +1286,22 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Court convicts two school directors for pupil murder",
-                   "body":  "The High court in Soroti convicted Jozan Nursery and Primary School directors Suzan Vivian Ariokot and Joseph Okedi, and police officer John Bosco Obotol, for the murder of six-year-old Joan Faith Apio. The pupil was found dead in a school latrine on February 5, 2025.",
-                   "why":  "The ruling establishes legal accountability for school administrators regarding the death of a student on campus.",
-                   "topic":  "Education",
+                   "headline":  "Uganda trade deficit widens to $598 million in June",
+                   "body":  "The merchandise trade deficit reached approximately $598 million in June as imports grew three times faster than exports. Nile Post reports that coffee earnings fell by more than a third.",
+                   "why":  "The decline in coffee revenue and surge in imports reduce the amount of foreign currency entering the country.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Nile Post",
+                                       "url":  "https://nilepost.co.ug/business/365328/ugandas-trade-deficit-widens-as-imports-surge-33-coffee-earnings-fall"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Court convicts 3 for murder of 6-year-old pupil",
+                   "body":  "The High court in Soroti convicted school directors Suzan Vivian Ariokot and Joseph Okedi, and police officer John Bosco Obotol, for the murder of Joan Faith Apio. The pupil was found dead with her throat slit in a school latrine on February 5, 2025.",
+                   "why":  "The ruling establishes criminal liability for the school\u0027s directors while acquitting the headteacher and matron.",
+                   "topic":  "News",
                    "sources":  [
                                    {
                                        "name":  "The Observer Uganda",
@@ -1170,21 +1310,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Movit Africa provides tuk-tuks to three Masaka traders",
-                   "body":  "Movit Africa gave tuk-tuks to three cosmetics traders in Masaka and Kyotera. The company stated the vehicles are intended to help traders move more stock and reduce transport costs.",
-                   "why":  "The new vehicles allow these specific traders to reach more customers and lower their operational overhead.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Watchdog Uganda",
-                                       "url":  "https://www.watchdoguganda.com/news/20260820/196800/movit-africa-gives-masaka-traders-tuk-tuks-to-boost-distribution.html"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "State witness claims Besigye plotted Cafe Javas bombing",
-                   "body":  "Investigator Andrew Wilson told the High court he used a hidden camera to record meetings where Dr. Kizza Besigye discussed acquiring weapons to overthrow the government. Wilson testified that these plans included bombing Cafe Javas.",
-                   "why":  "The testimony provides the court with alleged evidence of a plot to use explosives against a commercial target.",
+                   "headline":  "Witness claims Besigye plotted to bomb Cafe Javas",
+                   "body":  "Investigator Andrew Wilson told the High court he used a covert camera to record meetings where Dr. Kizza Besigye discussed acquiring weapons to overthrow the government. Wilson testified that these plans included bombing Cafe Javas.",
+                   "why":  "The testimony introduces evidence of a specific plot to target a commercial establishment as part of a coup attempt.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1192,38 +1320,26 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://observer.ug/news/besigye-plotted-to-bomb-cafe-javas-state-spy-tells-court/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "Movit Africa provides tuk-tuks to Masaka traders",
+                   "body":  "Movit Africa gave tuk-tuks to three cosmetics traders in Masaka and Kyotera. The company stated the vehicles are intended to help traders move more stock.",
+                   "why":  "The new vehicles allow traders Senalim Hakim and Kalungi K to cut transport costs and reach more customers.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Watchdog Uganda",
+                                       "url":  "https://www.watchdoguganda.com/news/20260820/196800/movit-africa-gives-masaka-traders-tuk-tuks-to-boost-distribution.html"
+                                   }
+                               ]
                }
            ],
     "zw":  [
                {
-                   "headline":  "RBZ injects ZiG600 million into economy",
-                   "body":  "The Reserve Bank of Zimbabwe injected approximately ZiG600 million into circulation during the first half of 2026. The central bank stated the move aims to deepen the use of the local currency.",
-                   "why":  "The injection is intended to ease cash-related challenges for users of the local currency.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Bulawayo24",
-                                       "url":  "https://bulawayo24.com/index-id-news-sc-national-byo-266988.html"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "RBZ maintains 30% export surrender requirement",
-                   "body":  "The Reserve Bank of Zimbabwe rejected calls from exporters to reduce the 30% export surrender threshold. The central bank stated in its mid-term monetary policy statement that the policy is critical for price and exchange rate stability.",
-                   "why":  "Exporters must continue to surrender nearly one-third of their foreign currency earnings to the central bank.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Zimbabwe Independent",
-                                       "url":  "https://zimbabwe-independent.com/article/rbz-rejects-push-to-slash-export-surrender-threshold/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Court grants USD1,000 bail to President\u0027s daughter-in-law",
-                   "body":  "Kelsea Tadiwa Tafirenyika and co-accused Isaac Arab Jessub were granted USD1,000 bail by the High Court. Justice Pisirayi Kwenda set aside a previous magistrate\u0027s decision from August 13 that had denied bail in a drug dealing case.",
-                   "why":  "The ruling allows the two accused individuals to leave custody pending their trial.",
-                   "topic":  "Politics",
+                   "headline":  "Court grants Mnangagwa daughter-in-law USD1,000 bail",
+                   "body":  "Kelsea Tadiwa Tafirenyika and co-accused Isaac Arab Jessub were granted USD1,000 bail on Thursday. Justice Pisirayi Kwenda set aside a previous magistrate\u0027s decision to keep the drug-dealing suspects in custody.",
+                   "why":  "The ruling allows the suspects to remain out of prison while awaiting trial.",
+                   "topic":  "News",
                    "sources":  [
                                    {
                                        "name":  "NewZimbabwe",
@@ -1236,21 +1352,33 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "State owes contractors ZiG250 billion",
-                   "body":  "The Auditor-General estimates outstanding state payments to contractors at ZiG250 billion. Affected firms stated this week they are exploring private consultants to recover the funds due to cash-flow problems.",
-                   "why":  "Deepening cash-flow shortages are pushing the affected firms to the brink of failure.",
+                   "headline":  "RBZ maintains 30% export surrender requirement",
+                   "body":  "The Reserve Bank of Zimbabwe rejected calls to reduce the 30% export surrender threshold in its mid-term monetary policy statement released Thursday. The central bank stated the policy is necessary for price and exchange rate stability.",
+                   "why":  "Exporters must continue converting nearly one-third of their foreign currency earnings into local currency.",
                    "topic":  "Business",
                    "sources":  [
                                    {
                                        "name":  "Zimbabwe Independent",
-                                       "url":  "https://zimbabwe-independent.com/article/unpaid-contractors-push-back-after-govt-backlash/"
+                                       "url":  "https://zimbabwe-independent.com/article/rbz-rejects-push-to-slash-export-surrender-threshold/"
                                    }
                                ]
                },
                {
-                   "headline":  "Zimbabwe introduces tracking system after hospital drug thefts",
-                   "body":  "The government launched a medicine tracking system to stop the theft of drugs from public hospitals. Deputy Health Minister Sleiman Kwidini said the system targets the alleged resale of stolen medicines through private pharmacies.",
-                   "why":  "The system aims to ensure public hospital medicines reach patients rather than being diverted to private sellers.",
+                   "headline":  "RBZ injects ZiG600 million into circulation",
+                   "body":  "The Reserve Bank of Zimbabwe added approximately ZiG600 million to the economy during the first half of 2026. The move aims to increase the use of the local currency.",
+                   "why":  "The injection is intended to ease cash-related challenges for businesses and consumers.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Bulawayo24",
+                                       "url":  "https://bulawayo24.com/index-id-news-sc-national-byo-266988.html"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Zimbabwe launches tracking system to stop drug theft",
+                   "body":  "The government introduced a medicine tracking system to prevent the theft of drugs from public hospitals. Deputy Health Minister Sleiman Kwidini said employees have been stealing medication for resale in private pharmacies.",
+                   "why":  "The system aims to ensure medications intended for public patients reach their destination rather than being diverted to the private market.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -1258,13 +1386,25 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://bulawayo24.com/index-id-news-sc-national-byo-266990.html"
                                    }
                                ]
+               },
+               {
+                   "headline":  "Contractors seek private consultants to recover ZiG250 billion",
+                   "body":  "Contractors are pursuing private consultants to recover outstanding state payments estimated by the Auditor-General at ZiG250 billion. The move follows a government backlash against the use of such consultants.",
+                   "why":  "Firms are attempting to resolve deepening cash-flow problems caused by the unpaid state debts.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Zimbabwe Independent",
+                                       "url":  "https://zimbabwe-independent.com/article/unpaid-contractors-push-back-after-govt-backlash/"
+                                   }
+                               ]
                }
            ],
     "cv":  [
                {
                    "headline":  "Cape Verde opens 55,719 new payment accounts in 2025",
-                   "body":  "The country added 55,719 new payment accounts in 2025, bringing the total for resident individuals to 439,973. According to the document, 85.6% of the resident population now holds at least one bank account. The number of bank branches fell by two to 127 during the year.",
-                   "why":  "The decline in physical branches reflects a shift toward the use of banking agents to provide financial services.",
+                   "body":  "A total of 55,719 new payment accounts were opened in 2025, according to a recent report. The system recorded 439,973 resident individual accounts by the end of the year, meaning 85.6% of the resident population now holds at least one bank account.",
+                   "why":  "The increase in account holders coincides with a reduction in physical infrastructure, as the number of bank branches fell from 129 to 127 due to the use of banking agents.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1274,9 +1414,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
+                   "headline":  "Cape Verde maintains US fiscal transparency status",
+                   "body":  "Cape Verde is among 73 nations that fully meet minimum budget integrity and public account management requirements. The status was confirmed in the latest US Department of State Fiscal Transparency Report.",
+                   "why":  "The designation is intended to strengthen the country\u0027s reputation with multilateral creditors, foreign investors, and development partners.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "A Nacao",
+                                       "url":  "https://www.anacao.cv/noticia/2026/08/20/relatorio-do-departamento-de-estado-dos-eua-cabo-verde-renova-estatuto-de-referencia-em-transparencia-fiscal/"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "Cape Verde government meets mayors to align budget priorities",
-                   "body":  "Government head Francisco Carvalho held meetings with mayors from Santiago island to align local priorities with the State Budget. Carvalho stated the administration is conducting a round of direct dialogue with mayors to hear the priorities of each territory. He noted that all municipalities will be treated equally.",
-                   "why":  "These consultations determine how state funds are allocated to specific local infrastructure and service projects.",
+                   "body":  "Prime Minister Francisco Carvalho held meetings with mayors from Santiago island to coordinate local priorities with the State Budget. Carvalho stated the government is conducting a round of direct dialogues with all municipalities.",
+                   "why":  "The meetings aim to ensure that local territorial needs are integrated into the national spending plan under a logic of equality.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1284,13 +1436,37 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://expressodasilhas.cv/politica/2026/08/20/governo-ausculta-autarcas-para-alinhar-prioridades-dos-proximos-orcamentos/104216"
                                    }
                                ]
+               },
+               {
+                   "headline":  "São Vicente reports zero dengue cases amid monthly mosquito studies",
+                   "body":  "Health authorities in São Vicente have recorded no cases of dengue despite the presence of vectors. According to official Celso Martins, the Health Delegation is conducting monthly entomological studies and monitoring ports and airports.",
+                   "why":  "The surveillance system allows the island to identify malaria cases as primarily imported from endemic zones rather than locally transmitted.",
+                   "topic":  "Health",
+                   "sources":  [
+                                   {
+                                       "name":  "Expresso das Ilhas",
+                                       "url":  "https://expressodasilhas.cv/pais/2026/08/20/sao-vicente-reforca-vigilancia-sobre-mosquitos-com-estudos-entomologicos-mensais/104213"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Health unions seek urgent salary updates for technicians",
+                   "body":  "Unions met with the Minister of Health to demand the implementation of Career, Function, and Remuneration Plans (PCFR). Representative Luís Lima stated the ministry has acknowledged the professional claims and the existing PCFR processes.",
+                   "why":  "The requested updates would change the pay scales and career progression for auxiliary health technicians.",
+                   "topic":  "Health",
+                   "sources":  [
+                                   {
+                                       "name":  "Expresso das Ilhas",
+                                       "url":  "https://expressodasilhas.cv/pais/2026/08/19/sindicatos-querem-actualizacao-salarial-dos-tecnicos-auxiliares-de-saude-com-urgencia/104194"
+                                   }
+                               ]
                }
            ],
     "td":  [
                {
-                   "headline":  "Community clashes in Batha leave 6 dead",
-                   "body":  "Clashes between communities in Alkhaba left six people dead, including one woman, and 10 others injured on Aug. 20. Tchadinfos reports the violence began over a dispute regarding the exploitation of a field.",
-                   "why":  "The conflict disrupted local agricultural activity and caused casualties in the Batha region.",
+                   "headline":  "Community clashes kill 6 in Batha region",
+                   "body":  "Six people, including one woman, died and 10 others were injured during clashes in Alkhaba on Aug. 20. Tchadinfos reports the violence began following a dispute over the exploitation of a field.",
+                   "why":  "The conflict disrupts local agricultural activity for farmers in the Oum-Hadjer area.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -1304,9 +1480,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Chad and Libya discuss N\u0027Djamena-Tripoli flight route",
-                   "body":  "The Chadian foreign minister met with Libyan authorities in Tripoli to discuss reopening the N\u0027Djamena-Tripoli flight line. The talks also included the creation of a dry port in Misrata.",
-                   "why":  "The agreement would restore air travel and create new transport corridors for goods between the two nations.",
+                   "headline":  "Chad and Libya plan N\u0027Djamena-Tripoli flight route",
+                   "body":  "The Chadian foreign minister and Libyan authorities agreed in Tripoli to reopen the N\u0027Djamena-Tripoli air line. The two nations also plan to establish a dry port in Misrata.",
+                   "why":  "The new transport corridors will increase the movement of goods and passengers between the two capitals.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1316,9 +1492,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
+                   "headline":  "Ndjamena faces power outages after Farcha plant fire",
+                   "body":  "Recurring power outages have hit several neighborhoods in Ndjamena following a fire at the Farcha 1 thermal power plant in late July. RFI Afrique reports authorities are installing mobile plants and recruiting independent producers to stabilize the grid.",
+                   "why":  "The energy shortage disrupts business operations and daily household activities for residents in the capital.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "RFI Afrique",
+                                       "url":  "https://www.rfi.fr/fr/afrique/20260820-tchad-des-d%C3%A9lestages-r%C3%A9currents-%C3%A0-ndjamena-depuis-l-incendie-de-la-centrale-%C3%A9lectrique-de-farcha"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "Doba launches sanitation drive to prevent cholera",
-                   "body":  "The municipality of Doba began a campaign to clear gutters and remove waste on Aug. 20. Mayor Misdongarti Nodjinan led the operation in the Bedogo, Tinmbi, and Gaki neighborhoods.",
-                   "why":  "The cleanup aims to reduce stagnant water and waste to prevent a cholera outbreak among residents.",
+                   "body":  "The city of Doba began a large-scale operation to clear gutters and remove waste on Aug. 20. Mayor Misdongarti Nodjinan initiated the cleanup in the Bedogo, Tinmbi, and Gaki neighborhoods.",
+                   "why":  "The cleanup aims to reduce stagnant water and waste to prevent a cholera outbreak among city residents.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -1328,35 +1516,23 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "N\u0027Djamena clears drains in 1st arrondissement",
-                   "body":  "The Direction of Hygiene and Sanitation began clearing gutters in several neighborhoods on Aug. 19. The operation was supervised by director Mahamat Abdelkerim Haroun.",
-                   "why":  "The work is intended to evacuate stagnant water to improve traffic circulation in the district.",
+                   "headline":  "Gold mine collapse in CAR kills at least 49",
+                   "body":  "At least 49 people died after a gold mine collapsed in Zamboï on the border between Cameroon and the Central African Republic. Official reports state the victims include Chadians, Cameroonians, and Central Africans.",
+                   "why":  "The disaster affects mining families and laborers operating across the border region.",
                    "topic":  "News",
                    "sources":  [
                                    {
-                                       "name":  "Tchadinfos",
-                                       "url":  "https://tchadinfos.com/2026/08/20/1er-arrondissement-de-ndjamena-des-travaux-de-curage-pour-evacuer-les-eaux-stagnantes/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Chad warns political parties on presidential clemency",
-                   "body":  "The Ministry of Territorial Administration and Decentralization issued a communiquÃ© stating that presidential grace does not constitute a legal pardon that erases a sentence. The ministry cited the need for parties to follow the Charter of Political Parties.",
-                   "why":  "Political parties remain legally liable for previous sentences despite the president\u0027s measure of clemency.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "Tchadinfos",
-                                       "url":  "https://tchadinfos.com/2026/08/20/tchad-le-ministere-de-ladministration-du-territoire-rappelle-aux-partis-politiques-que-la-grace-accordee-par-le-chef-de-letat-nest-pas-synonyme-de-pardon-legal-effacant-une-peine/"
+                                       "name":  "Anadolu Africa",
+                                       "url":  "https://www.aa.com.tr/en/africa/nearly-50-killed-in-gold-mine-collapse-in-central-african-republic/4032823"
                                    }
                                ]
                }
            ],
     "dj":  [
                {
-                   "headline":  "Djibouti economy grows 6.7% in 2025",
-                   "body":  "Djibouti\u0027s economy grew by 6.7% in 2025, down from 6.8% in 2024. The African Development Bank reported the growth was driven by telecommunications, energy, trade, construction, and port and logistics activities.",
-                   "why":  "The continued expansion of port and logistics activities supports the country\u0027s primary revenue streams from maritime trade.",
+                   "headline":  "Djibouti economy grew 6.7% in 2025",
+                   "body":  "Djibouti\u0027s economy grew 6.7% in 2025, down from 6.8% in 2024. The African Development Bank attributed the growth to telecommunications, energy, trade, construction, and port and logistics activities.",
+                   "why":  "The growth in port and logistics activities increases the volume of goods moving through the country\u0027s primary infrastructure.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1369,8 +1545,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
     "sz":  [
                {
                    "headline":  "Eswatini to pave 250km of roads for E1.6 billion",
-                   "body":  "Approximately 250 kilometres of untarred roads across four regions will be paved using Probase tarring at a cost of E1.6 billion. The project was detailed during a meeting between the King, Probase, and Exim Bank.",
-                   "why":  "The project replaces untarred surfaces with paved roads across all four of the country\u0027s regions.",
+                   "body":  "Approximately 250 kilometers of untarred roads across four regions will be paved using Probase tarring at a cost of E1.6 billion. The project was discussed during a visit by Probase and Exim Bank officials to the King, according to the King\u0027s Office. This infrastructure investment improves transport connectivity for residents and businesses across the country\u0027s four regions.",
+                   "why":  "The paving of untarred roads reduces travel time and vehicle wear for commuters and commercial transporters in the four regions.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1380,21 +1556,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "King gives US$1,000 to Eswatini students in Malaysia",
-                   "body":  "The King provided a contribution of US$1,000, or approximately E16,000, to each Eswatini student studying in Malaysia. Minister for Foreign Affairs and International Cooperation Pholile Shakantu announced the gift during a courtesy call.",
-                   "why":  "The funds provide direct financial support for the welfare of students studying abroad.",
-                   "topic":  "Education",
-                   "sources":  [
-                                   {
-                                       "name":  "Times of Eswatini",
-                                       "url":  "https://times.co.sz/41886/news/students-receive-us1-000-from-king/"
-                                   }
-                               ]
-               },
-               {
                    "headline":  "MPs pass motion to establish health fund levies",
-                   "body":  "Members of Parliament passed a motion to establish a fund for collecting levies to fight serious diseases. The motion was moved by Lobamba Lomdzala MP Marwick Khumalo and seconded by Somntongo MP Sandile Nxumalo.",
-                   "why":  "The fund creates a new mechanism to collect and channel money specifically toward treating serious diseases.",
+                   "body":  "Members of Parliament have passed a motion to create a fund for collecting levies to fight serious diseases. The motion was moved by MP Marwick Khumalo and seconded by MP Sandile Nxumalo. The fund will provide a dedicated financial stream to procure treatments and resources for patients with critical illnesses.",
+                   "why":  "The establishment of these levies creates a new funding source specifically for the treatment of serious diseases.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -1404,9 +1568,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Eswatini athletes eligible for E8.9m Comrades prize purse",
-                   "body":  "An E8.9 million prize purse is available for Eswatini elite athletes in the 100th Comrades Marathon. The centenary edition of the ultramarathon is scheduled for June 13, 2027.",
-                   "why":  "The prize money provides a financial incentive for elite athletes competing in the centenary event.",
+                   "headline":  "King gives US$1,000 to Eswatini students in Malaysia",
+                   "body":  "Eswatini students studying in Malaysia each received a contribution of US$1,000, or approximately E16,000. Minister for Foreign Affairs and International Cooperation Pholile Shakantu announced the gift during a courtesy call. The funds provide direct financial support for the living and academic expenses of students abroad.",
+                   "why":  "The payment provides immediate liquidity to students in Malaysia to cover their welfare and educational costs.",
+                   "topic":  "Education",
+                   "sources":  [
+                                   {
+                                       "name":  "Times of Eswatini",
+                                       "url":  "https://times.co.sz/41886/news/students-receive-us1-000-from-king/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Comrades Marathon offers E8.9m purse for Eswatini athletes",
+                   "body":  "A prize purse of E8.9 million is available for elite Eswatini athletes in the 100th Comrades Marathon. The centenary edition of the ultramarathon is scheduled for June 13, 2027, according to an announcement at Kings Park Rugby Stadium. The prize money provides a financial incentive for elite runners to enter the centenary event.",
+                   "why":  "The E8.9 million purse allows elite athletes to pursue professional training and competition in the centenary ultramarathon.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
@@ -1416,9 +1592,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "SBS Bank schedules first AGM after commercial conversion",
-                   "body":  "SBS Bank Eswatini will hold its first annual general meeting on September 4, 2026, at the Royal Villas Hotel. The meeting follows the institution\u0027s transition from the Swaziland Building Society into a commercial bank.",
-                   "why":  "The meeting marks the first formal shareholder gathering since the entity changed its legal status to a commercial banking institution.",
+                   "headline":  "SBS Bank schedules first AGM as commercial bank",
+                   "body":  "SBS Bank Eswatini will hold its first annual general meeting on September 4, 2026, at the Royal Villas Hotel. The meeting follows the institution\u0027s transition from the Swaziland Building Society into a commercial bank, according to the Times of Eswatini. This transition allows the bank to offer a broader range of commercial banking services to its customers.",
+                   "why":  "The conversion to a commercial bank enables the institution to provide expanded financial products beyond those of a building society.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1430,33 +1606,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            ],
     "ga":  [
                {
-                   "headline":  "Gabon allocates nearly 200 million for 400 youth entrepreneurs",
-                   "body":  "The government is providing nearly 200 million in funding for 400 young entrepreneurs. The measure is aimed at supporting youth entrepreneurship.",
-                   "why":  "This funding provides direct capital to 400 young business owners to start or expand their ventures.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "L\u0027Union Gabon",
-                                       "url":  "https://www.union.sonapresse.com/fr/entrepreneuriat-pres-de-200-millions-pour-400-jeunes"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Gabon to cancel study scholarships to France in September 2026",
-                   "body":  "Study scholarships for students heading to France will be suppressed starting in September 2026. Lawyer CharlÃ¨ne Ongotha has questioned the legal basis of the decision.",
-                   "why":  "Gabonese students planning to study in France will lose their primary source of funding for tuition and living expenses.",
-                   "topic":  "Education",
-                   "sources":  [
-                                   {
-                                       "name":  "Gabon Review",
-                                       "url":  "https://www.gabonreview.com/tribune-suppression-des-bourses-detudes-vers-la-france-quels-recours-pour-les-etudiants-gabonais/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Agasa impounds 10 bread transport vehicles in Estuaire",
-                   "body":  "The Gabonese Food Safety Agency (Agasa) has immobilized 10 vehicles in the Estuaire region since August 14, 2026. The agency is intensifying controls on vehicles transporting bread and bakery products to ensure compliance.",
-                   "why":  "Bakery distributors using non-compliant vehicles face the seizure of their transport assets and disruption of delivery schedules.",
+                   "headline":  "Agasa immobilizes 10 bread transport vehicles in Estuaire",
+                   "body":  "The Gabonese Food Safety Agency (Agasa) has immobilized 10 vehicles in the Estuaire region since Aug. 14. The agency is conducting a national compliance campaign for vehicles transporting bread and bakery products.",
+                   "why":  "Non-compliant transporters face vehicle seizure and operational halts to meet food safety standards.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -1466,9 +1618,33 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Budget shortfalls hinder Mougoutsi fish station in Tchibanga",
-                   "body":  "The Mougoutsi fish station is facing a lack of budget for fish feed. Minister of the Sea, Fisheries and Blue Economy AimÃ© Martial Massamba identified the shortage during a recent mission to Nyanga.",
-                   "why":  "The lack of feed prevents the public infrastructure from reaching its production potential, limiting fish availability in the region.",
+                   "headline":  "Gabon cancels study scholarships to France from September",
+                   "body":  "Study scholarships for students heading to France will be suppressed starting in September 2026. Lawyer Charlène Ongotha has questioned the legal basis and authority behind the measure.",
+                   "why":  "Gabonese students lose state funding for French degrees and must seek legal or alternative financial recourse.",
+                   "topic":  "Education",
+                   "sources":  [
+                                   {
+                                       "name":  "Gabon Review",
+                                       "url":  "https://www.gabonreview.com/tribune-suppression-des-bourses-detudes-vers-la-france-quels-recours-pour-les-etudiants-gabonais/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "ANBG signs pact to expand vocational training access",
+                   "body":  "The National Scholarship Agency of Gabon (ANBG) and the National Agency for Professional Training and Education (ANFEP) signed a collaboration agreement on Aug. 19. The deal aims to increase access for scholarship students to vocational training.",
+                   "why":  "Bursary students can now pivot from traditional academic paths to professional certifications within Gabon.",
+                   "topic":  "Education",
+                   "sources":  [
+                                   {
+                                       "name":  "Gabon Review",
+                                       "url":  "https://www.gabonreview.com/bourses-apres-la-france-lanbg-ouvre-la-voie-aux-formations-professionnelles-au-gabon/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Mougoutsi fish station lacks budget for feed",
+                   "body":  "The Mougoutsi fish station in Tchibanga is facing a shortage of fish feed. Minister of the Sea, Fisheries and Blue Economy Aimé Martial Massamba identified the budget gap during a recent mission to Nyanga.",
+                   "why":  "The lack of feed prevents the public infrastructure from utilizing its production potential to supply fish.",
                    "topic":  "Agriculture",
                    "sources":  [
                                    {
@@ -1476,13 +1652,49 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://www.gabonreview.com/tchibanga-le-potentiel-de-la-station-piscicole-de-mougoutsi-plombe-par-le-manque-de-budget/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "VAALCO names Hermélia Hayes Mbadinga as Gabon Country Manager",
+                   "body":  "VAALCO has appointed Hermélia Hayes Mbadinga as General Administrator and Country Manager of VAALCO Gabon S.A. The appointment was announced by group CEO George Maxwell.",
+                   "why":  "The leadership change establishes a new executive head for the company\u0027s petroleum operations in Gabon.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Gabon Actu",
+                                       "url":  "https://gabonactu.com/blog/2026/08/20/petrole-vaalco-nomme-hermelia-hayes-mbadinga-aux-fonctions-dadministrateur-general-et-country-manager-de-vaalco-gabon-s-a/"
+                                   }
+                               ]
                }
            ],
     "gm":  [
                {
-                   "headline":  "Gambia to play Somalia at Independence Stadium next month",
-                   "body":  "The national team will play its first Afcon 2027 qualifier against Somalia at the Independence Stadium. Coach Jonathon McKinstry announced the venue for the match scheduled for next month.",
-                   "why":  "This marks the first time since McKinstry took over as coach in May 2024 that the team will play a home match.",
+                   "headline":  "Coalition 2026 signs alliance of eight parties",
+                   "body":  "Eight political parties and movements, including the People\u0027s Right Party and FORWARD Gambia, are signing a political alliance today. The agreement will be signed at Pencha Mi Hall, according to a coalition statement.",
+                   "why":  "The alliance aims to consolidate support ahead of the presidential election on December 5.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "The Standard Gambia",
+                                       "url":  "https://standard.gm/coalition-2026-to-sign-political-alliance-today/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "PPA quits merger with Gambia For All",
+                   "body":  "The Patriotic Progressive Alliance (PPA) has dissolved its merger with Gambia For All. A statement from the PPA said the movement will now join the Unite/NUP alliance.",
+                   "why":  "The shift changes the composition of political blocs competing in the 2026 election.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "The Standard Gambia",
+                                       "url":  "https://standard.gm/gajigos-ppa-quits-merger-with-gfa/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Gambia to play Somalia at Independence Stadium",
+                   "body":  "The national team\u0027s first Afcon 2027 qualifier against Somalia will be played at the Independence Stadium next month. Coach Jonathon McKinstry announced the venue in a message to players.",
+                   "why":  "This marks the first time since McKinstry took over in May 2024 that the team will play a home match.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
@@ -1492,21 +1704,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "IGP meets security chiefs on election coordination",
-                   "body":  "The Inspector General of Police hosted service chiefs to coordinate security preparations for the upcoming electoral process. The meeting focused on information sharing and public safety.",
-                   "why":  "The engagement aims to establish a professional security approach to maintain order throughout the electoral period.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "The Point",
-                                       "url":  "https://thepoint.gm/africa/gambia/headlines/igp-hosts-service-chiefs-over-election-security-engagement"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Minister cites mathematics teacher shortage as major challenge",
-                   "body":  "Dr. Drammeh stated that a shortage of mathematics teachers is a significant factor in poor student performance. She attributed the gap to low enrollment in mathematics at the tertiary level.",
-                   "why":  "The lack of staff means some schools currently operate without a mathematics teacher.",
+                   "headline":  "Minister cites mathematics teacher shortage",
+                   "body":  "A shortage of mathematics teachers remains a major challenge for schools, according to Dr. Drammeh. Speaking to QTV on August 18, she noted that some schools currently have no math teachers.",
+                   "why":  "The shortage is compounded by low tertiary enrollment and student fear of the subject, impacting academic performance.",
                    "topic":  "Education",
                    "sources":  [
                                    {
@@ -1516,14 +1716,14 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "UDP claims state bias in conference center access",
-                   "body":  "UDP Deputy Administrative Secretary Dr. Lamin Manneh alleged the party was repeatedly denied use of the Sir Dawda Kairaba Jawara International Conference Centre. The party was denied access for its 30th anniversary and a strategic retreat despite offering to pay commercial fees.",
-                   "why":  "The restriction prevents the political party from using state-owned facilities for major organizational events.",
-                   "topic":  "Politics",
+                   "headline":  "Ismaila Kone pleads not guilty to murder",
+                   "body":  "Ismaila Kone pleaded not guilty to one count of murder before Principal Magistrate M. Krubally. Prosecutors allege Kone caused the death of Isatou Elizabeth Mendy on August 17 at Lovell Square Street in Banjul.",
+                   "why":  "The legal proceedings will determine if Kone is held accountable under Section 155 of the Criminal Offences Act 2025.",
+                   "topic":  "News",
                    "sources":  [
                                    {
                                        "name":  "The Point",
-                                       "url":  "https://thepoint.gm/africa/gambia/headlines/udps-manneh-raises-alarm-over-state-bias-on-public-institutions"
+                                       "url":  "https://thepoint.gm/africa/gambia/headlines/ismaila-kone-pleads-not-guilty-to-murder-of-isatou-elizabeth-mendy"
                                    }
                                ]
                }
@@ -1531,8 +1731,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
     "gn":  [
                {
                    "headline":  "Guinea creates 2 new administrative regions",
-                   "body":  "Presidential decree on Aug. 20 established Beyla and Siguiri as two new administrative regions. The areas previously served as prefectures. This restructuring changes the territorial division of the country.",
-                   "why":  "Local residents in Beyla and Siguiri will now operate under regional rather than prefectural administrative structures.",
+                   "body":  "President Mamadi Doumbouya established Beyla and Siguiri as new administrative regions on Thursday, Aug. 20. The move was announced via an official act restructuring the country\u0027s territorial division. These areas previously served as prefectures.",
+                   "why":  "The restructuring changes the administrative hierarchy for local officials and residents in Beyla and Siguiri.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1546,9 +1746,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Guinea revokes magistrate Algassimou Diallo",
-                   "body":  "The Superior Council of the Judiciary revoked Algassimou Diallo from the judiciary on Aug. 20. Diallo, a former general advocate at the Supreme Court, had been suspended on Aug. 18 for failure to meet statutory obligations. The move ends his career within the judicial corps.",
-                   "why":  "The removal of a high-ranking Supreme Court official alters the leadership of the country\u0027s judicial system.",
+                   "headline":  "President Doumbouya creates 11 new prefectures",
+                   "body":  "President Mamadi Doumbouya created 11 new prefectures on Thursday, Aug. 20. A regulatory act from the Minister of Territorial Administration and Decentralization will define their organization and operation.",
+                   "why":  "The decree grants these 11 localities the status of full-exercise administrative entities.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Africaguinee",
+                                       "url":  "https://www.africaguinee.com/guinee-timbo-kamsar-kintinianvoici-les-onze-nouvelles-prefectures-creees-par-le-president-doumbouya/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Guinea\u0027s High Council of the Judiciary revokes Algassimou Diallo",
+                   "body":  "The High Council of the Judiciary permanently revoked Algassimou Diallo from the judiciary on Aug. 20. Diallo, a former general advocate at the Supreme Court, had been suspended on Aug. 18 for failing to meet statutory obligations.",
+                   "why":  "The decision ends the legal career of a magistrate known for his role in the trial regarding the events of Sept. 28, 2009.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1558,47 +1770,35 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "HAC orders press associations to file 2025 financial reports",
-                   "body":  "The High Authority of Communication (HAC) ordered press associations on Aug. 20 to submit detailed financial reports for 2025. The reports must detail the use of media subsidies. President Boubacar Yacine Diallo issued the demand via official correspondence.",
-                   "why":  "Press associations must now account for the specific use of public funds to maintain their subsidies.",
-                   "topic":  "News",
+                   "headline":  "Ignace Deen hospital gives patients 72 hours to vacate",
+                   "body":  "Patients at the Ignace Deen hospital in Kaloum were ordered on Thursday to leave the facility within 72 hours. The order is part of a project to reconstruct and modernize the hospital.",
+                   "why":  "Patients with medical probes and other critical needs are being forced to find alternative care during the reconstruction.",
+                   "topic":  "Health",
                    "sources":  [
                                    {
-                                       "name":  "Mosaiqueguinee",
-                                       "url":  "https://mosaiqueguinee.com/2026/08/medias-les-associations-de-presse-sommees-par-la-hac-de-deposer-leur-rapport-financier-2025/"
+                                       "name":  "Africaguinee",
+                                       "url":  "https://www.africaguinee.com/jai-encore-des-sondeson-me-dit-de-quitter-lhopital-temoignage-de-patients-dignace-deen-sommes-de-liberer-les-lieux-dans-72h/"
                                    }
                                ]
                },
                {
-                   "headline":  "Guinea begins legal framework for industrial parks",
-                   "body":  "The Ministry of Commerce and Industry held a workshop on Aug. 20 to validate a draft law on industrial parks. The initiative seeks to fill a legal vacuum in the sector. The government aims to increase the country\u0027s attractiveness for investors.",
-                   "why":  "New legal protections for industrial parks will change how foreign and domestic investors establish manufacturing sites in Guinea.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Mosaiqueguinee",
-                                       "url":  "https://mosaiqueguinee.com/2026/08/guinee-vers-un-cadre-legal-pour-les-parcs-industriels/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Panaitolikos FC signs Salifou BombÃ© Soumah on loan",
-                   "body":  "Greek first-division club Panaitolikos FC signed Guinean striker Salifou BombÃ© Soumah on loan on Aug. 20. The player belongs to Swedish club MalmÃ¶ FF. The loan agreement runs until June 2027.",
-                   "why":  "The transfer moves the Guinean athlete from the Swedish league to the Greek first division.",
+                   "headline":  "Guinea bids to host 2032 and 2036 Africa Cup of Nations",
+                   "body":  "Prime Minister Amadou Oury Bah signed the official bid dossiers for Guinea to host the 2032 and 2036 editions of the Africa Cup of Nations. The signature followed a working meeting dedicated to the candidacy.",
+                   "why":  "The bid seeks to bring the continental football tournament to Guinea for the first time in those specific years.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
                                        "name":  "Mosaiqueguinee",
-                                       "url":  "https://mosaiqueguinee.com/2026/08/grece-salifou-bombe-soumah-prete-a-panaitolikos-fc/"
+                                       "url":  "https://mosaiqueguinee.com/2026/08/la-guinee-officialise-sa-candidature-pour-les-can-2032-et-2036/"
                                    }
                                ]
                }
            ],
     "gw":  [
                {
-                   "headline":  "CNE bars political parties from Aug. 30 referendum campaign",
+                   "headline":  "CNE bars parties from Aug. 30 referendum campaign",
                    "body":  "Political parties are excluded from participating in the campaign for the Aug. 30 referendum. National Election Commission President Carmem Isaura Tavares Batista Lobo cited the Referendum Law as the basis for the restriction.",
-                   "why":  "The ruling prevents organized political parties from officially campaigning for or against the proposed constitutional changes.",
+                   "why":  "The ruling prevents organized political parties from officially mobilizing voters or funding campaigns for the upcoming vote.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1606,13 +1806,61 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://www.odemocratagb.com/?p=58632"
                                    }
                                ]
+               },
+               {
+                   "headline":  "PAIGC calls for boycott of constitutional referendum",
+                   "body":  "The Permanent Commission of the African Party for the Independence of Guinea and Cape Verde (PAIGC) rejected the upcoming constitutional referendum. The party has called for a boycott of the vote.",
+                   "why":  "The boycott effort seeks to undermine the legitimacy of the constitutional changes by reducing voter turnout.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "O Democrata GB",
+                                       "url":  "https://www.odemocratagb.com/?p=58618"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "MRPT labels constitutional referendum a \u0027sham\u0027",
+                   "body":  "The Revolutionary Movement of the Soil (MRPT) opposed the constitutional referendum scheduled for Aug. 30. The group described the process as a \u0027simulacrum\u0027 and urged citizens to boycott the vote.",
+                   "why":  "The call for a boycott aims to delegitimize the legal process used to alter the country\u0027s constitution.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "O Democrata GB",
+                                       "url":  "https://www.odemocratagb.com/?p=58623"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Guiné Telecom and INSS sign worker social security pact",
+                   "body":  "Guiné Telecom and the National Institute of Social Security (INSS) signed an agreement on Aug. 20. The deal aims to regularize the social security status of workers.",
+                   "why":  "The agreement allows employees of the telecommunications firm to access social security benefits and legal protections.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "O Democrata GB",
+                                       "url":  "https://www.odemocratagb.com/?p=58639"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Mini-Football Association prioritizes talent scouting",
+                   "body":  "The Guinean Mini-Football Association (AMF-GB) has set staff training and talent scouting as its primary goals. President Califa Soares Cassamá announced the priorities today.",
+                   "why":  "The focus on scouting and training aims to increase the number of qualified coaches and competitive players in the sport.",
+                   "topic":  "Sport",
+                   "sources":  [
+                                   {
+                                       "name":  "O Democrata GB",
+                                       "url":  "https://www.odemocratagb.com/?p=58650"
+                                   }
+                               ]
                }
            ],
     "lr":  [
                {
                    "headline":  "Liberia collects US$904.7 million in domestic revenue",
-                   "body":  "The Liberia Revenue Authority reported US$904.7 million in domestic revenue collection as of August 18. The figure brings the government closer to a US$1 billion mark. This allows the government to strengthen domestic resource mobilization.",
-                   "why":  "Increased domestic revenue reduces the government\u0027s reliance on external funding for public spending.",
+                   "body":  "The Liberia Revenue Authority reported US$904.7 million in domestic revenue collection as of August 18. The figure brings the government close to a US$1 billion mark.",
+                   "why":  "Increased domestic resource mobilization allows the government to fund public projects without relying solely on external borrowing.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1626,42 +1874,62 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Unity Party backs security probe into Jewel Howard Taylor",
-                   "body":  "The governing Unity Party commended Joint Security for charges against former Vice President Jewel Howard Taylor. The charges relate to a multimillion-dollar cocaine probe. The party urged security agencies to remain professional despite public pressure.",
-                   "why":  "The party\u0027s support signals a commitment to pursuing high-level officials involved in narcotics trafficking.",
+                   "headline":  "Liberia implicates former VP Jewel Howard-Taylor in US$317M drug case",
+                   "body":  "Former Vice President Jewel Howard-Taylor is implicated in a cocaine seizure valued at US$317 million. The investigation involves high-ranking officials, according to reports.",
+                   "why":  "The probe targets organized drug trafficking and the laundering of proceeds within the country\u0027s political leadership.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
-                                       "name":  "The New Dawn Liberia",
-                                       "url":  "https://www.thenewdawnliberia.com/up-backs-joint-security-over-taylor-charges/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Liberia signs new Satellite Communications Guidelines",
-                   "body":  "LTA Chairperson Massaquoi and Minister of Posts and Telecommunications Sekou M. Kromah signed new Satellite Communications Guidelines. The officials displayed the signed copy of the document on Tuesday.",
-                   "why":  "The new guidelines establish the regulatory framework for satellite service providers operating in the country.",
-                   "topic":  "Tech",
-                   "sources":  [
-                                   {
                                        "name":  "Liberian Observer",
-                                       "url":  "https://www.liberianobserver.com/lta-chairperson-massaquoi-and-minister-of-posts-and-telecommunications-lta-board-chairman-sekou-m-kromah/image_469dc610-3821-4892-a29f-0437461ea344.html"
+                                       "url":  "https://www.liberianobserver.com/news/ex-vp-howard-taylor-connected-to-us-317m-drugs-case/article_8aeaf5e8-4fc6-43f2-a73a-41895be104ae.html"
                                    },
                                    {
                                        "name":  "Daily Observer Liberia",
-                                       "url":  "https://www.liberianobserver.com/lta-chairperson-massaquoi-and-minister-of-posts-and-telecommunications-lta-board-chairman-sekou-m-kromah/image_469dc610-3821-4892-a29f-0437461ea344.html"
+                                       "url":  "https://www.liberianobserver.com/news/ex-vp-howard-taylor-connected-to-us-317m-drugs-case/article_8aeaf5e8-4fc6-43f2-a73a-41895be104ae.html"
                                    }
                                ]
                },
                {
-                   "headline":  "AMEU and University of Sierra Leone renew partnership",
-                   "body":  "The African Methodist Episcopal University and the Institute of Public Administration and Management at the University of Sierra Leone renewed an academic cooperation agreement on Tuesday. The partnership focuses on joint research and faculty and student exchanges.",
-                   "why":  "Students and faculty at both institutions gain access to postgraduate opportunities and knowledge transfer across borders.",
+                   "headline":  "Prison Fellowship Liberia provides tuition for 525 children",
+                   "body":  "The Promise Path initiative is providing tuition fees and school supplies for 525 children of incarcerated parents. The program also introduces livelihood opportunities.",
+                   "why":  "The support ensures that children of prisoners can remain in school despite the loss of parental income.",
+                   "topic":  "Education",
+                   "sources":  [
+                                   {
+                                       "name":  "Liberian Observer",
+                                       "url":  "https://www.liberianobserver.com/news/525-inmates-children-get-tuition-support/article_64b96be4-8936-49d1-b3e1-c0abe11aff85.html"
+                                   },
+                                   {
+                                       "name":  "Daily Observer Liberia",
+                                       "url":  "https://www.liberianobserver.com/news/525-inmates-children-get-tuition-support/article_64b96be4-8936-49d1-b3e1-c0abe11aff85.html"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "AMEU and University of Sierra Leone renew academic partnership",
+                   "body":  "The African Methodist Episcopal University and the Institute of Public Administration and Management at the University of Sierra Leone reaffirmed their partnership on Tuesday. The agreement focuses on joint research and faculty and student exchanges.",
+                   "why":  "The renewal enables students and faculty to access postgraduate opportunities and knowledge transfer across the two regional institutions.",
                    "topic":  "Education",
                    "sources":  [
                                    {
                                        "name":  "The New Dawn Liberia",
                                        "url":  "https://www.thenewdawnliberia.com/ameu-university-of-sierra-leone-renew-academic-partnership/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Ganta Business Association warns of unofficial commerce inspectors",
+                   "body":  "Members of the Ganta Business Association have raised concerns over unemployed commerce agents acting as unofficial inspectors in Nimba County. The group claims the practice undermines regulatory functions.",
+                   "why":  "The presence of unofficial inspectors increases corruption risks for local businesses and threatens public safety.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Liberian Observer",
+                                       "url":  "https://www.liberianobserver.com/business/ganta-business-community-raises-alarm-over-unemployed-commerce-agents/article_366565ac-c908-4fa7-8291-596bc7713a16.html"
+                                   },
+                                   {
+                                       "name":  "Daily Observer Liberia",
+                                       "url":  "https://www.liberianobserver.com/business/ganta-business-community-raises-alarm-over-unemployed-commerce-agents/article_366565ac-c908-4fa7-8291-596bc7713a16.html"
                                    }
                                ]
                }
@@ -1670,7 +1938,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                {
                    "headline":  "Spanish exports to Libya rise 114.6%",
                    "body":  "Spanish exports to Libya increased by 114.6% and Libyan imports to Spain rose 66.8% during the first six months of the year. The Spanish Embassy in Libya provided the data.",
-                   "why":  "The growth increases the volume of trade goods moving between the two nations.",
+                   "why":  "The growth indicates a significant increase in the volume of goods moving between the two nations\u0027 markets.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1680,9 +1948,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Libyan health center distributes 300 solar refrigerators",
-                   "body":  "The National Centre for Disease Control distributed more than 300 solar-powered refrigerators. The move follows reports of medical supplies perishing due to summer power cuts.",
-                   "why":  "The equipment prevents the loss of temperature-sensitive medical supplies during blackouts.",
+                   "headline":  "Libya distributes 300 solar refrigerators for medical supplies",
+                   "body":  "The National Centre for Disease Control distributed more than 300 solar-powered refrigerators. The move aims to mitigate the impact of extensive power cuts and blackouts.",
+                   "why":  "The equipment prevents medical supplies from perishing during summer electricity failures.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -1692,33 +1960,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Libya sets new hard currency ceilings for companies",
-                   "body":  "The Ministry of Economy and Trade adopted a new mechanism to set ceilings on foreign currency for companies. The formula considers tax payments, employment, and economic activity.",
-                   "why":  "Companies must now meet specific employment and tax criteria to obtain hard currency.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Libya Herald",
-                                       "url":  "https://libyaherald.com/2026/08/ministry-of-economy-introduces-formula-for-libyan-companies-to-obtain-hard-currency-including-economic-activity-tax-payment-and-employment/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Libyan prosecutor detains 9 over citizenship forgery",
-                   "body":  "The Public Prosecutor ordered the detention of a civil registry employee and eight beneficiaries in Al-Khums. The group is accused of forging documents to grant citizenship rights unlawfully.",
-                   "why":  "The arrests target the illegal acquisition of citizenship rights through forged civil status data.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Libya Update",
-                                       "url":  "https://libyaupdate.com/detention-of-9-people-in-al-khums-over-forging-civil-status-data-and-granting-foreigners-citizenship-rights/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Libya and Chad to resume direct flights",
-                   "body":  "Prime Minister Abdel Hamid Aldabaiba and the Chadian Minister of Foreign Affairs discussed the resumption of direct flights. The flights are scheduled to start tomorrow.",
-                   "why":  "The agreement restores direct air travel between the two countries.",
+                   "headline":  "Libya and Chad resume direct flights",
+                   "body":  "Direct flights between Libya and Chad are scheduled to resume tomorrow. The arrangement follows a meeting between Prime Minister Abdel Hamid Aldabaiba and the Chadian Foreign Minister.",
+                   "why":  "The resumption of flights restores direct air travel and movement between the two countries.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1726,13 +1970,37 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://libyaherald.com/2026/08/tripoli-pm-aldabaiba-receives-chadian-foreign-minister-discussions-include-resumption-of-direct-flights-starting-tomorrow/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "Benghazi Court terminates Al-Kharafi land lease",
+                   "body":  "The North Benghazi Court terminated a land lease agreement with the Kuwaiti company Al-Kharafi. The ruling also nullifies an international arbitration award.",
+                   "why":  "The decision removes the Kuwaiti company\u0027s legal right to the leased land and the associated financial award.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Libya Herald",
+                                       "url":  "https://libyaherald.com/2026/08/benghazi-court-terminates-land-lease-agreement-with-kuwaiti-al-kharafi-company-and-nullifies-international-arbitration-award/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Libya detains 9 people for citizenship forgery",
+                   "body":  "The Public Prosecutor ordered the detention of a civil registry employee and eight beneficiaries in Al-Khums. The group is accused of forging documents to grant citizenship rights to foreigners.",
+                   "why":  "The arrests target the illegal acquisition of citizenship rights through the manipulation of official civil status data.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Libya Update",
+                                       "url":  "https://libyaupdate.com/detention-of-9-people-in-al-khums-over-forging-civil-status-data-and-granting-foreigners-citizenship-rights/"
+                                   }
+                               ]
                }
            ],
     "mg":  [
                {
-                   "headline":  "SADC urges Madagascar to return to constitutional normality",
-                   "body":  "The Southern African Development Community issued recommendations on democratic functioning and human rights following its 46th Summit in Durban. The regional organization expressed support for the country\u0027s refoundation process. The SADC communiquÃ© also noted consultations held under its aegis.",
-                   "why":  "The organization\u0027s demand for inclusive governance and accountability sets conditions for its continued support of the transition.",
+                   "headline":  "SADC backs Madagascar\u0027s Refondation with governance conditions",
+                   "body":  "The Southern African Development Community (SADC) encouraged Madagascar to return to constitutional normality following its 46th Summit in Durban. The organization\u0027s support is contingent on recommendations regarding human rights, accountability, and citizen participation.",
+                   "why":  "The conditions require the government to implement democratic reforms and inclusive governance to maintain regional diplomatic support.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1746,9 +2014,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "President Randrianirina promotes political dialogue for elections",
-                   "body":  "Colonel MichaÃ«l Randrianirina stated that ongoing political consultations are intended to accelerate the holding of elections. The president made the comments upon returning from the SADC summit in Durban, South Africa. He said the process is designed to assist the CENI in preparing for upcoming votes.",
-                   "why":  "The dialogue is intended to provide the CENI with the necessary support to organize the next election cycle.",
+                   "headline":  "President Randrianirina pushes political dialogue for elections",
+                   "body":  "President Michaël Randrianirina stated that ongoing political consultations are intended to accelerate the holding of elections. The head of state made the comments upon returning from the SADC summit in Durban.",
+                   "why":  "The dialogue is designed to provide technical and political support to the CENI in preparing for upcoming electoral deadlines.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1758,21 +2026,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "France and Madagascar discuss cooperation in Antananarivo",
-                   "body":  "President MichaÃ«l Randrianirina received Bruno Fuchs, chairman of the French National Assembly\u0027s foreign affairs committee, on Wednesday, Aug. 19. Fuchs visited the capital at the head of a parliamentary delegation. The meeting focused on bilateral cooperation.",
-                   "why":  "The visit occurs as Madagascar reconfigures its international relations and seeks to maintain ties with existing partners.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "Madagascar Tribune",
-                                       "url":  "https://www.madagascar-tribune.com/France-Madagascar-Bruno-Fuchs-recu-a-Ambohitsorohitra.html"
-                                   }
-                               ]
-               },
-               {
                    "headline":  "Antananarivo residents face renewed water and power outages",
-                   "body":  "Water pressure drops and power cuts have returned to several districts of the capital over the last few days. The utility provider JIRAMA announced new disruptions are expected to continue into next week. The outages follow a period of improved supply.",
-                   "why":  "The return of these disruptions affects the daily activities of residents and businesses in the capital\u0027s various sectors.",
+                   "body":  "Water pressure drops and power cuts have returned to several districts of the capital over the last few days. Utility provider JIRAMA announced that these disruptions are expected to continue into next week.",
+                   "why":  "The instability of basic utilities disrupts daily household activities and business operations for residents in the capital.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -1782,9 +2038,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Mpox vaccinations continue at Polyteknika Vontovorona",
-                   "body":  "Health officials are administering Mpox vaccines to students at the Polyteknika Vontovorona campus. The campaign includes awareness efforts to encourage students to protect themselves from the epidemic. Vaccinations are ongoing as of Aug. 20.",
-                   "why":  "The targeted campaign aims to reduce the spread of the virus among the student population.",
+                   "headline":  "Mpox vaccinations begin at Polyteknika Vontovorona",
+                   "body":  "Vaccinations against Mpox are currently being administered at the Polyteknika Vontovorona campus. Health officials are conducting awareness campaigns to encourage students to protect themselves from the virus.",
+                   "why":  "The targeted campaign aims to prevent an outbreak of the virus among the student population.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -1792,49 +2048,77 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://newsmada.com/2026/08/20/indray-mijery-832/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "Madagascar expands express road by 30 km",
+                   "body":  "A new express road project will extend the existing infrastructure by 30 kilometers. The project is categorized as an infrastructure expansion.",
+                   "why":  "The extension of the high-speed route increases the capacity for the movement of goods and people across the region.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "L\u0027Express de Madagascar",
+                                       "url":  "https://www.lexpress.mg/2026/08/infrastructure-la-voie-rapide-setend.html"
+                                   }
+                               ]
                }
            ],
     "mw":  [
                {
-                   "headline":  "Malawi loses $700 million in gold to smugglers",
-                   "body":  "Malawi loses an estimated $700 million worth of gold to smugglers annually. Mining Minister Thoko Tembo said the Malawi Mining Investment Company is establishing mining cooperatives and formal structures to address the trade.",
-                   "why":  "The government is implementing new measures to formalize the mining sector to recover lost revenue.",
+                   "headline":  "Malawi court to rule on Sylvester Namiwa bail",
+                   "body":  "Judge Mzonde Mvula will deliver a ruling on the bail application for jailed rights activist Sylvester Namiwa at 10 a.m. today. The decision follows weeks of proceedings in a treason case.",
+                   "why":  "The ruling determines whether the activist will remain in detention or be released pending his trial.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Nyasa Times",
+                                       "url":  "https://www.nyasatimes.com/namiwa-bail-ruling-due-as-treason-case-continues/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=namiwa-bail-ruling-due-as-treason-case-continues"
+                                   },
+                                   {
+                                       "name":  "Malawi24",
+                                       "url":  "https://malawi24.com/2026/08/20/namiwa-bail-ruling-set-for-friday/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Escom warns of blackouts as generation shortfall hits 83MW",
+                   "body":  "The national grid is facing a generation shortfall of 42MW, which increases to 83MW during evening peak hours. The Electricity Supply Corporation of Malawi reported that available capacity is currently 347MW.",
+                   "why":  "The deficit at the Nkula plant will lead to more frequent power outages for residential and business consumers.",
                    "topic":  "Business",
                    "sources":  [
                                    {
                                        "name":  "Nyasa Times",
-                                       "url":  "https://www.nyasatimes.com/malawi-losing-700million-worth-of-gold-to-smugglers-as-government-scrambles-to-crack-down-on-illegal-mining-trade/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=malawi-losing-700million-worth-of-gold-to-smugglers-as-government-scrambles-to-crack-down-on-illegal-mining-trade"
+                                       "url":  "https://www.nyasatimes.com/malawi-warned-of-more-blackouts-after-nkula-plant-failures/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=malawi-warned-of-more-blackouts-after-nkula-plant-failures"
                                    }
                                ]
                },
                {
-                   "headline":  "Youths account for 80% of population excluded from formal economy",
-                   "body":  "Approximately 80% of Malawi\u0027s population is excluded from or passively participating in economic activities. Stakeholders at a youth conference in Lilongwe attributed the trend to disjointed policies and a lack of opportunities.",
-                   "why":  "The lack of formal economic structures limits the ability of young entrepreneurs to innovate and create businesses.",
+                   "headline":  "Malawi High Court releases K383m to Nema Farm Seeds",
+                   "body":  "The High Court\u0027s Commercial Division lifted a preservation order on more than K383 million belonging to a local businessperson. The court ruled there were no grounds to suspect the funds were linked to criminal activity.",
+                   "why":  "The ruling allows Nema Farm Seeds to regain access to capital previously frozen by the Financial Intelligence Authority.",
                    "topic":  "Business",
                    "sources":  [
                                    {
-                                       "name":  "Times Group Malawi",
-                                       "url":  "https://times.mw/youths-left-out-of-formal-economy/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=youths-left-out-of-formal-economy"
+                                       "name":  "Nyasa Times",
+                                       "url":  "https://www.nyasatimes.com/no-evidence-of-crime-high-court-releases-frozen-k383m-to-nema-farm-seeds/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=no-evidence-of-crime-high-court-releases-frozen-k383m-to-nema-farm-seeds"
                                    }
                                ]
                },
                {
-                   "headline":  "Continental Holdings shares drop 44% from peak",
-                   "body":  "Continental Holdings plc share prices have fallen approximately 44% from a listing day peak of K350 per share. Investors have urged shareholders to remain patient despite the tumble.",
-                   "why":  "The price drop affects the current valuation of holdings for shareholders of the company.",
+                   "headline":  "Malawi to open gold buying centres in September",
+                   "body":  "The government plans to establish legal gold markets in major mining areas starting in September. MAMICO CEO Leonard Kalindekafe estimated that more than US$700 million worth of gold leaves the country annually via smuggling.",
+                   "why":  "The new centers aim to reduce illegal smuggling and increase government revenue from the mining sector.",
                    "topic":  "Business",
                    "sources":  [
                                    {
-                                       "name":  "The Nation Malawi",
-                                       "url":  "https://mwnation.com/investors-urged-to-be-patient-on-chl-shares/"
+                                       "name":  "Malawi24",
+                                       "url":  "https://malawi24.com/2026/08/20/malawi-plans-new-gold-markets/"
                                    }
                                ]
                },
                {
-                   "headline":  "President Mutharika awards Scorchers players K5 million each",
-                   "body":  "President Peter Mutharika has given K5 million to each player of the Scorchers. The payments follow the team\u0027s Wafcon campaign in Rabat, Morocco.",
-                   "why":  "The cash rewards provide direct financial compensation to the athletes for their international performance.",
+                   "headline":  "President Mutharika gives Scorchers players K5m each",
+                   "body":  "President Peter Mutharika awarded K5 million to each player of the Scorchers national team. The reward follows the team\u0027s campaign at the Wafcon in Rabat, Morocco.",
+                   "why":  "The payment serves as a financial incentive for the athletes after they reached the final and qualified for the 2027 FIFA Women’s World Cup.",
                    "topic":  "Sport",
                    "sources":  [
                                    {
@@ -1842,25 +2126,53 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://malawi24.com/2026/08/20/harvest-time-scorchers-reap-k5m-each/"
                                    }
                                ]
-               },
-               {
-                   "headline":  "Mozambique-Malawi power project misses third deadline",
-                   "body":  "The Mozambique-Malawi Interconnection Project has missed its commissioning deadline for a third time. The project is intended to provide stabilized electricity via an energy purchase deal.",
-                   "why":  "The delay extends the period of frequent power outages currently affecting Malawians.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Times Group Malawi",
-                                       "url":  "https://times.mw/long-way-to-mozambique-power/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=long-way-to-mozambique-power"
-                                   }
-                               ]
                }
            ],
     "ml":  [
                {
-                   "headline":  "Transport costs rise in Macina and TÃ©nenkou",
-                   "body":  "The trip from SÃ©gou to Macina now costs 4,000 francs CFA, up from 2,000 francs before the crisis. Travel between TÃ©nenkou and Macina has reached 7,500 francs, compared to 2,000 francs two years ago. Studio Tamani reported the price increases.",
-                   "why":  "Residents of Macina and TÃ©nenkou must pay up to 3.75 times more to move between towns.",
+                   "headline":  "San residents donate 1 million CFA to military",
+                   "body":  "Residents of San delivered more than 1 million CFA to camp officials on Aug. 19. The donation was made in the presence of regional governor Colonel-Major Ousmane Sangaré.",
+                   "why":  "The funds are intended to support defense and security forces following an attack on the camp.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Studio Tamani",
+                                       "url":  "https://www.studiotamani.org/206689-san-un-million-de-francs-pour-soutenir-les-fama"
+                                   },
+                                   {
+                                       "name":  "Bamada.net",
+                                       "url":  "https://bamada.net/san-un-million-de-francs-pour-soutenir-les-fama"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "HRW accuses Africa Corps of killing 9 civilians",
+                   "body":  "Russian Africa Corps paramilitaries killed nine civilians, including four minors, on July 10 in Bombori. Human Rights Watch reported the deaths, along with lootings and house fires, in a report published Aug. 20.",
+                   "why":  "The operation took place in the Mopti region of central Mali alongside Malian soldiers.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "RFI Afrique",
+                                       "url":  "https://www.rfi.fr/fr/afrique/20260820-mali-human-rights-watch-accuse-les-paramilitaires-d-africa-corps-d-avoir-tu%C3%A9-neuf-civils-dans-la-r%C3%A9gion-de-mopti"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Mali-Mètre poll shows 14.2 point drop in optimism",
+                   "body":  "Perceptions that the general situation in Mali has improved over the last 12 months fell by 14.2 points in one year. The Friedrich-Ebert-Stiftung (FES) Mali released the 17th edition of its political opinion survey on Aug. 19.",
+                   "why":  "Citizens maintain high expectations for improvements in employment, security, and essential services.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Journal du Mali",
+                                       "url":  "https://journaldumali.com/mali-metre-2026-le-sentiment-damelioration-recule-lespoir-demeure/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Transport costs double in Macina and Ténenkou",
+                   "body":  "The cost of travel from Ségou to Macina rose to 4,000 CFA from 2,000 CFA before the crisis. Trips between Ténenkou and Macina now cost up to 7,500 CFA, compared to 2,000 CFA two years ago.",
+                   "why":  "Increased travel expenses are making movement more expensive for local residents.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -1874,33 +2186,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Mali-MÃ¨tre survey shows 14.2 point drop in positive outlook",
-                   "body":  "Positive perception of the country\u0027s general situation fell by 14.2 points in one year, according to the 17th Mali-MÃ¨tre poll. More than half of those surveyed still believe the situation improved over the last 12 months. The Friedrich-Ebert-Stiftung (FES) Mali released the results on August 19.",
-                   "why":  "The decline in sentiment reflects growing citizen expectations for improvements in security, employment, and essential services.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "Journal du Mali",
-                                       "url":  "https://journaldumali.com/mali-metre-2026-le-sentiment-damelioration-recule-lespoir-demeure/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "GoÃ¯ta and Putin reaffirm security coordination",
-                   "body":  "Presidents Assimi GoÃ¯ta and Vladimir Putin held a telephone conversation on August 19 to discuss security and counter-terrorism in Mali and the Sahel. The Kremlin reported that GoÃ¯ta praised Russian support against armed extremist groups. The call followed an announcement of a future cooperation memorandum between Russia and ECOWAS.",
-                   "why":  "The coordination aims to stabilize Mali and counter attacks from armed extremist groups.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "Journal du Mali",
-                                       "url":  "https://journaldumali.com/goita-poutine-un-echange-au-coeur-de-la-nouvelle-strategie-regionale-de-moscou/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Chiaka Magassa takes office as SÃ©gou governor",
-                   "body":  "Chiaka Magassa took the oath of office as the new governor of SÃ©gou on August 19. Magassa, a former technical advisor at the Ministry of Territorial Administration, replaces Police Brigade General Commissioner SoulaÃ¯mane TraorÃ©. Studio Tamani reported the appointment.",
-                   "why":  "The appointment changes the regional leadership of SÃ©gou.",
+                   "headline":  "Chiaka Magassa sworn in as Ségou governor",
+                   "body":  "Chiaka Magassa took the oath of office on Aug. 19 at the Tribunal de grande instance. Magassa, a former technical advisor at the Ministry of Territorial Administration, replaces Police Brigadier General Soulaïmane Traoré.",
+                   "why":  "The appointment establishes new regional leadership for the city of Ségou.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -1912,82 +2200,66 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://bamada.net/segou-le-nouveau-gouverneur-prend-fonction"
                                    }
                                ]
-               },
-               {
-                   "headline":  "7-year-old boy dies of suspected poisoning in Kita",
-                   "body":  "A boy aged approximately seven died Tuesday after allegedly consuming a toxic substance in a bottle of milk. Studio Tamani reported the child died during evacuation to Bamako. Police are currently questioning a suspect woman.",
-                   "why":  "The incident has led to a police investigation into the death of a child in the SÃ©goubougouni neighborhood.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Studio Tamani",
-                                       "url":  "https://www.studiotamani.org/206675-kita-un-enfant-de-7-ans-meurt-apres-un-presume-empoisonnement"
-                                   },
-                                   {
-                                       "name":  "Bamada.net",
-                                       "url":  "https://bamada.net/kita-un-enfant-de-7-ans-meurt-apres-un-presume-empoisonnement"
-                                   }
-                               ]
                }
            ],
     "mr":  [
                {
-                   "headline":  "Mauritanian opposition rejects calls for third presidential term",
-                   "body":  "The democratic opposition coalition rejected calls for a third presidential term on Wednesday. The group stated that attempts to bypass constitutional term limits would threaten the peaceful transfer of power.",
-                   "why":  "The move signals potential political instability if the government attempts to modify constitutional restrictions on the presidency.",
+                   "headline":  "Mauritania to recruit 1,132 education agents",
+                   "body":  "The Ministry of Education and Reform of the Educational System announced a recruitment competition for 1,132 agents starting Sept. 3. The intake includes 891 teachers and 241 middle school professors.",
+                   "why":  "The recruitment opens employment opportunities for Mauritanians aged 20 and older.",
+                   "topic":  "Education",
+                   "sources":  [
+                                   {
+                                       "name":  "Sahara Medias",
+                                       "url":  "https://fr.saharamedias.net/ministere-de-leducation-organisation-dun-concours-pour-le-recrutement-de-1132-agents-dont-des-professeurs-de-college/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Mauritanian coast guard rescues 315 migrants",
+                   "body":  "Coast guard officials rescued 315 people from a makeshift boat near Nouadhibou on Wednesday. The vessel was traveling from Gambia and carried migrants from Senegal and Gambia.",
+                   "why":  "The operation prevents the loss of life for migrants attempting clandestine immigration by sea.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Sahara Medias",
+                                       "url":  "https://fr.saharamedias.net/immigration-clandestine-315-personnes-secourues-en-mer-par-les-garde-cotes-mauritaniens-pres-de-nouadhibou/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Mauritania offers 160 higher education options for 2026 graduates",
+                   "body":  "The Ministry of Higher Education and Scientific Research announced orientation results for the first 2026 baccalaureate session. The options include 131 programs within the country and 29 abroad.",
+                   "why":  "The distribution determines which students will study domestically versus those who will move abroad for their degrees.",
+                   "topic":  "Education",
+                   "sources":  [
+                                   {
+                                       "name":  "Sahara Medias",
+                                       "url":  "https://fr.saharamedias.net/le-mesrs-a-revele-les-orientations-apres-les-resultats-de-la-premiere-session-du-baccalaureat-2026/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Teacher unions announce sit-in at education ministry",
+                   "body":  "The \u0027Hadiroun\u0027 union group, representing 12 education organizations, will begin a sit-in at the Ministry of Education on Aug. 31. The group is protesting its exclusion.",
+                   "why":  "The protest signals labor unrest among educators that could disrupt administrative operations at the ministry.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
                                        "name":  "Sahara Medias",
-                                       "url":  "https://fr.saharamedias.net/la-coalition-de-lopposition-opposee-a-lappel-a-un-troisieme-mandat-presidentiel/"
+                                       "url":  "https://fr.saharamedias.net/des-syndicats-denseignants-annoncent-un-sit-in-devant-le-ministere-de-leducation-pour-denoncer-leur-exclusion/"
                                    }
                                ]
                },
                {
-                   "headline":  "Mauritania begins recruitment for 390 ministry agents",
-                   "body":  "Testing began Tuesday at the Nouakchott university campus to recruit 390 agents for several ministries. The exams are part of a larger initiative to hire 3,000 state contract employees.",
-                   "why":  "The hiring process increases the size of the state workforce across multiple government departments.",
-                   "topic":  "Business",
+                   "headline":  "Nouakchott residents protest mobile tower construction",
+                   "body":  "Residents in several Nouakchott neighborhoods are opposing the installation of telecommunications pylons on public squares. A company representative told local authorities they possess documents authorizing the installations.",
+                   "why":  "The dispute pits the expansion of mobile network infrastructure against the preservation of public community spaces.",
+                   "topic":  "Tech",
                    "sources":  [
                                    {
                                        "name":  "Sahara Medias",
-                                       "url":  "https://fr.saharamedias.net/des-concours-pour-le-recrutement-de-390-agents-pour-le-compte-de-plusieurs-ministeres-entames-hier/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Moroccan customs seize 54kg of gold from Mauritanian family",
-                   "body":  "Moroccan authorities seized 54 kilograms of gold from a Mauritanian couple and three minor children at Mohammed V International Airport in Casablanca. The family was referred to the judicial police for investigation.",
-                   "why":  "The seizure and subsequent police investigation restrict the movement and assets of the affected family members.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Sahara Medias",
-                                       "url":  "https://fr.saharamedias.net/passeports-diplomatiques-et-lingots-dissimules-la-peripetie-de-la-saisie-par-les-douanes-marocaines-dune-quantite-dor-en-possession-dune-famille-mauritanienne/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Vehicle fire destroys 34 million old ouguiyas in Arafat",
-                   "body":  "A vehicle transporting funds for several money transfer agencies caught fire in the Arafat moughata of Nouakchott-Sud. The owner of a transfer agency estimated the lost sum at 34 million old ouguiyas.",
-                   "why":  "The loss of funds affects the liquidity of the multiple money transfer agencies involved in the shipment.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Sahara Medias",
-                                       "url":  "https://fr.saharamedias.net/fait-divers-34-millions-mro-partis-en-cendre-dans-laccident-dun-vehicule-qui-transportait-des-fonds-a-arafat/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Mauritanian gendarmerie dismantles drug network in Nouakchott",
-                   "body":  "The Mauritanian gendarmerie announced Tuesday that it arrested members of a network selling narcotics and psychotropic substances in Nouakchott. The operation was conducted by the 1st company of Nouakchott and mixed brigades.",
-                   "why":  "The arrests remove a distribution network of illegal substances from the capital city.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Sahara Medias",
-                                       "url":  "https://fr.saharamedias.net/un-reseau-actif-de-trafic-de-drogue-demantele-a-nouakchott-et-ses-membres-arretes-par-la-gendarmerie/"
+                                       "url":  "https://fr.saharamedias.net/vives-protestations-contre-la-construction-surprise-dantennes-de-telephonie-mobile-sur-des-espaces-publics/"
                                    }
                                ]
                }
@@ -1995,8 +2267,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
     "mu":  [
                {
                    "headline":  "Supreme Court annuls release of inspector in Rs 75.9M drug case",
-                   "body":  "The Supreme Court overturned the release of Inspector Vicky Luckmun regarding the importation of Rs 75.9 million in synthetic drugs. The ruling was reported by Defi Media.",
-                   "why":  "The decision reinstates legal proceedings against a police official involved in a high-value narcotics trafficking case.",
+                   "body":  "The Supreme Court overturned the release of inspector Vicky Luckmun involving the importation of Rs 75.9 million in synthetic drugs. The ruling was reported by Defi Media.",
+                   "why":  "The decision reinstates legal proceedings against the officer involved in the high-value narcotics seizure.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -2006,25 +2278,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "IT Unit clones phone of Veronique Leu-Govind",
-                   "body":  "The IT Unit cloned the telephone of Veronique Leu-Govind. The incident was reported by Defi Media and Ion News.",
-                   "why":  "The breach compromises the digital privacy and communications security of a public figure.",
-                   "topic":  "Tech",
+                   "headline":  "Mauritius agricultural price index drops 2.6% in Q2",
+                   "body":  "The Producer Price Index-Agriculture fell 2.6% between the first and second quarters of 2026, moving from 96.2 in March to 94.0 in June. Statistics Mauritius published the data on August 19.",
+                   "why":  "The decline was driven by a 5.8% drop in crop product indices, affecting the revenue of farmers producing vegetable goods.",
+                   "topic":  "Agriculture",
                    "sources":  [
                                    {
-                                       "name":  "Defi Media",
-                                       "url":  "http://defimedia.info/le-telephone-de-veronique-leu-govind-clone-par-lit-unit"
-                                   },
-                                   {
                                        "name":  "Ion News",
-                                       "url":  "https://ionnews.mu/laffaire-des-156-kg-de-cannabis-le-telephone-de-veronique-leu-govind-clone-par-la-police/"
+                                       "url":  "https://ionnews.mu/ppi-a-baisse-des-prix-des-produits-vegetaux-vs-hausse-des-prix-dans-lelevage/"
                                    }
                                ]
                },
                {
-                   "headline":  "Mauritius water production falls 17.8% through July",
-                   "body":  "Global water production decreased by 17.8% compared to the previous year as of late July. Central Water Authority figures reported by Ion News indicate the Mare aux Vacoas reservoir has been hit harder by rainfall deficits than other reservoirs.",
-                   "why":  "Lower production levels reduce the available water supply for residents and businesses relying on the national grid.",
+                   "headline":  "Mauritius water production falls 17.8% as reservoirs deplete",
+                   "body":  "Overall water production decreased by 17.8% compared to the previous year, according to Central Water Authority figures reported in late July. Ion News noted that the Mare aux Vacoas reservoir has been particularly affected by rainfall deficits.",
+                   "why":  "Lower reservoir levels threaten the consistent supply of potable water to residents and businesses.",
                    "topic":  "Climate",
                    "sources":  [
                                    {
@@ -2034,26 +2302,26 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Indian Oil to deliver first fuel shipment in late September",
-                   "body":  "A first cargo of fuel from Indian Oil is expected to arrive in Mauritius at the end of September. The delivery was reported by Defi Media.",
-                   "why":  "The arrival of this shipment changes the fuel supply source for the country\u0027s energy infrastructure.",
+                   "headline":  "Mauritian call centers pivot after France bans phone solicitation",
+                   "body":  "Mauritian call centers are adapting their operations following a ban on telephone solicitation in France. The shift was reported by Defi Media.",
+                   "why":  "The regulatory change in France forces these centers to find new revenue streams or change their outreach methods to avoid losing contracts.",
                    "topic":  "Business",
                    "sources":  [
                                    {
                                        "name":  "Defi Media",
-                                       "url":  "http://defimedia.info/carburants-une-premiere-cargaison-dindian-oil-attendue-maurice-fin-septembre"
+                                       "url":  "http://defimedia.info/demarchage-telephonique-interdit-en-france-les-centres-dappels-mauriciens-sadaptent"
                                    }
                                ]
                },
                {
-                   "headline":  "MSM holds second mobilization rally in Sainte-Croix on Thursday",
-                   "body":  "The Mouvement socialiste militant (MSM) will hold a rally in constituency No. 4 on August 20 starting at 17:00. Ion News reports the event is part of a restructuring effort following the party\u0027s defeat in the November 2024 general elections.",
-                   "why":  "The party is attempting to rebuild its grassroots base to regain political influence in the Port-Louis Nord/Montagne-Longue area.",
-                   "topic":  "Politics",
+                   "headline":  "Ministry distributes safety gear to fishers at 2 locations",
+                   "body":  "The ministry of Agro-industry provided first aid kits, coolers, and distress beacons to fishers in Bambous-Virieux and Mahébourg on August 19. Minister Arvin Boolell stated the program will expand to all 14 fishing posts nationwide.",
+                   "why":  "The equipment allows fishers to venture further beyond the lagoon while maintaining safety and preserving catches.",
+                   "topic":  "News",
                    "sources":  [
                                    {
                                        "name":  "Ion News",
-                                       "url":  "https://ionnews.mu/circonscription-n-4-rassemblement-du-msm-ce-jeudi-a-sainte-croix/"
+                                       "url":  "https://ionnews.mu/arvin-boolell-bann-peser-nou-pe-enkouraz-zot-al-andeor-lagon-ek-lapes-kot-ena-pwason/"
                                    }
                                ]
                }
@@ -2061,8 +2329,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
     "mz":  [
                {
                    "headline":  "ExxonMobil awards $1.1 billion in Rovuma LNG equipment contracts",
-                   "body":  "ExxonMobil Mozambique awarded approximately $1.1 billion in pre-investment contracts for long-term critical equipment. The contracts support Phase 1 of the Rovuma LNG Project in Cabo Delgado province. The company acted on behalf of Area 4 partners.",
-                   "why":  "The investment advances the development of the natural gas project in Cabo Delgado.",
+                   "body":  "ExxonMobil Mozambique awarded approximately $1.1 billion in pre-investment contracts for long-term critical equipment. The contracts support Phase 1 of the Rovuma LNG project in Cabo Delgado province, according to the company.",
+                   "why":  "The investment accelerates the development of the gas field, moving the project closer to operational production.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2072,9 +2340,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "BCI profit falls to 3.3 billion meticais in first half of 2026",
-                   "body":  "Profit for Banco Comercial e de Investimentos fell to 3.3 billion meticais from approximately 3.7 billion meticais in the same period of 2025. O Pais reports the decline is due to high risks of bad credit, which increased the bank\u0027s reserves.",
-                   "why":  "Higher reserves for bad credit have reduced the bank\u0027s net earnings.",
+                   "headline":  "BCI first-half profit falls to 3.3 billion meticais",
+                   "body":  "Profit for Banco Comercial e de Investimentos fell to 3.3 billion meticais from 3.7 billion meticais in the same period of 2025. The bank cited a spike in reserves due to high credit risk from non-performing loans, according to O Pais.",
+                   "why":  "Increased reserves for bad loans reduce the bank\u0027s available capital for lending and shareholder returns.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2084,10 +2352,22 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Over 9,000 Mozambicans find work abroad since January",
-                   "body":  "More than 9,000 citizens were placed in South African mining and farming sectors since January. National Directorate of Migratory Labor Director Alice Brito stated that new recruitment is underway for Portugal and the UAE.",
-                   "why":  "The program increases employment opportunities for Mozambican workers in foreign labor markets.",
+                   "headline":  "Mozambique collects $43.83 million from Rovuma gas in first half",
+                   "body":  "The state collected $43.83 million from the production and export of liquefied natural gas from the Rovuma basin between January and June 2026. Total collections rose to $296.65 million, according to the Economic and Social Plan and State Budget balance.",
+                   "why":  "These revenues provide the government with foreign currency to fund public spending and infrastructure.",
                    "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "Carta de Mocambique",
+                                       "url":  "https://cartamz.com/economia-e-negocios/52903/industria-extractiva-gas-do-rovuma-produziu-mais-43-83-milhoes-de-usd-em-2026/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Over 9,000 Mozambicans find work abroad since January",
+                   "body":  "More than 9,000 citizens were placed in the mining and farming sectors in South Africa since the start of the year. National Directorate of Migratory Labor Director Alice Brito said recruitment is also underway in Portugal and the UAE.",
+                   "why":  "The placement of workers increases remittance flows back into the Mozambican economy.",
+                   "topic":  "News",
                    "sources":  [
                                    {
                                        "name":  "Carta de Mocambique",
@@ -2097,25 +2377,13 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Police commander and two foreigners detained for illegal mining",
-                   "body":  "The police commander of Chinde district, a Portuguese citizen, and a Chinese citizen were detained Monday on suspicion of illegal tantalite exploitation. The arrests were carried out by the Sofala Customs Court and the Mozambique Republic Police in Mocuba.",
-                   "why":  "The arrests target the illegal extraction of minerals in the ZambÃ©zia province.",
+                   "body":  "The police commander of Chinde district, a Portuguese citizen, and a Chinese citizen were detained Monday. The three are suspected of the illegal exploitation of tantalite, according to the Customs Court of Sofala and the Mozambican Police.",
+                   "why":  "The arrests target the illicit extraction of minerals that bypasses state taxation and regulation.",
                    "topic":  "News",
                    "sources":  [
                                    {
                                        "name":  "Carta de Mocambique",
                                        "url":  "https://cartamz.com/sociedade/52913/zambezia-comandante-da-policia-e-dois-estrangeiros-detidos-por-exploracao-ilegal-de-tantalite/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Sunderland offers â‚¬40 million for Geny Catamo",
-                   "body":  "British club Sunderland offered â‚¬30 million fixed plus â‚¬10 million in variables for Geny Catamo. O Pais reports that Sporting rejected the offer, though the English club intends to increase the bid.",
-                   "why":  "The potential transfer would move the player from Sporting to the English league.",
-                   "topic":  "Sport",
-                   "sources":  [
-                                   {
-                                       "name":  "O Pais",
-                                       "url":  "https://opais.co.mz/sporting-ainda-espera-nova-proposta-por-geny-catamo/"
                                    }
                                ]
                }
@@ -2124,7 +2392,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                {
                    "headline":  "Namibia non-bank sector assets reach N$552.8 billion",
                    "body":  "Namibia\u0027s non-bank financial sector assets have grown to more than N$552.8 billion. Imanuel Hawanga, general manager of capital markets at NAMFISA, also estimated the broader capital market ecosystem at N$338.2 billion.",
-                   "why":  "The growth in these assets increases the capacity of non-bank institutions to mobilize savings and finance economic activity.",
+                   "why":  "The growth increases the capacity of non-bank institutions to mobilize savings and finance economic activity.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2134,21 +2402,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Namibian Cabinet approves oil and gas local content policy",
-                   "body":  "The Cabinet has approved the National Upstream Petroleum Local Content Policy. Kornelia Shilunga, head of the Upstream Petroleum Unit in the office of the President, announced the approval on Wednesday.",
-                   "why":  "The policy allows for increased Namibian participation in the country\u0027s emerging oil and gas industry.",
-                   "topic":  "Business",
+                   "headline":  "Khomas100 attracts 400 cyclists from 14 countries",
+                   "body":  "More than 400 cyclists from 14 countries have confirmed participation for the Khomas100 gravel cycling event on August 22. The event will host the CAC African Continental Gravel Championships.",
+                   "why":  "The record international field increases the global profile of Namibian gravel cycling.",
+                   "topic":  "Sport",
                    "sources":  [
                                    {
-                                       "name":  "The Windhoek Observer",
-                                       "url":  "https://observer24.com.na/cabinet-approves-oil-and-gas-local-content-policy/"
+                                       "name":  "The Namibian",
+                                       "url":  "https://www.namibian.com.na/khomas100-set-for-record-international-field/"
                                    }
                                ]
                },
                {
                    "headline":  "Walvis Bay gives car wash operators 14 days to vacate",
-                   "body":  "The municipality has given car wash operators 14 days to vacate road reserves along Sam Nujoma Avenue and Independence Road. The municipality stated the businesses were operating without required approvals and permits.",
-                   "why":  "The eviction threatens the livelihoods of workers and the viability of the affected businesses.",
+                   "body":  "The Walvis Bay municipality has given car wash operators 14 days to leave road reserves along Sam Nujoma Avenue and Independence Road. The municipality stated the businesses lacked required permits and approvals.",
+                   "why":  "Operators face the loss of their businesses and the resulting loss of livelihoods for their workers.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2158,9 +2426,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Namibia introduces business employment permit",
-                   "body":  "The ministry of home affairs, immigration, safety and security has introduced the Employment Permit to Conduct Business. The permit was created through an amendment to Regulation 17 of the Immigration Control Act, 1993.",
-                   "why":  "The new permit simplifies the process for investors and businesspersons seeking to establish or conduct business in the country.",
+                   "headline":  "Namibian Cabinet approves oil and gas local content policy",
+                   "body":  "Cabinet has approved the National Upstream Petroleum Local Content Policy. Kornelia Shilunga, head of the Upstream Petroleum Unit, announced the approval on Wednesday.",
+                   "why":  "The policy creates a framework to increase the participation of Namibian entities in the emerging oil and gas industry.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "The Windhoek Observer",
+                                       "url":  "https://observer24.com.na/cabinet-approves-oil-and-gas-local-content-policy/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Namibia introduces new business employment permit",
+                   "body":  "The ministry of home affairs, immigration, safety and security has introduced the Employment Permit to Conduct Business. The permit was established through an amendment to Regulation 17 of the Immigration Control Act, 1993.",
+                   "why":  "The new permit simplifies the process for foreign investors and businesspersons to establish operations in the country.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2168,37 +2448,25 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://observer24.com.na/new-permit-targets-investors-and-business-growth/"
                                    }
                                ]
-               },
-               {
-                   "headline":  "Minors hospitalized after drinking vodka from truck accident",
-                   "body":  "Several minors were taken to the Otavi Clinic for medical attention after consuming alcoholic drinks. The beverages were recovered from a truck accident that occurred Tuesday morning near Otavi.",
-                   "why":  "The consumption of potentially dangerous beverages led to the hospitalization of children in the Otavi area.",
-                   "topic":  "Health",
-                   "sources":  [
-                                   {
-                                       "name":  "The Windhoek Observer",
-                                       "url":  "https://observer24.com.na/otavi-children-hospitalised-after-vodka-alert/"
-                                   }
-                               ]
                }
            ],
     "ne":  [
                {
-                   "headline":  "Niger signs 126.1 billion FCFA deal for 200 MWc solar plant",
-                   "body":  "The state of Niger signed a public-private partnership contract worth 126.1 billion FCFA with Niger Electricity Power Production. The agreement funds the construction of a 200 MWc photovoltaic solar power plant. This investment increases the national energy capacity for businesses and residents.",
-                   "why":  "The project adds 200 MWc of power to the grid, reducing energy shortages for industrial and residential users.",
+                   "headline":  "Niger signs $1.9 billion refinery deal with Zimar",
+                   "body":  "Niger has contracted the Canadian group Zimar to build a refinery in Dosso for $1.9 billion. The deal has caused doubt among government officials due to the group\u0027s lack of an international track record.",
+                   "why":  "The project aims to increase domestic fuel processing capacity but faces internal government skepticism over the contractor\u0027s credibility.",
                    "topic":  "Business",
                    "sources":  [
                                    {
-                                       "name":  "Agence Nigerienne de Presse",
-                                       "url":  "https://anp.ne/niger-signature-dune-convention-ppp-de-plus-de-126-milliards-fcfa-pour-une-centrale-solaire-de-200-mwc/"
+                                       "name":  "Jeune Afrique",
+                                       "url":  "https://www.jeuneafrique.com/1836039/economie-entreprises/petrole-le-niger-parie-19-milliard-de-dollars-sur-zimar-un-groupe-canadien-aux-references-introuvables/"
                                    }
                                ]
                },
                {
-                   "headline":  "Niamey court records 420 infractions including terrorism cases",
-                   "body":  "The Niamey High Court (TGI) recorded 420 total infractions during its seventh prosecutor\u0027s meeting of 2026. The prosecutor stated that a large portion of these cases are terrorist in nature. This reflects the ongoing security burden on the judicial system in the capital.",
-                   "why":  "The high volume of terrorism-related cases increases the caseload for the judiciary and affects the speed of legal processing for detainees.",
+                   "headline":  "Niamey court records 420 infractions",
+                   "body":  "The Niamey High Court recorded 420 total infractions during a review on Aug. 14. The Public Prosecutor stated that these cases were largely terrorist in nature.",
+                   "why":  "The high volume of terrorism-related charges increases the judicial workload for the Niamey prosecutor\u0027s office.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -2208,23 +2476,47 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "University Abdou Moumouni expects 20,000 new students",
-                   "body":  "University Abdou Moumouni Dioffo expects 20,000 new bachelors for the 2026-2027 academic year. Recteur Professor Moussa BaragÃ© reported the institution currently has over 42,000 enrolled students. The expansion covers nearly 200 programs and specialties.",
-                   "why":  "The influx of 20,000 new students increases the demand for campus housing and classroom infrastructure in Niamey.",
+                   "headline":  "AES holds sovereignty conference in Niamey",
+                   "body":  "The National Commission of the Confederation of the Alliance of Sahel States (AES) held a conference on Aug. 19. The event took place at the Palais des Congrès for the population of Niamey.",
+                   "why":  "The conference seeks to educate Niamey residents on the confederation\u0027s goals regarding national sovereignty.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Agence Nigerienne de Presse",
+                                       "url":  "https://anp.ne/aes-la-conquete-de-la-souverainete-au-coeur-dune-conference-a-niamey/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Agadez begins entrance exams for Excellence High Schools",
+                   "body":  "The Governor\u0027s office of Agadez launched written entrance exams for the Lycées d\u0027Excellence on Aug. 20. The tests were administered at the CES Maï Manga Oumara.",
+                   "why":  "The exams determine which students in the Agadez region will gain admission to specialized high-performance schools.",
                    "topic":  "Education",
                    "sources":  [
                                    {
                                        "name":  "Agence Nigerienne de Presse",
-                                       "url":  "https://anp.ne/universite-abdou-moumouni-plus-de-42-000-etudiants-et-20-000-nouveaux-bacheliers-attendus-en-2026-2027/"
+                                       "url":  "https://anp.ne/lancement-a-agadez-des-epreuves-ecrites-du-concours-direct-dentree-dans-les-lycees-dexcellence/"
                                    }
                                ]
                }
            ],
     "rw":  [
                {
+                   "headline":  "AfDB plans $400 million for Rwanda agriculture",
+                   "body":  "The African Development Bank plans to invest more than $400 million into Rwanda\u0027s agriculture sector over the next three years. The bank intends to shift some of its funding priorities to support the sector.",
+                   "why":  "The funding will provide capital for farmers to transition their production methods over the three-year period.",
+                   "topic":  "Agriculture",
+                   "sources":  [
+                                   {
+                                       "name":  "KT Press",
+                                       "url":  "https://www.ktpress.rw/2026/08/afdb-plans-400m-new-funding-for-agriculture-in-rwanda/"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "Rwanda low birth weight rate rises to 8.8%",
                    "body":  "The proportion of babies born weighing less than 2.5 kilograms reached 8.8% in 2025. The National Institute of Statistics of Rwanda reported the figure in the Rwanda Demographic and Health Survey (RDHS7).",
-                   "why":  "The increase in low birth weight affects neonatal health outcomes for newborns and their mothers.",
+                   "why":  "The increase in low birth weight babies affects neonatal health outcomes for infants born below the 2.5 kilogram threshold.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -2234,21 +2526,33 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Rwanda Primary Leaving Examination cohort grows by 50,000",
-                   "body":  "The 2025-2026 Primary Leaving Examination cohort increased by more than 50,000 candidates compared to the previous year. Results from the national examinations show an increase in successful students.",
-                   "why":  "The growth in candidate numbers requires the education system to accommodate more students in classrooms.",
-                   "topic":  "Education",
+                   "headline":  "Rwanda targets 100,000 hectares for conservation farming",
+                   "body":  "The government has set a target to cultivate more than 100,000 hectares using conservation agriculture. The Rwanda Agriculture and Animal Resources Development Board is seeking large-scale machinery to support this goal for the 2027A season.",
+                   "why":  "The acquisition of machinery allows the government to expand climate-smart farming across larger areas of land.",
+                   "topic":  "Agriculture",
+                   "sources":  [
+                                   {
+                                       "name":  "Taarifa Rwanda",
+                                       "url":  "https://taarifa.rw/2026/08/19/rwanda-seeks-large-scale-machinery-to-expand-climate-smart-farming/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Rwanda and South Korea sign police cooperation pact",
+                   "body":  "Rwanda and South Korea have signed an agreement to strengthen cooperation between their police forces. The pact includes intelligence sharing and the fight against transnational crime.",
+                   "why":  "The agreement enables the two countries to share intelligence to combat cross-border crime and protect citizens abroad.",
+                   "topic":  "Politics",
                    "sources":  [
                                    {
                                        "name":  "KT Press",
-                                       "url":  "https://www.ktpress.rw/2026/08/more-students-better-results-what-rwandas-national-exams-reveal-about-a-changing-classroom/"
+                                       "url":  "https://www.ktpress.rw/2026/08/rwanda-south-korea-sign-police-pact-to-fight-cross-border-crime/"
                                    }
                                ]
                },
                {
                    "headline":  "WFP delivers 5,000 metric tonnes of rice to three nations",
-                   "body":  "A 5,000-metric-tonne rice shipment from India was delivered to the Port of Dar es Salaam to support Rwanda, the DRC, and Burundi. The delivery was coordinated by DP World and the United Nations World Food Programme.",
-                   "why":  "The shipment provides food relief to communities in Rwanda facing acute food insecurity.",
+                   "body":  "The United Nations World Food Programme and DP World delivered 5,000 metric tonnes of rice to support Rwanda, the DRC, and Burundi. The shipment arrived at the Port of Dar es Salaam in Tanzania from India.",
+                   "why":  "The rice shipment provides immediate food relief to communities in Rwanda facing acute food insecurity.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -2256,37 +2560,25 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://rwandadispatch.com/wfp-food-shipment-to-support-vulnerable-communities-in-rwanda-drc-burundi/"
                                    }
                                ]
-               },
-               {
-                   "headline":  "Rwanda seeks Japanese investment in mining",
-                   "body":  "The Rwanda Development Board met with a delegation of Japanese mining investors on Wednesday. The talks were led by RDB CEO Jean-Guy K. Afrika and Japanese Ambassador Nakajo Kazuya.",
-                   "why":  "The cooperation aims to increase capital investment and economic activity within Rwanda\u0027s mining sector.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Taarifa Rwanda",
-                                       "url":  "https://taarifa.rw/2026/08/20/rwanda-japan-explore-new-mining-investment-opportunities/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Rwanda sends business delegation to Brazil",
-                   "body":  "A government and private-sector delegation is visiting Brazil from August 17 to 21, 2026. The mission is led by Ministry of Trade and Industry Permanent Secretary Chantal Tuyishimire and Ambassador Lawrence Manzi.",
-                   "why":  "The mission seeks to establish new partnerships in innovation, skills development, and trade between the two countries.",
-                   "topic":  "Business",
-                   "sources":  [
-                                   {
-                                       "name":  "Taarifa Rwanda",
-                                       "url":  "https://taarifa.rw/2026/08/19/rwanda-brazil-business-mission-opens-new-frontiers-for-trade-investment-skills/"
-                                   }
-                               ]
                }
            ],
     "st":  [
                {
-                   "headline":  "Constitutional Court delays party list for Sept. 27 elections",
-                   "body":  "The Constitutional Court of Sao Tome and Principe has not yet validated the list of political parties admitted to the Sept. 27 legislative elections. The court cited Article 41 of the electoral law, which grants judges 11 business days to decide on the admission of candidacies.",
-                   "why":  "The delay leaves the final field of candidates for the legislative elections unconfirmed.",
+                   "headline":  "Sao Tome installs 8 water systems to cut shortages",
+                   "body":  "The government is installing 8 modular water collection and distribution systems across the country. In Agostinho Neto, the systems will capture 100 cubic meters of treated water per hour, according to reports.",
+                   "why":  "The new infrastructure aims to reduce water scarcity for residents in affected localities.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Tela Non",
+                                       "url":  "https://www.telanon.info/destaques/2026/08/20/54035/oito-sistemas-de-captacao-vao-aliviar-escassez-de-agua-em-sao-tome/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Constitutional Court delays party list for Sept. 27 polls",
+                   "body":  "The Constitutional Court of Sao Tome and Principe has not yet validated the list of political parties admitted to the Sept. 27 legislative elections. Under Article 41 of the electoral law, judges have 11 working days to decide on the admission of candidacies.",
+                   "why":  "The delay leaves the final field of competing parties unconfirmed as the election date approaches.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -2296,24 +2588,48 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "AFAP opens tender for vehicle procurement",
-                   "body":  "The AFAP has announced a tender for the acquisition of rolling stock in batches. The procurement is part of a social protection, resilience, and recovery project funded by the World Bank.",
-                   "why":  "The acquisition of these vehicles will support the implementation of World Bank-funded social protection and recovery projects.",
-                   "topic":  "Business",
+                   "headline":  "6 de Setembro leads national division with 30 points",
+                   "body":  "The 15th round of the 1st division National Championship begins Friday, Aug. 21, with Agrosport de Monte Café facing Inter do Bombom. League leader 6 de Setembro holds 30 points heading into its Saturday match, according to STP Press.",
+                   "why":  "The upcoming matches determine if 6 de Setembro can maintain its lead over challengers like Caixão Grande and V.Riboque.",
+                   "topic":  "Sport",
+                   "sources":  [
+                                   {
+                                       "name":  "STP Press",
+                                       "url":  "https://www.stp-press.st/2026/08/20/6-setembro-e-caixao-grande-querem-somar-para-seguir-e-v-riboque-a-espreita/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Director Jessica Lima joins FilmLab Mozambique",
+                   "body":  "Sao Tomean director Jessica Adelaide Lombá da Silva e Lima has been selected for the first edition of FilmLab Mozambique. The intensive project development laboratory begins Aug. 24 in Maputo.",
+                   "why":  "The program aims to strengthen cinematic ties and professional development for the director in Mozambique.",
+                   "topic":  "Culture",
                    "sources":  [
                                    {
                                        "name":  "Tela Non",
-                                       "url":  "https://www.telanon.info/destaques/2026/08/20/54019/afap-aquisicao-de-meios-rolantes-por-lotes/"
+                                       "url":  "https://www.telanon.info/cultura/2026/08/20/54038/a-realizadora-sao-tomense-jessica-lima-integra-a-selecao-da-primeira-edicao-do-filmlab-mocambique/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Government organizes gastronomy fair for Aug. 23",
+                   "body":  "The Ministry of Environment, Youth and Sustainable Tourism will hold the \u0027Grande Feira Gastronómica\u0027 this Sunday, Aug. 23. The event begins at 12:00 at Praça Yon Gato in the capital.",
+                   "why":  "The fair provides a platform for local food vendors and tourism promotion in the capital.",
+                   "topic":  "Business",
+                   "sources":  [
+                                   {
+                                       "name":  "STP Press",
+                                       "url":  "https://www.stp-press.st/2026/08/20/governo-atraves-do-turismo-organiza-grande-feira-gastronomica-ja-este-domingo-dia-23/"
                                    }
                                ]
                }
            ],
     "sn":  [
                {
-                   "headline":  "Senegal National Assembly creates commission to probe tax waivers",
-                   "body":  "The National Assembly adopted a resolution Thursday to create a parliamentary inquiry commission into the management of tax exemptions and debt write-offs. The probe targets several hundred billion FCFA in fiscal losses. The PASTEF party requested the measure.",
-                   "why":  "The investigation seeks to recover hundreds of billions of FCFA in lost state revenue from tax exemptions.",
-                   "topic":  "Business",
+                   "headline":  "Senegal National Assembly creates probe into tax exemptions",
+                   "body":  "The National Assembly adopted a resolution Thursday to create a parliamentary commission of inquiry into the management of tax exemptions and debt write-offs. The probe targets several hundred billion FCFA in fiscal waivers. The resolution was proposed by the PASTEF party.",
+                   "why":  "The investigation seeks to uncover the scale of lost state revenue from corporate and individual tax breaks.",
+                   "topic":  "Politics",
                    "sources":  [
                                    {
                                        "name":  "Seneweb",
@@ -2322,47 +2638,63 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Senegal denounces U.S. sanctions on ICC official Abdoulaye Seye",
-                   "body":  "The Senegalese government expressed concern Thursday over U.S. sanctions announced Aug. 18 against International Criminal Court (ICC) officials. The sanctions target Senegalese official Abdoulaye Seye. The Ministry of African Integration, Foreign Affairs and Senegalese Abroad issued the statement.",
-                   "why":  "The sanctions affect Abdoulaye Seye, who is Senegal\u0027s candidate for the position of ICC judge.",
+                   "headline":  "Senegal expresses concern over U.S. sanctions on ICC official",
+                   "body":  "The Senegalese government expressed deep concern Thursday following U.S. sanctions announced Aug. 18 against International Criminal Court officials. The sanctions target Abdoulaye Seye, a member of the ICC Prosecutor\u0027s Office and a Senegalese candidate for a judge position.",
+                   "why":  "The measures affect a Senegalese national\u0027s candidacy and standing within the international judicial system.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Le Soleil",
+                                       "url":  "https://lesoleil.sn/actualites/sanctions-americaines-contre-des-autorites-de-la-cpi-dakar-affiche-sa-solidarite-avec-abdoulaye-seye/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Senegal opposition urges President Faye to set local election date",
+                   "body":  "Opposition parties are calling on President Bassirou Diomaye Faye to establish a date for local elections. The request follows tensions between the president and former ally Ousmane Sonko.",
+                   "why":  "The timing of the vote will determine when political challengers can contest local administrative control.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/20/senegal-opposition-presses-president-to-set-local-election-date/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Sonko threatens inquiry into Dakar airport land plots",
+                   "body":  "National Assembly President Ousmane Sonko has requested clarifications from the Minister of Justice regarding irregular land subdivisions around Dakar airport. Sonko has threatened to launch a parliamentary commission of inquiry into the sites.",
+                   "why":  "The probe targets illegal land allocations that affect property ownership and urban planning near the capital\u0027s airport.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
                                        "name":  "Dakaractu",
-                                       "url":  "https://www.dakaractu.com/Sanctions-americaines-contre-des-responsables-de-la-CPI-Le-Senegal-denonce-et-apporte-son-soutien-a-Abdoulaye-Seye_a275202.html"
+                                       "url":  "https://www.dakaractu.com/Foncier-autour-de-l-aeroport-de-Dakar-Ousmane-Sonko-reclame-des-precisions-au-Garde-des-Sceaux-et-brandit-la-menace-d_a275206.html"
                                    }
                                ]
                },
                {
-                   "headline":  "Lamine Camara scores in Monaco\u0027s 3-2 win over GÃ³rnik Zabrze",
-                   "body":  "AS Monaco defeated GÃ³rnik Zabrze 3-2 on Thursday in a Conference League playoff first leg. Lamine Camara scored one of the goals to secure the away victory. Mika Biereth scored in the 9th minute.",
-                   "why":  "The win gives Monaco a lead heading into the second leg of the European competition playoff.",
-                   "topic":  "Sport",
+                   "headline":  "Linguère police arrest 4 for drug trafficking",
+                   "body":  "The Linguère urban police station arrested four individuals for criminal association, possession, trafficking, and use of drugs. The arrests were carried out by local authorities.",
+                   "why":  "The operation removes four suspected traffickers and their drug supply from the Linguère community.",
+                   "topic":  "News",
                    "sources":  [
                                    {
-                                       "name":  "Le Soleil",
-                                       "url":  "https://lesoleil.sn/actualites/sports/lamine-camara-frappe-fort-et-porte-monaco/"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Bamba Dieng fails Lazio medical over knee issues",
-                   "body":  "Senegalese forward Bamba Dieng will not join Lazio Rome after failing a medical examination on Thursday. Reports from Gianluca Di Marzio cite knee problems discovered during the exams. The player is now pursuing a move to Red Star.",
-                   "why":  "The failed medical prevents the player from signing with the Italian club, forcing him to seek a different team.",
-                   "topic":  "Sport",
-                   "sources":  [
+                                       "name":  "Seneweb",
+                                       "url":  "https://www.seneweb.com/fr/news/Societe/linguere-quatre-individus-interpelles-pour-association-de-malfaiteurs-trafic-et-usage-de-drogue_n_502025.html"
+                                   },
                                    {
                                        "name":  "Le Soleil",
-                                       "url":  "https://lesoleil.sn/actualites/sports/visite-medicale-ratee-a-la-lazio-bamba-dieng-joue-son-avenir-a-letoile-rouge/"
+                                       "url":  "https://lesoleil.sn/actualites/societe-fait-divers/linguere-quatre-jeunes-arretes-pour-association-de-malfaiteurs-et-trafic-decstasy/"
                                    }
                                ]
                }
            ],
     "sc":  [
                {
-                   "headline":  "Seychelles Postal Service begins Shein deliveries",
-                   "body":  "The Seychelles Postal Service has taken over the delivery of Shein parcels. Chief Executive for the Postal Sector Neddy Padayachy said the service began approximately one month ago.",
-                   "why":  "Customers ordering from the online retailer Shein now receive their packages through the national postal system.",
+                   "headline":  "Postal Service begins Shein parcel deliveries",
+                   "body":  "The Postal Service has taken over the delivery of Shein parcels. Chief Executive for the Postal Sector Neddy Padayachy said the service began approximately one month ago.",
+                   "why":  "Customers ordering from the online retailer now receive their goods via the national postal network.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2374,9 +2706,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            ],
     "sl":  [
                {
-                   "headline":  "Sungrow commissions RESPITE Solar-plus-Storage Project",
-                   "body":  "Sungrow has commissioned the RESPITE Solar-plus-Storage Project, the first national-scale power generation project connected to the grid in nearly a decade. The project was announced on August 19, 2026.",
-                   "why":  "The project increases the country\u0027s power generation capacity by integrating solar energy and storage into the national grid.",
+                   "headline":  "Sungrow commissions first national-scale power project in Sierra Leone",
+                   "body":  "Sungrow has commissioned the RESPITE Solar-plus-Storage Project, the first national-scale power generation project connected to the grid in nearly a decade. The company is a provider of PV inverters and energy storage systems.",
+                   "why":  "The project increases the country\u0027s grid capacity through the introduction of solar and storage technology.",
                    "topic":  "Tech",
                    "sources":  [
                                    {
@@ -2386,9 +2718,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
+                   "headline":  "Njala University opens new agric lab with 1 million euro EU grant",
+                   "body":  "Njala University\u0027s Department of Aquaculture and Fisheries Management opened a new living lab using enclosed agricultural technology. Coordinator Dr. Olufemi Julius Olapade said the project received 1 million euros in funding from the European Union.",
+                   "why":  "The facility introduces circular technologies to create sustainable food systems for cities and regions in Africa.",
+                   "topic":  "Agriculture",
+                   "sources":  [
+                                   {
+                                       "name":  "Politico SL",
+                                       "url":  "https://www.politicosl.com/articles/njala-university-opens-new-agric-lab"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "Sierra Leone launches Gender Accountability Framework",
-                   "body":  "The Ministry of Gender and Children\u0027s Affairs and UN Women launched the Gender Accountability Framework and the 2025 Annual Report on the GEWE Act 2022 on August 19, 2026.",
-                   "why":  "The framework establishes a reporting mechanism to track the implementation of the Gender Equality and Women\u0027s Empowerment Act.",
+                   "body":  "The Ministry of Gender and Children\u0027s Affairs and UN Women launched the Gender Accountability Framework and the 2025 Annual Report on the Gender Equality and Women’s Empowerment Act 2022. The report tracks the implementation of the 2022 law.",
+                   "why":  "The framework establishes a mechanism to monitor government compliance with gender equality legislation.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -2398,9 +2742,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "President Bio warns Kush drug peddlers to stop sales",
-                   "body":  "President Julius Maada Bio called on sellers of the synthetic drug Kush to stop operations during a visit to the Harmful Drug Rehabilitation Facility in Hastings on October 30, 2025.",
-                   "why":  "The crackdown targets an illicit trade that the president says is wreaking havoc in the country.",
+                   "headline":  "President Bio warns against sale of Kush drug",
+                   "body":  "President Julius Maada Bio called on dealers to stop selling the synthetic drug known as Kush during a visit to the Government’s Harmful Drug Rehabilitation Facility in Hastings on October 30, 2025. The president stated that some parents are selling the substance.",
+                   "why":  "The crackdown aims to reduce the illicit trade of synthetic drugs that the president says is wreaking havoc in the country.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -2410,10 +2754,10 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Freetown to rebuild King Jimmy market",
-                   "body":  "The historic King Jimmy market in Freetown will be rebuilt into a modern indoor market, according to a report on August 20, 2026.",
-                   "why":  "The reconstruction replaces one of West Africa\u0027s oldest markets with a modern facility for traders.",
-                   "topic":  "Business",
+                   "headline":  "Freetown to rebuild King Jimmy market into modern indoor facility",
+                   "body":  "The King Jimmy market, one of West Africa\u0027s oldest markets established during the slave trade, will be rebuilt as a modern indoor market. The project involves a complete reconstruction of the historic site.",
+                   "why":  "The redevelopment replaces an open-air historic site with modern infrastructure for vendors and shoppers.",
+                   "topic":  "Culture",
                    "sources":  [
                                    {
                                        "name":  "Sierra Leone Telegraph",
@@ -2425,8 +2769,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
     "so":  [
                {
                    "headline":  "Al-Shabaab attacks in Mogadishu fall from 144 to 5",
-                   "body":  "Recorded attacks by Al-Shabaab in Mogadishu declined from 144 to 5, according to a report by The Economist. The report indicates a shift in the city\u0027s security landscape.",
-                   "why":  "The reduction in attacks improves safety for residents and businesses operating within the capital.",
+                   "body":  "Recorded attacks by Al-Shabaab in Mogadishu declined from 144 to 5. The figures are cited in a new report by The Economist.",
+                   "why":  "The reduction in violence changes the security landscape for residents and businesses operating in the capital.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -2437,8 +2781,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Somali pirates demand $3 million for 10 Pakistani sailors",
-                   "body":  "Pirates have demanded $3 million for the release of 10 Pakistani sailors held since April. A Pakistani minister reported the demand on Wednesday following the hijacking of an oil tanker.",
-                   "why":  "The demand creates a financial liability for the sailors\u0027 employers or the Pakistani government to secure their release.",
+                   "body":  "Pirates have requested $3 million to release 10 Pakistani sailors held since April. A Pakistani minister reported the demand on Wednesday following the hijacking of an oil tanker.",
+                   "why":  "The demand creates a financial burden for the sailors\u0027 employers or the Pakistani government to secure their release.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2448,21 +2792,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Airstrike kills 4 suspected pirates off Somalia coast",
-                   "body":  "An airstrike killed four suspected pirates on Tuesday off the coast of Garmaal in the Nugaal region. Puntland security officials said the strike followed the hijacking of a ship bound for Mogadishu.",
-                   "why":  "The operation targets maritime hijackers to secure shipping lanes for commercial vessels.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Hiiraan Online",
-                                       "url":  "https://www.hiiraan.com/news4/2026/Aug/206021/four_suspected_pirates_killed_in_airstrike_after_ship_hijacking_off_somalia.aspx"
-                                   }
-                               ]
-               },
-               {
-                   "headline":  "Somalia postpones Hirshabelle state elections",
-                   "body":  "The Independent National Electoral and Boundaries Commission postponed parliamentary and local council elections in Hirshabelle state. The votes were scheduled for Thursday, Aug. 20.",
-                   "why":  "The delay prevents the scheduled transition of power for local council and House of Representatives members.",
+                   "headline":  "Somalia postpones Hirshabelle parliamentary and local elections",
+                   "body":  "The Independent National Electoral and Boundaries Commission postponed elections for local councils and the House of Representatives in Hirshabelle state. The polls were scheduled for Thursday, Aug. 20.",
+                   "why":  "The delay prevents the immediate seating of new representatives and local officials in the state.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -2472,9 +2804,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Former president blames government for 30 deaths in Baidoa",
-                   "body":  "Former President Sharif Sheikh Ahmed attributed the deaths of 30 people in Baidoa to the federal government of President Hassan Sheikh Mohamud. Sharif stated the violence resulted from a change of power imposed by force in Southwest State in March.",
-                   "why":  "The accusation heightens political tension between the former president and the current federal administration.",
+                   "headline":  "Former Somali president blames government for 30 deaths in Baidoa",
+                   "body":  "Former President Sharif Sheikh Ahmed attributed 30 deaths during fighting in Baidoa to the federal government of President Hassan Sheikh Mohamud. Sharif stated on Tuesday that the violence resulted from a change of power imposed by force in Southwest State in March.",
+                   "why":  "The accusation escalates political tension between the former president and the current federal administration.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -2482,29 +2814,41 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://www.somaliguardian.com/news/somalia-news/somalia-ex-president-blames-govt-baidoa-bloodshed-30-dead/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "Pirates hijack cargo ship carrying Turkish weapons",
+                   "body":  "Pirates hijacked a Cameroonian-flagged cargo ship and captured its 10-member crew earlier this week. A Somali official said the vessel and its cargo were taken toward the Nugaal coast.",
+                   "why":  "The seizure of weapons cargo increases the risk of illicit arms entering the Puntland region.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Hiiraan Online",
+                                       "url":  "https://www.hiiraan.com/news4/2026/Aug/206035/pirates_hijack_cargo_ship_carrying_turkish_weapons_off_somalias_coast_official_says.aspx"
+                                   }
+                               ]
                }
            ],
     "ss":  [
                {
-                   "headline":  "UN Commission warns sham elections could fuel South Sudan conflict",
-                   "body":  "The UN Commission on Human Rights in South Sudan warned Thursday that sham elections could lead to atrocities and conflict. The warning was issued in a new report. This risk threatens to expose citizens to renewed violence and insecurity during the planned voting process.",
-                   "why":  "Irregular elections could trigger a return to large-scale violence for civilians.",
-                   "topic":  "Politics",
+                   "headline":  "Violence at Bentiu IDP camp kills 9",
+                   "body":  "At least nine people were killed and 23 others wounded during violence at the Bentiu internally displaced persons camp in Unity State. Sudans Post reports the clashes began when authorities attempted to arrest a self-proclaimed prophet named Taban Puol.",
+                   "why":  "The unrest disrupts the safety of displaced populations in Unity State.",
+                   "topic":  "News",
                    "sources":  [
                                    {
-                                       "name":  "Radio Tamazuj",
-                                       "url":  "https://www.radiotamazuj.org/en/news/article/un-commission-sham-elections-could-fuel-conflict-atrocities-in-south-sudan"
+                                       "name":  "Sudans Post",
+                                       "url":  "https://www.sudanspost.com/9-killed-23-injured-in-deadly-violence-at-bentiu-idp-camp/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=9-killed-23-injured-in-deadly-violence-at-bentiu-idp-camp"
                                    },
                                    {
-                                       "name":  "Eye Radio",
-                                       "url":  "https://www.eyeradio.org/un-warns-south-sudan-elections-without-safeguards-dialogue-could-fuel-conflict/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=un-warns-south-sudan-elections-without-safeguards-dialogue-could-fuel-conflict"
+                                       "name":  "Radio Tamazuj",
+                                       "url":  "https://www.radiotamazuj.org/en/news/article/9-killed-29-injured-in-bentiu-idp-camp-violence"
                                    }
                                ]
                },
                {
-                   "headline":  "IRC delivers new health and education facilities in Aweil South",
-                   "body":  "The International Rescue Committee handed over two renovated primary schools and health facilities to authorities in Aweil South County. The project was funded by the World Bank. Local communities in Northern Bahr el Ghazal State now have increased access to essential medical and schooling services.",
-                   "why":  "Residents of Aweil South County gain direct access to renovated primary schools and clinics.",
+                   "headline":  "IRC delivers health and education facilities in Aweil South",
+                   "body":  "The International Rescue Committee handed over two renovated primary schools and health facilities to authorities in Aweil South County. Sudans Post reports the project was funded by the World Bank.",
+                   "why":  "The new facilities increase local community access to essential medical and educational services.",
                    "topic":  "Health",
                    "sources":  [
                                    {
@@ -2514,35 +2858,63 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Governor Adil urges SPLA-IO and NAS to end violence",
-                   "body":  "Central Equatoria State Governor Emmanuel Adil Anthony called on the SPLA-IO and the National Salvation Front to stop fighting on Thursday. The appeal followed a 12-day period of activity. The governor stated that peace is necessary ahead of the country\u0027s planned general elections.",
-                   "why":  "Continued fighting between these armed groups threatens the stability required to hold general elections.",
+                   "headline":  "Nyangwara community seeks halt to Nyamini land demarcation",
+                   "body":  "The Nyangwara-Pojulu-Tijor community has called for a stop to land allocation and demarcation in Juba County. Eye Radio reports the dispute over the land has lasted more than 13 years.",
+                   "why":  "The ongoing conflict prevents the legal resolution of competing land claims for residents in Nyamini.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
-                                       "name":  "Sudans Post",
-                                       "url":  "https://www.sudanspost.com/governor-adil-urges-spla-io-nas-to-end-violence-ahead-of-elections/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=governor-adil-urges-spla-io-nas-to-end-violence-ahead-of-elections"
+                                       "name":  "Eye Radio",
+                                       "url":  "https://www.eyeradio.org/nyangwara-community-renews-call-to-halt-land-demarcation-in-nyamini/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=nyangwara-community-renews-call-to-halt-land-demarcation-in-nyamini"
                                    }
                                ]
                },
                {
-                   "headline":  "Humanitarian Minister assesses needs in Malakal",
-                   "body":  "Minister of Humanitarian Affairs and Disaster Management Albino Akol Atak led a delegation to Malakal in Upper Nile State on Thursday. The group was received by Governor James Koang Chol. The visit aims to identify the specific needs of affected communities in the region.",
-                   "why":  "The assessment determines how humanitarian aid will be distributed to affected populations in Upper Nile State.",
-                   "topic":  "News",
+                   "headline":  "Governor Adil vows crackdown on illegal mining",
+                   "body":  "Central Equatoria State Governor Emmanuel Adil Anthony announced a crackdown on illegal mining and armed groups. Radio Tamazuj reports the measure was announced Thursday.",
+                   "why":  "The initiative aims to curb unauthorized extraction of mineral resources within the state.",
+                   "topic":  "Business",
                    "sources":  [
                                    {
-                                       "name":  "Eye Radio",
-                                       "url":  "https://www.eyeradio.org/humanitarian-affairs-minister-leads-delegation-to-assess-needs-in-malakal/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=humanitarian-affairs-minister-leads-delegation-to-assess-needs-in-malakal"
+                                       "name":  "Radio Tamazuj",
+                                       "url":  "https://www.radiotamazuj.org/en/news/article/governor-adil-vows-to-curb-illegal-mining-armed-groups"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Former finance minister Kosti Manibe dies",
+                   "body":  "Former finance minister Kosti Manibe Ngai died on August 11, 2026. Sudans Post reports the death was acknowledged by RJMEC Chairperson Maj. Gen. George Aggrey Owinow.",
+                   "why":  "The loss removes a veteran politician involved in the country\u0027s peace process and public service.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Sudans Post",
+                                       "url":  "https://www.sudanspost.com/peace-monitor-chief-describes-late-kosti-manibe-as-dedicated-public-servant/?utm_source=rss\u0026utm_medium=rss\u0026utm_campaign=peace-monitor-chief-describes-late-kosti-manibe-as-dedicated-public-servant"
                                    }
                                ]
                }
            ],
     "sd":  [
                {
+                   "headline":  "Sudan army gains 318 RSF defectors",
+                   "body":  "The Sudanese army reports that 318 Rapid Support Forces fighters, including four commanders, have defected to its ranks. The army stated the move comes as fighting continues more than three years into the war.",
+                   "why":  "The surrender of paramilitary personnel reduces the manpower of the RSF during the ongoing conflict.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/19/sudan-war-318-rsf-fighters-defect-to-army-in-latest-blow-to-paramilitary/"
+                                   },
+                                   {
+                                       "name":  "Anadolu Africa",
+                                       "url":  "https://www.aa.com.tr/en/africa/hundreds-of-fighters-including-commanders-defect-from-sudans-rsf-army-says/4031914"
+                                   }
+                               ]
+               },
+               {
                    "headline":  "IOM reports 200,000 displaced in Kordofan",
-                   "body":  "More than 200,000 people have been displaced across Sudan\u0027s Kordofan region. The International Organization for Migration reported the figures following an intensification of fighting.",
-                   "why":  "The mass movement of people increases the immediate need for emergency shelter and food aid for civilians in the region.",
+                   "body":  "More than 200,000 people have been displaced across Sudan\u0027s Kordofan region. The International Organization for Migration attributed the movement to intensifying fighting.",
+                   "why":  "The mass movement of civilians disrupts local stability and increases the need for humanitarian aid in the region.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -2550,13 +2922,49 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://www.dabangasudan.org/en/all-news/article/200k-displaced-across-kordofan-as-fighting-intensifies"
                                    }
                                ]
+               },
+               {
+                   "headline":  "UN records 14,000 displaced in Blue Nile state",
+                   "body":  "Nearly 14,000 people were displaced in August in Sudan\u0027s Blue Nile state. The UN migration agency cited rising tensions and clashes in Qaisan and Kurmuk.",
+                   "why":  "Worsening security in these specific districts forces residents to abandon their homes.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Anadolu Africa",
+                                       "url":  "https://www.aa.com.tr/en/africa/nearly-14-000-displaced-by-worsening-security-in-sudan-s-blue-nile-state-un/4033258"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "RSF attacks displace 1,000 in North Kordofan",
+                   "body":  "Attacks on two villages southwest of the North Kordofan capital killed six people and displaced more than 1,000 residents. The Sudan Tribune reports 215 families arrived on foot.",
+                   "why":  "The violence forces rural families to flee their villages and travel on foot to seek safety.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "Anadolu Africa",
+                                       "url":  "https://www.aa.com.tr/en/africa/rsf-attacks-kill-6-displace-more-than-1-000-in-sudan-report/4033375"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Khartoum students return to schools amid war",
+                   "body":  "Children in Khartoum are returning to classrooms as security improves. Africanews reports that schools remain damaged and suffer from a shortage of teachers and supplies.",
+                   "why":  "Overcrowded classes and lack of materials hinder the quality of education for returning students.",
+                   "topic":  "Education",
+                   "sources":  [
+                                   {
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/19/children-in-khartoum-slowly-return-back-to-school-amid-war/"
+                                   }
+                               ]
                }
            ],
     "tg":  [
                {
                    "headline":  "Togo reports 2,244.31 billion FCFA in domestic debt",
-                   "body":  "Togo\u0027s domestic debt stands at 2,244.31 billion FCFA. The figure was discussed during a July 30 \u0027Deep Dive\u0027 meeting in LomÃ© between public and private sector actors. The session aimed to identify constraints hindering private sector growth.",
-                   "why":  "The high level of state debt limits the available capital and liquidity for private operators to expand their businesses.",
+                   "body":  "Togo\u0027s domestic debt stands at 2,244.31 billion FCFA. The figure was discussed during a July 30 meeting in Lomé between public and private sector actors. The session aimed to identify constraints hindering private sector growth.",
+                   "why":  "High levels of domestic debt limit the availability of credit and investment for local businesses.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2570,25 +2978,9 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Togo regulator says French journalists lacked accreditation",
-                   "body":  "The High Authority for the Regulation of Written, Audiovisual and Digital Communication (HARC) reported it received no accreditation requests for GaÃ«l MocaÃ«r and SÃ©bastien Perez-Pezzani. The statement was released on August 19 following the arrest of the two journalists. The regulator cited the lack of professional authorization for their activities in the country.",
-                   "why":  "The lack of official accreditation provides the legal basis for the state\u0027s detention of the foreign media workers.",
-                   "topic":  "News",
-                   "sources":  [
-                                   {
-                                       "name":  "Togo Actualite",
-                                       "url":  "https://togoactualite.com/arrestation-de-deux-francais-au-togo-la-harc-affirme-navoir-recu-aucune-demande-daccreditation/"
-                                   },
-                                   {
-                                       "name":  "Icilome",
-                                       "url":  "https://icilome.com/2026/08/togo-la-harc-dit-navoir-recu-aucune-demande-daccreditation-pour-les-deux-journalistes-francais/"
-                                   }
-                               ]
-               },
-               {
                    "headline":  "Togo grants provisional release to one French journalist",
-                   "body":  "One of two French journalists arrested on July 27 has been granted provisional release. The individuals and their local fixer appeared before an instruction judge in LomÃ© on August 20. The status of the second journalist remains pending.",
-                   "why":  "The release of one detainee partially eases the diplomatic tension between LomÃ© and Paris regarding the arrests.",
+                   "body":  "One of two French journalists arrested on July 27 in Kara was granted provisional release on August 20. The journalists and their local fixer were indicted on August 17. A judge in Lomé presided over the hearing.",
+                   "why":  "The release follows charges of \u0027false declarations\u0027 and a dispute over whether the crew had proper accreditation to film.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -2599,8 +2991,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Togo Senate opens second extraordinary session of 2026",
-                   "body":  "The Togolese Senate began its second extraordinary session of the year on August 17. The session was convened at the request of President Faure Essozimna GnassingbÃ©. The meeting took place at the Palais des CongrÃ¨s in LomÃ©.",
-                   "why":  "The extraordinary session allows the government to fast-track specific legislative priorities outside the regular parliamentary calendar.",
+                   "body":  "The Togolese Senate began its second extraordinary session of the year on August 17. The session was convened at the request of President Faure Essozimna Gnassingbé. Meetings are being held at the Palais des Congrès in Lomé.",
+                   "why":  "The session allows the Senate to address specific legislative priorities requested by the presidency outside of regular calendar dates.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -2608,13 +3000,25 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://icilome.com/2026/08/togo-le-senat-ouvre-sa-deuxieme-session-extraordinaire-de-2026/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "Togo hospital practitioners union launches \u0027Organizing\u0027 project",
+                   "body":  "The National Union of Hospital Practitioners of Togo (SYNPHOT) launched a project called \u0027Organizing\u0027 on August 17. The initiative was introduced during an event in Lomé. The project seeks to increase unionization among health professionals.",
+                   "why":  "Increased union membership gives healthcare workers more collective bargaining power regarding working conditions and pay.",
+                   "topic":  "Health",
+                   "sources":  [
+                                   {
+                                       "name":  "Icilome",
+                                       "url":  "https://icilome.com/2026/08/togo-le-synphot-lance-organizing-pour-renforcer-la-syndicalisation-des-professionnels-de-sante/"
+                                   }
+                               ]
                }
            ],
     "tn":  [
                {
                    "headline":  "Tunisia records 1,101 protests in July",
-                   "body":  "Tunisia saw 1,101 protest movements in July 2026, the highest monthly total since July 2016. The Tunisian Social Observatory reported that more than 60% of these mobilizations were linked to social problems.",
-                   "why":  "The record level of unrest indicates increasing public dissatisfaction with social conditions.",
+                   "body":  "Tunisia saw 1,101 protest movements in July 2026, the highest monthly level since July 2016. The Tunisian Social Observatory reported that more than 60% of these mobilizations were related to specific problems.",
+                   "why":  "The surge in unrest indicates a record level of social instability for the country in a decade.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -2624,21 +3028,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Tunis medina schedules Mouled procession for Aug. 25",
-                   "body":  "A procession will start at 9:30 a.m. on Tuesday, Aug. 25, at the zaouia of Sidi Mahrez. The event will move through the Tunis medina toward the zaouia of Sidi Ben Arous.",
-                   "why":  "The event organizes the movement of crowds and religious participants through the city center.",
-                   "topic":  "Culture",
+                   "headline":  "Tunisia opens online school registrations for 2026-2027",
+                   "body":  "The Ministry of Education opened remote registration and re-registration for primary, preparatory, and secondary students on Thursday, Aug. 20, starting at 8 p.m. The process is conducted online.",
+                   "why":  "Parents must now use a digital platform to secure their children\u0027s placement for the upcoming academic year.",
+                   "topic":  "Education",
                    "sources":  [
                                    {
                                        "name":  "Webdo",
-                                       "url":  "https://www.webdo.tn/fr/actualite/divers/mouled-la-grande-kharja-de-la-medina-de-tunis-a-partir-de-9h30/402797/"
+                                       "url":  "https://www.webdo.tn/fr/actualite/national/rentree-2026-2027-ouverture-des-inscriptions-scolaires/402825/"
                                    }
                                ]
                },
                {
                    "headline":  "Black Sea tensions pressure Tunisian wheat imports",
-                   "body":  "Tunisia remains dependent on imported wheat despite a strong domestic cereal campaign. Webdo reports that attacks on ships and ports in the Black Sea expose the country to supply disruptions.",
-                   "why":  "Instability in this global grain basin threatens the availability of a primary food staple for the population.",
+                   "body":  "Tunisia remains dependent on imported wheat despite a strong domestic cereal campaign. Attacks on ships and ports in the Black Sea are disrupting one of the world\u0027s primary grain basins, according to Webdo.",
+                   "why":  "Supply chain disruptions in the Black Sea increase the risk of grain shortages for Tunisian consumers.",
                    "topic":  "Agriculture",
                    "sources":  [
                                    {
@@ -2648,21 +3052,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Bottled mineral water shortages persist in Tunisia",
-                   "body":  "A shortage of bottled mineral water continues across the country. Kapitalis reports the scarcity remains visible in numerous supermarkets and retail points.",
-                   "why":  "The ongoing shortage limits consumer access to drinking water at major retail outlets.",
-                   "topic":  "Business",
+                   "headline":  "Tunis medina schedules Mouled procession for Aug. 25",
+                   "body":  "A large procession will start at 9:30 a.m. on Tuesday, Aug. 25, at the zaouia of Sidi Mahrez. The event will move through the Tunis medina toward the zaouia of Sidi Ben Arous.",
+                   "why":  "The event closes or restricts movement on the rue du Pacha for the duration of the religious festivities.",
+                   "topic":  "Culture",
                    "sources":  [
                                    {
-                                       "name":  "Kapitalis",
-                                       "url":  "https://kapitalis.com/tunisie/2026/08/20/la-crise-de-leau-minerale-en-bouteille-perdure-en-tunisie/"
+                                       "name":  "Webdo",
+                                       "url":  "https://www.webdo.tn/fr/actualite/divers/mouled-la-grande-kharja-de-la-medina-de-tunis-a-partir-de-9h30/402797/"
                                    }
                                ]
                },
                {
                    "headline":  "Tunisian government reviews 2027 economic balance",
-                   "body":  "Prime Minister Sara Zaafrani Zenzri presided over a ministerial council on Aug. 19 to examine the draft economic balance for 2027. The document serves as the primary orientation for the country\u0027s economic policy.",
-                   "why":  "The project establishes the fiscal and economic priorities that will govern state spending and business planning for 2027.",
+                   "body":  "Prime Minister Sara Zaafrani Zenzri presided over a ministerial council on Wednesday, Aug. 19, to examine the draft economic balance for 2027. The document serves as the major orientation for the country\u0027s economic policy.",
+                   "why":  "The resulting balance will determine the allocation of state funds and fiscal priorities for the 2027 budget year.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2674,9 +3078,37 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            ],
     "zm":  [
                {
-                   "headline":  "US and Serbia congratulate President-elect Hichilema on re-election",
-                   "body":  "The United States and Serbia issued congratulations to President-elect Hakainde Hichilema following the August 15 general election. Both nations pledged to strengthen bilateral relations and cooperation with Zambia. The US welcomed Hichilema\u0027s return to office.",
-                   "why":  "The pledges aim to maintain diplomatic cooperation and bilateral ties between Zambia and these two nations.",
+                   "headline":  "Police confirm former minister Mutotwe Kafwaya killed in security raid",
+                   "body":  "Police confirmed the death of former Minister of Works and Transport Mutotwe Kafwaya. The death occurred during a security raid on an opposition media outlet, according to BBC Africa.",
+                   "why":  "The killing of a former government official during a raid on a media house increases pressure on national security authorities.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "BBC Africa",
+                                       "url":  "https://www.bbc.co.uk/news/articles/cg5ljlzedd5o?at_medium=RSS\u0026at_campaign=rss"
+                                   },
+                                   {
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/20/former-zambian-minister-killed-in-post-election-security-raid/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Opposition leader Brian Mundubile challenges presidential poll results",
+                   "body":  "Opposition leader Brian Mundubile is challenging the results of the presidential election in court. Mundubile alleges his campaign documented serious irregularities in the counting and transmission of votes, Africanews reports.",
+                   "why":  "The legal challenge contests the legitimacy of the current administration\u0027s mandate following the August elections.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/20/zambian-opposition-leader-to-challenge-presidential-poll-results-in-court/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "US and Serbia congratulate President-elect Hakainde Hichilema",
+                   "body":  "The United States and Serbia have issued statements congratulating Hakainde Hichilema on his re-election. The two nations pledged to strengthen bilateral relations and cooperation, according to the Lusaka Times.",
+                   "why":  "These diplomatic recognitions signal continued international support and cooperation for Hichilema\u0027s second term.",
                    "topic":  "Politics",
                    "sources":  [
                                    {
@@ -2686,21 +3118,21 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Zambian government mourns former Minister Mutotwe Kafwaya",
-                   "body":  "Secretary to the Cabinet Patrick Kangwa expressed regret over the death of former Minister of Works and Transport Mutotwe Kafwaya on Wednesday. The government stated it will make no further comments while law enforcement agencies investigate the matter. Kangwa also condemned threats made against the President.",
-                   "why":  "Law enforcement agencies are currently investigating the circumstances surrounding the former minister\u0027s death.",
-                   "topic":  "News",
+                   "headline":  "Zambia copper boom attracts billions in green-energy investment",
+                   "body":  "Zambia\u0027s copper sector is attracting billions in green-energy investment. Africanews reports the boom occurs as the neighboring DRC implements a copper and cobalt export ban to target refining margins.",
+                   "why":  "The influx of capital targets the mining sector, though citizens are questioning the distribution of these financial benefits.",
+                   "topic":  "Business",
                    "sources":  [
                                    {
-                                       "name":  "Mwebantu",
-                                       "url":  "https://www.mwebantu.com/government-mourns-former-minister-mutotwe-kafwaya-warns-against-threats-to-president/"
+                                       "name":  "Africanews",
+                                       "url":  "http://www.africanews.com/2026/08/20/drc-will-the-copper-export-ban-finally-deliver-mineral-sovereignty-business-africa/"
                                    }
                                ]
                },
                {
-                   "headline":  "Police probe death of 25-year-old woman",
-                   "body":  "The Zambia Police Service is investigating the death of 25-year-old Lisa Mutambo, who was brought to a hospital on August 20. Deputy Police Public Relations Officer Chipo Kaitisha reported the incident occurred between 03:30 and 04:30 hours. Police stated no physical injuries were found on the body.",
-                   "why":  "The investigation seeks to determine the cause of death following reports that the woman became unconscious after vomiting.",
+                   "headline":  "Police probe death of 25-year-old Lisa Mutambo",
+                   "body":  "Police are investigating the death of 25-year-old Lisa Mutambo, who was brought to a hospital dead on August 20. Deputy Police Public Relations Officer Chipo Kaitisha stated that no physical injuries were found on the body.",
+                   "why":  "The official police finding of no physical injuries contradicts social media reports alleging the woman was beaten to death.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -2708,25 +3140,25 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://www.mwebantu.com/lisa-was-brought-in-dead-at-the-hospital-with-no-physical-injuries-were-observedon-her-body-police-say/"
                                    }
                                ]
-               },
-               {
-                   "headline":  "Busoli Royal Establishment recognizes Hichilema\u0027s election victory",
-                   "body":  "The Busoli Royal Establishment in Chongwe district congratulated President Hakainde Hichilema on his victory in the August 13, 2026, general elections. Representative Prince Kabwata stated the victory represents a renewed mandate from the people. The announcement was made in Chongwe.",
-                   "why":  "The recognition by the royal establishment signals traditional leadership support for the president\u0027s new term.",
-                   "topic":  "Politics",
-                   "sources":  [
-                                   {
-                                       "name":  "Lusaka Times",
-                                       "url":  "https://www.lusakatimes.com/2026/08/20/busoli-royal-establishment-welcome-president-hichilemas-re-election/"
-                                   }
-                               ]
                }
            ],
     "eh":  [
                {
-                   "headline":  "Morocco threatens to review Spanish contracts over 2030 World Cup",
-                   "body":  "Morocco warned it may review future contracts with Spanish companies if political pressure to exclude Morocco from the 2030 World Cup continues. The warning was reported by Moroccan media.",
-                   "why":  "Spanish firms face potential loss of contracts if political boycotts of the joint tournament hosting continue.",
+                   "headline":  "VOX MEP proposes ceding Western Sahara to Morocco",
+                   "body":  "European Parliament member Hermann Tertsch proposed accepting Moroccan claims over Western Sahara in exchange for Rabat recognizing Spanish sovereignty over Ceuta and Melilla. The proposal was detailed in a public message. The VOX party has not publicly disavowed the statements.",
+                   "why":  "The proposal suggests a territorial exchange that would change the legal status of Western Sahara to secure the status of Spanish exclaves.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "ECS Saharaui",
+                                       "url":  "https://ecsaharaui.com/08/2026/tertsch-propone-entregar-el-sahara-occidental-a-marruecos-a-cambio-de-que-rabat-respete-ceuta-y-melilla-mientras-vox-guarda-silencio/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Morocco threatens to review Spanish contracts over World Cup boycott",
+                   "body":  "Rabat warned it could review future contracts with Spanish companies if political pressure continues to exclude Morocco from the 2030 World Cup. The warning was reported by Moroccan media. Morocco is co-hosting the tournament with Spain and Portugal.",
+                   "why":  "Spanish firms face potential loss of contracts if political opposition to the World Cup organization persists.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2734,12 +3166,36 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                        "url":  "https://ecsaharaui.com/08/2026/marruecos-endurece-el-chantaje-sobre-espana-y-amenaza-con-revisar-contratos-si-continua-el-boicot-politico-al-mundial-de-2030/"
                                    }
                                ]
+               },
+               {
+                   "headline":  "Tens of thousands enter Ceuta from Morocco",
+                   "body":  "Tens of thousands of people entered Ceuta from Morocco in late July 2026. Sahrawi diplomat Jadiyetu El Mohtar described the event as a crisis. The incident highlighted European security dependence on Morocco.",
+                   "why":  "The mass entry of people creates an immediate security and humanitarian challenge for European authorities in the enclave.",
+                   "topic":  "News",
+                   "sources":  [
+                                   {
+                                       "name":  "ECS Saharaui",
+                                       "url":  "https://ecsaharaui.com/08/2026/ceuta-europa-debe-replantearse-el-poder-que-ha-entregado-a-marruecos/"
+                                   }
+                               ]
+               },
+               {
+                   "headline":  "Declassified US cable links Juan Carlos I to Melilla cession talks",
+                   "body":  "A 1979 US diplomatic document released by WikiLeaks indicates King Juan Carlos I considered ceding Melilla to Morocco. The cable describes conversations regarding formulas to resolve the future of Ceuta and Melilla. The document was recently declassified.",
+                   "why":  "The disclosure reveals historical royal willingness to negotiate the transfer of Spanish territory to Morocco.",
+                   "topic":  "Politics",
+                   "sources":  [
+                                   {
+                                       "name":  "ECS Saharaui",
+                                       "url":  "https://ecsaharaui.com/08/2026/juan-carlos-i-planteo-a-ee-uu-formulas-para-ceuta-y-melilla-y-contemplo-la-posibilidad-de-ceder-melilla-a-marruecos/"
+                                   }
+                               ]
                }
            ],
     "ls":  [
                {
-                   "headline":  "Auditor-General calls M30 million budget insufficient",
-                   "body":  "The Office of the Auditor-General (OAG) reported a M30 million budget allocation for the 2026/27 financial year. The OAG told the parliamentary Economic and Development Cluster Committee that the funds are insufficient to meet operational needs.",
+                   "headline":  "Auditor-General cites M30 million budget shortfall",
+                   "body":  "The Office of the Auditor-General (OAG) reported a M30 million budget allocation for the 2026/27 financial year is insufficient. The OAG testified before the parliamentary Economic and Development Cluster Committee this week.",
                    "why":  "The funding gap has left the institution struggling with mounting debts.",
                    "topic":  "Business",
                    "sources":  [
@@ -2751,8 +3207,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "LAA and LHDA settle ground rent dispute for M121 million",
-                   "body":  "The Land Administration Authority and the Lesotho Highlands Development Authority agreed to a M121 million settlement. The agreement was presented before Chief Justice Sakoane Sakoane to resolve a long-running dispute over unpaid ground rent.",
-                   "why":  "The settlement ends a legal conflict between the two state entities over land payments.",
+                   "body":  "The Land Administration Authority and the Lesotho Highlands Development Authority agreed to a M121 million settlement. The agreement was presented before Chief Justice Sakoane Sakoane.",
+                   "why":  "The payment resolves a long-running dispute over unpaid ground rent between the two entities.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2764,7 +3220,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                {
                    "headline":  "Auditor-General spends M12 million on LEC forensic audit",
                    "body":  "The Office of the Auditor-General spent M12 million on a forensic audit of the Lesotho Electricity Company. The expenditure was disclosed during a review by the Economic and Development Cluster this week.",
-                   "why":  "The audit seeks to identify financial mismanagement and procurement irregularities at the utility company.",
+                   "why":  "The audit aims to investigate financial mismanagement, procurement irregularities, and other alleged wrongdoing at the utility.",
                    "topic":  "Business",
                    "sources":  [
                                    {
@@ -2775,8 +3231,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                },
                {
                    "headline":  "Police sued for M3.2 million over alleged torture",
-                   "body":  "Retired government employee Molebatsi Monese is suing Chief Police Advocate Borotho Matsoso for M3.2 million. Monese claims police officers suffocated and electrocuted him during an interrogation.",
-                   "why":  "The lawsuit alleges the plaintiff lost two teeth during the police interrogation.",
+                   "body":  "Retired government employee Molebatsi Monese is suing Chief Police Advocate Borotho Matsoso for M3.2 million. The lawsuit filed in the High Court alleges Monese was suffocated, electrocuted, and had two teeth knocked out during interrogation.",
+                   "why":  "The legal action seeks damages for torture allegedly inflicted by police officers.",
                    "topic":  "News",
                    "sources":  [
                                    {
@@ -2786,14 +3242,14 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                ]
                },
                {
-                   "headline":  "Tsoelopele Investment sues WASCO over M25 million contract",
-                   "body":  "Tsoelopele Investment Holdings (Pty) Ltd has petitioned the Commercial Division of the court over a M25 million contract. The contractor alleges the Water and Sewerage Company and the Ministry of Natural Resources reneged on a 2018 appointment.",
-                   "why":  "The legal action seeks to recover losses from a withdrawn contract for the local contractor.",
+                   "headline":  "Businesswoman sues Lesotho Defence Force for M6 million",
+                   "body":  "A Maseru businesswoman is suing the Lesotho Defence Force and Lieutenant General Mojalefa Letsoela for more than M6 million. The claim relates to an unpaid balance for military jerseys supplied over a decade ago.",
+                   "why":  "The plaintiff claims the army\u0027s failure to settle the debt crippled her business.",
                    "topic":  "Business",
                    "sources":  [
                                    {
                                        "name":  "Lesotho Times",
-                                       "url":  "https://lestimes.com/?p=91273"
+                                       "url":  "https://lestimes.com/?p=91286"
                                    }
                                ]
                }
@@ -2807,13 +3263,13 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                "companies":  [
                                  {
                                      "t":  "BPA",
-                                     "name":  "CrÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dit Populaire d\u0027AlgÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©rie (CPA)",
+                                     "name":  "CrÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dit Populaire d\u0027AlgÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©rie (CPA)",
                                      "cap":  0.5,
                                      "change":  5.08
                                  },
                                  {
                                      "t":  "BDL",
-                                     "name":  "Banque de DÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©veloppement Local (BDL)",
+                                     "name":  "Banque de DÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©veloppement Local (BDL)",
                                      "cap":  0.4,
                                      "change":  -9.12
                                  }
@@ -2821,19 +3277,19 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            },
     "bj":  {
                "exchange":  "BRVM",
-               "name":  "Bourse RÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©gionale des Valeurs MobiliÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨res",
+               "name":  "Bourse RÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©gionale des Valeurs MobiliÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨res",
                "sourceUrl":  "https://www.brvm.org/fr/cours-actions/0",
                "asOf":  "2026-08-04",
                "companies":  [
                                  {
                                      "t":  "BICB",
-                                     "name":  "Banque Internationale pour l\u0027Industrie et le Commerce du BÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©nin",
+                                     "name":  "Banque Internationale pour l\u0027Industrie et le Commerce du BÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©nin",
                                      "cap":  0.478,
                                      "change":  0.0
                                  },
                                  {
                                      "t":  "LNBB",
-                                     "name":  "Loterie Nationale du BÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©nin",
+                                     "name":  "Loterie Nationale du BÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©nin",
                                      "cap":  0.128,
                                      "change":  -3.51
                                  }
@@ -2897,7 +3353,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            },
     "bf":  {
                "exchange":  "BRVM",
-               "name":  "Bourse RÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©gionale des Valeurs MobiliÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨res (regional exchange covering Burkina Faso and seven other WAEMU states, based in Abidjan)",
+               "name":  "Bourse RÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©gionale des Valeurs MobiliÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨res (regional exchange covering Burkina Faso and seven other WAEMU states, based in Abidjan)",
                "sourceUrl":  "https://www.brvm.org/en/cbibf",
                "asOf":  "2026-05-22",
                "companies":  [
@@ -2911,7 +3367,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            },
     "ci":  {
                "exchange":  "BRVM",
-               "name":  "Bourse RÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©gionale des Valeurs MobiliÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨res",
+               "name":  "Bourse RÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©gionale des Valeurs MobiliÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨res",
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
                "asOf":  "2026-07-31",
                "companies":  [
@@ -2923,31 +3379,31 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
                                  },
                                  {
                                      "t":  "CIEC",
-                                     "name":  "CIE CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
+                                     "name":  "CIE CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
                                      "cap":  0.4,
                                      "change":  3.65
                                  },
                                  {
                                      "t":  "BICC",
-                                     "name":  "BICI CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
+                                     "name":  "BICI CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
                                      "cap":  0.25,
                                      "change":  -1.94
                                  },
                                  {
                                      "t":  "SMBC",
-                                     "name":  "SMB CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
+                                     "name":  "SMB CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
                                      "cap":  0.15,
                                      "change":  -3.9
                                  },
                                  {
                                      "t":  "SICC",
-                                     "name":  "Sicor CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
+                                     "name":  "Sicor CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
                                      "cap":  0.05,
                                      "change":  -5.36
                                  },
                                  {
                                      "t":  "UNXC",
-                                     "name":  "Uniwax CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
+                                     "name":  "Uniwax CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â´te d\u0027Ivoire",
                                      "cap":  0.03,
                                      "change":  -3.17
                                  }
@@ -3023,7 +3479,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-20', generated: '2026-08-20T22:12:02
            },
     "gq":  {
                "exchange":  "BVMAC",
-               "name":  "Bourse des Valeurs MobiliÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨res de l\u0027Afrique Centrale",
+               "name":  "Bourse des Valeurs MobiliÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¨res de l\u0027Afrique Centrale",
                "sourceUrl":  "https://www.bvm-ac.org/wp-content/uploads/2026/07/BOC-20260701.pdf",
                "asOf":  "2026-07-01",
                "companies":  [

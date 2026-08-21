@@ -30,7 +30,7 @@ $inPath    = if ([IO.Path]::IsPathRooted($InFile)) { $InFile } else { Join-Path 
 if (-not (Test-Path $inPath)) { Write-Host "[add] input not found: $inPath" -ForegroundColor Red; exit 1 }
 $incoming = [IO.File]::ReadAllText($inPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
 
-$generated = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+$generated = (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz')
 $byCountry = [ordered]@{}
 $dates     = [ordered]@{}
 $markets   = [ordered]@{}
@@ -86,7 +86,7 @@ $state = [ordered]@{ generated = $generated; dates = $dates; byCountry = $byCoun
 # edition was 2026-08-05 while the live paper had been rebuilt many times since, so
 # the wire's "Past editions" picker was quietly frozen and the workflow was committing
 # a directory that nothing wrote to.
-$day = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+$day = $generated.Substring(0, 10)
 $archiveDir = Join-Path $root 'data\archive'
 if (-not (Test-Path $archiveDir)) { New-Item -ItemType Directory -Path $archiveDir | Out-Null }
 
