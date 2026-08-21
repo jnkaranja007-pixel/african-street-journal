@@ -761,19 +761,20 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   main{padding-top:0}
   .masthead,.masthead+.rule{display:none}
   .sub-rule{display:none}
-  .landing-core{flex:0 0 auto;justify-content:flex-start;padding:clamp(56px,10svh,84px) 0 18px}
+  .landing-core{flex:0 0 auto;justify-content:flex-start;padding:clamp(36px,6svh,54px) 0 10px}
   .title-block{padding:0 18px}
-  .title-block h1{font-size:clamp(39px,11vw,52px);line-height:1.02}
-  .title-block h1 em{font-size:.5em;margin-bottom:5px}
+  .title-block h1{font-size:clamp(34px,9.8vw,46px);line-height:1.02}
+  .title-block h1 em{font-size:.48em;margin-bottom:4px}
   .title-block h1 .g{display:inline-block}
-  .mobile-front-actions{display:grid;width:min(335px,100%);margin:22px auto 0}
-  .mobile-wire-entry{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:12px;min-height:54px;padding:0 14px;border:1px solid rgba(76,175,80,.35);border-inline:0;background:rgba(76,175,80,.035);color:var(--green-bright);font:800 10px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+  .mobile-front-actions{display:grid;width:min(335px,100%);margin:16px auto 0}
+  .mobile-wire-entry{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:12px;min-height:50px;padding:0 14px;border:1px solid rgba(76,175,80,.35);border-inline:0;background:rgba(76,175,80,.035);color:var(--green-bright);font:800 10px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
   .mobile-wire-entry:focus-visible{outline:2px solid var(--green-bright);outline-offset:3px}
   .mobile-wire-entry .wire-entry-label{justify-self:start}
   .mobile-wire-entry .wire-entry-count{padding-left:12px;border-left:1px solid rgba(232,230,227,.14);color:var(--text-muted);letter-spacing:.1em;white-space:nowrap}
   .mobile-wire-entry .wire-entry-icon{width:18px;height:18px;display:grid;place-items:center}
   .mobile-wire-entry svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
-  .tagline,.pop-counter,.stage{display:none}
+  .tagline,.pop-counter{display:none}
+  .stage{display:block;width:min(86vw,calc(100svh - 390px),390px);margin:22px auto 8px}
   .rule--bottom{display:none}
   .ticker-wrap{margin:0;border-top:1px solid rgba(232,230,227,.09);border-bottom:1px solid rgba(232,230,227,.09)}
   .your-desk{grid-template-columns:minmax(0,1fr);align-items:stretch;gap:7px;width:calc(100% - 28px);margin-left:14px;padding:5px 0}
@@ -793,7 +794,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 }
 @media (max-width:640px) and (max-height:760px){
   .title-block{padding-top:10px}
-  .stage{width:min(82vw,40svh)}
+  .stage{width:min(78vw,calc(100svh - 380px))}
 }
 @media (prefers-reduced-motion:reduce){
   .ticker{animation:none}

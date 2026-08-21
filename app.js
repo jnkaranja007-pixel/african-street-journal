@@ -4317,13 +4317,14 @@ async function runSelfTest() {
   if (!landingMapRect.width && document.hidden) {
     add('landing masthead renders', true, 'skipped - tab hidden');
   } else if (mobileLanding) {
-    const stageHidden = getComputedStyle(document.querySelector('.stage')).display === 'none';
+    const stageVisible = getComputedStyle(document.querySelector('.stage')).display !== 'none' && landingMapRect.width > 0 && landingMapRect.height > 0;
     const mobileEntry = document.querySelector('.mobile-wire-entry');
     const entryRect = mobileEntry?.getBoundingClientRect();
     const entryVisible = !!entryRect?.width && !!entryRect?.height && getComputedStyle(mobileEntry).display !== 'none';
     const continentLabel = mobileEntry?.querySelector('.wire-entry-label')?.textContent || '';
     const continentCount = mobileEntry?.querySelector('.wire-entry-count')?.textContent || '';
-    add('landing masthead renders', stageHidden && entryVisible && /Continent/.test(continentLabel) && /\d+ stories/.test(continentCount), continentLabel + ' · ' + continentCount);
+    const mapRatioOk = Math.abs(landingMapRatio - (1000 / 1001)) < 0.02;
+    add('landing masthead renders', stageVisible && mapRatioOk && entryVisible && /Continent/.test(continentLabel) && /\d+ stories/.test(continentCount), continentLabel + ' · ' + continentCount + ' · ' + landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
   } else {
     add('landing masthead renders', Math.abs(landingMapRatio - (1000 / 1001)) < 0.02, landingMapRect.width.toFixed(0) + 'x' + landingMapRect.height.toFixed(0));
   }
