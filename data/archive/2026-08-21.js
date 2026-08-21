@@ -1,30 +1,30 @@
 // The African Street Journal - archived edition 2026-08-21 (auto-generated).
-window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07+00:00', byCountry: {
+window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T20:00:35+00:00', byCountry: {
   "dz": [
     {
       "articleId": "f821460545f3e037d1c2",
-      "headline": "Algerian Forces Seize Drugs Valued at One Trillion Centimes",
-      "dek": "A transnational drug trafficking network has been dismantled by Algerian security forces following an investigation that began in January 2026.",
+      "headline": "Algerian Security Forces Seize One Thousand Billion Centimes in Drug Bust",
+      "dek": "Algerian security forces dismantled a transnational drug trafficking network, seizing psychotropic substances and hard drugs valued at one thousand billion centimes.",
       "paragraphs": [
-        "Algerian security forces have conducted a major operation, seizing illicit substances valued at one thousand billion centimes. The action targeted a sophisticated transnational drug trafficking network, culminating a meticulous investigation that commenced in January 2026.",
-        "The operation, led by the Central Service for Combating Illicit Trafficking of Narcotics and Psychotropic Substances, successfully dismantled a complex criminal organization. The scale of the seizure includes a significant quantity of psychotropic substances and hard drugs.",
-        "This intervention represents a significant blow against organized crime, with the network's operations extending beyond Algeria's national borders. The investigation uncovered a complex criminal structure and its international reach."
+        "Algerian security forces have dealt a significant blow to a transnational drug trafficking network, concluding an investigation that began in January 2026. The operation resulted in the neutralization of a large criminal organization and the seizure of a substantial quantity of psychotropic substances and hard drugs.",
+        "The market value of the seized drugs is estimated to be close to one thousand billion centimes, according to Algerie360. This intervention is considered a major success in the fight against organized crime in the region.",
+        "The Central Service for Combating Illicit Trafficking of Narcotics and Psychotropic Substances (SCLTISSP) led the investigation, which uncovered a complex criminal operation with connections extending beyond Algeria's borders."
       ],
-      "body": "Algerian security forces have conducted a major operation, seizing illicit substances valued at one thousand billion centimes. The action targeted a sophisticated transnational drug trafficking network, culminating a meticulous investigation that commenced in January 2026.\n\nThe operation, led by the Central Service for Combating Illicit Trafficking of Narcotics and Psychotropic Substances, successfully dismantled a complex criminal organization. The scale of the seizure includes a significant quantity of psychotropic substances and hard drugs.\n\nThis intervention represents a significant blow against organized crime, with the network's operations extending beyond Algeria's national borders. The investigation uncovered a complex criminal structure and its international reach.",
-      "why": "This seizure of illicit substances affects investors by disrupting criminal financial flows and potentially impacting the market for illegal goods.",
+      "body": "Algerian security forces have dealt a significant blow to a transnational drug trafficking network, concluding an investigation that began in January 2026. The operation resulted in the neutralization of a large criminal organization and the seizure of a substantial quantity of psychotropic substances and hard drugs.\n\nThe market value of the seized drugs is estimated to be close to one thousand billion centimes, according to Algerie360. This intervention is considered a major success in the fight against organized crime in the region.\n\nThe Central Service for Combating Illicit Trafficking of Narcotics and Psychotropic Substances (SCLTISSP) led the investigation, which uncovered a complex criminal operation with connections extending beyond Algeria's borders.",
+      "why": "This operation directly affects citizens by disrupting the supply of illegal drugs and psychotropic substances within and across national borders, potentially reducing related social harms.",
       "lensVersion": 1,
       "lenses": {
         "farmers": {
           "score": 20,
-          "why": "There is no direct connection to farmers or agricultural production in the provided evidence."
+          "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
         },
         "investors": {
-          "score": 70,
-          "why": "The seizure of one trillion centimes worth of drugs indicates significant illicit financial activity that could affect capital flows and market stability."
+          "score": 90,
+          "why": "The seizure of one thousand billion centimes worth of illicit goods indicates a significant disruption to underground economies, which can impact financial stability and the rule of law for investors."
         },
         "diaspora": {
-          "score": 40,
-          "why": "The disruption of a transnational criminal network may indirectly affect the safety and financial stability of diaspora communities involved in cross-border activities."
+          "score": 20,
+          "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
         }
       },
       "topic": "News",
@@ -49,7 +49,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
         "specific figure"
       ],
       "countryMatch": "domestic",
-      "wordCount": 101,
+      "wordCount": 110,
       "readMinutes": 1,
       "sources": [
         {
@@ -61,28 +61,28 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
     },
     {
       "articleId": "9378e7043f7756b6872f",
-      "headline": "Algerian U21 Footballer Withdraws From Mediterranean Games",
-      "dek": "Algeria's U21 football team will compete with seventeen players at the 2026 Mediterranean Games in Taranto, Italy, following the withdrawal of an eighteenth player.",
+      "headline": "Algerian Football Team Loses Player for Mediterranean Games",
+      "dek": "The Algerian national under-21 football team will compete with seventeen players instead of eighteen at the 2026 Mediterranean Games in Taranto, Italy, after a player withdrew.",
       "paragraphs": [
-        "The Algerian national U21 football team will participate in the Mediterranean Games in Taranto, Italy, with only seventeen players. This comes after the withdrawal of midfielder Seif Eddine Sarri, who plays for Olympique Akbou. The Algerian Football Federation has not provided an explanation for his withdrawal or indicated if a replacement will be named.",
-        "The team, led by new national coach Idriss Hamdani, begins its campaign on Saturday against Kosovo. The match is scheduled to kick off at half-past nine in the morning, Algerian time, which is half-past ten in the morning in Italy. Following this opening match, the Algerian squad will face Italy and Albania on Monday and Wednesday evenings, respectively.",
-        "The football competition at the Games is structured into two groups, with each group containing four teams. The top team and the runner-up from each group will advance to the semi-finals. Each national team is permitted to have eighteen players, including two goalkeepers, in their squad for the tournament."
+        "Saif Eddine Saria, a midfielder for Olympique Akbou, withdrew from the team on Friday, reducing the squad size. The Algerian Football Federation has not clarified the withdrawal or stated whether regulations permit a replacement player.",
+        "The team, led by new coach Ibrahim Hamdani, will begin its campaign on Saturday against Kosovo at nine-thirty AM Algerian time. Each team in the football competition is typically composed of eighteen players, including two goalkeepers.",
+        "Following the match against Kosovo, the Algerian team will face Italy and Albania on Monday and Wednesday evenings, respectively. The top two teams from each of the two groups will advance to the semi-finals of the competition."
       ],
-      "body": "The Algerian national U21 football team will participate in the Mediterranean Games in Taranto, Italy, with only seventeen players. This comes after the withdrawal of midfielder Seif Eddine Sarri, who plays for Olympique Akbou. The Algerian Football Federation has not provided an explanation for his withdrawal or indicated if a replacement will be named.\n\nThe team, led by new national coach Idriss Hamdani, begins its campaign on Saturday against Kosovo. The match is scheduled to kick off at half-past nine in the morning, Algerian time, which is half-past ten in the morning in Italy. Following this opening match, the Algerian squad will face Italy and Albania on Monday and Wednesday evenings, respectively.\n\nThe football competition at the Games is structured into two groups, with each group containing four teams. The top team and the runner-up from each group will advance to the semi-finals. Each national team is permitted to have eighteen players, including two goalkeepers, in their squad for the tournament.",
-      "why": "Algerian football players are affected by the reduced squad size for the Mediterranean Games, impacting team composition and potential player opportunities.",
+      "body": "Saif Eddine Saria, a midfielder for Olympique Akbou, withdrew from the team on Friday, reducing the squad size. The Algerian Football Federation has not clarified the withdrawal or stated whether regulations permit a replacement player.\n\nThe team, led by new coach Ibrahim Hamdani, will begin its campaign on Saturday against Kosovo at nine-thirty AM Algerian time. Each team in the football competition is typically composed of eighteen players, including two goalkeepers.\n\nFollowing the match against Kosovo, the Algerian team will face Italy and Albania on Monday and Wednesday evenings, respectively. The top two teams from each of the two groups will advance to the semi-finals of the competition.",
+      "why": "Algerian football fans and supporters of Olympique Akbou are affected by the team competing with one less player, potentially impacting their performance in the Mediterranean Games.",
       "lensVersion": 1,
       "lenses": {
         "farmers": {
           "score": 0,
-          "why": "This event has no direct impact on farmers, as it concerns a sporting competition and not agricultural production or markets."
+          "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
         },
         "investors": {
-          "score": 25,
-          "why": "Investors may have a slight interest in the event's impact on sports-related businesses or potential sponsorships, though direct financial implications are not detailed."
+          "score": 65,
+          "why": "This event has no direct connection to firms, trade, regulation, or capital markets."
         },
         "diaspora": {
-          "score": 45,
-          "why": "Diaspora members may follow the performance of the national youth team, with potential interest in players who might have family or community ties abroad."
+          "score": 30,
+          "why": "This national sports report may interest diaspora readers following teams and players from abroad."
         }
       },
       "topic": "Sport",
@@ -106,7 +106,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
         "specific figure"
       ],
       "countryMatch": "domestic",
-      "wordCount": 161,
+      "wordCount": 108,
       "readMinutes": 1,
       "sources": [
         {
@@ -118,28 +118,28 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
     },
     {
       "articleId": "5416d8e71bd97253774a",
-      "headline": "Fifteen Italian Firms Arrive in Algiers for Agricultural Modernization Talks",
-      "dek": "Algeria seeks food sovereignty as Italian companies prepare to offer technological solutions for farming methods.",
+      "headline": "Italian Firms Bring Agricultural Modernization Solutions to Algeria",
+      "dek": "Fifteen Italian companies will visit Algiers on September twenty-eighth and twenty-ninth, 2026, to offer technology for transforming national farming methods.",
       "paragraphs": [
-        "Algeria's drive for food sovereignty is set to be reshaped by the arrival of fifteen Italian companies in Algiers on September 28 and 29, 2026. The delegation, organized by the Italian Trade Agency (ICE) and FederUnacoma, will present concrete solutions to modernize the nation's agricultural sector. This initiative aims to accelerate technological adoption in local farming practices.",
-        "The mission focuses on bridging the gap between Italian agricultural machinery manufacturers and Algerian decision-makers from both public and private sectors. The goal is to foster partnerships that can bring advanced cultivation methods and technologies to the Algerian land, supporting the country's ambition for self-sufficiency in food production.",
-        "This economic mission represents a significant opportunity for Algeria to access European expertise in agricultural modernization. The participating Italian firms are expected to showcase innovations designed to transform national farming techniques, contributing to a more robust and technologically advanced agricultural landscape."
+        "Algeria is set to host an Italian industrial delegation in late September 2026, as the country seeks to accelerate its agricultural modernization and achieve food sovereignty. The visit, organized by the Italian Trade Agency (ICE) and FederUnacoma, aims to introduce concrete solutions for farming practices.",
+        "The mission will bring approximately fifteen Italian companies to Algiers, fostering connections between Italian operators and Algerian public and private sector decision-makers. This initiative responds to Algeria's immediate need for technological advancement in its local agricultural landscape.",
+        "The collaboration underscores Algeria's ambition for self-sufficiency in food production, recognizing that modernizing its agricultural sector requires significant technological input. The Italian experts are prepared to contribute to this transformation."
       ],
-      "body": "Algeria's drive for food sovereignty is set to be reshaped by the arrival of fifteen Italian companies in Algiers on September 28 and 29, 2026. The delegation, organized by the Italian Trade Agency (ICE) and FederUnacoma, will present concrete solutions to modernize the nation's agricultural sector. This initiative aims to accelerate technological adoption in local farming practices.\n\nThe mission focuses on bridging the gap between Italian agricultural machinery manufacturers and Algerian decision-makers from both public and private sectors. The goal is to foster partnerships that can bring advanced cultivation methods and technologies to the Algerian land, supporting the country's ambition for self-sufficiency in food production.\n\nThis economic mission represents a significant opportunity for Algeria to access European expertise in agricultural modernization. The participating Italian firms are expected to showcase innovations designed to transform national farming techniques, contributing to a more robust and technologically advanced agricultural landscape.",
-      "why": "Algerian farmers may gain access to new technologies and methods from Italian companies aimed at modernizing agricultural practices.",
+      "body": "Algeria is set to host an Italian industrial delegation in late September 2026, as the country seeks to accelerate its agricultural modernization and achieve food sovereignty. The visit, organized by the Italian Trade Agency (ICE) and FederUnacoma, aims to introduce concrete solutions for farming practices.\n\nThe mission will bring approximately fifteen Italian companies to Algiers, fostering connections between Italian operators and Algerian public and private sector decision-makers. This initiative responds to Algeria's immediate need for technological advancement in its local agricultural landscape.\n\nThe collaboration underscores Algeria's ambition for self-sufficiency in food production, recognizing that modernizing its agricultural sector requires significant technological input. The Italian experts are prepared to contribute to this transformation.",
+      "why": "Algerian farmers and agricultural businesses will gain access to new technologies and methods, potentially improving their productivity and efficiency.",
       "lensVersion": 1,
       "lenses": {
         "farmers": {
-          "score": 60,
-          "why": "Italian companies are expected to offer technological solutions to modernize Algerian farming methods and improve cultivation."
+          "score": 75,
+          "why": "Farmers may benefit from new technologies and methods introduced by Italian companies to transform national farming practices."
         },
         "investors": {
           "score": 90,
-          "why": "Fifteen Italian agricultural machinery firms are meeting with Algerian public and private sector decision-makers to forge business partnerships."
+          "why": "Italian companies are directly engaging with Algerian public and private sector decision-makers to establish business partnerships and offer solutions."
         },
         "diaspora": {
-          "score": 45,
-          "why": "The event could indirectly impact the diaspora by contributing to Algeria's food security and economic stability."
+          "score": 20,
+          "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
         }
       },
       "topic": "Business",
@@ -164,7 +164,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
         "specific figure"
       ],
       "countryMatch": "domestic",
-      "wordCount": 146,
+      "wordCount": 112,
       "readMinutes": 1,
       "sources": [
         {
@@ -176,28 +176,28 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
     },
     {
       "articleId": "b088530777198970c33d",
-      "headline": "Algerian Amateur League Postpones Season Start to September",
-      "dek": "The National Amateur Football League has pushed back the start of the second division season by one week, citing organizational and preparatory needs for the new campaign.",
+      "headline": "National Amateur Football League Delays Second Division Season Start",
+      "dek": "The National Amateur Football League has postponed the start of the 2026-2027 Second Division season to September eleventh and twelfth, from its original September fourth date.",
       "paragraphs": [
-        "The National Amateur Football League announced on Friday that the 2026-2027 second division season will now commence on September eleven and twelve, a delay from the previously scheduled September four start. This adjustment is part of the league's organizational and preparatory measures for the upcoming season.",
-        "The league's governing body stated that the postponement is intended to support clubs and ensure adequate administrative and sporting preparations are completed. Player registration has also been extended until September twenty-six, 2026, allowing clubs more time to finalize their rosters and administrative requirements.",
-        "The league has called on all clubs to adhere to the new directives and complete necessary procedures to ensure a smooth start to the competition. The fixture list for the second division, covering the central-east and central-west groups, was revealed on August nine."
+        "The National Amateur Football League announced the delay for the 2026-2027 Second Division season, citing organizational and preparatory measures for the new season. The league stated on its official website that the decision aligns with directives to support clubs, prepare for competitions, and monitor administrative and sports aspects.",
+        "The league also extended the player registration period until September twenty-sixth, 2026. This extension allows clubs more time to complete player registrations and finalize their administrative statuses within the new deadlines. The league urged all clubs to adhere to the announcement's content and complete all required procedures.",
+        "This adjustment aims to ensure the season begins under suitable organizational and sporting conditions. The schedule for the two groups, Central-East and Central-West, was previously revealed during the draw on August ninth. The top-ranked team from each group will directly qualify for the First Division, while the second and third-placed teams will compete in a playoff for the final promotion spot."
       ],
-      "body": "The National Amateur Football League announced on Friday that the 2026-2027 second division season will now commence on September eleven and twelve, a delay from the previously scheduled September four start. This adjustment is part of the league's organizational and preparatory measures for the upcoming season.\n\nThe league's governing body stated that the postponement is intended to support clubs and ensure adequate administrative and sporting preparations are completed. Player registration has also been extended until September twenty-six, 2026, allowing clubs more time to finalize their rosters and administrative requirements.\n\nThe league has called on all clubs to adhere to the new directives and complete necessary procedures to ensure a smooth start to the competition. The fixture list for the second division, covering the central-east and central-west groups, was revealed on August nine.",
-      "why": "The postponement affects amateur football clubs and players by delaying the start of their competitive season and extending the player registration period.",
+      "body": "The National Amateur Football League announced the delay for the 2026-2027 Second Division season, citing organizational and preparatory measures for the new season. The league stated on its official website that the decision aligns with directives to support clubs, prepare for competitions, and monitor administrative and sports aspects.\n\nThe league also extended the player registration period until September twenty-sixth, 2026. This extension allows clubs more time to complete player registrations and finalize their administrative statuses within the new deadlines. The league urged all clubs to adhere to the announcement's content and complete all required procedures.\n\nThis adjustment aims to ensure the season begins under suitable organizational and sporting conditions. The schedule for the two groups, Central-East and Central-West, was previously revealed during the draw on August ninth. The top-ranked team from each group will directly qualify for the First Division, while the second and third-placed teams will compete in a playoff for the final promotion spot.",
+      "why": "Football clubs and players are directly affected by the delayed season start and extended registration period, impacting their preparation and administrative processes.",
       "lensVersion": 1,
       "lenses": {
         "farmers": {
-          "score": 0,
-          "why": "This event concerns professional sports and has no direct impact on agricultural activities or livelihoods."
+          "score": 20,
+          "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
         },
         "investors": {
-          "score": 60,
-          "why": "Sports league scheduling changes can indirectly affect businesses involved in sports broadcasting, merchandise, and stadium operations by altering revenue timelines."
+          "score": 20,
+          "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
         },
         "diaspora": {
           "score": 45,
-          "why": "Algerians abroad interested in following or participating in domestic football may need to adjust their viewing or travel plans due to the schedule change."
+          "why": "This national sports report may interest diaspora readers following teams and players from abroad."
         }
       },
       "topic": "Sport",
@@ -221,7 +221,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
         "specific figure"
       ],
       "countryMatch": "domestic",
-      "wordCount": 132,
+      "wordCount": 156,
       "readMinutes": 1,
       "sources": [
         {
@@ -233,28 +233,28 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
     },
     {
       "articleId": "964fbb912912af2958b0",
-      "headline": "Algerie Ferries Asks Passengers to Arrive Early for Marseille Ferry",
-      "dek": "Algerie Ferries has requested passengers booked on the August 25th crossing from Algiers to Marseille to report to the port by 6:00 AM due to a change in travel arrangements.",
+      "headline": "Algérie Ferries asks passengers to arrive early for Alger-Marseille crossing",
+      "dek": "Algérie Ferries has instructed passengers for the Alger-Marseille crossing on Tuesday, August twenty-fifth, two thousand twenty-six, to report to the port of Algiers by six.",
       "paragraphs": [
-        "Algerie Ferries has issued a notice for passengers scheduled for the Algiers-Marseille crossing on Tuesday, August 25, 2026. Those directly contacted by the company are asked to arrive at the Port of Algiers by 6:00 AM to complete necessary travel formalities. The company stated this measure is for travelers whose journey arrangements have been modified.",
-        "The ferry operator did not specify the new departure time for the vessel in its announcement. The primary focus of the communication is the required arrival time for passengers to manage the pre-departure procedures. The company has apologized for any inconvenience caused by this change and requested passenger understanding.",
-        "Passengers requiring further information are encouraged to contact Algerie Ferries using the telephone numbers provided in the official notice. The company is managing adjustments to its services and aims to facilitate a smooth process for affected travelers despite the schedule modifications."
+        "Algérie Ferries has changed the travel arrangements for its Alger-Marseille crossing scheduled for Tuesday, August twenty-fifth, two thousand twenty-six. The company has directly contacted affected passengers and asked them to arrive at the port of Algiers by six o'clock in the morning to complete necessary travel formalities.",
+        "The company did not specify the new departure time for the ship, only the required arrival time for passengers at the port. Algérie Ferries apologized for the inconvenience caused by this modification and requested passengers' understanding.",
+        "Passengers seeking additional information can contact the company using the phone numbers provided in the notice. This adjustment impacts those who had already booked and been informed about the specific crossing."
       ],
-      "body": "Algerie Ferries has issued a notice for passengers scheduled for the Algiers-Marseille crossing on Tuesday, August 25, 2026. Those directly contacted by the company are asked to arrive at the Port of Algiers by 6:00 AM to complete necessary travel formalities. The company stated this measure is for travelers whose journey arrangements have been modified.\n\nThe ferry operator did not specify the new departure time for the vessel in its announcement. The primary focus of the communication is the required arrival time for passengers to manage the pre-departure procedures. The company has apologized for any inconvenience caused by this change and requested passenger understanding.\n\nPassengers requiring further information are encouraged to contact Algerie Ferries using the telephone numbers provided in the official notice. The company is managing adjustments to its services and aims to facilitate a smooth process for affected travelers despite the schedule modifications.",
-      "why": "Passengers booked on the Algiers to Marseille ferry on August 25, 2026, must arrive at the port by 6:00 AM for modified travel procedures.",
+      "body": "Algérie Ferries has changed the travel arrangements for its Alger-Marseille crossing scheduled for Tuesday, August twenty-fifth, two thousand twenty-six. The company has directly contacted affected passengers and asked them to arrive at the port of Algiers by six o'clock in the morning to complete necessary travel formalities.\n\nThe company did not specify the new departure time for the ship, only the required arrival time for passengers at the port. Algérie Ferries apologized for the inconvenience caused by this modification and requested passengers' understanding.\n\nPassengers seeking additional information can contact the company using the phone numbers provided in the notice. This adjustment impacts those who had already booked and been informed about the specific crossing.",
+      "why": "Passengers traveling on the Alger-Marseille ferry are directly affected by the change in required arrival times, necessitating an earlier presence at the port.",
       "lensVersion": 1,
       "lenses": {
         "farmers": {
-          "score": 0,
-          "why": "This event concerns passenger ferry travel and has no direct impact on agricultural production, markets, or rural livelihoods."
+          "score": 20,
+          "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
         },
         "investors": {
-          "score": 70,
-          "why": "Changes in ferry schedules and passenger management by Algerie Ferries can affect logistics and operational efficiency, impacting investor confidence in the transport sector."
+          "score": 20,
+          "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
         },
         "diaspora": {
-          "score": 85,
-          "why": "Diaspora members traveling between Algeria and Marseille on August 25, 2026, are directly affected by the early port arrival requirement and potential schedule changes."
+          "score": 75,
+          "why": "The change in ferry schedule affects travel plans for individuals, which could include members of the diaspora traveling between Algeria and France."
         }
       },
       "topic": "Business",
@@ -279,7 +279,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-08-21', generated: '2026-08-21T19:38:07
         "specific figure"
       ],
       "countryMatch": "domestic",
-      "wordCount": 146,
+      "wordCount": 114,
       "readMinutes": 1,
       "sources": [
         {
