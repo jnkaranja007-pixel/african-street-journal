@@ -248,31 +248,34 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-feed-tab.active{background:rgba(76,175,80,0.14);color:var(--green-bright)}
 .cv-cards.news-brief{grid-template-columns:1fr;gap:0;background:var(--surface);border-color:transparent}
 .cv-brief-desk{display:flex;flex-direction:column;min-height:0;overflow-y:auto;width:100%}
-.cv-brief-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1px solid rgba(232,230,227,0.08)}
+.cv-brief-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:9px 16px;border-bottom:1px solid rgba(232,230,227,0.08)}
 .cv-brief-head .t{font:700 11px/1 var(--mono);letter-spacing:0.1em;text-transform:uppercase;color:var(--text)}
 .cv-brief-head .t b{color:var(--green-bright)}
 .cv-brief-head .m{font:500 11px/1 var(--sans);letter-spacing:0;color:var(--text-muted)}
-.cv-news-row{border-bottom:1px solid rgba(232,230,227,.08);background:transparent}
-.cv-news-row.is-open{background:rgba(76,175,80,.025)}
+.cv-news-row{position:relative;border-bottom:1px solid rgba(232,230,227,.08);background:transparent}
+.cv-news-row.is-open{background:rgba(61,139,64,.035);box-shadow:inset 2px 0 0 var(--front-green)}
 .cv-news-summary{width:100%;border:0;background:transparent;color:inherit;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 16px;cursor:pointer;text-align:left}
-.cv-news-summary:hover,.cv-news-summary:focus-visible{background:rgba(76,175,80,.045);outline:none}
+.cv-news-summary:hover{background:rgba(61,139,64,.04)}
+.cv-news-summary:focus-visible{background:rgba(61,139,64,.04);box-shadow:inset 0 0 0 1px rgba(61,139,64,.55);outline:none}
 .cv-brief-rank{font:700 10px/1 var(--mono);letter-spacing:.06em;color:var(--text-dim)}
 .cv-news-summary-main{min-width:0}
 .cv-news-summary-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;font:700 10px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
 .cv-news-country{color:var(--text)}
-.cv-brief-topic{color:var(--green-bright)}
+.cv-brief-topic{color:var(--front-green)}
 .cv-news-source{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cv-brief-title{font:600 clamp(17px,1.55vw,21px)/1.2 var(--serif);color:var(--text);letter-spacing:0;margin:0}
-.cv-news-toggle{width:26px;height:26px;display:grid;place-items:center;border:1px solid rgba(232,230,227,.14);color:var(--green-bright);font:500 17px/1 var(--sans)}
-.cv-news-toggle::before{content:"+"}
-.cv-news-row.is-open .cv-news-toggle::before{content:"−"}
-.cv-brief-main{padding:0 16px 16px 62px;max-width:940px}
+.cv-news-toggle{width:32px;height:32px;display:grid;place-items:center;border-left:1px solid rgba(232,230,227,.14);color:var(--front-green)}
+.cv-news-toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform 180ms ease}
+.cv-news-row.is-open .cv-news-toggle svg{transform:rotate(180deg)}
+.cv-brief-main{padding:0 16px 17px 62px;max-width:940px;animation:cv-brief-open 180ms ease both}
+@keyframes cv-brief-open{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .cv-brief-body{font:400 14px/1.55 var(--sans);color:var(--text-muted);margin:0 0 10px}
-.cv-brief-why{margin:0 0 12px;padding-left:11px;border-left:2px solid rgba(76,175,80,.62);font:400 13px/1.45 var(--sans);color:var(--text)}
-.cv-brief-why b{margin-right:7px;font:700 10px/1 var(--mono);letter-spacing:.07em;color:var(--green-bright);text-transform:uppercase}
-.cv-brief-src{display:flex;flex-wrap:wrap;gap:8px}
-.cv-brief-src a{font:700 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);border:1px solid rgba(232,230,227,0.14);padding:6px 10px;border-radius:999px;text-decoration:none;transition:all 140ms}
-.cv-brief-src a:hover{border-color:rgba(76,175,80,0.5);color:var(--green-bright)}
+.cv-brief-why{margin:0 0 13px;padding-left:11px;border-left:2px solid var(--front-green);font:400 13px/1.45 var(--sans);color:var(--text)}
+.cv-brief-why b{display:block;margin:0 0 5px;font:700 9px/1 var(--mono);letter-spacing:.07em;color:var(--front-green);text-transform:uppercase}
+.cv-brief-src{display:flex;align-items:center;flex-wrap:wrap;gap:7px 14px;padding-top:10px;border-top:1px solid rgba(232,230,227,.08)}
+.cv-brief-src-label{font:700 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)}
+.cv-brief-src a{display:inline-flex;align-items:center;gap:4px;font:700 10px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted);padding:5px 0;border-bottom:1px solid rgba(232,230,227,.18);border-radius:0;text-decoration:none;transition:color 140ms,border-color 140ms}
+.cv-brief-src a:hover,.cv-brief-src a:focus-visible{border-color:var(--front-green);color:var(--front-green);outline:none}
 .cv-brief-empty{padding:50px 22px;text-align:center;color:var(--text-dim);font:400 14px/1.6 var(--sans)}
 /* Country File — the honest no-briefs-yet desk briefing */
 .cv-deskfile{padding-bottom:8px}
@@ -791,6 +794,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 @media (prefers-reduced-motion:reduce){
   .ticker{animation:none}
   #tooltip{transition:none}
+  .cv-brief-main{animation:none}
   #country-view.open{animation:none}
   #wire-view.open{animation:none}
   .cv-dot::after,.ticker button::after,.cv-story-item,.cv-carousel-track,.cv-cards{transition:none!important}
@@ -965,8 +969,10 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .wire-brief-card,.wire-brief-card:nth-child(3n){min-height:0;border-right:0}
 }
 @media (max-width:560px){
-  .cv-news-summary{grid-template-columns:28px minmax(0,1fr) auto;padding:12px}
-  .cv-brief-main{padding:0 12px 14px 52px}
+  .cv-news-summary{grid-template-columns:28px minmax(0,1fr) 44px;padding:12px 8px 12px 12px;gap:8px}
+  .cv-news-summary{scroll-margin-top:12px}
+  .cv-news-toggle{width:44px;height:44px}
+  .cv-brief-main{padding:0 12px 18px 48px}
   .cv-news-summary-meta{font-size:9px}
 }
 
@@ -1034,7 +1040,8 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 /* Remaining sub-44px controls, by their real selectors. Measured on a phone, not
    assumed: the earlier pass guessed at class names and missed these six. */
 @media (max-width:720px){
-  .cv-brief-src{display:inline-block;padding:11px 0;margin-right:16px}
+  .cv-brief-src{display:flex;padding-top:10px;margin-right:0}
+  .cv-brief-src a{min-height:44px;padding:11px 0}
   .cv-carousel-arrow{width:44px;height:44px;min-height:44px}
   .cv-audience-tab{min-height:44px}
   .cv-map-fs{min-width:44px;min-height:44px}

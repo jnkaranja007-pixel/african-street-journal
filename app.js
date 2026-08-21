@@ -1652,8 +1652,9 @@ function renderCountryFile(countryId) {
 }
 
 function briefRowHtml(b, i, countryTag) {
-  return '<article class="cv-news-row' + (i === 0 ? ' is-open' : '') + '">' +
-    '<button class="cv-news-summary" type="button" aria-expanded="' + (i === 0 ? 'true' : 'false') + '">' +
+  const domId = 'cv-brief-' + i;
+  return '<article class="cv-news-row">' +
+    '<button class="cv-news-summary" id="' + domId + '-summary" type="button" aria-expanded="false" aria-controls="' + domId + '-detail">' +
       '<span class="cv-brief-rank">' + String(i + 1).padStart(2, '0') + '</span>' +
       '<div class="cv-news-summary-main">' +
         '<div class="cv-news-summary-meta">' +
@@ -1662,12 +1663,12 @@ function briefRowHtml(b, i, countryTag) {
           '<span>·</span><span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span></div>' +
         '<h4 class="cv-brief-title">' + escapeHtml(b.headline) + '</h4>' +
       '</div>' +
-      '<span class="cv-news-toggle" aria-hidden="true"></span>' +
+      '<span class="cv-news-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 9l6 6 6-6"/></svg></span>' +
     '</button>' +
-    '<div class="cv-brief-main"' + (i === 0 ? '' : ' hidden') + '>' +
+    '<div class="cv-brief-main" id="' + domId + '-detail" role="region" aria-labelledby="' + domId + '-summary" hidden>' +
       '<p class="cv-brief-body">' + escapeHtml(b.body) + '</p>' +
-      '<p class="cv-brief-why"><b>Context</b>' + escapeHtml(briefWhy(b)) + '</p>' +
-      '<div class="cv-brief-src">' +
+      '<p class="cv-brief-why"><b>Why it matters</b>' + escapeHtml(briefWhy(b)) + '</p>' +
+      '<div class="cv-brief-src"><span class="cv-brief-src-label">Sources</span>' +
         (Array.isArray(b.sources) ? b.sources.filter(s => s && s.url).map(s =>
           '<a href="' + escapeHtml(safeUrl(s.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(s.name || 'Source') + ' ↗</a>'
         ).join('') : '') +
@@ -1713,6 +1714,8 @@ function regionalWireFor(countryId) {
 function renderBriefDesk(countryId) {
   const cards = document.getElementById('cv-cards');
   const meta = document.getElementById('cv-story-meta');
+  cards.onclick = null;
+  cards.onkeydown = null;
   cards.classList.remove('queue-collapsed', 'card-open');
   cards.classList.add('news-brief');
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline && b.body);
@@ -1730,37 +1733,62 @@ function renderBriefDesk(countryId) {
     }
     return;
   }
-  const when = relativeDateLabel(String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || '').slice(0,10));
   cards.innerHTML =
     '<div class="cv-brief-desk">' +
-      '<div class="cv-brief-head"><span class="t">Country <b>brief</b></span>' +
-        '<span class="m">' + (when ? escapeHtml(when) : 'Top story first') + '</span></div>' +
       briefs.map((b, i) => briefRowHtml(b, i)).join('') +
     '</div>';
   wireBriefAccordion(cards);
 }
 
 function wireBriefAccordion(cards) {
+  const setRowOpen = (row, open) => {
+    const summary = row?.querySelector('.cv-news-summary');
+    const detail = row?.querySelector('.cv-brief-main');
+    if (!row || !summary || !detail) return;
+    row.classList.toggle('is-open', open);
+    detail.hidden = !open;
+    summary.setAttribute('aria-expanded', String(open));
+  };
+
   cards.onclick = event => {
     const summary = event.target.closest('.cv-news-summary');
     if (!summary) return;
     const row = summary.closest('.cv-news-row');
-    const detail = row?.querySelector('.cv-brief-main');
-    if (!row || !detail) return;
+    if (!row) return;
     const opening = !row.classList.contains('is-open');
     if (opening) {
       cards.querySelectorAll('.cv-news-row.is-open').forEach(openRow => {
-        if (openRow === row) return;
-        openRow.classList.remove('is-open');
-        const openDetail = openRow.querySelector('.cv-brief-main');
-        const openButton = openRow.querySelector('.cv-news-summary');
-        if (openDetail) openDetail.hidden = true;
-        if (openButton) openButton.setAttribute('aria-expanded', 'false');
+        if (openRow !== row) setRowOpen(openRow, false);
       });
     }
-    row.classList.toggle('is-open', opening);
-    detail.hidden = !opening;
-    summary.setAttribute('aria-expanded', String(opening));
+    setRowOpen(row, opening);
+    if (opening && window.matchMedia('(max-width:720px)').matches) {
+      requestAnimationFrame(() => requestAnimationFrame(() => summary.scrollIntoView({
+        block: 'start',
+        behavior: window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth'
+      })));
+    }
+  };
+
+  cards.onkeydown = event => {
+    const summary = event.target.closest('.cv-news-summary');
+    if (!summary) return;
+    const summaries = Array.from(cards.querySelectorAll('.cv-news-summary'));
+    const index = summaries.indexOf(summary);
+    let next = -1;
+    if (event.key === 'ArrowDown') next = (index + 1) % summaries.length;
+    else if (event.key === 'ArrowUp') next = (index - 1 + summaries.length) % summaries.length;
+    else if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = summaries.length - 1;
+    else if (event.key === 'Escape' && summary.getAttribute('aria-expanded') === 'true') {
+      event.preventDefault();
+      setRowOpen(summary.closest('.cv-news-row'), false);
+      return;
+    }
+    if (next >= 0) {
+      event.preventDefault();
+      summaries[next].focus();
+    }
   };
 }
 
