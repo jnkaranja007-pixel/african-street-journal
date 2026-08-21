@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=26">
+<link rel="stylesheet" href="styles.css?v=27">
 </head>
 <body>
 
@@ -35,6 +35,14 @@
   <span>VOL. I &middot; EST. 2026 &middot; AFRICA</span>
   <div class="masthead-kicker"><span>INDEPENDENT</span><span class="kicker-dot" aria-hidden="true">&middot;</span><span>FOR THE CONTINENT</span></div>
   <span>EFFICIENT JOURNALISM</span>
+  <div class="mobile-masthead">
+    <a class="mobile-wordmark" href="./" aria-label="The African Street Journal home">ASJ</a>
+    <span class="mobile-wordmark-name">African Street<br>Journal</span>
+    <button class="wire-entry mobile-wire-entry" data-wire-entry type="button" aria-label="Open the latest Africa news brief" title="Open latest Africa news brief">
+      <span class="wire-entry-count">The Continent</span>
+      <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+    </button>
+  </div>
 </div>
 <div class="rule"></div>
 <div class="sub-rule">
@@ -51,6 +59,11 @@
     <div class="title-block">
       <h1><em>The</em> African Street <span class="g">Journal</span></h1>
       <p class="tagline">Culture &middot; Politics &middot; People</p>
+    </div>
+
+    <div class="mobile-continent-heading">
+      <span class="mobile-continent-name">Africa</span>
+      <span class="mobile-continent-meta"><b>The Continent</b><small>01 / 55 countries</small></span>
     </div>
 
     <div class="pop-counter" aria-live="polite">
@@ -301,11 +314,11 @@
   <div class="wire-results" id="wire-results"></div>
 </div>
 
-<script src="data/app-core.js?v=26"></script>
-<script src="data/briefs.js?v=26" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=26" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=26" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/app-core.js?v=27"></script>
+<script src="data/briefs.js?v=27" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=27" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=27" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
 
-<script src="app.js?v=26"></script>
+<script src="app.js?v=27"></script>
 </body>
 </html>
