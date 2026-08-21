@@ -13,6 +13,24 @@ $metricsFixture = [IO.Path]::Combine([IO.Path]::GetTempPath(), 'asj-thin-metrics
 $outFixture = [IO.Path]::Combine([IO.Path]::GetTempPath(), 'asj-thin-output-' + [guid]::NewGuid().ToString('N') + '.json')
 $utf8 = New-Object Text.UTF8Encoding($false)
 
+# Load only the production grounding helpers without executing the writer. This keeps
+# regressions tied to the exact functions used in the publication path.
+$writerSource = [IO.File]::ReadAllText($writer, [Text.Encoding]::UTF8)
+$parseTokens = $null
+$parseErrors = $null
+$writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
+if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
+$groundingDefinitions = New-Object System.Collections.Generic.List[string]
+foreach ($functionName in @('Get-NumberKeys','Get-UngroundedNumbers')) {
+  $definition = $writerAst.FindAll({
+    param($node)
+    $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
+  }, $true) | Select-Object -First 1
+  if (-not $definition) { throw "writer is missing $functionName" }
+  $groundingDefinitions.Add($definition.Extent.Text)
+}
+Invoke-Expression ($groundingDefinitions.ToArray() -join "`n")
+
 function Write-Fixture([int]$ParagraphCount, [switch]$BadLens, [switch]$ShortStory) {
   $allParagraphs = @(
     'The transport ministry opened a new freight checkpoint on Tuesday after a month-long trial. Officials said the site will inspect trucks moving between the capital and the northern farming corridor, where delays had pushed delivery times beyond two days during the busiest market weeks.',
@@ -81,6 +99,26 @@ try {
   if ($LASTEXITCODE -eq 0) { throw 'invalid short story was accepted' }
   Write-Host 'PASS story below the concise floor is rejected'
 
+  $missing = @(Get-UngroundedNumbers 'The gates open at 6:00.' 'Ouverture des portes a 6h00.')
+  if ($missing.Count) { throw 'equivalent clock formatting was rejected' }
+  Write-Host 'PASS equivalent clock formatting is grounded'
+
+  $missing = @(Get-UngroundedNumbers 'The project serves 27 districts.' 'The project serves several districts.')
+  if ($missing.Count -ne 1 -or $missing[0] -ne '27') { throw 'invented figure was not rejected' }
+  Write-Host 'PASS invented figure is rejected'
+
+  $missing = @(Get-UngroundedNumbers 'The plan is worth 1 trillion dinars.' 'Le plan vaut 1000 milliards de dinars.')
+  if ($missing.Count -ne 1 -or $missing[0] -notmatch '1\s*trillion') { throw 'magnitude conversion was accepted' }
+  Write-Host 'PASS magnitude conversion is rejected'
+
+  $missing = @(Get-UngroundedNumbers 'The plan is worth 1000 billion dinars.' 'Le plan vaut 1000 milliards de dinars.')
+  if ($missing.Count) { throw 'faithful magnitude translation was rejected' }
+  Write-Host 'PASS faithful magnitude translation is grounded'
+
+  $missing = @(Get-UngroundedNumbers 'Africa 24 reported the decision.' 'Africa 24')
+  if ($missing.Count) { throw 'numbered outlet attribution was rejected' }
+  Write-Host 'PASS numbered outlet attribution is grounded'
+
   $thinFeed = [ordered]@{
     fetched = '2026-08-20T09:00:00Z'
     byCountry = @{ xx = @{ country = 'Fixtureland'; items = @(1..4 | ForEach-Object { @{ title = "Candidate $_"; url = "https://example.com/$_" } }) } }
@@ -100,5 +138,5 @@ try {
   }
 }
 
-Write-Host '[story-contract] OK - 5 checks'
+Write-Host '[story-contract] OK - 10 checks'
 exit 0

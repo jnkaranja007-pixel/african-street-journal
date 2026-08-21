@@ -39,7 +39,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
-  [string]$PromptVersion = 'story-v6-flash-isolated-lenses',
+  [string]$PromptVersion = 'story-v7-number-repair-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -173,6 +173,11 @@ function Get-WordCount([string]$Text) {
 function Get-NumberKeys([string]$Text) {
   $keys = @{}
   if (-not $Text) { return $keys }
+  foreach ($time in [regex]::Matches($Text, '(?<!\d)(\d{1,2})\s*(?::|h)\s*(\d{2})(?!\d)', 'IgnoreCase')) {
+    $hour = [int]$time.Groups[1].Value
+    $minute = [int]$time.Groups[2].Value
+    if ($hour -le 23 -and $minute -le 59) { $keys[("time{0:D2}{1:D2}" -f $hour, $minute)] = $true }
+  }
   foreach ($match in [regex]::Matches($Text, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
     $key = ($match.Value.ToLowerInvariant() -replace '[^a-z0-9%]', '')
     $key = $key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent'
@@ -184,7 +189,17 @@ function Get-NumberKeys([string]$Text) {
 function Get-UngroundedNumbers([string]$StoryText, [string]$EvidenceText) {
   $evidence = Get-NumberKeys $EvidenceText
   $missing = New-Object System.Collections.Generic.List[string]
-  foreach ($match in [regex]::Matches($StoryText, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
+  $timePattern = '(?<!\d)(\d{1,2})\s*(?::|h)\s*(\d{2})(?!\d)'
+  foreach ($time in [regex]::Matches($StoryText, $timePattern, 'IgnoreCase')) {
+    $hour = [int]$time.Groups[1].Value
+    $minute = [int]$time.Groups[2].Value
+    $key = "time{0:D2}{1:D2}" -f $hour, $minute
+    if (-not $evidence.ContainsKey($key)) { $missing.Add($time.Value) }
+  }
+  # Mask complete times before scanning generic numbers so the minutes in "6:00"
+  # are not mistaken for a separate unsupported figure.
+  $numberText = [regex]::Replace($StoryText, $timePattern, ' TIME ', 'IgnoreCase')
+  foreach ($match in [regex]::Matches($numberText, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
     $key = ($match.Value.ToLowerInvariant() -replace '[^a-z0-9%]', '')
     $key = $key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent'
     if ($key -and -not $evidence.ContainsKey($key)) { $missing.Add($match.Value) }
@@ -205,7 +220,7 @@ if (-not $NoCache -and (Test-Path $cachePath)) {
   }
 }
 
-function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1) {
+function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$ExpectedItem = -1) {
   if (-not $apiKey) {
     throw 'OPENROUTER_API_KEY is not set (local: $env:OPENROUTER_API_KEY; CI: gh secret set OPENROUTER_API_KEY)'
   }
@@ -230,10 +245,12 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1) {
     }
     $lensProperties = [ordered]@{}
     foreach ($lens in $STORY_LENSES) { $lensProperties[$lens] = $lensEntrySchema }
+    $itemSchema = [ordered]@{ type = 'integer'; minimum = 0 }
+    if ($ExpectedItem -ge 0) { $itemSchema['const'] = $ExpectedItem }
     $storySchema = [ordered]@{
       type = 'object'
       properties = [ordered]@{
-        item = @{ type = 'integer'; minimum = 0 }
+        item = $itemSchema
         topic = @{ type = 'string'; enum = $VALID_TOPICS }
         headline = @{ type = 'string'; minLength = 12; maxLength = 100 }
         dek = @{ type = 'string'; minLength = 20; maxLength = 180 }
@@ -320,21 +337,44 @@ function Get-EvidencePacket($Item, [int]$Index) {
   [void]$lines.AppendLine("[$Index] ASSIGNED - $($Item.title)")
   [void]$lines.AppendLine("    outlet: $($Item.source)")
   if ($Item.published) { [void]$lines.AppendLine("    published: $($Item.published)") }
-  if ($Item.editorialScore) {
-    [void]$lines.AppendLine("    desk meter: $($Item.editorialScore)/$($Item.confidence); topic hint: $($Item.topicHint)")
-  }
-  if ($Item.rankReasons) { [void]$lines.AppendLine("    assignment reasons: $(@($Item.rankReasons) -join '; ')") }
   if ($Item.summary) { [void]$lines.AppendLine("    primary evidence: $($Item.summary)") }
-  if ($Item.corroboration -gt 1) {
-    $names = @(@($Item.alsoSources) | ForEach-Object { [string]$_.name } | Where-Object { $_ })
-    $also = if ($names.Count) { " (also in $($names -join ', '))" } else { '' }
-    [void]$lines.AppendLine("    corroborated by $($Item.corroboration) outlets$also")
-  }
   foreach ($other in @($Item.alsoSources)) {
-    if ($other.title) { [void]$lines.AppendLine("    additional source title: $($other.title)") }
+    if ($other.name) { [void]$lines.AppendLine("    additional outlet: $($other.name)") }
+    if ($other.published) { [void]$lines.AppendLine("    additional published: $($other.published)") }
+    if ($other.title) { [void]$lines.AppendLine("    additional title: $($other.title)") }
     if ($other.summary) { [void]$lines.AppendLine("    additional evidence: $($other.summary)") }
   }
   return $lines.ToString()
+}
+
+function Get-ItemEvidenceText($Item) {
+  $parts = New-Object System.Collections.Generic.List[string]
+  foreach ($value in @($Item.source, $Item.title, $Item.summary, $Item.published)) {
+    if ($value) { $parts.Add([string]$value) }
+  }
+  foreach ($other in @($Item.alsoSources)) {
+    foreach ($value in @($other.name, $other.title, $other.summary, $other.published)) {
+      if ($value) { $parts.Add([string]$value) }
+    }
+  }
+  return $parts.ToArray() -join "`n"
+}
+
+function Get-DraftFactText($Brief) {
+  $parts = New-Object System.Collections.Generic.List[string]
+  foreach ($value in @($Brief.headline, $Brief.dek, $Brief.why, $Brief.body)) {
+    if ($value) { $parts.Add([string]$value) }
+  }
+  foreach ($paragraph in @($Brief.paragraphs)) {
+    if ($paragraph) { $parts.Add([string]$paragraph) }
+  }
+  if ($Brief.lenses) {
+    foreach ($lens in $STORY_LENSES) {
+      $property = $Brief.lenses.PSObject.Properties[$lens]
+      if ($property -and $property.Value.why) { $parts.Add([string]$property.Value.why) }
+    }
+  }
+  return $parts.ToArray() -join "`n"
 }
 
 $result  = [ordered]@{}
@@ -409,9 +449,10 @@ number, date, cause or context from any other event. Return ONLY a JSON object i
 - Do not include a URL. The source is attached automatically.
 "@
 
+    $repairNote = ''
     for ($attempt = 1; $attempt -le ($Retries + 1); $attempt++) {
       try {
-        $response = Invoke-OpenRouter $prompt 1
+        $response = Invoke-OpenRouter ($prompt + $repairNote) 1 $i
         $apiCalls++
         $usagePrompt += $response.PromptTokens
         $usageCompletion += $response.CompletionTokens
@@ -422,7 +463,31 @@ number, date, cause or context from any other event. Return ONLY a JSON object i
         $parsed = $blk | ConvertFrom-Json
         $returned = @(Get-BriefArray $parsed)
         if ($returned.Count -ne 1) { $lastErr = "expected one story, received $($returned.Count)"; continue }
-        $oneBrief = $returned[0]
+        $candidate = $returned[0]
+        $candidateItem = -1
+        if ($null -eq $candidate.item -or -not [int]::TryParse([string]$candidate.item, [ref]$candidateItem) -or $candidateItem -ne $i) {
+          $lastErr = "assignment item mismatch: expected $i"
+          $repairNote = @"
+
+REPAIR: The previous draft did not return assignment item $i. Rewrite from the same
+packet and return item $i exactly. Do not add facts while repairing the JSON.
+"@
+          continue
+        }
+        $unsupported = @(Get-UngroundedNumbers (Get-DraftFactText $candidate) (Get-ItemEvidenceText $it))
+        if ($unsupported.Count) {
+          $badFigures = (($unsupported | Select-Object -Unique -First 4) -join ', ')
+          $lastErr = "item $i unsupported number: $badFigures"
+          $repairNote = @"
+
+REPAIR: The previous draft introduced or reformatted unsupported figures: $badFigures.
+Rewrite from the same packet. Copy every number, magnitude word, date, time and unit
+exactly as it appears. Do not convert 1000 billion to 1 trillion or change numeric
+formatting. If a figure is not needed, omit it. Do not add facts while repairing.
+"@
+          continue
+        }
+        $oneBrief = $candidate
         break
       } catch {
         $lastErr = $_.Exception.Message.Split("`n")[0]
@@ -546,14 +611,11 @@ number, date, cause or context from any other event. Return ONLY a JSON object i
       continue
     }
 
-    $evidence = ([string]$src.title) + "`n" + ([string]$src.summary) + "`n" + ([string]$src.published)
-    foreach ($other in @($src.alsoSources)) {
-      $evidence += "`n" + ([string]$other.title) + "`n" + ([string]$other.summary) + "`n" + ([string]$other.published)
-    }
+    $evidence = Get-ItemEvidenceText $src
     $lensWhyText = @($lensData.Values | ForEach-Object { [string]$_.why }) -join "`n"
     $ungrounded = @(Get-UngroundedNumbers ($headline + "`n" + $dek + "`n" + $body + "`n" + $why + "`n" + $lensWhyText) $evidence)
     if ($ungrounded.Count) {
-      $rejectReasons.Add('unsupported number: ' + (($ungrounded | Select-Object -First 2) -join ', '))
+      $rejectReasons.Add("item $idx unsupported number: " + (($ungrounded | Select-Object -First 2) -join ', '))
       continue
     }
 
