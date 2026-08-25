@@ -19,6 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The African Street Journal">
 <meta name="twitter:description" content="Original, source-cited stories and practical signals from all 55 African countries.">
+<link rel="canonical" href="https://africanstreetjournal.com/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23131313'/%3E%3Ctext x='32' y='47' font-family='Georgia,serif' font-size='46' font-weight='700' fill='%234caf50' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
 <!-- Analytics (enable at hosting): create a free account at goatcounter.com — privacy-respecting, no cookies:
@@ -27,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=36">
+<link rel="stylesheet" href="styles.css?v=38">
 </head>
 <body>
 
@@ -61,13 +62,13 @@
       <p class="tagline">Culture &middot; Politics &middot; People</p>
     </div>
 
-    <div class="pop-counter" aria-live="polite">
+    <div class="pop-counter" aria-label="Estimated population across 55 African countries">
       <div class="pop-number" id="africa-pop"></div>
       <div class="pop-label">PEOPLE &middot; 55 COUNTRIES</div>
     </div>
 
     <div class="stage">
-      <canvas id="map" role="img" tabindex="0" aria-label="Animated clickable map of Africa."></canvas>
+      <canvas id="map" role="img" aria-label="Clickable map of Africa. Use the capital city index below for keyboard navigation."></canvas>
       <div id="tooltip" role="status" aria-live="polite"></div>
     </div>
   </div>
@@ -166,7 +167,7 @@
             <h3>News</h3>
             <div class="cv-news-tools">
               <button class="cv-utility-btn" id="cv-copy-brief" type="button">Copy Desk</button>
-              <span class="meta" id="cv-story-meta">AI desk · ranked by usefulness</span>
+              <span class="meta" id="cv-story-meta">ASJ desk · ranked for you</span>
             </div>
           </header>
           <div class="cv-news-lenses" id="cv-news-lenses" role="group" aria-label="Rank stories for a reader lens">
@@ -276,7 +277,7 @@
                 </div>
               </div>
               <div class="cv-map-stage">
-                <canvas class="cv-country-map" id="cv-country-map" aria-label="Country atlas map" aria-describedby="cv-atlas-alt"></canvas>
+                <canvas class="cv-country-map" id="cv-country-map" role="img" aria-label="Country atlas map" aria-describedby="cv-atlas-alt"></canvas>
                 <p class="sr-only" id="cv-atlas-alt"></p>
                 <button class="cv-map-fs" id="cv-map-fs" type="button" title="Toggle fullscreen" aria-label="Toggle fullscreen map">⛶</button>
               </div>
@@ -358,15 +359,22 @@
       <div class="story-reader-copy" id="story-reader-copy"></div>
       <aside class="story-reader-why" id="story-reader-why"></aside>
       <footer class="story-reader-sources" id="story-reader-sources"></footer>
+      <nav class="story-reader-continue" id="story-reader-continue" aria-label="Continue reading">
+        <button class="story-reader-next" id="story-reader-next" type="button">
+          <span id="story-reader-next-kicker">Next unread</span>
+          <strong id="story-reader-next-title"></strong>
+          <small>Continue reading <span aria-hidden="true">&rarr;</span></small>
+        </button>
+      </nav>
     </div>
   </div>
 </article>
 
-<script src="data/app-core.js?v=36"></script>
-<script src="data/briefs.js?v=36" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=36" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=36" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/app-core.js?v=38"></script>
+<script src="data/briefs.js?v=38" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=38" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=38" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
 
-<script src="app.js?v=36"></script>
+<script src="app.js?v=38"></script>
 </body>
 </html>

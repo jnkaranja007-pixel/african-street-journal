@@ -12,7 +12,7 @@ Three steps, nightly at 05:00 UTC, entirely in GitHub Actions. No PC needed.
 | Step | Script | What it does |
 |---|---|---|
 | 1. Gather | `scripts/fetch-news.ps1` | Reads verified feeds, clusters the same event across languages, and scores six candidates on relevance, corroboration, source quality, freshness, impact and evidence. No API key. |
-| 2. Write | `scripts/write-briefs.ps1` | Turns the five assignments into original 110-280 word on-site stories. The sixth candidate is reserve. |
+| 2. Write | `scripts/write-briefs.ps1` | Turns the five assignments into original 70-220 word on-site stories. The sixth candidate is reserve. |
 | 3. Publish | `add-briefs` -> `validate-briefs` -> `audit-briefs` -> `build-static-pages` | Merges, gates, verifies every citation resolves, rebuilds the crawlable pages and sitemap, commits. |
 
 **The model never sees a URL.** It is handed numbered items and returns an index; the citation
@@ -56,7 +56,7 @@ enough.
 | Sundays 04:00 UTC | `check-sources.yml` verifies every feed and repairs the registry |
 | Monthly, 3rd | World Bank GDP/growth refresh |
 
-GitHub emails you only on failure. Trigger by hand at **Actions -> Update AI Desk -> Run workflow**;
+GitHub emails you only on failure. Trigger by hand at **Actions -> Update ASJ Desk -> Run workflow**;
 the `only` input (`ng,ke,za`) limits it to a few countries for a quick test.
 
 ---
@@ -64,16 +64,18 @@ the `only` input (`ng,ke,za`) limits it to a few countries for a quick test.
 ## Checking on it
 
 ```powershell
-powershell -File serve.ps1          # then open http://localhost:5733/?selftest=1  (33 checks)
-powershell -File scripts/test-news-ranking.ps1           # assignment behavior (11 checks)
-powershell -File scripts/test-story-contract.ps1          # story + cost gates (3 checks)
+powershell -File serve.ps1          # then open http://localhost:5733/?selftest=1
+powershell -File scripts/test-news-ranking.ps1           # assignment behavior
+powershell -File scripts/test-story-contract.ps1          # story + cost gates
+powershell -File scripts/test-publication-gate.ps1        # targeted-run publication gate
 powershell -File scripts/validate-briefs.ps1              # is the current data publishable?
 powershell -File scripts/audit-briefs.ps1 -CheckLinks     # does every citation resolve?
 powershell -File scripts/check-sources.ps1                # which feeds have rotted?
 ```
 
 `audit-briefs` prints a `REWRITE:` line naming the weakest countries. That is the input to the
-weekly quality pass in `scripts/ROUTINE.md`.
+weekly quality pass in `scripts/ROUTINE.md`. The full gate also requires five fresh story
+packages for at least 50 countries, so a mostly carried-forward edition cannot pass as new.
 
 ---
 

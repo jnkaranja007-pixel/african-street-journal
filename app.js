@@ -4,7 +4,7 @@ const AI_BRIEFS_AT = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS
 // Per-country brief dates: the pipeline carries a country's last good briefs through failed
 // runs, so its stories can be older than the edition date — show the honest per-country stamp.
 const AI_BRIEFS_DATES = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.dates) || {};
-// Live market heat data (top listed companies) written daily by build-briefs.ps1.
+// Market heat data (top listed companies) carried by the published edition.
 const LIVE_MARKETS = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.markets) || {};
 const STORY_LENS_KEY = 'asj:story-lens:v1';
 const STORY_READ_KEY = 'asj:story-read:v1';
@@ -469,7 +469,7 @@ const CRITICAL_INFRA_SEEDS = {
 
 const ISLAND_FULLSCREEN_BOUNDS = {
   mu: { minX: 57.28, maxX: 57.88, minY: 19.92, maxY: 20.58 },
-  sc: { minX: 55.25, maxX: 55.62, minY: 4.48, maxY: 4.86 },
+  sc: { minX: 55.34, maxX: 55.56, minY: 4.54, maxY: 4.82 },
   cv: { minX: -25.42, maxX: -22.52, minY: -17.45, maxY: -14.72 },
   km: { minX: 43.12, maxX: 44.58, minY: 11.18, maxY: 12.45 },
   st: { minX: 6.40, maxX: 7.58, minY: -1.78, maxY: 0.12 }
@@ -727,6 +727,11 @@ setInterval(() => {
   if (cached?.rates && cached.updatedAt) applySnapshot(cached.rates, cached.updatedAt, 'cached');
   else applySnapshot(FALLBACK_RATES, FALLBACK_AT, 'fallback');
 
+  // One live refresh every six hours is enough for a reference-rate tool. Previously every
+  // page view called the API even when a minute-old successful response was already cached.
+  const cachedAt = Date.parse(cached?.savedAt || '');
+  if (cached?.rates && Number.isFinite(cachedAt) && Date.now() - cachedAt < 6 * 60 * 60 * 1000) return;
+
   fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' })
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
@@ -763,7 +768,7 @@ setInterval(() => {
 const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('tooltip');
-const FRONT_GREEN = getComputedStyle(document.documentElement).getPropertyValue('--front-green').trim() || '#3d8b40';
+const FRONT_GREEN = getComputedStyle(document.documentElement).getPropertyValue('--front-green').trim() || '#439447';
 
 const dpr = Math.min(2, window.devicePixelRatio || 1);
 canvas.width = 1000 * dpr;
@@ -871,7 +876,7 @@ function drawIslandMarkers(elapsed) {
     const hovered = hoveredIdx === t.idx;
     ctx.beginPath();
     ctx.arc(t.cx, t.cy, 9, 0, Math.PI * 2);
-    ctx.strokeStyle = hovered ? 'rgba(102,187,106,0.95)' : 'rgba(61,139,64,0.55)';
+    ctx.strokeStyle = hovered ? 'rgba(102,187,106,0.95)' : 'rgba(67,148,71,0.55)';
     ctx.lineWidth = hovered ? 1.6 : 1;
     ctx.stroke();
     ctx.beginPath();
@@ -1608,7 +1613,9 @@ function resumeCityTicker() {
 }
 
 function isTouchLikePointer() {
-  return window.matchMedia('(pointer:coarse)').matches || window.matchMedia('(hover:none)').matches;
+  return window.matchMedia('(pointer:coarse)').matches ||
+    window.matchMedia('(hover:none)').matches ||
+    window.matchMedia('(max-width:720px)').matches;
 }
 
 function shouldRestoreCountryFocus(element) {
@@ -1825,7 +1832,7 @@ function renderNewsPanel(countryId, stories) {
   renderBriefDesk(countryId);
 }
 
-// The AI desk hasn't filed from most countries yet. Rather than a dead-end placeholder, the
+// The ASJ desk hasn't filed from most countries yet. Rather than a dead-end placeholder, the
 // News panel opens on a "Country File": a desk briefing composed from the layers we already
 // source and label — every line traceable, nothing invented, and the season line is computed
 // against today's date. Replaced automatically by ranked stories once the daily desk files.
@@ -1883,13 +1890,16 @@ function renderCountryFile(countryId) {
   return '<div class="cv-brief-desk cv-deskfile">' +
     '<div class="cv-brief-head"><span class="t">Country <b>file</b></span><span class="m">Compiled from sourced desk layers</span></div>' +
     rows.map(r => '<div class="cv-df-row"><span class="cv-df-tag">' + r.tag + '</span><p>' + r.text + '</p></div>').join('') +
-    '<div class="cv-df-note">The AI news desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — ranked, source-cited stories replace this file after the next daily run.</div>' +
+    '<div class="cv-df-note">The ASJ desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — ranked, source-cited stories replace this file after the next daily run.</div>' +
   '</div>';
 }
 
 const STORY_REGISTRY = new Map();
 let storyReaderLastFocus = null;
 let activeReaderRecord = null;
+let activeReaderQueue = [];
+let activeReaderNextKey = '';
+let activeWireStoryKeys = [];
 
 function storyParagraphs(story) {
   const filed = Array.isArray(story?.paragraphs)
@@ -1958,12 +1968,85 @@ function findPublishedStory(clientId) {
   return null;
 }
 
+function storyRecordKey(record) {
+  return record ? storyClientId(record.story, record.context) : '';
+}
+
+function globalReaderQueue() {
+  const rows = [];
+  Object.entries(AI_BRIEFS).forEach(([countryCode, stories]) => {
+    (stories || []).forEach((story, rank) => {
+      if (!story?.headline) return;
+      rows.push({
+        story,
+        context: {
+          countryCode,
+          country: COUNTRY_INFO[countryCode]?.name || countryCode.toUpperCase(),
+          published: story.published || AI_BRIEFS_DATES[countryCode] || AI_BRIEFS_AT,
+          rank
+        },
+        score: storyLensRank(story, activeStoryLens, rank),
+        rank
+      });
+    });
+  });
+  return rows
+    .sort((a, b) => b.score - a.score || a.rank - b.rank || a.context.country.localeCompare(b.context.country))
+    .map(({ story, context }) => ({ story, context }));
+}
+
+function readerQueueFromSource(sourceElement, currentRecord) {
+  let keys = [];
+  if (sourceElement?.closest?.('#wire-results') && activeWireStoryKeys.length) {
+    keys = activeWireStoryKeys.slice();
+  } else if (sourceElement?.closest?.('#cv-cards')) {
+    keys = Array.from(document.querySelectorAll('#cv-cards [data-story-key]'))
+      .map(button => button.dataset.storyKey)
+      .filter(Boolean);
+  }
+  const seen = new Set();
+  const queue = keys
+    .filter(key => key && !seen.has(key) && seen.add(key))
+    .map(findPublishedStory)
+    .filter(Boolean);
+  if (!queue.length) queue.push(...globalReaderQueue());
+  const currentKey = storyRecordKey(currentRecord);
+  if (currentKey && !queue.some(record => storyRecordKey(record) === currentKey)) queue.unshift(currentRecord);
+  return queue;
+}
+
+function nextReaderRecord() {
+  if (!activeReaderRecord || activeReaderQueue.length < 2) return null;
+  const currentKey = storyRecordKey(activeReaderRecord);
+  const currentIndex = Math.max(0, activeReaderQueue.findIndex(record => storyRecordKey(record) === currentKey));
+  for (let step = 1; step < activeReaderQueue.length; step++) {
+    const record = activeReaderQueue[(currentIndex + step) % activeReaderQueue.length];
+    const key = storyRecordKey(record);
+    if (key && key !== currentKey && !isStoryReadKey(key)) return { record, unread:true };
+  }
+  const record = activeReaderQueue[(currentIndex + 1) % activeReaderQueue.length];
+  return record && storyRecordKey(record) !== currentKey ? { record, unread:false } : null;
+}
+
+function updateReaderContinuation() {
+  const wrap = document.getElementById('story-reader-continue');
+  const next = nextReaderRecord();
+  if (!wrap) return;
+  wrap.hidden = !next;
+  activeReaderNextKey = next ? storyRecordKey(next.record) : '';
+  if (!next) return;
+  const country = next.record.context.country || COUNTRY_INFO[next.record.context.countryCode]?.name || '';
+  document.getElementById('story-reader-next-kicker').textContent =
+    (next.unread ? 'Next unread' : 'Next story') + (country ? ' · ' + country : '');
+  document.getElementById('story-reader-next-title').textContent = next.record.story.headline;
+}
+
 function openRegisteredStory(key, sourceElement = document.activeElement) {
   const record = STORY_REGISTRY.get(String(key || ''));
   if (record) openStoryReader(record.story, record.context, sourceElement);
 }
 
-function openStoryReader(story, context = {}, sourceElement = document.activeElement) {
+function openStoryReader(story, context = {}, sourceElement = document.activeElement, options = {}) {
   if (!storyReader || !story?.headline) return;
   const country = context.country || COUNTRY_INFO[context.countryCode]?.name || '';
   const topic = story.topic || context.topic || 'News';
@@ -1982,10 +2065,16 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   const lensData = storyLensData(story, readerLens);
   const clientId = storyClientId(story, context);
 
-  activeReaderRecord = { story, context: { ...context, country, topic, published }, clientId };
+  const nextRecord = { story, context: { ...context, country, topic, published }, clientId };
+  if (!options.continueQueue) activeReaderQueue = readerQueueFromSource(sourceElement, nextRecord);
+  activeReaderRecord = nextRecord;
   markStoryReadKey(clientId);
-  sourceElement?.closest?.('.cv-news-row,.wire-item,.wire-brief-card,.wire-hero')?.classList.add('is-read');
-  storyReaderLastFocus = sourceElement;
+  document.querySelectorAll('[data-story-key]').forEach(control => {
+    if (control.dataset.storyKey === clientId) {
+      control.closest('.cv-news-row,.wire-item,.wire-brief-card,.wire-hero')?.classList.add('is-read');
+    }
+  });
+  if (!options.continueQueue) storyReaderLastFocus = sourceElement;
   document.getElementById('story-reader-kicker').textContent = [topic, country].filter(Boolean).join(' · ');
   document.getElementById('story-reader-title').textContent = story.headline;
   const dek = document.getElementById('story-reader-dek');
@@ -2015,6 +2104,7 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
       ).join('') + '</div>'
     : '';
   sourcesEl.hidden = !uniqueSources.length;
+  updateReaderContinuation();
   document.getElementById('story-reader-share').textContent = 'Share';
   storyReader.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2041,9 +2131,16 @@ function closeStoryReader() {
     history.replaceState(null, '', currentUrl.pathname + currentUrl.search + currentUrl.hash);
   }
   activeReaderRecord = null;
+  activeReaderQueue = [];
+  activeReaderNextKey = '';
 }
 
 document.getElementById('story-reader-back')?.addEventListener('click', closeStoryReader);
+document.getElementById('story-reader-next')?.addEventListener('click', () => {
+  const record = activeReaderQueue.find(item => storyRecordKey(item) === activeReaderNextKey);
+  if (!record) return;
+  openStoryReader(record.story, record.context, storyReaderLastFocus, { continueQueue:true });
+});
 document.getElementById('story-reader-share')?.addEventListener('click', async event => {
   if (!activeReaderRecord) return;
   const story = activeReaderRecord.story;
@@ -2151,7 +2248,7 @@ function regionalWireFor(countryId) {
     '<div class="cv-brief-head"><span class="t">' + escapeHtml(scope) + ' <b>wire</b></span>' +
       '<span class="m">' + escapeHtml(info.name || '') + ' file pending</span></div>' +
     picks.map((p, i) => briefRowHtml(p.brief, i, p.country, p.countryCode, p.published, p.sourceRank)).join('') +
-    '<div class="cv-df-note">The AI desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — these are current stories from the ' +
+    '<div class="cv-df-note">The ASJ desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — these are current stories from the ' +
       escapeHtml(scope === 'Across Africa' ? 'Africa-wide' : scope) + ' wire. ' + escapeHtml(info.name || 'Its') + '&rsquo;s data file lives under Signals.</div>' +
   '</div>';
   return { html, label: scope === 'Across Africa' ? 'Africa-wide wire' : scope + ' wire' };
@@ -2587,6 +2684,7 @@ function renderAudienceKpis(countryId, info) {
     return;
   }
   renderInvestorKpis(countryId, info);
+  loadGdpHistory(countryId, info);
 }
 
 function renderDiasporaKpis(countryId, info) {
@@ -2842,9 +2940,9 @@ function countryBriefText(countryId) {
   const rankedBriefs = rankStoryEntries(briefs, activeStoryLens);
   const date = String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || latestBriefDate() || new Date().toISOString()).slice(0, 10);
   const lensName = activeStoryLens === 'general' ? '' : ' · ' + STORY_LENS_LABELS[activeStoryLens] + ' lens';
-  const lines = ['The African Street Journal', (info.name || 'Country') + ' brief - ' + date + lensName, ''];
+  const lines = ['The African Street Journal', (info.name || 'Country') + ' desk - ' + date + lensName, ''];
   if (!briefs.length) {
-    lines.push('No AI Desk brief is loaded for this country yet.');
+    lines.push('No ASJ story desk is loaded for this country yet.');
     return lines.join('\n');
   }
   rankedBriefs.slice(0, 6).forEach((entry, index) => {
@@ -2930,7 +3028,7 @@ function aiStoriesForCountry(countryId) {
     return {
     title: item.headline,
     summary: item.why || item.body || '',
-    source: src.name || 'AI Desk',
+    source: src.name || 'ASJ Desk',
     url: src.url || '',
     type: item.topic || 'News',
     place: info?.capital || (capital && capital.name) || '',
@@ -2971,10 +3069,33 @@ function detailPoint(lon, lat) {
   return [lon, -lat];
 }
 
+function syncMobileAtlasStage(countryId, mapPath, isFullscreen) {
+  const stage = countryMapCanvas?.closest('.cv-map-stage');
+  if (!stage) return;
+  if (!mobileDossierMedia.matches || isFullscreen || !mapPath?.bbox) {
+    stage.style.removeProperty('--atlas-mobile-height');
+    return;
+  }
+  const useIslandFocus = Object.prototype.hasOwnProperty.call(ISLAND_FULLSCREEN_BOUNDS, countryId);
+  const bounds = mapViewBounds(countryId, mapPath.bbox, useIslandFocus);
+  const width = stage.getBoundingClientRect().width || countryMapCanvas.getBoundingClientRect().width || window.innerWidth - 48;
+  const aspect = bounds.width / Math.max(0.001, bounds.height);
+  const framedAspect = Math.max(0.74, Math.min(1.08, aspect));
+  const maxHeight = Math.min(460, window.innerHeight * 0.62);
+  const height = Math.round(Math.max(320, Math.min(maxHeight, width / framedAspect)));
+  stage.style.setProperty('--atlas-mobile-height', height + 'px');
+}
+
 function drawCountryMap(countryId, countryPath) {
   if (!countryMapCanvas || !countryMapCtx) return;
-  const rect = countryMapCanvas.getBoundingClientRect();
   const isFs = document.getElementById('cv-map-portal').classList.contains('active');
+  const detail = COUNTRY_DETAIL[countryId];
+  const mapPath = detail
+    ? { shape: new Path2D(detail.d), bbox: detail.bbox }
+    : countryPath;
+  if (!mapPath) return;
+  syncMobileAtlasStage(countryId, mapPath, isFs);
+  const rect = countryMapCanvas.getBoundingClientRect();
   const baseDpr = Math.min(2, window.devicePixelRatio || 1);
   // The embedded map is physically small, so the same DPR puts far fewer device pixels on the
   // country than fullscreen does. Supersample it (render above display resolution, let the
@@ -2990,16 +3111,10 @@ function drawCountryMap(countryId, countryPath) {
   countryMapCtx.setTransform(mapDpr, 0, 0, mapDpr, 0, 0);
   countryMapCtx.clearRect(0, 0, width, height);
 
-  const detail = COUNTRY_DETAIL[countryId];
-  const mapPath = detail
-    ? { shape: new Path2D(detail.d), bbox: detail.bbox }
-    : countryPath;
-  if (!mapPath) return;
-
-  // Seychelles spans widely scattered outer islands, which makes the inhabited Mahe cluster
-  // effectively disappear in the narrow embedded map. Reuse its established detail bounds on
-  // mobile while leaving every desktop country view unchanged.
-  const useIslandFocus = isFs || (mobileDossierMedia.matches && countryId === 'sc');
+  // Archipelagos include remote specks that can make the inhabited island disappear in a narrow
+  // embedded map. Reuse each established focus crop on mobile; desktop keeps the full extent.
+  const useIslandFocus = isFs || (mobileDossierMedia.matches &&
+    Object.prototype.hasOwnProperty.call(ISLAND_FULLSCREEN_BOUNDS, countryId));
   const bounds = mapViewBounds(countryId, mapPath.bbox, useIslandFocus);
   // Padding scales with the canvas so small embedded maps don't spend ~18% of their width on
   // margin: ~5.5% of the short side, clamped to 28-72px (island focus crops keep extra room).
@@ -3007,7 +3122,7 @@ function drawCountryMap(countryId, countryPath) {
     ? 92
     : Math.max(28, Math.min(72, Math.round(Math.min(width, height) * 0.055)));
   const baseScale = Math.min((width - pad * 2) / bounds.width, (height - pad * 2) / bounds.height);
-  const scale = baseScale * islandFullscreenZoom(countryId, isFs);
+  const scale = baseScale * islandMapZoom(countryId, isFs);
   const offsetX = (width - bounds.width * scale) / 2 - bounds.minX * scale;
   const offsetY = (height - bounds.height * scale) / 2 - bounds.minY * scale;
   const project = (lon, lat) => {
@@ -3019,7 +3134,7 @@ function drawCountryMap(countryId, countryPath) {
   fillMapBackdrop(width, height);
   countryMapCtx.save();
   applyMapClip(mapPath, offsetX, offsetY, scale, mapDpr);
-  countryMapCtx.fillStyle = '#3f8f49';
+  countryMapCtx.fillStyle = FRONT_GREEN;
   countryMapCtx.fillRect(0, 0, width, height);
   if (mapLayers.terrain) {
     drawRelief(width, height, countryId);
@@ -3034,12 +3149,13 @@ function drawCountryMap(countryId, countryPath) {
   drawGisLayers(countryId, project, placedLabels, width, height, mapPath, offsetX, offsetY, scale, mapDpr);
 }
 
-function islandFullscreenZoom(countryId, isFullscreen) {
+function islandMapZoom(countryId, isFullscreen) {
   // Zoom-past-fit is only safe on top of an explicit ISLAND_FULLSCREEN_BOUNDS focus crop
   // (it trims empty ocean around archipelagos). Applied to a full-country fit it guarantees
   // overflow — e.g. Gambia at 1.6x spilled off both edges of the screen.
-  if (!isFullscreen || !ISLAND_FULLSCREEN_BOUNDS[countryId]) return 1;
-  return ({ cv: 1.15, km: 1.15, st: 1.15 })[countryId] || 1;
+  if (!ISLAND_FULLSCREEN_BOUNDS[countryId]) return 1;
+  if (isFullscreen) return ({ cv: 1.15, km: 1.15, st: 1.15 })[countryId] || 1;
+  return 1;
 }
 
 function mapViewBounds(countryId, bounds, useIslandFocus) {
@@ -3218,6 +3334,11 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
     for (const item of criticalInfraForCountry(countryId).slice(0, 9)) {
       if (!Number.isFinite(item.lon) || !Number.isFinite(item.lat)) continue;
       const [x, y] = project(item.lon, item.lat);
+      const overlapsPlace = mapLayers.places && (gis.places || []).some(place => {
+        const [placeX, placeY] = project(place.lon, place.lat);
+        return Math.hypot(placeX - x, placeY - y) < 18;
+      });
+      if (overlapsPlace) continue;
       if (mapLayers.labels) {
         countryMapCtx.font = '800 9px ui-monospace, SFMono-Regular, Consolas, monospace';
         const labelDrawn = drawSmartLabel(item.name.toUpperCase(), x, y, '#fff0a9', placedLabels, width, height, 'right');
@@ -3461,7 +3582,7 @@ function storySummary(story) {
   if (type.includes('transport') || type.includes('movement')) return 'Commuters, drivers, and small businesses are watching how movement through ' + place + ' changes the cost of the day.';
   if (type.includes('market') || type.includes('business')) return 'Traders in ' + place + ' are reading demand, delays, and prices as early signals for the week ahead.';
   if (type.includes('river')) return 'Boat crews and river communities near ' + place + ' are mapping route changes as conditions shift.';
-  return 'A street-level brief from ' + place + ', built around the voices, prices, and decisions shaping the day.';
+  return 'A street-level report from ' + place + ', built around the voices, prices, and decisions shaping the day.';
 }
 
 function squarifyTreemap(items, W, H) {
@@ -3694,7 +3815,6 @@ function renderInvestorPanel(countryId, info) {
   ).join('');
 
   briefWrap.innerHTML = renderInvestorSignals(countryId, inv, info);
-  loadGdpHistory(countryId, info);
 }
 
 function renderGdpChart(inv, summary = economySeriesSummary(inv)) {
@@ -3967,7 +4087,7 @@ canvas.addEventListener('touchstart', (e) => {
       }).length;
     }
     if (!previousSnapshot || (!changed && !newStories && !newTopics)) return '';
-    const copy = 'Compared with the last brief opened in this browser. It catches changed country leads, new story fingerprints, and new topic coverage.';
+    const copy = 'Compared with the last edition opened in this browser. It catches changed country leads, new story fingerprints, and new topic coverage.';
     return '<section class="wire-movement">' +
       '<div><h3>What Changed</h3><p>' + escapeHtml(copy) + '</p></div>' +
       '<div class="wire-movement-grid">' +
@@ -4014,7 +4134,7 @@ canvas.addEventListener('touchstart', (e) => {
   }
   function dailyBriefText(items){
     const date = latestBriefDate() || new Date().toISOString().slice(0, 10);
-    return ['The African Street Journal - Africa Brief', date, '']
+    return ['The African Street Journal - Daily Desk', date, '']
       .concat(items.slice(0, 12).map(storyLine))
       .join('\n')
       .trim();
@@ -4075,7 +4195,7 @@ canvas.addEventListener('touchstart', (e) => {
         risk: inv.risk === 'low' ? 'Low' : inv.risk === 'med' ? 'Medium' : 'High',
         currency: inv.currency || '—',
         sources: uniqueSourceCount(AI_BRIEFS[code] || []),
-        story: top.headline || 'No current brief'
+        story: top.headline || 'No current story'
       };
     });
     const row = (label, key, className = 'metric') =>
@@ -4152,8 +4272,9 @@ canvas.addEventListener('touchstart', (e) => {
       Math.min(60, total - shown) + '</span></button></div>';
   }
   function renderResults(){
-    if (!INDEX.length){ updateResultCount([]); resultsEl.innerHTML = '<div class="wire-empty">No stories loaded yet. The desk has not published a brief file.</div>'; return; }
+    if (!INDEX.length){ activeWireStoryKeys = []; updateResultCount([]); resultsEl.innerHTML = '<div class="wire-empty">No stories loaded yet. The desk has not published an edition.</div>'; return; }
     const items = filtered();
+    activeWireStoryKeys = items.map(item => item.storyKey);
     updateResultCount(items);
     if (!items.length){ resultsEl.innerHTML = '<div class="wire-meta">0 stories</div><div class="wire-empty">No headlines match your search.</div>'; return; }
     const frontPage = (activeTopic==='All' && !query.trim());
@@ -4185,7 +4306,7 @@ canvas.addEventListener('touchstart', (e) => {
     INDEX = buildIndex(); activeTopic = topic||'All'; query=''; visibleCount = 60; searchInput.value='';
     const dateEl = document.getElementById('wire-date');
     const briefDate = latestBriefDate();
-    if (dateEl) dateEl.textContent = briefDate ? 'Latest available · ' + formatShortDate(briefDate + 'T00:00:00Z') : 'Brief pending';
+    if (dateEl) dateEl.textContent = briefDate ? 'Latest available · ' + formatShortDate(briefDate + 'T00:00:00Z') : 'Edition pending';
     wireLastFocus = document.activeElement;
     previousSnapshot = readWireSnapshot();
     setMobileActionsOpen(false);
@@ -4229,7 +4350,7 @@ canvas.addEventListener('touchstart', (e) => {
     visibleCount = 60;
     const dateEl = document.getElementById('wire-date');
     const d = editionDate || latestBriefDate();
-    if (dateEl) dateEl.textContent = d ? (editionDate ? 'Edition · ' : 'Latest available · ') + formatShortDate(d + 'T00:00:00Z') : 'Brief pending';
+    if (dateEl) dateEl.textContent = d ? (editionDate ? 'Edition · ' : 'Latest available · ') + formatShortDate(d + 'T00:00:00Z') : 'Edition pending';
     renderTopics(); renderTrust(); renderResults();
   }
   editionSel?.addEventListener('change', () => {
@@ -4517,8 +4638,7 @@ async function syncDeskSignup(email, audience) {
     email,
     watchlist: signupWatchlistPayload(),
     preferred_audience: audience,
-    source: 'my_africa',
-    user_agent: navigator.userAgent || ''
+    source: 'my_africa'
   };
   const res = await fetch(cfg.url + '/rest/v1/' + encodeURIComponent(cfg.table), {
     method: 'POST',
@@ -4538,13 +4658,19 @@ async function syncDeskSignup(email, audience) {
 }
 function deskSignupHtml(list) {
   if (list.length < 2) return '';
+  if (!deskSignupConfig()) {
+    return '<div class="yd-signup yd-signup-offline">' +
+      '<div class="yd-signup-copy"><b>Desk saved here</b><span>Your followed countries stay on this device.</span></div>' +
+      '<p class="yd-signup-status">Cloud signup is not connected yet.</p>' +
+    '</div>';
+  }
   const signup = getDeskSignup();
   const savedEmail = String(signup.email || '');
   const savedAudience = String(signup.audience || preferredDeskAudience());
-  const savedState = signup.synced ? 'Synced' : (savedEmail ? 'Saved on this device' : 'Email only for now');
+  const savedState = signup.synced ? 'Joined' : 'Ready to join';
   const selected = value => value === savedAudience ? ' selected' : '';
   return '<form class="yd-signup" data-desk-signup>' +
-    '<div class="yd-signup-copy"><b>Save this desk</b><span>Keep these countries across devices.</span></div>' +
+    '<div class="yd-signup-copy"><b>Join the ASJ desk</b><span>Save the countries and lens you follow.</span></div>' +
     '<label class="sr-only" for="yd-signup-email">Email address</label>' +
     '<input id="yd-signup-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="' + escapeHtml(savedEmail) + '" required>' +
     '<label class="sr-only" for="yd-signup-audience">Desk lens</label>' +
@@ -4554,7 +4680,7 @@ function deskSignupHtml(list) {
       '<option value="investors"' + selected('investors') + '>Investors</option>' +
       '<option value="diaspora"' + selected('diaspora') + '>Diaspora</option>' +
     '</select>' +
-    '<button type="submit">Save</button>' +
+    '<button type="submit">Join</button>' +
     '<p class="yd-signup-status" data-signup-status aria-live="polite">' + escapeHtml(savedState) + '</p>' +
   '</form>';
 }
@@ -4823,8 +4949,12 @@ function syncRoute() {
     }
   }
   if ((location.hash || '') === hash) return;
-  if (hash) location.hash = hash;
-  else history.pushState(null, '', location.pathname + location.search);
+  // Opening an overlay creates one browser-history entry so the device Back button
+  // closes it. Changes inside that overlay replace the entry; otherwise every tab,
+  // lens and country hop becomes another Back press. Closing also replaces the route,
+  // which prevents the country the reader just left from reopening on the next Back.
+  if (hash && !location.hash) location.hash = hash;
+  else history.replaceState(null, '', location.pathname + location.search + hash);
 }
 function applyRoute() {
   routeApplying = true;
@@ -4920,6 +5050,7 @@ async function runSelfTest() {
   const populationLargeEnough = window.innerWidth > 620 || (populationRect.width > 150 && populationRect.height > 25);
   add('landing population counter visible', populationVisible && populationLargeEnough,
     populationRect ? populationRect.width.toFixed(0) + 'x' + populationRect.height.toFixed(0) : 'missing');
+  add('a11y: population counter does not announce every tick', africaPopEl?.getAttribute('aria-live') !== 'polite');
   add('country nav alphabetized', sortedCountryIds[0] === 'dz' && sortedCountryIds[1] === 'ao', sortedCountryIds.slice(0, 5).join(','));
   add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);
   const badIds = obj => Object.keys(obj || {}).filter(id => !COUNTRY_INFO[id]);
@@ -4958,6 +5089,7 @@ async function runSelfTest() {
     add('smoke: news panel has content', (document.getElementById('cv-cards').innerHTML || '').length > 400);
     add('smoke: crop calendar rows', document.querySelectorAll('#cv-crop-cal .cv-cal-row').length > 0, document.querySelectorAll('#cv-crop-cal .cv-cal-row').length);
     add('smoke: route set', location.hash.indexOf('#/ke') === 0, location.hash);
+    const countryRouteHistoryLength = history.length;
     add('a11y: one country panel exposed', document.querySelectorAll('.cv-panel[aria-hidden="false"]').length === 1, document.querySelectorAll('.cv-panel[aria-hidden="false"]').length);
     const fileContent = document.getElementById('cv-file-content');
     const sectionTabsRect = document.getElementById('cv-dots')?.getBoundingClientRect();
@@ -4972,6 +5104,8 @@ async function runSelfTest() {
     add('a11y: ticker clones skip keyboard', !document.querySelector('.ticker-segment[aria-hidden="true"] button:not([tabindex="-1"])'));
     audienceSelect.value = 'investors';
     audienceSelect.dispatchEvent(new Event('change'));
+    add('routing: lens changes replace the country history entry', history.length === countryRouteHistoryLength,
+      countryRouteHistoryLength + '->' + history.length);
     const pressedCountryLenses = Array.from(document.querySelectorAll('#cv-news-lenses [data-story-lens][aria-pressed="true"]'));
     add('news lens persists and keeps one active control',
       activeStoryLens === 'investors' && localStorage.getItem(STORY_LENS_KEY) === 'investors' &&
@@ -5055,9 +5189,20 @@ async function runSelfTest() {
         !!JSON.parse(localStorage.getItem(STORY_READ_KEY) || '{}')[openedStoryKey],
       openedStoryKey || 'missing');
     add('a11y: story reader hides underlying wire', document.getElementById('wire-view')?.getAttribute('aria-hidden') === 'true');
+    const firstReaderTitle = document.getElementById('story-reader-title')?.textContent || '';
+    const nextStoryButton = document.getElementById('story-reader-next');
+    const nextStoryAvailable = !!nextStoryButton && !document.getElementById('story-reader-continue')?.hidden;
+    nextStoryButton?.click();
+    await new Promise(r => setTimeout(r, 80));
+    add('retention: continue reading advances on site',
+      nextStoryAvailable && document.getElementById('story-reader-title')?.textContent !== firstReaderTitle,
+      nextStoryAvailable ? firstReaderTitle + ' -> ' + (document.getElementById('story-reader-title')?.textContent || '') : 'no next story');
     closeStoryReader();
     add('a11y: wire returns after story close', document.getElementById('wire-view')?.getAttribute('aria-hidden') === 'false');
     window.__wireClose();
+    const signupMarkup = deskSignupHtml(['ke', 'ng']);
+    add('trust: signup copy matches cloud connection state',
+      deskSignupConfig() ? signupMarkup.includes('data-desk-signup') : signupMarkup.includes('Cloud signup is not connected yet.'));
   } catch (e) {
     add('smoke: dossier flow threw', false, e.message);
   }

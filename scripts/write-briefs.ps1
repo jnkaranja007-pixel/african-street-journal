@@ -40,6 +40,7 @@ param(
   [double]$Temperature = 0.3,
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
+  [int]$MinEvidenceWords = 45,
   [string]$PromptVersion = 'story-v13-flash-precise-lenses',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
@@ -445,6 +446,17 @@ function Get-ItemEvidenceText($Item) {
   return $parts.ToArray() -join "`n"
 }
 
+function Get-AssignmentEvidenceWordCount($Item) {
+  $parts = New-Object System.Collections.Generic.List[string]
+  foreach ($value in @($Item.summary, $Item.articleEvidence)) {
+    if ($value) { $parts.Add([string]$value) }
+  }
+  foreach ($other in @($Item.alsoSources)) {
+    if ($other.summary) { $parts.Add([string]$other.summary) }
+  }
+  return Get-WordCount ($parts.ToArray() -join "`n")
+}
+
 function Get-DraftFactText($Brief) {
   $parts = New-Object System.Collections.Generic.List[string]
   foreach ($value in @($Brief.headline, $Brief.dek, $Brief.why, $Brief.body)) {
@@ -475,6 +487,25 @@ function Get-LensGroundingIssues($Brief) {
   return $issues.ToArray()
 }
 
+function Get-DraftContractIssues($Brief) {
+  $issues = New-Object System.Collections.Generic.List[string]
+  if (-not $Brief.headline -or -not $Brief.dek -or -not $Brief.why) {
+    $issues.Add('missing headline, dek, or why')
+    return $issues.ToArray()
+  }
+  if (([string]$Brief.headline).Trim().Length -gt 100) { $issues.Add('headline over 100 characters') }
+  if (([string]$Brief.dek).Trim().Length -gt 200) { $issues.Add('dek over 200 characters') }
+  $whyWords = Get-WordCount ([string]$Brief.why)
+  if ($whyWords -lt 8 -or $whyWords -gt 50) { $issues.Add('why outside 8-50 words') }
+  $paragraphs = @($Brief.paragraphs | ForEach-Object { ([string]$_).Trim() } | Where-Object { $_ })
+  if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) { $issues.Add("$($paragraphs.Count) paragraphs") }
+  $storyWords = Get-WordCount ($paragraphs -join ' ')
+  if ($storyWords -lt $MinStoryWords -or $storyWords -gt $MaxStoryWords) {
+    $issues.Add("$storyWords story words")
+  }
+  return $issues.ToArray()
+}
+
 $result  = [ordered]@{}
 $stories = 0
 $skipped = New-Object System.Collections.Generic.List[string]
@@ -486,15 +517,29 @@ $apiCalls = 0
 $cacheHits = 0
 $insufficientCandidates = 0
 $countriesEligibleForWriting = 0
+$evidenceThinCandidates = 0
+$reserveCandidatesUsed = 0
 
 foreach ($code in $codes) {
   $entry = $feed.byCountry.$code
-  $items = @($entry.items)
-  if ($items.Count -eq 0) { $skipped.Add("$code (no items)"); continue }
+  $rawItems = @($entry.items)
+  $items = @($rawItems | Where-Object { (Get-AssignmentEvidenceWordCount $_) -ge $MinEvidenceWords })
+  if ($rawItems.Count -and $items.Count -lt $rawItems.Count) {
+    $evidenceThinCandidates += $rawItems.Count - $items.Count
+    Write-Host ("      {0}: {1}/{2} candidates have at least {3} evidence words" -f `
+                $code, $items.Count, $rawItems.Count, $MinEvidenceWords) -ForegroundColor DarkGray
+  }
+  if ($items.Count -eq 0) {
+    $insufficientCandidates++
+    $skipped.Add("$code (no evidence-ready items)")
+    Write-Host ("  {0}  {1,-30} SKIPPED BEFORE MODEL: no evidence-ready candidates" -f `
+                $code, [string]$entry.country) -ForegroundColor DarkYellow
+    continue
+  }
   if ($items.Count -lt $MinBriefs) {
     $insufficientCandidates++
-    $skipped.Add("$code (only $($items.Count) ranked candidates)")
-    Write-Host ("  {0}  {1,-30} SKIPPED BEFORE MODEL: {2} candidates, need {3}" -f `
+    $skipped.Add("$code (only $($items.Count) evidence-ready candidates)")
+    Write-Host ("  {0}  {1,-30} SKIPPED BEFORE MODEL: {2} evidence-ready candidates, need {3}" -f `
                 $code, [string]$entry.country, $items.Count, $MinBriefs) -ForegroundColor DarkYellow
     continue
   }
@@ -504,11 +549,12 @@ foreach ($code in $codes) {
   # The meter has already done the assigning. Keep the sixth candidate at the ranking
   # boundary, but isolate each of the first five evidence packets in its own model call.
   # That makes cross-story fact leakage impossible and lets unchanged assignments hit cache.
-  $n    = [Math]::Min($MaxBriefs, [Math]::Max(1, $items.Count))
+  $n    = [Math]::Min($MaxBriefs + 1, [Math]::Max(1, $items.Count))
   $briefList = New-Object System.Collections.Generic.List[object]
   $storyCacheKeys = @{}
   $lastErr = ''
   for ($i = 0; $i -lt $n; $i++) {
+    if ($briefList.Count -ge $MaxBriefs) { break }
     $it = $items[$i]
     $itemKey = Get-TextHash (([string]$it.itemId) + "`n" + ([string]$it.url) + "`n" + (Get-ItemEvidenceText $it))
     $storyCacheKey = Get-TextHash (($PromptVersion, $Model, (Get-TextHash $STYLE), $code, $i, `
@@ -583,6 +629,18 @@ Keep the canonical story unchanged and repair the three lens scores and reasons.
 "@
           continue
         }
+        $draftIssues = @(Get-DraftContractIssues $candidate)
+        if ($draftIssues.Count) {
+          $draftIssueText = (($draftIssues | Select-Object -Unique -First 4) -join '; ')
+          $lastErr = "item $i story contract: $draftIssueText"
+          $repairNote = @"
+
+REPAIR: The previous draft failed the story contract: $draftIssueText. Return three
+complete paragraphs totaling $MinStoryWords-$MaxStoryWords words, a specific dek,
+and an 8-50 word why line. Keep the facts and assignment item unchanged.
+"@
+          continue
+        }
         $unsupported = @(Get-UngroundedNumbers (Get-DraftFactText $candidate) (Get-ItemEvidenceText $it))
         if ($unsupported.Count) {
           $badFigures = (($unsupported | Select-Object -Unique -First 4) -join ', ')
@@ -613,12 +671,15 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
       }
     }
     }
-    if (-not $oneBrief) { break }
+    if (-not $oneBrief) { continue }
     $briefList.Add($oneBrief)
+    if ($i -ge $MaxBriefs) { $reserveCandidatesUsed++ }
     Start-Sleep -Milliseconds $DelayMs
   }
 
-  $briefs = if ($briefList.Count -eq $n) { $briefList.ToArray() } else { $null }
+  $briefs = if ($briefList.Count -ge $MinBriefs) {
+    @($briefList.ToArray() | Select-Object -First $MaxBriefs)
+  } else { $null }
 
   if (-not $briefs) {
     Write-Host ("  {0}  {1,-30} SKIPPED: {2}" -f $code, $name, $lastErr) -ForegroundColor Red
@@ -827,6 +888,8 @@ $metrics = [ordered]@{
   countriesAttempted = $codes.Count
   countriesEligibleForWriting = $countriesEligibleForWriting
   countriesSkippedBeforeModel = $insufficientCandidates
+  evidenceThinCandidates = $evidenceThinCandidates
+  reserveCandidatesUsed = $reserveCandidatesUsed
   countriesWritten = $result.Count
   storiesWritten = $stories
   apiCalls = $apiCalls

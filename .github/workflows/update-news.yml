@@ -1,4 +1,4 @@
-name: Update AI Desk
+name: Update ASJ Desk
 
 # Each morning the desk reads verified African news feeds, clusters the same event
 # across outlets, scores six candidates, and turns five assignments into original
@@ -38,6 +38,7 @@ jobs:
           ./scripts/test-news-ranking.ps1
           ./scripts/test-story-contract.ps1
           ./scripts/test-article-evidence.ps1
+          ./scripts/test-publication-gate.ps1
 
       - name: Gather and rank today's stories
         shell: pwsh
@@ -82,7 +83,14 @@ jobs:
 
       - name: Validate before publishing
         shell: pwsh
-        run: ./scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages 5
+        run: |
+          $only = '${{ github.event.inputs.only }}'
+          if ($only.Trim()) {
+            $requested = @($only -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }).Count
+            ./scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages (5 * $requested) -MinFreshCountries $requested -RequiredFreshCountries $only
+          } else {
+            ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 250 -MinFreshCountries 50
+          }
 
       - name: Audit sources and quality
         shell: pwsh
@@ -109,7 +117,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: Commit refreshed briefs
+      - name: Commit refreshed stories
         shell: pwsh
         run: |
           git config user.name  "asj-news-bot"
@@ -122,10 +130,10 @@ jobs:
           git diff --staged --quiet
           if ($LASTEXITCODE -eq 0) { Write-Host 'No story changes this run.'; exit 0 }
           $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')
-          git commit -m "chore(ai-desk): refresh briefs ($stamp)"
+          git commit -m "chore(asj-desk): refresh stories ($stamp)"
           if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
           # The desk runs long enough that main can move while it works. A plain push
-          # would then be rejected as non-fast-forward and the whole run's briefs lost
+          # would then be rejected as non-fast-forward and the whole run's stories lost
           # with the workspace. Rebase onto current main and retry instead.
           $pushed = $false
           for ($attempt = 1; $attempt -le 3; $attempt++) {

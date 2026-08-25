@@ -5,8 +5,7 @@ create table if not exists public.asj_signups (
   preferred_audience text not null default 'general',
   source text not null default 'my_africa',
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  user_agent text
+  updated_at timestamptz not null default now()
 );
 
 alter table public.asj_signups enable row level security;

@@ -41,6 +41,7 @@ $script:NEWS_CANON = @{
   'petrole'='oil'; 'petroleo'='oil'; 'petroleos'='oil'
   'senat'='parliament'; 'senado'='parliament'
   'patrimoine'='heritage'; 'patrimonio'='heritage'
+  'gamou'='mawlid'; 'maouloud'='mawlid'; 'mouloud'='mawlid'
 }
 
 $script:NEWS_TOPIC_RULES = [ordered]@{
@@ -48,14 +49,18 @@ $script:NEWS_TOPIC_RULES = [ordered]@{
   Education   = @('school','university','student','teacher','education','exam','classroom','college')
   Climate     = @('climate','flood','drought','rainfall','storm','cyclone','wildfire','heatwave','emissions')
   Agriculture = @('agriculture','farmer','harvest','crop','maize','wheat','cocoa','coffee','livestock','fertilizer','food security')
+  News        = @('crash','collision','rollover','killed','dead','injured','fire','explosion','missing','rescue')
   Tech        = @('technology','digital','telecom','internet','startup','software','cyber','satellite','artificial intelligence')
   Sport       = @('football','soccer','basketball','athletics','tournament','league','cup final','olympic','sport')
-  Culture     = @('culture','heritage','music','film','book','artist','museum','festival','theatre','fashion')
+  Culture     = @('culture','heritage','music','film','book','artist','museum','festival','theatre','fashion','mawlid','eid',
+                  'pilgrim','pilgrims','pilgrimage','religious','faith')
   Business    = @('inflation','bank','budget','tax','debt','bond','gdp','economy','currency','exchange rate','export','import','trade',
                   'investment','investor','business','market','company','industry','mine','mining','oil','gas','fuel','power','electricity',
-                  'jobs','wage','unemployment','tariff','levy','price')
+                  'jobs','wage','unemployment','tariff','levy','price','factory','manufacturing','aluminium','aluminum','refinery',
+                  'transport','bus','buses','rail','railway','port','shipping','airline')
   Politics    = @('election','parliament','minister','president','government','court','ruling','law','bill','constitution','protest',
-                  'strike','sanctions','treaty','summit','diplomat','security','attack','military','police','refugee','detained','journalist')
+                  'strike','sanctions','treaty','summit','diplomat','security','attack','military','police','crime','fraud','corruption',
+                  'charges','mayor','mayoral','municipal','candidate','refugee','detained','journalist')
 }
 
 $script:NEWS_URGENT = @('killed','dead','death','fatal','crash','attack','war','coup','outbreak','cholera','flood','drought','cyclone',
@@ -69,7 +74,59 @@ $script:NEWS_JUNK = @('celebrity','wedding','romance','dating','gossip','horosco
                       'betting','odds','jackpot','lottery','showbiz','soap opera','reality tv','pageant','road trip experience',
                       'car review','test drive')
 $script:NEWS_LOW_VALUE = @('opinion','analysis','commentary','editorial','keynote address','statement of','press release','sponsored',
-                           'partner content','public seminar','public seminars','conference commences','weekly roundup')
+                           'partner content','public seminar','public seminars','conference commences','weekly roundup','op ed',
+                           'weekend wrap','daily roundup')
+$script:NEWS_HARD_LOW_VALUE = @('opinion','commentary','editorial','op ed','weekend wrap','weekly roundup','daily roundup',
+                                'press release','sponsored','partner content')
+$script:NEWS_ACTION = @('approves','approved','adopts','adopted','passes','passed','signs','signed','opens','opened','closes','closed',
+                        'raises','raised','cuts','cut','lowers','lowered','secures','secured','invests','invested','allocates','allocated',
+                        'deploys','deployed','mobilises','mobilise','mobilizes','mobilize','launches','launched','expands','expanded',
+                        'suspends','suspended','arrests','arrested','charges','charged','wins','won','begins','began','ends','ended')
+$script:NEWS_SPEECH = @('says','said','urges','urged','calls','called','warns','warned','claims','claimed','remarks','speech')
+$script:NEWS_EXTERNAL_COUNTRIES = @(
+  'france','french','francais','francaise','spain','spanish','espagne','italy','italian','italie',
+  'germany','german','allemagne','united kingdom','britain','british','royaume uni','united states',
+  'etats unis','american','americain','americaine','canada','canadian','australia','australian',
+  'australie','china','chinese','chine','india','indian','inde','japan','japanese','japon','russia',
+  'russian','russie','ukraine','ukrainian','iran','iranian','israel','israeli','turkey','turkish',
+  'turquie','saudi arabia','arabie saoudite','qatar','uae','emirats arabes unis'
+)
+
+function Get-NewsWordCount([string]$Text) {
+  if ([string]::IsNullOrWhiteSpace($Text)) { return 0 }
+  return @([regex]::Matches($Text.Trim(), '\S+')).Count
+}
+
+function Get-NewsEditorialRejectReason([string]$Title, [string]$Summary) {
+  $headline = ConvertTo-CanonicalNewsText $Title
+  $text = ConvertTo-CanonicalNewsText ($Title + ' ' + $Summary)
+  if ((Get-NewsMatchCount $text $script:NEWS_JUNK 1) -gt 0) { return 'junk or gossip' }
+  if ((Get-NewsMatchCount $headline $script:NEWS_HARD_LOW_VALUE 1) -gt 0) { return 'opinion, roundup, or sponsored copy' }
+  $headlineYears = @([regex]::Matches($headline, '\b20\d{2}\b') | ForEach-Object { [int]$_.Value })
+  if ($headlineYears.Count -and
+      ($headline -match '\b(?:afcon|can|championship|cup|eliminatoires|games|qualifiers?|tournament)\b') -and
+      (($headlineYears | Measure-Object -Maximum).Maximum -le ((Get-Date).Year - 2))) {
+    return 'stale competition year in headline'
+  }
+  if ($headline -match '^(?:a )?call to\b|\bwhat\b.+\bcan (?:still )?teach us\b') { return 'call-to-action or retrospective column' }
+  if ($headline -match '\b(?:swipe|swipes|insult|insults|mocks|fool)\b|\bmourners? laughing\b|\bopened (?:his|her|their) file\b') {
+    return 'personality-driven political clickbait'
+  }
+  if ($headline -match '^(?:les )?piques?\b|\bpiques? de\b' -or
+      $Title -match '(?i)^[^:]{2,50}\s+to\s+[^:]{2,50}:\s*\W*(?:you|your)\b') {
+    return 'personality-driven political clickbait'
+  }
+  if ($headline -match '^\d+\s+(?:neighborhoods|neighbourhoods|places|things|ways|reasons|tips|best|top)\b') {
+    return 'listicle rather than a reported event'
+  }
+  if ($headline -match '\b(?:urges?|calls on|appeals to)\b.+\b(?:peace|patience|unity|tolerance)\b|\bpromises? to make\b.+\bproud\b') {
+    return 'ceremonial appeal or promise'
+  }
+  if ($headline -match '\bworkshop\b.*\bstrengthens?\b|\bunveils?\b.*\bwelcome cent(?:er|re)\b') {
+    return 'institutional promotion without a material event'
+  }
+  return ''
+}
 
 function ConvertTo-NewsText([string]$Text) {
   if (-not $Text) { return '' }
@@ -171,6 +228,7 @@ function Test-SameNewsEvent($LeftTitle, $LeftEvent, $RightTitle, $RightEvent) {
   # stronger event identity than four generic political words.
   if ($LeftEvent.ContainsKey('journalist') -and $LeftEvent.ContainsKey('detained') -and
       $RightEvent.ContainsKey('journalist') -and $RightEvent.ContainsKey('detained')) { return $true }
+  if ($LeftEvent.ContainsKey('mawlid') -and $RightEvent.ContainsKey('mawlid')) { return $true }
   $event = Get-NewsSimilarity $LeftEvent $RightEvent
   if ($event.Shared -ge 5 -and $event.Containment -ge 0.18) { return $true }
   if ($event.Shared -ge 4 -and $event.Containment -ge 0.25) { return $true }
@@ -218,6 +276,8 @@ function Get-CountryRelevance([string]$Title, [string]$Summary, [string[]]$Terms
   $ledeTargetLength = Get-NewsLongestMatchLength $ledeText $Terms
   $titleForeignLength = Get-NewsLongestMatchLength $titleText $ForeignTerms
   $ledeForeignLength = Get-NewsLongestMatchLength $ledeText $ForeignTerms
+  $titleExternalHits = Get-NewsMatchCount $titleText $script:NEWS_EXTERNAL_COUNTRIES 1
+  $ledeExternalHits = Get-NewsMatchCount $ledeText $script:NEWS_EXTERNAL_COUNTRIES 1
 
   if ($titleForeignLength -gt $titleTargetLength) {
     return [pscustomobject]@{ HardReject = $true; Score = -20.0; Match = 'foreign'; Reason = 'headline names another country' }
@@ -230,6 +290,12 @@ function Get-CountryRelevance([string]$Title, [string]$Summary, [string[]]$Terms
   }
   if ($ledeHits -gt 0) {
     return [pscustomobject]@{ HardReject = $false; Score = 2.5; Match = 'lede'; Reason = 'country named in opening' }
+  }
+  if ($titleExternalHits -gt 0 -or $ledeExternalHits -gt 0) {
+    if ($Scope -eq 'regional' -or $RequireMatch) {
+      return [pscustomobject]@{ HardReject = $true; Score = -20.0; Match = 'external'; Reason = 'foreign story without explicit country link' }
+    }
+    return [pscustomobject]@{ HardReject = $false; Score = -1.0; Match = 'external'; Reason = 'foreign location needs local corroboration' }
   }
   if ($Scope -eq 'regional' -or $RequireMatch) {
     return [pscustomobject]@{ HardReject = $true; Score = -20.0; Match = 'none'; Reason = 'no explicit country match' }
@@ -268,6 +334,7 @@ function Get-EditorialScore($Item, [int]$OutletCount, [datetime]$Now) {
     freshness      = 0.0
     publicImpact   = 0.0
     evidence       = 0.0
+    materiality    = 0.0
     penalties      = 0.0
   }
   $reasons = New-Object System.Collections.Generic.List[string]
@@ -307,11 +374,26 @@ function Get-EditorialScore($Item, [int]$OutletCount, [datetime]$Now) {
   elseif ($public -gt 0) { $reasons.Add('public-policy consequence') }
   elseif ($economic -gt 0) { $reasons.Add('economic consequence') }
 
-  $summaryLength = ([string]$Item.summary).Length
-  if ($summaryLength -ge 80) { $breakdown.evidence += 0.75 }
-  if ($summaryLength -ge 180) { $breakdown.evidence += 0.5 }
+  $summaryWords = Get-NewsWordCount ([string]$Item.summary)
+  if ($summaryWords -ge 45) { $breakdown.evidence += 0.75 }
+  if ($summaryWords -ge 90) { $breakdown.evidence += 0.5 }
   if (Test-SubstantiveFigure $Item.title $Item.summary) { $breakdown.evidence += 1.25; $reasons.Add('specific figure') }
-  if ($summaryLength -eq 0) { $breakdown.penalties -= 2.0; $reasons.Add('headline only') }
+  if ($summaryWords -eq 0) { $breakdown.penalties -= 2.0; $reasons.Add('headline only') }
+  elseif ($summaryWords -lt 25) { $breakdown.penalties -= 1.5; $reasons.Add('thin source evidence') }
+  elseif ($summaryWords -lt 45) { $breakdown.penalties -= 0.75; $reasons.Add('limited source evidence') }
+
+  $headlineText = ConvertTo-CanonicalNewsText $Item.title
+  $headlineActions = Get-NewsMatchCount $headlineText $script:NEWS_ACTION 2
+  if ($headlineActions) {
+    $breakdown.materiality = [Math]::Min($headlineActions, 2) * 1.25
+    $reasons.Add('material action in headline')
+  }
+  $speechOnly = (Get-NewsMatchCount $headlineText $script:NEWS_SPEECH 1) -gt 0 -or
+    (([string]$Item.title -match '["“”«»]') -and -not $headlineActions)
+  if ($speechOnly -and -not $headlineActions) {
+    $breakdown.penalties -= 2.5
+    $reasons.Add('speech or quote without a material action')
+  }
 
   $junk = Get-NewsMatchCount $text $script:NEWS_JUNK 1
   $low = Get-NewsMatchCount (ConvertTo-CanonicalNewsText $Item.title) $script:NEWS_LOW_VALUE 2
@@ -385,6 +467,18 @@ function Select-NewsCandidates([object[]]$Items, [int]$Limit, [int]$LiveSources)
     @{ Expression = { [double]$_.selectionScore }; Descending = $true },
     @{ Expression = { [double]$_.score }; Descending = $true },
     @{ Expression = { [string]$_.title }; Descending = $false })
+}
+
+function Test-NewsCountryLink([string]$CountryMatch, [int]$OutletCount) {
+  return ($CountryMatch -ne 'external' -or $OutletCount -ge 2)
+}
+
+function Select-NewsWriteableCandidates([object[]]$Items, [int]$Limit, [int]$MinEvidenceWords = 45) {
+  return @($Items | Sort-Object -Property `
+    @{ Expression = { if ([int]$_.evidenceWords -ge $MinEvidenceWords) { 1 } else { 0 } }; Descending = $true },
+    @{ Expression = { [double]$_.selectionScore }; Descending = $true },
+    @{ Expression = { [double]$_.score }; Descending = $true },
+    @{ Expression = { [string]$_.title }; Descending = $false } | Select-Object -First $Limit)
 }
 
 function Get-NewsItemId([string]$Url, [string]$Title, [string]$Summary) {

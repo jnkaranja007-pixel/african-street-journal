@@ -164,7 +164,7 @@ try {
 
   $thinFeed = [ordered]@{
     fetched = '2026-08-20T09:00:00Z'
-    byCountry = @{ xx = @{ country = 'Fixtureland'; items = @(1..4 | ForEach-Object { @{ title = "Candidate $_"; url = "https://example.com/$_" } }) } }
+    byCountry = @{ xx = @{ country = 'Fixtureland'; items = @(1..5 | ForEach-Object { @{ title = "Candidate $_"; summary = 'Too thin.'; url = "https://example.com/$_" } }) } }
   }
   [IO.File]::WriteAllText($feedFixture, ($thinFeed | ConvertTo-Json -Depth 8), $utf8)
   & powershell -NoProfile -ExecutionPolicy Bypass -File $writer -Only xx -InFile $feedFixture `
@@ -174,7 +174,7 @@ try {
   if ($thinExit -ne 1 -or $thinMetrics.apiCalls -ne 0 -or $thinMetrics.countriesSkippedBeforeModel -ne 1) {
     throw 'thin candidate desk was not skipped before the model call'
   }
-  Write-Host 'PASS four-candidate desk spends zero model calls'
+  Write-Host 'PASS five thin-evidence candidates spend zero model calls'
 } finally {
   foreach ($path in @($fixture, $feedFixture, $metricsFixture, $outFixture)) {
     if (Test-Path $path) { Remove-Item -LiteralPath $path -Force }

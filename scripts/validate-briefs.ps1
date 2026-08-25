@@ -6,7 +6,8 @@
   pushing broken data to the live journal overnight.
 .USAGE
   powershell -ExecutionPolicy Bypass -File scripts/validate-briefs.ps1
-  powershell -ExecutionPolicy Bypass -File scripts/validate-briefs.ps1 -MinCountries 30 -MinStoryPackages 5
+  powershell -ExecutionPolicy Bypass -File scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages 250 -MinFreshCountries 50
+  powershell -ExecutionPolicy Bypass -File scripts/validate-briefs.ps1 -RequiredFreshCountries dz,sn
 .NOTES
   Exit 0 = safe to publish. Exit 1 = do not publish.
 #>
@@ -14,6 +15,9 @@ param(
   [int]$MinCountries = 1,
   [int]$MinBriefs = 1,
   [int]$MinStoryPackages = 0,
+  [int]$MinFreshCountries = 0,
+  [int]$FreshStoriesPerCountry = 5,
+  [string[]]$RequiredFreshCountries = @(),
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
   [string]$BriefsFile = ''
@@ -50,11 +54,16 @@ if ($countries.Count -lt $MinCountries) { $problems.Add("only $($countries.Count
 
 $totalBriefs = 0
 $storyPackages = 0
+$freshCountries = 0
+$freshByCountry = @{}
+$generatedDay = if ([string]$obj.generated -match '^(\d{4}-\d{2}-\d{2})') { $Matches[1] } else { '' }
 $badShape = New-Object System.Collections.Generic.List[string]
 $badUrls = New-Object System.Collections.Generic.List[string]
 $storyIds = New-Object 'System.Collections.Generic.HashSet[string]'
 foreach ($c in $countries) {
   $list = @($c.Value)
+  $countryStoryPackages = 0
+  $freshByCountry[[string]$c.Name] = $false
   if ($list.Count -eq 0) { $badShape.Add("$($c.Name):empty"); continue }
   foreach ($b in $list) {
     $totalBriefs++
@@ -64,6 +73,7 @@ foreach ($c in $countries) {
     $hasParagraphs = $null -ne $b.PSObject.Properties['paragraphs']
     if ($hasParagraphs) {
       $storyPackages++
+      $countryStoryPackages++
       $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
       $bodyText = ($paragraphs -join ' ').Trim()
       $wordCount = if ($bodyText) { ([regex]::Matches($bodyText, "[\p{L}\p{N}]+(?:[''-][\p{L}\p{N}]+)*")).Count } else { 0 }
@@ -113,9 +123,36 @@ foreach ($c in $countries) {
       if ($s -and $s.url -and $s.url -notmatch '^https?://') { $badUrls.Add("$($c.Name):$($s.url)") }
     }
   }
+  $countryDate = ''
+  if ($obj.dates -and $obj.dates.PSObject.Properties[$c.Name]) {
+    $countryDate = [string]$obj.dates.PSObject.Properties[$c.Name].Value
+  }
+  $isFresh = $generatedDay -and $countryDate.StartsWith($generatedDay) -and $countryStoryPackages -ge $FreshStoriesPerCountry
+  $freshByCountry[[string]$c.Name] = [bool]$isFresh
+  if ($isFresh) {
+    $freshCountries++
+  }
 }
+$requiredCodes = @(
+  $RequiredFreshCountries |
+    ForEach-Object { $_ -split ',' } |
+    ForEach-Object { $_.Trim().ToLowerInvariant() } |
+    Where-Object { $_ } |
+    Select-Object -Unique
+)
+$missingRequired = @(
+  $requiredCodes | Where-Object {
+    -not $freshByCountry.ContainsKey($_) -or -not $freshByCountry[$_]
+  }
+)
 if ($totalBriefs -lt $MinBriefs) { $problems.Add("only $totalBriefs briefs total (need >= $MinBriefs)") }
 if ($storyPackages -lt $MinStoryPackages) { $problems.Add("only $storyPackages full story packages (need >= $MinStoryPackages)") }
+if ($freshCountries -lt $MinFreshCountries) {
+  $problems.Add("only $freshCountries countries have $FreshStoriesPerCountry fresh stories dated $generatedDay (need >= $MinFreshCountries)")
+}
+if ($missingRequired.Count) {
+  $problems.Add("requested countries are not fresh complete desks: $($missingRequired -join ', ')")
+}
 if ($badShape.Count) { $problems.Add("$($badShape.Count) malformed briefs: $(($badShape | Select-Object -First 3) -join '; ')") }
 if ($badUrls.Count)  { $problems.Add("$($badUrls.Count) non-http source URLs: $(($badUrls | Select-Object -First 3) -join '; ')") }
 
@@ -125,5 +162,5 @@ if ($problems.Count) {
   exit 1
 }
 
-Write-Host "[validate] OK - $totalBriefs entries ($storyPackages full stories) across $($countries.Count) countries, generated $($obj.generated)" -ForegroundColor Green
+Write-Host "[validate] OK - $totalBriefs entries ($storyPackages full stories) across $($countries.Count) countries; $freshCountries fresh desks, generated $($obj.generated)" -ForegroundColor Green
 exit 0

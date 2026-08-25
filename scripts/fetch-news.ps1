@@ -41,14 +41,16 @@
 param(
   [string[]]$Only,
   [int]$Days = 2,
-  # Six ranked candidates for five briefs. Relevance and event uniqueness are hard
+  # Six ranked candidates for five stories. Relevance and event uniqueness are hard
   # gates before selection, so the writer gets a tight desk rather than a noisy inbox.
   [int]$PerCountry = 6,
   [double]$MinCandidateScore = 6.0,
   [int]$DelayMs = 150,
-  [int]$TimeoutSec = 20,
-  [int]$ArticleTimeoutSec = 12,
+  [int]$TimeoutSec = 12,
+  [int]$ArticleTimeoutSec = 8,
+  [int]$ArticleHostFailureLimit = 2,
   [int]$MaxArticleEvidenceChars = 5200,
+  [int]$MinEvidenceWords = 45,
   [switch]$SkipArticleEnrichment
 )
 
@@ -354,6 +356,7 @@ if ($Only) {
 
 $cutoff = (Get-Date).ToUniversalTime().AddDays(-$Days)
 $now    = (Get-Date).ToUniversalTime()
+$runTimer = [Diagnostics.Stopwatch]::StartNew()
 $result = [ordered]@{}
 $totalItems = 0
 $deadFeeds  = New-Object System.Collections.Generic.List[string]
@@ -361,6 +364,11 @@ $articleCache = @{}
 $articlePagesAttempted = 0
 $articlePagesEnriched = 0
 $articlePagesFailed = 0
+$articlePagesSuppressed = 0
+$evidenceReadyTotal = 0
+$articleHostFailures = @{}
+$editorialRejectedTotal = 0
+$countryLinkRejectedTotal = 0
 
 foreach ($code in $codes) {
   $entry = $registry.$code
@@ -385,6 +393,7 @@ foreach ($code in $codes) {
 
   $pool = New-Object System.Collections.Generic.List[object]
   $liveSources = 0
+  $editorialRejected = 0
   foreach ($s in $usable) {
     try {
       $items = Read-Feed $s.feed
@@ -392,6 +401,8 @@ foreach ($code in $codes) {
       # here is not a source for this country, and the diversity cap divides by it.
       $kept = 0
       foreach ($it in $items) {
+        $editorialReject = Get-NewsEditorialRejectReason $it.title $it.summary
+        if ($editorialReject) { $editorialRejected++; $editorialRejectedTotal++; continue }
         # Regional sources and outlets explicitly tagged requireMatch must name the
         # country in the headline or opening. Domestic outlets may use local shorthand,
         # but implicit relevance receives only a small score and cannot dominate.
@@ -479,6 +490,10 @@ foreach ($code in $codes) {
                                                     @{ Expression = { $_.Item.published }; Descending = $true })[0]
     $best = $choice.Item
     $meter = $choice.Meter
+    if (-not (Test-NewsCountryLink ([string]$best.countryMatch) $outlets.Count)) {
+      $countryLinkRejectedTotal++
+      continue
+    }
 
     $others = New-Object System.Collections.Generic.List[object]
     $seenOutlet = @{}
@@ -525,7 +540,10 @@ foreach ($code in $codes) {
   # two candidates judged to be the same event. A relaxed pass fills thin countries
   # without relaxing event uniqueness.
   $eligible = @($scored.ToArray() | Where-Object { $_.score -ge $MinCandidateScore })
-  $selected = @(Select-NewsCandidates $eligible $PerCountry $liveSources)
+  # Keep two no-model-cost reserves until evidence enrichment has run. The published
+  # assignment slate remains six, but a thin feed item cannot crowd out a writeable one.
+  $shortlistLimit = $PerCountry + 2
+  $selected = @(Select-NewsCandidates $eligible $shortlistLimit $liveSources)
 
   # Ranking stays cheap and feed-based. Fetch fuller article text only for the finalists,
   # and only when the feed did not already provide enough evidence to write from safely.
@@ -537,23 +555,42 @@ foreach ($code in $codes) {
       if ($articleCache.ContainsKey($urlKey)) {
         $articleEvidence = [string]$articleCache[$urlKey]
       } else {
-        $articlePagesAttempted++
-        try {
-          $articleEvidence = [string](Get-ArticleEvidence $urlKey)
-          $articleCache[$urlKey] = $articleEvidence
-          if (-not $articleEvidence) { $articlePagesFailed++ }
-        } catch {
+        $hostKey = ''
+        try { $hostKey = ([Uri]$urlKey).DnsSafeHost.ToLowerInvariant() } catch { }
+        $hostFailures = if ($hostKey -and $articleHostFailures.ContainsKey($hostKey)) { [int]$articleHostFailures[$hostKey] } else { 0 }
+        if ($ArticleHostFailureLimit -gt 0 -and $hostKey -and $hostFailures -ge $ArticleHostFailureLimit) {
           $articleCache[$urlKey] = ''
-          $articlePagesFailed++
+          $articlePagesSuppressed++
+        } else {
+          $articlePagesAttempted++
+          try {
+            $articleEvidence = [string](Get-ArticleEvidence $urlKey)
+            $articleCache[$urlKey] = $articleEvidence
+            if ($articleEvidence) {
+              if ($hostKey) { $articleHostFailures[$hostKey] = 0 }
+            } else {
+              $articlePagesFailed++
+              if ($hostKey) { $articleHostFailures[$hostKey] = $hostFailures + 1 }
+            }
+          } catch {
+            $articleCache[$urlKey] = ''
+            $articlePagesFailed++
+            if ($hostKey) { $articleHostFailures[$hostKey] = $hostFailures + 1 }
+          }
+          Start-Sleep -Milliseconds ([Math]::Min(100, $DelayMs))
         }
-        Start-Sleep -Milliseconds ([Math]::Min(100, $DelayMs))
       }
     }
     $articleWords = Get-TextWordCount $articleEvidence
     if ($articleWords -lt 70 -or $articleWords -lt $feedWords) { $articleEvidence = '' }
     if ($articleEvidence) { $articlePagesEnriched++ }
     $candidate | Add-Member -NotePropertyName articleEvidence -NotePropertyValue $articleEvidence -Force
+    $evidenceWords = [Math]::Max($feedWords, (Get-TextWordCount $articleEvidence))
+    $candidate | Add-Member -NotePropertyName evidenceWords -NotePropertyValue $evidenceWords -Force
   }
+
+  $selected = @(Select-NewsWriteableCandidates $selected $PerCountry $MinEvidenceWords)
+  $evidenceReadyTotal += @($selected | Where-Object { [int]$_.evidenceWords -ge $MinEvidenceWords }).Count
 
   $ranked = @($selected | ForEach-Object {
     [pscustomobject][ordered]@{
@@ -577,6 +614,7 @@ foreach ($code in $codes) {
       eventKey          = $_.eventKey
       itemId            = $_.itemId
       articleEvidence   = $_.articleEvidence
+      evidenceWords     = $_.evidenceWords
     }
   })
 
@@ -584,8 +622,8 @@ foreach ($code in $codes) {
   # three healthy feeds and there was no way to tell whether the feeds, the freshness
   # window, the clustering or the selection ate them without adding prints by hand.
   if ($ranked.Count -lt 3) {
-    Write-Host ("      {0}: pool={1} fresh={2} clusters={3} eligible={4} selected={5}" -f `
-                $code, $pool.Count, $fresh.Count, $clusters.Count, $eligible.Count, $ranked.Count) -ForegroundColor DarkGray
+    Write-Host ("      {0}: pool={1} rejected={2} fresh={3} clusters={4} eligible={5} selected={6}" -f `
+                $code, $pool.Count, $editorialRejected, $fresh.Count, $clusters.Count, $eligible.Count, $ranked.Count) -ForegroundColor DarkGray
   }
   if (-not $ranked.Count) {
     Write-Host ("  {0}  {1,-26} nothing usable after clustering" -f $code, $name) -ForegroundColor DarkYellow
@@ -607,6 +645,17 @@ if ($result.Count -eq 0) {
 $payload = [ordered]@{
   fetched   = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
   days      = $Days
+  stats     = [ordered]@{
+    durationSeconds = [Math]::Round($runTimer.Elapsed.TotalSeconds, 1)
+    editorialRejected = $editorialRejectedTotal
+    countryLinkRejected = $countryLinkRejectedTotal
+    articlePagesAttempted = $articlePagesAttempted
+    articlePagesEnriched = $articlePagesEnriched
+    articlePagesFailed = $articlePagesFailed
+    articlePagesSuppressed = $articlePagesSuppressed
+    evidenceReady = $evidenceReadyTotal
+    deadFeeds = $deadFeeds.Count
+  }
   byCountry = $result
 }
 [IO.File]::WriteAllText($outPath, ($payload | ConvertTo-Json -Depth 8), (New-Object Text.UTF8Encoding($false)))
@@ -614,7 +663,11 @@ $payload = [ordered]@{
 Write-Host ''
 Write-Host "[fetch] $totalItems stories across $($result.Count) countries -> data/feed-items.json" -ForegroundColor Green
 if (-not $SkipArticleEnrichment) {
-  Write-Host "[fetch] article evidence: $articlePagesEnriched assignment(s) enriched, $articlePagesFailed fetch fallback(s), $articlePagesAttempted page request(s)" -ForegroundColor DarkGray
+  Write-Host "[fetch] article evidence: $articlePagesEnriched enriched, $articlePagesFailed fallback(s), $articlePagesAttempted requested, $articlePagesSuppressed suppressed" -ForegroundColor DarkGray
+}
+Write-Host "[fetch] editorial gate rejected $editorialRejectedTotal low-value item(s); runtime $([Math]::Round($runTimer.Elapsed.TotalSeconds, 1))s" -ForegroundColor DarkGray
+if ($countryLinkRejectedTotal) {
+  Write-Host "[fetch] country-link gate rejected $countryLinkRejectedTotal single-source foreign item(s)" -ForegroundColor DarkGray
 }
 if ($deadFeeds.Count) {
   Write-Host "[fetch] $($deadFeeds.Count) feed(s) failed this run: $(($deadFeeds | Select-Object -First 10) -join ', ')" -ForegroundColor DarkYellow

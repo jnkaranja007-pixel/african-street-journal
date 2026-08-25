@@ -1,7 +1,7 @@
 {
   "name": "The African Street Journal",
   "short_name": "ASJ",
-  "description": "Daily briefs, market heat, farm signals and diaspora tools for all 55 African countries.",
+  "description": "Original daily stories, market context, farm signals and diaspora tools for all 55 African countries.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

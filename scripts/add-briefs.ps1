@@ -18,7 +18,8 @@
   the daily Action uses.
 #>
 param(
-  [string]$InFile = 'data/manual-briefs.json'
+  [string]$InFile = 'data/manual-briefs.json',
+  [int]$ArchiveDays = 30
 )
 
 $ErrorActionPreference = 'Stop'
@@ -48,7 +49,7 @@ $stories = 0
 foreach ($p in $incoming.PSObject.Properties) {
   $code = $p.Name
   $list = @($p.Value | Where-Object { $_.headline -and $_.body })
-  if (-not $list.Count) { Write-Host "  skip $code (no usable briefs)" -ForegroundColor DarkYellow; continue }
+  if (-not $list.Count) { Write-Host "  skip $code (no usable stories)" -ForegroundColor DarkYellow; continue }
   foreach ($b in $list) {
     foreach ($s in @($b.sources)) {
       if ($s -and $s.url -and $s.url -notmatch '^https?://') {
@@ -61,7 +62,7 @@ foreach ($p in $incoming.PSObject.Properties) {
   $dates[$code] = $generated
   $added++
   $stories += $list.Count
-  Write-Host ("  {0}  {1} briefs" -f $code, $list.Count) -ForegroundColor Green
+  Write-Host ("  {0}  {1} stories" -f $code, $list.Count) -ForegroundColor Green
 }
 
 if ($added -eq 0) { Write-Host '[add] nothing to merge' -ForegroundColor Red; exit 1 }
@@ -94,6 +95,22 @@ $archPayload = "// The African Street Journal - archived edition $day (auto-gene
                "window.__ASJ_ARCHIVE_DAY = { date: '$day', generated: '$generated', byCountry: $(ConvertTo-JsBlock $byCountry), markets: $(ConvertTo-JsBlock $markets) };`r`n"
 [IO.File]::WriteAllText((Join-Path $archiveDir "$day.js"), $archPayload, (New-Object Text.UTF8Encoding($false)))
 
+# Keep the edition picker and repository lean. Retention is inclusive of today and
+# only exact YYYY-MM-DD.js files inside data/archive are eligible for deletion.
+if ($ArchiveDays -gt 0) {
+  $editionDay = [DateTime]::ParseExact($day, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
+  $oldestKept = $editionDay.AddDays(-($ArchiveDays - 1))
+  $archiveRoot = [IO.Path]::GetFullPath($archiveDir).TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+  foreach ($file in @(Get-ChildItem $archiveDir -File -Filter '*.js')) {
+    if ($file.BaseName -notmatch '^\d{4}-\d{2}-\d{2}$') { continue }
+    $fileDay = [DateTime]::ParseExact($file.BaseName, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
+    $fullPath = [IO.Path]::GetFullPath($file.FullName)
+    if ($fileDay -lt $oldestKept -and $fullPath.StartsWith($archiveRoot, [StringComparison]::OrdinalIgnoreCase)) {
+      Remove-Item -LiteralPath $fullPath -Force
+    }
+  }
+}
+
 # Rebuild the index from what is actually on disk rather than appending, so a deleted
 # edition cannot leave a dangling entry the picker would 404 on.
 $editions = @(Get-ChildItem $archiveDir -Filter '*.js' |
@@ -103,5 +120,5 @@ $indexPayload = "window.UNITED_AFRICA_ARCHIVE_INDEX = $($editions | ConvertTo-Js
 if ($editions.Count -eq 1) { $indexPayload = "window.UNITED_AFRICA_ARCHIVE_INDEX = [`"$($editions[0])`"];`r`n" }
 [IO.File]::WriteAllText((Join-Path $archiveDir 'index.js'), $indexPayload, (New-Object Text.UTF8Encoding($false)))
 
-Write-Host "[add] merged $stories briefs across $added countries; $($byCountry.Count) countries now in data/briefs.js" -ForegroundColor Green
+Write-Host "[add] merged $stories stories across $added countries; $($byCountry.Count) countries now in data/briefs.js" -ForegroundColor Green
 Write-Host "[add] archived edition $day ($($editions.Count) editions on file)" -ForegroundColor Green

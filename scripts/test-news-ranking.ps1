@@ -62,6 +62,17 @@ $equatorial = Get-CountryRelevance `
   @('Equatorial Guinea','Malabo','Equatoguinean') 'regional' $true @('Guinea')
 Assert-Desk 'longest country phrase wins overlapping names' (-not $equatorial.HardReject)
 
+$franceOnSenegalDesk = Get-CountryRelevance `
+  'France: Saint-Denis mayor faces financial investigation' `
+  'French prosecutors opened the inquiry on Monday' `
+  @('Senegal','Senegalese','Dakar') '' $false @()
+Assert-Desk 'external story is marked for corroboration on a domestic feed' `
+  (-not $franceOnSenegalDesk.HardReject -and $franceOnSenegalDesk.Match -eq 'external')
+Assert-Desk 'single-source external story fails the country-link gate' `
+  (-not (Test-NewsCountryLink $franceOnSenegalDesk.Match 1))
+Assert-Desk 'corroborated external story can serve the diaspora lens' `
+  (Test-NewsCountryLink $franceOnSenegalDesk.Match 2)
+
 Write-Host '[ranking-test] event identity' -ForegroundColor Cyan
 $ignore = @('Togo','Togolese','Lome')
 $leftTitle = Get-NewsSignature 'Arrestation de deux journalistes francais au Togo' $ignore
@@ -82,12 +93,49 @@ Assert-Desk 'calendar date is not a substantive figure' `
 Assert-Desk 'currency amount is a substantive figure' `
   (Test-SubstantiveFigure 'Bank raises $500 million' 'The deal closed on 20 August 2026.')
 
+Assert-Desk 'op-ed is rejected before scoring' `
+  ((Get-NewsEditorialRejectReason 'Op-Ed | Ethiopia scholarship scheme' 'A columnist argues for expansion.') -ne '')
+Assert-Desk 'roundup package is rejected before scoring' `
+  ((Get-NewsEditorialRejectReason 'THE WEEKEND WRAP: politics, AI and sport' 'This edition covers three stories.') -ne '')
+Assert-Desk 'political insult clickbait is rejected before scoring' `
+  ((Get-NewsEditorialRejectReason 'Minister takes fresh swipe and calls rival a fool' 'Mourners laughed at the remarks.') -ne '')
+Assert-Desk 'material refinery event survives editorial rejection' `
+  ((Get-NewsEditorialRejectReason 'Niger approves $1.9 billion refinery' 'The project adds processing capacity.') -eq '')
+Assert-Desk 'listicle is rejected before scoring' `
+  ((Get-NewsEditorialRejectReason '5 neighborhoods where house rent is affordable' 'A guide to local rents.') -ne '')
+Assert-Desk 'ceremonial appeal is rejected before scoring' `
+  ((Get-NewsEditorialRejectReason 'Governor urges citizens to embrace peace and patience' 'The message marked a holiday.') -ne '')
+Assert-Desk 'personality quote is rejected before scoring' `
+  ((Get-NewsEditorialRejectReason "Gachagua to Duale: You don't own pastoralists" 'The politicians traded remarks.') -ne '')
+$staleCompetitionYear = (Get-Date).Year - 3
+Assert-Desk 'stale competition year is rejected before scoring' `
+  ((Get-NewsEditorialRejectReason "AFCON qualifiers ${staleCompetitionYear}: Senegal learns its opponent" 'The draw was republished.') -ne '')
+Assert-Desk 'crash headline is classified as news' `
+  ((Get-NewsTopicHint 'Two dead, 17 injured in microbus rollover' '') -eq 'News')
+Assert-Desk 'mayoral headline is classified as politics' `
+  ((Get-NewsTopicHint 'ANC names Johannesburg mayoral candidate' '') -eq 'Politics')
+Assert-Desk 'aluminium project is classified as business' `
+  ((Get-NewsTopicHint 'Egypt secures $2 billion aluminium plant' '') -eq 'Business')
+Assert-Desk 'Mawlid aliases collapse into one event family' `
+  (Test-SameNewsEvent (Get-NewsSignature 'Kaolack Gamou preparations begin' @()) (Get-NewsSignature 'Kaolack Gamou preparations begin' @()) `
+                      (Get-NewsSignature 'Mawlid pilgrims travel to Tivaouane' @()) (Get-NewsSignature 'Mawlid pilgrims travel to Tivaouane' @()))
+
 $now = (Get-Date).ToUniversalTime()
 $hard = New-TestItem 'Niger approves $1.9 billion refinery project' 'The investment will add fuel-processing capacity and construction jobs.' 1
 $filler = New-TestItem 'Opinion: minister gives keynote address at annual conference' 'The speech reviewed government priorities for the year.' 1
 $hardScore = Get-EditorialScore $hard 2 $now
 $fillerScore = Get-EditorialScore $filler 1 $now
 Assert-Desk 'corroborated material event outranks ceremonial opinion' ($hardScore.Score -gt ($fillerScore.Score + 8))
+
+$actionStory = New-TestItem 'Transit agency mobilises 300 buses for pilgrims' 'The service will run more than 500 trips during the festival.' 2
+$quoteStory = New-TestItem 'Official says the country must change its paradigm' 'The official spoke during the same festival.' 2
+Assert-Desk 'material action outranks an unsupported quote package' `
+  ((Get-EditorialScore $actionStory 2 $now).Score -gt (Get-EditorialScore $quoteStory 2 $now).Score)
+
+$thinEvidence = New-TestItem 'Transit authority changes regional bus routes' 'Routes changed today.' 2
+$fullEvidence = New-TestItem 'Transit authority changes regional rail routes' ('The authority published a detailed operating plan for commuters, stations, fares, replacement buses, accessibility, and the dates when each regional service changes. ' * 3) 2
+Assert-Desk 'writeable source evidence outranks a thin equivalent' `
+  ((Get-EditorialScore $fullEvidence 1 $now).Score -gt (Get-EditorialScore $thinEvidence 1 $now).Score)
 
 $edition = New-TestItem 'Eritrea Haddas 20 August 2026' 'Eritrea Haddas 20 August 2026' 1
 $editionScore = Get-EditorialScore $edition 1 $now
@@ -114,6 +162,14 @@ $selection = Select-NewsCandidates @(
 ) 4 2
 Assert-Desk 'relaxed-pass candidate is re-sorted by final selection score' `
   ($selection[2].title -eq 'Delta university intake expands' -and $selection[3].title -eq 'Gamma clinic vaccination opens')
+
+$writeable = Select-NewsWriteableCandidates @(
+  [pscustomobject]@{ title='Thin high score'; evidenceWords=12; selectionScore=20; score=20 },
+  [pscustomobject]@{ title='Ready middle score'; evidenceWords=80; selectionScore=14; score=14 },
+  [pscustomobject]@{ title='Ready lower score'; evidenceWords=55; selectionScore=12; score=12 }
+) 2 45
+Assert-Desk 'writeable candidates fill assignment slots before thin feeds' `
+  ($writeable.Count -eq 2 -and $writeable[0].title -eq 'Ready middle score' -and $writeable[1].title -eq 'Ready lower score')
 
 Write-Host ''
 if ($failed) {

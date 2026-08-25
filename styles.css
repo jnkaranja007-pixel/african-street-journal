@@ -1,7 +1,7 @@
 *,*::before,*::after{box-sizing:border-box}
 :root{
   --bg:#131313;--surface:#1a1a1a;--surface-raised:#202020;--rule:#2a2a2a;
-  --green:#4caf50;--green-dim:#2e7d32;--green-bright:#66bb6a;--front-green:#3d8b40;
+  --green:#4caf50;--green-dim:#2e7d32;--green-bright:#66bb6a;--front-green:#439447;
   --text:#e8e6e3;--text-muted:#a8a39d;--text-dim:#8a847b;--paper:#d8d3c8;--amber:#c9a44a;
   --serif:'Playfair Display',Georgia,'Times New Roman',serif;
   --mono:ui-monospace,'SF Mono','Cascadia Code','Consolas',monospace;
@@ -31,7 +31,7 @@ main{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;align-ite
 .tagline{font:italic 400 clamp(14px,1.55vw,18px)/1.2 var(--serif);color:var(--text-muted);margin:clamp(6px,0.9svh,10px) 0 0;letter-spacing:0.02em}
 
 .pop-counter{text-align:center;margin:clamp(4px,0.8svh,9px) 0 clamp(1px,0.35svh,4px);position:relative;padding:0 18px}
-.pop-counter::before,.pop-counter::after{content:"";position:absolute;top:50%;width:42px;height:1px;background:linear-gradient(90deg,transparent,rgba(61,139,64,.55))}
+.pop-counter::before,.pop-counter::after{content:"";position:absolute;top:50%;width:42px;height:1px;background:linear-gradient(90deg,transparent,rgba(67,148,71,.55))}
 .pop-counter::before{right:100%;transform:translateY(-50%)}
 .pop-counter::after{left:100%;transform:translateY(-50%) scaleX(-1)}
 .pop-number{font:700 clamp(34px,4.9vw,56px)/0.98 var(--serif);color:var(--front-green);letter-spacing:0.02em;font-variant-numeric:tabular-nums}
@@ -115,7 +115,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-econ-key{font:400 9px/1 var(--mono);letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase}
 .cv-econ-key::before{content:'"';color:var(--green);opacity:0.5}
 .cv-econ-key::after{content:'"';color:var(--green);opacity:0.5}
-.cv-econ-val{font:700 23px/1.1 var(--mono);color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-0.02em;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-econ-val{font:700 23px/1.1 var(--mono);color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:0;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cv-econ-val.up{color:var(--green-bright)}
 .cv-econ-val.down{color:#e0a35a}
 .cv-econ-sub{font:400 8px/1.2 var(--mono);letter-spacing:0.14em;color:rgba(232,230,227,0.25);text-transform:uppercase;margin-top:4px}
@@ -169,7 +169,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-identity::before{content:"COUNTRY FILE";position:absolute;right:172px;bottom:-7px;background:var(--bg);padding:0 8px;font:700 8px/1 var(--mono);letter-spacing:.18em;color:rgba(232,230,227,.26);text-transform:uppercase}
 .cv-id-main{min-width:0}
 .cv-region{font:11px/1 var(--mono);letter-spacing:0.2em;color:var(--green);text-transform:uppercase;margin-bottom:6px}
-.cv-name{margin:0 0 6px;font:700 clamp(30px,4.6vw,56px)/0.95 var(--serif);color:var(--text);letter-spacing:-0.01em}
+.cv-name{margin:0 0 6px;font:700 clamp(30px,4.6vw,56px)/0.95 var(--serif);color:var(--text);letter-spacing:0}
 .cv-id-meta{display:flex;flex-wrap:nowrap;align-items:center;gap:9px clamp(9px,1.1vw,16px);font:clamp(11px,.86vw,12px)/1 var(--mono);letter-spacing:0.08em;color:var(--text-muted);text-transform:uppercase;max-width:100%;white-space:nowrap;overflow:hidden}
 .cv-id-meta > span{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto}
 .cv-id-meta b{color:var(--text);font-weight:600;letter-spacing:0.1em}
@@ -233,13 +233,13 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-dia-rate{padding:18px 4px 16px;border-bottom:1px solid rgba(232,230,227,0.06)}
 .cv-dia-rate-key{font:400 9px/1 var(--mono);letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted)}
 .cv-dia-rate-key::before{content:'"';color:var(--green);opacity:0.5}.cv-dia-rate-key::after{content:'"';color:var(--green);opacity:0.5}
-.cv-dia-rate-val{font:700 40px/1 var(--mono);letter-spacing:-0.02em;color:var(--green-bright);margin-top:10px}
+.cv-dia-rate-val{font:700 40px/1 var(--mono);letter-spacing:0;color:var(--green-bright);margin-top:10px}
 .cv-dia-rate-val span{font-size:18px;color:var(--text-muted);letter-spacing:0.04em}
 .cv-dia-rate-sub{margin-top:8px;font:400 9px/1.3 var(--mono);letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,230,227,0.34)}
 .cv-dia-facts{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
 .cv-dia-fact{padding:16px 18px;border-bottom:1px solid rgba(232,230,227,0.06)}
 .cv-dia-fact:first-child{border-right:1px solid rgba(232,230,227,0.06)}
-.cv-dia-fact b{display:block;font:700 22px/1 var(--mono);letter-spacing:-0.01em;color:var(--text)}
+.cv-dia-fact b{display:block;font:700 22px/1 var(--mono);letter-spacing:0;color:var(--text)}
 .cv-dia-fact span{display:block;margin-top:6px;font:400 8px/1.3 var(--mono);letter-spacing:0.14em;text-transform:uppercase;color:rgba(232,230,227,0.3)}
 .cv-dia-note{padding:14px 2px 0;font:400 12px/1.55 var(--sans);color:var(--text-dim);max-width:54ch}
 .cv-dia-note a{color:var(--green-bright);text-decoration:none}
@@ -259,10 +259,10 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-brief-head .t b{color:var(--green-bright)}
 .cv-brief-head .m{font:500 11px/1 var(--sans);letter-spacing:0;color:var(--text-muted)}
 .cv-news-row{position:relative;border-bottom:1px solid rgba(232,230,227,.08);background:transparent}
-.cv-news-row.is-open{background:rgba(61,139,64,.035);box-shadow:inset 2px 0 0 var(--front-green)}
+.cv-news-row.is-open{background:rgba(67,148,71,.035);box-shadow:inset 2px 0 0 var(--front-green)}
 .cv-news-summary{width:100%;border:0;background:transparent;color:inherit;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 16px;cursor:pointer;text-align:left}
-.cv-news-summary:hover{background:rgba(61,139,64,.04)}
-.cv-news-summary:focus-visible{background:rgba(61,139,64,.04);box-shadow:inset 0 0 0 1px rgba(61,139,64,.55);outline:none}
+.cv-news-summary:hover{background:rgba(67,148,71,.04)}
+.cv-news-summary:focus-visible{background:rgba(67,148,71,.04);box-shadow:inset 0 0 0 1px rgba(67,148,71,.55);outline:none}
 .cv-brief-rank{font:700 10px/1 var(--mono);letter-spacing:.06em;color:var(--text-dim)}
 .cv-news-summary-main{min-width:0}
 .cv-news-summary-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;font:700 10px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
@@ -272,7 +272,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-news-lens-fit{color:var(--green-bright);white-space:nowrap}
 .cv-news-read-state{color:var(--text-dim);white-space:nowrap}
 .cv-news-row.is-read .cv-brief-title{color:var(--text-muted)}
-.cv-brief-title{font:600 clamp(17px,1.55vw,21px)/1.2 var(--serif);color:var(--text);letter-spacing:0;margin:0}
+.cv-brief-title{font:700 clamp(17px,1.55vw,21px)/1.2 var(--serif);color:var(--text);letter-spacing:0;margin:0}
 .cv-brief-dek{margin:6px 0 0;font:400 13px/1.45 var(--sans);letter-spacing:0;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .cv-news-toggle{width:32px;height:32px;display:grid;place-items:center;border-left:1px solid rgba(232,230,227,.14);color:var(--front-green)}
 .cv-news-toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform 180ms ease}
@@ -356,13 +356,13 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-signal-copy{font:400 12px/1.5 var(--sans);color:rgba(232,230,227,.72);max-width:60ch;margin:0}
 .cv-signal-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:11px;border-top:1px solid rgba(232,230,227,.08);font:700 9px/1.3 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:rgba(232,230,227,.42)}
 .cv-signal-footer>span{min-width:0;overflow-wrap:anywhere}
-.cv-signal-action{flex:0 0 auto;color:var(--green-bright);text-decoration:none;white-space:nowrap}
+.cv-signal-action{flex:0 0 auto;min-height:44px;display:inline-flex;align-items:center;color:var(--green-bright);text-decoration:none;white-space:nowrap}
 .cv-signal-action:hover,.cv-signal-action:focus-visible{color:var(--text);text-decoration:underline;outline:none}
 .cv-signal-empty{height:100%;min-height:220px;display:grid;place-content:center;text-align:center;color:rgba(232,230,227,.38);font:400 13px/1.5 var(--serif);font-style:italic}
 
 /* Agriculture profile card — Abloh */
 .cv-ag{padding:4px 0 0;display:flex;flex-direction:column;gap:14px}
-.cv-ag-type{font:700 22px/1.1 var(--serif);color:var(--text);letter-spacing:-0.01em}
+.cv-ag-type{font:700 22px/1.1 var(--serif);color:var(--text);letter-spacing:0}
 .cv-ag-type em{font-style:italic;color:var(--green-bright);font-weight:400}
 .cv-ag-bar{display:flex;height:3px;overflow:hidden;background:rgba(255,255,255,0.04)}
 .cv-ag-bar div{height:100%;transition:width 400ms ease}
@@ -387,7 +387,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-farm-key{font:400 9px/1 var(--mono);letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase}
 .cv-farm-key::before{content:'"';color:var(--green);opacity:0.4}
 .cv-farm-key::after{content:'"';color:var(--green);opacity:0.4}
-.cv-farm-val{margin-top:8px;font:700 28px/1.05 var(--mono);letter-spacing:-0.02em;color:var(--text);font-variant-numeric:tabular-nums}
+.cv-farm-val{margin-top:8px;font:700 28px/1.05 var(--mono);letter-spacing:0;color:var(--text);font-variant-numeric:tabular-nums}
 .cv-farm-val.green{color:var(--green-bright)}
 .cv-farm-sub{margin-top:6px;font:400 8px/1.35 var(--mono);letter-spacing:0.12em;color:rgba(232,230,227,0.22);text-transform:uppercase}
 .cv-star{flex:none;align-self:flex-start;width:36px;height:36px;margin:6px 14px 0 0;background:none;border:1px solid rgba(232,230,227,0.16);color:var(--text-dim);font-size:17px;line-height:1;cursor:pointer;border-radius:0;transition:all 150ms;padding:0}
@@ -429,13 +429,15 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .yd-signup-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
 .yd-signup-copy b{font:800 9px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--green-bright)}
 .yd-signup-copy span,.yd-signup-status{font:500 11px/1.25 var(--sans);letter-spacing:0;text-transform:none;color:var(--text-muted)}
-.yd-signup input,.yd-signup select{min-width:0;height:40px;border:1px solid rgba(232,230,227,.14);background:rgba(255,255,255,.024);color:var(--text);border-radius:0;padding:0 11px;font:600 13px/1 var(--sans)}
+.yd-signup input,.yd-signup select{min-width:0;height:44px;border:1px solid rgba(232,230,227,.14);background:rgba(255,255,255,.024);color:var(--text);border-radius:0;padding:0 11px;font:600 13px/1 var(--sans)}
 .yd-signup select{font:700 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);color-scheme:dark}
 .yd-signup input:focus,.yd-signup select:focus{border-color:rgba(102,187,106,.75);outline:none;background:rgba(76,175,80,.045)}
-.yd-signup button{height:40px;min-width:64px;border:1px solid rgba(76,175,80,.46);background:rgba(76,175,80,.09);color:var(--green-bright);font:800 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.yd-signup button{height:44px;min-width:64px;border:1px solid rgba(76,175,80,.46);background:rgba(76,175,80,.09);color:var(--green-bright);font:800 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 .yd-signup button:hover,.yd-signup button:focus-visible{border-color:var(--green-bright);background:rgba(76,175,80,.16);outline:none}
 .yd-signup button:disabled{opacity:.55;cursor:wait}
 .yd-signup-status{grid-column:2/-1;margin:0;min-height:14px;color:rgba(232,230,227,.42)}
+.yd-signup-offline{grid-template-columns:minmax(150px,1fr) minmax(220px,2fr)}
+.yd-signup-offline .yd-signup-status{grid-column:2;margin:0}
 .cv-dia-calc{display:flex;align-items:baseline;gap:9px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(232,230,227,0.08);font:700 10px/1 var(--mono);letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);flex-wrap:wrap}
 .cv-dia-calc input{width:92px;background:rgba(255,255,255,0.03);border:1px solid rgba(232,230,227,0.2);color:var(--text);font:700 15px/1 var(--mono);padding:7px 8px;border-radius:0;-moz-appearance:textfield}
 .cv-dia-calc input:focus{outline:none;border-color:rgba(76,175,80,0.6)}
@@ -747,8 +749,8 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .cv-header{grid-template-columns:auto minmax(0,1fr) auto;padding:10px 12px}
   .cv-header-meta{display:none}
   .cv-nav{grid-column:3}
-  .back-btn{min-height:40px}
-  .cv-nav-btn{width:40px;height:40px}
+  .back-btn{min-height:44px}
+  .cv-nav-btn{width:44px;height:44px}
   .cv-body{padding:12px 12px 8px;gap:10px}
   .cv-name{font-size:clamp(32px,9vw,52px)}
   .cv-id-meta{gap:8px 12px;font-size:11px}
@@ -797,6 +799,8 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .yd-signup{grid-column:1;grid-template-columns:1fr;gap:7px;padding-top:2px}
   .yd-signup input,.yd-signup select,.yd-signup button{width:100%;min-height:44px}
   .yd-signup-status{grid-column:1;margin-top:1px}
+  .yd-signup-offline{grid-template-columns:1fr}
+  .yd-signup-offline .yd-signup-status{grid-column:1}
 }
 @media (max-height:760px){
   main{justify-content:flex-start}
@@ -818,7 +822,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 /* Quiet utility link, not a boxed call-to-action. The panel, gradient and drop shadow
    read as the loudest thing on the page when the link sits in the masthead strip, so
    only the underline and the arrow carry it. */
-.wire-entry{margin:0;display:inline-flex;align-items:center;gap:10px;min-height:26px;padding:2px 0 3px;border:0;border-bottom:1px solid rgba(61,139,64,.4);background:none;box-shadow:none;color:var(--front-green);font:700 10px/1 var(--mono);letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:color 150ms,border-color 150ms;position:relative}
+.wire-entry{margin:0;display:inline-flex;align-items:center;gap:10px;min-height:26px;padding:2px 0 3px;border:0;border-bottom:1px solid rgba(67,148,71,.4);background:none;box-shadow:none;color:var(--front-green);font:700 10px/1 var(--mono);letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;transition:color 150ms,border-color 150ms;position:relative}
 .wire-entry:hover,.wire-entry:focus-visible{border-bottom-color:var(--front-green);color:var(--front-green);outline:none}
 .wire-entry:active{transform:translateY(1px)}
 .wire-entry .wire-entry-label{white-space:nowrap}
@@ -844,7 +848,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .story-reader-back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .story-reader-share{justify-self:end;padding:0 10px;border:1px solid var(--rule)}
 .story-reader-back:hover,.story-reader-back:focus-visible,.story-reader-share:hover,.story-reader-share:focus-visible{color:var(--green-bright);border-color:var(--front-green);outline:none}
-.story-reader-brand{font:italic 600 15px/1 var(--serif);letter-spacing:0;color:var(--text-muted)}
+.story-reader-brand{font:italic 400 15px/1 var(--serif);letter-spacing:0;color:var(--text-muted)}
 .story-reader-brand b{color:var(--front-green)}
 .story-reader-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
 .story-reader-inner{width:min(100% - 32px,780px);margin:0 auto;padding:clamp(34px,7vh,72px) 0 80px}
@@ -863,6 +867,14 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .story-reader-source-list{display:flex;flex-wrap:wrap;gap:8px}
 .story-reader-source-list a{min-height:44px;display:inline-flex;align-items:center;padding:0 13px;border:1px solid var(--rule);color:var(--text-muted);font:700 11px/1.2 var(--mono);letter-spacing:0;text-decoration:none}
 .story-reader-source-list a:hover,.story-reader-source-list a:focus-visible{border-color:var(--front-green);color:var(--green-bright);outline:none}
+.story-reader-continue{margin-top:34px;border-top:1px solid var(--rule)}
+.story-reader-next{width:100%;min-height:118px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 24px;padding:22px 0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
+.story-reader-next>span{grid-column:1/-1;font:700 10px/1 var(--mono);letter-spacing:0;text-transform:uppercase;color:var(--front-green)}
+.story-reader-next strong{min-width:0;font:700 24px/1.18 var(--serif);letter-spacing:0;color:var(--text);overflow-wrap:anywhere}
+.story-reader-next small{font:700 10px/1.3 var(--mono);letter-spacing:0;text-transform:uppercase;color:var(--text-dim);white-space:nowrap}
+.story-reader-next:hover strong,.story-reader-next:focus-visible strong{color:var(--green-bright)}
+.story-reader-next:focus-visible{outline:2px solid var(--front-green);outline-offset:5px}
+.story-reader-continue[hidden]{display:none}
 .wire-head{display:flex;align-items:center;gap:16px;padding:16px 22px;border-bottom:1px solid var(--rule);flex-shrink:0}
 .wire-head h2{margin:0;font:700 13px/1 var(--mono);letter-spacing:0.28em;text-transform:uppercase;color:var(--text);display:inline-flex;align-items:baseline;gap:14px}
 .wire-head h2 .g{color:var(--green-bright)}
@@ -872,7 +884,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .wire-hero-kicker{grid-column:1/-1;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font:700 9px/1 var(--mono);letter-spacing:0.14em;text-transform:uppercase;margin:0}
 .wire-hero-lead{color:var(--green-bright);border:0;padding:0;border-radius:0;letter-spacing:0.2em}
 .wire-hero-kicker .wire-item-flag{width:26px;height:18px}
-.wire-hero-title{font:600 clamp(28px,2.2vw,38px)/1.08 var(--serif);letter-spacing:0;color:var(--text);max-width:none;text-wrap:balance}
+.wire-hero-title{font:700 clamp(28px,2.2vw,38px)/1.08 var(--serif);letter-spacing:0;color:var(--text);max-width:none;text-wrap:balance}
 .wire-hero:hover .wire-hero-title{color:var(--green-bright)}
 .wire-hero-sum{margin:0;font:400 14px/1.5 var(--sans);color:var(--text-muted);max-width:46ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .wire-why{margin-top:12px;font:700 10px/1 var(--mono);letter-spacing:0.14em;text-transform:uppercase;color:var(--green-bright)}
@@ -967,7 +979,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .wire-item-src{color:var(--text-dim)}
 .wire-item-when{color:var(--text-muted)}
 .wire-item-kicker .dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim)}
-.wire-item-title{font:600 16px/1.32 var(--serif);color:var(--text);letter-spacing:0.01em}
+.wire-item-title{font:700 16px/1.32 var(--serif);color:var(--text);letter-spacing:0}
 .wire-item.is-read .wire-item-title,.wire-brief-card.is-read .wire-item-title,.wire-hero.is-read .wire-hero-title{color:var(--text-muted)}
 .wire-item:hover .wire-item-title{color:var(--green-bright)}
 .wire-item-sum{margin-top:5px;font:400 13px/1.5 var(--sans);color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -995,6 +1007,9 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .story-reader-dek{font-size:18px}
   .story-reader-copy{padding-top:24px}
   .story-reader-copy p,.story-reader-copy p:first-child{font-size:16px;line-height:1.68}
+  .story-reader-next{grid-template-columns:1fr;gap:9px;padding:20px 0}
+  .story-reader-next strong{font-size:21px}
+  .story-reader-next small{white-space:normal}
   .wire-hero{min-height:auto;padding:24px 16px}
   .wire-hero-title{font-size:26px;line-height:1.12;max-width:100%}
   .wire-hero-sum{font-size:15px;max-width:100%}
@@ -1004,7 +1019,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .wire-head{flex-wrap:wrap;padding:12px 16px}
   .wire-filter-bar{display:grid;gap:0}
   .wire-lenses{grid-template-columns:repeat(4,minmax(0,1fr));width:100%;padding:7px 16px 4px}
-  .wire-lens{min-width:0;min-height:40px;padding:0 4px;font-size:8px;letter-spacing:.05em}
+  .wire-lens{min-width:0;min-height:44px;padding:0 4px;font-size:8px;letter-spacing:.05em}
   .wire-topics{width:100%;padding:4px 16px 7px;gap:20px}
   .wire-tools{grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:8px 16px 10px}
   .wire-trust{flex-wrap:nowrap;white-space:nowrap;font-size:9px;letter-spacing:.035em}
@@ -1013,7 +1028,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .wire-trust span{gap:4px}
   .wire-trust span + span::before{margin:0 7px}
   .wire-result-count{grid-column:1/-1;font-size:9px;padding-top:3px}
-  .wire-mobile-actions-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:78px;min-height:40px;padding:0 11px;border:1px solid rgba(232,230,227,.14);background:rgba(255,255,255,.018);color:var(--text-muted);font:700 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+  .wire-mobile-actions-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:78px;min-height:44px;padding:0 11px;border:1px solid rgba(232,230,227,.14);background:rgba(255,255,255,.018);color:var(--text-muted);font:700 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
   .wire-mobile-actions-toggle svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform 150ms}
   .wire-mobile-actions-toggle[aria-expanded="true"]{color:var(--green-bright);border-color:rgba(76,175,80,.5)}
   .wire-mobile-actions-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
@@ -1022,8 +1037,8 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .wire-actions .wire-action{display:flex;align-items:center;justify-content:flex-start;width:100%;padding:0 10px;border-bottom:1px solid rgba(232,230,227,.07)}
   .wire-actions .wire-action:nth-of-type(odd){border-right:1px solid rgba(232,230,227,.07)}
   .wire-actions .wire-edition{grid-column:1/-1;width:100%}
-  .wire-close,.wire-topic,.wire-action{min-height:40px}
-  .wire-edition{height:40px}
+  .wire-search input,.wire-close,.wire-topic,.wire-action{min-height:44px}
+  .wire-edition{height:44px}
   .wire-compare{grid-template-columns:1fr}
   .wire-compare-panel,.wire-front-grid,.wire-movement{grid-template-columns:1fr}
   .wire-movement{gap:10px;padding:12px 16px}
@@ -1064,6 +1079,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   /* The brief link is the primary action on the landing screen; 26px was not a
      comfortable target. Padding only - the type stays the same size. */
   .wire-entry{min-height:44px;padding:10px 0}
+  .cv-nav-btn,.cv-star,.cv-utility-btn{min-height:44px;min-width:44px}
 }
 
 /* Coarse pointers get the same treatment regardless of width: a tablet in
@@ -1119,7 +1135,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .cv-file-toggle:hover,.cv-file-toggle:focus-visible{border-color:rgba(76,175,80,.55);outline:none;background:rgba(76,175,80,.08)}
   .cv-file-title{display:flex;min-width:0;flex-direction:column;gap:5px}
   .cv-file-kicker{font:700 8px/1 var(--mono);letter-spacing:.18em;color:var(--green);text-transform:uppercase}
-  .cv-file-title strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 22px/1 var(--serif);letter-spacing:0;color:var(--text)}
+  .cv-file-title strong{min-width:0;overflow-wrap:anywhere;white-space:normal;font:700 22px/1 var(--serif);letter-spacing:0;color:var(--text)}
   .cv-file-facts{display:flex;min-width:0;flex-direction:column;gap:5px;text-align:right;font:700 9px/1.1 var(--mono);letter-spacing:.08em;color:var(--text-muted);text-transform:uppercase}
   .cv-file-facts span{max-width:128px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cv-file-facts span:last-child{color:var(--green-bright);font-variant-numeric:tabular-nums}
@@ -1154,13 +1170,14 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 
   #cv-panel-atlas .cv-panel-head .meta{display:none}
   #cv-panel-atlas .cv-panel-body{padding:10px!important;overflow:visible}
-  #cv-panel-atlas .cv-map-wrap{height:auto;min-height:0;overflow:visible}
+  #cv-panel-atlas{min-height:0}
+  #cv-panel-atlas .cv-map-wrap{height:auto;min-height:0;overflow:visible;flex:0 0 auto}
   #cv-panel-atlas .cv-map-toolbar{grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:7px 8px}
   #cv-panel-atlas .cv-map-title{min-width:0}
   #cv-panel-atlas .cv-map-title b,#cv-panel-atlas .cv-map-title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   #cv-panel-atlas .cv-layers{flex-wrap:nowrap;gap:4px}
   #cv-panel-atlas .cv-layer-menu summary{min-height:44px;padding:0 9px}
-  #cv-panel-atlas .cv-map-stage{height:clamp(320px,52svh,460px);min-height:0;flex:0 0 auto}
+  #cv-panel-atlas .cv-map-stage{height:var(--atlas-mobile-height,clamp(320px,52svh,460px));min-height:0;flex:0 0 auto}
   #cv-panel-atlas .cv-country-map{width:100%;height:100%;min-height:0;aspect-ratio:auto;flex:1}
   #cv-panel-atlas .cv-map-fs{left:8px;right:auto}
   #cv-panel-atlas .cv-map-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;padding:10px 12px;font-size:8px;letter-spacing:.1em}

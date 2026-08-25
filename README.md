@@ -58,7 +58,7 @@ powershell -File serve.ps1        # then open http://localhost:5733
 ```
 
 No build step and no dependencies — plain HTML, CSS and JavaScript. Add `?selftest=1` to the
-URL to run 33 built-in integrity, interaction and render checks.
+URL to run the built-in integrity, interaction and render checks.
 
 To run the desk from your own machine (gather is free; writing needs an OpenRouter key):
 
@@ -67,6 +67,7 @@ powershell -File scripts/fetch-news.ps1 -Only ng,ke,za
 powershell -File scripts/test-news-ranking.ps1
 powershell -File scripts/test-story-contract.ps1
 powershell -File scripts/test-article-evidence.ps1
+powershell -File scripts/test-publication-gate.ps1
 $env:OPENROUTER_API_KEY = 'sk-or-v1-...'
 powershell -File scripts/write-briefs.ps1 -Only ng,ke,za -OutFile data/auto-briefs.json
 powershell -File scripts/add-briefs.ps1 -InFile data/auto-briefs.json

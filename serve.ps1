@@ -39,7 +39,11 @@ while ($listener.IsListening) {
       $res.Close()
       continue
     }
-    $path = $candidate
+    $path = if (Test-Path $candidate -PathType Container) {
+      Join-Path $candidate 'index.html'
+    } else {
+      $candidate
+    }
     if (Test-Path $path -PathType Leaf) {
       $bytes = [System.IO.File]::ReadAllBytes($path)
       $ext = [System.IO.Path]::GetExtension($path).ToLower()
