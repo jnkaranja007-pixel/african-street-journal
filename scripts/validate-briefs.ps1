@@ -56,7 +56,20 @@ $totalBriefs = 0
 $storyPackages = 0
 $freshCountries = 0
 $freshByCountry = @{}
-$generatedDay = if ([string]$obj.generated -match '^(\d{4}-\d{2}-\d{2})') { $Matches[1] } else { '' }
+# PowerShell 7's ConvertFrom-Json turns ISO-8601 strings into [datetime]; 5.1 leaves
+# them as strings. So [string]$obj.generated is "2026-08-25T14:52:36-07:00" locally but
+# "08/25/2026 22:33:07" under the pwsh that GitHub Actions runs, and a ^\d{4}-\d{2}-\d{2}
+# match against it silently returns empty. Every country then failed the freshness test
+# against a blank date - the desk wrote stories, merged them, and was told none were
+# fresh. Normalise on type, never on the culture-dependent string form.
+function Get-IsoDay($value) {
+  if ($null -eq $value) { return '' }
+  if ($value -is [datetime]) { return $value.ToString('yyyy-MM-dd') }
+  if ($value -is [DateTimeOffset]) { return $value.ToString('yyyy-MM-dd') }
+  if ([string]$value -match '^(\d{4}-\d{2}-\d{2})') { return $Matches[1] }
+  return ''
+}
+$generatedDay = Get-IsoDay $obj.generated
 $badShape = New-Object System.Collections.Generic.List[string]
 $badUrls = New-Object System.Collections.Generic.List[string]
 $storyIds = New-Object 'System.Collections.Generic.HashSet[string]'
@@ -125,9 +138,9 @@ foreach ($c in $countries) {
   }
   $countryDate = ''
   if ($obj.dates -and $obj.dates.PSObject.Properties[$c.Name]) {
-    $countryDate = [string]$obj.dates.PSObject.Properties[$c.Name].Value
+    $countryDate = Get-IsoDay $obj.dates.PSObject.Properties[$c.Name].Value
   }
-  $isFresh = $generatedDay -and $countryDate.StartsWith($generatedDay) -and $countryStoryPackages -ge $FreshStoriesPerCountry
+  $isFresh = $generatedDay -and $countryDate -eq $generatedDay -and $countryStoryPackages -ge $FreshStoriesPerCountry
   $freshByCountry[[string]$c.Name] = [bool]$isFresh
   if ($isFresh) {
     $freshCountries++
