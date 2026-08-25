@@ -43,3 +43,12 @@ try {
 finally {
   Remove-Item -LiteralPath $fixturePath -Force -ErrorAction SilentlyContinue
 }
+
+# Explicit success exit. The negative case above deliberately runs validate-briefs.ps1
+# to failure, which leaves $LASTEXITCODE at 1. The three sibling test scripts all end
+# with "exit 0"; this one did not, so GitHub's pwsh step wrapper read that residual
+# code and failed the job even though every check printed PASS. Locally, invoking with
+# powershell -File masked it - which is why the CI run caught what the local suite did
+# not.
+$global:LASTEXITCODE = 0
+exit 0
