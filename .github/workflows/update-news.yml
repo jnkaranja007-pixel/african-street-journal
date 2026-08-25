@@ -87,7 +87,10 @@ jobs:
           $only = '${{ github.event.inputs.only }}'
           if ($only.Trim()) {
             $requested = @($only -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }).Count
-            ./scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages (5 * $requested) -MinFreshCountries $requested -RequiredFreshCountries $only
+            # Same floor as the full run. Leaving this at five while the writer publishes
+            # from three would fail a targeted run for a country that filed four sound
+            # stories - the exact all-or-nothing trap that kept the site stale for days.
+            ./scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages (3 * $requested) -MinFreshCountries $requested -RequiredFreshCountries $only -FreshStoriesPerCountry 3
           } else {
             ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 220 -MinFreshCountries 48 -FreshStoriesPerCountry 3
           }
