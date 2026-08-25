@@ -31,9 +31,14 @@ param(
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
   [int]$MaxBriefs     = 5,
-  # Five stories make a country desk worth returning to. Thin countries keep their last
-  # complete edition and use the regional wire instead of publishing a partial desk.
-  [int]$MinBriefs     = 5,
+  # Five is the target, three is the floor for publishing. These were the same number,
+  # and that made every gate all-or-nothing: Angola, Burundi, Malawi, Namibia, Niger and
+  # Sudan each wrote five sound stories on 25 August, had ONE dek run past 200
+  # characters, and were discarded whole - thirty stories lost to punctuation. The same
+  # equality skipped Congo-Brazzaville, Djibouti, Eritrea and Ethiopia before the model
+  # for having four evidence-ready candidates instead of five.
+  # A country filing four good stories is not a failure. A site four days stale is.
+  [int]$MinBriefs     = 3,
   [int]$Retries       = 2,
   [int]$DelayMs       = 300,
   [int]$MaxOutputTokens = 1400,
@@ -628,6 +633,16 @@ an if-scenario, possible business effect or hypothetical diaspora/farmer connect
 Keep the canonical story unchanged and repair the three lens scores and reasons.
 "@
           continue
+        }
+        # Trim an over-long dek before judging the draft, not after. Limit-DeskSentence
+        # already existed but ran ~90 lines later, in final validation - so a dek of 201
+        # characters was rejected here, burned both repair attempts, and took the whole
+        # country with it. Angola, Burundi, Malawi, Namibia, Niger and Sudan all died
+        # this way on 25 August with five sound stories each. A dek that is slightly too
+        # long is a formatting detail the desk can fix silently; it is not a reason to
+        # discard reporting.
+        if ($candidate -and $candidate.dek) {
+          $candidate.dek = Limit-DeskSentence (([string]$candidate.dek).Trim()) 180
         }
         $draftIssues = @(Get-DraftContractIssues $candidate)
         if ($draftIssues.Count) {

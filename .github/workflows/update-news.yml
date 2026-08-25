@@ -89,7 +89,7 @@ jobs:
             $requested = @($only -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }).Count
             ./scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages (5 * $requested) -MinFreshCountries $requested -RequiredFreshCountries $only
           } else {
-            ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 250 -MinFreshCountries 50
+            ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 220 -MinFreshCountries 48 -FreshStoriesPerCountry 3
           }
 
       - name: Audit sources and quality

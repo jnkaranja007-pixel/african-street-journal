@@ -388,8 +388,14 @@ function Get-EditorialScore($Item, [int]$OutletCount, [datetime]$Now) {
     $breakdown.materiality = [Math]::Min($headlineActions, 2) * 1.25
     $reasons.Add('material action in headline')
   }
+  # Quote marks built from code points, never as literals. This file is UTF-8 without a
+  # BOM and PowerShell 5.1 reads that as ANSI, so a literal curly quote or guillemet in
+  # a character class arrives mangled - and the repository's ASCII guard fails the build
+  # before it ever runs. Same reason the mojibake markers in fetch-news are constructed.
+  $quoteChars = '"' + ([string][char]0x201C) + ([string][char]0x201D) + ([string][char]0x00AB) + ([string][char]0x00BB)
+  $quotePattern = '[' + [regex]::Escape($quoteChars) + ']'
   $speechOnly = (Get-NewsMatchCount $headlineText $script:NEWS_SPEECH 1) -gt 0 -or
-    (([string]$Item.title -match '["“”«»]') -and -not $headlineActions)
+    (([string]$Item.title -match $quotePattern) -and -not $headlineActions)
   if ($speechOnly -and -not $headlineActions) {
     $breakdown.penalties -= 2.5
     $reasons.Add('speech or quote without a material action')

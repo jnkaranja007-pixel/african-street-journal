@@ -45,6 +45,43 @@ jobs:
           if ($only.Trim()) { ./scripts/check-sources.ps1 -Fix -Only $only.Trim() }
           else { ./scripts/check-sources.ps1 -Fix }
 
+
+      - name: Refuse to commit a catastrophic result
+        shell: pwsh
+        run: |
+          # This guard exists because the 23 August run destroyed the registry. The
+          # check failed wholesale on the runner, continue-on-error let the job carry
+          # on, and the commit step wrote a registry marking all 480 feeds "error".
+          # fetch-news skips any source not marked ok, so every country was starved and
+          # the nightly desk failed for three days straight.
+          #
+          # 480 outlets across 55 countries do not die on the same night. A collapse of
+          # this size is a fact about the runner - blocked egress, DNS, a proxy - not
+          # about African media. Committing it turns a transient network fault into
+          # persistent data loss, so the working registry is restored and the job fails.
+          $before = git show HEAD:data/sources.json | Out-String
+          $after  = Get-Content data/sources.json -Raw
+          function Count-Ok([string]$json) {
+            if (-not $json) { return -1 }
+            $reg = $json | ConvertFrom-Json
+            $n = 0
+            foreach ($p in $reg.PSObject.Properties) {
+              if ($p.Name -eq '_comment') { continue }
+              foreach ($s in @($p.Value.sources)) { if ($s.state -eq 'ok') { $n++ } }
+            }
+            return $n
+          }
+          $okBefore = Count-Ok $before
+          $okAfter  = Count-Ok $after
+          Write-Host "usable sources before: $okBefore  after: $okAfter"
+          if ($okBefore -gt 0 -and $okAfter -lt [math]::Floor($okBefore * 0.5)) {
+            Write-Host "REFUSING TO COMMIT: usable sources fell from $okBefore to $okAfter."
+            Write-Host 'That is a runner or network fault, not 240 outlets closing at once.'
+            git checkout -- data/sources.json
+            exit 1
+          }
+          Write-Host 'Registry change is within a sane range.'
+
       - name: Commit registry updates
         shell: pwsh
         run: |

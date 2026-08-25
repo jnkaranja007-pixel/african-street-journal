@@ -338,10 +338,21 @@ function Read-Feed([string]$url) {
     if (-not $when) { $when = Get-NodeText $n.published }
     if (-not $when) { $when = Get-NodeText $n.updated }
     if (-not $when) { $when = Get-NodeText $n.date }
+    if (-not $when) { $when = Get-NodeText $n.'dc:date' }
     $pub = $null
+    $pubEstimated = $false
     try { if ($when) { $pub = ([datetime]::Parse($when)).ToUniversalTime() } } catch { $pub = $null }
+    if (-not $pub) {
+      # Politico SL publishes no date on any item, which produced five stories the
+      # validator rejected as "missing published time" and would have blocked the whole
+      # edition. Record when we first saw it and say so, rather than either dropping
+      # real reporting or quietly asserting a publication time the outlet never gave.
+      # Only 6 of 302 items need this, all from that one feed.
+      $pub = (Get-Date).ToUniversalTime()
+      $pubEstimated = $true
+    }
 
-    $out.Add([pscustomobject]@{ title = $title; url = $link; summary = $summary; published = $pub })
+    $out.Add([pscustomobject]@{ title = $title; url = $link; summary = $summary; published = $pub; publishedEstimated = $pubEstimated })
   }
   return $out
 }
@@ -378,7 +389,16 @@ foreach ($code in $codes) {
   # twenty seconds per country re-confirming that Cloudflare still says no.
   $usable = @($entry.sources | Where-Object { -not $_.state -or $_.state -eq 'ok' })
   if (-not $usable.Count) {
-    Write-Host ("  {0}  {1,-26} no usable sources registered" -f $code, $name) -ForegroundColor Red
+    # The registry said every feed here is dead. That is worth distrusting: on
+    # 23 August a failed source-check committed a registry marking all 480 feeds
+    # "error", every country was skipped by this exact branch, and the desk failed
+    # silently for three nights. A stale state flag should cost a slow run, never a
+    # blank country - so try the sources anyway and let the fetch itself decide.
+    Write-Host ("  {0}  {1,-26} registry says all sources dead - trying anyway" -f $code, $name) -ForegroundColor DarkYellow
+    $usable = @($entry.sources | Where-Object { $_.state -ne 'hijacked' })
+  }
+  if (-not $usable.Count) {
+    Write-Host ("  {0}  {1,-26} no sources registered at all" -f $code, $name) -ForegroundColor Red
     continue
   }
 
