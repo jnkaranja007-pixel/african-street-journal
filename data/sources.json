@@ -41,7 +41,7 @@
                                    "home":  "https://www.angop.ao/en/",
                                    "feed":  "https://www.angop.ao/en/rss/",
                                    "tier":  1,
-                                   "state":  "error"
+                                   "state":  "missing"
                                },
                                {
                                    "name":  "Jornal de Angola",
@@ -129,7 +129,7 @@
                                    "feed":  "https://feeds.bbci.co.uk/portuguese/rss.xml",
                                    "tier":  2,
                                    "scope":  "regional",
-                                   "state":  null
+                                   "state":  "ok"
                                },
                                {
                                    "name":  "VOA Portugues",
@@ -153,7 +153,7 @@
                                    "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
                                    "tier":  1,
                                    "scope":  "regional",
-                                   "state":  null
+                                   "state":  "ok"
                                },
                                {
                                    "name":  "VOA Africa",
@@ -168,6 +168,14 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Noticias Lusofonas",
+                                   "home":  "https://www.noticiaslusofonas.com/",
+                                   "feed":  "https://www.noticiaslusofonas.com/rss",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -557,7 +565,7 @@
                                    "feed":  "https://feeds.bbci.co.uk/portuguese/rss.xml",
                                    "tier":  2,
                                    "scope":  "regional",
-                                   "state":  null
+                                   "state":  "ok"
                                },
                                {
                                    "name":  "VOA Portugues",
@@ -581,7 +589,7 @@
                                    "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
                                    "tier":  1,
                                    "scope":  "regional",
-                                   "state":  null
+                                   "state":  "ok"
                                },
                                {
                                    "name":  "VOA Africa",
@@ -596,6 +604,14 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Noticias Lusofonas",
+                                   "home":  "https://www.noticiaslusofonas.com/",
+                                   "feed":  "https://www.noticiaslusofonas.com/rss",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -1889,7 +1905,7 @@
                                    "feed":  "https://feeds.bbci.co.uk/portuguese/rss.xml",
                                    "tier":  2,
                                    "scope":  "regional",
-                                   "state":  null
+                                   "state":  "ok"
                                },
                                {
                                    "name":  "VOA Portugues",
@@ -1913,7 +1929,7 @@
                                    "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
                                    "tier":  1,
                                    "scope":  "regional",
-                                   "state":  null
+                                   "state":  "ok"
                                },
                                {
                                    "name":  "VOA Africa",
@@ -1928,6 +1944,14 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Noticias Lusofonas",
+                                   "home":  "https://www.noticiaslusofonas.com/",
+                                   "feed":  "https://www.noticiaslusofonas.com/rss",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -2445,6 +2469,14 @@
                                    "feed":  "https://zitamar.com/feed/",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Noticias Lusofonas",
+                                   "home":  "https://www.noticiaslusofonas.com/",
+                                   "feed":  "https://www.noticiaslusofonas.com/rss",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -2769,7 +2801,7 @@
                                    "feed":  "https://feeds.bbci.co.uk/portuguese/rss.xml",
                                    "tier":  2,
                                    "scope":  "regional",
-                                   "state":  null
+                                   "state":  "ok"
                                },
                                {
                                    "name":  "VOA Portugues",
@@ -2793,7 +2825,7 @@
                                    "feed":  "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
                                    "tier":  1,
                                    "scope":  "regional",
-                                   "state":  null
+                                   "state":  "ok"
                                },
                                {
                                    "name":  "VOA Africa",
@@ -2808,6 +2840,14 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Noticias Lusofonas",
+                                   "home":  "https://www.noticiaslusofonas.com/",
+                                   "feed":  "https://www.noticiaslusofonas.com/rss",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }

@@ -44,6 +44,18 @@ if (Test-Path $statePath) {
   if ($prev.dates)     { foreach ($p in $prev.dates.PSObject.Properties)     { $dates[$p.Name]     = $p.Value } }
 }
 
+# A fresh market file overrides whatever state carried forward. Without this the markets
+# block is only ever copied: asOf values ranged from November 2025 to June 2026, and
+# corrupted company names survived for weeks because data that is copied rather than
+# regenerated never heals. scripts/update-markets.ps1 writes this file.
+$marketsPath = Join-Path $root 'data\markets.json'
+if (Test-Path $marketsPath) {
+  $liveMarkets = [IO.File]::ReadAllText($marketsPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+  $refreshed = 0
+  foreach ($p in $liveMarkets.PSObject.Properties) { $markets[[string]$p.Name] = $p.Value; $refreshed++ }
+  if ($refreshed) { Write-Host "[add] refreshed markets for $refreshed countries from data/markets.json" -ForegroundColor Green }
+}
+
 $added = 0
 $stories = 0
 foreach ($p in $incoming.PSObject.Properties) {

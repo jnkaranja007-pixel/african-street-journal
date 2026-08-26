@@ -73,6 +73,17 @@ jobs:
           if ($only.Trim()) { ./scripts/write-briefs.ps1 -Only $only.Trim() -JsonMode -OutFile data/auto-briefs.json }
           else { ./scripts/write-briefs.ps1 -JsonMode -OutFile data/auto-briefs.json }
 
+      - name: Refresh market data
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          # Best-effort: a market page layout change must not block the newsroom. The
+          # markets block was hand-seeded and carried forward for months - asOf ranged
+          # from November 2025 to June 2026 - which is also how corrupted company names
+          # survived for weeks. add-briefs prefers this file when it exists and falls
+          # back to the carried-forward block when it does not.
+          ./scripts/update-markets.ps1
+
       - name: Merge into the journal
         shell: pwsh
         run: |
@@ -125,7 +136,7 @@ jobs:
         run: |
           git config user.name  "asj-news-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/briefs.js data/briefs-state.json data/archive sitemap.xml robots.txt
+          git add data/briefs.js data/briefs-state.json data/markets.json data/archive sitemap.xml robots.txt
           Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object { git add "$($_.Name)/index.html" }
           # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError - a grouping
           # expression cannot contain a statement separator. Run the check, then read
