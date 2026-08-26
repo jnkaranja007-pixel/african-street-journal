@@ -31,14 +31,20 @@ param(
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
   [int]$MaxBriefs     = 5,
-  # Five is the target, three is the floor for publishing. These were the same number,
-  # and that made every gate all-or-nothing: Angola, Burundi, Malawi, Namibia, Niger and
-  # Sudan each wrote five sound stories on 25 August, had ONE dek run past 200
-  # characters, and were discarded whole - thirty stories lost to punctuation. The same
-  # equality skipped Congo-Brazzaville, Djibouti, Eritrea and Ethiopia before the model
-  # for having four evidence-ready candidates instead of five.
-  # A country filing four good stories is not a failure. A site four days stale is.
-  [int]$MinBriefs     = 3,
+  # Five is the target. One is the floor, because the alternative is a dead page.
+  #
+  # This was 5, then 3. Both were wrong for the same reason: a country that cannot meet
+  # the floor publishes NOTHING and keeps showing last week's copy. Comoros and
+  # Guinea-Bissau field two sound stories a day; at a floor of three they printed zero
+  # and went stale, which is worse for a reader than two fresh ones. Western Sahara,
+  # Seychelles and Eritrea have days with almost no domestic press at all - that is a
+  # fact about those media markets and no threshold changes it.
+  #
+  # This does not lower the quality bar. Every story still has to clear evidence,
+  # grounding and the story contract individually; MinBriefs only decides how many
+  # survivors are needed before the country is worth publishing. One fresh, sourced,
+  # grounded story beats five from four days ago.
+  [int]$MinBriefs     = 1,
   [int]$Retries       = 2,
   [int]$DelayMs       = 300,
   [int]$MaxOutputTokens = 1400,

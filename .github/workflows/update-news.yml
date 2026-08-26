@@ -101,9 +101,12 @@ jobs:
             # Same floor as the full run. Leaving this at five while the writer publishes
             # from three would fail a targeted run for a country that filed four sound
             # stories - the exact all-or-nothing trap that kept the site stale for days.
-            ./scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages (3 * $requested) -MinFreshCountries $requested -RequiredFreshCountries $only -FreshStoriesPerCountry 3
+            ./scripts/validate-briefs.ps1 -MinCountries 50 -MinStoryPackages $requested -MinFreshCountries $requested -RequiredFreshCountries $only -FreshStoriesPerCountry 1
           } else {
-            ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 220 -MinFreshCountries 48 -FreshStoriesPerCountry 3
+            # Freshness means 'did this country get new reporting today', not 'did it hit five'.
+            # Comoros and Guinea-Bissau field two sound stories a day; counting those as
+            # stale made the gate reward a blank page over a thin one.
+            ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 180 -MinFreshCountries 45 -FreshStoriesPerCountry 1
           }
 
       - name: Audit sources and quality
