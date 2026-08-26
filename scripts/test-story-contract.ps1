@@ -155,12 +155,33 @@ try {
   if ($band.Mode -ne 'direct' -or $band.Min -ne 75) { throw 'ferry travel missed direct diaspora band' }
   Write-Host 'PASS ferry travel enters direct diaspora band'
 
+
   $longDek = ('The transport authority changed the passenger reporting window after publishing a detailed operational notice for every ticket holder. ' * 2).Trim()
   $limitedDek = Limit-DeskSentence $longDek 180
   if ($limitedDek.Length -gt 180 -or -not $limitedDek.EndsWith('.') -or $limitedDek -match ' tick\.$') {
     throw 'long dek was not trimmed cleanly at a word boundary'
   }
+  # The old assertion only checked length and a trailing full stop, so it passed while
+  # the desk shipped "...to the Independent Electoral and Boundaries Commission for." -
+  # correctly punctuated and still a broken sentence. A dek must not end on a word a
+  # sentence cannot end on.
+  $danglingDek = 'The National Police Service will submit names of individuals with a history of promoting political violence to the Independent Electoral and Boundaries Commission for action ahead of 2027.'
+  $trimmedDangling = Limit-DeskSentence $danglingDek 180
+  $lastWord = ($trimmedDangling.TrimEnd([char[]]' .').Split(' ')[-1]).ToLowerInvariant()
+  $dangleCheck = @('for','to','of','in','on','at','by','with','from','and','or','the','a','an','that','as','into','over','under','after','before','during','which','while','when','who','but','if','than','then','about','against','between','through')
+  if ($dangleCheck -contains $lastWord) {
+    throw "dek ends on a dangling word: '$lastWord' in '$trimmedDangling'"
+  }
+  # A dek that already contains a sentence end inside the budget should stop there
+  # rather than being cut mid-clause further along.
+  $twoSentence = 'Kenya holds its base rate at 12.5 percent. The shilling steadied against the dollar after three weeks of decline and traders now expect a calm quarter ahead of the vote.'
+  $trimmedTwo = Limit-DeskSentence $twoSentence 120
+  $twoLast = ($trimmedTwo.TrimEnd([char[]]' .').Split(' ')[-1]).ToLowerInvariant()
+  if ($dangleCheck -contains $twoLast) {
+    throw "multi-sentence dek ended on a dangling word: '$trimmedTwo'"
+  }
   Write-Host 'PASS long dek is trimmed at a sentence boundary'
+  Write-Host 'PASS dek never ends on a dangling word'
 
   $thinFeed = [ordered]@{
     fetched = '2026-08-20T09:00:00Z'

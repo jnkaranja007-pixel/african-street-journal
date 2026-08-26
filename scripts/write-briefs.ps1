@@ -230,12 +230,39 @@ function Get-WordCount([string]$Text) {
 }
 
 function Limit-DeskSentence([string]$Text, [int]$MaxChars) {
+  # The dangling list lives inside the function on purpose. As a script-scope variable
+  # it vanished whenever a consumer imported the function alone - which the story
+  # contract test does - and the walk-back below silently did nothing while still
+  # reporting PASS. A helper that quietly degrades when imported is worse than one that
+  # is slightly longer.
+  $dangling = @('for','to','of','in','on','at','by','with','from','and','or','the','a','an',
+                'that','as','into','over','under','after','before','during','its','their',
+                'his','her','which','while','when','who','but','if','than','then','about',
+                'against','between','through','per','via','amid','following')
+
   $clean = ([string]$Text).Trim()
   if ($clean.Length -le $MaxChars) { return $clean }
+
+  # Prefer a real sentence end inside the budget - a clean stop, not a cut.
+  $window = $clean.Substring(0, $MaxChars)
+  $lastStop = [Math]::Max($window.LastIndexOf('. '), [Math]::Max($window.LastIndexOf('! '), $window.LastIndexOf('? ')))
+  if ($lastStop -ge [int]($MaxChars * 0.55)) { return $clean.Substring(0, $lastStop + 1).Trim() }
+
+  # Otherwise cut on a word boundary, then walk back off any word a sentence cannot end
+  # on. Cutting at the last space and adding a full stop produced deks like "...to the
+  # Independent Electoral and Boundaries Commission for." - punctuated, still broken.
   $cut = $clean.Substring(0, $MaxChars - 1)
   $lastSpace = $cut.LastIndexOf(' ')
-  if ($lastSpace -ge [int]($MaxChars * 0.72)) { $cut = $cut.Substring(0, $lastSpace) }
-  return $cut.TrimEnd([char[]]' ,;:.') + '.'
+  if ($lastSpace -ge [int]($MaxChars * 0.6)) { $cut = $cut.Substring(0, $lastSpace) }
+  $cut = $cut.TrimEnd([char[]]' ,;:.')
+  for ($i = 0; $i -lt 5; $i++) {
+    $sp = $cut.LastIndexOf(' ')
+    if ($sp -lt [int]($MaxChars * 0.35)) { break }
+    $tail = $cut.Substring($sp + 1).ToLowerInvariant().Trim([char[]]',;:.')
+    if ($dangling -notcontains $tail) { break }
+    $cut = $cut.Substring(0, $sp).TrimEnd([char[]]' ,;:.')
+  }
+  return $cut + '.'
 }
 
 function Convert-NumberScanText([string]$Text) {
