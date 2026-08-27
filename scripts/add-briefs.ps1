@@ -69,26 +69,15 @@ if (Test-Path $marketsPath) {
 # story costs one story rather than the day.
 $MinStoryWords = 70
 $MaxStoryWords = 220
+# One definition, shared with validate-briefs. These checks used to be duplicated here
+# and drifted by a single character: this copy treated the curly apostrophe as a
+# word-joiner and the gate did not, so a South Sudan story measured 218 words on the
+# way in and 221 at the gate. The merge kept it, the gate rejected the edition, and
+# 243 sound stories went unpublished.
+. (Join-Path $PSScriptRoot 'story-shape.ps1')
 $seenArticleIds = New-Object 'System.Collections.Generic.HashSet[string]'
-function Get-StoryWordCount([string]$Text) {
-  if (-not $Text) { return 0 }
-  return ([regex]::Matches($Text, "[\p{L}\p{N}]+(?:['\u2019-][\p{L}\p{N}]+)*")).Count
-}
 function Get-StoryDefect($Story) {
-  if (-not $Story.paragraphs) { return $null }   # not a full story package; other checks cover it
-  $id = [string]$Story.articleId
-  if (-not $id) { return 'missing articleId' }
-  if (-not $seenArticleIds.Add($id)) { return "duplicate articleId $id" }
-  $wc = Get-StoryWordCount ([string]$Story.body)
-  if ($wc -lt $MinStoryWords -or $wc -gt $MaxStoryWords) { return "$wc words, need $MinStoryWords-$MaxStoryWords" }
-  $paras = @($Story.paragraphs).Count
-  if ($paras -lt 3 -or $paras -gt 6) { return "$paras paragraphs, need 3-6" }
-  if (-not $Story.dek) { return 'missing dek' }
-  if (([string]$Story.dek).Length -gt 200) { return 'dek over 200 chars' }
-  if (-not $Story.why) { return 'missing why' }
-  if (-not $Story.published) { return 'missing published time' }
-  if (([string]$Story.headline).Length -gt 100) { return 'headline over 100 chars' }
-  return $null
+  return Get-StoryShapeIssue $Story $MinStoryWords $MaxStoryWords $seenArticleIds
 }
 $droppedStories = New-Object System.Collections.Generic.List[string]
 $added = 0

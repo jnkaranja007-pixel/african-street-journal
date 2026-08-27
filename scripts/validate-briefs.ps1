@@ -29,6 +29,7 @@ $briefsPath = if ($BriefsFile) {
 } else {
   [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\data\briefs.js'))
 }
+. (Join-Path $PSScriptRoot 'story-shape.ps1')
 $problems = New-Object System.Collections.Generic.List[string]
 
 if (-not (Test-Path $briefsPath)) { Write-Host '[validate] FAIL: data/briefs.js missing' -ForegroundColor Red; exit 1 }
@@ -89,7 +90,8 @@ foreach ($c in $countries) {
       $countryStoryPackages++
       $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
       $bodyText = ($paragraphs -join ' ').Trim()
-      $wordCount = if ($bodyText) { ([regex]::Matches($bodyText, "[\p{L}\p{N}]+(?:[''-][\p{L}\p{N}]+)*")).Count } else { 0 }
+      # Shared with add-briefs so the drop-guard and this gate cannot disagree.
+      $wordCount = Get-StoryWordCount $bodyText
       if (-not $b.articleId) { $badShape.Add("$($c.Name):story missing articleId") }
       elseif (-not $storyIds.Add([string]$b.articleId)) { $badShape.Add("$($c.Name):duplicate articleId $($b.articleId)") }
       if (-not $b.dek) { $badShape.Add("$($c.Name):story missing dek") }
