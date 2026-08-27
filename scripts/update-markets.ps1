@@ -25,7 +25,8 @@
 param(
   [string[]]$Only,
   [int]$PerCountry = 12,
-  [int]$TimeoutSec = 25,
+  [int]$TimeoutSec = 45,
+  [int]$Retries = 3,
   [int]$DelayMs = 400
 )
 
@@ -48,16 +49,31 @@ $EXCHANGES = @(
 )
 
 function Get-Page([string]$url) {
-  $req = [Net.HttpWebRequest]::Create($url)
-  $req.UserAgent = $UA
-  $req.Timeout = $TimeoutSec * 1000
-  $req.ReadWriteTimeout = $TimeoutSec * 1000
-  $req.AllowAutoRedirect = $true
-  $resp = $req.GetResponse()
-  try {
-    $sr = New-Object IO.StreamReader($resp.GetResponseStream(), [Text.Encoding]::UTF8)
-    return $sr.ReadToEnd()
-  } finally { $resp.Close() }
+  # Retries with backoff. Every exchange timed out at exactly 25s on the GitHub runner
+  # on 27 August while the same URLs answered instantly from a home connection. That is
+  # the signature of a host that drops datacenter traffic rather than refusing it, but
+  # it is also what a slow first byte looks like, so give it real attempts before
+  # concluding the source is unreachable.
+  $lastErr = $null
+  for ($attempt = 1; $attempt -le $Retries; $attempt++) {
+    try {
+      $req = [Net.HttpWebRequest]::Create($url)
+      $req.UserAgent = $UA
+      $req.Timeout = $TimeoutSec * 1000
+      $req.ReadWriteTimeout = $TimeoutSec * 1000
+      $req.AllowAutoRedirect = $true
+      $req.KeepAlive = $false
+      $resp = $req.GetResponse()
+      try {
+        $sr = New-Object IO.StreamReader($resp.GetResponseStream(), [Text.Encoding]::UTF8)
+        return $sr.ReadToEnd()
+      } finally { $resp.Close() }
+    } catch {
+      $lastErr = $_
+      if ($attempt -lt $Retries) { Start-Sleep -Seconds (5 * $attempt) }
+    }
+  }
+  throw $lastErr
 }
 
 function Get-Listings([string]$html) {
