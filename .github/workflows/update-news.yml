@@ -9,7 +9,13 @@ name: Update ASJ Desk
 
 on:
   schedule:
-    - cron: '0 5 * * *'   # 05:00 UTC daily (~08:00 EAT)
+    # 05:17, not 05:00. GitHub queues scheduled runs and deprioritises them under
+    # load, and the whole world schedules on the hour, so :00 sits behind the longest
+    # queue. The 27 August run was queued at 05:00 and did not start until 16:01.
+    - cron: '17 5 * * *'    # ~08:17 EAT
+    # Second attempt, in case the first was delayed past usefulness or failed. It exits
+    # in seconds when today's edition is already out, so the safety net costs a no-op.
+    - cron: '17 12 * * *'
   workflow_dispatch:
     inputs:
       only:
@@ -32,6 +38,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Skip if today's edition already published
+        id: guard
+        shell: pwsh
+        run: |
+          # The second daily attempt exists only to cover a delayed or failed first one.
+          # If the edition is already out, every step below is skipped and the run costs
+          # seconds instead of a second full model spend.
+          $stale = 'true'
+          if (Test-Path data/briefs.js) {
+            $raw = [IO.File]::ReadAllText((Resolve-Path data/briefs.js).Path, [Text.Encoding]::UTF8)
+            $m = [regex]::Match($raw, "generated:\s*'([^']+)'")
+            if ($m.Success) {
+              $genDay = if ($m.Groups[1].Value -match '^(\d{4}-\d{2}-\d{2})') { $Matches[1] } else { '' }
+              $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+              if ($genDay -eq $today) { $stale = 'false' }
+              Write-Host "edition generated $genDay, today $today, stale=$stale"
+            }
+          }
+          "stale=$stale" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
       - name: Test assignment ranking
         shell: pwsh
         run: |
@@ -41,6 +67,7 @@ jobs:
           ./scripts/test-publication-gate.ps1
 
       - name: Gather and rank today's stories
+        if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         run: |
           # No API key needed for this step. Feeds are public RSS, spread across ~200
@@ -50,6 +77,7 @@ jobs:
           else { ./scripts/fetch-news.ps1 }
 
       - name: Restore story cache
+        if: steps.guard.outputs.stale == 'true'
         uses: actions/cache@v4
         with:
           path: data/story-cache.json
@@ -58,6 +86,7 @@ jobs:
             ${{ runner.os }}-asj-story-v1-
 
       - name: Write on-site stories
+        if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -74,6 +103,7 @@ jobs:
           else { ./scripts/write-briefs.ps1 -JsonMode -OutFile data/auto-briefs.json }
 
       - name: Refresh market data
+        if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         continue-on-error: true
         run: |
@@ -85,6 +115,7 @@ jobs:
           ./scripts/update-markets.ps1
 
       - name: Merge into the journal
+        if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         run: |
           # add-briefs writes BOTH data/briefs.js and data/briefs-state.json. The state
@@ -93,6 +124,7 @@ jobs:
           ./scripts/add-briefs.ps1 -InFile data/auto-briefs.json
 
       - name: Validate before publishing
+        if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         run: |
           $only = '${{ github.event.inputs.only }}'
@@ -110,6 +142,7 @@ jobs:
           }
 
       - name: Audit sources and quality
+        if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         run: |
           # Fetches every cited URL. Only 404/410 fails the run - that is a citation with
@@ -118,6 +151,7 @@ jobs:
           ./scripts/audit-briefs.ps1 -CheckLinks -Worst 8
 
       - name: Rebuild crawlable pages and sitemap
+        if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         run: |
           # The app routes on hash fragments, which crawlers discard, so these static
@@ -135,6 +169,7 @@ jobs:
           retention-days: 30
 
       - name: Commit refreshed stories
+        if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         run: |
           git config user.name  "asj-news-bot"

@@ -26,7 +26,17 @@
   as a failed desk run rather than quietly publishing yesterday's paper again.
 #>
 param(
-  [string]$Model      = 'google/gemini-2.5-flash',
+  # flash-lite, not flash. Output is 73 percent of the bill - 2.50 per M against 0.30
+  # for input - and lite prices output at 0.40, taking 18.05 a month to 3.74.
+  #
+  # Measured on the same 20 stories from the same feed, not assumed: word count 172
+  # against 160, dek length 163 against 164, lens relevance 35 against 33 percent, and
+  # far fewer repair calls (2 of 22, against 74 of 328 on the full flash run).
+  #
+  # One gap worth watching: stories carrying a figure ran 80 percent against 90. On
+  # twenty stories that cannot be separated from noise, but this is a numbers-first
+  # paper, so if it holds at full scale the saving is not free and flash should return.
+  [string]$Model      = 'google/gemini-2.5-flash-lite',
   [string[]]$Only,
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
