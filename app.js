@@ -257,10 +257,22 @@ const MARKETS_SEED = {
 };
 function marketsForCountry(id){
   const live = LIVE_MARKETS[id];
-  const generatedAt = Date.parse(AI_BRIEFS_AT || '');
-  const fresh = Number.isFinite(generatedAt) && (Date.now() - generatedAt) < 72 * 60 * 60 * 1000;
+  // Judge market data by ITS OWN asOf, not by when the stories were written. These were
+  // the same test, and because stories refresh daily it was always true - so prices from
+  // November 2025 were labelled isLive. That is the one thing a markets panel must not do.
+  // Five days covers a weekend plus a public holiday; beyond that the panel falls back to
+  // the seed and says plainly that it is not live.
+  const asOfAt = Date.parse((live && live.asOf) || "");
+  const fresh = Number.isFinite(asOfAt) && (Date.now() - asOfAt) < 5 * 24 * 60 * 60 * 1000;
   if (fresh && live && Array.isArray(live.companies) && live.companies.length) {
-    return { ...live, isLive:true, asOf:live.asOf || AI_BRIEFS_AT };
+    return { ...live, isLive:true, asOf:live.asOf };
+  }
+  // Stale real data still beats nothing. Algeria has AFX rows from June and no seed
+  // entry, so rejecting stale prices outright left its panel empty. Show what was
+  // actually fetched, flagged not-live and carrying its own asOf, and let the reader
+  // judge. Only fall through to the seed when there is no fetched data at all.
+  if (live && Array.isArray(live.companies) && live.companies.length) {
+    return { ...live, isLive:false, asOf:live.asOf || null };
   }
   const seed = MARKETS_SEED[id];
   return seed ? { ...seed, isLive:false, asOf:null } : null;
@@ -1238,7 +1250,18 @@ function updateSlidePos() {
   });
   const pos = document.getElementById('cv-pos');
   if (pos && sortedCountryIds.length) pos.textContent = String(currentSlideIndex + 1).padStart(2, '0') + '/' + String(sortedCountryIds.length).padStart(2, '0');
-  if (activeCountryMap) requestAnimationFrame(() => drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks));
+  // Redraw the atlas after the panel has actually laid out, and re-check activeCountryMap
+  // at call time rather than schedule time. Deep-linking to #/xx/atlas sets the panel
+  // before the map data is attached, so the old guard skipped the redraw and nothing ran
+  // afterwards: the canvas kept its 300x150 browser default and a 1169x320 CSS box
+  // stretched it almost twofold. Two frames plus a settle pass covers the carousel
+  // transform; the redraw is cheap and idempotent.
+  const repaintAtlas = () => {
+    if (!activeCountryMap) return;
+    drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
+  };
+  requestAnimationFrame(() => requestAnimationFrame(repaintAtlas));
+  setTimeout(repaintAtlas, 250);
 }
 
 function setPanel(index) {
