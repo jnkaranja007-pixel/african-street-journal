@@ -46,6 +46,15 @@ jobs:
           # If the edition is already out, every step below is skipped and the run costs
           # seconds instead of a second full model spend.
           $stale = 'true'
+          # The guard exists to stop the second SCHEDULED attempt repeating work the
+          # first already did. A manual dispatch is an explicit instruction to run, so it
+          # must never be skipped - otherwise there is no way to force a re-run on a day
+          # the edition has already published, including to test this workflow.
+          if ($env:GITHUB_EVENT_NAME -ne 'schedule') {
+            Write-Host "event=$env:GITHUB_EVENT_NAME - not a scheduled run, proceeding regardless"
+            "stale=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+            exit 0
+          }
           if (Test-Path data/briefs.js) {
             $raw = [IO.File]::ReadAllText((Resolve-Path data/briefs.js).Path, [Text.Encoding]::UTF8)
             $m = [regex]::Match($raw, "generated:\s*'([^']+)'")
