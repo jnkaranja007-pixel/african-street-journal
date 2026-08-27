@@ -56,12 +56,48 @@ if (Test-Path $marketsPath) {
   if ($refreshed) { Write-Host "[add] refreshed markets for $refreshed countries from data/markets.json" -ForegroundColor Green }
 }
 
+
+# Drop individually defective stories instead of letting them fail the whole edition.
+# On 27 August the desk wrote 221 sound stories across 49 countries and published none
+# of them, because two were malformed: one Liberia story ran 223 words against a 220
+# cap, and one Sudan story reused an articleId. Rejecting 219 good stories over three
+# surplus words is the same all-or-nothing trap that kept the site stale for four days,
+# just relocated into the merge.
+#
+# These are exactly the conditions validate-briefs refuses to publish, so filtering
+# here means the gate stays strict about what reaches the site while a single bad
+# story costs one story rather than the day.
+$MinStoryWords = 70
+$MaxStoryWords = 220
+$seenArticleIds = New-Object 'System.Collections.Generic.HashSet[string]'
+function Get-StoryWordCount([string]$Text) {
+  if (-not $Text) { return 0 }
+  return ([regex]::Matches($Text, "[\p{L}\p{N}]+(?:['\u2019-][\p{L}\p{N}]+)*")).Count
+}
+function Get-StoryDefect($Story) {
+  if (-not $Story.paragraphs) { return $null }   # not a full story package; other checks cover it
+  $id = [string]$Story.articleId
+  if (-not $id) { return 'missing articleId' }
+  if (-not $seenArticleIds.Add($id)) { return "duplicate articleId $id" }
+  $wc = Get-StoryWordCount ([string]$Story.body)
+  if ($wc -lt $MinStoryWords -or $wc -gt $MaxStoryWords) { return "$wc words, need $MinStoryWords-$MaxStoryWords" }
+  $paras = @($Story.paragraphs).Count
+  if ($paras -lt 3 -or $paras -gt 6) { return "$paras paragraphs, need 3-6" }
+  if (-not $Story.dek) { return 'missing dek' }
+  if (([string]$Story.dek).Length -gt 200) { return 'dek over 200 chars' }
+  if (-not $Story.why) { return 'missing why' }
+  if (-not $Story.published) { return 'missing published time' }
+  if (([string]$Story.headline).Length -gt 100) { return 'headline over 100 chars' }
+  return $null
+}
+$droppedStories = New-Object System.Collections.Generic.List[string]
 $added = 0
 $stories = 0
 foreach ($p in $incoming.PSObject.Properties) {
   $code = $p.Name
   $list = @($p.Value | Where-Object { $_.headline -and $_.body })
   if (-not $list.Count) { Write-Host "  skip $code (no usable stories)" -ForegroundColor DarkYellow; continue }
+  $kept = New-Object System.Collections.Generic.List[object]
   foreach ($b in $list) {
     foreach ($s in @($b.sources)) {
       if ($s -and $s.url -and $s.url -notmatch '^https?://') {
@@ -69,7 +105,13 @@ foreach ($p in $incoming.PSObject.Properties) {
         exit 1
       }
     }
+    # A defective story costs itself, not the edition.
+    $defect = Get-StoryDefect $b
+    if ($defect) { $droppedStories.Add("${code}: $defect"); continue }
+    $kept.Add($b)
   }
+  if (-not $kept.Count) { Write-Host "  skip $code (all stories defective)" -ForegroundColor DarkYellow; continue }
+  $list = $kept.ToArray()
   $byCountry[$code] = $list
   $dates[$code] = $generated
   $added++
@@ -133,4 +175,9 @@ if ($editions.Count -eq 1) { $indexPayload = "window.UNITED_AFRICA_ARCHIVE_INDEX
 [IO.File]::WriteAllText((Join-Path $archiveDir 'index.js'), $indexPayload, (New-Object Text.UTF8Encoding($false)))
 
 Write-Host "[add] merged $stories stories across $added countries; $($byCountry.Count) countries now in data/briefs.js" -ForegroundColor Green
+if ($droppedStories.Count) {
+  # Named, not silent. A story dropped here is one a reader will not see, and a count
+  # that creeps up is the signal the writer has started producing malformed output.
+  Write-Host ("[add] dropped {0} defective story(ies): {1}" -f $droppedStories.Count, (($droppedStories | Select-Object -First 6) -join '; ')) -ForegroundColor DarkYellow
+}
 Write-Host "[add] archived edition $day ($($editions.Count) editions on file)" -ForegroundColor Green

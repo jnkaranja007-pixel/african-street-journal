@@ -1,78 +1,78 @@
 {
     "ke":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  273.25,
-                                     "t":  "CGEN",
-                                     "name":  "Car and General Kenya Ltd",
-                                     "change":  -9.97
-                                 },
-                                 {
-                                     "cap":  161.5,
-                                     "t":  "AMAC",
-                                     "name":  "Africa Mega Agricorp",
-                                     "change":  8.39
-                                 },
-                                 {
-                                     "cap":  19.5,
-                                     "t":  "SMER",
-                                     "name":  "Sameer Africa Plc",
-                                     "change":  7.73
-                                 },
-                                 {
-                                     "cap":  429.75,
-                                     "t":  "KUKZ",
-                                     "name":  "Kakuzi Ltd",
-                                     "change":  4.69
-                                 },
-                                 {
-                                     "cap":  6.96,
-                                     "t":  "XPRS",
-                                     "name":  "Express Kenya Ltd",
-                                     "change":  -3.87
-                                 },
-                                 {
-                                     "cap":  122.75,
-                                     "t":  "PORT",
-                                     "name":  "East African Portland Cement",
-                                     "change":  3.81
-                                 },
-                                 {
-                                     "cap":  5.66,
-                                     "t":  "KQ",
-                                     "name":  "Kenya Airways Ltd",
-                                     "change":  2.91
-                                 },
-                                 {
-                                     "cap":  6.1,
-                                     "t":  "SGL",
-                                     "name":  "Standard Group Ltd",
-                                     "change":  -2.87
-                                 },
-                                 {
-                                     "cap":  2.74,
+                                     "cap":  2.99,
                                      "t":  "LKL",
                                      "name":  "Longhorn Publishers Ltd",
-                                     "change":  -2.84
+                                     "change":  9.12
                                  },
                                  {
-                                     "cap":  43.1,
-                                     "t":  "CARB",
-                                     "name":  "Carbacid Investments",
-                                     "change":  -2.82
+                                     "cap":  48,
+                                     "t":  "TOTL",
+                                     "name":  "Total Kenya Ltd",
+                                     "change":  7.02
                                  },
                                  {
-                                     "cap":  33.45,
-                                     "t":  "UNGA",
-                                     "name":  "Unga Group Ltd",
+                                     "cap":  290,
+                                     "t":  "SBIC",
+                                     "name":  "Stanbic Holdings Ltd",
+                                     "change":  5.17
+                                 },
+                                 {
+                                     "cap":  18.5,
+                                     "t":  "SMER",
+                                     "name":  "Sameer Africa Plc",
+                                     "change":  -5.13
+                                 },
+                                 {
+                                     "cap":  18.2,
+                                     "t":  "SKL",
+                                     "name":  "Shri Krishana Overseas Ltd",
+                                     "change":  -4.46
+                                 },
+                                 {
+                                     "cap":  324.5,
+                                     "t":  "KAPC",
+                                     "name":  "Kapchorua Tea Company Ltd",
+                                     "change":  -3.99
+                                 },
+                                 {
+                                     "cap":  7.2,
+                                     "t":  "XPRS",
+                                     "name":  "Express Kenya Ltd",
+                                     "change":  3.45
+                                 },
+                                 {
+                                     "cap":  2.26,
+                                     "t":  "FTGH",
+                                     "name":  "Flame Tree Group Holdings",
+                                     "change":  3.2
+                                 },
+                                 {
+                                     "cap":  12.35,
+                                     "t":  "NMG",
+                                     "name":  "Nation Media Group",
                                      "change":  -2.76
                                  },
                                  {
-                                     "cap":  1.46,
+                                     "cap":  1.42,
                                      "t":  "UCHM",
                                      "name":  "Uchumi Supermarket Ltd",
-                                     "change":  -2.67
+                                     "change":  -2.74
+                                 },
+                                 {
+                                     "cap":  66.25,
+                                     "t":  "BKG",
+                                     "name":  "BK Group Plc",
+                                     "change":  2.32
+                                 },
+                                 {
+                                     "cap":  941,
+                                     "t":  "SMWF",
+                                     "name":  "Satrix MSCI World Feeder ETF",
+                                     "change":  2.28
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/nse/",
@@ -80,79 +80,79 @@
                "name":  "Nairobi Securities Exchange"
            },
     "ng":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  84.2,
+                                     "cap":  75.8,
                                      "t":  "FIDSON",
                                      "name":  "Fidson Healthcare",
-                                     "change":  -9.99
+                                     "change":  -9.98
                                  },
                                  {
-                                     "cap":  7.79,
-                                     "t":  "FTNCOCOA",
-                                     "name":  "FTN Cocoa Processors",
-                                     "change":  -9.94
+                                     "cap":  8.7,
+                                     "t":  "LEARNAFRCA",
+                                     "name":  "Learn Africa",
+                                     "change":  -9.84
                                  },
                                  {
-                                     "cap":  3.15,
+                                     "cap":  2.84,
                                      "t":  "INTENEGINS",
                                      "name":  "International Energy Insurance",
-                                     "change":  -9.74
+                                     "change":  -9.84
                                  },
                                  {
-                                     "cap":  7.95,
-                                     "t":  "NEIMETH",
-                                     "name":  "Neimeth International Pharma",
-                                     "change":  9.66
+                                     "cap":  5.35,
+                                     "t":  "CORNERST",
+                                     "name":  "Cornerstone Insurance Company",
+                                     "change":  9.18
                                  },
                                  {
-                                     "cap":  7.2,
-                                     "t":  "LIVESTOCK",
-                                     "name":  "Livestock Feeds",
-                                     "change":  -9.43
-                                 },
-                                 {
-                                     "cap":  4.5,
-                                     "t":  "CAVERTON",
-                                     "name":  "Caverton Offshore Support Group",
-                                     "change":  -9.09
-                                 },
-                                 {
-                                     "cap":  7.8,
-                                     "t":  "JAIZBANK",
-                                     "name":  "Jaiz Bank Plc",
-                                     "change":  -7.69
-                                 },
-                                 {
-                                     "cap":  11,
+                                     "cap":  12,
                                      "t":  "MANSARD",
                                      "name":  "AXA Mansard Insurance",
-                                     "change":  -7.56
+                                     "change":  9.09
                                  },
                                  {
-                                     "cap":  32,
+                                     "cap":  1.38,
+                                     "t":  "DAARCOMM",
+                                     "name":  "Daar Communications",
+                                     "change":  -8.61
+                                 },
+                                 {
+                                     "cap":  3.8,
+                                     "t":  "LEGENDINT",
+                                     "name":  "Legend Internet",
+                                     "change":  -8.43
+                                 },
+                                 {
+                                     "cap":  38.7,
+                                     "t":  "IKEJAHOTEL",
+                                     "name":  "Ikeja Hotel Plc",
+                                     "change":  -7.86
+                                 },
+                                 {
+                                     "cap":  29.7,
                                      "t":  "NEM",
                                      "name":  "N.E.M. Insurance Company",
-                                     "change":  6.67
+                                     "change":  -7.19
                                  },
                                  {
-                                     "cap":  0.72,
-                                     "t":  "NSLTECH",
-                                     "name":  "Secure Electronic Technology",
-                                     "change":  -6.49
+                                     "cap":  8.5,
+                                     "t":  "ABBEYBANK",
+                                     "name":  "Abbey Bank",
+                                     "change":  6.25
                                  },
                                  {
-                                     "cap":  1.88,
-                                     "t":  "LINKASSURE",
-                                     "name":  "Linkage Assurance",
-                                     "change":  5.62
+                                     "cap":  135,
+                                     "t":  "FIRSTHOLDCO",
+                                     "name":  "First HoldCo Plc",
+                                     "change":  4.65
                                  },
                                  {
-                                     "cap":  3.7,
-                                     "t":  "AIICO",
-                                     "name":  "Aiico Insurance Plc",
-                                     "change":  -4.88
+                                     "cap":  7.6,
+                                     "t":  "NEIMETH",
+                                     "name":  "Neimeth International Pharma",
+                                     "change":  -4.4
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/ngx/",
@@ -160,79 +160,79 @@
                "name":  "Nigerian Exchange Group"
            },
     "za":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  7,
-                                     "t":  "BAC",
-                                     "name":  "Africa Bitcoin Corporation Ltd",
-                                     "change":  40
+                                     "cap":  55.01,
+                                     "t":  "AME",
+                                     "name":  "African Media Ent Ltd",
+                                     "change":  -22.19
                                  },
                                  {
-                                     "cap":  5.07,
-                                     "t":  "BRT",
-                                     "name":  "Brimstone Inv Corp Ltd",
-                                     "change":  -7.31
+                                     "cap":  1.12,
+                                     "t":  "CHP",
+                                     "name":  "Choppies Enterprises Limited",
+                                     "change":  12
                                  },
                                  {
-                                     "cap":  48.42,
-                                     "t":  "ADH",
-                                     "name":  "ADvTECH Ltd",
-                                     "change":  5.35
-                                 },
-                                 {
-                                     "cap":  155.15,
-                                     "t":  "APN",
-                                     "name":  "Aspen Pharmacare Holdings",
-                                     "change":  4.34
-                                 },
-                                 {
-                                     "cap":  1.58,
-                                     "t":  "AXX",
-                                     "name":  "Araxi Ltd",
-                                     "change":  -3.66
-                                 },
-                                 {
-                                     "cap":  8.03,
-                                     "t":  "BLU",
-                                     "name":  "Blue Label Telecoms Ltd",
-                                     "change":  -3.49
-                                 },
-                                 {
-                                     "cap":  3.6,
+                                     "cap":  3.89,
                                      "t":  "CGR",
                                      "name":  "Calgro M3 Hldgs Ltd",
-                                     "change":  -2.7
+                                     "change":  8.06
                                  },
                                  {
-                                     "cap":  77.25,
-                                     "t":  "BOX",
-                                     "name":  "Boxer Retail Ltd",
-                                     "change":  2.6
+                                     "cap":  14.5,
+                                     "t":  "BCF",
+                                     "name":  "Bowler Metcalf Ltd",
+                                     "change":  7.49
                                  },
                                  {
-                                     "cap":  4.3,
-                                     "t":  "CLH",
-                                     "name":  "City Lodge Hotels Limited",
-                                     "change":  -2.49
+                                     "cap":  0.16,
+                                     "t":  "BIK",
+                                     "name":  "Brikor Limited",
+                                     "change":  -5.88
                                  },
                                  {
-                                     "cap":  3790.12,
-                                     "t":  "CFR",
-                                     "name":  "Compagnie Financière Richemont",
-                                     "change":  2.48
+                                     "cap":  0.77,
+                                     "t":  "ACT",
+                                     "name":  "AfroCentric Inv Corp Ltd",
+                                     "change":  -3.75
                                  },
                                  {
-                                     "cap":  40.9,
-                                     "t":  "ART",
-                                     "name":  "Argent Industrial Ltd",
-                                     "change":  -2.41
+                                     "cap":  159.55,
+                                     "t":  "APN",
+                                     "name":  "Aspen Pharmacare Holdings",
+                                     "change":  3.28
                                  },
                                  {
-                                     "cap":  0.41,
-                                     "t":  "APF",
-                                     "name":  "Accelerate Property Fund Limited",
-                                     "change":  -2.38
+                                     "cap":  25.5,
+                                     "t":  "AFT",
+                                     "name":  "Afrimat Limited",
+                                     "change":  -3.12
+                                 },
+                                 {
+                                     "cap":  4.23,
+                                     "t":  "AEG",
+                                     "name":  "Aveng Group Limited",
+                                     "change":  -2.76
+                                 },
+                                 {
+                                     "cap":  38,
+                                     "t":  "CMH",
+                                     "name":  "Combined Motor Hldgs Ltd",
+                                     "change":  2.67
+                                 },
+                                 {
+                                     "cap":  11.68,
+                                     "t":  "CAT",
+                                     "name":  "Caxton \u0026 CTP Publishers Limited",
+                                     "change":  -2.59
+                                 },
+                                 {
+                                     "cap":  27.39,
+                                     "t":  "AEL",
+                                     "name":  "Altron: Allied Electronics Corporation",
+                                     "change":  2.35
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/jse/",
@@ -240,79 +240,79 @@
                "name":  "Johannesburg Stock Exchange"
            },
     "gh":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  0.22,
-                                     "t":  "DIGICUT",
-                                     "name":  "Digicut Production \u0026 Advertising",
-                                     "change":  10
-                                 },
-                                 {
-                                     "cap":  1.67,
+                                     "cap":  1.83,
                                      "t":  "DASPHARMA",
                                      "name":  "Dannex Ayrton Starwin Plc",
-                                     "change":  9.87
+                                     "change":  9.58
                                  },
                                  {
-                                     "cap":  6.75,
+                                     "cap":  0.24,
+                                     "t":  "DIGICUT",
+                                     "name":  "Digicut Production \u0026 Advertising",
+                                     "change":  9.09
+                                 },
+                                 {
+                                     "cap":  6.16,
                                      "t":  "EGL",
                                      "name":  "Enterprise Group Limited",
-                                     "change":  -8.91
+                                     "change":  -8.74
+                                 },
+                                 {
+                                     "cap":  1.21,
+                                     "t":  "TBL",
+                                     "name":  "Trust Bank Gambia Limited",
+                                     "change":  -8.33
+                                 },
+                                 {
+                                     "cap":  5,
+                                     "t":  "SIC",
+                                     "name":  "SIC Insurance Company Limited",
+                                     "change":  -8.09
                                  },
                                  {
                                      "cap":  6,
-                                     "t":  "SOGEGH",
-                                     "name":  "Societe Generale Ghana Limited",
-                                     "change":  6.19
+                                     "t":  "CLYD",
+                                     "name":  "Clydestone Ghana Limited",
+                                     "change":  -7.41
                                  },
                                  {
-                                     "cap":  1.32,
-                                     "t":  "TBL",
-                                     "name":  "Trust Bank Gambia Limited",
-                                     "change":  3.94
+                                     "cap":  0.76,
+                                     "t":  "IIL",
+                                     "name":  "Intravenous Infusions Limited",
+                                     "change":  -5
                                  },
                                  {
-                                     "cap":  1.81,
+                                     "cap":  1.86,
                                      "t":  "ETI",
                                      "name":  "Ecobank Transnational Incorporated",
-                                     "change":  -2.16
+                                     "change":  2.76
                                  },
                                  {
-                                     "cap":  0.74,
-                                     "t":  "CAL",
-                                     "name":  "CalBank Plc",
-                                     "change":  1.37
-                                 },
-                                 {
-                                     "cap":  41.5,
-                                     "t":  "TOTAL",
-                                     "name":  "TotalEnergies Marketing Ghana",
-                                     "change":  -1.19
-                                 },
-                                 {
-                                     "cap":  7,
+                                     "cap":  6.9,
                                      "t":  "MTNGH",
                                      "name":  "MTN Ghana",
-                                     "change":  1.16
+                                     "change":  -1.43
                                  },
                                  {
-                                     "cap":  5.44,
-                                     "t":  "SIC",
-                                     "name":  "SIC Insurance Company Limited",
-                                     "change":  -1.09
+                                     "cap":  0.73,
+                                     "t":  "CAL",
+                                     "name":  "CalBank Plc",
+                                     "change":  -1.35
                                  },
                                  {
-                                     "cap":  40,
-                                     "t":  "UNIL",
-                                     "name":  "Unilever Ghana Limited",
-                                     "change":  1.04
+                                     "cap":  39.09,
+                                     "t":  "GCB",
+                                     "name":  "GCB Bank Limited",
+                                     "change":  0.23
                                  },
                                  {
-                                     "cap":  76.67,
-                                     "t":  "BOPP",
-                                     "name":  "Benso Oil Palm Plantation Limited",
-                                     "change":  0.88
+                                     "cap":  69.89,
+                                     "t":  "SCB",
+                                     "name":  "Standard Chartered Bank Limited",
+                                     "change":  -0.16
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/gse/",
@@ -320,78 +320,78 @@
                "name":  "Ghana Stock Exchange"
            },
     "ug":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  378.39,
-                                     "t":  "NMG",
-                                     "name":  "Nation Media Group",
-                                     "change":  3.95
+                                     "cap":  64,
+                                     "t":  "BOBU",
+                                     "name":  "Bank of Baroda Uganda",
+                                     "change":  1.46
                                  },
                                  {
-                                     "cap":  511.56,
-                                     "t":  "CENT",
-                                     "name":  "Centum Investment",
-                                     "change":  2.76
-                                 },
-                                 {
-                                     "cap":  7970.68,
-                                     "t":  "EABL",
-                                     "name":  "East African Breweries Limited",
-                                     "change":  1.84
-                                 },
-                                 {
-                                     "cap":  102,
+                                     "cap":  101,
                                      "t":  "SBU",
                                      "name":  "Stanbic Bank Uganda",
-                                     "change":  0.99
+                                     "change":  -0.98
                                  },
                                  {
-                                     "cap":  11848.11,
-                                     "t":  "JHL",
-                                     "name":  "Jubilee Holdings Limited",
-                                     "change":  -0.9
+                                     "cap":  435.9,
+                                     "t":  "MTNU",
+                                     "name":  "MTN Uganda",
+                                     "change":  0.14
                                  },
                                  {
-                                     "cap":  161.97,
-                                     "t":  "KA",
-                                     "name":  "Kenya Airways",
-                                     "change":  -0.55
+                                     "cap":  171.23,
+                                     "t":  "AIRTEL",
+                                     "name":  "Airtel Uganda",
+                                     "change":  0.12
+                                 },
+                                 {
+                                     "cap":  370.34,
+                                     "t":  "NMG",
+                                     "name":  "Nation Media Group",
+                                     "change":  0
+                                 },
+                                 {
+                                     "cap":  9.3,
+                                     "t":  "NIC",
+                                     "name":  "National Insurance Corporation",
+                                     "change":  0
+                                 },
+                                 {
+                                     "cap":  7.1,
+                                     "t":  "UCL",
+                                     "name":  "Uganda Clays Limited",
+                                     "change":  0
+                                 },
+                                 {
+                                     "cap":  63,
+                                     "t":  "UMEM",
+                                     "name":  "Umeme Limited",
+                                     "change":  0
                                  },
                                  {
                                      "cap":  160.77,
                                      "t":  "QCIL",
                                      "name":  "Quality Chemical Industries Ltd",
-                                     "change":  0.48
+                                     "change":  0
                                  },
                                  {
-                                     "cap":  2701.88,
-                                     "t":  "KCB",
-                                     "name":  "KCB Group",
-                                     "change":  0.42
+                                     "cap":  148,
+                                     "t":  "NVL",
+                                     "name":  "New Vision Limited",
+                                     "change":  0
                                  },
                                  {
-                                     "cap":  2690.46,
-                                     "t":  "EBL",
-                                     "name":  "Equity Bank Limited",
-                                     "change":  0.27
+                                     "cap":  337,
+                                     "t":  "DFCU",
+                                     "name":  "DFCU Limited",
+                                     "change":  0
                                  },
                                  {
-                                     "cap":  435.28,
-                                     "t":  "MTNU",
-                                     "name":  "MTN Uganda",
-                                     "change":  0.06
-                                 },
-                                 {
-                                     "cap":  171.02,
-                                     "t":  "AIRTEL",
-                                     "name":  "Airtel Uganda",
-                                     "change":  0.01
-                                 },
-                                 {
-                                     "cap":  11400,
-                                     "t":  "BATU",
-                                     "name":  "British American Tobacco Uganda",
+                                     "cap":  8040.78,
+                                     "t":  "EABL",
+                                     "name":  "East African Breweries Limited",
                                      "change":  0
                                  }
                              ],
@@ -400,79 +400,79 @@
                "name":  "Uganda Securities Exchange"
            },
     "zw":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  0.277613,
-                                     "t":  "TNCI",
-                                     "name":  "TN CyberTech Investments Holdings",
-                                     "change":  -14.97
+                                     "cap":  2.3,
+                                     "t":  "UNIF",
+                                     "name":  "Unifreight Africa Limited",
+                                     "change":  15
                                  },
                                  {
-                                     "cap":  2.87,
-                                     "t":  "ZSEH",
-                                     "name":  "Zimbabwe Stock Exchange Holdings",
-                                     "change":  14.8
-                                 },
-                                 {
-                                     "cap":  0.78,
-                                     "t":  "ZIMR",
-                                     "name":  "Zimre Holdings Limited",
-                                     "change":  -14.52
-                                 },
-                                 {
-                                     "cap":  0.09,
+                                     "cap":  0.103494,
                                      "t":  "GBH",
                                      "name":  "General Beltings Holdings Limited",
-                                     "change":  -14.29
+                                     "change":  14.99
                                  },
                                  {
-                                     "cap":  2.6,
-                                     "t":  "MSHL",
-                                     "name":  "Masimba Holdings Limited",
-                                     "change":  13.04
+                                     "cap":  4.5,
+                                     "t":  "DZL",
+                                     "name":  "Dairibord Holdings Limited",
+                                     "change":  13.64
                                  },
                                  {
-                                     "cap":  1.56413,
-                                     "t":  "MASH",
-                                     "name":  "Mashonaland Holdings Limited",
-                                     "change":  -7.97
+                                     "cap":  0.6825,
+                                     "t":  "ZIMR",
+                                     "name":  "Zimre Holdings Limited",
+                                     "change":  -12.5
                                  },
                                  {
-                                     "cap":  0.06,
-                                     "t":  "ARIS",
-                                     "name":  "Ariston Holdings Limited",
-                                     "change":  -7.22
+                                     "cap":  2.702203,
+                                     "t":  "ZSEH",
+                                     "name":  "Zimbabwe Stock Exchange Holdings",
+                                     "change":  -5.85
                                  },
                                  {
-                                     "cap":  0.0702,
+                                     "cap":  0.072867,
                                      "t":  "WILD",
                                      "name":  "Willdale Zimbabwe Limited",
-                                     "change":  5.74
+                                     "change":  3.8
                                  },
                                  {
-                                     "cap":  0.038515,
-                                     "t":  "SACL",
-                                     "name":  "Star Africa Corporation Limited",
-                                     "change":  -3.71
+                                     "cap":  6.2,
+                                     "t":  "NMB",
+                                     "name":  "NMBZ Holdings Limited",
+                                     "change":  3.33
                                  },
                                  {
-                                     "cap":  5.501526,
-                                     "t":  "SEED",
-                                     "name":  "Seed Co Limited",
-                                     "change":  -2.45
+                                     "cap":  0.286545,
+                                     "t":  "TNCI",
+                                     "name":  "TN CyberTech Investments Holdings",
+                                     "change":  3.22
                                  },
                                  {
-                                     "cap":  4.38792,
-                                     "t":  "TANG",
-                                     "name":  "Tanganda Tea Company",
-                                     "change":  -2.27
-                                 },
-                                 {
-                                     "cap":  1.094945,
+                                     "cap":  1.070354,
                                      "t":  "TIG",
                                      "name":  "Tigere Property Fund REIT",
-                                     "change":  -2.18
+                                     "change":  -2.25
+                                 },
+                                 {
+                                     "cap":  1.555294,
+                                     "t":  "RTG",
+                                     "name":  "Rainbow Tourism Group Limited",
+                                     "change":  -1.94
+                                 },
+                                 {
+                                     "cap":  0.038833,
+                                     "t":  "SACL",
+                                     "name":  "Star Africa Corporation Limited",
+                                     "change":  0.83
+                                 },
+                                 {
+                                     "cap":  2.514286,
+                                     "t":  "MEIK",
+                                     "name":  "Meikles Limited",
+                                     "change":  0.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/zse/",
@@ -480,79 +480,79 @@
                "name":  "Zimbabwe Stock Exchange"
            },
     "ci":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  8005,
-                                     "t":  "SICC",
-                                     "name":  "Sicor Côte d’Ivoire",
-                                     "change":  -7.46
+                                     "cap":  56115,
+                                     "t":  "UNLC",
+                                     "name":  "Unilever Côte d’Ivoire",
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  3600,
-                                     "t":  "ABJC",
-                                     "name":  "Servair Abidjan Côte d’Ivoire",
-                                     "change":  7.46
-                                 },
-                                 {
-                                     "cap":  8500,
-                                     "t":  "BOAS",
-                                     "name":  "Bank of Africa - Senegal",
-                                     "change":  6.25
-                                 },
-                                 {
-                                     "cap":  8000,
+                                     "cap":  8600,
                                      "t":  "BOABF",
                                      "name":  "Bank of Africa - Burkina Faso",
-                                     "change":  5.26
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  2500,
+                                     "cap":  21205,
+                                     "t":  "STBC",
+                                     "name":  "Sitab Côte d’Ivoire",
+                                     "change":  -7.4
+                                 },
+                                 {
+                                     "cap":  2135,
+                                     "t":  "BNBC",
+                                     "name":  "Bernabe Côte d’Ivoire",
+                                     "change":  7.29
+                                 },
+                                 {
+                                     "cap":  2680,
                                      "t":  "NEIC",
                                      "name":  "NEI-CEDA Côte d’Ivoire",
-                                     "change":  4.17
+                                     "change":  7.2
                                  },
                                  {
-                                     "cap":  8495,
-                                     "t":  "BICB",
-                                     "name":  "BIIC Bénin",
-                                     "change":  3.6
+                                     "cap":  3595,
+                                     "t":  "TTLC",
+                                     "name":  "Total Côte d’Ivoire",
+                                     "change":  5.74
                                  },
                                  {
-                                     "cap":  29000,
-                                     "t":  "CBIBF",
-                                     "name":  "Coris Bank International",
-                                     "change":  -3.33
+                                     "cap":  34600,
+                                     "t":  "SNTS",
+                                     "name":  "Sonatel Senegal",
+                                     "change":  -5.21
                                  },
                                  {
-                                     "cap":  2700,
+                                     "cap":  2560,
                                      "t":  "SDSC",
                                      "name":  "Bollore Transport \u0026 Logistics",
-                                     "change":  -2.88
+                                     "change":  -5.19
                                  },
                                  {
-                                     "cap":  3190,
-                                     "t":  "ORGT",
-                                     "name":  "Oragroup Togo",
-                                     "change":  2.08
-                                 },
-                                 {
-                                     "cap":  9250,
+                                     "cap":  9650,
                                      "t":  "SPHC",
                                      "name":  "Saph Côte d’Ivoire",
-                                     "change":  -2.01
+                                     "change":  4.32
                                  },
                                  {
-                                     "cap":  5800,
-                                     "t":  "SAFC",
-                                     "name":  "Safca Côte d’Ivoire",
-                                     "change":  1.75
+                                     "cap":  12490,
+                                     "t":  "SDCC",
+                                     "name":  "Sode Côte d’Ivoire",
+                                     "change":  4.08
                                  },
                                  {
-                                     "cap":  67,
-                                     "t":  "ETIT",
-                                     "name":  "Ecobank Transnational Inc",
-                                     "change":  1.52
+                                     "cap":  2400,
+                                     "t":  "UNXC",
+                                     "name":  "Uniwax Côte d’Ivoire",
+                                     "change":  -3.81
+                                 },
+                                 {
+                                     "cap":  10350,
+                                     "t":  "BOAB",
+                                     "name":  "Bank of Africa - Benin",
+                                     "change":  3.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
@@ -560,79 +560,79 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "bj":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  8005,
-                                     "t":  "SICC",
-                                     "name":  "Sicor Côte d’Ivoire",
-                                     "change":  -7.46
+                                     "cap":  56115,
+                                     "t":  "UNLC",
+                                     "name":  "Unilever Côte d’Ivoire",
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  3600,
-                                     "t":  "ABJC",
-                                     "name":  "Servair Abidjan Côte d’Ivoire",
-                                     "change":  7.46
-                                 },
-                                 {
-                                     "cap":  8500,
-                                     "t":  "BOAS",
-                                     "name":  "Bank of Africa - Senegal",
-                                     "change":  6.25
-                                 },
-                                 {
-                                     "cap":  8000,
+                                     "cap":  8600,
                                      "t":  "BOABF",
                                      "name":  "Bank of Africa - Burkina Faso",
-                                     "change":  5.26
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  2500,
+                                     "cap":  21205,
+                                     "t":  "STBC",
+                                     "name":  "Sitab Côte d’Ivoire",
+                                     "change":  -7.4
+                                 },
+                                 {
+                                     "cap":  2135,
+                                     "t":  "BNBC",
+                                     "name":  "Bernabe Côte d’Ivoire",
+                                     "change":  7.29
+                                 },
+                                 {
+                                     "cap":  2680,
                                      "t":  "NEIC",
                                      "name":  "NEI-CEDA Côte d’Ivoire",
-                                     "change":  4.17
+                                     "change":  7.2
                                  },
                                  {
-                                     "cap":  8495,
-                                     "t":  "BICB",
-                                     "name":  "BIIC Bénin",
-                                     "change":  3.6
+                                     "cap":  3595,
+                                     "t":  "TTLC",
+                                     "name":  "Total Côte d’Ivoire",
+                                     "change":  5.74
                                  },
                                  {
-                                     "cap":  29000,
-                                     "t":  "CBIBF",
-                                     "name":  "Coris Bank International",
-                                     "change":  -3.33
+                                     "cap":  34600,
+                                     "t":  "SNTS",
+                                     "name":  "Sonatel Senegal",
+                                     "change":  -5.21
                                  },
                                  {
-                                     "cap":  2700,
+                                     "cap":  2560,
                                      "t":  "SDSC",
                                      "name":  "Bollore Transport \u0026 Logistics",
-                                     "change":  -2.88
+                                     "change":  -5.19
                                  },
                                  {
-                                     "cap":  3190,
-                                     "t":  "ORGT",
-                                     "name":  "Oragroup Togo",
-                                     "change":  2.08
-                                 },
-                                 {
-                                     "cap":  9250,
+                                     "cap":  9650,
                                      "t":  "SPHC",
                                      "name":  "Saph Côte d’Ivoire",
-                                     "change":  -2.01
+                                     "change":  4.32
                                  },
                                  {
-                                     "cap":  5800,
-                                     "t":  "SAFC",
-                                     "name":  "Safca Côte d’Ivoire",
-                                     "change":  1.75
+                                     "cap":  12490,
+                                     "t":  "SDCC",
+                                     "name":  "Sode Côte d’Ivoire",
+                                     "change":  4.08
                                  },
                                  {
-                                     "cap":  67,
-                                     "t":  "ETIT",
-                                     "name":  "Ecobank Transnational Inc",
-                                     "change":  1.52
+                                     "cap":  2400,
+                                     "t":  "UNXC",
+                                     "name":  "Uniwax Côte d’Ivoire",
+                                     "change":  -3.81
+                                 },
+                                 {
+                                     "cap":  10350,
+                                     "t":  "BOAB",
+                                     "name":  "Bank of Africa - Benin",
+                                     "change":  3.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
@@ -640,79 +640,79 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "bf":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  8005,
-                                     "t":  "SICC",
-                                     "name":  "Sicor Côte d’Ivoire",
-                                     "change":  -7.46
+                                     "cap":  56115,
+                                     "t":  "UNLC",
+                                     "name":  "Unilever Côte d’Ivoire",
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  3600,
-                                     "t":  "ABJC",
-                                     "name":  "Servair Abidjan Côte d’Ivoire",
-                                     "change":  7.46
-                                 },
-                                 {
-                                     "cap":  8500,
-                                     "t":  "BOAS",
-                                     "name":  "Bank of Africa - Senegal",
-                                     "change":  6.25
-                                 },
-                                 {
-                                     "cap":  8000,
+                                     "cap":  8600,
                                      "t":  "BOABF",
                                      "name":  "Bank of Africa - Burkina Faso",
-                                     "change":  5.26
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  2500,
+                                     "cap":  21205,
+                                     "t":  "STBC",
+                                     "name":  "Sitab Côte d’Ivoire",
+                                     "change":  -7.4
+                                 },
+                                 {
+                                     "cap":  2135,
+                                     "t":  "BNBC",
+                                     "name":  "Bernabe Côte d’Ivoire",
+                                     "change":  7.29
+                                 },
+                                 {
+                                     "cap":  2680,
                                      "t":  "NEIC",
                                      "name":  "NEI-CEDA Côte d’Ivoire",
-                                     "change":  4.17
+                                     "change":  7.2
                                  },
                                  {
-                                     "cap":  8495,
-                                     "t":  "BICB",
-                                     "name":  "BIIC Bénin",
-                                     "change":  3.6
+                                     "cap":  3595,
+                                     "t":  "TTLC",
+                                     "name":  "Total Côte d’Ivoire",
+                                     "change":  5.74
                                  },
                                  {
-                                     "cap":  29000,
-                                     "t":  "CBIBF",
-                                     "name":  "Coris Bank International",
-                                     "change":  -3.33
+                                     "cap":  34600,
+                                     "t":  "SNTS",
+                                     "name":  "Sonatel Senegal",
+                                     "change":  -5.21
                                  },
                                  {
-                                     "cap":  2700,
+                                     "cap":  2560,
                                      "t":  "SDSC",
                                      "name":  "Bollore Transport \u0026 Logistics",
-                                     "change":  -2.88
+                                     "change":  -5.19
                                  },
                                  {
-                                     "cap":  3190,
-                                     "t":  "ORGT",
-                                     "name":  "Oragroup Togo",
-                                     "change":  2.08
-                                 },
-                                 {
-                                     "cap":  9250,
+                                     "cap":  9650,
                                      "t":  "SPHC",
                                      "name":  "Saph Côte d’Ivoire",
-                                     "change":  -2.01
+                                     "change":  4.32
                                  },
                                  {
-                                     "cap":  5800,
-                                     "t":  "SAFC",
-                                     "name":  "Safca Côte d’Ivoire",
-                                     "change":  1.75
+                                     "cap":  12490,
+                                     "t":  "SDCC",
+                                     "name":  "Sode Côte d’Ivoire",
+                                     "change":  4.08
                                  },
                                  {
-                                     "cap":  67,
-                                     "t":  "ETIT",
-                                     "name":  "Ecobank Transnational Inc",
-                                     "change":  1.52
+                                     "cap":  2400,
+                                     "t":  "UNXC",
+                                     "name":  "Uniwax Côte d’Ivoire",
+                                     "change":  -3.81
+                                 },
+                                 {
+                                     "cap":  10350,
+                                     "t":  "BOAB",
+                                     "name":  "Bank of Africa - Benin",
+                                     "change":  3.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
@@ -720,79 +720,79 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "ml":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  8005,
-                                     "t":  "SICC",
-                                     "name":  "Sicor Côte d’Ivoire",
-                                     "change":  -7.46
+                                     "cap":  56115,
+                                     "t":  "UNLC",
+                                     "name":  "Unilever Côte d’Ivoire",
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  3600,
-                                     "t":  "ABJC",
-                                     "name":  "Servair Abidjan Côte d’Ivoire",
-                                     "change":  7.46
-                                 },
-                                 {
-                                     "cap":  8500,
-                                     "t":  "BOAS",
-                                     "name":  "Bank of Africa - Senegal",
-                                     "change":  6.25
-                                 },
-                                 {
-                                     "cap":  8000,
+                                     "cap":  8600,
                                      "t":  "BOABF",
                                      "name":  "Bank of Africa - Burkina Faso",
-                                     "change":  5.26
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  2500,
+                                     "cap":  21205,
+                                     "t":  "STBC",
+                                     "name":  "Sitab Côte d’Ivoire",
+                                     "change":  -7.4
+                                 },
+                                 {
+                                     "cap":  2135,
+                                     "t":  "BNBC",
+                                     "name":  "Bernabe Côte d’Ivoire",
+                                     "change":  7.29
+                                 },
+                                 {
+                                     "cap":  2680,
                                      "t":  "NEIC",
                                      "name":  "NEI-CEDA Côte d’Ivoire",
-                                     "change":  4.17
+                                     "change":  7.2
                                  },
                                  {
-                                     "cap":  8495,
-                                     "t":  "BICB",
-                                     "name":  "BIIC Bénin",
-                                     "change":  3.6
+                                     "cap":  3595,
+                                     "t":  "TTLC",
+                                     "name":  "Total Côte d’Ivoire",
+                                     "change":  5.74
                                  },
                                  {
-                                     "cap":  29000,
-                                     "t":  "CBIBF",
-                                     "name":  "Coris Bank International",
-                                     "change":  -3.33
+                                     "cap":  34600,
+                                     "t":  "SNTS",
+                                     "name":  "Sonatel Senegal",
+                                     "change":  -5.21
                                  },
                                  {
-                                     "cap":  2700,
+                                     "cap":  2560,
                                      "t":  "SDSC",
                                      "name":  "Bollore Transport \u0026 Logistics",
-                                     "change":  -2.88
+                                     "change":  -5.19
                                  },
                                  {
-                                     "cap":  3190,
-                                     "t":  "ORGT",
-                                     "name":  "Oragroup Togo",
-                                     "change":  2.08
-                                 },
-                                 {
-                                     "cap":  9250,
+                                     "cap":  9650,
                                      "t":  "SPHC",
                                      "name":  "Saph Côte d’Ivoire",
-                                     "change":  -2.01
+                                     "change":  4.32
                                  },
                                  {
-                                     "cap":  5800,
-                                     "t":  "SAFC",
-                                     "name":  "Safca Côte d’Ivoire",
-                                     "change":  1.75
+                                     "cap":  12490,
+                                     "t":  "SDCC",
+                                     "name":  "Sode Côte d’Ivoire",
+                                     "change":  4.08
                                  },
                                  {
-                                     "cap":  67,
-                                     "t":  "ETIT",
-                                     "name":  "Ecobank Transnational Inc",
-                                     "change":  1.52
+                                     "cap":  2400,
+                                     "t":  "UNXC",
+                                     "name":  "Uniwax Côte d’Ivoire",
+                                     "change":  -3.81
+                                 },
+                                 {
+                                     "cap":  10350,
+                                     "t":  "BOAB",
+                                     "name":  "Bank of Africa - Benin",
+                                     "change":  3.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
@@ -800,79 +800,79 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "ne":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  8005,
-                                     "t":  "SICC",
-                                     "name":  "Sicor Côte d’Ivoire",
-                                     "change":  -7.46
+                                     "cap":  56115,
+                                     "t":  "UNLC",
+                                     "name":  "Unilever Côte d’Ivoire",
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  3600,
-                                     "t":  "ABJC",
-                                     "name":  "Servair Abidjan Côte d’Ivoire",
-                                     "change":  7.46
-                                 },
-                                 {
-                                     "cap":  8500,
-                                     "t":  "BOAS",
-                                     "name":  "Bank of Africa - Senegal",
-                                     "change":  6.25
-                                 },
-                                 {
-                                     "cap":  8000,
+                                     "cap":  8600,
                                      "t":  "BOABF",
                                      "name":  "Bank of Africa - Burkina Faso",
-                                     "change":  5.26
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  2500,
+                                     "cap":  21205,
+                                     "t":  "STBC",
+                                     "name":  "Sitab Côte d’Ivoire",
+                                     "change":  -7.4
+                                 },
+                                 {
+                                     "cap":  2135,
+                                     "t":  "BNBC",
+                                     "name":  "Bernabe Côte d’Ivoire",
+                                     "change":  7.29
+                                 },
+                                 {
+                                     "cap":  2680,
                                      "t":  "NEIC",
                                      "name":  "NEI-CEDA Côte d’Ivoire",
-                                     "change":  4.17
+                                     "change":  7.2
                                  },
                                  {
-                                     "cap":  8495,
-                                     "t":  "BICB",
-                                     "name":  "BIIC Bénin",
-                                     "change":  3.6
+                                     "cap":  3595,
+                                     "t":  "TTLC",
+                                     "name":  "Total Côte d’Ivoire",
+                                     "change":  5.74
                                  },
                                  {
-                                     "cap":  29000,
-                                     "t":  "CBIBF",
-                                     "name":  "Coris Bank International",
-                                     "change":  -3.33
+                                     "cap":  34600,
+                                     "t":  "SNTS",
+                                     "name":  "Sonatel Senegal",
+                                     "change":  -5.21
                                  },
                                  {
-                                     "cap":  2700,
+                                     "cap":  2560,
                                      "t":  "SDSC",
                                      "name":  "Bollore Transport \u0026 Logistics",
-                                     "change":  -2.88
+                                     "change":  -5.19
                                  },
                                  {
-                                     "cap":  3190,
-                                     "t":  "ORGT",
-                                     "name":  "Oragroup Togo",
-                                     "change":  2.08
-                                 },
-                                 {
-                                     "cap":  9250,
+                                     "cap":  9650,
                                      "t":  "SPHC",
                                      "name":  "Saph Côte d’Ivoire",
-                                     "change":  -2.01
+                                     "change":  4.32
                                  },
                                  {
-                                     "cap":  5800,
-                                     "t":  "SAFC",
-                                     "name":  "Safca Côte d’Ivoire",
-                                     "change":  1.75
+                                     "cap":  12490,
+                                     "t":  "SDCC",
+                                     "name":  "Sode Côte d’Ivoire",
+                                     "change":  4.08
                                  },
                                  {
-                                     "cap":  67,
-                                     "t":  "ETIT",
-                                     "name":  "Ecobank Transnational Inc",
-                                     "change":  1.52
+                                     "cap":  2400,
+                                     "t":  "UNXC",
+                                     "name":  "Uniwax Côte d’Ivoire",
+                                     "change":  -3.81
+                                 },
+                                 {
+                                     "cap":  10350,
+                                     "t":  "BOAB",
+                                     "name":  "Bank of Africa - Benin",
+                                     "change":  3.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
@@ -880,79 +880,79 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "sn":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  8005,
-                                     "t":  "SICC",
-                                     "name":  "Sicor Côte d’Ivoire",
-                                     "change":  -7.46
+                                     "cap":  56115,
+                                     "t":  "UNLC",
+                                     "name":  "Unilever Côte d’Ivoire",
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  3600,
-                                     "t":  "ABJC",
-                                     "name":  "Servair Abidjan Côte d’Ivoire",
-                                     "change":  7.46
-                                 },
-                                 {
-                                     "cap":  8500,
-                                     "t":  "BOAS",
-                                     "name":  "Bank of Africa - Senegal",
-                                     "change":  6.25
-                                 },
-                                 {
-                                     "cap":  8000,
+                                     "cap":  8600,
                                      "t":  "BOABF",
                                      "name":  "Bank of Africa - Burkina Faso",
-                                     "change":  5.26
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  2500,
+                                     "cap":  21205,
+                                     "t":  "STBC",
+                                     "name":  "Sitab Côte d’Ivoire",
+                                     "change":  -7.4
+                                 },
+                                 {
+                                     "cap":  2135,
+                                     "t":  "BNBC",
+                                     "name":  "Bernabe Côte d’Ivoire",
+                                     "change":  7.29
+                                 },
+                                 {
+                                     "cap":  2680,
                                      "t":  "NEIC",
                                      "name":  "NEI-CEDA Côte d’Ivoire",
-                                     "change":  4.17
+                                     "change":  7.2
                                  },
                                  {
-                                     "cap":  8495,
-                                     "t":  "BICB",
-                                     "name":  "BIIC Bénin",
-                                     "change":  3.6
+                                     "cap":  3595,
+                                     "t":  "TTLC",
+                                     "name":  "Total Côte d’Ivoire",
+                                     "change":  5.74
                                  },
                                  {
-                                     "cap":  29000,
-                                     "t":  "CBIBF",
-                                     "name":  "Coris Bank International",
-                                     "change":  -3.33
+                                     "cap":  34600,
+                                     "t":  "SNTS",
+                                     "name":  "Sonatel Senegal",
+                                     "change":  -5.21
                                  },
                                  {
-                                     "cap":  2700,
+                                     "cap":  2560,
                                      "t":  "SDSC",
                                      "name":  "Bollore Transport \u0026 Logistics",
-                                     "change":  -2.88
+                                     "change":  -5.19
                                  },
                                  {
-                                     "cap":  3190,
-                                     "t":  "ORGT",
-                                     "name":  "Oragroup Togo",
-                                     "change":  2.08
-                                 },
-                                 {
-                                     "cap":  9250,
+                                     "cap":  9650,
                                      "t":  "SPHC",
                                      "name":  "Saph Côte d’Ivoire",
-                                     "change":  -2.01
+                                     "change":  4.32
                                  },
                                  {
-                                     "cap":  5800,
-                                     "t":  "SAFC",
-                                     "name":  "Safca Côte d’Ivoire",
-                                     "change":  1.75
+                                     "cap":  12490,
+                                     "t":  "SDCC",
+                                     "name":  "Sode Côte d’Ivoire",
+                                     "change":  4.08
                                  },
                                  {
-                                     "cap":  67,
-                                     "t":  "ETIT",
-                                     "name":  "Ecobank Transnational Inc",
-                                     "change":  1.52
+                                     "cap":  2400,
+                                     "t":  "UNXC",
+                                     "name":  "Uniwax Côte d’Ivoire",
+                                     "change":  -3.81
+                                 },
+                                 {
+                                     "cap":  10350,
+                                     "t":  "BOAB",
+                                     "name":  "Bank of Africa - Benin",
+                                     "change":  3.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
@@ -960,79 +960,79 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "tg":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  8005,
-                                     "t":  "SICC",
-                                     "name":  "Sicor Côte d’Ivoire",
-                                     "change":  -7.46
+                                     "cap":  56115,
+                                     "t":  "UNLC",
+                                     "name":  "Unilever Côte d’Ivoire",
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  3600,
-                                     "t":  "ABJC",
-                                     "name":  "Servair Abidjan Côte d’Ivoire",
-                                     "change":  7.46
-                                 },
-                                 {
-                                     "cap":  8500,
-                                     "t":  "BOAS",
-                                     "name":  "Bank of Africa - Senegal",
-                                     "change":  6.25
-                                 },
-                                 {
-                                     "cap":  8000,
+                                     "cap":  8600,
                                      "t":  "BOABF",
                                      "name":  "Bank of Africa - Burkina Faso",
-                                     "change":  5.26
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  2500,
+                                     "cap":  21205,
+                                     "t":  "STBC",
+                                     "name":  "Sitab Côte d’Ivoire",
+                                     "change":  -7.4
+                                 },
+                                 {
+                                     "cap":  2135,
+                                     "t":  "BNBC",
+                                     "name":  "Bernabe Côte d’Ivoire",
+                                     "change":  7.29
+                                 },
+                                 {
+                                     "cap":  2680,
                                      "t":  "NEIC",
                                      "name":  "NEI-CEDA Côte d’Ivoire",
-                                     "change":  4.17
+                                     "change":  7.2
                                  },
                                  {
-                                     "cap":  8495,
-                                     "t":  "BICB",
-                                     "name":  "BIIC Bénin",
-                                     "change":  3.6
+                                     "cap":  3595,
+                                     "t":  "TTLC",
+                                     "name":  "Total Côte d’Ivoire",
+                                     "change":  5.74
                                  },
                                  {
-                                     "cap":  29000,
-                                     "t":  "CBIBF",
-                                     "name":  "Coris Bank International",
-                                     "change":  -3.33
+                                     "cap":  34600,
+                                     "t":  "SNTS",
+                                     "name":  "Sonatel Senegal",
+                                     "change":  -5.21
                                  },
                                  {
-                                     "cap":  2700,
+                                     "cap":  2560,
                                      "t":  "SDSC",
                                      "name":  "Bollore Transport \u0026 Logistics",
-                                     "change":  -2.88
+                                     "change":  -5.19
                                  },
                                  {
-                                     "cap":  3190,
-                                     "t":  "ORGT",
-                                     "name":  "Oragroup Togo",
-                                     "change":  2.08
-                                 },
-                                 {
-                                     "cap":  9250,
+                                     "cap":  9650,
                                      "t":  "SPHC",
                                      "name":  "Saph Côte d’Ivoire",
-                                     "change":  -2.01
+                                     "change":  4.32
                                  },
                                  {
-                                     "cap":  5800,
-                                     "t":  "SAFC",
-                                     "name":  "Safca Côte d’Ivoire",
-                                     "change":  1.75
+                                     "cap":  12490,
+                                     "t":  "SDCC",
+                                     "name":  "Sode Côte d’Ivoire",
+                                     "change":  4.08
                                  },
                                  {
-                                     "cap":  67,
-                                     "t":  "ETIT",
-                                     "name":  "Ecobank Transnational Inc",
-                                     "change":  1.52
+                                     "cap":  2400,
+                                     "t":  "UNXC",
+                                     "name":  "Uniwax Côte d’Ivoire",
+                                     "change":  -3.81
+                                 },
+                                 {
+                                     "cap":  10350,
+                                     "t":  "BOAB",
+                                     "name":  "Bank of Africa - Benin",
+                                     "change":  3.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
@@ -1040,79 +1040,79 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "gw":  {
-               "asOf":  "2026-08-26",
+               "asOf":  "2026-08-27",
                "companies":  [
                                  {
-                                     "cap":  8005,
-                                     "t":  "SICC",
-                                     "name":  "Sicor Côte d’Ivoire",
-                                     "change":  -7.46
+                                     "cap":  56115,
+                                     "t":  "UNLC",
+                                     "name":  "Unilever Côte d’Ivoire",
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  3600,
-                                     "t":  "ABJC",
-                                     "name":  "Servair Abidjan Côte d’Ivoire",
-                                     "change":  7.46
-                                 },
-                                 {
-                                     "cap":  8500,
-                                     "t":  "BOAS",
-                                     "name":  "Bank of Africa - Senegal",
-                                     "change":  6.25
-                                 },
-                                 {
-                                     "cap":  8000,
+                                     "cap":  8600,
                                      "t":  "BOABF",
                                      "name":  "Bank of Africa - Burkina Faso",
-                                     "change":  5.26
+                                     "change":  7.5
                                  },
                                  {
-                                     "cap":  2500,
+                                     "cap":  21205,
+                                     "t":  "STBC",
+                                     "name":  "Sitab Côte d’Ivoire",
+                                     "change":  -7.4
+                                 },
+                                 {
+                                     "cap":  2135,
+                                     "t":  "BNBC",
+                                     "name":  "Bernabe Côte d’Ivoire",
+                                     "change":  7.29
+                                 },
+                                 {
+                                     "cap":  2680,
                                      "t":  "NEIC",
                                      "name":  "NEI-CEDA Côte d’Ivoire",
-                                     "change":  4.17
+                                     "change":  7.2
                                  },
                                  {
-                                     "cap":  8495,
-                                     "t":  "BICB",
-                                     "name":  "BIIC Bénin",
-                                     "change":  3.6
+                                     "cap":  3595,
+                                     "t":  "TTLC",
+                                     "name":  "Total Côte d’Ivoire",
+                                     "change":  5.74
                                  },
                                  {
-                                     "cap":  29000,
-                                     "t":  "CBIBF",
-                                     "name":  "Coris Bank International",
-                                     "change":  -3.33
+                                     "cap":  34600,
+                                     "t":  "SNTS",
+                                     "name":  "Sonatel Senegal",
+                                     "change":  -5.21
                                  },
                                  {
-                                     "cap":  2700,
+                                     "cap":  2560,
                                      "t":  "SDSC",
                                      "name":  "Bollore Transport \u0026 Logistics",
-                                     "change":  -2.88
+                                     "change":  -5.19
                                  },
                                  {
-                                     "cap":  3190,
-                                     "t":  "ORGT",
-                                     "name":  "Oragroup Togo",
-                                     "change":  2.08
-                                 },
-                                 {
-                                     "cap":  9250,
+                                     "cap":  9650,
                                      "t":  "SPHC",
                                      "name":  "Saph Côte d’Ivoire",
-                                     "change":  -2.01
+                                     "change":  4.32
                                  },
                                  {
-                                     "cap":  5800,
-                                     "t":  "SAFC",
-                                     "name":  "Safca Côte d’Ivoire",
-                                     "change":  1.75
+                                     "cap":  12490,
+                                     "t":  "SDCC",
+                                     "name":  "Sode Côte d’Ivoire",
+                                     "change":  4.08
                                  },
                                  {
-                                     "cap":  67,
-                                     "t":  "ETIT",
-                                     "name":  "Ecobank Transnational Inc",
-                                     "change":  1.52
+                                     "cap":  2400,
+                                     "t":  "UNXC",
+                                     "name":  "Uniwax Côte d’Ivoire",
+                                     "change":  -3.81
+                                 },
+                                 {
+                                     "cap":  10350,
+                                     "t":  "BOAB",
+                                     "name":  "Bank of Africa - Benin",
+                                     "change":  3.6
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/brvm/",
