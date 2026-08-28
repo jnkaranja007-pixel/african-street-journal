@@ -1,0 +1,9 @@
+name = "asj-cron"
+main = "worker.js"
+compatibility_date = "2026-08-01"
+
+# 02:10 UTC = 05:10 EAT, 03:10 SAST/CAT, 03:10 WAT+2. A ~30 minute run puts the edition
+# on the doorstep before Nairobi is up, which is the earliest-rising large market.
+# The second firing covers a GitHub-side failure without waiting for the daytime backstop.
+[triggers]
+crons = ["10 2 * * *", "10 6 * * *"]

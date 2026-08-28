@@ -9,12 +9,21 @@ name: Update ASJ Desk
 
 on:
   schedule:
-    # 05:17, not 05:00. GitHub queues scheduled runs and deprioritises them under
-    # load, and the whole world schedules on the hour, so :00 sits behind the longest
-    # queue. The 27 August run was queued at 05:00 and did not start until 16:01.
-    - cron: '17 5 * * *'    # ~08:17 EAT
-    # Second attempt, in case the first was delayed past usefulness or failed. It exits
-    # in seconds when today's edition is already out, so the safety net costs a no-op.
+    # The paper is for readers in Africa, so it has to be on the doorstep before the
+    # continent wakes. Nairobi and Addis (UTC+3) rise around 06:00 local, which is
+    # 03:00 UTC; Lagos and Kinshasa (UTC+1) at 05:00 UTC. A run takes about 30 minutes,
+    # so the last useful start for East Africa is roughly 02:30 UTC.
+    #
+    # Moving off the hour did not help: 05:17 was still queued eleven hours on
+    # 28 August. GitHub deprioritises scheduled runs on free public repositories and no
+    # setting changes that, so the answer is several early attempts rather than one
+    # hopeful slot. The freshness guard makes every attempt after a successful one cost
+    # a few seconds, so this buys reliability rather than compute.
+    - cron: '40 1 * * *'    # 04:40 EAT - first attempt, well before dawn
+    - cron: '40 2 * * *'    # 05:40 EAT
+    - cron: '40 3 * * *'    # 06:40 EAT - last chance for East Africa
+    - cron: '40 4 * * *'    # 05:40 WAT - still ahead of Lagos
+    # Daytime backstop, in case every early attempt was queued past usefulness.
     - cron: '17 12 * * *'
   workflow_dispatch:
     inputs:

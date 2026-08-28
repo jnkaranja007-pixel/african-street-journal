@@ -92,7 +92,29 @@ function Get-NodeText($node) {
 # Mojibake markers, built from code points so this file stays pure ASCII. Writing them
 # as literals breaks the script outright: PowerShell 5.1 reads a UTF-8-without-BOM file
 # as ANSI, and the high bytes then fail to parse.
-$MOJI_PATTERN = ([string][char]0x00C3) + '|' + ([string][char]0x00E2) + ([string][char]0x20AC) + '|' + ([string][char]0x00C2)
+# Mojibake is UTF-8 bytes decoded as Latin-1: a lead byte (C2/C3/E2) followed by a
+# CONTINUATION byte, which renders in the 0x80-0xBF range. Matching the lead byte ALONE
+# flagged correct Portuguese - REDUCAO, Sao, Camara all contain A-tilde or a-circumflex
+# followed by an ordinary letter - so the scanner reported corruption in clean copy and,
+# worse, Repair-Mojibake was invited to "fix" text that was never broken.
+# Requiring the continuation byte separates the two: real Portuguese never puts a
+# 0x80-0xBF character straight after A-tilde.
+$MOJI_LEAD = ([string][char]0x00C2) + ([string][char]0x00C3)
+$MOJI_CONT = ([string][char]0x0080) + '-' + ([string][char]0x00BF)
+# Two patterns, because detection and repair want opposite things.
+#
+# DETECT is strict - a lead byte followed by a continuation byte. It decides whether
+# text is corrupt at all, so a false positive here means either a bogus corruption
+# report or, worse, running a destructive repair over clean Portuguese.
+#
+# REPAIR is loose - the lead byte alone. Once a string is known to be mangled, each
+# round-trip leaves intermediate states whose lead bytes are followed by ordinary
+# letters. Requiring the continuation byte there stopped the loop after one pass and
+# left Yaounde half-repaired, which is how the four-layer Journal du Cameroun case
+# regressed. Entry is strict; iteration is permissive.
+$MOJI_DETECT  = '[' + $MOJI_LEAD + '][' + $MOJI_CONT + ']|' + ([string][char]0x00E2) + ([string][char]0x20AC) + '[' + $MOJI_CONT + ([string][char]0x02DC) + ([string][char]0x2122) + ']'
+$MOJI_REPAIR  = '[' + $MOJI_LEAD + ']|' + ([string][char]0x00E2) + ([string][char]0x20AC)
+$MOJI_PATTERN = $MOJI_DETECT
 $REPL_CHAR    = [string][char]0xFFFD
 
 function Repair-Mojibake([string]$s) {
@@ -112,13 +134,16 @@ function Repair-Mojibake([string]$s) {
     # -cnotmatch, not -notmatch: PowerShell's -match is case-insensitive and U+00C2 is the
     # uppercase pair of U+00E2, so a plain -match flags legitimate French "cable" and
     # Portuguese "nao" as corruption. Case-sensitivity is the whole signal here.
-    if ($s -cnotmatch $MOJI_PATTERN) { break }
+    # Strict on the first pass so clean text is never touched; permissive afterwards so
+    # a multi-layer mangle is followed all the way down.
+    $probe = if ($pass -eq 0) { $MOJI_DETECT } else { $MOJI_REPAIR }
+    if ($s -cnotmatch $probe) { break }
     try {
       $fixed = [Text.Encoding]::UTF8.GetString([Text.Encoding]::GetEncoding(1252).GetBytes($s))
     } catch { break }
     if ($fixed.Contains($REPL_CHAR)) { break }
-    $before = ([regex]::Matches($s,     $MOJI_PATTERN)).Count
-    $after  = ([regex]::Matches($fixed, $MOJI_PATTERN)).Count
+    $before = ([regex]::Matches($s,     $MOJI_REPAIR)).Count
+    $after  = ([regex]::Matches($fixed, $MOJI_REPAIR)).Count
     if ($after -ge $before) { break }
     $s = $fixed
   }
