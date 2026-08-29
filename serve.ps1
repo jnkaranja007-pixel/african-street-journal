@@ -48,6 +48,13 @@ while ($listener.IsListening) {
       $bytes = [System.IO.File]::ReadAllBytes($path)
       $ext = [System.IO.Path]::GetExtension($path).ToLower()
       $res.ContentType = if ($mime.ContainsKey($ext)) { $mime[$ext] } else { 'application/octet-stream' }
+      # Never let the browser cache anything from the dev server. Without this it applies
+      # heuristic caching to a response with no headers and keeps serving the app.js it
+      # already has - so you edit a file, reload, and are shown the old one. Bumping the
+      # ?v= in index.html does not always help either, because the service worker's shell
+      # list and the browser's disk cache can both still answer.
+      $res.Headers.Add('Cache-Control', 'no-store, no-cache, must-revalidate')
+      $res.Headers.Add('Pragma', 'no-cache')
       $res.ContentLength64 = $bytes.Length
       $res.OutputStream.Write($bytes, 0, $bytes.Length)
     } else {

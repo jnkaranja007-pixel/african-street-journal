@@ -7,9 +7,9 @@
 // v16. Nothing broke - the fetch handler matches with ignoreSearch, and GitHub Pages
 // ignores query strings - but the numbers lied, and a version that lies is worse than
 // no version. Bump V alone; index.html's ?v= must match it.
-const V = '39';
+const V = '40';
 const CACHE = 'asj-v' + V;
-const SHELL = ['./', 'index.html', 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/archive/index.js?v=' + V, 'data/supabase-config.js?v=' + V, 'manifest.json', 'icon.svg'];
+const SHELL = ['./', 'index.html', 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/archive/index.js?v=' + V, 'data/supabase-config.js?v=' + V, 'data/analytics-config.js?v=' + V, 'data/newsletter-config.js?v=' + V, 'manifest.json', 'icon.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(

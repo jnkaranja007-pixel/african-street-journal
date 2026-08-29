@@ -74,6 +74,11 @@ $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $root    = Split-Path $PSScriptRoot -Parent
+
+# Get-IsoInstant. Timestamps read back out of feed-items.json arrive as [datetime]
+# under pwsh, and stringifying one directly stamps the runner's culture onto the
+# published field the site sorts by.
+. (Join-Path $PSScriptRoot 'story-shape.ps1')
 $inPath  = if ([IO.Path]::IsPathRooted($InFile))  { $InFile }  else { Join-Path $root $InFile }
 $outPath = if ([IO.Path]::IsPathRooted($OutFile)) { $OutFile } else { Join-Path $root $OutFile }
 $cachePath = if ([IO.Path]::IsPathRooted($CacheFile)) { $CacheFile } else { Join-Path $root $CacheFile }
@@ -859,10 +864,10 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
 
     # Cite every outlet that carried the story, not just the one whose text was used.
     $srcList = New-Object System.Collections.Generic.List[object]
-    $srcList.Add(@{ name = [string]$src.source; url = [string]$src.url; published = [string]$src.published })
+    $srcList.Add(@{ name = [string]$src.source; url = [string]$src.url; published = (Get-IsoInstant $src.published) })
     foreach ($o in @($src.alsoSources)) {
       if ($o -and ([string]$o.url) -match '^https?://') {
-        $srcList.Add(@{ name = [string]$o.name; url = [string]$o.url; published = [string]$o.published })
+        $srcList.Add(@{ name = [string]$o.name; url = [string]$o.url; published = (Get-IsoInstant $o.published) })
       }
     }
 
@@ -876,7 +881,7 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
       lensVersion     = 1
       lenses          = $lensData
       topic           = $topic
-      published       = [string]$src.published
+      published       = Get-IsoInstant $src.published
       sourceTitle     = [string]$src.title
       editorialScore  = if ($src.editorialScore) { [double]$src.editorialScore } else { 0.0 }
       selectionScore  = if ($src.selectionScore) { [double]$src.selectionScore } else { 0.0 }

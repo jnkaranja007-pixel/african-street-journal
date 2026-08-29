@@ -27,6 +27,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
+
+# Get-IsoDay lives here so the page builder, the merge and the publication gate all
+# read a date stamp the same way. See the note in story-shape.ps1.
+. (Join-Path $PSScriptRoot 'story-shape.ps1')
 $BaseUrl = $BaseUrl.TrimEnd('/')
 
 # --- country metadata out of app.js -----------------------------------------
@@ -93,6 +97,21 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 .morenav a:hover{color:#66bb6a;border-bottom-color:#2f5c33}
 '@
 
+# Same analytics loader as index.html. These pages are where search traffic lands, so
+# leaving them unmeasured would report the site as quieter than it is and hide which
+# countries people actually arrive for. Literal here-string: nothing in it is expanded.
+$analytics = @'
+<script src="/data/analytics-config.js" onerror="window.ASJ_ANALYTICS=null"></script>
+<script>
+(function(){var c=window.ASJ_ANALYTICS;if(!c)return;
+if(navigator.doNotTrack==='1'||window.doNotTrack==='1')return;var s;
+if(c.goatcounter){s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';
+s.setAttribute('data-goatcounter','https://'+c.goatcounter+'.goatcounter.com/count');document.head.appendChild(s);}
+if(c.cloudflare){s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';
+s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.head.appendChild(s);}}());
+</script>
+'@
+
 $built = 0
 $urls = New-Object System.Collections.Generic.List[string]
 $urls.Add($BaseUrl + '/')
@@ -104,7 +123,7 @@ $urls.Add($BaseUrl + '/')
 # journal a search engine can read at all.
 $pageCodes = New-Object System.Collections.Generic.List[string]
 foreach ($prop in $byCountry.PSObject.Properties) {
-  if (-not @($prop.Value | Where-Object { $_.headline -and $_.body }).Count) { continue }
+  if (-not @($prop.Value | Where-Object { Test-StoryIsRenderable $_ }).Count) { continue }
   if (-not $info[$prop.Name]) { continue }
   $pageCodes.Add($prop.Name)
 }
@@ -115,13 +134,13 @@ foreach ($c in ($pageCodes | Sort-Object { $info[$_].name })) {
 
 foreach ($prop in $byCountry.PSObject.Properties) {
   $code = $prop.Name
-  $stories = @($prop.Value | Where-Object { $_.headline -and $_.body })
+  $stories = @($prop.Value | Where-Object { Test-StoryIsRenderable $_ })
   if (-not $stories.Count) { continue }
   $meta = $info[$code]
   if (-not $meta) { continue }
 
   $name = $meta.name
-  $when = if ($dates -and $dates.PSObject.Properties[$code]) { ([string]$dates.$code).Substring(0,10) } else { '' }
+  $when = if ($dates -and $dates.PSObject.Properties[$code]) { Get-IsoDay $dates.$code } else { '' }
   $lead = ([string]$stories[0].headline)
   $desc = "$name news: $lead. Original source-cited stories and country signals from The African Street Journal."
   if ($desc.Length -gt 300) { $desc = $desc.Substring(0,297) + '...' }
@@ -188,6 +207,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <meta name="description" content="$(Esc $desc)">
 <link rel="canonical" href="$canonical">
 <meta name="theme-color" content="#131313">
+$analytics
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -228,7 +248,7 @@ $($navLinks.ToString())
 }
 
 # --- sitemap ----------------------------------------------------------------
-$today = (Get-Date).ToString('yyyy-MM-dd')
+$today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
 $sm = New-Object System.Text.StringBuilder
 [void]$sm.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
 [void]$sm.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')

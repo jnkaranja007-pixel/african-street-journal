@@ -1,5 +1,25 @@
 const APP_DATA = window.UNITED_AFRICA_DATA || {};
-const AI_BRIEFS = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.byCountry) || {};
+
+// A story's prose is shipped once, as paragraphs. The published payload used to carry
+// `body` as well - the same text joined by blank lines - which was 31% of the file and
+// bought the reader nothing. The desk still records both; this rebuilds the field the
+// rest of the app reads, so nothing downstream has to know about the change.
+// Archived editions come through the same door, hence a function rather than a loop.
+function hydrateBriefs(byCountry) {
+  if (!byCountry) return byCountry;
+  for (const list of Object.values(byCountry)) {
+    if (!Array.isArray(list)) continue;
+    for (const story of list) {
+      if (!story || story.body) continue;
+      if (Array.isArray(story.paragraphs) && story.paragraphs.length) {
+        story.body = story.paragraphs.join('\n\n');
+      }
+    }
+  }
+  return byCountry;
+}
+
+const AI_BRIEFS = hydrateBriefs((window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.byCountry) || {});
 const AI_BRIEFS_AT = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS.generated) || null;
 // Per-country brief dates: the pipeline carries a country's last good briefs through failed
 // runs, so its stories can be older than the edition date — show the honest per-country stamp.
@@ -51,6 +71,8 @@ function markStoryReadKey(key) {
     .slice(0, 500);
   storyReadHistory = Object.fromEntries(recent);
   try { localStorage.setItem(STORY_READ_KEY, JSON.stringify(storyReadHistory)); } catch {}
+  // The landing front page dims stories you have already read, so it needs to know.
+  try { window.dispatchEvent(new CustomEvent('asj:story-read', { detail: { key: id } })); } catch {}
 }
 
 function storyLensData(story, lens = activeStoryLens) {
@@ -77,9 +99,17 @@ function storyFreshnessScore(story) {
 
 function storyLensRank(story, lens = activeStoryLens, sourceIndex = 0) {
   const rawEditorial = Number(story?.selectionScore ?? story?.editorialScore);
+  // A scored story lands on 4x its desk score; the 28 August edition ran from 3 to 90.2
+  // with a median of 45. The fallback for an unscored story used to be 92 - rank*10,
+  // which put it ABOVE every scored story in the paper: three hand-written Western
+  // Sahara briefs from 21 August, carrying no score at all, took the lead slot and the
+  // highlights grid off a full desk of same-day reporting.
+  //
+  // No score is not evidence of a good story, it is absence of evidence, so the honest
+  // prior is the middle of the pack. Ranking within the country is preserved.
   const editorial = Number.isFinite(rawEditorial) && rawEditorial > 0
     ? Math.max(0, Math.min(100, rawEditorial * 4))
-    : Math.max(30, 92 - sourceIndex * 10);
+    : Math.max(20, 45 - sourceIndex * 6);
   const mode = normalizeStoryLens(lens);
   if (mode === 'general') return editorial;
   return editorial * 0.60 + storyLensData(story, mode).score * 0.30 + storyFreshnessScore(story) * 0.10;
@@ -4301,8 +4331,14 @@ canvas.addEventListener('touchstart', (e) => {
     updateResultCount(items);
     if (!items.length){ resultsEl.innerHTML = '<div class="wire-meta">0 stories</div><div class="wire-empty">No headlines match your search.</div>'; return; }
     const frontPage = (activeTopic==='All' && !query.trim());
-    const hero = frontPage ? items[0] : null;
-    const list = hero ? items.slice(1) : items;
+    // The lead slot goes to the best story the desk filed FOR THIS EDITION. Sorting by
+    // score alone once put a 21 August brief at the top of the 28 August paper, which is
+    // the one thing a daily cannot do. If every story is old - a desk that has not run -
+    // the best of them still leads, because a front page with nothing on it is worse.
+    const hero = frontPage ? (items.find(it => !isStaleDate(it.date, 2)) || items[0]) : null;
+    // Remove the hero by identity, not by position: it is no longer guaranteed to be
+    // items[0], and slicing blindly would both duplicate it and drop the story it skipped.
+    const list = hero ? items.filter(it => it !== hero) : items;
     if (frontPage) {
       const frontCards = list.slice(0, 6);
       const more = list.slice(6);
@@ -4313,6 +4349,9 @@ canvas.addEventListener('touchstart', (e) => {
           '<div class="wire-meta">Highlights</div>' +
           '<div class="wire-front-grid">' + frontCards.map(frontCardMarkup).join('') + '</div>' +
           movementMarkup(items) +
+          // Mount point for the sign-up. The reader has just read the front page here,
+          // which is the only honest moment to ask for an address.
+          '<div id="wire-signup"></div>' +
           (more.length ? '<div class="wire-meta">More across Africa</div>' + visibleMore.map(itemMarkup).join('') + loadMoreMarkup(more.length, visibleMore.length) : '') +
         '</div>';
       return;
@@ -4385,6 +4424,7 @@ canvas.addEventListener('touchstart', (e) => {
     loader.onload = () => {
       const dayData = window.__ASJ_ARCHIVE_DAY;
       if (dayData && dayData.byCountry) {
+        hydrateBriefs(dayData.byCountry);
         editionCache[day] = dayData.byCountry;
         editionDate = day; editionBriefs = dayData.byCountry;
         applyEdition();
@@ -4454,6 +4494,139 @@ canvas.addEventListener('touchstart', (e) => {
   });
   const n = Object.values(AI_BRIEFS||{}).reduce((a,arr)=>a+arr.length,0);
   entryCounts.forEach(el => { el.textContent = n ? (n+' stories') : 'ASJ Wire'; });
+})();
+
+/* ── The front page on the landing screen ──────────────────────────────────
+   A daily whose landing screen shows no journalism is a poster. The Wire already
+   builds a proper front page, but it lived behind a button in the corner, so a
+   stranger arriving from a search result or a shared link saw a map and a population
+   counter and had to guess.
+   These headlines fill the empty columns either side of the map on a wide screen and
+   sit under the ticker on a phone. Ranking is the desk's own: same scores, same lens,
+   so the landing page and the Wire never disagree about what today's lead is. */
+(function renderHomeFront(){
+  const slots = {
+    left: document.getElementById('home-front-left'),
+    right: document.getElementById('home-front-right'),
+    mobile: document.getElementById('home-front-mobile')
+  };
+  if (!slots.left && !slots.right && !slots.mobile) return;
+
+  function topStories(limit) {
+    const out = [];
+    for (const [code, list] of Object.entries(AI_BRIEFS || {})) {
+      const info = COUNTRY_INFO[code];
+      if (!info || !Array.isArray(list)) continue;
+      list.forEach((story, rank) => {
+        if (!story || !story.headline) return;
+        out.push({
+          code, story, rank,
+          country: info.name,
+          source: (Array.isArray(story.sources) && story.sources[0]?.name) || '',
+          topic: story.topic || 'News',
+          date: story.published || AI_BRIEFS_DATES[code] || AI_BRIEFS_AT || '',
+          score: storyLensRank(story, 'general', rank),
+          key: registerStory(story, { countryCode: code, country: info.name, published: story.published || AI_BRIEFS_DATES[code], rank })
+        });
+      });
+    }
+    out.sort((a, b) => b.score - a.score || a.rank - b.rank || a.country.localeCompare(b.country));
+    // Same rule the Wire's lead slot uses: a story from a previous edition does not
+    // lead today's paper unless there is nothing else.
+    const fresh = out.filter(it => !isStaleDate(it.date, 2));
+    const ordered = fresh.length ? fresh.concat(out.filter(it => isStaleDate(it.date, 2))) : out;
+    // One story per country, so the front page reads as a continent rather than as
+    // whichever country the ranker liked most that morning.
+    const seen = new Set();
+    const spread = [];
+    for (const item of ordered) {
+      if (seen.has(item.code)) continue;
+      seen.add(item.code);
+      spread.push(item);
+      if (spread.length >= limit) break;
+    }
+    return spread;
+  }
+
+  // What a returning reader wants to know before anything else: is there anything new.
+  // The Wire already computes this ("What Changed") but only once you have opened it,
+  // which is the wrong order - the count is the reason to open it. The snapshot is the
+  // same one the Wire writes, so the two can never disagree.
+  function newSinceLastVisit(items) {
+    let snapshot = null;
+    try { snapshot = JSON.parse(localStorage.getItem('asj-wire-snapshot') || 'null'); } catch { return 0; }
+    if (!snapshot || !Array.isArray(snapshot.keys)) return 0;
+    const seen = new Set(snapshot.keys);
+    let n = 0;
+    for (const [code, list] of Object.entries(AI_BRIEFS || {})) {
+      (list || []).forEach((story, rank) => {
+        if (!story || !story.headline) return;
+        if (!seen.has(code + ':' + rank + ':' + story.headline)) n++;
+      });
+    }
+    return n;
+  }
+
+  function storyMarkup(item, isLead) {
+    const dek = item.story.dek || storyParagraphs(item.story)[0] || '';
+    return '<button class="home-story' + (isLead ? ' home-story--lead' : '') +
+        (isStoryReadKey(item.key) ? ' is-read' : '') +
+        '" type="button" data-home-story="' + escapeHtml(item.key) + '">' +
+      '<span class="home-story-kicker">' +
+        '<span>' + escapeHtml(item.country) + '</span>' +
+        '<span>' + escapeHtml(item.topic) + '</span>' +
+        (item.source ? '<span class="home-story-src">' + escapeHtml(item.source) + '</span>' : '') +
+      '</span>' +
+      '<span class="home-story-title">' + escapeHtml(item.story.headline) + '</span>' +
+      (isLead && dek ? '<span class="home-story-dek">' + escapeHtml(dek) + '</span>' : '') +
+    '</button>';
+  }
+
+  function fill(el, items, label, opts) {
+    if (!el) return;
+    if (!items.length) { el.innerHTML = ''; return; }
+    el.innerHTML = '<div class="home-front-label">' + escapeHtml(label) + '</div>' +
+      items.map((item, i) => storyMarkup(item, opts.lead && i === 0)).join('') +
+      // One call to action on the screen, not one per column.
+      (opts.cta ? '<button class="home-front-all" type="button" data-home-all>Read today\'s desk</button>' : '');
+  }
+
+  function paint() {
+    const items = topStories(7);
+    if (!items.length) return;
+    const fresh = newSinceLastVisit();
+    const label = fresh > 0 ? fresh + (fresh === 1 ? ' new story' : ' new stories') : 'Today';
+    // Desktop reads left column first, so the lead goes there.
+    fill(slots.left, items.slice(0, 3), label, { lead: true, cta: false });
+    fill(slots.right, items.slice(3, 6), 'Also today', { lead: false, cta: true });
+    fill(slots.mobile, items.slice(0, 5), label, { lead: true, cta: true });
+    // The sign-up form lives inside these blocks and is wiped by the repaint above.
+    try { window.dispatchEvent(new CustomEvent('asj:front-painted')); } catch {}
+    // The entry button is the other place a returning reader looks. Saying "12 new"
+    // there is the difference between a bookmark that gets opened and one that does not.
+    if (fresh > 0) {
+      document.querySelectorAll('#wire-entry-count, .wire-entry-count').forEach(el => {
+        el.textContent = fresh + ' new';
+        el.classList.add('is-new');
+      });
+    }
+  }
+
+  document.addEventListener('click', event => {
+    const all = event.target.closest('[data-home-all]');
+    if (all) { window.__wireOpen?.('All'); return; }
+    const trigger = event.target.closest('[data-home-story]');
+    if (!trigger) return;
+    const found = findPublishedStory(trigger.dataset.homeStory);
+    if (found) openStoryReader(found.story, found.context, trigger);
+  });
+
+  paint();
+  // Repaint when a story is marked read, so the landing page dims what you have seen.
+  window.addEventListener('asj:story-read', paint);
+  // Opening the Wire rewrites the snapshot, so the count is stale the moment the reader
+  // comes back to the landing page. Repaint on the route change that brings them here.
+  window.addEventListener('hashchange', paint);
 })();
 
 /* ── Lazy country data: detail outline + GIS load per country, on demand ──
@@ -5037,6 +5210,53 @@ if (new URLSearchParams(location.search).has('selftest')) {
 async function runSelfTest() {
   const checks = [];
   const add = (name, pass, note = '') => checks.push({ name, pass: !!pass, note: String(note) });
+
+  // --- the payload the reader actually downloads --------------------------------
+  // body is no longer shipped; app.js rebuilds it from paragraphs. If that ever stops
+  // working the site looks fine until a story is opened, which is too late to notice.
+  {
+    const stories = Object.values(AI_BRIEFS || {}).flat().filter(Boolean);
+    const withProse = stories.filter(s => s.body && s.body.trim());
+    add('payload: every story has prose after hydration', withProse.length === stories.length,
+        withProse.length + '/' + stories.length);
+    const sample = stories.find(s => Array.isArray(s.paragraphs) && s.paragraphs.length > 1);
+    add('payload: rebuilt body matches its paragraphs',
+        !sample || sample.body === sample.paragraphs.join('\n\n'), sample ? sample.headline : 'no sample');
+    const badDates = stories.filter(s => s.published && !Number.isFinite(Date.parse(s.published)));
+    add('payload: every published stamp parses as a date', badDates.length === 0,
+        badDates.length ? badDates[0].published : 'all parse');
+    add('payload: desk-only ranking fields are not shipped',
+        !stories.some(s => 'scoreBreakdown' in s || 'rankReasons' in s),
+        stories.length + ' stories checked');
+  }
+
+  // --- the front page on the landing screen -------------------------------------
+  {
+    const anyColumn = document.querySelector('#home-front-left .home-story, #home-front-mobile .home-story');
+    add('landing: today\'s headlines render without opening the Wire', !!anyColumn,
+        document.querySelectorAll('.home-story').length + ' headlines');
+    const titles = [...document.querySelectorAll('#home-front-left .home-story-title, #home-front-right .home-story-title')]
+      .map(el => el.textContent.trim());
+    add('landing: no headline appears twice', new Set(titles).size === titles.length, titles.length + ' shown');
+    // A daily cannot lead on a story from a previous edition while a current one exists.
+    const leadEl = document.querySelector('.home-story--lead .home-story-title');
+    const leadTitle = leadEl ? leadEl.textContent.trim() : '';
+    const lead = Object.values(AI_BRIEFS || {}).flat().find(s => s && s.headline === leadTitle);
+    const anyFresh = Object.values(AI_BRIEFS || {}).flat().some(s => s && s.published && !isStaleDate(s.published, 2));
+    add('landing: the lead story is from a current edition',
+        !lead || !anyFresh || !isStaleDate(lead.published || '', 2),
+        leadTitle + ' @ ' + (lead ? lead.published : 'unknown'));
+  }
+
+  // --- an unscored story must not outrank the desk ------------------------------
+  {
+    const scored = { headline:'Scored', selectionScore:20, paragraphs:['x'], sources:[] };
+    const unscored = { headline:'Unscored', paragraphs:['x'], sources:[] };
+    add('ranking: a story with no score ranks below a well-scored one',
+        storyLensRank(unscored, 'general', 0) < storyLensRank(scored, 'general', 0),
+        storyLensRank(unscored, 'general', 0) + ' vs ' + storyLensRank(scored, 'general', 0));
+  }
+
   const D = window.UNITED_AFRICA_DATA || {};
   const originalStoryLens = activeStoryLens;
   const lensFixture = [
@@ -5240,3 +5460,84 @@ async function runSelfTest() {
     (failed.length ? '\n' + failed.map(f => '✗ ' + f.name + (f.note ? ' — ' + f.note : '')).join('\n') : '  ✓');
   document.body.appendChild(box);
 }
+
+/* ── Sign-up: one morning email ────────────────────────────────────────────
+   The journal has no way to bring a reader back. A bookmark is not a relationship,
+   and a watchlist that lives in localStorage is lost the first time someone clears
+   their browser or picks up a different phone.
+   Nothing renders unless data/newsletter-config.js names an endpoint, because a form
+   that quietly discards what people type is worse than no form. */
+(function newsletterSignup(){
+  const cfg = window.ASJ_NEWSLETTER;
+  if (!cfg || !cfg.endpoint) return;
+  // Mounted where there is room to scroll: the phone front page, and the Wire, where
+  // the reader has just finished the front page. The desktop side columns are capped
+  // at the height of the map, so a form there would simply be clipped.
+  function hosts() {
+    return [document.getElementById('home-front-mobile'), document.getElementById('wire-signup')].filter(Boolean);
+  }
+  const field = cfg.field || 'email';
+  const pitch = cfg.pitch || 'One morning email from the desk.';
+  const DONE_KEY = 'asj:subscribed:v1';
+
+  function alreadySubscribed() {
+    try { return localStorage.getItem(DONE_KEY) === '1'; } catch { return false; }
+  }
+
+  function markSubscribed() {
+    try { localStorage.setItem(DONE_KEY, '1'); } catch {}
+  }
+
+  function mount(host) {
+    if (host.querySelector('.asj-signup')) return;
+    const wrap = document.createElement('form');
+    wrap.className = 'asj-signup';
+    wrap.noValidate = true;
+    if (alreadySubscribed()) {
+      wrap.innerHTML = '<p class="asj-signup-done">You are on the morning list.</p>';
+      host.appendChild(wrap);
+      return;
+    }
+    wrap.innerHTML =
+      '<p class="asj-signup-pitch">' + escapeHtml(pitch) + '</p>' +
+      '<div class="asj-signup-row">' +
+        '<input class="asj-signup-input" type="email" name="' + escapeHtml(field) + '" autocomplete="email" ' +
+          'required placeholder="you@example.com" aria-label="Email address">' +
+        '<button class="asj-signup-btn" type="submit">Join</button>' +
+      '</div>' +
+      '<p class="asj-signup-note" role="status"></p>';
+    host.appendChild(wrap);
+
+    wrap.addEventListener('submit', async event => {
+      event.preventDefault();
+      const input = wrap.querySelector('.asj-signup-input');
+      const note = wrap.querySelector('.asj-signup-note');
+      const value = String(input.value || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
+        note.textContent = 'That does not look like an email address.';
+        input.focus();
+        return;
+      }
+      note.textContent = 'Sending...';
+      const body = new FormData();
+      body.append(field, value);
+      try {
+        // no-cors where the provider does not send CORS headers: the POST still lands,
+        // the response is just opaque, so a submission cannot be reported as failed
+        // when it actually succeeded.
+        await fetch(cfg.endpoint, { method: 'POST', body, mode: cfg.cors === false ? 'no-cors' : 'cors' });
+        markSubscribed();
+        wrap.innerHTML = '<p class="asj-signup-done">Thank you. The next edition lands before dawn.</p>';
+      } catch {
+        note.textContent = 'That did not go through. Try again in a moment.';
+      }
+    });
+  }
+
+  function mountAll() { hosts().forEach(mount); }
+  mountAll();
+  // Both hosts have their innerHTML rewritten when they repaint, which removes the
+  // form. Re-mount whenever that happens rather than assuming one pass is enough.
+  window.addEventListener('asj:front-painted', mountAll);
+  document.addEventListener('click', () => setTimeout(mountAll, 250));
+}());

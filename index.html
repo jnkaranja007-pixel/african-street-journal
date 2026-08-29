@@ -22,13 +22,41 @@
 <link rel="canonical" href="https://africanstreetjournal.com/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23131313'/%3E%3Ctext x='32' y='47' font-family='Georgia,serif' font-size='46' font-weight='700' fill='%234caf50' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
-<!-- Analytics (enable at hosting): create a free account at goatcounter.com — privacy-respecting, no cookies:
-<script data-goatcounter="https://YOURCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
--->
+<!-- Analytics. Nothing loads unless data/analytics-config.js names a provider; the
+     committed copy is null, so a fork or a local checkout sends no traffic anywhere.
+     The file is committed on purpose - Pages serves this repo, and neither a
+     GoatCounter site code nor a Cloudflare beacon token is a secret.
+     Both supported providers are cookieless and neither profiles readers across sites,
+     which is the only reason this page can measure traffic without a consent banner. -->
+<script src="data/analytics-config.js?v=40" onerror="window.ASJ_ANALYTICS=null"></script>
+<script>
+(function () {
+  var cfg = window.ASJ_ANALYTICS;
+  if (!cfg) return;
+  // Respect an explicit opt-out. Do Not Track is advisory and widely ignored; honouring
+  // it costs a few readers in the numbers and is the behaviour a paper should have.
+  if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+  var s;
+  if (cfg.goatcounter) {
+    s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://gc.zgo.at/count.js';
+    s.setAttribute('data-goatcounter', 'https://' + cfg.goatcounter + '.goatcounter.com/count');
+    document.head.appendChild(s);
+  }
+  if (cfg.cloudflare) {
+    s = document.createElement('script');
+    s.defer = true;
+    s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    s.setAttribute('data-cf-beacon', JSON.stringify({ token: cfg.cloudflare }));
+    document.head.appendChild(s);
+  }
+}());
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=39">
+<link rel="stylesheet" href="styles.css?v=40">
 </head>
 <body>
 
@@ -67,9 +95,19 @@
       <div class="pop-label">PEOPLE &middot; 55 COUNTRIES</div>
     </div>
 
-    <div class="stage">
-      <canvas id="map" role="img" aria-label="Clickable map of Africa. Use the capital city index below for keyboard navigation."></canvas>
-      <div id="tooltip" role="status" aria-live="polite"></div>
+    <!-- The map is a centred square, so on a wide screen there are two tall columns of
+         empty black either side of it. A newspaper whose front page shows no news is a
+         poster, so today's lead and the next headlines live there: the reader gets
+         journalism in the first screen and the map keeps every pixel it had. Below
+         1080px the columns collapse and the same headlines render under the ticker,
+         which is where a phone has the room. -->
+    <div class="landing-stage-row">
+      <aside class="home-front home-front--left" id="home-front-left" aria-label="Today's lead stories"></aside>
+      <div class="stage">
+        <canvas id="map" role="img" aria-label="Clickable map of Africa. Use the capital city index below for keyboard navigation."></canvas>
+        <div id="tooltip" role="status" aria-live="polite"></div>
+      </div>
+      <aside class="home-front home-front--right" id="home-front-right" aria-label="More from today's desk"></aside>
     </div>
   </div>
 
@@ -78,6 +116,10 @@
   <div class="ticker-wrap" aria-label="Featured cities">
     <div class="ticker" id="ticker"></div>
   </div>
+
+  <!-- The phone's copy of the front page. Same stories as the desktop side columns,
+       rendered here because a narrow screen has vertical room and no horizontal room. -->
+  <aside class="home-front home-front--mobile" id="home-front-mobile" aria-label="Today's lead stories"></aside>
 
 </main>
 
@@ -370,11 +412,12 @@
   </div>
 </article>
 
-<script src="data/app-core.js?v=39"></script>
-<script src="data/briefs.js?v=39" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=39" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=39" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/app-core.js?v=40"></script>
+<script src="data/briefs.js?v=40" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=40" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=40" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=40" onerror="window.ASJ_NEWSLETTER=null"></script>
 
-<script src="app.js?v=39"></script>
+<script src="app.js?v=40"></script>
 </body>
 </html>

@@ -32,6 +32,7 @@ param(
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $root = Split-Path $PSScriptRoot -Parent
+. (Join-Path $PSScriptRoot 'story-shape.ps1')
 $briefsPath = Join-Path $root 'data\briefs.js'
 if (-not (Test-Path $briefsPath)) { Write-Host '[audit] data/briefs.js missing' -ForegroundColor Red; exit 1 }
 
@@ -126,7 +127,9 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   foreach ($b in $list) {
     $totalBriefs++
     $head = [string]$b.headline
-    $body = [string]$b.body
+    # Prose comes from paragraphs; the published payload no longer duplicates it into a
+    # 'body' field. Reading $b.body directly here reported every story as missing a body.
+    $body = Get-StoryBodyText $b
     $srcs = @($b.sources | Where-Object { $_ -and $_.url })
 
     if (-not $head -or -not $body) { $critical.Add("$code : brief missing headline or body"); continue }

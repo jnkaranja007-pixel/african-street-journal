@@ -83,6 +83,7 @@ jobs:
           ./scripts/test-story-contract.ps1
           ./scripts/test-article-evidence.ps1
           ./scripts/test-publication-gate.ps1
+          ./scripts/test-static-pages.ps1
 
       - name: Gather and rank today's stories
         if: steps.guard.outputs.stale == 'true'
@@ -164,6 +165,10 @@ jobs:
           # pages are the only version a search engine can read. Change -BaseUrl here on
           # the day a custom domain goes live.
           ./scripts/build-static-pages.ps1
+          # Re-run the page checks against what was just written. The copy in the test
+          # step above sees yesterday's pages, so on its own it reports a bad date a day
+          # after it shipped. Checking here is what stops one leaving the runner.
+          ./scripts/test-static-pages.ps1
 
       - name: Save desk efficiency metrics
         if: always()

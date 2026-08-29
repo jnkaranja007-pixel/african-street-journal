@@ -57,19 +57,10 @@ $totalBriefs = 0
 $storyPackages = 0
 $freshCountries = 0
 $freshByCountry = @{}
-# PowerShell 7's ConvertFrom-Json turns ISO-8601 strings into [datetime]; 5.1 leaves
-# them as strings. So [string]$obj.generated is "2026-08-25T14:52:36-07:00" locally but
-# "08/25/2026 22:33:07" under the pwsh that GitHub Actions runs, and a ^\d{4}-\d{2}-\d{2}
-# match against it silently returns empty. Every country then failed the freshness test
-# against a blank date - the desk wrote stories, merged them, and was told none were
-# fresh. Normalise on type, never on the culture-dependent string form.
-function Get-IsoDay($value) {
-  if ($null -eq $value) { return '' }
-  if ($value -is [datetime]) { return $value.ToString('yyyy-MM-dd') }
-  if ($value -is [DateTimeOffset]) { return $value.ToString('yyyy-MM-dd') }
-  if ([string]$value -match '^(\d{4}-\d{2}-\d{2})') { return $Matches[1] }
-  return ''
-}
+# Get-IsoDay comes from story-shape.ps1, dot-sourced above. The long note explaining
+# the PowerShell 7 datetime coercion now lives with the function. It used to be defined
+# here only, and the page builder grew a second copy that read the stamp with
+# Substring - shipping '08/28/2026' into every country page's schema.org block.
 $generatedDay = Get-IsoDay $obj.generated
 $badShape = New-Object System.Collections.Generic.List[string]
 $badUrls = New-Object System.Collections.Generic.List[string]
@@ -81,7 +72,11 @@ foreach ($c in $countries) {
   if ($list.Count -eq 0) { $badShape.Add("$($c.Name):empty"); continue }
   foreach ($b in $list) {
     $totalBriefs++
-    if (-not $b.headline -or -not $b.body) { $badShape.Add("$($c.Name):missing headline/body") }
+    # Prose, not the 'body' field. The published payload ships paragraphs only - body is
+    # the same text joined by blank lines and app.js rebuilds it - so a gate that
+    # insisted on a literal body field would reject every story the desk ships.
+    # Get-StoryBodyText is what the merge and the word counter already use.
+    if (-not $b.headline -or -not (Get-StoryBodyText $b)) { $badShape.Add("$($c.Name):missing headline/body") }
     elseif ($b.headline.Length -gt 100) { $badShape.Add("$($c.Name):headline over 100 chars") }
 
     $hasParagraphs = $null -ne $b.PSObject.Properties['paragraphs']

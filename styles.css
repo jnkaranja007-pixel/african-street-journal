@@ -1269,3 +1269,148 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .mobile-wire-entry{padding-left:9px}
   .mobile-wire-entry .wire-entry-count{max-width:67px;font-size:10px}
 }
+
+/* ── Front page on the landing screen ────────────────────────────────────────
+   The map is a centred square, so a wide screen leaves two tall columns of empty
+   black beside it. Today's lead and the next headlines go there. The map keeps its
+   full size because the stage's own width formula is untouched and the columns take
+   only the space the map was never using.
+   Below 1080px the columns collapse and .home-front--mobile carries the same
+   headlines under the ticker, where a phone has room. */
+.landing-stage-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:clamp(14px,2.2vw,34px);
+  width:100%;
+  max-width:1720px;
+  margin:0 auto;
+}
+.home-front{display:flex;flex-direction:column;gap:14px;min-width:0}
+.home-front--left{justify-self:end;text-align:right}
+.home-front--right{justify-self:start}
+.home-front--mobile{display:none}
+
+.home-front-label{
+  font:700 10px/1 var(--mono);letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--text-dim);padding-bottom:8px;border-bottom:1px solid var(--rule);
+}
+.home-front--left .home-front-label{border-bottom-color:var(--rule)}
+
+.home-story{
+  display:block;width:100%;text-align:inherit;
+  background:none;border:0;border-left:1px solid transparent;
+  padding:0;margin:0;cursor:pointer;color:inherit;
+  transition:border-color 160ms,color 160ms;
+}
+.home-front--right .home-story{border-left:1px solid var(--rule);padding-left:14px}
+.home-front--left .home-story{border-left:0;border-right:1px solid var(--rule);padding-right:14px}
+.home-story:hover,.home-story:focus-visible{outline:none}
+.home-front--right .home-story:hover,.home-front--right .home-story:focus-visible{border-left-color:var(--green)}
+.home-front--left .home-story:hover,.home-front--left .home-story:focus-visible{border-right-color:var(--green)}
+
+.home-story-kicker{
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  font:700 9px/1.4 var(--mono);letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--front-green);margin-bottom:6px;
+}
+.home-front--left .home-story-kicker{justify-content:flex-end}
+.home-story-kicker .home-story-src{color:var(--text-dim)}
+.home-story-title{
+  font:700 clamp(15px,1.15vw,19px)/1.22 var(--serif);color:var(--text);
+  text-wrap:balance;
+}
+.home-story:hover .home-story-title,.home-story:focus-visible .home-story-title{color:var(--green-bright)}
+.home-story--lead .home-story-title{font-size:clamp(19px,1.62vw,27px);line-height:1.14}
+.home-story--lead .home-story-dek{
+  font:400 13px/1.45 var(--sans);color:var(--text-muted);margin-top:8px;
+}
+.home-story.is-read .home-story-title{color:var(--text-dim)}
+
+.home-front-all{
+  align-self:inherit;background:none;border:0;padding:0;margin-top:2px;cursor:pointer;
+  font:700 10px/1 var(--mono);letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--text-dim);border-bottom:1px solid var(--rule);padding-bottom:6px;
+  transition:color 160ms,border-color 160ms;
+}
+.home-front-all:hover,.home-front-all:focus-visible{color:var(--green);border-bottom-color:var(--green);outline:none}
+
+/* The side columns need real width to be readable. Below this the map and two columns
+   of serif headlines cannot share a row without one of them becoming unreadable, so
+   the phone layout takes over rather than shrinking both. */
+@media (max-width:1079px){
+  .landing-stage-row{display:block}
+  .home-front--left,.home-front--right{display:none}
+  .home-front--mobile{
+    display:flex;width:100%;max-width:760px;margin:0 auto;
+    padding:22px clamp(16px,5vw,28px) 30px;text-align:left;gap:18px;
+  }
+  .home-front--mobile .home-story{border-left:1px solid var(--rule);padding-left:14px}
+  .home-front--mobile .home-story:hover,.home-front--mobile .home-story:focus-visible{border-left-color:var(--green)}
+  .home-front--mobile .home-story-title{font-size:17px}
+  .home-front--mobile .home-story--lead .home-story-title{font-size:23px}
+}
+
+/* .landing-core is a three-row grid above 640px and the map is sized by the height of
+   its last row, not by its own width. Wrapping the stage put a new element in that row,
+   so .stage's height:100% suddenly resolved against a content-sized box and the map
+   inflated to its intrinsic 1000px. The wrapper has to carry the row's height for the
+   stage to keep measuring against the same thing it always did. */
+@media (min-width:641px){
+  .landing-stage-row{height:100%;min-height:0;align-self:center}
+}
+/* The columns must never grow the row: a long lead paragraph would otherwise push the
+   ticker off the screen. They are as tall as the map and no taller. */
+.home-front{max-height:100%;overflow:hidden}
+.home-story-dek{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Below 641px .landing-core is a column flex container and .stage used to be its own
+   flex item with flex:none. The wrapper took that place without inheriting it, so it
+   was shrunk to 20px while the map inside it overflowed and painted underneath the
+   headlines. The wrapper has to be as unshrinkable as the map it holds. */
+.landing-stage-row{flex:none}
+
+/* The landing page is a locked single-viewport composition: body is 100svh with
+   overflow hidden, so nothing below the ticker can ever be reached. That is right for
+   a poster and wrong for a newspaper on a phone, where the front page is the reason
+   someone came. Below 1080px the page scrolls: the map still owns the first screen,
+   and today's headlines are one thumb-flick underneath it.
+   The overlays (country view, wire, story reader) are position:fixed and set
+   body.overflow themselves while open, so they are unaffected. */
+@media (max-width:1079px){
+  body{height:auto;min-height:100svh;overflow-y:auto;overflow-x:hidden}
+  main{overflow:visible}
+  /* No min-height here: forcing the core to a screen height left ~290px of dead black
+     between the map and the ticker. Content height puts the ticker under the map and
+     the headlines directly under that, which is what makes the scroll worth taking. */
+  /* A cue that there is something under the fold. Without it the map still reads as
+     the whole page and nobody scrolls. */
+  .home-front--mobile{border-top:1px solid var(--rule)}
+}
+
+/* "12 new" on the desk entry button. The count is the reason a returning reader opens
+   it, so it gets the accent colour the rest of the furniture does not. */
+.wire-entry-count.is-new{color:var(--green-bright);font-weight:700}
+
+/* ── Sign-up ─────────────────────────────────────────────────────────────── */
+.asj-signup{margin-top:22px;padding-top:18px;border-top:1px solid var(--rule)}
+.asj-signup-pitch{
+  font:400 14px/1.5 var(--sans);color:var(--text-muted);margin:0 0 12px;max-width:46ch;
+}
+.asj-signup-row{display:flex;gap:0;max-width:420px}
+.asj-signup-input{
+  flex:1;min-width:0;background:rgba(255,255,255,.02);border:1px solid var(--rule);
+  border-right:0;padding:11px 13px;color:var(--text);font:400 14px/1.2 var(--sans);
+  border-radius:0;
+}
+.asj-signup-input::placeholder{color:var(--text-dim)}
+.asj-signup-input:focus{outline:none;border-color:var(--green);box-shadow:inset 0 0 0 1px rgba(76,175,80,.25)}
+.asj-signup-btn{
+  border:1px solid var(--green);background:var(--green);color:#0e1a0f;cursor:pointer;
+  padding:11px 20px;border-radius:0;
+  font:700 11px/1.2 var(--mono);letter-spacing:0.16em;text-transform:uppercase;
+  transition:background 150ms,color 150ms;
+}
+.asj-signup-btn:hover,.asj-signup-btn:focus-visible{background:var(--green-bright);outline:none}
+.asj-signup-note{font:400 12px/1.5 var(--sans);color:var(--text-dim);margin:9px 0 0;min-height:1em}
+.asj-signup-done{font:400 14px/1.5 var(--sans);color:var(--green-bright);margin:0}
