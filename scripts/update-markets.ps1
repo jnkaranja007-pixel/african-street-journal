@@ -45,6 +45,12 @@ $EXCHANGES = @(
   @{ slug='gse';  code='GSE';   name='Ghana Stock Exchange';               countries=@('gh') },
   @{ slug='use';  code='USE';   name='Uganda Securities Exchange';         countries=@('ug') },
   @{ slug='zse';  code='ZSE';   name='Zimbabwe Stock Exchange';            countries=@('zw') },
+  # AFX publishes ten exchanges and this list used seven. Botswana was left on a
+  # hand-seeded block from March, 166 days old by 28 August, while bse was sitting
+  # there the whole time; Zambia and Malawi had no market panel at all.
+  @{ slug='bse';  code='BSE';   name='Botswana Stock Exchange';            countries=@('bw') },
+  @{ slug='luse'; code='LuSE';  name='Lusaka Securities Exchange';         countries=@('zm') },
+  @{ slug='mse';  code='MSE';   name='Malawi Stock Exchange';              countries=@('mw') },
   @{ slug='brvm'; code='BRVM';  name='Bourse Regionale des Valeurs Mobilieres'; countries=@('ci','bj','bf','ml','ne','sn','tg','gw') }
 )
 

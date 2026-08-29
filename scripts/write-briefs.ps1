@@ -160,7 +160,11 @@ sound like a press release, and never send the reader away to understand the eve
 
 Rules:
 - Headline: actor + active verb + material result. Maximum 90 characters.
-- Dek: one specific sentence that advances the headline, maximum 180 characters.
+- Dek: ONE complete sentence that advances the headline. Aim for 110 to 150 characters,
+  and never more than 170. Compose a sentence that ends where you meant it to. Do not
+  write toward the limit and stop mid-phrase: "...the certificate for six historic
+  Comorian." is a failed dek, and so is any dek whose last word is a preposition,
+  article or conjunction.
 - Paragraphs: exactly 3 short paragraphs, 70 to 220 words total; aim for 90 to 160.
   Lead with what changed, then attribution, scale, affected people and useful context
   present in the evidence. Count the story words before returning the JSON.
@@ -244,12 +248,29 @@ function Get-WordCount([string]$Text) {
   return ([regex]::Matches($Text, "[\p{L}\p{N}]+(?:[''\u2019-][\p{L}\p{N}]+)*")).Count
 }
 
+function Test-DeskSentenceEndsBadly([string]$Text) {
+  # A second copy of the dangling list, on purpose - see the note in Limit-DeskSentence.
+  # Both are self-contained so either can be imported alone; test-story-contract asserts
+  # they still match.
+  $dangling = @('for','to','of','in','on','at','by','with','from','and','or','the','a','an',
+                'that','as','into','over','under','after','before','during','its','their',
+                'his','her','which','while','when','who','but','if','than','then','about',
+                'against','between','through','per','via','amid','following')
+  $clean = ([string]$Text).Trim().TrimEnd([char[]]' .!?')
+  if (-not $clean) { return $false }
+  $sp = $clean.LastIndexOf(' ')
+  if ($sp -lt 0) { return $false }
+  $last = $clean.Substring($sp + 1).ToLowerInvariant().Trim([char[]]',;:."()')
+  return ($dangling -contains $last)
+}
+
 function Limit-DeskSentence([string]$Text, [int]$MaxChars) {
   # The dangling list lives inside the function on purpose. As a script-scope variable
   # it vanished whenever a consumer imported the function alone - which the story
-  # contract test does - and the walk-back below silently did nothing while still
-  # reporting PASS. A helper that quietly degrades when imported is worse than one that
-  # is slightly longer.
+  # contract test does, by lifting the function's own AST text - and the walk-back below
+  # silently did nothing while still reporting PASS. Test-DeskSentenceEndsBadly holds a
+  # deliberate second copy for the same reason; test-story-contract asserts the two
+  # agree, so the duplication is checked rather than hoped about.
   $dangling = @('for','to','of','in','on','at','by','with','from','and','or','the','a','an',
                 'that','as','into','over','under','after','before','during','its','their',
                 'his','her','which','while','when','who','but','if','than','then','about',
@@ -383,7 +404,11 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
         item = $itemSchema
         topic = @{ type = 'string'; enum = $VALID_TOPICS }
         headline = @{ type = 'string'; minLength = 12; maxLength = 100 }
-        dek = @{ type = 'string'; minLength = 20; maxLength = 180 }
+        # 170, not 180. At 180 the model wrote to the ceiling and stopped mid-noun-phrase
+        # on 51 of 249 deks; the desk then punctuated the fragment and shipped it. The
+        # prompt asks for 110-150, so this is a backstop with headroom rather than a
+        # cliff the writer composes up against.
+        dek = @{ type = 'string'; minLength = 20; maxLength = 170 }
         paragraphs = @{ type = 'array'; minItems = 3; maxItems = 3; items = @{ type = 'string'; minLength = 20 } }
         wordCount = @{ type = 'integer'; minimum = $MinStoryWords; maximum = $MaxStoryWords }
         why = @{ type = 'string'; minLength = 20; maxLength = 320 }
@@ -548,6 +573,10 @@ function Get-DraftContractIssues($Brief) {
   }
   if (([string]$Brief.headline).Trim().Length -gt 100) { $issues.Add('headline over 100 characters') }
   if (([string]$Brief.dek).Trim().Length -gt 200) { $issues.Add('dek over 200 characters') }
+  # A dek ending on a preposition, article or conjunction is a fragment, whatever
+  # punctuation it carries. Sending it back costs one repair call; shipping it puts
+  # "...the certificate for six historic Comorian." under a headline on the front page.
+  if (Test-DeskSentenceEndsBadly ([string]$Brief.dek)) { $issues.Add('dek ends mid-phrase') }
   $whyWords = Get-WordCount ([string]$Brief.why)
   if ($whyWords -lt 8 -or $whyWords -gt 50) { $issues.Add('why outside 8-50 words') }
   $paragraphs = @($Brief.paragraphs | ForEach-Object { ([string]$_).Trim() } | Where-Object { $_ })

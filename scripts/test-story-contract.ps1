@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence')) {
+foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -202,5 +202,38 @@ try {
   }
 }
 
-Write-Host '[story-contract] OK - 18 checks'
+
+# The dek trimmer and the draft contract each carry their own copy of the dangling-word
+# list, because a script-scope variable disappears when either function is imported on
+# its own and the walk-back then no-ops while printing PASS. Duplication is the right
+# call there; drifting duplication is not, so assert they still agree.
+$writerText = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'write-briefs.ps1'), [Text.Encoding]::UTF8)
+$lists = [regex]::Matches($writerText, "(?s)\`$dangling = @\((.*?)\)\r?\n")
+if ($lists.Count -ne 2) { throw "expected two dangling-word lists in the writer, found $($lists.Count)" }
+$normalise = { param($s) ($s -replace '\s+', '') }
+if ((& $normalise $lists[0].Groups[1].Value) -ne (& $normalise $lists[1].Groups[1].Value)) {
+  throw 'the two dangling-word lists have drifted apart'
+}
+Write-Host 'PASS both dangling-word lists still agree'
+
+# A fragment ending on a function word must be caught by the contract, not punctuated
+# and published. This check knows prepositions, articles and conjunctions - it cannot
+# tell that "...six historic Comorian." is also a fragment, because that needs to know
+# "Comorian" is an adjective here. The prompt target and the 170-character schema cap
+# are what keep the writer from composing into that shape in the first place.
+foreach ($bad in @(
+  'Police arrested four suspects in a raid on a warehouse owned by',
+  'The bank raised its policy rate, citing inflation and',
+  'The ministry issued the inscription certificate for')) {
+  if (-not (Test-DeskSentenceEndsBadly $bad)) { throw "fragment not detected: '$bad'" }
+}
+foreach ($good in @(
+  'The central bank raised its policy rate to 8.75 percent as inflation reached 14.5 percent.',
+  'Nchimbi resigned as vice president and was expelled from the ruling party.',
+  'Eight civilians were killed in a drone strike in North Kordofan')) {
+  if (Test-DeskSentenceEndsBadly $good) { throw "complete sentence wrongly flagged: '$good'" }
+}
+Write-Host 'PASS dek fragments are detected and complete sentences are not'
+
+Write-Host '[story-contract] OK - 20 checks'
 exit 0
