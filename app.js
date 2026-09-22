@@ -4628,23 +4628,21 @@ canvas.addEventListener('touchstart', (e) => {
     el.innerHTML = '<div class="home-front-label">' + escapeHtml(label) + '</div>' +
       items.map((item, i) => storyMarkup(item, opts.lead && i === 0)).join('') +
       // One call to action on the screen, not one per column.
-      (opts.cta ? '<button class="home-front-all" type="button" data-home-all>Read today\'s desk</button>' : '');
+      (opts.cta ? '<button class="home-front-all" type="button" data-home-all>Read the desk</button>' : '');
   }
 
   function paint() {
     const items = topStories(7);
     if (!items.length) return;
+    // Desk furniture, not a time claim. "Today" and "Also today" said nothing the
+    // masthead had not already said, and on a stale edition they said it falsely -
+    // the banner above reported the desk had not published while the column underneath
+    // was headed Today. The edition date belongs in one place, and this is not it.
     const fresh = newSinceLastVisit();
-    // "Today" is a claim, and on a stale edition it is a false one - the masthead
-    // notice would be saying the desk has not published while this column said today.
-    // When the paper is behind, the column carries the date it actually is.
-    const day = latestBriefDate();
-    const age = day ? Math.floor((Date.now() - Date.parse(day + 'T00:00:00Z')) / 86400000) : 0;
-    const dated = day && age >= 2 ? formatShortDate(day + 'T00:00:00Z') : 'Today';
-    const label = fresh > 0 ? fresh + (fresh === 1 ? ' new story' : ' new stories') : dated;
+    const label = fresh > 0 ? fresh + (fresh === 1 ? ' new story' : ' new stories') : 'The lead';
     // Desktop reads left column first, so the lead goes there.
     fill(slots.left, items.slice(0, 3), label, { lead: true, cta: false });
-    fill(slots.right, items.slice(3, 6), dated === 'Today' ? 'Also today' : 'Also', { lead: false, cta: true });
+    fill(slots.right, items.slice(3, 6), 'Elsewhere', { lead: false, cta: true });
     fill(slots.mobile, items.slice(0, 5), label, { lead: true, cta: true });
     // The sign-up form lives inside these blocks and is wiped by the repaint above.
     try { window.dispatchEvent(new CustomEvent('asj:front-painted')); } catch {}
