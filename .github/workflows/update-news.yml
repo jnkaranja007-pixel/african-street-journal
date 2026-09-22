@@ -188,7 +188,9 @@ jobs:
         run: |
           git config user.name  "asj-news-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/briefs.js data/briefs-state.json data/archive sitemap.xml robots.txt
+          # briefs-full.js is the deferred half of the edition - forgetting it here would
+          # ship an index whose prose is a day old, which is worse than shipping neither.
+          git add data/briefs.js data/briefs-full.js data/briefs-state.json data/archive sitemap.xml robots.txt
           Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object { git add "$($_.Name)/index.html" }
           # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError - a grouping
           # expression cannot contain a statement separator. Run the check, then read

@@ -200,3 +200,141 @@ function Get-IsoInstant($value) {
   }
   return ''
 }
+
+# --- the two halves of a published story -------------------------------------------
+# The reader downloads 576 KB before the map draws, and all of it is prose for 55
+# countries they have not clicked on yet. The index is 112 KB of that - enough for the
+# front page, the wire list, the map dots, the counts and the ranking - and the prose
+# follows once the page is already up.
+#
+# Splitting on "what does the first screen need" rather than on "what is a story"
+# is why lens SCORES live in the index (the wire ranks by them the moment a reader
+# picks a lens) while lens WHY text does not (it is only ever read inside an open
+# story).
+
+function ConvertTo-StoryIndexRecord($Story) {
+  $out = [ordered]@{}
+  foreach ($f in $Story.PSObject.Properties) {
+    if ($STORY_DESK_ONLY_FIELDS -contains $f.Name) { continue }
+    # Prose and per-lens explanations belong to the deferred half.
+    if ($f.Name -in @('paragraphs','body','why','lenses','sources')) { continue }
+    $out[$f.Name] = $f.Value
+  }
+  # Source NAMES only. The wire prints the first outlet and counts the rest; the URLs
+  # are only followed from inside an open story, and they are a third of the sources
+  # block by weight.
+  $names = New-Object System.Collections.Generic.List[object]
+  foreach ($s in @($Story.sources)) {
+    if ($s -and $s.name) { $names.Add([ordered]@{ name = [string]$s.name }) }
+  }
+  $out['sources'] = $names.ToArray()
+  if ($Story.PSObject.Properties['lenses'] -and $Story.lenses) {
+    $scores = [ordered]@{}
+    foreach ($lens in $Story.lenses.PSObject.Properties) {
+      if ($null -ne $lens.Value -and $lens.Value.PSObject.Properties['score']) {
+        $scores[$lens.Name] = $lens.Value.score
+      }
+    }
+    $out['lensScores'] = $scores
+  }
+  return $out
+}
+
+function ConvertTo-StoryFullRecord($Story) {
+  # Keyed by articleId so the browser can match it to its index record. A story with no
+  # articleId cannot be matched, so it keeps its prose in the index instead - see
+  # ConvertTo-ShippableStory, which is still what decides body-versus-paragraphs.
+  $out = [ordered]@{ articleId = [string]$Story.articleId }
+  foreach ($name in @('paragraphs','body','why','lenses','sources')) {
+    if ($Story.PSObject.Properties[$name]) { $out[$name] = $Story.$name }
+  }
+  return $out
+}
+
+function Split-ShippableByCountry($ByCountry) {
+  # Returns @{ index = <ordered>; full = <ordered> }, both keyed by country code.
+  $codes = if ($ByCountry -is [System.Collections.IDictionary]) { @($ByCountry.Keys) }
+           else { @($ByCountry.PSObject.Properties.Name) }
+  $index = [ordered]@{}
+  $full  = [ordered]@{}
+  foreach ($code in $codes) {
+    $stories = if ($ByCountry -is [System.Collections.IDictionary]) { $ByCountry[$code] } else { $ByCountry.$code }
+    $idxList  = New-Object System.Collections.Generic.List[object]
+    $fullList = New-Object System.Collections.Generic.List[object]
+    foreach ($s in @($stories)) {
+      $ship = ConvertTo-ShippableStory $s
+      $shipObj = [pscustomobject]$ship
+      if (-not $shipObj.articleId) {
+        # No id to join on. Ship it whole in the index rather than lose its prose -
+        # three Western Sahara briefs are in this shape and they are still journalism.
+        $idxList.Add($ship)
+        continue
+      }
+      $idxList.Add((ConvertTo-StoryIndexRecord $shipObj))
+      $fullList.Add((ConvertTo-StoryFullRecord $shipObj))
+    }
+    $index[$code] = $idxList.ToArray()
+    $full[$code]  = $fullList.ToArray()
+  }
+  return @{ index = $index; full = $full }
+}
+
+function Import-PublishedEdition([string]$Root) {
+  # The edition ships as two files - data/briefs.js (index) and data/briefs-full.js
+  # (prose) - and every server-side tool needs them back as whole stories.
+  #
+  # This exists because splitting the payload silently broke all three consumers at
+  # once: build-static-pages produced ZERO country pages, and the publication gate
+  # reported 235 malformed briefs, because each was reading the index and finding no
+  # prose in it. The gate in particular has to judge what actually ships, so it reads
+  # the shipped files and merges them exactly as the browser does rather than reading
+  # the state file and grading a different artefact.
+  $indexPath = Join-Path $Root 'data\briefs.js'
+  $fullPath  = Join-Path $Root 'data\briefs-full.js'
+  if (-not (Test-Path $indexPath)) { return $null }
+
+  $raw = [IO.File]::ReadAllText($indexPath, [Text.Encoding]::UTF8)
+  $m = [regex]::Match($raw, 'byCountry:\s*(\{[\s\S]*?\}),\s*markets:')
+  if (-not $m.Success) { return $null }
+  $byCountry = $m.Groups[1].Value | ConvertFrom-Json
+  $dm = [regex]::Match($raw, 'dates:\s*(\{[\s\S]*?\}),\s*byCountry:')
+  $dates = if ($dm.Success) { $dm.Groups[1].Value | ConvertFrom-Json } else { $null }
+  $gm = [regex]::Match($raw, "generated:\s*'([^']+)'")
+  $generated = if ($gm.Success) { $gm.Groups[1].Value } else { '' }
+
+  $mergedCount = Merge-DeferredHalf $byCountry $fullPath
+  return [pscustomobject]@{
+    generated = $generated
+    dates     = $dates
+    byCountry = $byCountry
+    merged    = $mergedCount
+  }
+}
+
+function Merge-DeferredHalf($ByCountry, [string]$FullPath) {
+  # Fold data/briefs-full.js back into an index, in place, exactly as app.js does in the
+  # browser. Returns the number of stories that gained their prose.
+  if (-not $ByCountry -or -not (Test-Path $FullPath)) { return 0 }
+  $fullRaw = [IO.File]::ReadAllText($FullPath, [Text.Encoding]::UTF8)
+  $fm = [regex]::Match($fullRaw, 'byCountry:\s*(\{[\s\S]*\})\s*\};')
+  if (-not $fm.Success) { return 0 }
+  $full = $fm.Groups[1].Value | ConvertFrom-Json
+  $merged = 0
+  foreach ($p in $full.PSObject.Properties) {
+    $target = $ByCountry.PSObject.Properties[$p.Name]
+    if (-not $target) { continue }
+    $lookup = @{}
+    foreach ($rec in @($p.Value)) { if ($rec -and $rec.articleId) { $lookup[[string]$rec.articleId] = $rec } }
+    foreach ($story in @($target.Value)) {
+      if (-not $story.articleId) { continue }
+      $rec = $lookup[[string]$story.articleId]
+      if (-not $rec) { continue }
+      foreach ($f in $rec.PSObject.Properties) {
+        if ($f.Name -eq 'articleId') { continue }
+        Add-Member -InputObject $story -NotePropertyName $f.Name -NotePropertyValue $f.Value -Force
+      }
+      $merged++
+    }
+  }
+  return $merged
+}

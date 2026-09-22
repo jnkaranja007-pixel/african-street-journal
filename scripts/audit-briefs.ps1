@@ -36,11 +36,10 @@ $root = Split-Path $PSScriptRoot -Parent
 $briefsPath = Join-Path $root 'data\briefs.js'
 if (-not (Test-Path $briefsPath)) { Write-Host '[audit] data/briefs.js missing' -ForegroundColor Red; exit 1 }
 
-$raw = [IO.File]::ReadAllText($briefsPath)
-$m = [regex]::Match($raw, 'byCountry:\s*(\{[\s\S]*?\}),\s*markets:')
-if (-not $m.Success) { Write-Host '[audit] cannot find byCountry block' -ForegroundColor Red; exit 1 }
-try { $byCountry = $m.Groups[1].Value | ConvertFrom-Json }
-catch { Write-Host "[audit] byCountry is not valid JSON: $($_.Exception.Message)" -ForegroundColor Red; exit 1 }
+# Citation URLs live in the deferred half, so the link audit needs both files merged.
+$edition = Import-PublishedEdition $root
+if (-not $edition) { Write-Host '[audit] cannot read the published edition' -ForegroundColor Red; exit 1 }
+$byCountry = $edition.byCountry
 
 function Get-LinkStatus([string]$Url, [int]$TimeoutSec) {
   try {

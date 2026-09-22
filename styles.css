@@ -1408,3 +1408,8 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .asj-signup-btn:hover,.asj-signup-btn:focus-visible{background:var(--green-bright);outline:none}
 .asj-signup-note{font:400 12px/1.5 var(--sans);color:var(--text-dim);margin:9px 0 0;min-height:1em}
 .asj-signup-done{font:400 14px/1.5 var(--sans);color:var(--green-bright);margin:0}
+
+/* A story clicked before the deferred half has landed. Usually imperceptible; on a
+   slow connection it is the difference between "loading" and "broken". */
+body.asj-waiting{cursor:progress}
+body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-story-key]{cursor:progress}

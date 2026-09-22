@@ -49,12 +49,11 @@ foreach ($m in [regex]::Matches($appJs, $q)) {
 if ($info.Count -lt 55) { Write-Host "[static] only parsed $($info.Count) countries from app.js (expected 55)" -ForegroundColor Red; exit 1 }
 
 # --- briefs -----------------------------------------------------------------
-$raw = [IO.File]::ReadAllText((Join-Path $root 'data\briefs.js'))
-$m = [regex]::Match($raw, 'byCountry:\s*(\{[\s\S]*?\}),\s*markets:')
-if (-not $m.Success) { Write-Host '[static] cannot read byCountry' -ForegroundColor Red; exit 1 }
-$byCountry = $m.Groups[1].Value | ConvertFrom-Json
-$dm = [regex]::Match($raw, 'dates:\s*(\{[\s\S]*?\}),\s*byCountry:')
-$dates = if ($dm.Success) { $dm.Groups[1].Value | ConvertFrom-Json } else { $null }
+# The edition ships in two halves. These pages carry the story text, so they need both.
+$edition = Import-PublishedEdition $root
+if (-not $edition) { Write-Host '[static] cannot read the published edition' -ForegroundColor Red; exit 1 }
+$byCountry = $edition.byCountry
+$dates = $edition.dates
 
 function Esc($s) {
   if ($null -eq $s) { return '' }

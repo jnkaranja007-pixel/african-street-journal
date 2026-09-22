@@ -48,6 +48,15 @@ try { $obj = $js | ConvertFrom-Json } catch {
   exit 1
 }
 
+# The edition ships as an index plus a deferred half, and this gate has to judge what
+# actually ships - not the state file, which would grade a different artefact. Merge the
+# sibling file the way the browser does before measuring anything.
+# A -BriefsFile fixture has no sibling and already carries whole stories, so this is a
+# no-op there.
+$fullSibling = Join-Path (Split-Path $briefsPath -Parent) 'briefs-full.js'
+$mergedFromFull = Merge-DeferredHalf $obj.byCountry $fullSibling
+if ($mergedFromFull) { Write-Host "[validate] merged prose for $mergedFromFull stories from briefs-full.js" -ForegroundColor DarkGray }
+
 if (-not $obj.generated) { $problems.Add('no generated timestamp') }
 $countries = @()
 if ($obj.byCountry) { $countries = @($obj.byCountry.PSObject.Properties) }

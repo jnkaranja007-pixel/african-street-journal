@@ -79,7 +79,11 @@ function storyLensData(story, lens = activeStoryLens) {
   const mode = normalizeStoryLens(lens);
   if (mode === 'general') return { score:100, why:briefWhy(story), explicit:true };
   const raw = story?.lenses?.[mode];
-  const parsed = Number(raw?.score);
+  // lensScores is the index's copy of the score without the why text, so the wire can
+  // rank by a reader's lens the moment they pick one - before the deferred half has
+  // arrived. Falling through to the topic table instead would rank the paper one way
+  // for a second and then reorder it under the reader.
+  const parsed = Number(raw?.score ?? story?.lensScores?.[mode]);
   const fallback = STORY_LENS_TOPIC_SCORES[mode]?.[story?.topic || 'News'] ?? 50;
   const score = Number.isFinite(parsed) ? Math.round(Math.max(0, Math.min(100, parsed))) : fallback;
   const why = String(raw?.why || '').trim() || briefWhy(story);
@@ -2137,6 +2141,20 @@ function openRegisteredStory(key, sourceElement = document.activeElement) {
 
 function openStoryReader(story, context = {}, sourceElement = document.activeElement, options = {}) {
   if (!storyReader || !story?.headline) return;
+  // The prose arrives in a second file after first paint. A reader who clicks inside
+  // that window would otherwise get a reader with a headline and nothing under it, so
+  // wait for the half that has the paragraphs and then open properly. Once loaded this
+  // is a synchronous path again.
+  if (!window.ASJ_FULL_LOADED && !storyParagraphs(story).length && window.ASJ_FULL_READY) {
+    // On the reader itself this would be invisible - it is still closed. The class goes
+    // on body so a click that is waiting on the network looks like it did something.
+    document.body.classList.add('asj-waiting');
+    window.ASJ_FULL_READY.then(() => {
+      document.body.classList.remove('asj-waiting');
+      openStoryReader(story, context, sourceElement, options);
+    });
+    return;
+  }
   const country = context.country || COUNTRY_INFO[context.countryCode]?.name || '';
   const topic = story.topic || context.topic || 'News';
   const paragraphs = storyParagraphs(story);
@@ -4474,6 +4492,14 @@ canvas.addEventListener('touchstart', (e) => {
   }
   window.__wireOpen = openWire;
   window.__wireClose = closeWire;
+  // The wire's index carries a folded search haystack built from whatever the story had
+  // at the time. Built before the prose arrived, it holds headlines and deks only, and
+  // full-text search would keep quietly missing until the next open. Rebuild in place.
+  window.addEventListener('asj:full-loaded', () => {
+    if (!INDEX.length) return;
+    INDEX = buildIndex();
+    if (view.classList.contains('open')) renderResults();
+  });
   // Past editions: a journal keeps a record. The daily pipeline archives each edition to
   // data/archive/YYYY-MM-DD.js; this picker loads one and re-renders the wire from it.
   const editionSel = document.getElementById('wire-edition');
@@ -4705,6 +4731,9 @@ canvas.addEventListener('touchstart', (e) => {
   paint();
   // Repaint when a story is marked read, so the landing page dims what you have seen.
   window.addEventListener('asj:story-read', paint);
+  // Deks come from the index so the columns are right immediately, but the why lines
+  // and the paragraph fallback only exist once the prose lands. Repaint then.
+  window.addEventListener('asj:full-loaded', paint);
   // Opening the Wire rewrites the snapshot, so the count is stale the moment the reader
   // comes back to the landing page. Repaint on the route change that brings them here.
   window.addEventListener('hashchange', paint);
@@ -5407,6 +5436,27 @@ async function runSelfTest() {
         !hay.some(h => h.includes('zzzqqx')), 'zzzqqx');
   }
 
+  // --- the edition arrives in two halves ----------------------------------------
+  {
+    const all = Object.values(AI_BRIEFS || {}).flat().filter(Boolean);
+    const withId = all.filter(s => s.articleId);
+    add('payload: the deferred half loaded', window.ASJ_FULL_LOADED === true, String(window.ASJ_FULL_LOADED));
+    // The merge must land on the same objects the wire index and the registry hold,
+    // not on copies, or an open view keeps rendering the index-only record.
+    add('payload: every story has its prose after the merge',
+        withId.every(s => Array.isArray(s.paragraphs) && s.paragraphs.length),
+        withId.filter(s => !(s.paragraphs||[]).length).length + ' without paragraphs');
+    add('payload: source URLs arrive with the deferred half',
+        withId.every(s => (s.sources||[]).some(x => x && x.url)),
+        withId.filter(s => !(s.sources||[]).some(x=>x&&x.url)).length + ' without a citation URL');
+    // Lens ranking has to be exact from the index alone, or the wire reorders itself
+    // under a reader a second after they pick a lens.
+    const sample = withId.find(s => s.lensScores || s.lenses);
+    add('payload: lens scores are usable before the prose lands',
+        !sample || Number.isFinite(storyLensData(sample, 'farmers').score),
+        sample ? String(storyLensData(sample, 'farmers').score) : 'no lens data');
+  }
+
   const D = window.UNITED_AFRICA_DATA || {};
   const originalStoryLens = activeStoryLens;
   const lensFixture = [
@@ -5686,4 +5736,72 @@ async function runSelfTest() {
   // form. Re-mount whenever that happens rather than assuming one pass is enough.
   window.addEventListener('asj:front-painted', mountAll);
   document.addEventListener('click', () => setTimeout(mountAll, 250));
+}());
+
+/* ── The deferred half of the edition ──────────────────────────────────────
+   data/briefs.js is an index: headlines, deks, topics, dates, source names and lens
+   scores - 37KB gzipped, enough for the front page, the wire list, the map, the
+   counts and the ranking. The prose is 153KB more, and none of it is needed until a
+   reader opens something. It used to be in front of the map.
+
+   This loads it once the page is up and merges it into the SAME story objects the
+   rest of the app already holds, so nothing has to know the data arrived in two
+   pieces. Everything below degrades honestly in the window before it lands: deks
+   show, lens ranking is exact, why lines fall back to their topic sentence, and an
+   opened story waits rather than rendering half of itself. */
+(function loadDeferredHalf(){
+  let resolveReady;
+  window.ASJ_FULL_READY = new Promise(r => { resolveReady = r; });
+  window.ASJ_FULL_LOADED = false;
+
+  function merge(full) {
+    if (!full || !full.byCountry) return false;
+    let merged = 0;
+    for (const [code, records] of Object.entries(full.byCountry)) {
+      const target = AI_BRIEFS[code];
+      if (!Array.isArray(target) || !Array.isArray(records)) continue;
+      const byId = new Map(records.map(r => [String(r && r.articleId), r]));
+      for (const story of target) {
+        const rec = byId.get(String(story && story.articleId));
+        if (!rec) continue;
+        // Assign onto the existing object: the wire index, the registry and any open
+        // view already hold this reference.
+        for (const [k, v] of Object.entries(rec)) {
+          if (k === 'articleId') continue;
+          story[k] = v;
+        }
+        merged++;
+      }
+    }
+    hydrateBriefs(AI_BRIEFS);
+    window.ASJ_FULL_LOADED = true;
+    // Search matches against a folded haystack built when the index was built, and it
+    // had no prose in it until now. Anything already built has to be rebuilt or
+    // full-text search silently keeps missing.
+    window.dispatchEvent(new CustomEvent('asj:full-loaded', { detail: { merged } }));
+    return merged > 0;
+  }
+
+  function start() {
+    if (window.UNITED_AFRICA_BRIEFS_FULL) { merge(window.UNITED_AFRICA_BRIEFS_FULL); resolveReady(true); return; }
+    const s = document.createElement('script');
+    s.src = 'data/briefs-full.js?v=' + (window.ASJ_ASSET_VERSION || '1');
+    s.async = true;
+    s.onload = () => { merge(window.UNITED_AFRICA_BRIEFS_FULL); resolveReady(true); };
+    // A failed load is not fatal: headlines, deks and citations still render, and an
+    // opened story falls back to its dek. Better a thin paper than a blank one.
+    s.onerror = () => { window.ASJ_FULL_LOADED = false; resolveReady(false); };
+    document.head.appendChild(s);
+  }
+
+  // After first paint, not during it. requestIdleCallback where it exists, a timeout
+  // where it does not - and never rAF, which does not run in a hidden tab, so a page
+  // restored into a background tab would sit with no prose until it was looked at.
+  if (document.readyState === 'complete') {
+    (window.requestIdleCallback || (f => setTimeout(f, 60)))(start, { timeout: 1500 });
+  } else {
+    window.addEventListener('load', () => {
+      (window.requestIdleCallback || (f => setTimeout(f, 60)))(start, { timeout: 1500 });
+    }, { once: true });
+  }
 }());
