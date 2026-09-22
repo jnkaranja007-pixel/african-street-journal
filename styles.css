@@ -1414,3 +1414,20 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .asj-signup-btn:hover,.asj-signup-btn:focus-visible{background:var(--green-bright);outline:none}
 .asj-signup-note{font:400 12px/1.5 var(--sans);color:var(--text-dim);margin:9px 0 0;min-height:1em}
 .asj-signup-done{font:400 14px/1.5 var(--sans);color:var(--green-bright);margin:0}
+
+/* ── Stale edition notice ────────────────────────────────────────────────────
+   Amber, not red: the paper is late, not broken, and the stories in it are still
+   real reporting with real citations. Full-bleed so it reads as a masthead line
+   rather than a dismissible toast - there is nothing here for the reader to fix. */
+.stale-notice{
+  width:100vw;max-width:none;margin:0 calc(50% - 50vw);
+  padding:9px 20px;text-align:center;
+  background:rgba(201,164,74,.10);
+  border-bottom:1px solid rgba(201,164,74,.34);
+  color:var(--amber);
+  font:700 10px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  flex-shrink:0;
+}
+@media (max-width:640px){
+  .stale-notice{font-size:9px;letter-spacing:.1em;padding:8px 14px}
+}

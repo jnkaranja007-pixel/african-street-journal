@@ -2159,7 +2159,23 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   sourcesEl.hidden = !uniqueSources.length;
   updateReaderContinuation();
   document.getElementById('story-reader-share').textContent = 'Share';
+  // A story gets its own address. Without this the URL never changed when a story
+  // opened, which cost two things that matter more on a phone than anywhere else:
+  // the hardware Back button left the site instead of closing the story, and anyone
+  // who shares by copying the address bar - which is most people - sent the front
+  // page rather than the piece they were reading.
+  // The first open pushes an entry so Back can consume it; moving to the next story
+  // in the queue replaces it, so a reading run does not bury the way out.
+  const wasOpen = storyReader.classList.contains('open');
   storyReader.classList.add('open');
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('selftest');
+    url.searchParams.set('story', clientId);
+    const href = url.pathname + url.search + url.hash;
+    if (wasOpen || history.state?.asjStory) history.replaceState({ asjStory: clientId }, '', href);
+    else history.pushState({ asjStory: clientId }, '', href);
+  } catch {}
   document.body.style.overflow = 'hidden';
   updateOverlayAccessibility();
   const scroll = storyReader.querySelector('.story-reader-scroll');
@@ -2188,7 +2204,27 @@ function closeStoryReader() {
   activeReaderNextKey = '';
 }
 
-document.getElementById('story-reader-back')?.addEventListener('click', closeStoryReader);
+// The reader's own Back button walks the history entry the open pushed, so the UI
+// control and the phone's Back gesture do the same thing and neither leaves a dead
+// entry behind. When the reader was opened from a shared ?story= link there is no
+// entry of ours to consume, so close directly.
+function requestCloseStoryReader() {
+  if (history.state?.asjStory) { history.back(); return; }
+  closeStoryReader();
+}
+document.getElementById('story-reader-back')?.addEventListener('click', requestCloseStoryReader);
+
+// Back out of a story instead of out of the paper. On Android this is the primary
+// navigation gesture; before this it closed the site from the first story a reader
+// opened, which is the worst possible moment to lose them.
+window.addEventListener('popstate', () => {
+  const stillAStory = new URLSearchParams(location.search).get('story');
+  if (storyReader?.classList.contains('open') && !stillAStory) { closeStoryReader(); return; }
+  if (stillAStory && !storyReader?.classList.contains('open')) {
+    const found = findPublishedStory(stillAStory);
+    if (found) openStoryReader(found.story, found.context, document.body);
+  }
+});
 document.getElementById('story-reader-next')?.addEventListener('click', () => {
   const record = activeReaderQueue.find(item => storyRecordKey(item) === activeReaderNextKey);
   if (!record) return;
@@ -2218,7 +2254,9 @@ document.addEventListener('keydown', event => {
   if (event.key !== 'Escape' || !storyReader?.classList.contains('open')) return;
   event.preventDefault();
   event.stopImmediatePropagation();
-  closeStoryReader();
+  // Escape goes through the same door as the Back button, so the pushed history
+  // entry is consumed either way.
+  requestCloseStoryReader();
 }, true);
 
 function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) {
@@ -4384,7 +4422,9 @@ canvas.addEventListener('touchstart', (e) => {
     }, 60);
   }
   function closeWire(){
-    if (storyReader?.classList.contains('open')) closeStoryReader();
+    // The wire is closing under the reader, so drop our history entry with it rather
+    // than leaving a Back that reopens a story over a page the reader has left.
+    if (storyReader?.classList.contains('open')) requestCloseStoryReader();
     view.classList.remove('open');
     if (!document.getElementById('country-view').classList.contains('open')) document.body.style.overflow='';
     updateOverlayAccessibility();
@@ -4595,10 +4635,16 @@ canvas.addEventListener('touchstart', (e) => {
     const items = topStories(7);
     if (!items.length) return;
     const fresh = newSinceLastVisit();
-    const label = fresh > 0 ? fresh + (fresh === 1 ? ' new story' : ' new stories') : 'Today';
+    // "Today" is a claim, and on a stale edition it is a false one - the masthead
+    // notice would be saying the desk has not published while this column said today.
+    // When the paper is behind, the column carries the date it actually is.
+    const day = latestBriefDate();
+    const age = day ? Math.floor((Date.now() - Date.parse(day + 'T00:00:00Z')) / 86400000) : 0;
+    const dated = day && age >= 2 ? formatShortDate(day + 'T00:00:00Z') : 'Today';
+    const label = fresh > 0 ? fresh + (fresh === 1 ? ' new story' : ' new stories') : dated;
     // Desktop reads left column first, so the lead goes there.
     fill(slots.left, items.slice(0, 3), label, { lead: true, cta: false });
-    fill(slots.right, items.slice(3, 6), 'Also today', { lead: false, cta: true });
+    fill(slots.right, items.slice(3, 6), dated === 'Today' ? 'Also today' : 'Also', { lead: false, cta: true });
     fill(slots.mobile, items.slice(0, 5), label, { lead: true, cta: true });
     // The sign-up form lives inside these blocks and is wiped by the repaint above.
     try { window.dispatchEvent(new CustomEvent('asj:front-painted')); } catch {}
@@ -4815,8 +4861,19 @@ function deskSignupConfig() {
   const url = String(cfg?.url || '').replace(/\/+$/, '');
   const anonKey = String(cfg?.anonKey || '');
   const table = String(cfg?.table || 'asj_signups');
-  if (!/^https:\/\/[a-z0-9.-]+\.supabase\.co$/i.test(url) || anonKey.length < 20) return null;
-  return { url, anonKey, table };
+  if (/^https:\/\/[a-z0-9.-]+\.supabase\.co$/i.test(url) && anonKey.length >= 20) {
+    return { kind: 'supabase', url, anonKey, table };
+  }
+  // Supabase keeps the watchlist and the lens alongside the address, which is what
+  // this desk is really for. A plain list endpoint - Buttondown, Formspree, a Worker -
+  // takes the address only. Accepting the simpler one means a reader can be signed up
+  // the day an endpoint is pasted in, rather than waiting for a database to exist.
+  const list = window.ASJ_NEWSLETTER || null;
+  const endpoint = String(list?.endpoint || '');
+  if (/^https:\/\//i.test(endpoint)) {
+    return { kind: 'endpoint', endpoint, field: String(list.field || 'email'), cors: list.cors !== false };
+  }
+  return null;
 }
 function preferredDeskAudience() {
   return normalizeStoryLens(activeStoryLens);
@@ -4830,6 +4887,18 @@ function signupWatchlistPayload() {
 async function syncDeskSignup(email, audience) {
   const cfg = deskSignupConfig();
   if (!cfg) return { synced: false, reason: 'missing-config' };
+
+  if (cfg.kind === 'endpoint') {
+    // A list provider takes a form post and usually answers without CORS headers, so
+    // the response is opaque and cannot be read. That is fine: what must not happen is
+    // reporting a failure for a submission that actually landed.
+    const body = new FormData();
+    body.append(cfg.field, email);
+    body.append('audience', audience);
+    await fetch(cfg.endpoint, { method: 'POST', body, mode: cfg.cors ? 'cors' : 'no-cors' });
+    return { synced: true };
+  }
+
   const payload = {
     email,
     watchlist: signupWatchlistPayload(),
@@ -5186,7 +5255,11 @@ const directStoryId = new URLSearchParams(location.search).get('story');
 if (directStoryId) {
   const directStory = findPublishedStory(directStoryId);
   if (directStory) {
-    requestAnimationFrame(() => openStoryReader(directStory.story, directStory.context, document.body));
+    // setTimeout, not requestAnimationFrame: rAF does not run while the tab is
+    // hidden, and a shared link is very often opened into a background tab - from a
+    // chat app, or by a browser restoring tabs at launch. The story then sat closed
+    // until the reader happened to focus it. Opening a story is not an animation.
+    setTimeout(() => openStoryReader(directStory.story, directStory.context, document.body), 0);
   }
 }
 
@@ -5255,6 +5328,49 @@ async function runSelfTest() {
     add('ranking: a story with no score ranks below a well-scored one',
         storyLensRank(unscored, 'general', 0) < storyLensRank(scored, 'general', 0),
         storyLensRank(unscored, 'general', 0) + ' vs ' + storyLensRank(scored, 'general', 0));
+  }
+
+  // --- a story has its own address ----------------------------------------------
+  {
+    const trigger = document.querySelector('[data-home-story]');
+    const before = new URLSearchParams(location.search).get('story');
+    const historyBefore = history.length;
+    trigger?.click();
+    await new Promise(r => setTimeout(r, 400));
+    const shared = new URLSearchParams(location.search).get('story');
+    add('sharing: opening a story puts it in the address bar', !!shared && shared !== before, String(shared));
+    add('sharing: opening a story adds exactly one history entry',
+        history.length === historyBefore + 1, historyBefore + ' -> ' + history.length);
+    // Back must return to the paper, not leave it. On a phone this is the main gesture.
+    history.back();
+    await new Promise(r => setTimeout(r, 400));
+    add('sharing: back closes the story instead of leaving the site',
+        !document.getElementById('story-reader')?.classList.contains('open'),
+        location.search);
+    add('sharing: a shared id resolves to a real story',
+        !!(shared && findPublishedStory(shared)), String(shared));
+  }
+
+  // --- the paper admits when it is old ------------------------------------------
+  {
+    const notice = document.getElementById('stale-notice');
+    const day = latestBriefDate();
+    const age = day ? Math.floor((Date.now() - Date.parse(day + 'T00:00:00Z')) / 86400000) : 999;
+    add('staleness: the notice element exists', !!notice, day + ' / ' + age + 'd');
+    // The whole point: an old edition must say so, and a current one must not nag.
+    add('staleness: notice shown only when the edition is two days behind',
+        !notice || (age >= 2 ? !notice.hidden : notice.hidden),
+        'age=' + age + ' hidden=' + (notice ? notice.hidden : 'n/a'));
+    if (notice && !notice.hidden) {
+      add('staleness: the notice names the edition date',
+          notice.textContent.includes(String(new Date(day + 'T00:00:00Z').getUTCFullYear())),
+          notice.textContent);
+    }
+    // The column heading must not say "Today" over a fortnight-old front page.
+    const label = document.querySelector('#home-front-left .home-front-label, #home-front-mobile .home-front-label');
+    add('staleness: the front page heading does not claim today when it is not',
+        !label || age < 2 || !/^today$/i.test(label.textContent.trim()),
+        (label ? label.textContent : 'no label') + ' @ ' + age + 'd');
   }
 
   const D = window.UNITED_AFRICA_DATA || {};
@@ -5460,74 +5576,70 @@ async function runSelfTest() {
     (failed.length ? '\n' + failed.map(f => '✗ ' + f.name + (f.note ? ' — ' + f.note : '')).join('\n') : '  ✓');
   document.body.appendChild(box);
 }
-
-/* ── Sign-up: one morning email ────────────────────────────────────────────
+/* -- Sign-up ---------------------------------------------------------------
    The journal has no way to bring a reader back. A bookmark is not a relationship,
    and a watchlist that lives in localStorage is lost the first time someone clears
    their browser or picks up a different phone.
-   Nothing renders unless data/newsletter-config.js names an endpoint, because a form
-   that quietly discards what people type is worse than no form. */
-(function newsletterSignup(){
-  const cfg = window.ASJ_NEWSLETTER;
-  if (!cfg || !cfg.endpoint) return;
+
+   There is exactly one signup. The "Your desk" strip already had one, but it only
+   appeared after a reader followed two countries, which is a long way past the moment
+   they might have said yes. This mounts the same record and the same sync on the front
+   page and in the Wire, where readers actually are. Two forms writing two records
+   would have made the list impossible to trust.
+
+   Nothing renders unless a backend is configured - Supabase, or a plain list endpoint
+   in data/newsletter-config.js - because a form that quietly discards what people type
+   is worse than no form. */
+(function frontPageSignup(){
+  if (!deskSignupConfig()) return;
+  const pitch = String(window.ASJ_NEWSLETTER?.pitch || 'One morning email from the desk.');
+
   // Mounted where there is room to scroll: the phone front page, and the Wire, where
   // the reader has just finished the front page. The desktop side columns are capped
   // at the height of the map, so a form there would simply be clipped.
   function hosts() {
     return [document.getElementById('home-front-mobile'), document.getElementById('wire-signup')].filter(Boolean);
   }
-  const field = cfg.field || 'email';
-  const pitch = cfg.pitch || 'One morning email from the desk.';
-  const DONE_KEY = 'asj:subscribed:v1';
-
-  function alreadySubscribed() {
-    try { return localStorage.getItem(DONE_KEY) === '1'; } catch { return false; }
-  }
-
-  function markSubscribed() {
-    try { localStorage.setItem(DONE_KEY, '1'); } catch {}
-  }
 
   function mount(host) {
     if (host.querySelector('.asj-signup')) return;
-    const wrap = document.createElement('form');
-    wrap.className = 'asj-signup';
-    wrap.noValidate = true;
-    if (alreadySubscribed()) {
-      wrap.innerHTML = '<p class="asj-signup-done">You are on the morning list.</p>';
-      host.appendChild(wrap);
+    const form = document.createElement('form');
+    form.className = 'asj-signup';
+    form.noValidate = true;
+    if (getDeskSignup().email) {
+      form.innerHTML = '<p class="asj-signup-done">You are on the morning list.</p>';
+      host.appendChild(form);
       return;
     }
-    wrap.innerHTML =
+    form.innerHTML =
       '<p class="asj-signup-pitch">' + escapeHtml(pitch) + '</p>' +
       '<div class="asj-signup-row">' +
-        '<input class="asj-signup-input" type="email" name="' + escapeHtml(field) + '" autocomplete="email" ' +
-          'required placeholder="you@example.com" aria-label="Email address">' +
+        '<input class="asj-signup-input" type="email" name="email" autocomplete="email" ' +
+          'inputmode="email" required placeholder="you@example.com" aria-label="Email address">' +
         '<button class="asj-signup-btn" type="submit">Join</button>' +
       '</div>' +
       '<p class="asj-signup-note" role="status"></p>';
-    host.appendChild(wrap);
+    host.appendChild(form);
 
-    wrap.addEventListener('submit', async event => {
+    form.addEventListener('submit', async event => {
       event.preventDefault();
-      const input = wrap.querySelector('.asj-signup-input');
-      const note = wrap.querySelector('.asj-signup-note');
-      const value = String(input.value || '').trim();
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
+      const input = form.querySelector('.asj-signup-input');
+      const note = form.querySelector('.asj-signup-note');
+      const email = String(input.value || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
         note.textContent = 'That does not look like an email address.';
         input.focus();
         return;
       }
+      const audience = preferredDeskAudience();
       note.textContent = 'Sending...';
-      const body = new FormData();
-      body.append(field, value);
+      // Saved locally first, so a reader who signs up on a train keeps their place in
+      // the paper even if the request never lands.
+      saveDeskSignup({ email, audience, synced: false, watchlist: getWatchlist(), savedAt: new Date().toISOString() });
       try {
-        // no-cors where the provider does not send CORS headers: the POST still lands,
-        // the response is just opaque, so a submission cannot be reported as failed
-        // when it actually succeeded.
-        await fetch(cfg.endpoint, { method: 'POST', body, mode: cfg.cors === false ? 'no-cors' : 'cors' });
-        markSubscribed();
-        wrap.innerHTML = '<p class="asj-signup-done">Thank you. The next edition lands before dawn.</p>';
+        const result = await syncDeskSignup(email, audience);
+        saveDeskSignup({ email, audience, synced: !!result.synced, duplicate: !!result.duplicate, watchlist: getWatchlist(), savedAt: new Date().toISOString() });
+        form.innerHTML = '<p class="asj-signup-done">Thank you. The next edition lands before dawn.</p>';
       } catch {
         note.textContent = 'That did not go through. Try again in a moment.';
       }
@@ -5540,4 +5652,42 @@ async function runSelfTest() {
   // form. Re-mount whenever that happens rather than assuming one pass is enough.
   window.addEventListener('asj:front-painted', mountAll);
   document.addEventListener('click', () => setTimeout(mountAll, 250));
+}());
+
+/* ── Say so when the paper is old ──────────────────────────────────────────
+   The desk ran out of model credit on 6 September 2026. The site kept serving the
+   6 September edition perfectly well, and for fifteen days nothing on the page told
+   a reader they were looking at a fortnight-old paper. A frozen page that looks
+   current is worse than an empty one: it spends the trust the citations were for.
+
+   Two days of grace, because a desk that misses one night is a late edition, not a
+   dead one, and because Comoros and Guinea-Bissau legitimately file on their own
+   rhythm. Past that the masthead says plainly what day the reader is on. */
+(function staleEditionNotice(){
+  const el = document.getElementById('stale-notice');
+  if (!el) return;
+
+  function paint() {
+    const day = latestBriefDate();
+    if (!day) {
+      el.hidden = false;
+      el.className = 'stale-notice is-stale';
+      el.textContent = 'No edition has published yet.';
+      return;
+    }
+    const published = Date.parse(day + 'T00:00:00Z');
+    if (!Number.isFinite(published)) { el.hidden = true; return; }
+    const days = Math.floor((Date.now() - published) / 86400000);
+    if (days < 2) { el.hidden = true; el.textContent = ''; return; }
+    el.hidden = false;
+    el.className = 'stale-notice is-stale';
+    // The date, not a vague "a while ago" - a reader deciding whether to trust a
+    // market figure needs to know exactly which morning it came from.
+    el.textContent = "Today's desk has not published. You are reading the edition of "
+      + formatShortDate(day + 'T00:00:00Z') + ', ' + days + ' days ago.';
+  }
+
+  paint();
+  // The clock crosses midnight on a page somebody left open overnight.
+  setInterval(paint, 30 * 60 * 1000);
 }());
