@@ -4622,10 +4622,12 @@ canvas.addEventListener('touchstart', (e) => {
     '</button>';
   }
 
-  function fill(el, items, label, opts) {
+  function fill(el, items, opts) {
     if (!el) return;
     if (!items.length) { el.innerHTML = ''; return; }
-    el.innerHTML = '<div class="home-front-label">' + escapeHtml(label) + '</div>' +
+    // No column heading. The headlines carry their own country, topic and outlet, and
+    // a label above them only repeated the masthead or made a claim about the clock.
+    el.innerHTML =
       items.map((item, i) => storyMarkup(item, opts.lead && i === 0)).join('') +
       // One call to action on the screen, not one per column.
       (opts.cta ? '<button class="home-front-all" type="button" data-home-all>Read the desk</button>' : '');
@@ -4634,16 +4636,11 @@ canvas.addEventListener('touchstart', (e) => {
   function paint() {
     const items = topStories(7);
     if (!items.length) return;
-    // Desk furniture, not a time claim. "Today" and "Also today" said nothing the
-    // masthead had not already said, and on a stale edition they said it falsely -
-    // the banner above reported the desk had not published while the column underneath
-    // was headed Today. The edition date belongs in one place, and this is not it.
     const fresh = newSinceLastVisit();
-    const label = fresh > 0 ? fresh + (fresh === 1 ? ' new story' : ' new stories') : 'The lead';
     // Desktop reads left column first, so the lead goes there.
-    fill(slots.left, items.slice(0, 3), label, { lead: true, cta: false });
-    fill(slots.right, items.slice(3, 6), 'Elsewhere', { lead: false, cta: true });
-    fill(slots.mobile, items.slice(0, 5), label, { lead: true, cta: true });
+    fill(slots.left, items.slice(0, 3), { lead: true, cta: false });
+    fill(slots.right, items.slice(3, 6), { lead: false, cta: true });
+    fill(slots.mobile, items.slice(0, 5), { lead: true, cta: true });
     // The sign-up form lives inside these blocks and is wiped by the repaint above.
     try { window.dispatchEvent(new CustomEvent('asj:front-painted')); } catch {}
     // The entry button is the other place a returning reader looks. Saying "12 new"
@@ -5349,28 +5346,6 @@ async function runSelfTest() {
         !!(shared && findPublishedStory(shared)), String(shared));
   }
 
-  // --- the paper admits when it is old ------------------------------------------
-  {
-    const notice = document.getElementById('stale-notice');
-    const day = latestBriefDate();
-    const age = day ? Math.floor((Date.now() - Date.parse(day + 'T00:00:00Z')) / 86400000) : 999;
-    add('staleness: the notice element exists', !!notice, day + ' / ' + age + 'd');
-    // The whole point: an old edition must say so, and a current one must not nag.
-    add('staleness: notice shown only when the edition is two days behind',
-        !notice || (age >= 2 ? !notice.hidden : notice.hidden),
-        'age=' + age + ' hidden=' + (notice ? notice.hidden : 'n/a'));
-    if (notice && !notice.hidden) {
-      add('staleness: the notice names the edition date',
-          notice.textContent.includes(String(new Date(day + 'T00:00:00Z').getUTCFullYear())),
-          notice.textContent);
-    }
-    // The column heading must not say "Today" over a fortnight-old front page.
-    const label = document.querySelector('#home-front-left .home-front-label, #home-front-mobile .home-front-label');
-    add('staleness: the front page heading does not claim today when it is not',
-        !label || age < 2 || !/^today$/i.test(label.textContent.trim()),
-        (label ? label.textContent : 'no label') + ' @ ' + age + 'd');
-  }
-
   const D = window.UNITED_AFRICA_DATA || {};
   const originalStoryLens = activeStoryLens;
   const lensFixture = [
@@ -5650,42 +5625,4 @@ async function runSelfTest() {
   // form. Re-mount whenever that happens rather than assuming one pass is enough.
   window.addEventListener('asj:front-painted', mountAll);
   document.addEventListener('click', () => setTimeout(mountAll, 250));
-}());
-
-/* ── Say so when the paper is old ──────────────────────────────────────────
-   The desk ran out of model credit on 6 September 2026. The site kept serving the
-   6 September edition perfectly well, and for fifteen days nothing on the page told
-   a reader they were looking at a fortnight-old paper. A frozen page that looks
-   current is worse than an empty one: it spends the trust the citations were for.
-
-   Two days of grace, because a desk that misses one night is a late edition, not a
-   dead one, and because Comoros and Guinea-Bissau legitimately file on their own
-   rhythm. Past that the masthead says plainly what day the reader is on. */
-(function staleEditionNotice(){
-  const el = document.getElementById('stale-notice');
-  if (!el) return;
-
-  function paint() {
-    const day = latestBriefDate();
-    if (!day) {
-      el.hidden = false;
-      el.className = 'stale-notice is-stale';
-      el.textContent = 'No edition has published yet.';
-      return;
-    }
-    const published = Date.parse(day + 'T00:00:00Z');
-    if (!Number.isFinite(published)) { el.hidden = true; return; }
-    const days = Math.floor((Date.now() - published) / 86400000);
-    if (days < 2) { el.hidden = true; el.textContent = ''; return; }
-    el.hidden = false;
-    el.className = 'stale-notice is-stale';
-    // The date, not a vague "a while ago" - a reader deciding whether to trust a
-    // market figure needs to know exactly which morning it came from.
-    el.textContent = "Today's desk has not published. You are reading the edition of "
-      + formatShortDate(day + 'T00:00:00Z') + ', ' + days + ' days ago.';
-  }
-
-  paint();
-  // The clock crosses midnight on a page somebody left open overnight.
-  setInterval(paint, 30 * 60 * 1000);
 }());
