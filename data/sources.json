@@ -78,7 +78,7 @@
         "home": "https://www.verangola.net/",
         "feed": "https://www.verangola.net/va/pt/rss.xml",
         "tier": 2,
-        "state": "missing"
+        "state": "blocked"
       },
       {
         "name": "Angola24Horas",
@@ -92,7 +92,7 @@
         "home": "https://jornalf8.net/",
         "feed": "https://jornalf8.net/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Angonoticias",
@@ -193,7 +193,7 @@
         "feed": "https://www.noticiaslusofonas.com/rss",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Farmers Review Africa",
@@ -285,7 +285,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -309,7 +309,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -446,7 +446,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -470,7 +470,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -725,7 +725,7 @@
         "feed": "https://www.noticiaslusofonas.com/rss",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Farmers Review Africa",
@@ -772,7 +772,7 @@
         "home": "https://oubanguimedias.com/",
         "feed": "https://oubanguimedias.com/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Le Tsunami",
@@ -803,7 +803,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -827,7 +827,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -889,7 +889,7 @@
         "home": "https://www.ialtchad.com/",
         "feed": "https://www.ialtchad.com/index.php?format=feed&amp;type=rss",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Tchad Actuel",
@@ -920,7 +920,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -944,7 +944,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -1052,7 +1052,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Comoros Times",
@@ -1083,7 +1083,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -1147,14 +1147,14 @@
         "home": "https://journaldebrazza.com/",
         "feed": "https://journaldebrazza.com/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Congo Media Time",
         "home": "https://congomediatime.com/",
         "feed": "https://congomediatime.com/feed/",
         "tier": 3,
-        "state": "missing"
+        "state": "error"
       },
       {
         "name": "Farmers Review Africa",
@@ -1273,7 +1273,7 @@
         "home": "https://www.afrique-sur7.fr/",
         "feed": "https://www.afrique-sur7.fr/feed/",
         "tier": 3,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "RFI Afrique",
@@ -1297,7 +1297,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -1321,7 +1321,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -1442,7 +1442,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Horn Diplomat",
@@ -1465,7 +1465,7 @@
         "home": "https://www.hch24.com/",
         "feed": "https://www.hch24.com/feed/",
         "tier": 3,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Africanews",
@@ -1481,7 +1481,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -1640,7 +1640,7 @@
         "home": "https://shabait.com/",
         "feed": "https://shabait.com/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Eritrean Press",
@@ -1654,7 +1654,7 @@
         "home": "https://tesfanews.net/",
         "feed": "https://tesfanews.net/feed/",
         "tier": 3,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "African Arguments",
@@ -1725,7 +1725,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -1781,7 +1781,7 @@
         "home": "https://new.observer.org.sz/",
         "feed": "https://new.observer.org.sz/feed/",
         "tier": 1,
-        "state": "missing"
+        "state": "error"
       },
       {
         "name": "Swaziland News",
@@ -1830,7 +1830,7 @@
         "home": "https://www.thereporterethiopia.com/",
         "feed": "https://www.thereporterethiopia.com/homepage/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Ethiopian Monitor",
@@ -1915,7 +1915,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -2027,7 +2027,7 @@
         "home": "https://foroyaa.net/",
         "feed": "https://foroyaa.net/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The Standard Gambia",
@@ -2089,7 +2089,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -2152,7 +2152,7 @@
         "home": "https://citinewsroom.com/",
         "feed": "https://citinewsroom.com/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "blocked"
       },
       {
         "name": "GhanaWeb",
@@ -2208,7 +2208,7 @@
         "home": "https://guineematin.com/",
         "feed": "https://guineematin.com/feed/",
         "tier": 2,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Farmers Review Africa",
@@ -2337,7 +2337,7 @@
         "feed": "https://www.noticiaslusofonas.com/rss",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Farmers Review Africa",
@@ -2525,7 +2525,7 @@
         "home": "https://www.liberianobserver.com/",
         "feed": "http://www.liberianobserver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The New Dawn Liberia",
@@ -2539,7 +2539,7 @@
         "home": "https://www.liberianobserver.com/",
         "feed": "http://www.liberianobserver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
         "tier": 3,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Farmers Review Africa",
@@ -2574,7 +2574,7 @@
         "home": "https://libyaobserver.ly/",
         "feed": "https://libyaobserver.ly/rss.xml",
         "tier": 1,
-        "state": "missing"
+        "state": "blocked"
       },
       {
         "name": "Libyan Express",
@@ -2766,7 +2766,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -2790,7 +2790,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -2979,14 +2979,14 @@
         "home": "https://www.yabiladi.com/",
         "feed": "https://www.yabiladi.com/rss",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Barlamane",
         "home": "https://www.barlamane.com/",
         "feed": "https://www.barlamane.com/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Farmers Review Africa",
@@ -3014,7 +3014,7 @@
         "home": "https://clubofmozambique.com/",
         "feed": "https://clubofmozambique.com/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "O Pais",
@@ -3043,7 +3043,7 @@
         "feed": "https://www.noticiaslusofonas.com/rss",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Farmers Review Africa",
@@ -3127,7 +3127,7 @@
         "home": "https://www.anp.ne/",
         "feed": "https://www.anp.ne/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Air Info Agadez",
@@ -3165,7 +3165,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -3189,7 +3189,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -3503,7 +3503,7 @@
         "feed": "https://www.noticiaslusofonas.com/rss",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Farmers Review Africa",
@@ -3580,7 +3580,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -3604,7 +3604,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -3667,7 +3667,7 @@
         "home": "https://www.today.sc/",
         "feed": "https://www.today.sc/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "error"
       },
       {
         "name": "Seychelles Broadcasting Corp",
@@ -3729,7 +3729,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -3999,7 +3999,7 @@
         "home": "https://www.eyeradio.org/",
         "feed": "https://www.eyeradio.org/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "The City Review South Sudan",
@@ -4062,7 +4062,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -4216,7 +4216,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -4311,7 +4311,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -4389,7 +4389,7 @@
         "home": "https://www.togoactualite.com/",
         "feed": "https://www.togoactualite.com/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "L-Frii",
@@ -4420,7 +4420,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
@@ -4444,7 +4444,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -4563,14 +4563,14 @@
         "home": "https://chimpreports.com/",
         "feed": "https://chimpreports.com/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "blocked"
       },
       {
         "name": "Nile Post",
         "home": "https://nilepost.co.ug/",
         "feed": "https://nilepost.co.ug/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The Observer Uganda",
@@ -4584,7 +4584,7 @@
         "home": "https://www.watchdoguganda.com/",
         "feed": "https://www.watchdoguganda.com/feed/",
         "tier": 3,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Farmers Review Africa",
@@ -4681,7 +4681,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
@@ -4737,7 +4737,7 @@
         "home": "https://www.newsday.co.zw/",
         "feed": "https://www.newsday.co.zw/feed/",
         "tier": 1,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "The Chronicle",
@@ -4758,7 +4758,7 @@
         "home": "https://www.newzimbabwe.com/",
         "feed": "https://www.newzimbabwe.com/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Bulawayo24",
@@ -4779,7 +4779,7 @@
         "home": "https://www.thestandard.co.zw/",
         "feed": "https://www.thestandard.co.zw/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Pindula News",
@@ -4860,7 +4860,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Western Sahara Resource Watch",
@@ -4891,7 +4891,7 @@
         "feed": "https://feeds.bbci.co.uk/news/world/africa/rss.xml",
         "tier": 1,
         "scope": "regional",
-        "state": null
+        "state": "ok"
       },
       {
         "name": "VOA Africa",
