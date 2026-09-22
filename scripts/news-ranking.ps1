@@ -97,7 +97,18 @@ function Get-NewsWordCount([string]$Text) {
   return @([regex]::Matches($Text.Trim(), '\S+')).Count
 }
 
-function Get-NewsEditorialRejectReason([string]$Title, [string]$Summary) {
+# Outlets file commentary under a section of its own, and the path is a far more
+# reliable tell than any amount of reading the prose: /opinion/, /columnists/,
+# /analysis/. Five stories in the 6 September edition came from one of these and were
+# rendered as neutral news - a Daily Maverick column arguing the SACP "must prioritise
+# electability" was filed with the same voice as a cholera briefing, with nothing to
+# tell a reader it was one person's argument. This paper's whole claim is sourced fact,
+# so a column has to be declined rather than laundered.
+$script:NEWS_OPINION_PATHS = '/opinion|/opinions|/columnist|/column/|/editorial|/commentary|/analysis/|/blog/|/blogs/|/perspective|/viewpoint|/op-ed'
+
+# $Url is optional so every existing caller and test keeps working unchanged.
+function Get-NewsEditorialRejectReason([string]$Title, [string]$Summary, [string]$Url = '') {
+  if ($Url -and $Url -match $script:NEWS_OPINION_PATHS) { return 'filed under opinion or analysis' }
   $headline = ConvertTo-CanonicalNewsText $Title
   $text = ConvertTo-CanonicalNewsText ($Title + ' ' + $Summary)
   if ((Get-NewsMatchCount $text $script:NEWS_JUNK 1) -gt 0) { return 'junk or gossip' }

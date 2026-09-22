@@ -55,6 +55,8 @@ if (Test-Path $marketsPath) {
   foreach ($p in $liveMarkets.PSObject.Properties) { $markets[[string]$p.Name] = $p.Value; $refreshed++ }
   if ($refreshed) { Write-Host "[add] refreshed markets for $refreshed countries from data/markets.json" -ForegroundColor Green }
 }
+# A block nothing can refresh should not age in place - see Select-FreshMarkets.
+$markets = Select-FreshMarkets $markets
 
 
 # Drop individually defective stories instead of letting them fail the whole edition.

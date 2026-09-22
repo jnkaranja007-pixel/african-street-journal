@@ -485,7 +485,7 @@ foreach ($code in $codes) {
       # here is not a source for this country, and the diversity cap divides by it.
       $kept = 0
       foreach ($it in $items) {
-        $editorialReject = Get-NewsEditorialRejectReason $it.title $it.summary
+        $editorialReject = Get-NewsEditorialRejectReason $it.title $it.summary $it.url
         if ($editorialReject) { $editorialRejected++; $editorialRejectedTotal++; continue }
         # Regional sources and outlets explicitly tagged requireMatch must name the
         # country in the headline or opening. Domestic outlets may use local shorthand,

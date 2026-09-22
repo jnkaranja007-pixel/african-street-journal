@@ -367,3 +367,33 @@ function Get-StorySlug([string]$Headline, [string]$ArticleId) {
   if ($tail) { return "$slug-$tail" }
   return $slug
 }
+
+function Select-FreshMarkets($Markets, [int]$MaxAgeDays = 120) {
+  # Drop a price block that nothing can refresh any more.
+  #
+  # AFX carries ten African exchanges. EGX, SGBV and BVMAC are not among them, so Egypt,
+  # Algeria and Equatorial Guinea sat on hand-seeded blocks that aged in place - Egypt's
+  # was 313 days old on 22 September 2026, still listing ten companies as if that were
+  # reference data. The app labels a stale block honestly, but a company list from ten
+  # months ago is not reference data either: firms list, delist and merge.
+  #
+  # Past the cutoff the block goes and the panel falls back to naming the exchange,
+  # which is the last thing about it still true.
+  if (-not $Markets) { return $Markets }
+  $cutoff = (Get-Date).ToUniversalTime().AddDays(-$MaxAgeDays)
+  $out = [ordered]@{}
+  $dropped = New-Object System.Collections.Generic.List[string]
+  $names = if ($Markets -is [System.Collections.IDictionary]) { @($Markets.Keys) } else { @($Markets.PSObject.Properties.Name) }
+  foreach ($code in $names) {
+    $block = if ($Markets -is [System.Collections.IDictionary]) { $Markets[$code] } else { $Markets.$code }
+    $asOf = [datetime]::MinValue
+    $ok = [datetime]::TryParse([string]$block.asOf, [Globalization.CultureInfo]::InvariantCulture,
+                               [Globalization.DateTimeStyles]::AssumeUniversal, [ref]$asOf)
+    if ($ok -and $asOf -lt $cutoff) { $dropped.Add([string]$code); continue }
+    $out[[string]$code] = $block
+  }
+  if ($dropped.Count) {
+    Write-Host "[markets] retired $($dropped.Count) block(s) older than $MaxAgeDays days: $($dropped -join ', ')" -ForegroundColor DarkGray
+  }
+  return $out
+}

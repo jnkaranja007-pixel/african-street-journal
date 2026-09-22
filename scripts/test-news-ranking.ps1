@@ -171,6 +171,25 @@ $writeable = Select-NewsWriteableCandidates @(
 Assert-Desk 'writeable candidates fill assignment slots before thin feeds' `
   ($writeable.Count -eq 2 -and $writeable[0].title -eq 'Ready middle score' -and $writeable[1].title -eq 'Ready lower score')
 
+# Commentary must not be laundered into the paper as reporting. The URL path is the
+# tell: outlets file columns under a section of their own. The negative cases matter as
+# much - "company-analysis-tools" is a business story, not an analysis column.
+Write-Host 'Opinion and analysis paths'
+$opinionCases = @(
+  @{ url = 'https://www.dailymaverick.co.za/opinionista/2026-09-06-sacp-ideology/'; reject = $true  },
+  @{ url = 'https://punchng.com/columnists/the-week-that-was/';                     reject = $true  },
+  @{ url = 'https://example.com/news/analysis/2026/report';                         reject = $true  },
+  @{ url = 'https://www.dailymaverick.co.za/article/2026-09-06-sacp-ideology/';      reject = $false },
+  @{ url = 'https://example.com/business/company-analysis-tools';                   reject = $false },
+  @{ url = 'https://nation.africa/kenya/news/maize-prices-rise-123';                reject = $false },
+  @{ url = '';                                                                      reject = $false }
+)
+foreach ($case in $opinionCases) {
+  $reason = Get-NewsEditorialRejectReason 'Neutral headline about a thing' 'A plain summary of what happened, with numbers.' $case.url
+  $label = if ($case.url) { $case.url } else { '(no url)' }
+  Assert-Desk "opinion path handled: $label" (([bool]$reason) -eq $case.reject)
+}
+
 Write-Host ''
 if ($failed) {
   Write-Host "[ranking-test] FAIL - $failed failed, $passed passed" -ForegroundColor Red

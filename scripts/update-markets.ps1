@@ -27,6 +27,8 @@ param(
   [int]$PerCountry = 12,
   [int]$TimeoutSec = 45,
   [int]$Retries = 3,
+  # Beyond this a price block is not reference data either - companies list and delist.
+  [int]$MaxBlockAgeDays = 120,
   [int]$DelayMs = 400
 )
 
@@ -156,6 +158,32 @@ if ($okExchanges -eq 0) {
 
 [IO.File]::WriteAllText($outPath, ($result | ConvertTo-Json -Depth 8), (New-Object Text.UTF8Encoding($false)))
 Write-Host ''
+# Retire a price block nobody can refresh. AFX carries ten exchanges; EGX, SGBV and
+# BVMAC are not among them, so Egypt, Algeria and Equatorial Guinea were left on
+# hand-seeded blocks that aged in place - Egypt's was 313 days old by 22 September 2026.
+#
+# The app already labels a stale block honestly ("reference company size, no live price
+# claim"), but a company list from ten months ago is not reference data either: firms
+# list, delist and merge. Past the cutoff the block is dropped and the panel falls back
+# to naming the exchange, which is the last thing about it that is still true.
+$carried = 0
+$dropped = 0
+$existingPath = Join-Path $root 'data\markets.json'
+if (Test-Path $existingPath) {
+  $prev = [IO.File]::ReadAllText($existingPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+  $cutoff = (Get-Date).ToUniversalTime().AddDays(-$MaxBlockAgeDays)
+  foreach ($p in $prev.PSObject.Properties) {
+    if ($result.Contains([string]$p.Name)) { continue }   # refreshed above
+    $asOf = [datetime]::MinValue
+    $parsed = [datetime]::TryParse([string]$p.Value.asOf, [Globalization.CultureInfo]::InvariantCulture,
+                                   [Globalization.DateTimeStyles]::AssumeUniversal, [ref]$asOf)
+    if ($parsed -and $asOf -ge $cutoff) { $result[[string]$p.Name] = $p.Value; $carried++ }
+    else { $dropped++ }
+  }
+}
+if ($carried -or $dropped) {
+  Write-Host "[markets] carried $carried block(s) this run cannot refresh, dropped $dropped past $MaxBlockAgeDays days" -ForegroundColor DarkGray
+}
 Write-Host "[markets] $okExchanges exchange(s) -> $($result.Count) countries, asOf $today -> data/markets.json" -ForegroundColor Green
 if ($failed.Count) { Write-Host "[markets] failed: $($failed -join ', ')" -ForegroundColor DarkYellow }
 exit 0

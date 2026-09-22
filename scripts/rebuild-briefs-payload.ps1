@@ -48,7 +48,7 @@ if (Test-Path $marketsPath) {
   foreach ($p in $state.markets.PSObject.Properties) { $merged[[string]$p.Name] = $p.Value }
   $refreshed = 0
   foreach ($p in $live.PSObject.Properties) { $merged[[string]$p.Name] = $p.Value; $refreshed++ }
-  $markets = $merged
+  $markets = Select-FreshMarkets $merged
   if ($refreshed) { Write-Host "[rebuild] refreshed markets for $refreshed countries from data/markets.json" -ForegroundColor Green }
 }
 
