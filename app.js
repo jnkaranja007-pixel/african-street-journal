@@ -1954,6 +1954,42 @@ let activeReaderQueue = [];
 let activeReaderNextKey = '';
 let activeWireStoryKeys = [];
 
+// Search normalisation. Two things the wire search did not do.
+//
+// It stripped no accents, so a reader who spells their own country correctly got fewer
+// results than one who did not: "senegal" matched two stories and "senegal" with the
+// acute matched none. NFD splits a letter from its combining mark and the mark is then
+// dropped, which is the same treatment ConvertTo-NewsText already applies on the desk
+// side - the browser simply never got it.
+//
+// It also searched only headline, dek, why, topic, source and country. The desk writes
+// about 250 original stories a day and none of their prose was reachable: "inflation"
+// returned nothing while three stories discussed it, "drought" nothing while four did.
+function foldForSearch(text) {
+  return String(text || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
+// Built once per story when the index is built. Folding six fields plus three
+// paragraphs on every keystroke, across every story, is work that never changes.
+function storySearchHaystack(story, context) {
+  const sources = Array.isArray(story?.sources)
+    ? story.sources.map(s => (s && (s.name || s.url)) || '').join(' ')
+    : '';
+  return foldForSearch([
+    story?.headline,
+    story?.dek,
+    story?.why,
+    story?.topic,
+    context?.country,
+    sources,
+    storyParagraphs(story).join(' ')
+  ].filter(Boolean).join(' '));
+}
+
 function storyParagraphs(story) {
   const filed = Array.isArray(story?.paragraphs)
     ? story.paragraphs.map(paragraph => String(paragraph || '').trim()).filter(Boolean)
@@ -4115,6 +4151,8 @@ canvas.addEventListener('touchstart', (e) => {
           editorialScore,
           lensScore:lensData.score,
           storyKey,
+          // Folded once here so search is a substring test, not a rebuild per keystroke.
+          haystack: storySearchHaystack(b, { country: info.name }),
           story: b
         });
       });
@@ -4136,12 +4174,14 @@ canvas.addEventListener('touchstart', (e) => {
     ).join('');
   }
   function filtered(){
-    const q = query.trim().toLowerCase();
+    if (activeTopic === 'All' && !query.trim()) return INDEX;
+    const q = foldForSearch(query);
     return INDEX.filter(it=>{
       if (activeTopic!=='All' && it.type!==activeTopic) return false;
       if (!q) return true;
-      const sourceText = (it.sources || []).map(source => source.name || source.url || '').join(' ');
-      return (it.title+' '+it.summary+' '+it.why+' '+it.type+' '+it.source+' '+sourceText+' '+it.country).toLowerCase().includes(q);
+      // haystack is folded once when the index is built, not rebuilt on every keystroke
+      // across 250 stories.
+      return it.haystack.includes(q);
     });
   }
   function wireSnapshot(items){
@@ -5344,6 +5384,27 @@ async function runSelfTest() {
         location.search);
     add('sharing: a shared id resolves to a real story',
         !!(shared && findPublishedStory(shared)), String(shared));
+  }
+
+  // --- search reaches the whole story, in any spelling ---------------------------
+  {
+    const stories = Object.values(AI_BRIEFS || {}).flat().filter(Boolean);
+    const hay = stories.map(s => storySearchHaystack(s, { country: 'X' }));
+    // The prose has to be in the haystack: search used to read only headline, dek,
+    // why, topic, source and country, so "inflation" found nothing while stories
+    // discussed it at length.
+    const withBody = stories.filter((s, i) => {
+      const first = (storyParagraphs(s)[0] || '').split(/\s+/).find(w => w.length > 6);
+      return !first || hay[i].includes(foldForSearch(first));
+    }).length;
+    add('search: the body of every story is searchable', withBody === stories.length,
+        withBody + '/' + stories.length);
+    add('search: accents fold both ways',
+        foldForSearch('SENEGAL') === foldForSearch('S\u00c9N\u00c9GAL') &&
+        foldForSearch('C\u00f4te d\u2019Ivoire').startsWith('cote d'),
+        foldForSearch('S\u00c9N\u00c9GAL'));
+    add('search: nonsense still matches nothing',
+        !hay.some(h => h.includes('zzzqqx')), 'zzzqqx');
   }
 
   const D = window.UNITED_AFRICA_DATA || {};
