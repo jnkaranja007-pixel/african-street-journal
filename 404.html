@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Not found | The African Street Journal</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#131313">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#131313;color:#e8e6e3;font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;
+     min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0 24px;text-align:center}
+.wrap{max-width:560px}
+.masthead{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.24em;text-transform:uppercase;color:#8a847b;margin-bottom:28px}
+.masthead a{color:#8a847b;text-decoration:none}
+h1{font:700 clamp(28px,6vw,44px)/1.1 Georgia,'Times New Roman',serif;margin:0 0 14px;color:#f2f0ed}
+p{color:#a8a39d;margin:0 0 22px}
+a.go{display:inline-block;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;
+     text-transform:uppercase;color:#66bb6a;text-decoration:none;border-bottom:1px solid #2f5c33;padding-bottom:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead"><a href="/">The African Street Journal</a></div>
+  <h1 id="title">That page has moved on</h1>
+  <p id="copy">Stories keep a page of their own for a week. This one is older than that, but the desk is still here.</p>
+  <a class="go" id="go" href="/">Go to the front page &rarr;</a>
+</div>
+<script>
+// A story keeps its own page for a week; after that the page is swept so the
+// repository does not grow without bound. A link shared a fortnight ago should still
+// land somewhere useful, so an expired /<cc>/<slug>/ is sent to /<cc>/ - the country
+// it belonged to, which still carries today's reporting.
+(function () {
+  var parts = location.pathname.split('/').filter(Boolean);
+  var cc = parts[0] || '';
+  if (!/^[a-z]{2}$/.test(cc)) return;
+  var go = document.getElementById('go');
+  go.href = '/' + cc + '/';
+  go.innerHTML = 'Go to the country desk &rarr;';
+  document.getElementById('copy').textContent =
+    'Stories keep a page of their own for a week. This one is older than that - the country desk has the current reporting.';
+  // Give the reader a moment to see why, rather than bouncing them somewhere they
+  // did not ask for.
+  setTimeout(function () { location.replace('/' + cc + '/'); }, 2500);
+}());
+</script>
+</body>
+</html>

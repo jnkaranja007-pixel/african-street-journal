@@ -2288,10 +2288,22 @@ document.getElementById('story-reader-share')?.addEventListener('click', async e
   if (!activeReaderRecord) return;
   const story = activeReaderRecord.story;
   const country = activeReaderRecord.context.country;
+  // Share the story's own page, not the app shell. /?story=<id> serves index.html:
+  // one title, one description, one image, for every story the desk has ever filed, so
+  // a story sent to a chat app arrived as the masthead and a generic blurb. The slug
+  // comes from the payload rather than being recomputed here - two implementations of
+  // a URL is two chances to send someone somewhere that is not there.
   const shareUrl = new URL(window.location.href);
-  shareUrl.searchParams.delete('selftest');
-  shareUrl.searchParams.set('story', activeReaderRecord.clientId);
+  shareUrl.search = '';
   shareUrl.hash = '';
+  const shareCc = activeReaderRecord.context?.countryCode;
+  if (story.slug && shareCc) {
+    shareUrl.pathname = '/' + shareCc + '/' + story.slug + '/';
+  } else {
+    // No page of its own: a hand-written brief with no articleId, or an edition older
+    // than the retention window. The app link still opens the right story.
+    shareUrl.searchParams.set('story', activeReaderRecord.clientId);
+  }
   const text = [story.headline, story.dek || storyParagraphs(story)[0] || '', country ? 'The African Street Journal · ' + country : 'The African Street Journal']
     .filter(Boolean).join('\n\n');
   if (navigator.share) {

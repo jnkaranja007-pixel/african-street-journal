@@ -58,9 +58,19 @@ while ($listener.IsListening) {
       $res.ContentLength64 = $bytes.Length
       $res.OutputStream.Write($bytes, 0, $bytes.Length)
     } else {
+      # Serve 404.html the way GitHub Pages does, so the soft landing for an expired
+      # story URL can actually be tested here rather than only in production.
       $res.StatusCode = 404
-      $msg = [System.Text.Encoding]::UTF8.GetBytes("Not Found: $rel")
-      $res.OutputStream.Write($msg, 0, $msg.Length)
+      $notFound = Join-Path $rootPath '404.html'
+      if (Test-Path $notFound -PathType Leaf) {
+        $bytes = [System.IO.File]::ReadAllBytes($notFound)
+        $res.ContentType = 'text/html; charset=utf-8'
+        $res.ContentLength64 = $bytes.Length
+        $res.OutputStream.Write($bytes, 0, $bytes.Length)
+      } else {
+        $msg = [System.Text.Encoding]::UTF8.GetBytes("Not Found: $rel")
+        $res.OutputStream.Write($msg, 0, $msg.Length)
+      }
     }
     $res.Close()
   } catch {

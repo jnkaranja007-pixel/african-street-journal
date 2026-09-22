@@ -22,7 +22,10 @@
 param(
   # The live origin, no trailing slash. Every canonical, og:url and sitemap entry is
   # built from this, so it is the one value to change if the domain ever moves again.
-  [string]$BaseUrl = 'https://africanstreetjournal.com'
+  [string]$BaseUrl = 'https://africanstreetjournal.com',
+  # How long a shared story keeps a page of its own. Past this it is swept and
+  # 404.html lands the reader on the country rather than a dead end.
+  [int]$StoryDays = 7
 )
 
 $ErrorActionPreference = 'Stop'
@@ -30,7 +33,7 @@ $root = Split-Path $PSScriptRoot -Parent
 
 # Get-IsoDay lives here so the page builder, the merge and the publication gate all
 # read a date stamp the same way. See the note in story-shape.ps1.
-. (Join-Path $PSScriptRoot 'story-shape.ps1')
+. (Join-Path $PSScriptRoot 'story-shape.ps1')   # Get-IsoDay, Get-StorySlug, Import-PublishedEdition
 $BaseUrl = $BaseUrl.TrimEnd('/')
 
 # --- country metadata out of app.js -----------------------------------------
@@ -112,6 +115,7 @@ s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.h
 '@
 
 $built = 0
+$storyPages = New-Object System.Collections.Generic.List[object]
 $urls = New-Object System.Collections.Generic.List[string]
 $urls.Add($BaseUrl + '/')
 
@@ -148,8 +152,12 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   $storyIndex = 0
   foreach ($b in $stories) {
     $storyKey = if ($b.articleId) { 'id:' + [string]$b.articleId } else { "slot:$code`:$storyIndex" }
-    $storyUrl = "$BaseUrl/?story=$([Uri]::EscapeDataString($storyKey))"
-    [void]$body.Append("<article id=""story-$storyIndex"">`n")
+    # A page of its own, so a shared story shows its own headline. Every story link on
+    # the site used to be /?story=<id>, which serves the app shell: one title, one
+    # description, one image, for 235 stories a day.
+    $storySlug = Get-StorySlug $b.headline $b.articleId
+    $storyUrl = "$BaseUrl/$code/$storySlug/"
+    [void]$storyPages.Add([pscustomobject]@{ code = $code; slug = $storySlug; brief = $b; when = $when; country = $name; key = $storyKey })
     [void]$body.Append("<div class=""kicker"">$(Esc $b.topic)$(if($when){" &middot; $when"})</div>`n")
     [void]$body.Append("<h2><a href=""$storyUrl"">$(Esc $b.headline)</a></h2>`n")
     if ($b.dek) { [void]$body.Append("<p class=""dek"">$(Esc $b.dek)</p>`n") }
@@ -190,7 +198,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   foreach ($b in $stories) {
     if ($li -gt 0) { [void]$ld.Append(',') }
     $storyKey = if ($b.articleId) { 'id:' + [string]$b.articleId } else { "slot:$code`:$li" }
-    $storyUrl = "$BaseUrl/?story=$([Uri]::EscapeDataString($storyKey))"
+    $storyUrl = "$BaseUrl/$code/$(Get-StorySlug $b.headline $b.articleId)/"
     $li++
     [void]$ld.Append("{""@type"":""ListItem"",""position"":$li,""name"":""$(JsonEsc $b.headline)"",""url"":""$storyUrl""}")
   }
@@ -223,7 +231,7 @@ $analytics
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="$BaseUrl/og-image.png">
 <script type="application/ld+json">$($ld.ToString())</script>
-<style>$css</style>
+<link rel="stylesheet" href="$BaseUrl/static-pages.css">
 </head>
 <body>
 <div class="wrap">
@@ -250,6 +258,135 @@ $($navLinks.ToString())
   $built++
 }
 
+# --- a page per story -------------------------------------------------------
+# Every story link on the site used to point at /?story=<id>, which serves the app
+# shell. That is one title, one description and one image for 235 stories a day: a
+# story shared to a chat app showed the masthead and the generic blurb rather than its
+# own headline, and a search engine saw one URL where there were 235 pieces.
+#
+# Retention is deliberate. A page per story per day kept forever is roughly 86,000
+# files a year in a git repository, which is not a thing a static host should carry.
+# Pages older than -StoryDays are swept, and 404.html turns an expired story URL into
+# its country page rather than a dead end.
+$storyKept = @{}
+$storyBuilt = 0
+foreach ($sp in $storyPages) {
+  $b = $sp.brief
+  $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
+  if (-not $paragraphs.Count -and $b.body) { $paragraphs = @([string]$b.body) }
+  if (-not $paragraphs.Count) { continue }
+  $dek = if ($b.dek) { [string]$b.dek } else { $paragraphs[0] }
+  if ($dek.Length -gt 300) { $dek = $dek.Substring(0, 297) + '...' }
+  $storyCanonical = "$BaseUrl/$($sp.code)/$($sp.slug)/"
+  $published = Get-IsoInstant $b.published
+  if (-not $published) { $published = $sp.when }
+  $appUrl = "$BaseUrl/?story=$([Uri]::EscapeDataString($sp.key))"
+
+  $srcs = @($b.sources | Where-Object { $_ -and $_.url -and $_.url -match '^https?://' })
+  $srcHtml = New-Object System.Text.StringBuilder
+  if ($srcs.Count) {
+    [void]$srcHtml.Append('<div class="src">')
+    foreach ($s in $srcs) { [void]$srcHtml.Append("<a href=""$(Esc $s.url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $s.name)</a>") }
+    [void]$srcHtml.Append('</div>')
+  }
+  $bodyHtml = New-Object System.Text.StringBuilder
+  foreach ($p in $paragraphs) { [void]$bodyHtml.Append("<p>$(Esc $p)</p>`n") }
+  if ($b.why) { [void]$bodyHtml.Append("<p class=""why""><b>Why it matters</b>$(Esc $b.why)</p>`n") }
+
+  # NewsArticle, not CollectionPage: this is one piece, with a date and a publisher,
+  # and citation carries the outlets it was written from.
+  $ld = New-Object System.Text.StringBuilder
+  [void]$ld.Append('{"@context":"https://schema.org","@type":"NewsArticle"')
+  [void]$ld.Append(",""headline"":""$(JsonEsc $b.headline)""")
+  [void]$ld.Append(",""description"":""$(JsonEsc $dek)""")
+  [void]$ld.Append(",""url"":""$storyCanonical""")
+  if ($published) { [void]$ld.Append(",""datePublished"":""$published"",""dateModified"":""$published""") }
+  [void]$ld.Append(",""inLanguage"":""en"",""isAccessibleForFree"":true")
+  [void]$ld.Append(",""publisher"":{""@type"":""NewsMediaOrganization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/""}")
+  [void]$ld.Append(",""contentLocation"":{""@type"":""Country"",""name"":""$(JsonEsc $sp.country)""}")
+  if ($srcs.Count) {
+    [void]$ld.Append(',"citation":[')
+    for ($ci = 0; $ci -lt $srcs.Count; $ci++) {
+      if ($ci -gt 0) { [void]$ld.Append(',') }
+      [void]$ld.Append("{""@type"":""CreativeWork"",""name"":""$(JsonEsc $srcs[$ci].name)"",""url"":""$(JsonEsc $srcs[$ci].url)""}")
+    }
+    [void]$ld.Append(']')
+  }
+  [void]$ld.Append('}')
+
+  $storyTitle = "$([string]$b.headline) | The African Street Journal"
+  $storyHtml = @"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>$(Esc $storyTitle)</title>
+<meta name="description" content="$(Esc $dek)">
+<link rel="canonical" href="$storyCanonical">
+<meta name="theme-color" content="#131313">
+$analytics
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
+<meta property="og:site_name" content="The African Street Journal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="$(Esc $b.headline)">
+<meta property="og:description" content="$(Esc $dek)">
+<meta property="og:url" content="$storyCanonical">
+<meta property="og:image" content="$BaseUrl/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="$(Esc $b.headline)">
+<meta name="twitter:description" content="$(Esc $dek)">
+<meta name="twitter:image" content="$BaseUrl/og-image.png">
+<script type="application/ld+json">$($ld.ToString())</script>
+<link rel="stylesheet" href="$BaseUrl/static-pages.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead"><a href="$BaseUrl/">The African Street Journal</a> &middot; <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a></div>
+  <div class="meta">$(Esc $b.topic)$(if($sp.when){" &middot; $($sp.when)"})</div>
+  <h1>$(Esc $b.headline)</h1>
+  <p class="dek">$(Esc $dek)</p>
+$($bodyHtml.ToString())
+$($srcHtml.ToString())
+  <a class="open" href="$appUrl">Read in the ASJ desk &rarr;</a>
+  <div class="morenav"><h2>More from $(Esc $sp.country)</h2><a href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories</a></div>
+  <footer>The African Street Journal &middot; original reporting, every source cited</footer>
+</div>
+</body>
+</html>
+"@
+  $storyDirPath = Join-Path (Join-Path $root $sp.code) $sp.slug
+  if (-not (Test-Path $storyDirPath)) { New-Item -ItemType Directory -Path $storyDirPath -Force | Out-Null }
+  [IO.File]::WriteAllText((Join-Path $storyDirPath 'index.html'), $storyHtml, (New-Object Text.UTF8Encoding($false)))
+  $storyKept["$($sp.code)/$($sp.slug)"] = $true
+  $urls.Add($storyCanonical)
+  $storyBuilt++
+}
+
+# Sweep story pages past the retention window. Anything in this edition was just
+# rewritten above and is in $storyKept, so only genuinely expired pages go.
+$swept = 0
+if ($StoryDays -gt 0) {
+  $cutoff = (Get-Date).ToUniversalTime().AddDays(-$StoryDays)
+  foreach ($cc in $pageCodes) {
+    $ccDir = Join-Path $root $cc
+    if (-not (Test-Path $ccDir)) { continue }
+    foreach ($sub in Get-ChildItem -Path $ccDir -Directory -ErrorAction SilentlyContinue) {
+      if ($storyKept.ContainsKey("$cc/$($sub.Name)")) { continue }
+      $page = Join-Path $sub.FullName 'index.html'
+      if (-not (Test-Path $page)) { continue }
+      if ((Get-Item $page).LastWriteTimeUtc -lt $cutoff) {
+        [IO.Directory]::Delete($sub.FullName, $true)
+        $swept++
+      }
+    }
+  }
+}
+Write-Host "[static] $storyBuilt story pages, $swept swept past $StoryDays days" -ForegroundColor DarkGray
+
 # --- sitemap ----------------------------------------------------------------
 $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
 $sm = New-Object System.Text.StringBuilder
@@ -260,6 +397,12 @@ foreach ($u in $urls) {
 }
 [void]$sm.AppendLine('</urlset>')
 [IO.File]::WriteAllText((Join-Path $root 'sitemap.xml'), $sm.ToString(), (New-Object Text.UTF8Encoding($false)))
+
+# --- shared stylesheet -------------------------------------------------------
+# Inlined into every page this was ~4 KB x 290 pages of identical bytes, none of it
+# cacheable across the set. One file is one request that every other page then gets
+# from cache.
+[IO.File]::WriteAllText((Join-Path $root 'static-pages.css'), $css, (New-Object Text.UTF8Encoding($false)))
 
 # --- robots -----------------------------------------------------------------
 $robots = "User-agent: *`nAllow: /`n`nSitemap: $BaseUrl/sitemap.xml`n"

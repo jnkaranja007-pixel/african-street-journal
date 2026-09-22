@@ -228,6 +228,12 @@ function ConvertTo-StoryIndexRecord($Story) {
     if ($s -and $s.name) { $names.Add([ordered]@{ name = [string]$s.name }) }
   }
   $out['sources'] = $names.ToArray()
+  # The slug the static page is built at, carried in the payload so the Share button
+  # can point at that page without the browser reimplementing the algorithm. Two
+  # implementations of a URL is two chances to send a reader somewhere that is not there.
+  if ($Story.articleId -and $Story.headline) {
+    $out['slug'] = Get-StorySlug $Story.headline $Story.articleId
+  }
   if ($Story.PSObject.Properties['lenses'] -and $Story.lenses) {
     $scores = [ordered]@{}
     foreach ($lens in $Story.lenses.PSObject.Properties) {
@@ -337,4 +343,27 @@ function Merge-DeferredHalf($ByCountry, [string]$FullPath) {
     }
   }
   return $merged
+}
+function Get-StorySlug([string]$Headline, [string]$ArticleId) {
+  # Readable, stable, and short enough to survive being pasted into a chat window.
+  # The id tail is there because two countries can and do run the same headline on the
+  # same morning, and a collision would silently overwrite one of them.
+  $plain = ([string]$Headline).Normalize([Text.NormalizationForm]::FormD)
+  $sb = New-Object Text.StringBuilder
+  foreach ($ch in $plain.ToCharArray()) {
+    if ([Globalization.CharUnicodeInfo]::GetUnicodeCategory($ch) -ne [Globalization.UnicodeCategory]::NonSpacingMark) {
+      [void]$sb.Append($ch)
+    }
+  }
+  $slug = $sb.ToString().ToLowerInvariant()
+  $slug = [regex]::Replace($slug, '[^a-z0-9]+', '-').Trim('-')
+  if ($slug.Length -gt 60) {
+    $slug = $slug.Substring(0, 60)
+    $cut = $slug.LastIndexOf('-')
+    if ($cut -gt 30) { $slug = $slug.Substring(0, $cut) }
+  }
+  if (-not $slug) { $slug = 'story' }
+  $tail = if ($ArticleId) { ([string]$ArticleId).Substring(0, [Math]::Min(6, ([string]$ArticleId).Length)) } else { '' }
+  if ($tail) { return "$slug-$tail" }
+  return $slug
 }
