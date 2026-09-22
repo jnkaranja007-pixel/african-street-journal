@@ -33,9 +33,15 @@ param(
   # against 160, dek length 163 against 164, lens relevance 35 against 33 percent, and
   # far fewer repair calls (2 of 22, against 74 of 328 on the full flash run).
   #
-  # One gap worth watching: stories carrying a figure ran 80 percent against 90. On
-  # twenty stories that cannot be separated from noise, but this is a numbers-first
-  # paper, so if it holds at full scale the saving is not free and flash should return.
+  # The one gap the twenty-story sample showed - stories carrying a figure at 80 percent
+  # against 90 - did not survive a full edition. Measured again at scale on 28 August:
+  # flash-lite 75.9 percent of 249 stories, flash 75.1 percent of 253. The saving is
+  # free, and the concern is closed rather than merely unrepeated.
+  #
+  # Still the right call as of 21 September 2026: gemini-3 is not on OpenRouter, and of
+  # 337 catalogue models that support structured output with 32k+ context, this one
+  # ranks 59th by cost on this workload. What is NOT yet taken is the identical model on
+  # the batch tier at exactly half price - see the note on Model above.
   [string]$Model      = 'google/gemini-2.5-flash-lite',
   [string[]]$Only,
   [string]$InFile     = 'data/feed-items.json',
