@@ -42,7 +42,15 @@ param(
   # 337 catalogue models that support structured output with 32k+ context, this one
   # ranks 59th by cost on this workload. What is NOT yet taken is the identical model on
   # the batch tier at exactly half price - see the note on Model above.
-  [string]$Model      = 'google/gemini-2.5-flash-lite',
+  # The batch tier, not the standard one. Identical model, identical 1M context,
+  # identical structured-output support, and exactly half the rate: 0.05/0.20 per M
+  # against 0.10/0.40, which takes the bill from about $2.80 a month to $1.40.
+  # Checked against the live OpenRouter catalogue on 21 September 2026.
+  #
+  # The trade is latency, and the desk has a deadline: it starts at 01:40 UTC and has
+  # to be on the doorstep before Nairobi wakes around 03:00. If a run ever misses that
+  # window, drop the ':batch' suffix - it is the only change needed.
+  [string]$Model      = 'google/gemini-2.5-flash-lite:batch',
   [string[]]$Only,
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',

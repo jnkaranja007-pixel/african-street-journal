@@ -30,6 +30,22 @@
                                    "feed":  "https://www.algerie360.com/feed/",
                                    "tier":  3,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -178,6 +194,22 @@
                                    "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -294,6 +326,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -325,6 +373,22 @@
                                    "home":  "https://thevoicebw.com/",
                                    "feed":  "https://thevoicebw.com/feed/",
                                    "tier":  3,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -423,6 +487,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -461,6 +541,22 @@
                                    "feed":  "https://www.yaga-burundi.com/feed/",
                                    "tier":  3,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -493,6 +589,22 @@
                                    "home":  "https://cameroonnewsagency.com/",
                                    "feed":  "https://cameroonnewsagency.com/feed/",
                                    "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -614,6 +726,22 @@
                                    "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -716,6 +844,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -815,6 +959,22 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -940,6 +1100,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -979,6 +1155,22 @@
                                    "feed":  "https://congomediatime.com/feed/",
                                    "tier":  3,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -1012,6 +1204,22 @@
                                    "feed":  "https://www.mediacongo.net/rss.html",
                                    "tier":  2,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -1128,6 +1336,22 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -1282,6 +1506,22 @@
                                    "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -1331,6 +1571,22 @@
                                    "tier":  2,
                                    "requireMatch":  true,
                                    "state":  "blocked"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -1356,6 +1612,22 @@
                                    "home":  "https://diariorombe.es/",
                                    "feed":  "https://diariorombe.es/feed/",
                                    "tier":  3,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -1470,6 +1742,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -1508,6 +1796,22 @@
                                    "feed":  "https://www.eswatinipositivenews.com/feed/",
                                    "tier":  3,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -1628,6 +1932,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -1672,6 +1992,22 @@
                                    "home":  "https://gabonactu.com/",
                                    "feed":  "https://gabonactu.com/feed/",
                                    "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -1770,6 +2106,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -1808,6 +2160,22 @@
                                    "feed":  "https://www.ghanaweb.com/GhanaHomePage/rss/news.xml",
                                    "tier":  2,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -1841,6 +2209,22 @@
                                    "feed":  "https://guineematin.com/feed/",
                                    "tier":  2,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -1954,6 +2338,22 @@
                                    "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -2037,6 +2437,29 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "FarmBiz Africa",
+                                   "home":  "https://www.farmbizafrica.com/",
+                                   "feed":  "https://www.farmbizafrica.com/feed/",
+                                   "tier":  2,
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -2067,6 +2490,22 @@
                                    "home":  "https://publiceyenews.com/",
                                    "feed":  "https://publiceyenews.com/feed/",
                                    "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -2101,6 +2540,22 @@
                                    "feed":  "http://www.liberianobserver.com/search/?f=rss\u0026amp;t=article\u0026amp;l=50\u0026amp;s=start_time\u0026amp;sd=desc\u0026amp;k%5B%5D=%23topstory",
                                    "tier":  3,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -2133,6 +2588,22 @@
                                    "home":  "https://libyaupdate.com/",
                                    "feed":  "https://libyaupdate.com/feed/",
                                    "tier":  3,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -2167,6 +2638,22 @@
                                    "feed":  "https://newsmada.com/feed/",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -2199,6 +2686,22 @@
                                    "home":  "https://times.mw/",
                                    "feed":  "https://times.mw/feed/",
                                    "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -2304,6 +2807,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -2341,6 +2860,22 @@
                                    "home":  "https://lecalame.info/",
                                    "feed":  "https://lecalame.info/?q=rss.xml",
                                    "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -2382,6 +2917,22 @@
                                    "feed":  "https://insidenews.mu/feed/",
                                    "tier":  3,
                                    "state":  "error"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -2436,6 +2987,22 @@
                                    "feed":  "https://www.barlamane.com/feed/",
                                    "tier":  2,
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -2477,6 +3044,22 @@
                                    "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -2509,6 +3092,22 @@
                                    "home":  "https://www.observer24.com.na/",
                                    "feed":  "https://www.observer24.com.na/feed/",
                                    "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -2607,6 +3206,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -2691,6 +3306,29 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "AgroNigeria",
+                                   "home":  "https://agronigeria.ng/",
+                                   "feed":  "https://agronigeria.ng/feed/",
+                                   "tier":  2,
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -2736,6 +3374,22 @@
                                    "home":  "https://rwandadispatch.com/",
                                    "feed":  "https://rwandadispatch.com/feed/",
                                    "tier":  3,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -2850,6 +3504,22 @@
                                    "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -2949,6 +3619,22 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -3060,6 +3746,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -3098,6 +3800,22 @@
                                    "feed":  "https://slconcordtimes.com/feed/",
                                    "tier":  3,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -3130,6 +3848,22 @@
                                    "home":  "https://somaliguardian.com/",
                                    "feed":  "https://somaliguardian.com/feed/",
                                    "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -3215,6 +3949,22 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -3327,6 +4077,22 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -3467,6 +4233,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -3544,6 +4326,22 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }
@@ -3663,6 +4461,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -3700,6 +4514,22 @@
                                    "home":  "https://kapitalis.com/",
                                    "feed":  "https://kapitalis.com/tunisie/feed/",
                                    "tier":  2,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -3754,6 +4584,22 @@
                                    "home":  "https://www.watchdoguganda.com/",
                                    "feed":  "https://www.watchdoguganda.com/feed/",
                                    "tier":  3,
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
                                    "state":  "ok"
                                }
                            ]
@@ -3852,6 +4698,22 @@
                                    "tier":  3,
                                    "scope":  "regional",
                                    "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ],
                "match":  [
@@ -3932,6 +4794,22 @@
                                    "feed":  "https://www.techzim.co.zw/feed/",
                                    "tier":  3,
                                    "state":  "missing"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
                                }
                            ]
            },
@@ -4028,6 +4906,22 @@
                                    "home":  "https://www.aa.com.tr/en/africa",
                                    "feed":  "https://www.aa.com.tr/en/rss/default?cat=africa",
                                    "tier":  3,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Farmers Review Africa",
+                                   "home":  "https://farmersreviewafrica.com/",
+                                   "feed":  "https://farmersreviewafrica.com/feed/",
+                                   "tier":  2,
+                                   "scope":  "regional",
+                                   "state":  "ok"
+                               },
+                               {
+                                   "name":  "Food Business Africa",
+                                   "home":  "https://www.foodbusinessafrica.com/",
+                                   "feed":  "https://www.foodbusinessafrica.com/feed/",
+                                   "tier":  2,
                                    "scope":  "regional",
                                    "state":  "ok"
                                }

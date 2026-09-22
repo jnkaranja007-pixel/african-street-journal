@@ -292,7 +292,46 @@ function Get-Url([string]$url) {
   } finally { $resp.Close() }
 }
 
+# One fetch per URL per run, not one per country that registers it.
+#
+# The registry holds 350 usable source entries across only 170 distinct feeds, because
+# the pan-African wires are registered against every country they might name: Anadolu,
+# VOA Africa, Africanews and BBC Africa are each listed 27 times. Without this, a run
+# downloaded the same BBC feed 27 times, parsed it 27 times, and made 180 requests -
+# 51 percent of the total - that it already had the answers to.
+#
+# It is also a politeness measure with history. AllAfrica IP-banned this desk after
+# roughly 25 requests, and the lesson taken then was to spread load across many hosts;
+# hammering the hosts that remain 27 times a night is the same mistake wearing a
+# different hat.
+#
+# Per RUN, deliberately - the cache is a script variable, so it dies with the process
+# and a feed is never served from a previous night.
+$script:FEED_CACHE = @{}
+
 function Read-Feed([string]$url) {
+  $key = [string]$url
+  if ($script:FEED_CACHE.ContainsKey($key)) {
+    $hit = $script:FEED_CACHE[$key]
+    # A feed that failed is cached as its failure and rethrown, so the caller still
+    # reports it and still counts it dead - but a host that is down is asked once a
+    # night rather than 27 times. Without this the cache would speed up the healthy
+    # feeds and leave the broken ones costing a timeout per country, which is where
+    # most of a slow run actually goes.
+    if ($hit -is [Exception]) { throw $hit }
+    return $hit
+  }
+  try {
+    $items = Read-FeedUncached $key
+  } catch {
+    $script:FEED_CACHE[$key] = $_.Exception
+    throw
+  }
+  $script:FEED_CACHE[$key] = $items
+  return $items
+}
+
+function Read-FeedUncached([string]$url) {
   # Returns a list of raw items normalised across RSS 2.0, RDF and Atom.
   $txt = Get-Url $url
   $txt = $txt.TrimStart([char]0xFEFF, ' ', "`t", "`r", "`n")

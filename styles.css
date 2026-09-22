@@ -1413,3 +1413,12 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
    slow connection it is the difference between "loading" and "broken". */
 body.asj-waiting{cursor:progress}
 body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-story-key]{cursor:progress}
+
+/* The lens is a smaller paper, and says so. Amber rather than green: this is the desk
+   declining to fill a tab, not a result to celebrate. */
+.wire-lens-note{
+  margin:0 0 14px;padding:10px 14px;
+  border-left:2px solid rgba(201,164,74,.55);
+  background:rgba(201,164,74,.07);
+  font:400 13px/1.55 var(--sans);color:var(--text-muted);
+}

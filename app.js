@@ -4203,11 +4203,33 @@ canvas.addEventListener('touchstart', (e) => {
       '<button class="wire-topic" type="button" data-topic="'+t+'" aria-pressed="'+(t===activeTopic)+'">'+t+'<span class="n">'+c[t]+'</span></button>'
     ).join('');
   }
+  // The relevance floor a lens has to clear before it may claim a story.
+  //
+  // The desk scores every story 0-100 for each audience, and the prompt defines the
+  // bands: 0-20 no direct connection, 21-40 reader interest only, 41-60 a supported
+  // indirect effect, 61-80 a direct practical or financial effect, 81-100 central.
+  // The lens was only ever a SORT, so all 235 stories appeared under every tab and a
+  // reader who picked Farmer got the whole paper reordered - agriculture for the first
+  // few, then business and politics scored 20 for farmers, presented as farming news.
+  // Measured on the 6 September edition: 145 of 235 stories cleared 61 for investors,
+  // 34 for farmers, 31 for diaspora. One lens discriminated; two padded.
+  //
+  // 41 is the lowest band the desk itself calls a real connection, so it is the lowest
+  // number this tab can honestly show.
+  const LENS_RELEVANCE_FLOOR = 41;
+
+  function lensQualifies(it){
+    if (activeStoryLens === 'general') return true;
+    return storyLensData(it.story, activeStoryLens).score >= LENS_RELEVANCE_FLOOR;
+  }
+
   function filtered(){
-    if (activeTopic === 'All' && !query.trim()) return INDEX;
     const q = foldForSearch(query);
+    const lensAll = activeStoryLens === 'general';
+    if (activeTopic === 'All' && !q && lensAll) return INDEX;
     return INDEX.filter(it=>{
       if (activeTopic!=='All' && it.type!==activeTopic) return false;
+      if (!lensAll && !lensQualifies(it)) return false;
       if (!q) return true;
       // haystack is folded once when the index is built, not rebuilt on every keystroke
       // across 250 stories.
@@ -4437,8 +4459,27 @@ canvas.addEventListener('touchstart', (e) => {
     const items = filtered();
     activeWireStoryKeys = items.map(item => item.storyKey);
     updateResultCount(items);
-    if (!items.length){ resultsEl.innerHTML = '<div class="wire-meta">0 stories</div><div class="wire-empty">No headlines match your search.</div>'; return; }
+    if (!items.length){
+      // Say which of the two it is. "No headlines match your search" over an empty
+      // Farmer tab reads as a broken filter; the truth is that the desk filed nothing
+      // for farmers today, and a reader is owed that rather than left guessing.
+      const lensName = STORY_LENS_LABELS[activeStoryLens];
+      const emptyCopy = (activeStoryLens !== 'general' && !query.trim())
+        ? 'Nothing in today\'s edition has a direct effect on ' + escapeHtml(lensName.toLowerCase()) +
+          ' readers' + (activeTopic !== 'All' ? ' under ' + escapeHtml(activeTopic) : '') +
+          '. This is the desk being honest rather than padding the tab - switch to Top for the full edition.'
+        : 'No headlines match your search.';
+      resultsEl.innerHTML = '<div class="wire-meta">0 stories</div><div class="wire-empty">' + emptyCopy + '</div>';
+      return;
+    }
     const frontPage = (activeTopic==='All' && !query.trim());
+    // Under a lens the reader is seeing a deliberately smaller paper. Say how much
+    // smaller, so a short list reads as an editorial judgement rather than a bug.
+    const lensNote = (activeStoryLens !== 'general')
+      ? '<div class="wire-lens-note">' + items.length + ' of ' + INDEX.length +
+        ' stories have a direct effect on ' + escapeHtml(STORY_LENS_LABELS[activeStoryLens].toLowerCase()) +
+        ' readers today. The rest of the edition is under Top.</div>'
+      : '';
     // The lead slot goes to the best story the desk filed FOR THIS EDITION. Sorting by
     // score alone once put a 21 August brief at the top of the 28 August paper, which is
     // the one thing a daily cannot do. If every story is old - a desk that has not run -
@@ -4452,6 +4493,7 @@ canvas.addEventListener('touchstart', (e) => {
       const more = list.slice(6);
       const visibleMore = more.slice(0, visibleCount);
       resultsEl.innerHTML =
+        lensNote +
         '<div class="wire-front">' +
           (hero ? heroMarkup(hero) : '') +
           '<div class="wire-meta">Highlights</div>' +
@@ -4466,6 +4508,7 @@ canvas.addEventListener('touchstart', (e) => {
     }
     const visibleItems = list.slice(0, visibleCount);
     resultsEl.innerHTML =
+      lensNote +
       (hero ? heroMarkup(hero) : '') +
       '<div class="wire-meta">'+(frontPage?'More across Africa':items.length+' '+(items.length===1?'story':'stories')+(activeTopic!=='All'?' · '+escapeHtml(activeTopic):'')+(query?' · “'+escapeHtml(query.trim())+'”':''))+'</div>' +
       visibleItems.map(itemMarkup).join('') +
@@ -5446,6 +5489,28 @@ async function runSelfTest() {
         foldForSearch('S\u00c9N\u00c9GAL'));
     add('search: nonsense still matches nothing',
         !hay.some(h => h.includes('zzzqqx')), 'zzzqqx');
+  }
+
+  // --- a lens shows only what it can honestly claim --------------------------------
+  {
+    const all = Object.values(AI_BRIEFS || {}).flat().filter(Boolean);
+    const counts = {};
+    for (const lens of ['farmers','investors','diaspora']) {
+      counts[lens] = all.filter(s => storyLensData(s, lens).score >= 41).length;
+    }
+    // The lens used to be a sort, so every story appeared under every tab. Farmer
+    // showed agriculture for a few slots and then business and politics scored 20.
+    add('lens: each lens claims fewer stories than the whole edition',
+        Object.values(counts).every(n => n < all.length),
+        JSON.stringify(counts) + ' of ' + all.length);
+    // Investors was the only lens with a real pool; the other two must not have been
+    // quietly widened to match it.
+    add('lens: the relevance floor actually excludes something',
+        Math.min(...Object.values(counts)) < all.length * 0.9,
+        'narrowest lens keeps ' + Math.min(...Object.values(counts)));
+    const belowFloor = all.filter(s => storyLensData(s, 'farmers').score < 41).length;
+    add('lens: stories below the floor exist and are held back',
+        belowFloor > 0, belowFloor + ' stories score under 41 for farmers');
   }
 
   // --- the edition arrives in two halves ----------------------------------------
