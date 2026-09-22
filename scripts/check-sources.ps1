@@ -51,10 +51,23 @@ $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 [Net.ServicePointManager]::DefaultConnectionLimit = 8
 # Diagnostic only: several outlets have misconfigured chains and a TLS warning should
-# not be reported as "paper closed". The production fetcher does NOT do this - it keeps
-# normal validation, and this checker's job is to reveal which hosts have cert problems
-# so they can be judged deliberately rather than trusted silently.
-[Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+# There used to be a global certificate-validation override here, set to a ScriptBlock,
+# so that an outlet with a misconfigured chain was not reported as a closed paper.
+#
+# It took the whole job down for a month. Windows PowerShell 5.1 marshals a ScriptBlock
+# onto RemoteCertificateValidationCallback happily; the pwsh that GitHub Actions runs
+# does not - .NET invokes the callback off a thread with no runspace, the call throws,
+# and HttpWebRequest surfaces that as a WebException. Every host on earth then reads as
+# ERROR. Five consecutive weekly runs from 23 August reported "usable sources fell from
+# 327 to 0", the catastrophic-result guard correctly refused to commit, and the job
+# failed every time while the registry quietly went unmaintained.
+#
+# It could not reproduce locally: 5.1 is what runs here and it worked perfectly. The
+# tell was that fetch-news.ps1 hits the same hosts from the same runner every night and
+# succeeds - and the single line of difference between the two scripts was this one.
+#
+# A cert warning now reads as ERROR, which is honest and is what the state column is
+# for. That is a far smaller price than the checker being blind.
 
 $root = Split-Path $PSScriptRoot -Parent
 $srcPath = Join-Path $root 'data\sources.json'
