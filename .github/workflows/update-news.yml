@@ -190,8 +190,14 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # briefs-full.js is the deferred half of the edition - forgetting it here would
           # ship an index whose prose is a day old, which is worse than shipping neither.
-          git add data/briefs.js data/briefs-full.js data/briefs-state.json data/archive sitemap.xml robots.txt
-          Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object { git add "$($_.Name)/index.html" }
+          git add data/briefs.js data/briefs-full.js data/briefs-state.json data/archive sitemap.xml robots.txt static-pages.css 404.html
+          # --all on the whole country directory, not just its index.html. Each country
+          # now holds a directory per story as well, and the old line staged none of
+          # them - the desk would have built 235 story pages a night and committed
+          # nothing. --all is also what stages the DELETIONS when the seven-day sweep
+          # removes expired pages; without it they would be rebuilt into the working
+          # tree and never leave it.
+          Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object { git add --all "$($_.Name)" }
           # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError - a grouping
           # expression cannot contain a statement separator. Run the check, then read
           # the exit code on its own line.
