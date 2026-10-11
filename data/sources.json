@@ -37,7 +37,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -201,7 +201,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -259,7 +259,7 @@
       {
         "name": "Benin Web TV",
         "home": "https://beninwebtv.com/",
-        "feed": "https://beninwebtv.com/feed.xml",
+        "feed": "https://beninwebtv.com/feed/",
         "tier": 2,
         "state": "ok"
       },
@@ -285,7 +285,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -333,7 +333,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -381,7 +381,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -446,7 +446,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -494,7 +494,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -548,7 +548,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -568,7 +568,7 @@
         "home": "https://www.journalducameroun.com/",
         "feed": "https://www.journalducameroun.com/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Business in Cameroon",
@@ -587,7 +587,7 @@
       {
         "name": "Cameroon News Agency",
         "home": "https://cameroonnewsagency.com/",
-        "feed": "https://cameroonnewsagency.com/feed/",
+        "feed": "https://cameroonnewsagency.com/web-stories/feed/",
         "tier": 2,
         "state": "ok"
       },
@@ -597,7 +597,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -733,7 +733,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -803,7 +803,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -851,7 +851,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -920,7 +920,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -968,7 +968,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1052,7 +1052,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Comoros Times",
@@ -1107,7 +1107,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1162,7 +1162,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1211,7 +1211,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1231,7 +1231,7 @@
         "home": "https://www.aip.ci/",
         "feed": "https://www.aip.ci/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Fraternite Matin",
@@ -1297,7 +1297,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -1345,7 +1345,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1442,7 +1442,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Horn Diplomat",
@@ -1465,7 +1465,7 @@
         "home": "https://www.hch24.com/",
         "feed": "https://www.hch24.com/feed/",
         "tier": 3,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Africanews",
@@ -1513,7 +1513,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1578,7 +1578,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1627,7 +1627,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1647,7 +1647,7 @@
         "home": "https://shabait.com/",
         "feed": "https://shabait.com/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Eritrean Press",
@@ -1661,7 +1661,7 @@
         "home": "https://tesfanews.net/",
         "feed": "https://tesfanews.net/feed/",
         "tier": 3,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "African Arguments",
@@ -1756,7 +1756,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1810,7 +1810,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -1837,7 +1837,7 @@
         "home": "https://www.thereporterethiopia.com/",
         "feed": "https://www.thereporterethiopia.com/homepage/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Ethiopian Monitor",
@@ -1858,7 +1858,7 @@
         "home": "https://borkena.com/",
         "feed": "https://borkena.com/feed/",
         "tier": 3,
-        "state": "missing"
+        "state": "blocked"
       },
       {
         "name": "African Arguments",
@@ -1946,7 +1946,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2014,7 +2014,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2041,14 +2041,14 @@
         "home": "https://foroyaa.net/",
         "feed": "https://foroyaa.net/feed/",
         "tier": 1,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "The Standard Gambia",
         "home": "https://standard.gm/",
         "feed": "https://standard.gm/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The Chronicle Gambia",
@@ -2127,7 +2127,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2181,7 +2181,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2230,7 +2230,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2359,7 +2359,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2458,7 +2458,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2480,7 +2480,7 @@
         "home": "https://eastleighvoice.co.ke/",
         "feed": "https://eastleighvoice.co.ke/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       }
     ],
     "match": [
@@ -2519,7 +2519,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2561,7 +2561,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2610,7 +2610,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2659,7 +2659,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2708,7 +2708,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2780,7 +2780,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -2828,7 +2828,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2882,7 +2882,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -2938,7 +2938,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3008,7 +3008,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3065,7 +3065,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3114,7 +3114,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3179,7 +3179,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -3227,7 +3227,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3327,7 +3327,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3342,7 +3342,7 @@
         "home": "https://agronigeria.ng/",
         "feed": "https://agronigeria.ng/feed/",
         "tier": 2,
-        "state": "blocked"
+        "state": "ok"
       }
     ],
     "match": [
@@ -3396,7 +3396,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3525,7 +3525,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3594,7 +3594,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -3642,7 +3642,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3767,7 +3767,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3792,7 +3792,7 @@
         "home": "https://awokonewspaper.sl/",
         "feed": "https://awokonewspaper.sl/feed/",
         "tier": 1,
-        "state": "error"
+        "state": "missing"
       },
       {
         "name": "Sierra Leone Telegraph",
@@ -3821,7 +3821,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3870,7 +3870,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -3972,7 +3972,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4107,7 +4107,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4261,7 +4261,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4356,7 +4356,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4441,7 +4441,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Jeune Afrique",
@@ -4489,7 +4489,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4543,7 +4543,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4613,7 +4613,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4647,7 +4647,7 @@
         "home": "https://www.daily-mail.co.zm/",
         "feed": "https://www.daily-mail.co.zm/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Mwebantu",
@@ -4726,7 +4726,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4758,7 +4758,7 @@
         "home": "https://www.newsday.co.zw/",
         "feed": "https://www.newsday.co.zw/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The Chronicle",
@@ -4779,7 +4779,7 @@
         "home": "https://www.newzimbabwe.com/",
         "feed": "https://www.newzimbabwe.com/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Bulawayo24",
@@ -4822,7 +4822,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
@@ -4881,7 +4881,7 @@
         "feed": "https://www.afrik.com/feed",
         "tier": 3,
         "scope": "regional",
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Western Sahara Resource Watch",
@@ -4936,7 +4936,7 @@
         "feed": "https://farmersreviewafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Food Business Africa",
