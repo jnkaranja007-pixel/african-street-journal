@@ -85,7 +85,7 @@
         "home": "https://www.angola24horas.com/",
         "feed": "https://www.angola24horas.com/feed/",
         "tier": 3,
-        "state": "missing"
+        "state": "blocked"
       },
       {
         "name": "Folha 8",
@@ -568,7 +568,7 @@
         "home": "https://www.journalducameroun.com/",
         "feed": "https://www.journalducameroun.com/feed/",
         "tier": 1,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Business in Cameroon",
@@ -772,7 +772,7 @@
         "home": "https://oubanguimedias.com/",
         "feed": "https://oubanguimedias.com/feed/",
         "tier": 2,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Le Tsunami",
@@ -896,7 +896,7 @@
         "home": "https://tchadactuel.com/",
         "feed": "https://tchadactuel.com/feed/",
         "tier": 3,
-        "state": "error"
+        "state": "blocked"
       },
       {
         "name": "RFI Afrique",
@@ -1133,14 +1133,14 @@
         "home": "https://www.adiac-congo.com/",
         "feed": "https://www.adiac-congo.com/rss.xml",
         "tier": 1,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Vox Congo",
         "home": "https://www.voxcongo.com/",
         "feed": "https://www.voxcongo.com/feed/",
         "tier": 2,
-        "state": "error"
+        "state": "blocked"
       },
       {
         "name": "Journal de Brazza",
@@ -1231,7 +1231,7 @@
         "home": "https://www.aip.ci/",
         "feed": "https://www.aip.ci/feed/",
         "tier": 1,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Fraternite Matin",
@@ -1379,7 +1379,7 @@
         "home": "https://www.adi.dj/",
         "feed": "https://www.adi.dj/rss",
         "tier": 1,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Djibouti Actu",
@@ -1647,7 +1647,7 @@
         "home": "https://shabait.com/",
         "feed": "https://shabait.com/feed/",
         "tier": 1,
-        "state": "blocked"
+        "state": "error"
       },
       {
         "name": "Eritrean Press",
@@ -1837,7 +1837,7 @@
         "home": "https://www.thereporterethiopia.com/",
         "feed": "https://www.thereporterethiopia.com/homepage/feed/",
         "tier": 1,
-        "state": "blocked"
+        "state": "missing"
       },
       {
         "name": "Ethiopian Monitor",
@@ -1858,7 +1858,7 @@
         "home": "https://borkena.com/",
         "feed": "https://borkena.com/feed/",
         "tier": 3,
-        "state": "blocked"
+        "state": "error"
       },
       {
         "name": "African Arguments",
@@ -3085,7 +3085,7 @@
         "home": "https://www.namibian.com.na/",
         "feed": "https://www.namibian.com.na/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "New Era Live",
@@ -4647,7 +4647,7 @@
         "home": "https://www.daily-mail.co.zm/",
         "feed": "https://www.daily-mail.co.zm/feed/",
         "tier": 2,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Mwebantu",
@@ -4779,7 +4779,7 @@
         "home": "https://www.newzimbabwe.com/",
         "feed": "https://www.newzimbabwe.com/feed/",
         "tier": 1,
-        "state": "blocked"
+        "state": "error"
       },
       {
         "name": "Bulawayo24",
