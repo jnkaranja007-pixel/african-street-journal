@@ -45,6 +45,7 @@ const LABELS = () => {
     outer: for (const p of paths) for (let i = 0; i <= 6; i++) for (let j = 0; j <= 3; j++) {
       if (pr.isPointInPath(p.shape, r.x0 + (r.x1 - r.x0) * i / 6, r.y0 + (r.y1 - r.y0) * j / 3)) { bad.push(id + ' tag touches ' + p.id); break outer; }
     }
+    if (r.x0 < islandLabelBounds.x0 - 0.5 || r.x1 > islandLabelBounds.x1 + 0.5) bad.push(id + ' tag off screen');
     for (const [id2, L2] of rs) if (id2 > id && !(r.x1 < L2.r.x0 || L2.r.x1 < r.x0 || r.y1 < L2.r.y0 || L2.r.y1 < r.y0)) bad.push(id + ' tag overlaps ' + id2);
   }
   return { n: rs.length, bad, overflow: document.documentElement.scrollWidth > innerWidth };

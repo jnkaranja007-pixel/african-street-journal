@@ -964,9 +964,14 @@ function paintOcean(ctx) {
 // Mozambique) at any width. Cached per layout because the answer only changes on resize.
 const labelProbeCtx = document.createElement('canvas').getContext('2d');
 let islandLabelCache = { key: '', map: {} };
+// Visible window in map units. On phones the canvas overflows the screen, so a tag inside
+// the canvas can still be off-screen (SYC was cut to 'SY'). layoutPhoneMap narrows this.
+let islandLabelBounds = { x0: 4, x1: 996 };
 function islandLabelRect(t, side, dist, w, h) {
   const vert = side === 'above' || side === 'below';
-  const x = t.cx + (vert ? 0 : (side === 'left' ? -dist : dist));
+  // A tag above/below a ring docked at the canvas edge slides inward to stay readable
+  // (the canvas clips anything past its edge, which cut 'CPV' to 'PV' on small maps).
+  const x = vert ? Math.max(islandLabelBounds.x0 + w / 2 + 1, Math.min(islandLabelBounds.x1 - w / 2 - 1, t.cx)) : t.cx + (side === 'left' ? -dist : dist);
   const y = t.cy + (side === 'below' ? dist : side === 'above' ? -dist : 0);
   const align = vert ? 'center' : (side === 'left' ? 'right' : 'left');
   const x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
@@ -997,7 +1002,7 @@ function computeIslandLabels(u, ring, gap) {
     for (const mult of [1, 1.8, 2.6]) {
       for (const side of sides) {
         const c = islandLabelRect(t, side, gap * mult, w, h);
-        const off = c.r.x0 < 4 || c.r.x1 > 996 || c.r.y0 < 4 || c.r.y1 > 997;
+        const off = c.r.x0 < islandLabelBounds.x0 || c.r.x1 > islandLabelBounds.x1 || c.r.y0 < 4 || c.r.y1 > 997;
         if (off || rectHitsLand(c.r, pad) || placed.some(q => rectsOverlap(c.r, q, pad * 0.5))) continue;
         pick = c; break;
       }
@@ -1018,7 +1023,7 @@ function computeIslandLabels(u, ring, gap) {
   return map;
 }
 function islandLabelPlacement(t, u, ring, gap) {
-  const key = u.toFixed(3) + '|' + islandHitTargets.map(o => o.cx.toFixed(1) + ',' + o.cy.toFixed(1) + o.side).join(';');
+  const key = u.toFixed(3) + '|' + islandLabelBounds.x0.toFixed(1) + ',' + islandLabelBounds.x1.toFixed(1) + '|' + islandHitTargets.map(o => o.cx.toFixed(1) + ',' + o.cy.toFixed(1) + o.side).join(';');
   if (islandLabelCache.key !== key) islandLabelCache = { key, map: computeIslandLabels(u, ring, gap) };
   return islandLabelCache.map[t.id];
 }
@@ -1264,6 +1269,7 @@ function layoutPhoneMap() {
     canvas.style.removeProperty('left'); canvas.style.removeProperty('top');
     stage.classList.remove('stage--phone');
     for (const t of islandHitTargets) { t.cx = t.ox; t.cy = t.oy; t.side = t.oside; }
+    islandLabelBounds = { x0: 4, x1: 996 };
     return;
   }
   stage.classList.add('stage--phone');
@@ -1284,6 +1290,7 @@ function layoutPhoneMap() {
   const left = (vw - boxW) / 2;
   const ux0 = b.x0 - left / s, ux1 = b.x0 + (vw - left) / s;
   const padX = 22 / s, padY = 16 / s;
+  islandLabelBounds = { x0: Math.max(4, ux0 + 6 / s), x1: Math.min(996, ux1 - 6 / s) };
   const bb = id => (pathById[id] && pathById[id].bbox) || null;
   const sl = bb('sl') || bb('lr'), mg = bb('mg');
   for (const t of islandHitTargets) {

@@ -1529,3 +1529,9 @@ html,body{overflow-x:hidden}
 .cv-index-chg.is-up{color:#7ccf80}.cv-index-chg.is-down{color:#e58a7a}
 .cv-index-asof{flex-basis:100%;font-size:12px;color:rgba(232,230,227,0.6)}
 .cv-index-line.is-stale .cv-index-level{color:rgba(232,230,227,0.6)}
+/* stress-v1: phones held sideways (and short laptop windows) showed only North Africa;
+   drop the big title so the whole continent fits in one screen. */
+@media (min-width:641px) and (max-height:520px){
+  .title-block{display:none}
+  .stage{height:calc(100svh - 150px);width:auto;max-height:none}
+}
