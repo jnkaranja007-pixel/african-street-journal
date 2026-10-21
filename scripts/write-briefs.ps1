@@ -498,6 +498,9 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
     'HTTP-Referer'  = 'https://jnkaranja007-pixel.github.io/african-street-journal'
     'X-Title'       = 'The African Street Journal'
   }
+  # Google keys (incl. the newer 'AQ.' style) are also accepted via x-goog-api-key.
+  if ($Provider -eq 'gemini') { $headers.Remove('HTTP-Referer'); $headers.Remove('X-Title'); $headers['x-goog-api-key'] = $apiKey }
+
 
   # Invoke-WebRequest with manual UTF-8 decoding. Invoke-RestMethod in PS 5.1 decodes
   # by the response charset header and mangles accented names into mojibake.

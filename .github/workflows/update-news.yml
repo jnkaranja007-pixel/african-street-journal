@@ -30,6 +30,10 @@ on:
         description: 'Limit to these ISO-2 codes, e.g. ng,ke,za. Empty runs all 55.'
         required: false
         default: ''
+      provider:
+        description: 'Optional provider override for this run only: openrouter or gemini.'
+        required: false
+        default: ''
       model:
         description: 'Optional OpenRouter model slug override for this run.'
         required: false
@@ -158,7 +162,7 @@ jobs:
           # Free alternative: create a key at https://aistudio.google.com/apikey, then
           #   gh secret set GEMINI_API_KEY ; gh variable set ASJ_PROVIDER --body gemini
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          ASJ_PROVIDER: ${{ vars.ASJ_PROVIDER }}
+          ASJ_PROVIDER: ${{ github.event.inputs.provider || vars.ASJ_PROVIDER }}
         run: |
           if (-not $env:OPENROUTER_API_KEY -and -not $env:GEMINI_API_KEY) {
             # Failing loudly on purpose. Exiting 0 here would let the journal quietly
