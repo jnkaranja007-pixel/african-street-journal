@@ -133,8 +133,11 @@ jobs:
             exit 1
           }
           $only = '${{ github.event.inputs.only }}'
-          if ($only.Trim()) { ./scripts/write-briefs.ps1 -Only $only.Trim() -JsonMode -OutFile data/auto-briefs.json }
-          else { ./scripts/write-briefs.ps1 -JsonMode -OutFile data/auto-briefs.json }
+          # Tee to a file: the alarm step cannot read this run's log through the API while
+          # the run is still going, so it reads the reason from here instead.
+          if ($only.Trim()) { ./scripts/write-briefs.ps1 -Only $only.Trim() -JsonMode -OutFile data/auto-briefs.json *>&1 | Tee-Object -FilePath desk-write.log }
+          else { ./scripts/write-briefs.ps1 -JsonMode -OutFile data/auto-briefs.json *>&1 | Tee-Object -FilePath desk-write.log }
+          exit $LASTEXITCODE
 
       - name: Merge into the journal
         if: steps.guard.outputs.stale == 'true'
@@ -257,6 +260,7 @@ jobs:
           $reason = 'The run failed. Open the log to see which step.'
           $log = ''
           try { $log = gh run view $env:GITHUB_RUN_ID --log 2>$null | Out-String } catch {}
+          if (Test-Path desk-write.log) { $log += (Get-Content desk-write.log -Raw) }
           if ($log -match 'FAIL FAST' -and $log -notmatch 'HTTP 402'){
             $reason = 'The model API returned errors on 3 calls in a row, so the run stopped early. The log line starting [api] shows OpenRouter''s exact response.'
           } elseif ($log -match 'HTTP 402|credit unavailable') {
