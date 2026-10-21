@@ -330,7 +330,7 @@ function formatFxRate(rate) {
 function formatFxDate(value) {
   const date = new Date(value || '');
   if (!Number.isFinite(date.getTime())) return '';
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('en-GB', {
     month:'short', day:'numeric', year:'numeric', timeZone:'UTC'
   }).format(date);
 }
@@ -338,7 +338,7 @@ function formatFxDate(value) {
 function formatShortDate(value) {
   const date = new Date(value || '');
   if (!Number.isFinite(date.getTime())) return '';
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('en-GB', {
     month:'short', day:'numeric', year:'numeric', timeZone:'UTC'
   }).format(date);
 }
@@ -4743,7 +4743,7 @@ canvas.addEventListener('touchstart', (e) => {
   }
   function itemMarkup(it){
     const lensMeta = activeStoryLens === 'general' ? '' :
-      '<span class="dot"></span><span class="wire-item-lens">' + escapeHtml(STORY_LENS_LABELS[activeStoryLens]) + ' fit ' + it.lensScore + '</span>';
+      '';
     return '<button class="wire-item' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
       '<div class="wire-item-body">' +
@@ -4762,7 +4762,7 @@ canvas.addEventListener('touchstart', (e) => {
   }
   function frontCardMarkup(it){
     const lensMeta = activeStoryLens === 'general' ? '' :
-      '<span class="dot"></span><span class="wire-item-lens">' + escapeHtml(STORY_LENS_LABELS[activeStoryLens]) + ' fit ' + it.lensScore + '</span>';
+      '';
     return '<button class="wire-brief-card' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<div class="wire-item-kicker">' +
         '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
@@ -4775,7 +4775,7 @@ canvas.addEventListener('touchstart', (e) => {
     '</button>';
   }
   function heroMarkup(it){
-    const lensLead = activeStoryLens === 'general' ? 'Lead story' : STORY_LENS_LABELS[activeStoryLens] + ' lead · fit ' + it.lensScore;
+    const lensLead = activeStoryLens === 'general' ? 'Lead story' : 'Top for ' + ({ farmers:'farmers', investors:'investors', diaspora:'the diaspora' }[activeStoryLens] || 'you');
     return '<button class="wire-hero' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<div class="wire-hero-kicker"><span class="wire-hero-lead">' + escapeHtml(lensLead) + '</span>' +
         '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +

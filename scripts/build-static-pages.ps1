@@ -139,6 +139,9 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 .related li a{font:600 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;padding:14px 0}
 .rel-topic{font:500 13px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none}
 .why{font-style:normal}
+/* readability-v2 */
+.story-head .meta,.page>.meta,.masthead,.masthead a,.asj-info,.asj-info>summary,.asj-info-menu a,.asj-info-menu a:visited,.kicker,.story-head .kicker,.topic{text-transform:none!important;letter-spacing:0!important;font-family:system-ui,-apple-system,'Segoe UI',sans-serif!important;font-size:14px!important}
+.asj-info-menu a{font-size:15px!important;font-weight:500!important}
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=58" defer></script>'

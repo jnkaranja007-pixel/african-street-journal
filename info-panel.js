@@ -114,3 +114,26 @@
   var h0 = location.hash.slice(1);
   if (h0 in PAGES) open(h0, false);
 }());
+
+/* readability-v2: show ISO dates (2026-10-21) as "21 Oct 2026" in visible text only.
+   Machine-readable values (datetime attrs, JSON-LD, URLs, inputs) are untouched. */
+(function () {
+  var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var RE = /\b(20\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b(?!T)/g;
+  function fix(s) { return s.replace(RE, function (_, y, m, d) { return (+d) + ' ' + M[+m - 1] + ' ' + y; }); }
+  var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, INPUT: 1, CODE: 1, PRE: 1, NOSCRIPT: 1 };
+  function walk(root) {
+    if (!root) return;
+    if (root.nodeType === 3) { if (RE.test(root.nodeValue)) { RE.lastIndex = 0; root.nodeValue = fix(root.nodeValue); } RE.lastIndex = 0; return; }
+    if (root.nodeType !== 1 || SKIP[root.nodeName]) return;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n, list = [];
+    while ((n = w.nextNode())) { var p = n.parentNode; if (p && !SKIP[p.nodeName] && /20\d\d-\d\d-\d\d/.test(n.nodeValue)) list.push(n); }
+    list.forEach(function (t) { var v = fix(t.nodeValue); if (v !== t.nodeValue) t.nodeValue = v; });
+  }
+  function start() {
+    walk(document.body);
+    new MutationObserver(function (ms) { ms.forEach(function (m) { if (m.type === 'characterData') walk(m.target); else m.addedNodes.forEach(walk); }); })
+      .observe(document.body, { childList: true, subtree: true, characterData: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+}());
