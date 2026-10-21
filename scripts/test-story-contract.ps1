@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly')) {
+foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -235,5 +235,24 @@ foreach ($good in @(
 }
 Write-Host 'PASS dek fragments are detected and complete sentences are not'
 
-Write-Host '[story-contract] OK - 20 checks'
+# House style: numerals from 10 up, set only after grounding has passed. Each case is
+# one the desk actually wrote, or one a careless converter would get wrong.
+foreach ($case in @(
+  @('The province accounts for two thousand four hundred seventy-two suspected cases.', 'The province accounts for 2,472 suspected cases.'),
+  @('A court convicted him of one hundred ninety-one murders', 'A court convicted him of 191 murders'),
+  @('adopted unanimously by the seventy-one members', 'adopted unanimously by the 71 members'),
+  @('Twenty-eight high-risk counties received supplies.', '28 high-risk counties received supplies.'),
+  @('one hundred and twenty days', '120 days'),
+  @('a ten-year plan worth twenty million dollars', 'a 10-year plan worth 20 million dollars'),
+  @('teams ranked ninth through twenty-fourth', 'teams ranked ninth through twenty-fourth'),
+  @('seven ministers and one deputy', 'seven ministers and one deputy'),
+  @('hundreds of people and a hundred cars', 'hundreds of people and a hundred cars'),
+  @('in nineteen ninety-four', 'in nineteen ninety-four'),
+  @('someone often went to the tent', 'someone often went to the tent'),
+  @('The figure rose to 2,472 from 1,900.', 'The figure rose to 2,472 from 1,900.'))) {
+  $got = ConvertTo-NumeralStyle $case[0]
+  if ($got -ne $case[1]) { throw "numeral style: '$($case[0])' became '$got', expected '$($case[1])'" }
+}
+Write-Host 'PASS numbers from ten up are set as numerals; ordinals, years and small numbers are not'
+Write-Host '[story-contract] OK - 21 checks'
 exit 0

@@ -203,7 +203,21 @@ on-site news stories from the supplied evidence. Be plain, specific and useful. 
 sound like a press release, and never send the reader away to understand the event.
 
 Rules:
-- Headline: actor + active verb + material result. Maximum 90 characters.
+- Headline: actor + active verb + material result. Maximum 90 characters. Sentence
+  case: capitalise the first word and proper nouns only ("Kenya confirms ninth Ebola
+  case", not "Kenya Confirms Ninth Ebola Case").
+- Topic: the ONE label for what the story is about, not for what it mentions.
+  Politics = government, parliament, elections, parties, courts and prosecutions of
+  officials, security, conflict, diplomacy, sanctions. Business = companies, markets,
+  banking, trade, investment, prices, jobs, the economy. Sport = teams, clubs, matches,
+  athletes and sports bodies. Tech = technology, telecoms, digital services, AI.
+  Climate = weather, environment, disasters, energy transition, conservation.
+  Agriculture = farming, livestock, fisheries, food production and land.
+  Culture = arts, music, film, religion, heritage, media. Health = disease, hospitals,
+  medicine, public health. Education = schools, universities, scholarships, research.
+  News = crime, accidents and anything that fits none of these. A story is not
+  Business because money appears in it: a football club's debts are Sport, a court
+  order over unpaid fees is Politics, a government changing the clocks is News.
 - Dek: ONE complete sentence that advances the headline. Aim for 110 to 150 characters,
   and never more than 170. Compose a sentence that ends where you meant it to. Do not
   write toward the limit and stop mid-phrase: "...the certificate for six historic
@@ -399,6 +413,49 @@ function Get-UngroundedNumbers([string]$StoryText, [string]$EvidenceText) {
     if ($key -and -not $evidence.ContainsKey($key)) { $missing.Add($match.Value) }
   }
   return @($missing | Select-Object -Unique)
+}
+
+# House style: numerals for 10 and above. The writer is told to turn a number the source
+# wrote in words into English words, because the grounding check matches digits against
+# the evidence and a model asked to convert words to digits can convert them wrongly.
+# That check has passed by the time this runs, so this only changes how the figure is
+# set: "two thousand four hundred seventy-two suspected cases" becomes "2,472 suspected
+# cases". Under ten stays in words, ordinals are left alone, and anything that does not
+# parse as one clean cardinal ("nineteen ninety-four", "a hundred", "hundreds of") is
+# left exactly as written.
+function ConvertTo-NumeralStyle([string]$Text) {
+  if (-not $Text) { return $Text }
+  $word = '(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)'
+  $ordinal = '(?:first|second|third|(?:four|fif|six|seven|eigh|nin|ten|eleven|twelf|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)th|(?:twen|thir|for|fif|six|seven|eigh|nine)tieth|hundredth|thousandth)\b'
+  $pattern = "(?<![\w-])$word(?:(?:-|\s+(?:and\s+)?)$word)*(?!\w)(?!-$ordinal)"
+  return [regex]::Replace($Text, $pattern, {
+    param($m)
+    $units = @{ zero=0; one=1; two=2; three=3; four=4; five=5; six=6; seven=7; eight=8; nine=9 }
+    $teens = @{ ten=10; eleven=11; twelve=12; thirteen=13; fourteen=14; fifteen=15; sixteen=16; seventeen=17; eighteen=18; nineteen=19 }
+    $tens  = @{ twenty=20; thirty=30; forty=40; fifty=50; sixty=60; seventy=70; eighty=80; ninety=90 }
+    $total = 0; $group = 0; $last = 'start'; $hundredInGroup = $false
+    foreach ($tok in @($m.Value.ToLowerInvariant() -split '[\s-]+' | Where-Object { $_ -and $_ -ne 'and' })) {
+      if ($units.ContainsKey($tok)) {
+        if ($last -in @('unit','teen')) { return $m.Value }
+        $group += $units[$tok]; $last = 'unit'
+      } elseif ($teens.ContainsKey($tok)) {
+        if ($last -in @('unit','teen','tens')) { return $m.Value }
+        $group += $teens[$tok]; $last = 'teen'
+      } elseif ($tens.ContainsKey($tok)) {
+        if ($last -in @('unit','teen','tens')) { return $m.Value }
+        $group += $tens[$tok]; $last = 'tens'
+      } elseif ($tok -eq 'hundred') {
+        if ($last -ne 'unit' -or $hundredInGroup -or $group -lt 1 -or $group -gt 9) { return $m.Value }
+        $group *= 100; $hundredInGroup = $true; $last = 'hundred'
+      } elseif ($tok -eq 'thousand') {
+        if ($last -eq 'start' -or $last -eq 'thousand' -or $total -gt 0 -or $group -lt 1) { return $m.Value }
+        $total = $group * 1000; $group = 0; $hundredInGroup = $false; $last = 'thousand'
+      } else { return $m.Value }
+    }
+    $value = $total + $group
+    if ($value -lt 10) { return $m.Value }
+    return $value.ToString('N0', [Globalization.CultureInfo]::InvariantCulture)
+  }, 'IgnoreCase')
 }
 
 $storyCache = @{}
@@ -768,6 +825,12 @@ foreach ($code in $codes) {
 
     if (-not $oneBrief) {
       $packet = Get-EvidencePacket $it $i
+      # The shape below has placeholders, not sample values. It used to read
+      # "topic":"Business" with lens scores of 60, 90 and 45, and the model copied
+      # them: on 21 October 106 of 233 stories were Business (a football club's
+      # meeting, US sanctions on Eritrea, Egypt changing its clocks) and 145 claimed a
+      # direct effect on investors. The strict response schema keeps a placeholder from
+      # ever reaching the output, on every route.
       $prompt = @"
 Country: $name
 
@@ -777,9 +840,10 @@ $packet
 Write exactly one original on-site story from this assignment. Do not import a name,
 number, date, cause or context from any other event. Return ONLY a JSON object in this shape:
 
-{"stories":[{"item":$i,"topic":"Business","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":120,"why":"...","lenses":{"farmers":{"score":60,"why":"..."},"investors":{"score":90,"why":"..."},"diaspora":{"score":45,"why":"..."}}}]}
+{"stories":[{"item":$i,"topic":"<one topic>","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":<words>,"why":"...","lenses":{"farmers":{"score":<0-100>,"why":"..."},"investors":{"score":<0-100>,"why":"..."},"diaspora":{"score":<0-100>,"why":"..."}}}]}
 
 - "item" must be exactly $i.
+- Fill every <...> slot from this story alone; none of them has a default.
 - "topic" must be exactly one of: $($VALID_TOPICS -join ', ').
 - "wordCount" counts only the three paragraph strings and must be $MinStoryWords-$MaxStoryWords.
 - Include all three lens objects. Each score is a whole number from 0 to 100 and each
@@ -1012,6 +1076,15 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
       $rejectReasons.Add("item $idx unsupported number: " + (($ungrounded | Select-Object -First 2) -join ', '))
       continue
     }
+
+    # Numerals for 10 and above, now that every figure is known to be grounded.
+    $headline = ConvertTo-NumeralStyle $headline
+    $dek = ConvertTo-NumeralStyle $dek
+    $why = ConvertTo-NumeralStyle $why
+    for ($p = 0; $p -lt $paragraphs.Count; $p++) { $paragraphs[$p] = ConvertTo-NumeralStyle $paragraphs[$p] }
+    foreach ($lens in @($lensData.Keys)) { $lensData[$lens]['why'] = ConvertTo-NumeralStyle ([string]$lensData[$lens]['why']) }
+    $body = $paragraphs.ToArray() -join "`n`n"
+    $wordCount = Get-WordCount $body
 
     # Cite every outlet that carried the story, not just the one whose text was used.
     $srcList = New-Object System.Collections.Generic.List[object]

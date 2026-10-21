@@ -4075,16 +4075,30 @@ function storyDate(daysAgo) {
   return date.toISOString().slice(0, 10);
 }
 
+// Calendar days between a story's date and a reference moment, in the reader's own time
+// zone rather than 24-hour blocks: a story filed at 23:00 yesterday is one day old at
+// 07:00 today. Accepts a bare day or a full timestamp. NaN when unparseable.
+function calendarDaysBefore(date, reference = Date.now()) {
+  if (!date) return NaN;
+  const value = String(date);
+  const then = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? value + 'T00:00:00' : value);
+  if (isNaN(then)) return NaN;
+  const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  return Math.round((startOfDay(new Date(reference)) - startOfDay(then)) / 86400000);
+}
+
 function relativeDateLabel(date) {
-  if (!date) return '';
-  const then = new Date(date + 'T00:00:00');
-  if (isNaN(then)) return '';
-  const days = Math.round((Date.now() - then.getTime()) / 86400000);
+  // Stories carry full timestamps ("2026-10-20T22:48:19Z"). This used to append
+  // T00:00:00 to whatever it was given, which only parses for a bare day, so every Wire
+  // row lost its age - and a story six weeks old read exactly like this morning's.
+  const days = calendarDaysBefore(date);
+  if (!Number.isFinite(days)) return '';
+  const value = String(date);
+  const then = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? value + 'T00:00:00' : value);
   if (days <= 0) return 'Today';
   if (days === 1) return 'Yesterday';
   if (days < 7) return days + ' days ago';
-  if (days < 30) return Math.round(days / 7) + 'w ago';
-  return then.toISOString().slice(0, 10);
+  return new Intl.DateTimeFormat('en-GB', { day:'numeric', month:'short' }).format(then);
 }
 
 function storySummary(story) {
@@ -4595,9 +4609,17 @@ canvas.addEventListener('touchstart', (e) => {
         });
       });
     }
+    // A country whose desk has not filed for a while keeps its last stories, and they
+    // keep their old selection scores - so a six-week-old Ethiopia story could lead the
+    // Wire. Anything over a week older than the edition goes below everything current;
+    // it stays readable, dated, and in the country's own column.
+    // Same calendar-day rule as the age label, so a row dated rather than "N days ago" is
+    // exactly a row that has been moved down.
+    const reference = editionDate ? Date.parse(editionDate + 'T12:00:00') : Date.now();
+    out.forEach(item => { item.stale = calendarDaysBefore(item.date, reference) >= 7; });
     // The assignment meter remains the strongest component. A selected reader lens adds
     // audience fit and freshness without changing the canonical story or its source rank.
-    out.sort((a, b) => b.score - a.score || a.rank - b.rank || a.country.localeCompare(b.country));
+    out.sort((a, b) => (a.stale - b.stale) || b.score - a.score || a.rank - b.rank || a.country.localeCompare(b.country));
     return out;
   }
   function topicCounts(){
@@ -6096,6 +6118,15 @@ async function runSelfTest() {
     // One plain sentence, no stat cells, no second count line.
     add('smoke: wire summary is one sentence', !!wireTrust && wireTrust.children.length === 0 && /\d+ stor/.test(wireTrust.textContent) && wireResultCount?.hidden, (wireTrust?.textContent || '').trim());
     add('smoke: wire opens at the lead story', wireResults?.scrollTop === 0, wireResults?.scrollTop);
+    // Every row says how old it is, and nothing over a week old sits above a current story.
+    const rowAges = [...(wireResults?.querySelectorAll('.wire-item-meta') || [])].map(el => el.textContent.split('·').pop().trim());
+    const isAgeLabel = text => /^(Today|Yesterday|\d+ days ago|\d{1,2} [A-Z][a-z]{2,3})$/.test(text);
+    add('wire: every row shows its age', rowAges.length > 0 && rowAges.every(isAgeLabel),
+        rowAges.find(text => !isAgeLabel(text)) || rowAges.length + ' rows');
+    const firstOld = rowAges.findIndex(text => /^\d{1,2} [A-Z][a-z]{2,3}$/.test(text));
+    add('wire: a week-old story never ranks above a current one',
+        firstOld < 0 || rowAges.slice(firstOld).every(text => /^\d{1,2} [A-Z][a-z]{2,3}$/.test(text)),
+        firstOld < 0 ? 'none older than a week in view' : 'first old row at ' + firstOld);
     const storyTrigger = wireResults?.querySelector('[data-story-key]');
     const openedStoryKey = storyTrigger?.dataset.storyKey || '';
     add('smoke: wire uses on-site story buttons', storyTrigger instanceof HTMLButtonElement, storyTrigger?.tagName || 'missing');
