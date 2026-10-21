@@ -4667,11 +4667,9 @@ canvas.addEventListener('touchstart', (e) => {
    so the landing page and the Wire never disagree about what today's lead is. */
 (function renderHomeFront(){
   const slots = {
-    left: document.getElementById('home-front-left'),
-    right: document.getElementById('home-front-right'),
     mobile: document.getElementById('home-front-mobile')
   };
-  if (!slots.left && !slots.right && !slots.mobile) return;
+  if (!slots.mobile) return;
 
   function topStories(limit) {
     const out = [];
@@ -4758,9 +4756,6 @@ canvas.addEventListener('touchstart', (e) => {
     const items = topStories(7);
     if (!items.length) return;
     const fresh = newSinceLastVisit();
-    // Desktop reads left column first, so the lead goes there.
-    fill(slots.left, items.slice(0, 3), { lead: true, cta: false });
-    fill(slots.right, items.slice(3, 6), { lead: false, cta: true });
     fill(slots.mobile, items.slice(0, 5), { lead: true, cta: true });
     // The sign-up form lives inside these blocks and is wiped by the repaint above.
     try { window.dispatchEvent(new CustomEvent('asj:front-painted')); } catch {}
@@ -5424,10 +5419,10 @@ async function runSelfTest() {
 
   // --- the front page on the landing screen -------------------------------------
   {
-    const anyColumn = document.querySelector('#home-front-left .home-story, #home-front-mobile .home-story');
+    const anyColumn = document.querySelector('#home-front-mobile .home-story');
     add('landing: today\'s headlines render without opening the Wire', !!anyColumn,
         document.querySelectorAll('.home-story').length + ' headlines');
-    const titles = [...document.querySelectorAll('#home-front-left .home-story-title, #home-front-right .home-story-title')]
+    const titles = [...document.querySelectorAll('#home-front-mobile .home-story-title')]
       .map(el => el.textContent.trim());
     add('landing: no headline appears twice', new Set(titles).size === titles.length, titles.length + ' shown');
     // A daily cannot lead on a story from a previous edition while a current one exists.

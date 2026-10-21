@@ -1279,7 +1279,8 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
    headlines under the ticker, where a phone has room. */
 .landing-stage-row{
   display:grid;
-  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  grid-template-columns:auto;
+  justify-content:center;
   align-items:center;
   gap:clamp(14px,2.2vw,34px);
   width:100%;
@@ -1287,8 +1288,6 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   margin:0 auto;
 }
 .home-front{display:flex;flex-direction:column;gap:14px;min-width:0}
-.home-front--left{justify-self:end;text-align:right}
-.home-front--right{justify-self:start}
 .home-front--mobile{display:none}
 
 .home-story{
@@ -1297,18 +1296,13 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   padding:0;margin:0;cursor:pointer;color:inherit;
   transition:border-color 160ms,color 160ms;
 }
-.home-front--right .home-story{border-left:1px solid var(--rule);padding-left:14px}
-.home-front--left .home-story{border-left:0;border-right:1px solid var(--rule);padding-right:14px}
 .home-story:hover,.home-story:focus-visible{outline:none}
-.home-front--right .home-story:hover,.home-front--right .home-story:focus-visible{border-left-color:var(--green)}
-.home-front--left .home-story:hover,.home-front--left .home-story:focus-visible{border-right-color:var(--green)}
 
 .home-story-kicker{
   display:flex;gap:8px;align-items:center;flex-wrap:wrap;
   font:700 9px/1.4 var(--mono);letter-spacing:0.16em;text-transform:uppercase;
   color:var(--front-green);margin-bottom:6px;
 }
-.home-front--left .home-story-kicker{justify-content:flex-end}
 .home-story-kicker .home-story-src{color:var(--text-dim)}
 .home-story-title{
   font:700 clamp(15px,1.15vw,19px)/1.22 var(--serif);color:var(--text);
@@ -1334,7 +1328,6 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
    the phone layout takes over rather than shrinking both. */
 @media (max-width:1079px){
   .landing-stage-row{display:block}
-  .home-front--left,.home-front--right{display:none}
   .home-front--mobile{
     display:flex;width:100%;max-width:760px;margin:0 auto;
     padding:22px clamp(16px,5vw,28px) 30px;text-align:left;gap:18px;
