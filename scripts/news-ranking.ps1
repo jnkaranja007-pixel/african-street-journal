@@ -73,6 +73,13 @@ $script:NEWS_ECONOMIC = @('investment','trade','export','import','mine','mining'
 $script:NEWS_JUNK = @('celebrity','wedding','romance','dating','gossip','horoscope','recipe','red carpet','lingerie','net worth',
                       'betting','odds','jackpot','lottery','showbiz','soap opera','reality tv','pageant','road trip experience',
                       'car review','test drive')
+# Lurid or tabloid subjects. Added 20 Oct 2026 after 'Businessman dies after penis
+# enlargement procedure' ran as Nigeria Business. Kept narrow on purpose: words that
+# also name policy news (prostitution law, witchcraft killings) are not here.
+$script:NEWS_TABLOID = @('penis','manhood','enlargement procedure','enlargement surgery','erectile','sex tape','sex toy','nude','nudes',
+                         'naked','leaked video','viral video','side chick','sugar mummy','sugar mommy','sugar daddy','love potion',
+                         'threesome','bbl','butt lift','breast enlargement','bedroom secrets','sleeps with','caught in bed')
+$script:NEWS_CLICKBAIT = '\b(?:you won ?t believe|shocking|bizarre|strange|weird|jaw dropping|goes viral|trending video|watch video|see photos|hilarious)\b'
 $script:NEWS_LOW_VALUE = @('opinion','analysis','commentary','editorial','keynote address','statement of','press release','sponsored',
                            'partner content','public seminar','public seminars','conference commences','weekly roundup','op ed',
                            'weekend wrap','daily roundup')
@@ -112,6 +119,8 @@ function Get-NewsEditorialRejectReason([string]$Title, [string]$Summary, [string
   $headline = ConvertTo-CanonicalNewsText $Title
   $text = ConvertTo-CanonicalNewsText ($Title + ' ' + $Summary)
   if ((Get-NewsMatchCount $text $script:NEWS_JUNK 1) -gt 0) { return 'junk or gossip' }
+  if ((Get-NewsMatchCount $text $script:NEWS_TABLOID 1) -gt 0) { return 'tabloid or lurid subject' }
+  if ($headline -match $script:NEWS_CLICKBAIT) { return 'clickbait headline rather than a newsworthy event' }
   if ((Get-NewsMatchCount $headline $script:NEWS_HARD_LOW_VALUE 1) -gt 0) { return 'opinion, roundup, or sponsored copy' }
   $headlineYears = @([regex]::Matches($headline, '\b20\d{2}\b') | ForEach-Object { [int]$_.Value })
   if ($headlineYears.Count -and

@@ -120,8 +120,12 @@ jobs:
           #   gh variable set ASJ_FALLBACK_MODELS --body 'google/gemini-3.1-flash-lite,deepseek/deepseek-v3.2'
           ASJ_MODEL: ${{ github.event.inputs.model || vars.ASJ_MODEL }}
           ASJ_FALLBACK_MODELS: ${{ vars.ASJ_FALLBACK_MODELS }}
+          # Free alternative: create a key at https://aistudio.google.com/apikey, then
+          #   gh secret set GEMINI_API_KEY ; gh variable set ASJ_PROVIDER --body gemini
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ASJ_PROVIDER: ${{ vars.ASJ_PROVIDER }}
         run: |
-          if (-not $env:OPENROUTER_API_KEY) {
+          if (-not $env:OPENROUTER_API_KEY -and -not $env:GEMINI_API_KEY) {
             # Failing loudly on purpose. Exiting 0 here would let the journal quietly
             # go stale for weeks with every run reporting success.
             Write-Host 'OPENROUTER_API_KEY secret is not set.'

@@ -108,13 +108,25 @@ $cachePath = if ([IO.Path]::IsPathRooted($CacheFile)) { $CacheFile } else { Join
 $metricsPath = if ([IO.Path]::IsPathRooted($MetricsFile)) { $MetricsFile } else { Join-Path $root $MetricsFile }
 
 $apiKey = $env:OPENROUTER_API_KEY
-$DEFAULT_MODEL = 'google/gemini-2.5-flash-lite'
-$DEFAULT_FALLBACKS = @('google/gemini-3.1-flash-lite','deepseek/deepseek-v3.2')
+# Provider: 'openrouter' (default) or 'gemini' (Google AI Studio's OpenAI-compatible
+# endpoint, which has a free tier: ~15 requests/min, ~500/day on flash-lite as of Oct
+# 2026). Chosen by ASJ_PROVIDER, or automatically when only GEMINI_API_KEY is set.
+$Provider = if ($env:ASJ_PROVIDER) { $env:ASJ_PROVIDER.Trim().ToLower() } elseif ($env:GEMINI_API_KEY -and -not $apiKey) { 'gemini' } else { 'openrouter' }
+$ApiUrl = 'https://openrouter.ai/api/v1/chat/completions'
+if ($Provider -eq 'gemini') {
+  $apiKey = $env:GEMINI_API_KEY
+  $ApiUrl = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'
+  # Free tier is 15 requests a minute; one call every 4.5s stays under it.
+  if ($DelayMs -lt 4500) { $DelayMs = 4500 }
+}
+$DEFAULT_MODEL = if ($Provider -eq 'gemini') { 'gemini-2.5-flash-lite' } else { 'google/gemini-2.5-flash-lite' }
+$DEFAULT_FALLBACKS = if ($Provider -eq 'gemini') { @() } else { @('google/gemini-3.1-flash-lite','deepseek/deepseek-v3.2') }
 if (-not $Model) { $Model = if ($env:ASJ_MODEL) { $env:ASJ_MODEL.Trim() } else { $DEFAULT_MODEL } }
 if (-not $FallbackModels) {
   $FallbackModels = if ($env:ASJ_FALLBACK_MODELS) { @($env:ASJ_FALLBACK_MODELS -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }) } else { $DEFAULT_FALLBACKS }
 }
 $FallbackModels = @($FallbackModels | Where-Object { $_ -and $_ -ne $Model } | Select-Object -First 2)
+if ($Provider -eq 'gemini') { $Model = $Model -replace '^google/',''; $FallbackModels = @() }
 $consecutiveApiErrors = 0
 $servedModels = @{}
 if (-not (Test-Path $inPath)) {
@@ -404,7 +416,7 @@ if (-not $NoCache -and (Test-Path $cachePath)) {
 
 function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$ExpectedItem = -1) {
   if (-not $apiKey) {
-    throw 'OPENROUTER_API_KEY is not set (local: $env:OPENROUTER_API_KEY; CI: gh secret set OPENROUTER_API_KEY)'
+    throw "API key for provider '$Provider' is not set (OPENROUTER_API_KEY or GEMINI_API_KEY)"
   }
   $body = [ordered]@{
     model       = $Model
@@ -472,9 +484,11 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
       }
     }
     # Do not silently route to a provider that ignores the schema.
-    $body['provider'] = @{
-      require_parameters = $true
-      allow_fallbacks = $true
+    if ($Provider -eq 'openrouter') {
+      $body['provider'] = @{
+        require_parameters = $true
+        allow_fallbacks = $true
+      }
     }
   }
 
@@ -490,7 +504,7 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
   # Invoke-WebRequest with manual UTF-8 decoding. Invoke-RestMethod in PS 5.1 decodes
   # by the response charset header and mangles accented names into mojibake.
   try {
-    $resp = Invoke-WebRequest -Uri 'https://openrouter.ai/api/v1/chat/completions' `
+    $resp = Invoke-WebRequest -Uri $ApiUrl `
               -Method Post -Headers $headers -Body $bytes -TimeoutSec 120 `
               -UseBasicParsing -ErrorAction Stop
   } catch {
