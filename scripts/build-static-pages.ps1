@@ -145,7 +145,7 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=66" defer></script>'
-$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">All 55 countries</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/privacy/">Privacy</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/feed.xml">RSS</a></div></details>'
+$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">All 55 countries</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/privacy/">Privacy</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="mailto:hello@africanstreetjournal.com">Email us</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/feed.xml">RSS</a></div></details>'
 
 
 # Same analytics loader as index.html. These pages are where search traffic lands, so
@@ -507,13 +507,15 @@ $trustPages = [ordered]@{
 <p>The site stores a copy of its own pages in your browser so it can open quickly and work offline. That copy stays on your device and is never sent to us.</p>
 <h2>Email</h2>
 <p>If you email us, we use your message and address only to reply. We do not run a mailing list at the moment.</p>
-<p>A contact channel for privacy questions is coming soon.</p>
+<p>For privacy questions, email <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a>.</p>
 "@ }
   contact = @{ title = 'Contact'; desc = 'How to reach The African Street Journal with tips, corrections or questions.'; body = @"
-<p>A contact channel is coming soon. Once it is open, we welcome:</p>
+<p class="contact-email">Email us at <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a></p>
+<p>We read every message. Good reasons to write:</p>
 <ul>
 <li><b>Corrections:</b> include the story link. See the <a href="$BaseUrl/corrections/">corrections policy</a>.</li>
 <li><b>Outlets and publishers:</b> if you think we have summarised or credited your reporting wrongly, or you want your feed removed, tell us and we will act promptly.</li>
+<li><b>Partnerships:</b> newsrooms, data providers and organisations who want to work with us.</li>
 <li><b>Tips and suggestions:</b> sources we should be reading, countries we cover thinly, or features you would like.</li>
 </ul>
 "@ }
@@ -525,7 +527,7 @@ $trustPages = [ordered]@{
 <li>If a story should not have run at all (for example a misattributed report, or an item that is not news), we take it down.</li>
 <li>Because stories are summaries generated with an AI model and checked automatically, mistakes are possible. Reader reports are an important part of catching them.</li>
 </ul>
-<p>A channel for reporting errors is coming soon.</p>
+<p>To report an error, email <a href="mailto:hello@africanstreetjournal.com?subject=Correction">hello@africanstreetjournal.com</a> with the story link and what is wrong.</p>
 "@ }
 }
 foreach ($slug in $trustPages.Keys) {

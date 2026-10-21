@@ -95,9 +95,20 @@ if (fs.existsSync(ijs)) {
 } else fail('data/indices.js missing');
 
 // Privacy: the owner's personal details must never ship.
-const banned = [/jnkaranja007@/i, /karanja/i];
+// Only hello@africanstreetjournal.com may be published; no personal names or other inboxes.
+const banned = [/jnkaranja007@/i, /karanja/i, /africanstreetj@gmail/i, /[a-z0-9._%+-]+@gmail\.com/i];
 const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.name.startsWith('.') || e.name === 'node_modules' || e.name === 'tools' ? [] : e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
-for (const f of walk(root)) if (/\.(html|js|xml|json|css|txt)$/.test(f)) { const s = fs.readFileSync(f, 'utf8'); for (const b of banned) if (b.test(s)) fail('private detail in ' + path.relative(root, f)); }
+const ALLOWED_EMAIL = 'hello@africanstreetjournal.com';
+const emailRe = /mailto:([^"'?\s<>]+)|\b[a-z0-9._%+-]+@(?:gmail|yahoo|outlook|hotmail|icloud|proton(?:mail)?)\.[a-z]+\b|\b[a-z0-9._%+-]+@africanstreetjournal\.com\b/gi;
+for (const f of walk(root)) if (/\.(html|js|xml|json|css|txt)$/.test(f)) {
+  const s = fs.readFileSync(f, 'utf8');
+  for (const b of banned) if (b.test(s)) fail('private detail in ' + path.relative(root, f));
+  for (const m of s.matchAll(emailRe)) { const addr = (m[1] || m[0]).toLowerCase(); if (addr !== ALLOWED_EMAIL) fail('unexpected email ' + addr + ' in ' + path.relative(root, f)); }
+}
+for (const page of ['contact/index.html', 'corrections/index.html']) {
+  const p = path.join(root, page);
+  if (!fs.existsSync(p) || !fs.readFileSync(p, 'utf8').includes('mailto:' + ALLOWED_EMAIL)) fail(page + ' is missing the mailto:' + ALLOWED_EMAIL + ' link');
+}
 
 console.log(fails.length ? fails.length + ' failure(s)' : 'site-check: all passed');
 process.exit(fails.length ? 1 : 0);
