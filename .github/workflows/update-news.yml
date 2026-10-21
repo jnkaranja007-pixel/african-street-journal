@@ -267,39 +267,18 @@ jobs:
         if: steps.guard.outputs.stale == 'true'
         shell: pwsh
         run: |
-          git config user.name  "asj-news-bot"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          # briefs-full.js is the deferred half of the edition - forgetting it here would
-          # ship an index whose prose is a day old, which is worse than shipping neither.
-          git add data/briefs.js data/briefs-full.js data/briefs-state.json data/archive sitemap.xml news-sitemap.xml feed.xml robots.txt static-pages.css 404.html about privacy contact corrections
-          # --all on the whole country directory, not just its index.html. Each country
-          # now holds a directory per story as well, and the old line staged none of
-          # them - the desk would have built 235 story pages a night and committed
-          # nothing. --all is also what stages the DELETIONS when the seven-day sweep
-          # removes expired pages; without it they would be rebuilt into the working
-          # tree and never leave it.
-          Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object { git add --all "$($_.Name)" }
-          # `(cmd; $LASTEXITCODE -eq 0)` is a PowerShell ParserError - a grouping
-          # expression cannot contain a statement separator. Run the check, then read
-          # the exit code on its own line.
-          git diff --staged --quiet
-          if ($LASTEXITCODE -eq 0) { Write-Host 'No story changes this run.'; exit 0 }
-          $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm UTC')
-          git commit -m "chore(asj-desk): refresh stories ($stamp)"
-          if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
-          # The desk runs long enough that main can move while it works. A plain push
-          # would then be rejected as non-fast-forward and the whole run's stories lost
-          # with the workspace. Rebase onto current main and retry instead.
-          $pushed = $false
-          for ($attempt = 1; $attempt -le 3; $attempt++) {
-            git push
-            if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
-            Write-Host "Push rejected (attempt $attempt) - rebasing onto origin/main and retrying."
-            git pull --rebase origin main
-            if ($LASTEXITCODE -ne 0) { Write-Host 'Rebase failed - resolve by hand.'; exit 1 }
+          # publish-edition.ps1 owns the staging list and the push. If main moved during
+          # the run it rebuilds the edition on top of it rather than rebasing generated
+          # files - a rebase of 290 regenerated pages cannot succeed, and on 21 October
+          # it threw away 41 minutes of finished, audited stories.
+          $only = '${{ github.event.inputs.only }}'
+          if ($only.Trim()) {
+            $requested = @($only -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }).Count
+            ./scripts/publish-edition.ps1 -MinCountries 50 -MinStoryPackages $requested -MinFreshCountries $requested -RequiredFreshCountries $only -FreshStoriesPerCountry 1
+          } else {
+            ./scripts/publish-edition.ps1 -MinCountries 55 -MinStoryPackages 150 -MinFreshCountries 10 -FreshStoriesPerCountry 1
           }
-          if (-not $pushed) { Write-Host 'Push failed after 3 attempts.'; exit 1 }
-          Write-Host 'Pushed refreshed stories'
+          exit $LASTEXITCODE
 
       - name: Ping IndexNow with new stories
         if: steps.guard.outputs.stale == 'true'
@@ -346,6 +325,8 @@ jobs:
             $reason = 'OpenRouter rejected the API key (HTTP 401). The key may have been rotated or revoked.'
           } elseif ($log -match 'not safe to publish') {
             $reason = 'The publication gate refused the edition. The stories were written but did not meet the contract.'
+          } elseif ($log -match '\[publish\] (Could not rebuild|Push failed|Could not fetch|Commit failed)') {
+            $reason = 'The stories were written and passed every check, but could not be pushed: main kept moving while the desk worked and the rebuild on top of it failed. Run the desk again by hand: gh workflow run update-news.yml'
           }
 
           $runUrl = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
@@ -361,8 +342,8 @@ jobs:
             "Run: $runUrl",
             "",
             "The site is still up and serving the last good edition; it is not broken, it",
-            "is frozen. The masthead tells readers which day they are on once it is two",
-            "days behind.",
+            "is frozen - and nothing on the page tells readers that, so treat a long gap as",
+            "urgent. Each country page shows when its desk last filed.",
             "",
             "This issue stays open and is updated on each failure. Close it once the desk",
             "publishes again."
