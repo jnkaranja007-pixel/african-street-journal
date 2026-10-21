@@ -97,7 +97,16 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 .morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8a847b;margin:0 0 12px}
 .morenav a{display:inline-block;margin:0 14px 7px 0;font:400 13px/1.5 'Playfair Display',Georgia,'Times New Roman',serif;color:#9a958e;text-decoration:none;border-bottom:1px solid transparent}
 .morenav a:hover{color:#66bb6a;border-bottom-color:#2f5c33}
+.sitelinks{margin-top:10px}
+.sitelinks a{color:#8a847b;text-decoration:none;margin-right:14px}
+.sitelinks a:hover{color:#66bb6a}
+.page p,.page li{color:#c9c5c0;font-size:16.5px;line-height:1.65}
+.page h2{margin-top:30px}
+.page ul{padding-left:20px}
 '@
+# Trust-page links, appended to every generated footer.
+$siteLinks = '<nav class="sitelinks"><a href="'+$BaseUrl+'/about/">About</a> <a href="'+$BaseUrl+'/privacy/">Privacy</a> <a href="'+$BaseUrl+'/contact/">Contact</a> <a href="'+$BaseUrl+'/corrections/">Corrections</a> <a href="'+$BaseUrl+'/feed.xml">RSS</a></nav>'
+
 
 # Same analytics loader as index.html. These pages are where search traffic lands, so
 # leaving them unmeasured would report the site as quieter than it is and hide which
@@ -245,7 +254,7 @@ $($body.ToString())
 <h2>Explore country desks</h2>
 $($navLinks.ToString())
 </nav>
-<footer>The African Street Journal &middot; from the streets, for the streets<br>Every story carries its sources. Figures are labelled with their origin and date.</footer>
+<footer>The African Street Journal &middot; from the streets, for the streets<br>Every story carries its sources. Figures are labelled with their origin and date.$siteLinks</footer>
 </div>
 </body>
 </html>
@@ -270,6 +279,7 @@ $($navLinks.ToString())
 # its country page rather than a dead end.
 $storyKept = @{}
 $storyBuilt = 0
+$feedItems = New-Object System.Collections.Generic.List[object]
 foreach ($sp in $storyPages) {
   $b = $sp.brief
   $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
@@ -353,7 +363,7 @@ $($bodyHtml.ToString())
 $($srcHtml.ToString())
   <a class="open" href="$appUrl">Read in the ASJ desk &rarr;</a>
   <div class="morenav"><h2>More from $(Esc $sp.country)</h2><a href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories</a></div>
-  <footer>The African Street Journal &middot; original reporting, every source cited</footer>
+  <footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
 </div>
 </body>
 </html>
@@ -363,6 +373,7 @@ $($srcHtml.ToString())
   [IO.File]::WriteAllText((Join-Path $storyDirPath 'index.html'), $storyHtml, (New-Object Text.UTF8Encoding($false)))
   $storyKept["$($sp.code)/$($sp.slug)"] = $true
   $urls.Add($storyCanonical)
+  $feedItems.Add([pscustomobject]@{ title = [string]$b.headline; link = $storyCanonical; dek = $dek; published = $published; country = [string]$sp.country })
   $storyBuilt++
 }
 
@@ -387,6 +398,114 @@ if ($StoryDays -gt 0) {
 }
 Write-Host "[static] $storyBuilt story pages, $swept swept past $StoryDays days" -ForegroundColor DarkGray
 
+
+# --- trust pages ---------------------------------------------------------------
+# About, Privacy, Contact, Corrections. Added 20 Oct 2026: a news site with none of
+# these reads as anonymous, and Google News expects them.
+$ContactEmail = 'jnkaranja007@gmail.com'
+$trustPages = [ordered]@{
+  about = @{ title = 'About'; desc = 'What The African Street Journal is, how its stories are made, and who runs it.'; body = @"
+<p>The African Street Journal is an independent daily digest of news from all 55 African countries, written for readers on the continent and in the diaspora.</p>
+<h2>How the desk works</h2>
+<p>Every morning an automated desk reads public news feeds from outlets across Africa, groups reports of the same event, and ranks them for public importance: elections, budgets, courts, health, food, power, jobs, trade and security come first. Gossip, sponsored copy, opinion columns and tabloid items are filtered out.</p>
+<p>Each selected report is rewritten into a short original summary by an AI language model, working only from the facts in that report. Software then checks every story: figures must appear in the source, the story must name and link the outlet it came from, and anything that fails is dropped rather than published.</p>
+<p>Stories are summaries, not original reporting from the ground. The outlet that broke the story is always credited and linked; please read and support them.</p>
+<h2>Who runs it</h2>
+<p>The site is run by James Karanja. Questions, tips and complaints are welcome on the <a href="$BaseUrl/contact/">contact page</a>.</p>
+"@ }
+  privacy = @{ title = 'Privacy'; desc = 'What The African Street Journal collects about readers (very little) and why.'; body = @"
+<p>This site does not use cookies, does not ask you to sign in, and does not run advertising trackers.</p>
+<h2>Analytics</h2>
+<p>We count page views with <a href="https://www.cloudflare.com/web-analytics/" rel="noopener">Cloudflare Web Analytics</a>. It is cookieless: it does not set cookies or use local storage to identify you, and it does not build a profile of you across sites. It records things like the page viewed, the referring site, browser type and country, in aggregate.</p>
+<p>If your browser sends a Do Not Track signal, the analytics script is not loaded at all.</p>
+<h2>Hosting</h2>
+<p>The site is served by GitHub Pages, and its domain name is handled by Cloudflare. Like any web host, they may keep short-lived server logs (such as IP addresses) for security and reliability. Typefaces are loaded from Google Fonts, which receives your IP address when it serves them. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>.</p>
+<h2>Offline reading</h2>
+<p>The site stores a copy of its own pages in your browser so it can open quickly and work offline. That copy stays on your device and is never sent to us.</p>
+<h2>Email</h2>
+<p>If you email us, we use your message and address only to reply. We do not run a mailing list at the moment.</p>
+<p>Questions about privacy: <a href="mailto:$ContactEmail">$ContactEmail</a>.</p>
+"@ }
+  contact = @{ title = 'Contact'; desc = 'How to reach The African Street Journal with tips, corrections or questions.'; body = @"
+<p>Email: <a href="mailto:$ContactEmail">$ContactEmail</a></p>
+<ul>
+<li><b>Corrections:</b> put &ldquo;Correction&rdquo; in the subject and include the story link. See the <a href="$BaseUrl/corrections/">corrections policy</a>.</li>
+<li><b>Outlets and publishers:</b> if you think we have summarised or credited your reporting wrongly, or you want your feed removed, tell us and we will act promptly.</li>
+<li><b>Tips and suggestions:</b> sources we should be reading, countries we cover thinly, or features you would like.</li>
+</ul>
+"@ }
+  corrections = @{ title = 'Corrections'; desc = 'How The African Street Journal corrects mistakes.'; body = @"
+<p>We aim to be accurate. When we get something wrong, we fix it.</p>
+<ul>
+<li>Every story links to the outlet it was based on. If our summary does not match that source, the source wins and we correct or remove our story.</li>
+<li>Factual errors in a live story are corrected as soon as we confirm them, normally within one working day.</li>
+<li>If a story should not have run at all (for example a misattributed report, or an item that is not news), we take it down.</li>
+<li>Because stories are summaries generated with an AI model and checked automatically, mistakes are possible. Reader reports are an important part of catching them.</li>
+</ul>
+<p>To report an error, email <a href="mailto:$ContactEmail">$ContactEmail</a> with &ldquo;Correction&rdquo; in the subject and the link to the story.</p>
+"@ }
+}
+foreach ($slug in $trustPages.Keys) {
+  $tp = $trustPages[$slug]
+  $tpUrl = "$BaseUrl/$slug/"
+  $tpHtml = @"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>$($tp.title) | The African Street Journal</title>
+<meta name="description" content="$(Esc $tp.desc)">
+<link rel="canonical" href="$tpUrl">
+<meta name="theme-color" content="#131313">
+<link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
+$analytics
+<link rel="stylesheet" href="$BaseUrl/static-pages.css">
+</head>
+<body>
+<div class="wrap page">
+<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a></div>
+<h1>$($tp.title)</h1>
+$($tp.body)
+<footer>The African Street Journal &middot; from the streets, for the streets$siteLinks</footer>
+</div>
+</body>
+</html>
+"@
+  $tpDir = Join-Path $root $slug
+  if (-not (Test-Path $tpDir)) { New-Item -ItemType Directory -Path $tpDir -Force | Out-Null }
+  [IO.File]::WriteAllText((Join-Path $tpDir 'index.html'), $tpHtml, (New-Object Text.UTF8Encoding($false)))
+  $urls.Add($tpUrl)
+}
+
+# --- RSS feed and Google News sitemap ------------------------------------------
+function XmlEsc([string]$t) { if ($null -eq $t) { return '' }; return [Security.SecurityElement]::Escape($t) }
+$sortedFeed = @($feedItems | Sort-Object { try { [datetime]::Parse([string]$_.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { [datetime]::MinValue } } -Descending)
+$rss = New-Object System.Text.StringBuilder
+[void]$rss.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
+[void]$rss.AppendLine('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>')
+[void]$rss.AppendLine("<title>The African Street Journal</title><link>$BaseUrl/</link><description>Daily news from all 55 African countries, every source cited.</description><language>en</language>")
+[void]$rss.AppendLine("<atom:link href=""$BaseUrl/feed.xml"" rel=""self"" type=""application/rss+xml""/>")
+$news = New-Object System.Text.StringBuilder
+[void]$news.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
+[void]$news.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">')
+$newsCut = (Get-Date).ToUniversalTime().AddDays(-2)
+foreach ($fi in ($sortedFeed | Select-Object -First 100)) {
+  $pd = $null
+  try { $pd = [datetime]::Parse([string]$fi.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { }
+  [void]$rss.Append("<item><title>$(XmlEsc $fi.title)</title><link>$(XmlEsc $fi.link)</link><guid isPermaLink=""true"">$(XmlEsc $fi.link)</guid><category>$(XmlEsc $fi.country)</category><description>$(XmlEsc $fi.dek)</description>")
+  if ($pd) { [void]$rss.Append("<pubDate>$($pd.ToString('r', [Globalization.CultureInfo]::InvariantCulture))</pubDate>") }
+  [void]$rss.AppendLine('</item>')
+  # Google News sitemaps list only articles from the last two days.
+  if ($pd -and $pd -ge $newsCut) {
+    [void]$news.AppendLine("  <url><loc>$(XmlEsc $fi.link)</loc><news:news><news:publication><news:name>The African Street Journal</news:name><news:language>en</news:language></news:publication><news:publication_date>$($pd.ToString('yyyy-MM-ddTHH:mm:ssZ'))</news:publication_date><news:title>$(XmlEsc $fi.title)</news:title></news:news></url>")
+  }
+}
+[void]$rss.AppendLine('</channel></rss>')
+[void]$news.AppendLine('</urlset>')
+[IO.File]::WriteAllText((Join-Path $root 'feed.xml'), $rss.ToString(), (New-Object Text.UTF8Encoding($false)))
+[IO.File]::WriteAllText((Join-Path $root 'news-sitemap.xml'), $news.ToString(), (New-Object Text.UTF8Encoding($false)))
+
 # --- sitemap ----------------------------------------------------------------
 $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
 $sm = New-Object System.Text.StringBuilder
@@ -405,7 +524,7 @@ foreach ($u in $urls) {
 [IO.File]::WriteAllText((Join-Path $root 'static-pages.css'), $css, (New-Object Text.UTF8Encoding($false)))
 
 # --- robots -----------------------------------------------------------------
-$robots = "User-agent: *`nAllow: /`n`nSitemap: $BaseUrl/sitemap.xml`n"
+$robots = "User-agent: *`nAllow: /`n`nSitemap: $BaseUrl/sitemap.xml`nSitemap: $BaseUrl/news-sitemap.xml`n"
 [IO.File]::WriteAllText((Join-Path $root 'robots.txt'), $robots, (New-Object Text.UTF8Encoding($false)))
 
 Write-Host "[static] built $built country pages, sitemap with $($urls.Count) URLs, robots.txt" -ForegroundColor Green

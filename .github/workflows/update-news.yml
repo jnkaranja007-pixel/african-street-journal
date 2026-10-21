@@ -202,7 +202,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # briefs-full.js is the deferred half of the edition - forgetting it here would
           # ship an index whose prose is a day old, which is worse than shipping neither.
-          git add data/briefs.js data/briefs-full.js data/briefs-state.json data/archive sitemap.xml robots.txt static-pages.css 404.html
+          git add data/briefs.js data/briefs-full.js data/briefs-state.json data/archive sitemap.xml news-sitemap.xml feed.xml robots.txt static-pages.css 404.html about privacy contact corrections
           # --all on the whole country directory, not just its index.html. Each country
           # now holds a directory per story as well, and the old line staged none of
           # them - the desk would have built 235 story pages a night and committed

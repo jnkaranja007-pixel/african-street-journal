@@ -1415,3 +1415,8 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
   background:rgba(201,164,74,.07);
   font:400 13px/1.55 var(--sans);color:var(--text-muted);
 }
+
+/* Trust-page links (About, Privacy, Contact, Corrections). Quiet, at the foot of the page. */
+.site-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin:22px auto 26px;padding:0 16px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase}
+.site-links a{color:#8a847b;text-decoration:none}
+.site-links a:hover,.site-links a:focus-visible{color:#66bb6a}

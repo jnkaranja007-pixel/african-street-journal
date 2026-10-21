@@ -24,3 +24,9 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 .morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8a847b;margin:0 0 12px}
 .morenav a{display:inline-block;margin:0 14px 7px 0;font:400 13px/1.5 'Playfair Display',Georgia,'Times New Roman',serif;color:#9a958e;text-decoration:none;border-bottom:1px solid transparent}
 .morenav a:hover{color:#66bb6a;border-bottom-color:#2f5c33}
+.sitelinks{margin-top:10px}
+.sitelinks a{color:#8a847b;text-decoration:none;margin-right:14px}
+.sitelinks a:hover{color:#66bb6a}
+.page p,.page li{color:#c9c5c0;font-size:16.5px;line-height:1.65}
+.page h2{margin-top:30px}
+.page ul{padding-left:20px}

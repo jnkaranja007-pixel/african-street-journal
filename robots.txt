@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://africanstreetjournal.com/sitemap.xml
+Sitemap: https://africanstreetjournal.com/news-sitemap.xml
