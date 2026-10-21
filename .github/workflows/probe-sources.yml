@@ -1,0 +1,14 @@
+name: Probe market sources
+on:
+  push:
+    branches: [stress-v1]
+    paths: ['.github/workflows/probe-sources.yml']
+  workflow_dispatch: {}
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for u in https://afx.kwayisi.org/nse/ https://afx.kwayisi.org/jse/ https://open.er-api.com/v6/latest/USD "https://api.worldbank.org/v2/country/KE/indicator/FP.CPI.TOTL.ZG?format=json&mrv=1" "https://query1.finance.yahoo.com/v8/finance/chart/SBK.JO?range=5d&interval=1d" "https://query1.finance.yahoo.com/v8/finance/chart/COMI.CA?range=5d&interval=1d" "https://stooq.com/q/l/?s=sbk.za&f=sd2t2ohlcv&h&e=csv" https://www.african-markets.com/en/stock-markets/nse "https://r.jina.ai/https://afx.kwayisi.org/nse/"; do
+            echo "$u -> $(curl -s -o /tmp/o -w '%{http_code} %{time_total}s' -A 'Mozilla/5.0' -m 25 "$u") $(head -c 150 /tmp/o | tr -d '\n')"
+          done
