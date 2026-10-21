@@ -1432,5 +1432,5 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
 .asj-info--right .asj-info-menu,.asj-info--m .asj-info-menu{left:auto;right:0}
 
 .asj-info--m{display:none}
-@media (max-width:760px){.asj-info--m .asj-info-menu{left:auto;right:0}.asj-info--m{display:inline-block;margin-left:10px;font:700 9px/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;align-self:center}}
+@media (max-width:760px){.asj-info--m .asj-info-menu{left:auto;right:0}.asj-info--m{display:inline-block;margin-left:10px;font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;align-self:center}}
 
