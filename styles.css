@@ -1646,3 +1646,80 @@ main{position:relative}
   .cv-news-row{background:transparent!important}
   .cv-news-row+.cv-news-row{border-top:1px solid var(--rule)!important}
 }
+
+/* ── signals-v1: Signals reads like the News column. Sections stack vertically (no side-scrolling
+   card carousel), no outer frames or nested boxes, thin dividers, readable labels. ── */
+#cv-panel-signals .cv-carousel-nav{display:none!important}
+#cv-panel-signals .cv-info-grid{flex-direction:column!important;overflow:visible!important;height:auto!important;gap:0!important;padding:0!important;scroll-snap-type:none!important;max-width:760px}
+#cv-panel-signals .cv-info-grid>*{flex:none!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;border:0!important;border-bottom:1px solid var(--rule)!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;padding:24px 0!important;overflow:visible!important;scroll-snap-align:none!important}
+#cv-panel-signals .cv-info-grid>*::before,#cv-panel-signals .cv-info-grid>*::after{display:none!important}
+#cv-panel-signals .cv-section-head{border:0!important;padding:0 0 12px!important;margin:0!important;display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#cv-panel-signals .cv-section-head h4{font:650 18px/1.3 var(--sans)!important;color:var(--text)!important;letter-spacing:0!important;text-transform:none!important;margin:0}
+#cv-panel-signals .cv-section-head .meta{font:400 14px/1.4 var(--sans)!important;color:var(--text-muted)!important;letter-spacing:0!important;text-transform:none!important}
+#cv-panel-signals .cv-ag-legend,#cv-panel-signals .cv-ag-legend *{font:500 14px/1.4 var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
+#cv-panel-signals .cv-ag-line{border-color:var(--rule)!important;padding:12px 0!important}
+#cv-panel-signals .cv-ag-line-key{min-width:96px}
+/* market hubs: a plain list */
+#cv-panel-signals .cv-markets{border:0!important;background:transparent!important}
+#cv-panel-signals .cv-mkt-row{background:transparent!important;border-color:var(--rule)!important;padding:12px 0!important;font:400 16px/1.4 var(--sans)!important}
+#cv-panel-signals .cv-mkt-row.head{font:500 13px/1.3 var(--sans)!important;color:var(--text-muted)!important;letter-spacing:0!important;text-transform:none!important;padding-top:0!important}
+#cv-panel-signals .cv-mkt-row *{font-family:var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
+#cv-panel-signals .cv-mkt-tier,#cv-panel-signals .cv-mkt-pop{font-size:14px!important}
+#cv-panel-signals .cv-mkt-name{font-size:16px!important}
+/* infrastructure: open figures, no boxes */
+#cv-panel-signals .cv-infra-cell{border:0!important;background:transparent!important;box-shadow:none!important;padding:8px 16px 8px 0!important}
+#cv-panel-signals .cv-infra-cell *{font-family:var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
+#cv-panel-signals .cv-infra-icon{font-size:13px!important}
+#cv-panel-signals .cv-infra-key{font-size:14px!important}
+#cv-panel-signals .cv-infra-sub{font-size:13px!important}
+/* season calendar: readable months and crop names */
+#cv-panel-signals .cv-cal-months,#cv-panel-signals .cv-cal-row{grid-template-columns:120px repeat(12,minmax(0,1fr))!important;gap:3px!important}
+#cv-panel-signals .cv-cal-months u{font:500 12px/1 var(--sans)!important;color:var(--text-muted)!important}
+#cv-panel-signals .cv-cal-row{padding:6px 0}
+#cv-panel-signals .cv-cal-row i,#cv-panel-signals .cv-cal-row i b{font:500 14px/1.3 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;color:var(--text)!important}
+#cv-panel-signals .cv-cal-row i small{font:400 12px/1.3 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;color:var(--text-muted)!important}
+#cv-panel-signals .cv-cal-cell{height:14px;border-radius:2px}
+#cv-panel-signals .cv-cal-legend,#cv-panel-signals .cv-cal-legend *{font:500 13px/1.4 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;color:var(--text-muted)!important}
+/* catch-all: nothing in Signals below 12px, no tracked caps */
+#cv-panel-signals .cv-info-grid [class]{letter-spacing:0!important}
+/* panel head: same quiet line as News, audience as pills */
+#cv-panel-signals .cv-panel-head{max-width:760px;background:transparent!important;box-shadow:none!important;border:0!important}
+#cv-panel-signals .cv-audience-tabs{border:0!important;background:transparent!important;gap:8px!important;padding:0!important}
+#cv-panel-signals .cv-audience-tab{border:1px solid rgba(232,230,227,.14)!important;border-radius:999px!important;background:transparent!important;padding:0 16px!important;min-height:40px!important;color:var(--text-muted)!important}
+#cv-panel-signals .cv-audience-tab[aria-pressed="true"],#cv-panel-signals .cv-audience-tab.active,#cv-panel-signals .cv-audience-tab[aria-selected="true"]{background:rgba(102,187,106,.14)!important;border-color:rgba(102,187,106,.55)!important;color:#e6f4e7!important}
+@media (min-width:721px){ #cv-panel-signals .cv-panel-head h3{display:none!important} }
+@media (max-width:720px){
+  #cv-panel-signals .cv-panel-head{position:static!important;padding:12px 0!important}
+  #cv-panel-signals .cv-audience-tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  #cv-panel-signals .cv-audience-tab{padding:0 6px!important;min-height:44px!important}
+  #cv-panel-signals .cv-cal-months,#cv-panel-signals .cv-cal-row{grid-template-columns:84px repeat(12,minmax(0,1fr))!important;gap:2px!important}
+  #cv-panel-signals .cv-cal-months u{font-size:11px!important}
+  #cv-panel-signals .cv-infra-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+#cv-panel-signals .cv-infra-icon{display:none!important}
+#cv-panel-signals #cv-audience-meta{display:none!important}
+#cv-panel-signals .cv-panel-head{justify-content:flex-start!important}
+#cv-panel-signals .cv-news-tools{justify-content:flex-start!important}
+#cv-panel-signals .cv-ag-line-key{font:500 14px/1.4 var(--sans)!important;color:var(--text-muted)!important}
+#cv-panel-signals .cv-ag-line-key::before,#cv-panel-signals .cv-ag-line-key::after{content:none!important}
+@media (min-width:721px){#cv-panel-signals .cv-panel-head>div:first-child{display:none!important}#cv-panel-signals .cv-panel-head{padding-left:0!important}}
+/* signals-v1: all audience modes (farmers, investors, diaspora) share one calm type system */
+#cv-panel-signals .cv-info-grid *:not(svg):not(svg *){font-family:var(--sans)!important;text-transform:none!important;letter-spacing:0!important;font-style:normal!important}
+#cv-panel-signals [class*="-key"]::before,#cv-panel-signals [class*="-key"]::after{content:none!important}
+#cv-panel-signals [class*="-key"],#cv-panel-signals [class*="-label"]{font-size:14px!important;font-weight:500!important;color:var(--text-muted)!important}
+#cv-panel-signals [class*="-sub"],#cv-panel-signals small,#cv-panel-signals [class*="-note"]{font-size:13px!important;line-height:1.45!important;color:var(--text-muted)!important}
+#cv-panel-signals [class*="-val"]:not(.cv-ag-line-val){font-weight:600!important}
+#cv-panel-signals .cv-econ-val{font-size:26px!important}
+#cv-panel-signals [class*="-cell"],#cv-panel-signals [class*="-card"],#cv-panel-signals [class*="sector"]:not([class*="sector-"]),#cv-panel-signals .cv-econ,#cv-panel-signals [class*="-chart"]{background:transparent!important;box-shadow:none!important}
+#cv-panel-signals [class*="-cell"]:not(.cv-cal-cell),#cv-panel-signals [class*="-card"]{border-color:var(--rule)!important}
+#cv-panel-signals .cv-econ-cell{padding:14px 16px 14px 0!important}
+#cv-panel-signals .cv-econ-cell+.cv-econ-cell{padding-left:16px!important}
+#cv-panel-signals p{font-size:15px!important;line-height:1.55!important;max-width:68ch}
+#cv-panel-signals input{font:600 17px/1 var(--sans)!important;min-height:44px}
+#cv-panel-signals .cv-dia-fact span,#cv-panel-signals .cv-dia-calc label,#cv-panel-signals .cv-dia-calc>span,#cv-panel-signals .cv-heat-tile span,#cv-panel-signals .cv-heat-tile b{font-size:13px!important}
+#cv-panel-signals .cv-dia-fact b,#cv-panel-signals .cv-dia-fact strong{font-size:20px!important}
+#cv-panel-signals .cv-sector,#cv-panel-signals .cv-signal-card,#cv-panel-signals .cv-heat-detail,#cv-panel-signals .cv-heat-grid{background:transparent!important;box-shadow:none!important;border:0!important;border-bottom:1px solid var(--rule)!important;border-radius:0!important}
+#cv-panel-signals .cv-sector{padding:12px 0!important}
+#cv-panel-signals .cv-sector-name{font-size:16px!important;color:var(--text)!important}
+#cv-panel-signals .cv-heat-tile{box-shadow:none!important}
+#cv-panel-signals .cv-sector::before{display:none!important}#cv-panel-signals .cv-sector{padding-left:0!important}#cv-panel-signals .cv-dia-note{font-size:14px!important;line-height:1.55!important;max-width:60ch}
