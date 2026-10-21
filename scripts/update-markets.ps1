@@ -25,8 +25,12 @@
 param(
   [string[]]$Only,
   [int]$PerCountry = 12,
-  [int]$TimeoutSec = 45,
-  [int]$Retries = 3,
+  [int]$TimeoutSec = 20,
+  [int]$Retries = 2,
+  # Every exchange comes from one host (afx.kwayisi.org). When it drops runner traffic,
+  # each exchange timed out for 2.5 min and the job was cancelled at 20 min every day
+  # (16-20 Oct 2026). After this many consecutive fetch failures, skip the rest.
+  [int]$MaxConsecutiveFailures = 2,
   # Beyond this a price block is not reference data either - companies list and delist.
   [int]$MaxBlockAgeDays = 120,
   [int]$DelayMs = 400
@@ -78,7 +82,7 @@ function Get-Page([string]$url) {
       } finally { $resp.Close() }
     } catch {
       $lastErr = $_
-      if ($attempt -lt $Retries) { Start-Sleep -Seconds (5 * $attempt) }
+      if ($attempt -lt $Retries) { Start-Sleep -Seconds (3 * $attempt) }
     }
   }
   throw $lastErr
@@ -115,6 +119,7 @@ $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
 $result = [ordered]@{}
 $okExchanges = 0
 $failed = New-Object System.Collections.Generic.List[string]
+$consecutiveFailures = 0
 
 foreach ($ex in $EXCHANGES) {
   $wanted = @($ex.countries)
@@ -124,13 +129,18 @@ foreach ($ex in $EXCHANGES) {
     if (-not $wanted.Count) { continue }
   }
   $url = "https://afx.kwayisi.org/$($ex.slug)/"
+  if ($consecutiveFailures -ge $MaxConsecutiveFailures) {
+    Write-Host ("  {0,-6} SKIPPED: source host unreachable ({1} consecutive failures)" -f $ex.slug, $consecutiveFailures) -ForegroundColor DarkYellow
+    $failed.Add($ex.slug); continue
+  }
   try {
     $html = Get-Page $url
     $rows = @(Get-Listings $html)
   } catch {
     Write-Host ("  {0,-6} FETCH FAILED: {1}" -f $ex.slug, $_.Exception.Message.Split("`n")[0]) -ForegroundColor Red
-    $failed.Add($ex.slug); Start-Sleep -Milliseconds $DelayMs; continue
+    $failed.Add($ex.slug); $consecutiveFailures++; Start-Sleep -Milliseconds $DelayMs; continue
   }
+  $consecutiveFailures = 0
   if (-not $rows.Count) {
     Write-Host ("  {0,-6} no rows parsed - layout may have changed" -f $ex.slug) -ForegroundColor DarkYellow
     $failed.Add($ex.slug); Start-Sleep -Milliseconds $DelayMs; continue
