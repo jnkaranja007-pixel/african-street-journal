@@ -51,7 +51,7 @@ jobs:
     timeout-minutes: 90
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Skip if today's edition already published
         id: guard
@@ -103,7 +103,7 @@ jobs:
 
       - name: Restore story cache
         if: steps.guard.outputs.stale == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data/story-cache.json
           key: ${{ runner.os }}-asj-story-v1-${{ hashFiles('scripts/write-briefs.ps1', 'scripts/news-ranking.ps1') }}
@@ -187,7 +187,7 @@ jobs:
 
       - name: Save desk efficiency metrics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: desk-run-metrics
           path: data/desk-run-metrics.json
