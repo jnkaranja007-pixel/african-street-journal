@@ -960,26 +960,31 @@ function paintOcean(ctx) {
 function drawIslandMarkers(elapsed) {
   const alpha = Math.max(0, Math.min(1, (elapsed - 2.4) / 0.8));
   if (alpha === 0) return;
+  // Sizes are set in screen pixels, then converted to map units, so markers read the
+  // same on a 360px phone and a 1440px desktop.
+  const u = 1000 / (canvas.getBoundingClientRect().width || 1000);
+  const ring = 6 * u, dot = 1.7 * u, gap = ring + 5 * u;
   ctx.save();
   ctx.translate(0.41, 2);
   ctx.globalAlpha = alpha;
-  ctx.font = '700 11px ui-monospace, SFMono-Regular, Consolas, monospace';
+  ctx.font = '600 ' + (8.5 * u).toFixed(1) + 'px ui-monospace, SFMono-Regular, Consolas, monospace';
   ctx.textBaseline = 'middle';
   for (const t of islandHitTargets) {
     const hovered = hoveredIdx === t.idx;
     ctx.beginPath();
-    ctx.arc(t.cx, t.cy, 9, 0, Math.PI * 2);
-    ctx.strokeStyle = hovered ? 'rgba(102,187,106,0.95)' : 'rgba(67,148,71,0.55)';
-    ctx.lineWidth = hovered ? 1.6 : 1;
+    ctx.arc(t.cx, t.cy, ring, 0, Math.PI * 2);
+    if (hovered) { ctx.fillStyle = 'rgba(88,178,92,0.18)'; ctx.fill(); }
+    ctx.strokeStyle = hovered ? 'rgba(170,225,172,0.95)' : 'rgba(102,170,106,0.5)';
+    ctx.lineWidth = (hovered ? 1.3 : 1) * u;
     ctx.stroke();
     ctx.beginPath();
-    ctx.arc(t.cx, t.cy, 2.2, 0, Math.PI * 2);
-    ctx.fillStyle = hovered ? '#8fd694' : FRONT_GREEN;
+    ctx.arc(t.cx, t.cy, dot, 0, Math.PI * 2);
+    ctx.fillStyle = hovered ? '#bfe8c1' : '#5cae60';
     ctx.fill();
     const vert = t.side === 'above' || t.side === 'below';
     ctx.textAlign = vert ? 'center' : (t.side === 'left' ? 'right' : 'left');
-    ctx.fillStyle = hovered ? 'rgba(220,240,222,0.95)' : 'rgba(160,190,165,0.7)';
-    ctx.fillText(ISLAND_MARKERS[t.id].tag, t.cx + (vert ? 0 : (t.side === 'left' ? -14 : 14)), t.cy + (t.side === 'below' ? 20 : t.side === 'above' ? -20 : 0));
+    ctx.fillStyle = hovered ? 'rgba(232,246,233,0.98)' : 'rgba(170,196,174,0.78)';
+    ctx.fillText(ISLAND_MARKERS[t.id].tag, t.cx + (vert ? 0 : (t.side === 'left' ? -gap : gap)), t.cy + (t.side === 'below' ? gap : t.side === 'above' ? -gap : 0));
   }
   ctx.restore();
 }
@@ -1018,59 +1023,117 @@ let hoveredIdx = -1;
 let assemblyDone = false;
 let lastFocus = null;
 
+/* Rendering. The settled map (ocean, shade, countries, lakes, light) is painted once into
+   an offscreen layer; hover, focus and ticker pulses then cost one drawImage plus a
+   single country, instead of re-filling 55 shapes under a blurred shadow per event. */
+let baseLayer = null, shadeLayer = null;
+function offscreen() {
+  const c = document.createElement('canvas');
+  c.width = 1000 * dpr; c.height = 1001 * dpr;
+  const x = c.getContext('2d'); x.scale(dpr, dpr); x.lineJoin = 'round';
+  return [c, x];
+}
+const HAIR = 1 / dpr;
+function strokeBorders(x, shape) {
+  x.lineWidth = Math.max(0.55, 1.6 * HAIR); x.strokeStyle = 'rgba(9,26,11,0.82)'; x.stroke(shape);
+}
+function paintShade() {
+  // Soft contact shadow under the whole landmass: depth, not decoration.
+  const [c, x] = offscreen();
+  x.translate(0.41, 2);
+  x.shadowColor = 'rgba(0,0,0,0.55)'; x.shadowBlur = 26; x.shadowOffsetY = 7;
+  x.fillStyle = '#10301a';
+  for (const p of paths) x.fill(p.shape);
+  return c;
+}
+function paintLight(x) {
+  // A whisper of north-west light across the land, clipped to the coastline.
+  x.save(); x.translate(0.41, 2);
+  const g = x.createLinearGradient(150, 60, 820, 940);
+  g.addColorStop(0, 'rgba(255,255,255,0.07)');
+  g.addColorStop(0.55, 'rgba(255,255,255,0)');
+  g.addColorStop(1, 'rgba(0,0,0,0.10)');
+  x.fillStyle = g;
+  for (const p of paths) x.fill(p.shape);
+  x.restore();
+}
+function paintLakes(x, alpha) {
+  if (!LAKES || alpha <= 0) return;
+  x.save(); x.translate(0.41, 2); x.globalAlpha = alpha;
+  x.fillStyle = '#121815'; x.fill(LAKES);
+  x.lineWidth = Math.max(0.5, 1.4 * HAIR); x.strokeStyle = 'rgba(9,26,11,0.9)'; x.stroke(LAKES);
+  x.restore();
+}
+function buildBase() {
+  const [c, x] = offscreen();
+  if (!oceanLayer) drawOcean(1.2);
+  x.drawImage(oceanLayer, 0, 0, 1000, 1001);
+  if (!shadeLayer) shadeLayer = paintShade();
+  x.drawImage(shadeLayer, 0, 0, 1000, 1001);
+  x.save(); x.translate(0.41, 2);
+  x.fillStyle = FRONT_GREEN;
+  for (const p of paths) x.fill(p.shape);
+  x.restore();
+  paintLight(x);
+  x.save(); x.translate(0.41, 2);
+  for (const p of paths) strokeBorders(x, p.shape);
+  x.restore();
+  paintLakes(x, 1);
+  baseLayer = c;
+}
+function drawCountryOverlay(c, fill, lift) {
+  ctx.save(); ctx.translate(0.41, 2);
+  if (lift) { ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 2; }
+  ctx.fillStyle = fill; ctx.fill(c.shape);
+  ctx.shadowColor = 'transparent';
+  if (LAKES) { ctx.save(); ctx.clip(c.shape); ctx.fillStyle = '#121815'; ctx.fill(LAKES); ctx.restore(); }
+  ctx.restore();
+}
 function render(elapsed) {
   ctx.clearRect(0, 0, 1000, 1001);
+  const pulse = pulseAmount();
+  if (assemblyDone && elapsed >= 3.5) {
+    if (!baseLayer) buildBase();
+    ctx.drawImage(baseLayer, 0, 0, 1000, 1001);
+    if (pulseIdx >= 0 && pulse > 0 && pulseIdx !== hoveredIdx) {
+      ctx.save(); ctx.globalAlpha = pulse;
+      drawCountryOverlay(paths[pulseIdx], '#66b56a', false);
+      ctx.restore();
+      ctx.save(); ctx.translate(0.41, 2); strokeBorders(ctx, paths[pulseIdx].shape); ctx.restore();
+    }
+    if (hoveredIdx >= 0) {
+      const c = paths[hoveredIdx];
+      drawCountryOverlay(c, '#58b25c', true);
+      ctx.save(); ctx.translate(0.41, 2);
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = Math.max(1, 2.2 * HAIR); ctx.strokeStyle = 'rgba(226,244,227,0.95)'; ctx.stroke(c.shape);
+      ctx.restore();
+    }
+    drawIslandMarkers(elapsed);
+    return;
+  }
+  // Draw-in: countries ease into place; the shade and lakes fade in as they land.
   drawOcean(elapsed);
   ctx.lineJoin = 'round';
-  const pulse = pulseAmount();
-  const hair = 1 / dpr;           // one device pixel: crisp borders at any density
-  const settled = Math.max(0, Math.min(1, (elapsed - 2.6) / 0.9));
-
-  // Soft drop shade under the landmass once it has settled: depth without a gimmick.
+  const settled = Math.max(0, Math.min(1, (elapsed - 2.5) / 1.0));
   if (settled > 0) {
-    ctx.save();
-    ctx.translate(0.41, 2);
-    ctx.shadowColor = 'rgba(0,0,0,' + (0.55 * settled).toFixed(3) + ')';
-    ctx.shadowBlur = 28; ctx.shadowOffsetY = 8;
-    ctx.fillStyle = '#163a18';
-    for (let i = 0; i < paths.length; i++) ctx.fill(paths[i].shape);
-    ctx.restore();
+    if (!shadeLayer) shadeLayer = paintShade();
+    ctx.save(); ctx.globalAlpha = settled; ctx.drawImage(shadeLayer, 0, 0, 1000, 1001); ctx.restore();
   }
-
   for (let i = 0; i < paths.length; i++) {
     const c = paths[i];
     const t = c.dur === 0 ? 1 : Math.max(0, Math.min(1, (elapsed - c.delay) / c.dur));
     if (t === 0) continue;
     const eased = easeOut(t);
-    const isHover = i === hoveredIdx && assemblyDone;
-    if (isHover) continue;          // drawn last, on top
     ctx.save();
     ctx.translate(0.41 + c.sx * (1 - eased), 2 + c.sy * (1 - eased));
     ctx.globalAlpha = Math.min(1, t / 0.18);
-    const pulsing = i === pulseIdx && pulse > 0;
-    ctx.fillStyle = pulsing ? 'rgb(' + Math.round(67 + 35 * pulse) + ',' + Math.round(148 + 39 * pulse) + ',' + Math.round(71 + 35 * pulse) + ')' : FRONT_GREEN;
+    ctx.fillStyle = FRONT_GREEN;
     ctx.fill(c.shape);
-    ctx.lineWidth = 2.4 * hair + 0.35; ctx.strokeStyle = 'rgba(12,32,14,0.85)';
-    ctx.stroke(c.shape);
+    strokeBorders(ctx, c.shape);
     ctx.restore();
   }
-  if (LAKES) {
-    ctx.save(); ctx.translate(0.41, 2);
-    ctx.globalAlpha = Math.min(1, Math.max(0, (elapsed - 1.2) / 1.2));
-    ctx.fillStyle = '#141a17'; ctx.fill(LAKES);
-    ctx.lineWidth = 2 * hair; ctx.strokeStyle = 'rgba(12,32,14,0.9)'; ctx.stroke(LAKES);
-    ctx.restore();
-  }
-  if (hoveredIdx >= 0 && assemblyDone) {
-    const c = paths[hoveredIdx];
-    ctx.save(); ctx.translate(0.41, 2);
-    ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 3;
-    ctx.fillStyle = '#5cb860'; ctx.fill(c.shape);
-    ctx.shadowColor = 'transparent';
-    if (LAKES) { ctx.save(); ctx.clip(c.shape); ctx.fillStyle = '#141a17'; ctx.fill(LAKES); ctx.restore(); }
-    ctx.lineWidth = 1.4; ctx.strokeStyle = '#d7efd8'; ctx.stroke(c.shape);
-    ctx.restore();
-  }
+  paintLakes(ctx, Math.min(1, Math.max(0, (elapsed - 1.6) / 1.4)));
   drawIslandMarkers(elapsed);
 }
 
