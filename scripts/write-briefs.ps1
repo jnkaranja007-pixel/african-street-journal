@@ -119,7 +119,7 @@ if ($Provider -eq 'gemini') {
   # Free tier is 15 requests a minute; one call every 4.5s stays under it.
   if ($DelayMs -lt 4500) { $DelayMs = 4500 }
 }
-$DEFAULT_MODEL = if ($Provider -eq 'gemini') { 'gemini-2.5-flash-lite' } else { 'google/gemini-2.5-flash-lite' }
+$DEFAULT_MODEL = if ($Provider -eq 'gemini') { 'gemini-3.5-flash-lite' } else { 'google/gemini-2.5-flash-lite' }
 $DEFAULT_FALLBACKS = if ($Provider -eq 'gemini') { @() } else { @('google/gemini-3.1-flash-lite','deepseek/deepseek-v3.2') }
 if (-not $Model) { $Model = if ($env:ASJ_MODEL) { $env:ASJ_MODEL.Trim() } else { $DEFAULT_MODEL } }
 if (-not $FallbackModels) {
@@ -565,7 +565,7 @@ if ($Provider -eq 'openrouter' -and $env:OPENROUTER_API_KEY) {
   foreach ($fm in $FallbackModels) { $script:routes.Add(@{ provider='openrouter'; model=$fm; url='https://openrouter.ai/api/v1/chat/completions'; key=$env:OPENROUTER_API_KEY; dead=$false }) }
 }
 if ($env:GEMINI_API_KEY) {
-  $gm = if ($Provider -eq 'gemini') { $Model } else { 'gemini-2.5-flash-lite' }
+  $gm = if ($Provider -eq 'gemini') { $Model } elseif ($env:ASJ_GEMINI_MODEL) { $env:ASJ_GEMINI_MODEL } else { 'gemini-3.5-flash-lite' }
   $script:routes.Add(@{ provider='gemini'; model=($gm -replace '^google/',''); url='https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'; key=$env:GEMINI_API_KEY; dead=$false })
 }
 $script:routeCalls = @{}
