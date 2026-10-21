@@ -1425,11 +1425,11 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
 .asj-info[open]>summary::after{transform:translateY(1px) rotate(225deg)}
 .asj-info>summary:hover,.asj-info>summary:focus-visible,.asj-info[open]>summary{color:#66bb6a;outline:none}
 .asj-info>summary:focus-visible{outline:2px solid #66bb6a;outline-offset:3px}
-.asj-info-menu{position:absolute;top:calc(100% + 8px);left:0;z-index:2000;min-width:180px;display:flex;flex-direction:column;background:#161616;border:1px solid #2c2c2c;border-radius:4px;box-shadow:0 12px 32px rgba(0,0,0,.55);padding:6px 0;text-align:left}
+.asj-info-menu{position:absolute;top:calc(100% + 8px);left:0;z-index:2000;min-width:180px;max-width:calc(100vw - 24px);display:flex;flex-direction:column;background:#161616;border:1px solid #2c2c2c;border-radius:4px;box-shadow:0 12px 32px rgba(0,0,0,.55);padding:6px 0;text-align:left}
 .asj-info-menu a,.asj-info-menu a:visited{display:block;padding:10px 16px;color:#cfcbc6;text-decoration:none;border:0;font:700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
 .asj-info-menu a:hover,.asj-info-menu a:focus-visible{background:#1f241f;color:#66bb6a;outline:none}
 .asj-info--right{margin-left:auto;padding-left:10px}
-.asj-info--right .asj-info-menu,.asj-info--m .asj-info-menu{left:auto;right:0}
+.asj-info--right .asj-info-menu{left:auto;right:0}
 
 .asj-info--m{display:none}
 @media (max-width:760px){.asj-info--m .asj-info-menu{left:auto;right:0}.asj-info--m{display:inline-block;margin-left:10px;font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;align-self:center}}
@@ -1479,3 +1479,8 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
   .pop-counter{margin-top:8px}
   .landing-stage-row{padding:6px 0}
 }
+
+/* Never let an overlay widen the page (iOS Safari shifts the whole layout sideways). */
+html,body{overflow-x:hidden}
+@supports (overflow:clip){html,body{overflow-x:clip}}
+.asj-info--m .asj-info-menu{left:0!important;right:auto!important}
