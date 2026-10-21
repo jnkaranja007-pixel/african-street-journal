@@ -71,7 +71,7 @@ $script:NEWS_PUBLIC = @('election','budget','tax','debt','inflation','interest r
 $script:NEWS_ECONOMIC = @('investment','trade','export','import','mine','mining','oil','gas','agriculture','harvest','infrastructure',
                           'rail','port','telecom','bank','business','market','factory','industry')
 $script:NEWS_JUNK = @('celebrity','wedding','romance','dating','gossip','horoscope','recipe','red carpet','lingerie','net worth',
-                      'betting','odds','jackpot','lottery','showbiz','soap opera','reality tv','pageant','road trip experience',
+                      'betting','odds','jackpot','lottery','loto','lotto','draws numbers','showbiz','soap opera','reality tv','pageant','road trip experience',
                       'car review','test drive')
 # Lurid or tabloid subjects. Added 20 Oct 2026 after 'Businessman dies after penis
 # enlargement procedure' ran as Nigeria Business. Kept narrow on purpose: words that

@@ -5037,12 +5037,9 @@ async function syncDeskSignup(email, audience) {
 }
 function deskSignupHtml(list) {
   if (list.length < 2) return '';
-  if (!deskSignupConfig()) {
-    return '<div class="yd-signup yd-signup-offline">' +
-      '<div class="yd-signup-copy"><b>Desk saved here</b><span>Your followed countries stay on this device.</span></div>' +
-      '<p class="yd-signup-status">Cloud signup is not connected yet.</p>' +
-    '</div>';
-  }
+  // No newsletter backend is configured, so show nothing rather than a form or a
+  // 'not connected yet' notice. Wiring a provider in data/newsletter-config.js brings it back.
+  if (!deskSignupConfig()) return '';
   const signup = getDeskSignup();
   const savedEmail = String(signup.email || '');
   const savedAudience = String(signup.audience || preferredDeskAudience());
