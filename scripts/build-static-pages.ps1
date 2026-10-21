@@ -144,7 +144,7 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 .asj-info-menu a{font-size:15px!important;font-weight:500!important}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=60" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=61" defer></script>'
 $infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/privacy/">Privacy</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/feed.xml">RSS</a></div></details>'
 
 
@@ -280,7 +280,7 @@ $analytics
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="$BaseUrl/og-image.png">
 <script type="application/ld+json">$($ld.ToString())</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=60">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=61">
 </head>
 <body>
 <div class="wrap">
@@ -405,7 +405,7 @@ $analytics
 <meta name="twitter:description" content="$(Esc $dek)">
 <meta name="twitter:image" content="$BaseUrl/og/$($sp.code).jpg">
 <script type="application/ld+json">$($ld.ToString())</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=60">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=61">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
@@ -533,7 +533,7 @@ foreach ($slug in $trustPages.Keys) {
 <meta name="theme-color" content="#131313">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=60">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=61">
 </head>
 <body>
 <div class="wrap page">
