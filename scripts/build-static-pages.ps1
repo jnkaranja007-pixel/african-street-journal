@@ -410,8 +410,8 @@ $trustPages = [ordered]@{
 <p>Every morning an automated desk reads public news feeds from outlets across Africa, groups reports of the same event, and ranks them for public importance: elections, budgets, courts, health, food, power, jobs, trade and security come first. Gossip, sponsored copy, opinion columns and tabloid items are filtered out.</p>
 <p>Each selected report is rewritten into a short original summary by an AI language model, working only from the facts in that report. Software then checks every story: figures must appear in the source, the story must name and link the outlet it came from, and anything that fails is dropped rather than published.</p>
 <p>Stories are summaries, not original reporting from the ground. The outlet that broke the story is always credited and linked; please read and support them.</p>
-<h2>Who runs it</h2>
-<p>The site is run by James Karanja. Questions, tips and complaints are welcome on the <a href="$BaseUrl/contact/">contact page</a>.</p>
+<h2>Get in touch</h2>
+<p>The African Street Journal is an independent desk. Questions, tips and complaints are welcome on the <a href="$BaseUrl/contact/">contact page</a>.</p>
 "@ }
   privacy = @{ title = 'Privacy'; desc = 'What The African Street Journal collects about readers (very little) and why.'; body = @"
 <p>This site does not use cookies, does not ask you to sign in, and does not run advertising trackers.</p>
