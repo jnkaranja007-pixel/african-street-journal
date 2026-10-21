@@ -429,6 +429,7 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
   }
   # OpenRouter's own model fallback: if the primary has no live endpoint, it tries the
   # next model in the list within the same request.
+  if ($Provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
   if ($FallbackModels.Count) { $body['models'] = @(@($Model) + $FallbackModels) }
   if ($JsonMode) {
     $lensEntrySchema = [ordered]@{
