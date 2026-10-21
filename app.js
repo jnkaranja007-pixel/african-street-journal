@@ -2669,7 +2669,7 @@ function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) 
 // The data prose lives in Signals; the Country File renders only if no briefs exist anywhere.
 function regionalWireFor(countryId) {
   const info = COUNTRY_INFO[countryId] || {};
-  const pool = Object.entries(AI_BRIEFS).filter(([id, list]) => id !== countryId && Array.isArray(list) && list.some(b => b && b.headline && b.body));
+  const pool = Object.entries(AI_BRIEFS).filter(([id, list]) => id !== countryId && Array.isArray(list) && list.some(b => b && b.headline && (b.body || b.dek)));
   if (!pool.length) return null;
   const same = pool.filter(([id]) => (COUNTRY_INFO[id] || {}).region === info.region);
   const chosen = same.length ? same : pool;
@@ -2718,7 +2718,7 @@ function renderBriefDesk(countryId) {
   cards.classList.remove('queue-collapsed', 'card-open');
   cards.classList.add('news-brief');
   updateStoryLensControls();
-  const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline && b.body);
+  const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline && (b.body || b.dek));
   const rankedBriefs = rankStoryEntries(briefs, activeStoryLens);
   const sourceCount = uniqueSourceCount(briefs);
   if (meta && briefs.length) {
@@ -6210,3 +6210,15 @@ async function runSelfTest() {
     }, { once: true });
   }
 }());
+
+// seam-v1: a deep link (#/ke) can render the News panel before the prose half of the
+// edition arrives. Repaint the open country's stories once it lands so expanded rows
+// carry the full first paragraph rather than the dek.
+window.addEventListener('asj:full-loaded', () => {
+  try {
+    if (countryView.classList.contains('open') && activeCountryMap?.countryId) {
+      const open = document.querySelector('#cv-cards .cv-news-summary[aria-expanded="true"]');
+      if (!open) renderBriefDesk(activeCountryMap.countryId);
+    }
+  } catch {}
+});
