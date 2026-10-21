@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-21T05:26:12+00:00",
+  "generated": "2026-10-21T05:52:36+00:00",
   "dates": {
     "dz": "2026-10-21T05:11:50+00:00",
     "ao": "2026-10-21T05:11:50+00:00",
@@ -15,11 +15,11 @@
     "eg": "2026-10-21T05:11:50+00:00",
     "gq": "2026-10-21T05:11:50+00:00",
     "er": "2026-10-21T05:11:50+00:00",
-    "ke": "2026-10-21T05:26:12+00:00",
+    "ke": "2026-10-21T05:52:36+00:00",
     "za": "2026-10-21T05:11:50+00:00",
     "ng": "2026-10-21T05:26:12+00:00",
     "et": "2026-09-06T06:56:45+00:00",
-    "gh": "2026-10-21T05:26:12+00:00",
+    "gh": "2026-10-21T05:52:36+00:00",
     "cd": "2026-10-21T05:11:50+00:00",
     "tz": "2026-10-21T05:11:50+00:00",
     "ma": "2026-10-21T05:11:50+00:00",
@@ -3770,28 +3770,99 @@
     ],
     "ke": [
       {
-        "articleId": "96e2115482b6158022c4",
-        "headline": "Ruto Expands Internship Program by 50,000 Places",
-        "dek": "President William Ruto announced an expansion of the National Internship Programme by 50,000 places starting January 2027, offering monthly stipends to graduates.",
+        "articleId": "f0d2a0d61c4c5fb0983c",
+        "headline": "Kenya confirms ninth Ebola case as United States raises travel advisory",
+        "dek": "Health officials report the newest patient is a close relative of the first victim, while contact tracing reaches 134 of 135 identified individuals.",
         "paragraphs": [
-          "President William Ruto has announced plans to significantly expand the National Internship Programme, adding 50,000 new places starting January 2027. Successful participants will receive monthly stipends. The initiative aims to provide young people completing their studies at universities, technical colleges, and other institutions with practical work experience.",
-          "The President stated that placements will be managed through a transparent, digital, and merit-based system. Additionally, incentives will be offered to private employers to provide meaningful work experience. This program is designed to address the challenge graduates face in securing employment without prior experience, which is often a prerequisite for entry-level jobs.",
-          "This internship expansion is one of four measures announced by the President, alongside proposed changes to income tax, stamp duty on land transactions, and import duty on mobile phones. The government is expected to finalize the necessary administrative and financing arrangements for the program's rollout."
+          "Kenya confirmed a ninth case of Ebola on October 19 after a 24-year-old man tested positive while in quarantine. Director General for Health Dr Patrick Amoth stated that the patient is a close relative of the first victim and has started treatment. Eight hospitalized patients are responding well and showing significant improvement under observation.",
+          "The Ministry of Health distributed medical supplies to twenty-eight high-risk counties and established a dedicated testing laboratory at Kenyatta National Hospital. Contact tracing has covered 134 of 135 identified people, placing them in quarantine without any transmission recorded inside the facilities.",
+          "The United States State Department raised its travel advisory for Kenya to Level three in response to the outbreak. Officials noted that Kenya has not imposed any restrictions on public gatherings, travel or trade, and contacts who remain well will begin returning home from October 25 after completing their twenty-one-day monitoring period."
         ],
-        "body": "President William Ruto has announced plans to significantly expand the National Internship Programme, adding 50,000 new places starting January 2027. Successful participants will receive monthly stipends. The initiative aims to provide young people completing their studies at universities, technical colleges, and other institutions with practical work experience.\n\nThe President stated that placements will be managed through a transparent, digital, and merit-based system. Additionally, incentives will be offered to private employers to provide meaningful work experience. This program is designed to address the challenge graduates face in securing employment without prior experience, which is often a prerequisite for entry-level jobs.\n\nThis internship expansion is one of four measures announced by the President, alongside proposed changes to income tax, stamp duty on land transactions, and import duty on mobile phones. The government is expected to finalize the necessary administrative and financing arrangements for the program's rollout.",
-        "why": "Young people completing their studies will gain work experience and receive stipends, addressing the difficulty of finding jobs without prior experience.",
+        "body": "Kenya confirmed a ninth case of Ebola on October 19 after a 24-year-old man tested positive while in quarantine. Director General for Health Dr Patrick Amoth stated that the patient is a close relative of the first victim and has started treatment. Eight hospitalized patients are responding well and showing significant improvement under observation.\n\nThe Ministry of Health distributed medical supplies to twenty-eight high-risk counties and established a dedicated testing laboratory at Kenyatta National Hospital. Contact tracing has covered 134 of 135 identified people, placing them in quarantine without any transmission recorded inside the facilities.\n\nThe United States State Department raised its travel advisory for Kenya to Level three in response to the outbreak. Officials noted that Kenya has not imposed any restrictions on public gatherings, travel or trade, and contacts who remain well will begin returning home from October 25 after completing their twenty-one-day monitoring period.",
+        "why": "Health officials and citizens in Kenya are directly affected by the Ebola outbreak, quarantine measures, and newly implemented medical testing protocols.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 20,
+            "score": 10,
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
-            "score": 70,
-            "why": "The initiative includes incentives for private employers to offer work experience, potentially impacting labor costs and talent acquisition."
+            "score": 85,
+            "why": "The United States raised its travel advisory for Kenya to Level three, directly impacting travel, trade, and economic considerations for investors."
           },
           "diaspora": {
-            "score": 45,
+            "score": 75,
+            "why": "Family safety and travel plans are directly affected by the Level three United States travel advisory and local Ebola quarantine measures."
+          }
+        },
+        "topic": "Health",
+        "published": "2026-10-20T15:28:53Z",
+        "sourceTitle": "Kenya confirms 9th Ebola case as US issues travel advisory",
+        "editorialScore": 23.05,
+        "selectionScore": 23.05,
+        "confidence": "high",
+        "corroboration": 3,
+        "scoreBreakdown": {
+          "relevance": 4.0,
+          "corroboration": 6.0,
+          "sourceQuality": 1.75,
+          "freshness": 3.5,
+          "publicImpact": 5.3,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in headline",
+          "3-source corroboration",
+          "published within 18h",
+          "urgent public consequence",
+          "specific figure"
+        ],
+        "countryMatch": "title",
+        "wordCount": 147,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "published": "2026-10-20T15:28:53Z",
+            "name": "Capital FM",
+            "url": "https://capitalfm.africa/kenya-confirms-9th-ebola-case-as-us-issues-travel-advisory/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"
+          },
+          {
+            "published": "2026-10-20T14:45:23Z",
+            "name": "Africanews",
+            "url": "http://www.africanews.com/2026/10/20/us-raises-kenya-travel-advisory-over-ebola-and-security-concerns/"
+          },
+          {
+            "published": "2026-10-20T16:24:21Z",
+            "name": "Anadolu Africa",
+            "url": "https://www.aa.com.tr/en/health/kenya-confirms-9th-ebola-case-says-all-infections-linked-to-one-cluster/4094932"
+          }
+        ]
+      },
+      {
+        "articleId": "96e2115482b6158022c4",
+        "headline": "Ruto Expands National Internship Programme By 50,000 Places Starting January 2027",
+        "dek": "President William Ruto announced a massive expansion of the national internship initiative during recent celebrations in Eldoret.",
+        "paragraphs": [
+          "President William Ruto announced plans to scale up the National Internship Programme by adding 50,000 places starting in January 2027. Speaking during Mashujaa Day celebrations in Eldoret, the President stated that the expanded initiative will provide monthly stipends to successful applicants finishing their studies at universities, technical and vocational education and training institutions, and other colleges.",
+          "Placements under the upcoming expansion will use a transparent, digital, and merit-based system, supported by incentives for private employers to offer meaningful work experience. The plan addresses the challenge faced by graduates who struggle to find jobs without prior experience.",
+          "This internship expansion is part of four measures proposed by the government, which also include changes to income tax, stamp duty on land transactions, and import duty on mobile phones. Administrative and financing arrangements are expected to proceed ahead of the rollout."
+        ],
+        "body": "President William Ruto announced plans to scale up the National Internship Programme by adding 50,000 places starting in January 2027. Speaking during Mashujaa Day celebrations in Eldoret, the President stated that the expanded initiative will provide monthly stipends to successful applicants finishing their studies at universities, technical and vocational education and training institutions, and other colleges.\n\nPlacements under the upcoming expansion will use a transparent, digital, and merit-based system, supported by incentives for private employers to offer meaningful work experience. The plan addresses the challenge faced by graduates who struggle to find jobs without prior experience.\n\nThis internship expansion is part of four measures proposed by the government, which also include changes to income tax, stamp duty on land transactions, and import duty on mobile phones. Administrative and financing arrangements are expected to proceed ahead of the rollout.",
+        "why": "Young people finishing their studies at universities and colleges are affected by gaining access to the expanded internship programme and monthly stipends.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 65,
+            "why": "Investors and private employers are affected by proposed incentives to provide meaningful work experience alongside broader tax changes."
+          },
+          "diaspora": {
+            "score": 30,
             "why": "This education report may interest diaspora readers following institutions and opportunities from abroad."
           }
         },
@@ -3820,45 +3891,45 @@
           "specific figure"
         ],
         "countryMatch": "lede",
-        "wordCount": 145,
+        "wordCount": 139,
         "readMinutes": 1,
         "sources": [
           {
-            "url": "https://capitalfm.africa/ruto-to-expand-internship-programme-by-50000-places-from-january-2027/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news",
             "published": "2026-10-20T13:00:00Z",
-            "name": "Capital FM"
+            "name": "Capital FM",
+            "url": "https://capitalfm.africa/ruto-to-expand-internship-programme-by-50000-places-from-january-2027/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"
           },
           {
-            "url": "https://www.businessdailyafrica.com/bd/corporate/companies/mystery-investors-transfer-kpc-shares-worth-sh42bn-5638330",
             "published": "2026-10-19T18:30:00Z",
-            "name": "Business Daily Africa"
+            "name": "Business Daily Africa",
+            "url": "https://www.businessdailyafrica.com/bd/corporate/companies/mystery-investors-transfer-kpc-shares-worth-sh42bn-5638330"
           },
           {
-            "url": "https://www.kenyans.co.ke/news/128725-kipchoge-keino-stadium-get-canopy-ahead-2027-afcon-ruto-says",
             "published": "2026-10-20T12:29:32Z",
-            "name": "Kenyans.co.ke"
+            "name": "Kenyans.co.ke",
+            "url": "https://www.kenyans.co.ke/news/128725-kipchoge-keino-stadium-get-canopy-ahead-2027-afcon-ruto-says"
           }
         ]
       },
       {
         "articleId": "4e36d210c7fa6b0aa681",
-        "headline": "Kenyan court convicts cult leader of 191 starvation deaths",
-        "dek": "Pastor Paul Mackenzie and 28 others were found guilty of murder for inciting followers to starve themselves to death.",
+        "headline": "Kenyan court convicts cult leader Paul Mackenzie of one hundred ninety-one murders",
+        "dek": "A Mombasa judge found a self-proclaimed preacher and twenty-eight associates guilty of murdering children and adults in a starvation cult.",
         "paragraphs": [
-          "A Kenyan court on Monday found cult leader Paul Mackenzie and 28 associates guilty of murdering 191 people, primarily children, in the Shakahola Forest Massacre. The judge stated the prosecution proved the case for the deaths of 190 children and one adult, rejecting claims that the victims voluntarily fasted. Hundreds of bodies have been exhumed from the cult's base near Malindi since 2023, with the total number of victims exceeding 400 over three years.",
-          "Mackenzie, who allegedly told his followers to starve to meet Jesus, remained impassive in the Mombasa courtroom as the verdict was delivered. He faces separate charges of manslaughter and terrorism. Relatives of those who died, many from rural coastal communities, were present in court to hear the judgment.",
-          "The Shakahola Forest Massacre has revealed a grim pattern of deaths, with bodies of men, women, and children unearthed over the past three years. The court's decision marks a significant step in holding those responsible accountable for the widespread loss of life attributed to the cult's extreme practices."
+          "A Kenyan court found a self-proclaimed preacher and twenty-eight co-defendants guilty of murdering 191 people in the Shakahola Forest starvation cult case. Hundreds of bodies have been discovered since 2023 at the cult base inland from Malindi.",
+          "Paul Mackenzie and his associates were convicted after the judge stated the prosecution proved the case for the murder of 190 children and one adult. The accused stood impassive in the Mombasa courtroom while relatives of the victims looked on.",
+          "The High Court rejected claims that the victims voluntarily fasted to death to meet Jesus. Mackenzie continues to face separate charges of manslaughter and terrorism."
         ],
-        "body": "A Kenyan court on Monday found cult leader Paul Mackenzie and 28 associates guilty of murdering 191 people, primarily children, in the Shakahola Forest Massacre. The judge stated the prosecution proved the case for the deaths of 190 children and one adult, rejecting claims that the victims voluntarily fasted. Hundreds of bodies have been exhumed from the cult's base near Malindi since 2023, with the total number of victims exceeding 400 over three years.\n\nMackenzie, who allegedly told his followers to starve to meet Jesus, remained impassive in the Mombasa courtroom as the verdict was delivered. He faces separate charges of manslaughter and terrorism. Relatives of those who died, many from rural coastal communities, were present in court to hear the judgment.\n\nThe Shakahola Forest Massacre has revealed a grim pattern of deaths, with bodies of men, women, and children unearthed over the past three years. The court's decision marks a significant step in holding those responsible accountable for the widespread loss of life attributed to the cult's extreme practices.",
-        "why": "Relatives of victims are affected by the court's guilty verdict in the starvation cult case.",
+        "body": "A Kenyan court found a self-proclaimed preacher and twenty-eight co-defendants guilty of murdering 191 people in the Shakahola Forest starvation cult case. Hundreds of bodies have been discovered since 2023 at the cult base inland from Malindi.\n\nPaul Mackenzie and his associates were convicted after the judge stated the prosecution proved the case for the murder of 190 children and one adult. The accused stood impassive in the Mombasa courtroom while relatives of the victims looked on.\n\nThe High Court rejected claims that the victims voluntarily fasted to death to meet Jesus. Mackenzie continues to face separate charges of manslaughter and terrorism.",
+        "why": "Relatives of the victims and the general public are affected by the closure and accountability delivered by the court ruling on the mass starvation deaths.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 75,
-            "why": "Rural community members, including farmers, traveled to the court in Mombasa to witness the proceedings related to the deaths."
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
-            "score": 20,
+            "score": 0,
             "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
           },
           "diaspora": {
@@ -3892,84 +3963,139 @@
           "material action in headline"
         ],
         "countryMatch": "title",
-        "wordCount": 170,
+        "wordCount": 102,
         "readMinutes": 1,
         "sources": [
           {
-            "url": "http://www.africanews.com/2026/10/19/guilty-as-charged-kenyan-court-finds-cult-leader-responsible-of-191-starvation-deaths/",
             "published": "2026-10-19T17:19:04Z",
-            "name": "Africanews"
+            "name": "Africanews",
+            "url": "http://www.africanews.com/2026/10/19/guilty-as-charged-kenyan-court-finds-cult-leader-responsible-of-191-starvation-deaths/"
           },
           {
-            "url": "https://www.aa.com.tr/en/africa/kenyan-court-convicts-cult-leader-paul-mackenzie-of-murdering-190-children-1-adult/4093759",
             "published": "2026-10-19T16:39:49Z",
-            "name": "Anadolu Africa"
+            "name": "Anadolu Africa",
+            "url": "https://www.aa.com.tr/en/africa/kenyan-court-convicts-cult-leader-paul-mackenzie-of-murdering-190-children-1-adult/4093759"
           }
         ]
       },
       {
-        "articleId": "6eef6966c3522671dca0",
-        "headline": "Kenya Ebola Cases Prompt Travel Advisories",
-        "dek": "The US has advised citizens to reconsider travel to Kenya following confirmation of nine Ebola cases, including one death.",
+        "articleId": "5fc4c067b701b7fb1d52",
+        "headline": "Court certifies urgent bid to jail Nairobi officials over Sh76.7m debt",
+        "dek": "The High Court has certified as urgent an application seeking to jail Nairobi Governor Johnson Sakaja and three other county officials over unpaid legal fees.",
         "paragraphs": [
-          "Kenya has confirmed nine cases of the Ebola virus, with one fatality, all linked to a single patient cluster. The outbreak has prompted international concern, with the United States advising its citizens to reconsider travel to the country.",
-          "Despite the travel advisory, the Kenyan government is working to reassure the public about the situation. The confirmed cases are contained within a single cluster, suggesting a limited spread from the initial patient.",
-          "The emergence of Ebola cases in Kenya has led to countries beginning to impose restrictions on travel and trade with the nation. The government is focused on managing public perception and controlling the outbreak."
+          "The High Court has certified as urgent an application seeking to jail Nairobi Governor Johnson Sakaja, current Finance Executive Ibrahim Auma Nyangoya, Chief Officer for Finance Asha Abdi, and former Finance Executive Charles Kerich over an alleged breach of a court-approved payment plan. Kwengu & Company Advocates filed the fresh application to reinstate a three-month jail sentence previously imposed on Kerich and hold the officials accountable for a Sh76.7 million debt.",
+          "Justice Francis Gikonyo directed that the application be served and responses filed within seven days, setting the hearing for October 29. The dispute stems from a missed payment of a second instalment of Sh36.7 million due on October 15 under a court-adopted consent order from July 16. The county previously paid an initial instalment of Sh30 million out of the total Sh106.7 million legal fees dispute involving money owed to Foton East Africa Limited.",
+          "The law firm wants the court to declare that the consent order has been breached and to summon Governor Sakaja to personally explain why he should not be cited for contempt. The advocates are seeking civil jail terms of six months for the officials unless the outstanding balance of Sh76,736,841 is settled in full."
         ],
-        "body": "Kenya has confirmed nine cases of the Ebola virus, with one fatality, all linked to a single patient cluster. The outbreak has prompted international concern, with the United States advising its citizens to reconsider travel to the country.\n\nDespite the travel advisory, the Kenyan government is working to reassure the public about the situation. The confirmed cases are contained within a single cluster, suggesting a limited spread from the initial patient.\n\nThe emergence of Ebola cases in Kenya has led to countries beginning to impose restrictions on travel and trade with the nation. The government is focused on managing public perception and controlling the outbreak.",
-        "why": "Investors face potential disruption and increased costs due to international travel advisories and potential restrictions impacting trade and business operations.",
+        "body": "The High Court has certified as urgent an application seeking to jail Nairobi Governor Johnson Sakaja, current Finance Executive Ibrahim Auma Nyangoya, Chief Officer for Finance Asha Abdi, and former Finance Executive Charles Kerich over an alleged breach of a court-approved payment plan. Kwengu & Company Advocates filed the fresh application to reinstate a three-month jail sentence previously imposed on Kerich and hold the officials accountable for a Sh76.7 million debt.\n\nJustice Francis Gikonyo directed that the application be served and responses filed within seven days, setting the hearing for October 29. The dispute stems from a missed payment of a second instalment of Sh36.7 million due on October 15 under a court-adopted consent order from July 16. The county previously paid an initial instalment of Sh30 million out of the total Sh106.7 million legal fees dispute involving money owed to Foton East Africa Limited.\n\nThe law firm wants the court to declare that the consent order has been breached and to summon Governor Sakaja to personally explain why he should not be cited for contempt. The advocates are seeking civil jail terms of six months for the officials unless the outstanding balance of Sh76,736,841 is settled in full.",
+        "why": "Nairobi county officials face potential civil jail terms and Governor Sakaja faces a personal court summons over an unpaid Sh76.7 million legal fee debt.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 20,
+            "score": 0,
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
             "score": 90,
-            "why": "Investors face potential disruption and increased costs due to international travel advisories and potential restrictions impacting trade and business operations."
+            "why": "Investors and financial stakeholders tracking public sector compliance, county debt obligations, and legal enforcement risks are directly affected by the court proceedings."
           },
           "diaspora": {
-            "score": 75,
-            "why": "Diaspora members planning travel to Kenya may face increased scrutiny or altered travel plans due to US advisories."
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
         "topic": "Business",
-        "published": "2026-10-21T04:36:10Z",
-        "sourceTitle": "Concern as Countries Begin Imposing Restrictions on Kenya Amid Ebola Concerns",
-        "editorialScore": 14.25,
-        "selectionScore": 14.25,
+        "published": "2026-10-20T15:35:38Z",
+        "sourceTitle": "Judge certifies fresh bid to jail Sakaja, Charles Kerich over Sh76.7m debt as urgent",
+        "editorialScore": 12.2,
+        "selectionScore": 12.2,
         "confidence": "medium",
-        "corroboration": 2,
+        "corroboration": 1,
         "scoreBreakdown": {
-          "relevance": 4.0,
-          "corroboration": 4.0,
-          "sourceQuality": 1.75,
+          "relevance": 2.5,
+          "corroboration": 0.0,
+          "sourceQuality": 3.0,
           "freshness": 3.5,
-          "publicImpact": 1.75,
-          "evidence": 0.0,
+          "publicImpact": 2.7,
+          "evidence": 1.25,
           "materiality": 0.0,
           "penalties": -0.75
         },
         "rankReasons": [
-          "country in headline",
-          "2-source corroboration",
+          "country in opening",
+          "tier-1 source",
           "published within 18h",
-          "urgent public consequence",
+          "public-policy consequence",
+          "specific figure",
           "limited source evidence"
         ],
-        "countryMatch": "title",
-        "wordCount": 105,
+        "countryMatch": "lede",
+        "wordCount": 203,
         "readMinutes": 1,
         "sources": [
           {
-            "url": "https://www.kenyans.co.ke/news/128732-el-salvador-imposes-visa-restrictions-kenya-and-7-other-african-countries",
-            "published": "2026-10-21T04:36:10Z",
-            "name": "Kenyans.co.ke"
+            "published": "2026-10-20T15:35:38Z",
+            "name": "The Standard",
+            "url": "https://www.standardmedia.co.ke/article/2001560549/judge-certifies-fresh-bid-to-jail-sakaja-charles-kerich-over-sh76-7m-debt-as-urgent"
+          }
+        ]
+      },
+      {
+        "articleId": "6558424547a647d92dfc",
+        "headline": "Kirinyaga Tea Farmers Demand Kes 117 Million Subsidy Refund",
+        "dek": "Growers at Thumaita Tea Factory want a government refund after delayed fertiliser subsidy reimbursements reduced their annual bonus payments.",
+        "paragraphs": [
+          "Tea farmers at Thumaita Tea Factory in Kirinyaga County are demanding a Kes 117 million refund from the government. The growers blame delayed fertiliser subsidy reimbursements for reduced bonuses and mounting financial pressure.",
+          "Factory chairman Richard Magu stated that the facility used money intended for growers to cover outstanding costs because the state failed to remit funds. Senate figures show the government reportedly owes the Kenya Tea Development Agency approximately Kes7 billion.",
+          "Farmers also requested promised tea-processing equipment to improve product quality. In September, the government announced a Kes 10 billion allocation for the tea sector to fund subsidies and factory modernisation."
+        ],
+        "body": "Tea farmers at Thumaita Tea Factory in Kirinyaga County are demanding a Kes 117 million refund from the government. The growers blame delayed fertiliser subsidy reimbursements for reduced bonuses and mounting financial pressure.\n\nFactory chairman Richard Magu stated that the facility used money intended for growers to cover outstanding costs because the state failed to remit funds. Senate figures show the government reportedly owes the Kenya Tea Development Agency approximately Kes7 billion.\n\nFarmers also requested promised tea-processing equipment to improve product quality. In September, the government announced a Kes 10 billion allocation for the tea sector to fund subsidies and factory modernisation.",
+        "why": "Smallholder tea farmers are affected because delayed government fertiliser reimbursements reduced their bonus payments and strained household finances.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 85,
+            "why": "Smallholder tea farmers face direct financial pressure and reduced bonus payments because of delayed government fertiliser subsidy reimbursements."
           },
+          "investors": {
+            "score": 20,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+          },
+          "diaspora": {
+            "score": 20,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "Agriculture",
+        "published": "2026-10-19T13:25:10Z",
+        "sourceTitle": "Kirinyaga tea farmers demand refund over delayed fertiliser subsidy payments",
+        "editorialScore": 12.15,
+        "selectionScore": 11.15,
+        "confidence": "medium",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 2.5,
+          "corroboration": 0.0,
+          "sourceQuality": 1.75,
+          "freshness": 1.0,
+          "publicImpact": 4.4,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in opening",
+          "public-policy consequence",
+          "specific figure"
+        ],
+        "countryMatch": "lede",
+        "wordCount": 102,
+        "readMinutes": 1,
+        "sources": [
           {
-            "url": "https://www.bbc.co.uk/news/articles/c693z948px0jo?at_medium=RSS&at_campaign=rss",
-            "published": "2026-10-20T23:41:30Z",
-            "name": "BBC Africa"
+            "published": "2026-10-19T13:25:10Z",
+            "name": "Food Business Africa",
+            "url": "https://www.foodbusinessmea.com/kirinyaga-tea-farmers-demand-refund-over-delayed-fertiliser-subsidy-payments/"
           }
         ]
       }
@@ -4721,24 +4847,24 @@
     "gh": [
       {
         "articleId": "31e3ed40cd8c0816dcfb",
-        "headline": "BaseNord Opens to Boost Ghana-Sweden Trade",
-        "dek": "A new facility in Accra aims to connect Ghanaian and Swedish entrepreneurs with investors and partners.",
+        "headline": "Nickie Akosa launches BaseNord facility to deepen Ghana-Sweden trade",
+        "dek": "The new co-working hub in Accra aims to support startups and boost commercial ties following record bilateral trade levels between the two nations.",
         "paragraphs": [
-          "BaseNord, a new facility designed to foster business connections between Ghana and Sweden, has opened in Accra's East Legon neighborhood. The center offers co-working spaces, private offices, and virtual office solutions to support startups and established businesses. Sweden's Honorary Consul to Ghana, Nickie Akosa, established BaseNord in response to the challenges startups face in finding professional working environments and the growing interest from Swedish investors in Ghana.",
-          "The initiative aims to deepen commercial ties, which saw significant growth in 2025 with bilateral trade reaching its highest levels in three years. Ghana's exports to Sweden were valued at US$3.07 million, while Swedish exports to Ghana reached US$86.3 million. BaseNord will provide practical support, information, and assistance for Ghanaian businesses seeking partners in Scandinavia and for Swedish investors looking to establish operations in Ghana.",
-          "Ms. Akosa, drawing on her experience in the renewable energy sector and establishing foreign company operations in Ghana, envisions BaseNord as a hub for strengthening trade relations. The center intends to facilitate partnerships and strengthen bilateral trade, particularly in the renewable energy, food, and agriculture sectors, by addressing bureaucratic processes and local market navigation."
+          "Trade relations between Ghana and Sweden recorded significant growth in 2025, with bilateral imports and exports reaching their highest levels in three years. Data from Trading Economics show that Ghana’s exports to Sweden were valued at US$3.07 million, while Swedish exports to Ghana reached US$86.3 million during the year.",
+          "To support growing commercial ties, Nickie Akosa, Sweden’s Honorary Consul to Ghana, has established BaseNord in the East Legon neighbourhood of Accra. The purpose-built facility provides dedicated co-working spaces, private offices, meeting rooms and virtual office solutions for startups and investors.",
+          "Ms Akosa stated that the hub addresses the difficulties early-stage businesses face in finding professional working environments. The initiative also aims to assist Ghanaian businesses seeking partners in Scandinavia and Swedish investors establishing operations in Ghana, particularly in renewable energy, food and agriculture."
         ],
-        "body": "BaseNord, a new facility designed to foster business connections between Ghana and Sweden, has opened in Accra's East Legon neighborhood. The center offers co-working spaces, private offices, and virtual office solutions to support startups and established businesses. Sweden's Honorary Consul to Ghana, Nickie Akosa, established BaseNord in response to the challenges startups face in finding professional working environments and the growing interest from Swedish investors in Ghana.\n\nThe initiative aims to deepen commercial ties, which saw significant growth in 2025 with bilateral trade reaching its highest levels in three years. Ghana's exports to Sweden were valued at US$3.07 million, while Swedish exports to Ghana reached US$86.3 million. BaseNord will provide practical support, information, and assistance for Ghanaian businesses seeking partners in Scandinavia and for Swedish investors looking to establish operations in Ghana.\n\nMs. Akosa, drawing on her experience in the renewable energy sector and establishing foreign company operations in Ghana, envisions BaseNord as a hub for strengthening trade relations. The center intends to facilitate partnerships and strengthen bilateral trade, particularly in the renewable energy, food, and agriculture sectors, by addressing bureaucratic processes and local market navigation.",
-        "why": "Investors and entrepreneurs can access workspace and networking opportunities to facilitate business between Ghana and Sweden.",
+        "body": "Trade relations between Ghana and Sweden recorded significant growth in 2025, with bilateral imports and exports reaching their highest levels in three years. Data from Trading Economics show that Ghana’s exports to Sweden were valued at US$3.07 million, while Swedish exports to Ghana reached US$86.3 million during the year.\n\nTo support growing commercial ties, Nickie Akosa, Sweden’s Honorary Consul to Ghana, has established BaseNord in the East Legon neighbourhood of Accra. The purpose-built facility provides dedicated co-working spaces, private offices, meeting rooms and virtual office solutions for startups and investors.\n\nMs Akosa stated that the hub addresses the difficulties early-stage businesses face in finding professional working environments. The initiative also aims to assist Ghanaian businesses seeking partners in Scandinavia and Swedish investors establishing operations in Ghana, particularly in renewable energy, food and agriculture.",
+        "why": "Startups and investors looking for workspace and commercial partners in Ghana and Sweden are directly affected by the launch of the new facility.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
             "score": 75,
-            "why": "The facility aims to strengthen bilateral trade, particularly in food and agriculture, potentially benefiting farmers through new market access."
+            "why": "The initiative aims to further strengthen bilateral trade, particularly in food and agriculture between Ghana and Sweden."
           },
           "investors": {
             "score": 90,
-            "why": "BaseNord provides dedicated spaces and practical support for Swedish investors looking to establish operations in Ghana and vice versa."
+            "why": "BaseNord is designed to support startups and connect businesses with potential investors and partners in Ghana, Sweden and other Scandinavian countries."
           },
           "diaspora": {
             "score": 20,
@@ -4771,97 +4897,36 @@
           "material action in headline"
         ],
         "countryMatch": "title",
-        "wordCount": 190,
+        "wordCount": 137,
         "readMinutes": 1,
         "sources": [
           {
-            "url": "https://www.myjoyonline.com/basenord-launched-to-deepen-ghana-sweden-trade-ties-and-support-investors/",
             "published": "2026-10-20T20:02:00Z",
-            "name": "MyJoyOnline"
-          }
-        ]
-      },
-      {
-        "articleId": "fb38db49a47f689b10d3",
-        "headline": "Ghana's Judiciary Faces Partisan Influence, Warns Ex-Unilever Executive",
-        "dek": "Public trust in courts has fallen significantly, with many Ghanaians believing judges are swayed by political leaders, according to Yaw Nsarkoh.",
-        "paragraphs": [
-          "Ghana's judiciary is structurally vulnerable to partisan influence, a trend that has gradually eroded public trust over years, according to Yaw Nsarkoh, former Executive Vice President of Unilever Ghana and Nigeria. Speaking at a Tuesday event, Nsarkoh cited Afrobarometer data showing a drop in public trust from 61% in 2002 to 38% in 2022, with 57% of respondents believing judges are influenced by political leaders. He described these figures as empirical signals of weakening judicial independence, not mere accusations.",
-          "Nsarkoh pointed to aggressive appointment powers exercised by successive administrations since 2000, noting that over 70% of Supreme Court members between 2017 and 2024 were appointed by a single president. He also referenced reports from organizations like CDD-Ghana highlighting persistent delays and opaque criteria for judicial elevation, particularly during politically sensitive periods. These factors, he argued, reinforce public suspicion about the judiciary's impartiality.",
-          "To strengthen judicial independence, Nsarkoh proposed radical measures, including an institutional role for medically fit, living retired Supreme Court justices in proceedings concerning the executive's attempts to remove sitting judges. He stated that the cumulative effect of these trends is a public belief that Ghana's judiciary has become structurally vulnerable to partisan influence, shaping the political imagination of the Fourth Republic."
-        ],
-        "body": "Ghana's judiciary is structurally vulnerable to partisan influence, a trend that has gradually eroded public trust over years, according to Yaw Nsarkoh, former Executive Vice President of Unilever Ghana and Nigeria. Speaking at a Tuesday event, Nsarkoh cited Afrobarometer data showing a drop in public trust from 61% in 2002 to 38% in 2022, with 57% of respondents believing judges are influenced by political leaders. He described these figures as empirical signals of weakening judicial independence, not mere accusations.\n\nNsarkoh pointed to aggressive appointment powers exercised by successive administrations since 2000, noting that over 70% of Supreme Court members between 2017 and 2024 were appointed by a single president. He also referenced reports from organizations like CDD-Ghana highlighting persistent delays and opaque criteria for judicial elevation, particularly during politically sensitive periods. These factors, he argued, reinforce public suspicion about the judiciary's impartiality.\n\nTo strengthen judicial independence, Nsarkoh proposed radical measures, including an institutional role for medically fit, living retired Supreme Court justices in proceedings concerning the executive's attempts to remove sitting judges. He stated that the cumulative effect of these trends is a public belief that Ghana's judiciary has become structurally vulnerable to partisan influence, shaping the political imagination of the Fourth Republic.",
-        "why": "The judiciary's perceived vulnerability to partisan influence affects all citizens by potentially compromising the fairness and impartiality of legal proceedings.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 20,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
-          },
-          "investors": {
-            "score": 20,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
-          },
-          "diaspora": {
-            "score": 45,
-            "why": "This politics report may interest diaspora readers following national public affairs from abroad."
-          }
-        },
-        "topic": "Politics",
-        "published": "2026-10-20T19:27:15Z",
-        "sourceTitle": "Ghana’s judiciary has become vulnerable to partisan influence – Yaw Nsarkoh",
-        "editorialScore": 17.45,
-        "selectionScore": 16.2,
-        "confidence": "high",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 4.0,
-          "corroboration": 0.0,
-          "sourceQuality": 3.0,
-          "freshness": 3.5,
-          "publicImpact": 4.45,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in headline",
-          "tier-1 source",
-          "published within 18h",
-          "urgent public consequence",
-          "specific figure"
-        ],
-        "countryMatch": "title",
-        "wordCount": 203,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "url": "https://www.myjoyonline.com/ghanas-judiciary-has-become-vulnerable-to-partisan-influence-yaw-nsarkoh/",
-            "published": "2026-10-20T19:27:15Z",
-            "name": "MyJoyOnline"
+            "name": "MyJoyOnline",
+            "url": "https://www.myjoyonline.com/basenord-launched-to-deepen-ghana-sweden-trade-ties-and-support-investors/"
           }
         ]
       },
       {
         "articleId": "c17a85bba287b853a27c",
-        "headline": "NPA, UMaT Explore Partnership to Boost Petroleum Sector",
-        "dek": "The National Petroleum Authority and the University of Mines and Technology are discussing collaboration to enhance innovation and training in Ghana's downstream petroleum.",
+        "headline": "NPA and UMaT Explore Partnership to Strengthen Downstream Petroleum Sector",
+        "dek": "The National Petroleum Authority and the University of Mines and Technology are discussing a partnership to boost training and innovation in the industry.",
         "paragraphs": [
-          "The National Petroleum Authority (NPA) is in discussions with the University of Mines and Technology (UMaT) to forge a partnership aimed at strengthening innovation, technical training, and professional development within Ghana's downstream petroleum sector. NPA Chief Executive Officer Godwin Kudzo Tameklo stated that collaboration with academic institutions is crucial for advancing the industry through research and novel solutions to sector challenges. The NPA is considering offering internships to UMaT students in its technical departments to provide practical industry exposure.",
-          "Further discussions between the NPA and UMaT include potential special training and secondment opportunities for UMaT teaching staff. The university might also be integrated into training programs for the proposed NPA Centre of Excellence, and there is a possibility of retooling a laboratory at UMaT as part of this initiative. Professor Richard Amorin, Dean of UMaT's School of Petroleum Studies, expressed gratitude for the NPA's openness to collaboration, noting that the university will relay the discussions to its Vice Chancellor to formalize the partnership.",
-          "Both institutions are optimistic that this engagement will effectively bridge the gap between academic research and practical industry application, thereby fostering skills development and innovation in Ghana's downstream petroleum industry. The NPA reiterated its commitment to building partnerships with academic bodies as part of its regulatory mandate for the sector."
+          "The National Petroleum Authority is exploring a partnership with the University of Mines and Technology to strengthen technical training, innovation, and professional development in the downstream petroleum industry. NPA Chief Executive Officer Godwin Kudzo Tameklo disclosed the initiative during a courtesy call by a university delegation led by Professor Richard Amorin on Tuesday, October 20, 2026.",
+          "Discussions between the two institutions covered potential student internships within technical departments of the NPA and special training or secondment opportunities for teaching staff. The collaboration may also include incorporating the university into training programmes at a proposed NPA Centre of Excellence alongside the possible retooling of a laboratory at UMaT.",
+          "Both parties expressed optimism that the engagement will bridge the gap between academic research and industry practice. The NPA stated that building partnerships with academic institutions aligns with its mandate to regulate, oversee, and monitor the downstream petroleum sector."
         ],
-        "body": "The National Petroleum Authority (NPA) is in discussions with the University of Mines and Technology (UMaT) to forge a partnership aimed at strengthening innovation, technical training, and professional development within Ghana's downstream petroleum sector. NPA Chief Executive Officer Godwin Kudzo Tameklo stated that collaboration with academic institutions is crucial for advancing the industry through research and novel solutions to sector challenges. The NPA is considering offering internships to UMaT students in its technical departments to provide practical industry exposure.\n\nFurther discussions between the NPA and UMaT include potential special training and secondment opportunities for UMaT teaching staff. The university might also be integrated into training programs for the proposed NPA Centre of Excellence, and there is a possibility of retooling a laboratory at UMaT as part of this initiative. Professor Richard Amorin, Dean of UMaT's School of Petroleum Studies, expressed gratitude for the NPA's openness to collaboration, noting that the university will relay the discussions to its Vice Chancellor to formalize the partnership.\n\nBoth institutions are optimistic that this engagement will effectively bridge the gap between academic research and practical industry application, thereby fostering skills development and innovation in Ghana's downstream petroleum industry. The NPA reiterated its commitment to building partnerships with academic bodies as part of its regulatory mandate for the sector.",
-        "why": "The partnership aims to improve skills and innovation in the downstream petroleum sector, which could affect the livelihoods of those employed in it.",
+        "body": "The National Petroleum Authority is exploring a partnership with the University of Mines and Technology to strengthen technical training, innovation, and professional development in the downstream petroleum industry. NPA Chief Executive Officer Godwin Kudzo Tameklo disclosed the initiative during a courtesy call by a university delegation led by Professor Richard Amorin on Tuesday, October 20, 2026.\n\nDiscussions between the two institutions covered potential student internships within technical departments of the NPA and special training or secondment opportunities for teaching staff. The collaboration may also include incorporating the university into training programmes at a proposed NPA Centre of Excellence alongside the possible retooling of a laboratory at UMaT.\n\nBoth parties expressed optimism that the engagement will bridge the gap between academic research and industry practice. The NPA stated that building partnerships with academic institutions aligns with its mandate to regulate, oversee, and monitor the downstream petroleum sector.",
+        "why": "University students and teaching staff are directly affected through upcoming internship placements, training programmes, and potential staff secondment opportunities.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 20,
+            "score": 0,
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
-            "score": 90,
-            "why": "The collaboration seeks to strengthen the downstream petroleum industry through innovation and training, potentially impacting operational efficiency and investment attractiveness."
+            "score": 85,
+            "why": "The report covers institutional partnerships, technical standards, and human capital development within the downstream petroleum sector."
           },
           "diaspora": {
             "score": 20,
@@ -4872,7 +4937,7 @@
         "published": "2026-10-20T20:35:00Z",
         "sourceTitle": "NPA, UMaT explore partnership to strengthen Ghana’s downstream petroleum sector",
         "editorialScore": 16.15,
-        "selectionScore": 12.65,
+        "selectionScore": 13.9,
         "confidence": "high",
         "corroboration": 1,
         "scoreBreakdown": {
@@ -4892,27 +4957,27 @@
           "public-policy consequence"
         ],
         "countryMatch": "title",
-        "wordCount": 213,
+        "wordCount": 146,
         "readMinutes": 1,
         "sources": [
           {
-            "url": "https://www.myjoyonline.com/npa-umat-explore-partnership-to-strengthen-ghanas-downstream-petroleum-sector/",
             "published": "2026-10-20T20:35:00Z",
-            "name": "MyJoyOnline"
+            "name": "MyJoyOnline",
+            "url": "https://www.myjoyonline.com/npa-umat-explore-partnership-to-strengthen-ghanas-downstream-petroleum-sector/"
           }
         ]
       },
       {
-        "articleId": "5b28537829da47c65f09",
-        "headline": "Teacher Alleges Widespread Sexual Misconduct in Ghanaian Schools",
-        "dek": "A teacher claims one or two educators in nearly every school engage in sexual misconduct, leaving students vulnerable.",
+        "articleId": "251f0d9dae856bcb7f9c",
+        "headline": "Ghana Immigration Service Orders November Deadline For Unearned Salary Refunds",
+        "dek": "Two immigration officers face a November 7 deadline to return unearned salaries totaling up to GH¢57,006 following parliamentary committee scrutiny.",
         "paragraphs": [
-          "A teacher at Ekumpoano Catholic Basic School, Stephen Desu, has alleged that sexual misconduct by teachers is pervasive across Ghana’s educational institutions. He stated that the issue has persisted for years, with one or two teachers in almost every school reportedly involved in such behavior. Desu warned that a failure to address this problem decisively could leave students at risk of abuse.",
-          "Desu elaborated that the problem is not limited to senior high schools but also exists at primary and junior high levels, though he noted it is more severe at the senior high level. He suggested that some teachers view postings to senior high schools as an opportunity to engage in predatory sexual behavior. These comments were made during a discussion on Joy News’ PM Express concerning allegations at Obuasi Senior High Technical School.",
-          "The teacher attributed the ongoing problem to the Ghana Education Service's (GES) perceived failure to act decisively against sexual misconduct. He argued that a lack of punishment for wrongdoing encourages repetition and imitation. Desu called for a more robust response from education authorities to protect students and handle complaints effectively, especially in light of recent scrutiny following the Obuasi SHTS allegations."
+          "Two officers within the Ghana Immigration Service who collected up to GH¢57,006 in unearned wages must return the funds by November 7, 2026. The Minister for the Interior, Muntaka Mohammed-Mubarak, identified the beneficiaries as Abida Zakaria and Abora Angelina during an appearance before Parliament's Public Accounts Committee. Officials who authorised these payments face financial liability if the money remains unrecovered after the deadline.",
+          "The committee also reviewed GH¢37,907 in excess salary arrears paid to 7 officers, with approximately GH¢12,900 still outstanding from an initial GH¢24,900 recovery. Lawmakers discussed an additional recovery of GH¢206,085 regarding an inspector who resigned following four years of paid study leave without fulfilling service obligations.",
+          "To prevent future payroll discrepancies, the interior minister announced plans to deploy new human resource software for better staff transfers and salary validation. He also proposed self-accounting arrangements for security services to improve financial oversight and simplify payroll audits."
         ],
-        "body": "A teacher at Ekumpoano Catholic Basic School, Stephen Desu, has alleged that sexual misconduct by teachers is pervasive across Ghana’s educational institutions. He stated that the issue has persisted for years, with one or two teachers in almost every school reportedly involved in such behavior. Desu warned that a failure to address this problem decisively could leave students at risk of abuse.\n\nDesu elaborated that the problem is not limited to senior high schools but also exists at primary and junior high levels, though he noted it is more severe at the senior high level. He suggested that some teachers view postings to senior high schools as an opportunity to engage in predatory sexual behavior. These comments were made during a discussion on Joy News’ PM Express concerning allegations at Obuasi Senior High Technical School.\n\nThe teacher attributed the ongoing problem to the Ghana Education Service's (GES) perceived failure to act decisively against sexual misconduct. He argued that a lack of punishment for wrongdoing encourages repetition and imitation. Desu called for a more robust response from education authorities to protect students and handle complaints effectively, especially in light of recent scrutiny following the Obuasi SHTS allegations.",
-        "why": "Students are at risk of sexual abuse due to alleged widespread misconduct by teachers in schools across Ghana.",
+        "body": "Two officers within the Ghana Immigration Service who collected up to GH¢57,006 in unearned wages must return the funds by November 7, 2026. The Minister for the Interior, Muntaka Mohammed-Mubarak, identified the beneficiaries as Abida Zakaria and Abora Angelina during an appearance before Parliament's Public Accounts Committee. Officials who authorised these payments face financial liability if the money remains unrecovered after the deadline.\n\nThe committee also reviewed GH¢37,907 in excess salary arrears paid to 7 officers, with approximately GH¢12,900 still outstanding from an initial GH¢24,900 recovery. Lawmakers discussed an additional recovery of GH¢206,085 regarding an inspector who resigned following four years of paid study leave without fulfilling service obligations.\n\nTo prevent future payroll discrepancies, the interior minister announced plans to deploy new human resource software for better staff transfers and salary validation. He also proposed self-accounting arrangements for security services to improve financial oversight and simplify payroll audits.",
+        "why": "Two immigration officers and seven others are affected by strict refund demands and oversight changes regarding unearned salaries and excess arrears.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
@@ -4924,7 +4989,128 @@
             "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
           },
           "diaspora": {
-            "score": 60,
+            "score": 20,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "Business",
+        "published": "2026-10-21T00:03:00Z",
+        "sourceTitle": "2 Immigration officers who received unearned salaries of up to GH¢57,006 given Nov 7 deadline to refund",
+        "editorialScore": 14.2,
+        "selectionScore": 10.45,
+        "confidence": "medium",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 2.5,
+          "corroboration": 0.0,
+          "sourceQuality": 3.0,
+          "freshness": 3.5,
+          "publicImpact": 2.7,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in opening",
+          "tier-1 source",
+          "published within 18h",
+          "public-policy consequence",
+          "specific figure"
+        ],
+        "countryMatch": "lede",
+        "wordCount": 158,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "published": "2026-10-21T00:03:00Z",
+            "name": "MyJoyOnline",
+            "url": "https://www.myjoyonline.com/2-immigration-officers-who-received-unearned-salaries-of-up-to-gh%c2%a257006-given-nov-7-deadline-to-refund/"
+          }
+        ]
+      },
+      {
+        "articleId": "532453b4f2718625c838",
+        "headline": "Dr Valentine Mensah warns delayed funding undermines Ghana judiciary",
+        "dek": "Inadequate financial resources and delayed funding are weakening effective justice delivery across the courts in Ghana.",
+        "paragraphs": [
+          "Delays in funding and inadequate resources are undermining effective justice delivery in Ghana, according to Dr Valentine Mensah, a D&D fellow in public financial management and corporate governance. Speaking at a JoyNews and An Amalgam of Professionals event on Tuesday, October 20, he stated that the judiciary needs dependable financial support, proper staffing, and essential facilities.",
+          "Data cited shows Parliament approved GH¢945 million for the judiciary in 2024, but only GH¢700 million was released, with compensation absorbing 79 per cent. In 2025, audited expenditure exceeded GH¢1.6 billion, with compensation taking 87 per cent. Furthermore, JUSAG reported more than 130 courts operating without magistrates.",
+          "Dr Mensah called for sustainable funding arrangements and improved staffing plans. He noted that the judicial complex has remained unfinished for more than a decade due to incomplete planning and funding delays."
+        ],
+        "body": "Delays in funding and inadequate resources are undermining effective justice delivery in Ghana, according to Dr Valentine Mensah, a D&D fellow in public financial management and corporate governance. Speaking at a JoyNews and An Amalgam of Professionals event on Tuesday, October 20, he stated that the judiciary needs dependable financial support, proper staffing, and essential facilities.\n\nData cited shows Parliament approved GH¢945 million for the judiciary in 2024, but only GH¢700 million was released, with compensation absorbing 79 per cent. In 2025, audited expenditure exceeded GH¢1.6 billion, with compensation taking 87 per cent. Furthermore, JUSAG reported more than 130 courts operating without magistrates.\n\nDr Mensah called for sustainable funding arrangements and improved staffing plans. He noted that the judicial complex has remained unfinished for more than a decade due to incomplete planning and funding delays.",
+        "why": "Citizens and court users are affected by delayed justice resulting from severe underfunding, severe staff shortages, and unfinished judicial infrastructure across Ghana.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 10,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 20,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+          },
+          "diaspora": {
+            "score": 20,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "Business",
+        "published": "2026-10-20T21:07:33Z",
+        "sourceTitle": "Delayed funding of judiciary means delayed justice – Dr Valentine Mensah",
+        "editorialScore": 13.9,
+        "selectionScore": 8.9,
+        "confidence": "medium",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 0.0,
+          "sourceQuality": 3.0,
+          "freshness": 3.5,
+          "publicImpact": 4.4,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "tier-1 source",
+          "published within 18h",
+          "public-policy consequence",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 140,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "published": "2026-10-20T21:07:33Z",
+            "name": "MyJoyOnline",
+            "url": "https://www.myjoyonline.com/delayed-funding-of-judiciary-means-delayed-justice-dr-valentine-mensah/"
+          }
+        ]
+      },
+      {
+        "articleId": "5b28537829da47c65f09",
+        "headline": "Teacher Alleges Widespread School Sexual Misconduct in Ghana",
+        "dek": "Stephen Desu claims that almost every school nationwide has one or two educators involved in predatory behavior.",
+        "paragraphs": [
+          "A teacher at Ekumpoano Catholic Basic School, Stephen Desu, has alleged that sexual misconduct by educators is widespread across schools in Ghana. Speaking on Joy News on Tuesday, October 20, he claimed that almost every school has one or two staff members engaged in such behavior, warning that the issue spans primary, junior high, and senior high levels.",
+          "The remarks follow an investigation into allegations of sexual abuse involving female students at Obuasi Senior High Technical School. Following reports by investigative correspondent Manasseh Azure Awuni, the Ghana Education Service interdicted headmaster Zakaria Abdulai, and police arrested him. The allegations against Mr Abdulai have not yet been established in court.",
+          "Mr Desu blamed the Ghana Education Service for failing to deal decisively with misconduct, arguing that a lack of punishment allows such actions to fester. Education authorities will need to establish the extent of the problem through formal investigations, as the widespread claims remain unsubstantiated."
+        ],
+        "body": "A teacher at Ekumpoano Catholic Basic School, Stephen Desu, has alleged that sexual misconduct by educators is widespread across schools in Ghana. Speaking on Joy News on Tuesday, October 20, he claimed that almost every school has one or two staff members engaged in such behavior, warning that the issue spans primary, junior high, and senior high levels.\n\nThe remarks follow an investigation into allegations of sexual abuse involving female students at Obuasi Senior High Technical School. Following reports by investigative correspondent Manasseh Azure Awuni, the Ghana Education Service interdicted headmaster Zakaria Abdulai, and police arrested him. The allegations against Mr Abdulai have not yet been established in court.\n\nMr Desu blamed the Ghana Education Service for failing to deal decisively with misconduct, arguing that a lack of punishment allows such actions to fester. Education authorities will need to establish the extent of the problem through formal investigations, as the widespread claims remain unsubstantiated.",
+        "why": "Students and school administrators across Ghana are affected by institutional responses to allegations of sexual misconduct.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 65,
+            "why": "The provided text contains no direct connection to firms, rates, currency, or capital investments."
+          },
+          "diaspora": {
+            "score": 30,
             "why": "This education report may interest diaspora readers following institutions and opportunities from abroad."
           }
         },
@@ -4932,7 +5118,7 @@
         "published": "2026-10-20T23:50:00Z",
         "sourceTitle": "‘One or two teachers in almost every school engage in sexual misconduct’ — Teacher alleges",
         "editorialScore": 13.8,
-        "selectionScore": 10.05,
+        "selectionScore": 6.55,
         "confidence": "medium",
         "corroboration": 1,
         "scoreBreakdown": {
@@ -4952,72 +5138,13 @@
           "public-policy consequence"
         ],
         "countryMatch": "lede",
-        "wordCount": 196,
+        "wordCount": 154,
         "readMinutes": 1,
         "sources": [
           {
-            "url": "https://www.myjoyonline.com/one-or-two-teachers-in-almost-every-school-engage-in-sexual-misconduct-teacher-alleges/",
             "published": "2026-10-20T23:50:00Z",
-            "name": "MyJoyOnline"
-          }
-        ]
-      },
-      {
-        "articleId": "c97722da9b2ffb51129c",
-        "headline": "Google Cloud outage disrupts UK banks and services",
-        "dek": "A power event at a third-party facility in London caused widespread disruption to UK financial institutions and online platforms.",
-        "paragraphs": [
-          "Google Cloud has resolved a significant disruption affecting its UK cloud services, which impacted numerous banks, businesses, and government services. The outage, originating from a power event at a third-party facility in Google's London data centre region, caused widespread errors and intermittent network failures. Services including Revolut, Lloyds Bank, and HSBC confirmed disruptions, with customers reporting inability to access funds and complete transactions.",
-          "The tech giant acknowledged the issue, stating that multiple services were affected by the power event in the 'europe-west2' cloud region. This incident led to over 1,500 reports of problems with Revolut alone. Other affected platforms included Royal Mail, DPD, and the HM Courts and Tribunals Service, which experienced issues with its video platform for remote hearings.",
-          "A Google Cloud spokesperson apologized for the inconvenience and confirmed that services have been restored. The company plans to publish an analysis of the incident on its service health dashboard. The event highlights the reliance of many online platforms on a few major cloud computing providers and the potential impact of infrastructure failures."
-        ],
-        "body": "Google Cloud has resolved a significant disruption affecting its UK cloud services, which impacted numerous banks, businesses, and government services. The outage, originating from a power event at a third-party facility in Google's London data centre region, caused widespread errors and intermittent network failures. Services including Revolut, Lloyds Bank, and HSBC confirmed disruptions, with customers reporting inability to access funds and complete transactions.\n\nThe tech giant acknowledged the issue, stating that multiple services were affected by the power event in the 'europe-west2' cloud region. This incident led to over 1,500 reports of problems with Revolut alone. Other affected platforms included Royal Mail, DPD, and the HM Courts and Tribunals Service, which experienced issues with its video platform for remote hearings.\n\nA Google Cloud spokesperson apologized for the inconvenience and confirmed that services have been restored. The company plans to publish an analysis of the incident on its service health dashboard. The event highlights the reliance of many online platforms on a few major cloud computing providers and the potential impact of infrastructure failures.",
-        "why": "UK banks and businesses were affected by the outage, leading to difficulties in accessing funds and completing transactions.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 20,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
-          },
-          "investors": {
-            "score": 90,
-            "why": "The outage directly impacted major UK financial institutions and businesses, affecting their operations and customer access."
-          },
-          "diaspora": {
-            "score": 20,
-            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
-          }
-        },
-        "topic": "Business",
-        "published": "2026-10-20T23:01:00Z",
-        "sourceTitle": "Google resolves cloud outage affecting UK banks and websites",
-        "editorialScore": 12.65,
-        "selectionScore": 7.65,
-        "confidence": "medium",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 0.5,
-          "corroboration": 0.0,
-          "sourceQuality": 3.0,
-          "freshness": 3.5,
-          "publicImpact": 4.4,
-          "evidence": 1.25,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "tier-1 source",
-          "published within 18h",
-          "public-policy consequence"
-        ],
-        "countryMatch": "domestic",
-        "wordCount": 174,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "url": "https://www.myjoyonline.com/google-resolves-cloud-outage-affecting-uk-banks-and-websites/",
-            "published": "2026-10-20T23:01:00Z",
-            "name": "MyJoyOnline"
+            "name": "MyJoyOnline",
+            "url": "https://www.myjoyonline.com/one-or-two-teachers-in-almost-every-school-engage-in-sexual-misconduct-teacher-alleges/"
           }
         ]
       }
