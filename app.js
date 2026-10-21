@@ -1100,6 +1100,75 @@ else requestAnimationFrame(frame);
 setTimeout(finishAssembly, 4200);
 document.addEventListener('visibilitychange', () => { if (document.hidden) finishAssembly(); });
 
+/* Phones: scale the MAINLAND (with Madagascar) to ~95% of the screen width instead of
+   fitting the whole 1000-unit square, which the far-flung islands make mostly ocean.
+   The canvas keeps its exact aspect ratio; the stage becomes a window onto the
+   mainland's bounding box and the canvas is offset inside it. Island markers are
+   pulled inside the visible area, next to their true positions, so they never shrink
+   the map and are never clipped. */
+const MAINLAND_BOX = (() => {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const p of paths) {
+    if (ISLAND_MARKERS[p.id] || !p.bbox) continue;
+    x0 = Math.min(x0, p.bbox.minX); y0 = Math.min(y0, p.bbox.minY);
+    x1 = Math.max(x1, p.bbox.maxX); y1 = Math.max(y1, p.bbox.maxY);
+  }
+  return { x0, y0, x1, y1 };
+})();
+for (const t of islandHitTargets) { t.ox = t.cx; t.oy = t.cy; t.oside = t.side; }
+const phoneMapMQ = window.matchMedia('(max-width:640px)');
+function layoutPhoneMap() {
+  const stage = canvas.parentElement;
+  const row = stage.parentElement;
+  if (!phoneMapMQ.matches) {
+    stage.style.removeProperty('width'); stage.style.removeProperty('height');
+    canvas.style.removeProperty('width'); canvas.style.removeProperty('height');
+    canvas.style.removeProperty('left'); canvas.style.removeProperty('top');
+    stage.classList.remove('stage--phone');
+    for (const t of islandHitTargets) { t.cx = t.ox; t.cy = t.oy; t.side = t.oside; }
+    return;
+  }
+  stage.classList.add('stage--phone');
+  const vw = document.documentElement.clientWidth;
+  const b = MAINLAND_BOX, mw = b.x1 - b.x0, mh = b.y1 - b.y0;
+  // Height actually free for the map: the row's box once the stage is collapsed.
+  stage.style.height = '0px';
+  const availH = Math.max(160, row.getBoundingClientRect().height - 8);
+  const s = Math.min((vw * 0.95) / mw, availH / mh); // px per map unit
+  const boxW = mw * s, boxH = mh * s;
+  stage.style.width = boxW + 'px';
+  stage.style.height = boxH + 'px';
+  canvas.style.width = (1000 * s) + 'px';
+  canvas.style.height = (1001 * s) + 'px';
+  canvas.style.left = (-b.x0 * s) + 'px';
+  canvas.style.top = (-b.y0 * s) + 'px';
+  // Visible window in map units, from the screen edges (the canvas overflows the box).
+  const left = (vw - boxW) / 2;
+  const ux0 = b.x0 - left / s, ux1 = b.x0 + (vw - left) / s;
+  const padX = 22 / s, padY = 16 / s;
+  const bb = id => (pathById[id] && pathById[id].bbox) || null;
+  const sl = bb('sl') || bb('lr'), mg = bb('mg');
+  for (const t of islandHitTargets) {
+    // Cape Verde and Mauritius sit beyond the scaled mainland: dock them in open
+    // ocean at the screen edge (Atlantic below the western bulge; Indian Ocean
+    // below Madagascar) rather than on top of Senegal or Madagascar.
+    if (t.id === 'cv' && sl) { t.cx = ux0 + padX + 6 / s; t.cy = sl.maxY + 46 / s; t.side = 'below'; continue; }
+    if (t.id === 'mu' && mg) { t.cx = Math.min(ux1 - padX, mg.maxX + 4 / s); t.cy = mg.maxY + 22 / s; t.side = 'left'; continue; }
+    let cx = Math.max(ux0 + padX, Math.min(ux1 - padX, t.ox));
+    let cy = Math.max(b.y0 + padY, Math.min(b.y1 + 6 / s, t.oy));
+    t.cx = cx; t.cy = cy;
+    t.side = t.oside;
+    if (t.oside === 'below' || t.oside === 'above') {
+      // keep a vertical label unless it would leave the visible window
+      if (t.side === 'below' && cy + 20 > b.y1 + 14 / s) t.side = 'above';
+    }
+  }
+  render(assemblyDone ? 3.5 : 0);
+}
+layoutPhoneMap();
+window.addEventListener('resize', () => requestAnimationFrame(layoutPhoneMap));
+(phoneMapMQ.addEventListener ? phoneMapMQ.addEventListener('change', layoutPhoneMap) : phoneMapMQ.addListener(layoutPhoneMap));
+
 function eventToLocal(e) {
   const rect = canvas.getBoundingClientRect();
   return [
@@ -1150,7 +1219,7 @@ function updateMapPointer(e) {
   const country = idx >= 0 ? paths[idx] : null;
   canvas.style.cursor = country ? 'pointer' : 'default';
   if (country) {
-    const rect = canvas.getBoundingClientRect();
+    const rect = (tooltip.offsetParent || canvas).getBoundingClientRect();
     tooltip.textContent = country.info.name;
     tooltip.style.left = (e.clientX - rect.left) + 'px';
     tooltip.style.top = (e.clientY - rect.top) + 'px';

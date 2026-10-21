@@ -1452,7 +1452,7 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
   .rule{background:rgba(232,230,227,.1)}
   body{min-height:100svh}
   main{min-height:calc(100svh - 39px);display:flex;flex-direction:column}
-  .landing-core{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;min-height:0}
+  .landing-core{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;min-height:0}
   .title-block{display:flex;padding:14px 16px 0}
   .title-block h1{font-size:clamp(30px,8.6vw,40px);line-height:1.02}
   .title-block h1 em{font-size:.5em;margin-bottom:2px}
@@ -1460,8 +1460,9 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
   .pop-counter{margin:16px 0 0;padding:0 52px}
   .pop-number{font-size:clamp(26px,7.4vw,32px)}
   .pop-label{font-size:8px;margin-top:3px}
-  .landing-stage-row{flex:1 1 auto;display:flex;align-items:center;justify-content:center;width:100%;min-height:0}
-  .stage{position:relative;left:auto;transform:none;margin:0 auto;width:min(108vw,calc(100svh - 300px),560px);flex:0 0 auto}
+  .landing-stage-row{flex:1 1 auto;display:flex;align-items:center;justify-content:center;width:100%;min-height:0;padding:10px 0}
+  .stage{position:relative;left:auto;transform:none;margin:0 auto;width:96vw;flex:0 0 auto;overflow:visible}
+  .stage.stage--phone #map{position:absolute;max-width:none;max-height:none}
   main,.landing-core,.landing-stage-row{overflow:hidden}
   .landing-stage-row{align-items:center}
   .title-block{padding-top:26px}
@@ -1471,3 +1472,10 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
   .home-front--mobile{display:none!important}
 }
 @media (max-width:640px) and (prefers-reduced-motion:reduce){ .ticker-wrap{overflow-x:auto} }
+@media (max-width:640px) and (max-height:720px){
+  .title-block{padding-top:14px}
+  .title-block h1{font-size:clamp(26px,7.4vw,32px)}
+  .tagline{display:none}
+  .pop-counter{margin-top:8px}
+  .landing-stage-row{padding:6px 0}
+}
