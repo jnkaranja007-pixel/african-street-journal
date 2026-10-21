@@ -1434,3 +1434,40 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
 .asj-info--m{display:none}
 @media (max-width:760px){.asj-info--m .asj-info-menu{left:auto;right:0}.asj-info--m{display:inline-block;margin-left:10px;font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;align-self:center}}
 
+
+/* ---- Phone home screen (map-v2): one calm screen ----------------------------
+   Thin strip (About left, desk right), the serif title as on desktop, counter, map
+   with breathing room, My Africa, ticker. No below-the-fold block. */
+@media (max-width:640px){
+  html.ticker-js .ticker{animation:none}
+  .ticker-wrap{scrollbar-width:none;overscroll-behavior-x:contain}
+  .ticker-wrap::-webkit-scrollbar{display:none}
+  .mobile-masthead{display:flex;align-items:center;justify-content:space-between;min-height:38px;padding:0 16px;gap:12px}
+  .mobile-wordmark,.mobile-wordmark-name{display:none}
+  .asj-info--m{margin-left:0;font:700 10px/1 var(--mono);letter-spacing:.16em}
+  .asj-info--m .asj-info-menu{left:0;right:auto}
+  .mobile-wire-entry{min-height:38px;padding:0;border:0;gap:6px}
+  .mobile-wire-entry .wire-entry-count{max-width:none;font:700 10px/1 var(--mono);letter-spacing:.16em;white-space:nowrap}
+  .mobile-wire-entry .wire-entry-icon,.mobile-wire-entry svg{width:14px;height:14px}
+  .rule{background:rgba(232,230,227,.1)}
+  body{min-height:100svh}
+  main{min-height:calc(100svh - 39px);display:flex;flex-direction:column}
+  .landing-core{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;min-height:0}
+  .title-block{display:flex;padding:14px 16px 0}
+  .title-block h1{font-size:clamp(30px,8.6vw,40px);line-height:1.02}
+  .title-block h1 em{font-size:.5em;margin-bottom:2px}
+  .tagline{display:block;font-size:13px;margin-top:6px}
+  .pop-counter{margin:16px 0 0;padding:0 52px}
+  .pop-number{font-size:clamp(26px,7.4vw,32px)}
+  .pop-label{font-size:8px;margin-top:3px}
+  .landing-stage-row{flex:1 1 auto;display:flex;align-items:center;justify-content:center;width:100%;min-height:0}
+  .stage{position:relative;left:auto;transform:none;margin:0 auto;width:min(108vw,calc(100svh - 300px),560px);flex:0 0 auto}
+  main,.landing-core,.landing-stage-row{overflow:hidden}
+  .landing-stage-row{align-items:center}
+  .title-block{padding-top:26px}
+  .your-desk{margin:0 16px 8px}
+  .ticker-wrap{min-height:46px}
+  .ticker button{min-height:45px;padding:0 16px;font:700 11px/1 var(--mono);letter-spacing:.08em}
+  .home-front--mobile{display:none!important}
+}
+@media (max-width:640px) and (prefers-reduced-motion:reduce){ .ticker-wrap{overflow-x:auto} }

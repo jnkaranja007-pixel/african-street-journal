@@ -715,6 +715,36 @@ function renderTicker() {
 
 renderTicker();
 
+/* Phones: drive the city ticker by scrolling the strip rather than translating a
+   ~25,000px-wide element. iOS Safari drops composited layers that large, which left an
+   empty band where the ticker should be. scrollLeft is tiled like ordinary content. */
+(function phoneTicker() {
+  const wrap = tickerEl && tickerEl.closest('.ticker-wrap');
+  if (!wrap) return;
+  const mq = window.matchMedia('(max-width:720px)');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let last = 0, pos = 0, held = false, raf = 0;
+  const SPEED = 38; // px per second: calm, readable
+  function seg() { const s = tickerEl.querySelector('.ticker-segment'); return s ? s.offsetWidth : 0; }
+  function step(now) {
+    raf = 0;
+    if (!mq.matches || reduce.matches) return;
+    const dt = last ? Math.min(0.1, (now - last) / 1000) : 0; last = now;
+    const w = seg();
+    if (!held && !document.hidden && w) { pos += SPEED * dt; if (pos >= w) pos -= w; wrap.scrollLeft = pos; }
+    raf = requestAnimationFrame(step);
+  }
+  function start() { if (!raf) { last = 0; raf = requestAnimationFrame(step); } }
+  function sync() { document.documentElement.classList.toggle('ticker-js', mq.matches && !reduce.matches); if (mq.matches) start(); else wrap.scrollLeft = 0; }
+  wrap.addEventListener('pointerdown', () => { held = true; });
+  window.addEventListener('pointerup', () => { if (held) { held = false; pos = wrap.scrollLeft; } });
+  wrap.addEventListener('focusin', () => { held = true; });
+  wrap.addEventListener('focusout', () => { held = false; pos = wrap.scrollLeft; });
+  wrap.addEventListener('scroll', () => { if (held) pos = wrap.scrollLeft; }, { passive: true });
+  (mq.addEventListener ? mq.addEventListener('change', sync) : mq.addListener(sync));
+  sync();
+})();
+
 // Every few seconds, ping the map country whose capital is currently centered in the ticker.
 // Skipped when reduced motion is preferred, the tab is hidden, or the landing map isn't visible.
 setInterval(() => {
@@ -855,7 +885,7 @@ const easeOut = t => 1 - Math.pow(1 - t, 3);
 
 // Island nations are 1-3px paths on the continental map — invisible and untappable. Each gets
 // a ringed, tagged marker sharing the country's hover/click behavior via a forgiving hit radius.
-const ISLAND_MARKERS = { cv: { tag: 'CPV', side: 'left' }, st: { tag: 'STP', side: 'left' }, km: { tag: 'COM', side: 'left' }, sc: { tag: 'SYC', side: 'right' }, mu: { tag: 'MUS', side: 'right' } };
+const ISLAND_MARKERS = { cv: { tag: 'CPV', side: 'below' }, st: { tag: 'STP', side: 'left' }, km: { tag: 'COM', side: 'left' }, sc: { tag: 'SYC', side: 'above' }, mu: { tag: 'MUS', side: 'below' } };
 const islandHitTargets = Object.keys(ISLAND_MARKERS)
   .map(id => {
     const idx = paths.findIndex(p => p.id === id);
@@ -866,8 +896,8 @@ const islandHitTargets = Object.keys(ISLAND_MARKERS)
     const cx = Math.max(18, Math.min(982, (b.minX + b.maxX) / 2));
     const cy = Math.max(18, Math.min(983, (b.minY + b.maxY) / 2));
     let side = ISLAND_MARKERS[id].side;
-    if (cx < 60) side = 'right';
-    if (cx > 940) side = 'left';
+    if (side === 'left' && cx < 60) side = 'right';
+    if (side === 'right' && cx > 940) side = 'left';
     return { id, idx, cx, cy, side };
   })
   .filter(Boolean);
@@ -946,9 +976,10 @@ function drawIslandMarkers(elapsed) {
     ctx.arc(t.cx, t.cy, 2.2, 0, Math.PI * 2);
     ctx.fillStyle = hovered ? '#8fd694' : FRONT_GREEN;
     ctx.fill();
-    ctx.textAlign = t.side === 'left' ? 'right' : 'left';
+    const vert = t.side === 'above' || t.side === 'below';
+    ctx.textAlign = vert ? 'center' : (t.side === 'left' ? 'right' : 'left');
     ctx.fillStyle = hovered ? 'rgba(220,240,222,0.95)' : 'rgba(160,190,165,0.7)';
-    ctx.fillText(ISLAND_MARKERS[t.id].tag, t.cx + (t.side === 'left' ? -14 : 14), t.cy);
+    ctx.fillText(ISLAND_MARKERS[t.id].tag, t.cx + (vert ? 0 : (t.side === 'left' ? -14 : 14)), t.cy + (t.side === 'below' ? 20 : t.side === 'above' ? -20 : 0));
   }
   ctx.restore();
 }
@@ -5470,9 +5501,8 @@ async function runSelfTest() {
 
   // --- the front page on the landing screen -------------------------------------
   {
-    const anyColumn = document.querySelector('#home-front-mobile .home-story');
-    add('landing: today\'s headlines render without opening the Wire', !!anyColumn,
-        document.querySelectorAll('.home-story').length + ' headlines');
+    add('landing: the home screen is a single screen (no below-hero stories block)',
+        !document.getElementById('home-front-mobile'), 'headlines live in the Wire and country views');
     const titles = [...document.querySelectorAll('#home-front-mobile .home-story-title')]
       .map(el => el.textContent.trim());
     add('landing: no headline appears twice', new Set(titles).size === titles.length, titles.length + ' shown');
