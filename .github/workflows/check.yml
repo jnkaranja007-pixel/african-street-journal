@@ -100,9 +100,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
+      # Node 20 reached end of life in April 2026. 22 is the maintained LTS line.
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
       - name: Install Playwright
         run: |
           mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i playwright@1 >/dev/null
