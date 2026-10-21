@@ -414,7 +414,7 @@ if (-not $NoCache -and (Test-Path $cachePath)) {
   }
 }
 
-function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$ExpectedItem = -1) {
+function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$ExpectedItem, [string]$Provider, [string]$Model, [string]$ApiUrl, [string]$apiKey) {
   if (-not $apiKey) {
     throw "API key for provider '$Provider' is not set (OPENROUTER_API_KEY or GEMINI_API_KEY)"
   }
@@ -427,10 +427,7 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
     temperature = $Temperature
     max_tokens  = $MaxOutputTokens
   }
-  # OpenRouter's own model fallback: if the primary has no live endpoint, it tries the
-  # next model in the list within the same request.
-  if ($Provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
-  if ($FallbackModels.Count) { $body['models'] = @(@($Model) + $FallbackModels) }
+    if ($Provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
   if ($JsonMode) {
     $lensEntrySchema = [ordered]@{
       type = 'object'
@@ -552,6 +549,58 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
     TotalTokens      = if ($obj.usage.total_tokens) { [int]$obj.usage.total_tokens } else { 0 }
     Cost             = if ($obj.usage.cost) { [double]$obj.usage.cost } else { 0.0 }
   }
+}
+
+# Routes are tried in order for every call: the pinned primary model, then the pricier
+# fallback models, then (if GEMINI_API_KEY is set) Google AI Studio's free tier. A route
+# is only left after real errors - never because OpenRouter preferred another model.
+# 20 Oct 2026: OpenRouter's own 'models' list silently served ~some calls on the pricier
+# gemini-3.1-flash-lite; fallback is now done here, explicitly, and logged.
+$script:routes = New-Object System.Collections.Generic.List[object]
+if ($Provider -eq 'openrouter' -and $env:OPENROUTER_API_KEY) {
+  $script:routes.Add(@{ provider='openrouter'; model=$Model; url='https://openrouter.ai/api/v1/chat/completions'; key=$env:OPENROUTER_API_KEY; dead=$false })
+  foreach ($fm in $FallbackModels) { $script:routes.Add(@{ provider='openrouter'; model=$fm; url='https://openrouter.ai/api/v1/chat/completions'; key=$env:OPENROUTER_API_KEY; dead=$false }) }
+}
+if ($env:GEMINI_API_KEY) {
+  $gm = if ($Provider -eq 'gemini') { $Model } else { 'gemini-2.5-flash-lite' }
+  $script:routes.Add(@{ provider='gemini'; model=($gm -replace '^google/',''); url='https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'; key=$env:GEMINI_API_KEY; dead=$false })
+}
+$script:routeCalls = @{}
+
+function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$ExpectedItem = -1) {
+  if (-not $script:routes.Count) { throw 'No API key set (OPENROUTER_API_KEY or GEMINI_API_KEY)' }
+  $last = 'no live route'
+  foreach ($r in $script:routes) {
+    if ($r.dead) { continue }
+    for ($try = 1; $try -le 3; $try++) {
+      try {
+        if ($r.provider -eq 'gemini' -and $script:lastGeminiCall) {
+          $wait = 4500 - ((Get-Date) - $script:lastGeminiCall).TotalMilliseconds
+          if ($wait -gt 0) { Start-Sleep -Milliseconds ([int]$wait) }
+        }
+        if ($r.provider -eq 'gemini') { $script:lastGeminiCall = Get-Date }
+        $out = Invoke-ModelOnce $prompt $ExpectedStories $ExpectedItem $r.provider $r.model $r.url $r.key
+        $k = "$($r.provider):$($r.model)"
+        $script:routeCalls[$k] = 1 + [int]$script:routeCalls[$k]
+        return $out
+      } catch {
+        $last = $_.Exception.Message.Split("`n")[0]
+        $code = 0
+        if ($last -match '^HTTP (\d+)') { $code = [int]$Matches[1] }
+        if ($code -in 401,402,403) {
+          # Account-level: no point trying another OpenRouter model on the same key.
+          foreach ($x in $script:routes) { if ($x.provider -eq $r.provider) { $x.dead = $true } }
+          Write-Host "      [route] $($r.provider) disabled for this run ($last)" -ForegroundColor Red
+          break
+        }
+        $transient = ($code -eq 0 -or $code -eq 408 -or $code -eq 429 -or $code -ge 500)
+        if (-not $transient) { break }   # 400/404/422: this model cannot take this call
+        if ($try -lt 3) { Start-Sleep -Seconds $(if ($code -eq 429) { 15 * $try } else { 3 * $try * $try }) }
+      }
+    }
+    Write-Host "      [route] falling back from $($r.provider):$($r.model) after: $last" -ForegroundColor DarkYellow
+  }
+  throw $last
 }
 
 function Get-EvidencePacket($Item, [int]$Index) {
@@ -1090,6 +1139,7 @@ if ($Merge -and (Test-Path $outPath)) {
 Write-Host ''
 Write-Host "[write] $stories on-site stories across $($result.Count) countries -> $OutFile" -ForegroundColor Green
 Write-Host "[write] model: $Model" -ForegroundColor DarkGray
+foreach ($k in $script:routeCalls.Keys) { Write-Host "[write] calls served via ${k}: $($script:routeCalls[$k])" -ForegroundColor DarkGray }
 Write-Host ("[write] usage: {0} input + {1} output = {2} tokens; {3} API calls; {4} cache hits; reported cost `${5}" -f `
            $usagePrompt, $usageCompletion, $usageTotal, $apiCalls, $cacheHits, ([Math]::Round($usageCost, 4))) -ForegroundColor DarkGray
 if ($skipped.Count) {
