@@ -2710,6 +2710,41 @@ function regionalWireFor(countryId) {
   return { html, label: scope === 'Across Africa' ? 'Africa-wide wire' : scope + ' wire' };
 }
 
+// "Updated …" for a country's News line. Uses the desk's filing time for that country, falling
+// back to the newest story's publish time. Never the clock: no reliable stamp, no label.
+function reliableStamp(value) {
+  if (!value || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(String(value))) return null;
+  const d = new Date(value);
+  const t = d.getTime();
+  if (!Number.isFinite(t) || t > Date.now() + 5 * 60 * 1000 || t < Date.UTC(2024, 0, 1)) return null;
+  return d;
+}
+function countryUpdatedAt(countryId, briefs) {
+  const filed = reliableStamp(AI_BRIEFS_DATES[countryId]);
+  if (filed) return filed;
+  let newest = null;
+  for (const b of briefs || []) {
+    const d = reliableStamp(b && b.published);
+    if (d && (!newest || d > newest)) newest = d;
+  }
+  return newest;
+}
+function relativeUpdated(d) {
+  const mins = Math.round((Date.now() - d.getTime()) / 60000);
+  if (mins < 2) return 'just now';
+  if (mins < 60) return mins + ' minutes ago';
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return hrs === 1 ? '1 hour ago' : hrs + ' hours ago';
+  if (hrs < 48) return 'yesterday';
+  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(d);
+}
+function updatedStampHtml(countryId, briefs) {
+  const d = countryUpdatedAt(countryId, briefs);
+  if (!d) return '';
+  const full = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }).format(d);
+  return '<span class="cv-updated"> · <time datetime="' + d.toISOString() + '" title="Updated ' + escapeHtml(full) + '">Updated ' + escapeHtml(relativeUpdated(d)) + '</time></span>';
+}
+
 function renderBriefDesk(countryId) {
   const cards = document.getElementById('cv-cards');
   const meta = document.getElementById('cv-story-meta');
@@ -2723,7 +2758,7 @@ function renderBriefDesk(countryId) {
   const sourceCount = uniqueSourceCount(briefs);
   if (meta && briefs.length) {
     const lensLabel = activeStoryLens === 'general' ? '' : STORY_LENS_LABELS[activeStoryLens] + ' lens · ';
-    meta.textContent = briefs.length + ' stories from ' + sourceCount + ' sources';
+    meta.innerHTML = escapeHtml(briefs.length + (briefs.length === 1 ? ' story' : ' stories') + ' from ' + sourceCount + (sourceCount === 1 ? ' source' : ' sources')) + updatedStampHtml(countryId, briefs);
   }
   if (!briefs.length) {
     const wire = regionalWireFor(countryId);
@@ -4354,17 +4389,29 @@ function renderGdpChart(inv, summary = economySeriesSummary(inv)) {
   });
   const line = points.map(point => point.x.toFixed(1) + ',' + point.y.toFixed(1)).join(' ');
   const area = x0 + ',' + yBottom + ' ' + line + ' ' + x1 + ',' + yBottom;
+  // Axis labels live in HTML over the chart: the SVG stretches (preserveAspectRatio none),
+  // which squashed its own text to ~7px and distorted it.
+  const axisLabels =
+    yTicks.map(value => {
+      const y = yBottom - ((value - min) / range) * (yBottom - yTop);
+      return '<span class="cv-gdp-ylab" aria-hidden="true" style="top:' + (y / 250 * 100).toFixed(2) + '%">' + formatBillions(value) + '</span>';
+    }).join('') +
+    xTickPoints.map(tick => {
+      const point = points.find(item => item.year === tick.year);
+      return '<span class="cv-gdp-xlab" aria-hidden="true" style="left:' + (point.x / 10).toFixed(2) + '%">' + point.year + '</span>';
+    }).join('');
   return '<div class="cv-gdp-chart" aria-label="GDP history">' + head +
+    '<div class="cv-gdp-plot">' + axisLabels +
     '<svg viewBox="0 0 1000 250" preserveAspectRatio="none" role="img" aria-label="GDP trend from ' + first.year + ' to ' + latest.year + '">' +
       yTicks.map(value => {
         const y = yBottom - ((value - min) / range) * (yBottom - yTop);
-        return '<text class="cv-gdp-value" x="64" y="' + (y + 4).toFixed(1) + '">' + formatBillions(value) + '</text>' +
+        return '' +
           '<line class="cv-gdp-grid" x1="' + x0 + '" y1="' + y.toFixed(1) + '" x2="' + x1 + '" y2="' + y.toFixed(1) + '"></line>';
       }).join('') +
       xTickPoints.map(tick => {
         const point = points.find(item => item.year === tick.year);
         return '<line class="cv-gdp-grid cv-gdp-grid-x" x1="' + point.x.toFixed(1) + '" y1="' + yTop + '" x2="' + point.x.toFixed(1) + '" y2="' + yBottom + '"></line>' +
-          '<text class="cv-gdp-year" x="' + point.x.toFixed(1) + '" y="240">' + point.year + '</text>';
+          '';
       }).join('') +
       '<line class="cv-gdp-axis" x1="' + x0 + '" y1="' + yBottom + '" x2="' + x1 + '" y2="' + yBottom + '"></line>' +
       '<polygon class="cv-gdp-area" points="' + area + '"></polygon>' +
@@ -4381,7 +4428,7 @@ function renderGdpChart(inv, summary = economySeriesSummary(inv)) {
           '</g>' +
         '</g>';
       }).join('') +
-    '</svg>' +
+    '</svg></div>' +
   '</div>';
 }
 

@@ -1723,3 +1723,15 @@ main{position:relative}
 #cv-panel-signals .cv-sector-name{font-size:16px!important;color:var(--text)!important}
 #cv-panel-signals .cv-heat-tile{box-shadow:none!important}
 #cv-panel-signals .cv-sector::before{display:none!important}#cv-panel-signals .cv-sector{padding-left:0!important}#cv-panel-signals .cv-dia-note{font-size:14px!important;line-height:1.55!important;max-width:60ch}
+
+/* updated-v1: "Updated …" stamp on the News line; readable GDP axis labels (HTML, not stretched SVG text) */
+.cv-updated{white-space:nowrap}
+.cv-updated time{color:var(--text-muted)}
+#cv-story-meta{overflow-wrap:anywhere}
+.cv-gdp-plot{position:relative;padding-left:0}
+.cv-gdp-ylab,.cv-gdp-xlab{position:absolute;font:500 13px/1 var(--sans);color:rgba(232,230,227,.66);font-variant-numeric:tabular-nums;pointer-events:none;white-space:nowrap}
+.cv-gdp-ylab{left:0;transform:translateY(-50%);width:7%;min-width:44px;text-align:left}
+.cv-gdp-xlab{bottom:0;transform:translateX(-50%)}
+.cv-gdp-xlab:last-child{transform:translateX(-100%)}
+.cv-gdp-chart svg text.cv-gdp-year,.cv-gdp-chart svg text.cv-gdp-value{display:none}
+.cv-gdp-tip text{font-family:var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
