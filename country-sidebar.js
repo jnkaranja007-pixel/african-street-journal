@@ -39,24 +39,43 @@
     if (!real(v)) return '';
     return '<div class="cv-rail-fact"><dt>' + esc(k) + '</dt><dd>' + esc(v) + (sub && real(sub) ? '<small>' + esc(sub) + '</small>' : '') + '</dd></div>';
   }
-  // The facts strip relabels its cells per audience, so find a fact by its visible key.
-  function almFact(re, label) {
-    var keys = document.querySelectorAll('#country-view .cv-alm-key');
-    for (var i = 0; i < keys.length; i++) {
-      if (re.test(keys[i].textContent.trim())) {
-        var cell = keys[i].parentNode;
-        var v = cell.querySelector('.cv-alm-val'), sub = cell.querySelector('.cv-alm-sub');
-        return factRow(label, v && v.textContent.trim(), sub && sub.textContent.trim());
-      }
-    }
-    return '';
+  // Quick facts must not repeat the header (capital, region) or the facts strip above,
+  // whose cells change with the audience. Real data only; a missing fact is skipped.
+  function shownKeys() {
+    return Array.prototype.map.call(document.querySelectorAll('#country-view .cv-alm-key'), function (k) {
+      return k.getClientRects().length ? k.textContent.trim().toLowerCase() : '';
+    }).join(' | ');
+  }
+  function fxFact(cc, info) {
+    try {
+      var inv = investorForCountry(cc, info);
+      var ccy = inv && inv.currency;
+      var rate = ccy && (window.__FX || {})[ccy];
+      var at = Date.parse(window.__FX_AT || '');
+      if (!ccy || !Number.isFinite(rate) || rate <= 0 || !Number.isFinite(at)) return null;
+      if (window.__FX_SOURCE === 'fallback' || Date.now() - at > 7 * 86400000) return null;
+      return { k: 'US dollar', v: '1 USD = ' + formatFxRate(rate) + ' ' + ccy, sub: 'as of ' + formatFxDate(window.__FX_AT) + ' · ExchangeRate-API', ccy: ccy };
+    } catch (e) { return null; }
+  }
+  function quickFacts(cc, info) {
+    var shown = shownKeys();
+    var rows = [];
+    var fx = fxFact(cc, info);
+    if (fx) rows.push(fx);
+    var ccy = fx ? fx.ccy : (function () { try { return investorForCountry(cc, info).currency; } catch (e) { return ''; } }());
+    if (ccy && typeof CCY_NAME !== 'undefined' && CCY_NAME[ccy] && !/payout|currency/.test(shown)) rows.push({ k: 'Currency', v: CCY_NAME[ccy] + ' (' + ccy + ')' });
+    // Same figure the page shows elsewhere (live-ticking estimate), so the numbers agree.
+    var live = (txt('cv-file-pop').match(/^([\d.]+)\s*([MB])/i) || []);
+    var popText = live[1] ? live[1] + (live[2].toUpperCase() === 'B' ? ' billion' : ' million') : (Number.isFinite(info.pop) && info.pop > 0 ? (info.pop / 1e6).toFixed(info.pop >= 1e7 ? 0 : 1) + ' million' : '');
+    if (popText && !/population/.test(shown)) rows.push({ k: 'Population', v: popText });
+    return rows.slice(0, 3).map(function (r) { return factRow(r.k, r.v, r.sub); }).join('');
   }
   function render() {
     var cc = currentId();
     if (!cc) return;
     var info = COUNTRY_INFO[cc] || {};
     var html = '';
-    var facts = factRow('Capital', info.capital || txt('cv-capital')) + almFact(/^local time/i, 'Local time') + almFact(/^weather/i, 'Weather');
+    var facts = quickFacts(cc, info);
     var idx = '';
     try { if (typeof renderIndexLine === 'function') idx = renderIndexLine(cc); } catch (e) {}
     html += '<section class="cv-rail-block"><h2 class="cv-rail-h">Quick facts</h2><dl class="cv-rail-facts">' + facts + '</dl>' +
@@ -83,6 +102,7 @@
     if (f && star) f.addEventListener('click', function () { star.click(); setTimeout(render, 50); });
   }
   window.__asjRailRender = render;
+  document.addEventListener('fx-ready', function () { setTimeout(render, 30); });
   window.addEventListener('hashchange', function () { setTimeout(render, 60); });
   var name = document.getElementById('cv-name');
   if (name) new MutationObserver(function () { setTimeout(render, 60); }).observe(name, { childList: true, characterData: true, subtree: true });
