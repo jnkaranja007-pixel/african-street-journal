@@ -1904,3 +1904,26 @@ main{position:relative}
 }
 #wire-view .wire-compare-body select:focus-visible{outline:2px solid var(--green-bright);outline-offset:2px}
 @media (max-width:720px){#wire-view .wire-compare-body select{min-height:44px;font-size:16px!important}}
+
+/* ── reader-v2: the story reader's chrome at reading size ─────────────────────────
+   readability-v2 moved these to sans but left them at 10-11px: the date, read time and
+   source count under the headline, the citation links (the reason to trust the piece),
+   Back / Share, and the "Next unread" label. */
+.story-reader-back,.story-reader-share{font:600 14px/1 var(--sans)!important}
+.story-reader-kicker{font:600 14px/1.3 var(--sans)!important}
+.story-reader-meta{font:400 14px/1.4 var(--sans)!important;gap:6px 18px}
+.story-reader-meta *{font:inherit!important}
+.story-reader-meta b{font-weight:600!important}
+.story-reader-why b{font:600 14px/1.3 var(--sans)!important}
+.story-reader-sources>span{font:600 14px/1.3 var(--sans)!important;color:var(--text-muted)}
+.story-reader-source-list a{font:500 15px/1.2 var(--sans)!important;border-radius:8px}
+.story-reader-next>span{font:600 14px/1.3 var(--sans)!important}
+.story-reader-next small{font:400 14px/1.3 var(--sans)!important}
+
+/* The landing page's one way into the news was set in 10px. Same place, same mono
+   voice as the rest of the landing chrome, at a size you can read and hit. */
+.wire-entry{font-size:13px!important;letter-spacing:.08em!important;min-height:36px}
+@media (max-width:720px){
+  .mobile-wire-entry .wire-entry-count{font-size:13px!important;letter-spacing:.06em!important}
+  .mobile-wire-entry{min-height:44px}
+}

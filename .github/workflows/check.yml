@@ -63,9 +63,12 @@ jobs:
       - name: Ranking behavior
         shell: pwsh
         run: |
-          ./scripts/test-news-ranking.ps1
-          ./scripts/test-story-contract.ps1
-          ./scripts/test-article-evidence.ps1
+          # Only the last command's exit code fails a pwsh step; check each one.
+          ./scripts/test-news-ranking.ps1;     if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ./scripts/test-story-contract.ps1;   if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ./scripts/test-article-evidence.ps1; if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          # Built pages belong to the desk and are checked as it builds them.
+          ./scripts/test-static-pages.ps1 -UnitOnly
 
       - name: Published payload validates
         shell: pwsh

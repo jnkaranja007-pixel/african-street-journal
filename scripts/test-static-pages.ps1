@@ -14,8 +14,14 @@
   rendering. It could not reproduce locally, which is exactly why it needs a test that
   feeds the [datetime] shape in deliberately rather than whatever this shell happens to
   produce.
+.PARAMETER UnitOnly
+  Run the normalisation tests and skip the checks on built pages. The desk's pre-flight
+  step uses this: before a run, the pages on disk are the previous edition's, already
+  checked when they were built, and a new page check would fail every run until the
+  pages were next rebuilt - which that failing run would never get to do. The check
+  after the build step runs everything.
 #>
-param()
+param([switch]$UnitOnly)
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
@@ -54,7 +60,9 @@ $pages = @(Get-ChildItem -Path $root -Directory |
   ForEach-Object { Join-Path $_.FullName 'index.html' } |
   Where-Object { Test-Path $_ })
 
-if ($pages.Count -eq 0) {
+if ($UnitOnly) {
+  Write-Host '  SKIP  built pages (-UnitOnly: checked after the build step)' -ForegroundColor Yellow
+} elseif ($pages.Count -eq 0) {
   Write-Host '  SKIP  no country pages built yet' -ForegroundColor Yellow
 } else {
   $bad = New-Object System.Collections.Generic.List[string]
@@ -67,6 +75,18 @@ if ($pages.Count -eq 0) {
     }
   }
   Check "all $($pages.Count) country pages carry an ISO dateModified" ($bad.Count -eq 0) ($bad -join ', ')
+
+  # Every story block opens the article it closes. The opening tag went missing once and
+  # nothing noticed: browsers tolerate a stray </article>, so the pages rendered - just
+  # without the spacing and dividers each story is meant to have.
+  $unbalanced = New-Object System.Collections.Generic.List[string]
+  foreach ($p in $pages) {
+    $html = [IO.File]::ReadAllText($p, [Text.Encoding]::UTF8)
+    $open = [regex]::Matches($html, '<article[\s>]').Count
+    $close = [regex]::Matches($html, '</article>').Count
+    if ($open -ne $close) { $unbalanced.Add("$(Split-Path (Split-Path $p -Parent) -Leaf)=$open/$close") }
+  }
+  Check "all $($pages.Count) country pages open every article they close" ($unbalanced.Count -eq 0) (($unbalanced | Select-Object -First 5) -join ', ')
 }
 
 if ($fail) { Write-Host "[static-pages] $fail check(s) failed" -ForegroundColor Red; exit 1 }

@@ -2502,9 +2502,11 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
     .map(paragraph => '<p>' + escapeHtml(paragraph) + '</p>').join('');
   const why = document.getElementById('story-reader-why');
   const whyText = lensData.why;
+  // Same words as the country page's inline story. The bare relevance score meant
+  // nothing to a reader - there is no scale on the page to read it against.
   const whyLabel = readerLens === 'general'
     ? 'Why it matters'
-    : STORY_LENS_LABELS[readerLens] + ' lens · relevance ' + lensData.score;
+    : 'Why it matters for ' + ({ farmers:'farmers', investors:'investors', diaspora:'the diaspora' }[readerLens] || 'you');
   why.innerHTML = '<b>' + escapeHtml(whyLabel) + '</b>' + escapeHtml(whyText);
   why.hidden = !whyText;
   const sourcesEl = document.getElementById('story-reader-sources');
@@ -6104,7 +6106,7 @@ async function runSelfTest() {
       document.querySelectorAll('#story-reader-copy p').length > 0 && document.querySelectorAll('#story-reader-sources a').length > 0,
       document.querySelectorAll('#story-reader-copy p').length + ' paragraphs, ' + document.querySelectorAll('#story-reader-sources a').length + ' sources');
     add('story reader uses the active lens without rewriting copy',
-      /Investor lens/.test(document.getElementById('story-reader-why')?.textContent || '') &&
+      /for investors/.test(document.getElementById('story-reader-why')?.textContent || '') &&
         document.querySelector('#story-reader-copy p')?.textContent === storyParagraphs(findPublishedStory(openedStoryKey)?.story)[0],
       document.getElementById('story-reader-why')?.textContent || 'missing');
     add('opened story is saved as read',

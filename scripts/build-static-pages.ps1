@@ -142,6 +142,23 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 /* readability-v2 */
 .story-head .meta,.page>.meta,.masthead,.masthead a,.asj-info,.asj-info>summary,.asj-info-menu a,.asj-info-menu a:visited,.kicker,.story-head .kicker,.topic{text-transform:none!important;letter-spacing:0!important;font-family:system-ui,-apple-system,'Segoe UI',sans-serif!important;font-size:14px!important}
 .asj-info-menu a{font-size:15px!important;font-weight:500!important}
+/* readability-v3: the same type system as the app, on every generated page.
+   Playfair is for a page's own title - the country name, the story headline, which is
+   how the same story looks in the app's reader. Headlines in a list are sans, as on the
+   app's country page and Wire. Labels, sources and links are 14px sans with no caps
+   tracking; v2 reached the story pages but country pages still set them in 10-11px
+   monospace capitals. */
+.meta,.open,.src,.read,footer,.morenav h2{font-family:system-ui,-apple-system,'Segoe UI',sans-serif!important;letter-spacing:0!important;text-transform:none!important}
+.meta{font-size:14px!important;font-weight:400!important;color:#a8a39d}
+.open{font-size:15px!important;font-weight:600!important;margin:18px 0 10px!important}
+.src{font-size:14px!important;font-weight:500!important;line-height:1.8!important}
+.read{font-size:15px!important;font-weight:600!important}
+footer{font-size:13px!important;font-weight:400!important;line-height:1.8!important;color:#8a847b}
+.morenav h2{font-size:15px!important;font-weight:650!important;color:#cfcac3}
+.morenav a{font:400 15px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif!important}
+article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI',sans-serif!important}
+.story-head h1{font:700 clamp(30px,5.6vw,46px)/1.12 'Playfair Display',Georgia,'Times New Roman',serif!important;letter-spacing:0!important}
+.related li a{font:650 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif!important}
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=67" defer></script>'
@@ -207,6 +224,10 @@ foreach ($prop in $byCountry.PSObject.Properties) {
     $storySlug = Get-StorySlug $b.headline $b.articleId
     $storyUrl = "$BaseUrl/$code/$storySlug/"
     [void]$storyPages.Add([pscustomobject]@{ code = $code; slug = $storySlug; brief = $b; when = $when; country = $name; key = $storyKey })
+    # Opened here and closed after "Read in ASJ". The opening tag was missing, so every
+    # country page closed 4-5 articles it never opened, and the spacing and dividers the
+    # stylesheet gives each story never applied.
+    [void]$body.Append("<article>`n")
     [void]$body.Append("<div class=""kicker"">$(Esc $b.topic)$(if($when){" &middot; $when"})</div>`n")
     [void]$body.Append("<h2><a href=""$storyUrl"">$(Esc $b.headline)</a></h2>`n")
     if ($b.dek) { [void]$body.Append("<p class=""dek"">$(Esc $b.dek)</p>`n") }
@@ -283,7 +304,7 @@ $analytics
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=67">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=68">
 </head>
 <body>
 <div class="wrap">
@@ -414,7 +435,7 @@ $analytics
 <meta name="twitter:description" content="$(Esc $dek)">
 <meta name="twitter:image" content="$BaseUrl/og/$($sp.code).jpg">
 <script type="application/ld+json">$($ld.ToString())</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=67">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=68">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
@@ -545,7 +566,7 @@ foreach ($slug in $trustPages.Keys) {
 <meta name="theme-color" content="#131313">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=67">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=68">
 </head>
 <body>
 <div class="wrap page">
@@ -590,7 +611,7 @@ $hubHtml = @"
 <meta property="og:url" content="$BaseUrl/countries/">
 <meta property="og:image" content="$BaseUrl/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=67">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=68">
 $analytics
 </head>
 <body>
