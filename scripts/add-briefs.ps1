@@ -55,6 +55,9 @@ if (Test-Path $marketsPath) {
   foreach ($p in $liveMarkets.PSObject.Properties) { $markets[[string]$p.Name] = $p.Value; $refreshed++ }
   if ($refreshed) { Write-Host "[add] refreshed markets for $refreshed countries from data/markets.json" -ForegroundColor Green }
 }
+# Loaded before first use: Select-FreshMarkets lives there, and dot-sourcing it below
+# its first call broke the merge step on 21 Oct 2026.
+. (Join-Path $PSScriptRoot 'story-shape.ps1')
 # A block nothing can refresh should not age in place - see Select-FreshMarkets.
 $markets = Select-FreshMarkets $markets
 
@@ -76,7 +79,6 @@ $MaxStoryWords = 220
 # word-joiner and the gate did not, so a South Sudan story measured 218 words on the
 # way in and 221 at the gate. The merge kept it, the gate rejected the edition, and
 # 243 sound stories went unpublished.
-. (Join-Path $PSScriptRoot 'story-shape.ps1')
 $seenArticleIds = New-Object 'System.Collections.Generic.HashSet[string]'
 function Get-StoryDefect($Story) {
   return Get-StoryShapeIssue $Story $MinStoryWords $MaxStoryWords $seenArticleIds

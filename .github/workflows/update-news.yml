@@ -102,8 +102,9 @@ jobs:
           else { ./scripts/fetch-news.ps1 }
 
       - name: Restore story cache
+        id: storycache
         if: steps.guard.outputs.stale == 'true'
-        uses: actions/cache@v5
+        uses: actions/cache/restore@v5
         with:
           path: data/story-cache.json
           key: ${{ runner.os }}-asj-story-v1-${{ hashFiles('scripts/write-briefs.ps1', 'scripts/news-ranking.ps1') }}
@@ -187,6 +188,14 @@ jobs:
           # step above sees yesterday's pages, so on its own it reports a bad date a day
           # after it shipped. Checking here is what stops one leaving the runner.
           ./scripts/test-static-pages.ps1
+
+      # Saved even when a later step fails, so a rerun reuses stories already paid for.
+      - name: Save story cache
+        if: always() && steps.guard.outputs.stale == 'true' && hashFiles('data/story-cache.json') != ''
+        uses: actions/cache/save@v5
+        with:
+          path: data/story-cache.json
+          key: ${{ runner.os }}-asj-story-v1-${{ hashFiles('scripts/write-briefs.ps1', 'scripts/news-ranking.ps1') }}-${{ github.run_id }}
 
       - name: Save desk efficiency metrics
         if: always()
