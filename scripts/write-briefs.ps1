@@ -50,7 +50,16 @@ param(
   # The trade is latency, and the desk has a deadline: it starts at 01:40 UTC and has
   # to be on the doorstep before Nairobi wakes around 03:00. If a run ever misses that
   # window, drop the ':batch' suffix - it is the only change needed.
-  [string]$Model      = 'google/gemini-2.5-flash-lite:batch',
+  #
+  # 20 Oct 2026: the desk failed every night from 6 Sep with HTTP 404 and an empty
+  # body on the ':batch' slug. The model and fallbacks are now configurable: pass
+  # -Model / -FallbackModels, or set the ASJ_MODEL / ASJ_FALLBACK_MODELS repository
+  # variables (comma-separated). OpenRouter tries the list in order on its side.
+  [string]$Model      = '',
+  [string[]]$FallbackModels,
+  # Abort the whole run after this many API errors in a row, instead of grinding
+  # through 55 countries x 3 attempts against a dead endpoint for half an hour.
+  [int]$MaxConsecutiveApiErrors = 3,
   [string[]]$Only,
   [string]$InFile     = 'data/feed-items.json',
   [string]$OutFile    = 'data/manual-briefs.json',
@@ -99,6 +108,15 @@ $cachePath = if ([IO.Path]::IsPathRooted($CacheFile)) { $CacheFile } else { Join
 $metricsPath = if ([IO.Path]::IsPathRooted($MetricsFile)) { $MetricsFile } else { Join-Path $root $MetricsFile }
 
 $apiKey = $env:OPENROUTER_API_KEY
+$DEFAULT_MODEL = 'google/gemini-2.5-flash-lite'
+$DEFAULT_FALLBACKS = @('google/gemini-3.1-flash-lite','deepseek/deepseek-v3.2')
+if (-not $Model) { $Model = if ($env:ASJ_MODEL) { $env:ASJ_MODEL.Trim() } else { $DEFAULT_MODEL } }
+if (-not $FallbackModels) {
+  $FallbackModels = if ($env:ASJ_FALLBACK_MODELS) { @($env:ASJ_FALLBACK_MODELS -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }) } else { $DEFAULT_FALLBACKS }
+}
+$FallbackModels = @($FallbackModels | Where-Object { $_ -and $_ -ne $Model } | Select-Object -First 2)
+$consecutiveApiErrors = 0
+$servedModels = @{}
 if (-not (Test-Path $inPath)) {
   Write-Host "[write] $InFile not found - run scripts/fetch-news.ps1 first." -ForegroundColor Red
   exit 1
@@ -396,8 +414,10 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
     )
     temperature = $Temperature
     max_tokens  = $MaxOutputTokens
-    reasoning   = @{ effort = 'none' }
   }
+  # OpenRouter's own model fallback: if the primary has no live endpoint, it tries the
+  # next model in the list within the same request.
+  if ($FallbackModels.Count) { $body['models'] = @(@($Model) + $FallbackModels) }
   if ($JsonMode) {
     $lensEntrySchema = [ordered]@{
       type = 'object'
@@ -454,7 +474,6 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
     # Do not silently route to a provider that ignores the schema.
     $body['provider'] = @{
       require_parameters = $true
-      order = @('google-vertex','google-ai-studio')
       allow_fallbacks = $true
     }
   }
@@ -479,24 +498,38 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
     # and loses OpenRouter's actual explanation - wrong model slug, no credit, bad
     # parameter - which is the only thing that makes the failure diagnosable.
     $status = 0; $detail = ''
-    if ($_.Exception.Response) {
-      try { $status = [int]$_.Exception.Response.StatusCode } catch { $status = 0 }
-      if ($_.ErrorDetails -and $_.ErrorDetails.Message) {
-        $detail = [string]$_.ErrorDetails.Message
-      }
+    $resp0 = $_.Exception.Response
+    if ($resp0) {
+      try { $status = [int]$resp0.StatusCode } catch { $status = 0 }
+    }
+    if ($_.ErrorDetails -and $_.ErrorDetails.Message) { $detail = [string]$_.ErrorDetails.Message }
+    # PS7 (the CI runner): HttpResponseMessage. Read the body explicitly.
+    if (-not $detail -and $resp0 -and $resp0.Content) {
+      try { $detail = [string]$resp0.Content.ReadAsStringAsync().GetAwaiter().GetResult() } catch { }
+    }
+    # PS5.1: WebResponse stream.
+    if (-not $detail -and $resp0) {
       try {
-        if (-not $detail -and $_.Exception.Response.GetResponseStream) {
-          $sr = New-Object IO.StreamReader($_.Exception.Response.GetResponseStream(), [Text.Encoding]::UTF8)
-          $detail = $sr.ReadToEnd()
-        }
+        $sr = New-Object IO.StreamReader($resp0.GetResponseStream(), [Text.Encoding]::UTF8)
+        $detail = $sr.ReadToEnd()
       } catch { }
     }
-    if ($detail.Length -gt 300) { $detail = $detail.Substring(0, 300) }
+    if (-not $detail) { $detail = "(empty body) $($_.Exception.Message)" }
+    $detail = ($detail -replace '\s+', ' ')
+    if ($detail.Length -gt 600) { $detail = $detail.Substring(0, 600) }
+    Write-Host ("      [api] HTTP {0} model={1}: {2}" -f $status, $Model, $detail) -ForegroundColor Red
     throw "HTTP $status $detail"
   }
   $text = [Text.Encoding]::UTF8.GetString($resp.RawContentStream.ToArray())
   $obj  = $text | ConvertFrom-Json
-  if ($obj.error) { throw "API error: $($obj.error.message)" }
+  if ($obj.error) {
+    Write-Host ("      [api] error body: {0}" -f (($text -replace '\s+',' ') | ForEach-Object { if ($_.Length -gt 600) { $_.Substring(0,600) } else { $_ } })) -ForegroundColor Red
+    throw "API error: $($obj.error.message)"
+  }
+  if ($obj.model -and -not $script:servedModels.ContainsKey([string]$obj.model)) {
+    $script:servedModels[[string]$obj.model] = $true
+    Write-Host ("      [api] served by {0}" -f $obj.model) -ForegroundColor DarkGray
+  }
   return [pscustomobject]@{
     Content          = [string]$obj.choices[0].message.content
     PromptTokens     = if ($obj.usage.prompt_tokens) { [int]$obj.usage.prompt_tokens } else { 0 }
@@ -691,6 +724,7 @@ number, date, cause or context from any other event. Return ONLY a JSON object i
     for ($attempt = 1; $attempt -le ($Retries + 1); $attempt++) {
       try {
         $response = Invoke-OpenRouter ($prompt + $repairNote) 1 $i
+        $consecutiveApiErrors = 0
         $apiCalls++
         $usagePrompt += $response.PromptTokens
         $usageCompletion += $response.CompletionTokens
@@ -765,6 +799,13 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
         break
       } catch {
         $lastErr = $_.Exception.Message.Split("`n")[0]
+        if ($lastErr -match '^(HTTP \d|API error)') {
+          $consecutiveApiErrors++
+          if ($consecutiveApiErrors -ge $MaxConsecutiveApiErrors) {
+            Write-Host "[write] FAIL FAST: $consecutiveApiErrors consecutive API errors (last: $lastErr). Aborting the run instead of retrying every country." -ForegroundColor Red
+            exit 1
+          }
+        }
         if ($lastErr -match 'HTTP 402|402 \(Payment Required\)') {
           $lastErr = 'OpenRouter credit unavailable (HTTP 402); add credit before the next desk run'
           break

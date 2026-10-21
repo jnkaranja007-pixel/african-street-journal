@@ -19,16 +19,19 @@ on:
     # setting changes that, so the answer is several early attempts rather than one
     # hopeful slot. The freshness guard makes every attempt after a successful one cost
     # a few seconds, so this buys reliability rather than compute.
+    # Cut from five attempts to two on 20 Oct 2026. Five failing attempts burned
+    # ~150 runner-minutes a day for six weeks; the desk now fails fast on API errors,
+    # and one retry two hours later still lands before East Africa wakes.
     - cron: '40 1 * * *'    # 04:40 EAT - first attempt, well before dawn
-    - cron: '40 2 * * *'    # 05:40 EAT
-    - cron: '40 3 * * *'    # 06:40 EAT - last chance for East Africa
-    - cron: '40 4 * * *'    # 05:40 WAT - still ahead of Lagos
-    # Daytime backstop, in case every early attempt was queued past usefulness.
-    - cron: '17 12 * * *'
+    - cron: '40 3 * * *'    # 06:40 EAT - retry if the first was queued or failed
   workflow_dispatch:
     inputs:
       only:
         description: 'Limit to these ISO-2 codes, e.g. ng,ke,za. Empty runs all 55.'
+        required: false
+        default: ''
+      model:
+        description: 'Optional OpenRouter model slug override for this run.'
         required: false
         default: ''
 
@@ -112,6 +115,11 @@ jobs:
         shell: pwsh
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          # Model choice lives in repository variables so it can change without a commit:
+          #   gh variable set ASJ_MODEL --body google/gemini-2.5-flash-lite
+          #   gh variable set ASJ_FALLBACK_MODELS --body 'google/gemini-3.1-flash-lite,deepseek/deepseek-v3.2'
+          ASJ_MODEL: ${{ github.event.inputs.model || vars.ASJ_MODEL }}
+          ASJ_FALLBACK_MODELS: ${{ vars.ASJ_FALLBACK_MODELS }}
         run: |
           if (-not $env:OPENROUTER_API_KEY) {
             # Failing loudly on purpose. Exiting 0 here would let the journal quietly
@@ -245,7 +253,9 @@ jobs:
           $reason = 'The run failed. Open the log to see which step.'
           $log = ''
           try { $log = gh run view $env:GITHUB_RUN_ID --log 2>$null | Out-String } catch {}
-          if ($log -match 'HTTP 402|credit unavailable') {
+          if ($log -match 'FAIL FAST' -and $log -notmatch 'HTTP 402'){
+            $reason = 'The model API returned errors on 3 calls in a row, so the run stopped early. The log line starting [api] shows OpenRouter''s exact response.'
+          } elseif ($log -match 'HTTP 402|credit unavailable') {
             $reason = 'OpenRouter is out of credit (HTTP 402). Add credit at https://openrouter.ai/settings/credits, then run the desk by hand with: gh workflow run update-news.yml'
           } elseif ($log -match 'OPENROUTER_API_KEY secret is not set') {
             $reason = 'The OPENROUTER_API_KEY secret is missing or empty.'
@@ -261,7 +271,7 @@ jobs:
           # column zero, and inside a YAML run: block every line is indented, so a
           # here-string here is a parse error at runtime. check-workflows.ps1 catches it.
           $body = @(
-            "The nightly desk failed at $stamp.",
+            "@jnkaranja007-pixel - the nightly desk failed at $stamp.",
             "",
             "**$reason**",
             "",
