@@ -301,6 +301,15 @@ jobs:
           if (-not $pushed) { Write-Host 'Push failed after 3 attempts.'; exit 1 }
           Write-Host 'Pushed refreshed stories'
 
+      - name: Ping IndexNow with new stories
+        if: steps.guard.outputs.stale == 'true'
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          # Tells Bing and other IndexNow engines about the homepage and every story
+          # from the last 48 hours. Logs the HTTP code; never fails the run.
+          ./scripts/submit-indexnow.ps1
+
       - name: Raise the alarm if the desk failed
         if: failure()
         shell: pwsh
