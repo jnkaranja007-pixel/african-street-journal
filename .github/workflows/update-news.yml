@@ -111,6 +111,40 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-asj-story-v1-
 
+      - name: Check OpenRouter credit
+        if: steps.guard.outputs.stale == 'true'
+        continue-on-error: true
+        shell: pwsh
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Warn days before the money runs out, not the morning after. Never fails the run.
+          if (-not $env:OPENROUTER_API_KEY) { Write-Host 'No OpenRouter key; skipping credit check.'; exit 0 }
+          $h = @{ Authorization = "Bearer $env:OPENROUTER_API_KEY" }
+          $remaining = $null
+          try {
+            $c = (Invoke-RestMethod -Uri 'https://openrouter.ai/api/v1/credits' -Headers $h -TimeoutSec 20).data
+            $remaining = [double]$c.total_credits - [double]$c.total_usage
+          } catch {
+            try {
+              $k = (Invoke-RestMethod -Uri 'https://openrouter.ai/api/v1/key' -Headers $h -TimeoutSec 20).data
+              if ($null -ne $k.limit_remaining) { $remaining = [double]$k.limit_remaining }
+            } catch { Write-Host "Credit check unavailable: $($_.Exception.Message)" }
+          }
+          if ($null -eq $remaining) { exit 0 }
+          Write-Host ("OpenRouter credit remaining: `${0:N2}" -f $remaining)
+          if ($remaining -lt 2) {
+            $title = 'ASJ OpenRouter credit is low'
+            $nights = [Math]::Floor($remaining / 0.14)
+            $body = "@jnkaranja007-pixel - OpenRouter credit is down to `$$('{0:N2}' -f $remaining), about $nights more nightly editions at ~`$0.13 each. Top up at https://openrouter.ai/settings/credits. (If GEMINI_API_KEY is set, the desk falls back to Google's free tier when credit runs out.)"
+            $existing = gh issue list --state open --search "$title in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq $title } | Select-Object -First 1
+            if ($existing) { gh issue comment $existing.number --body $body } else { gh issue create --title $title --body $body }
+          } else {
+            $existing = gh issue list --state open --search "ASJ OpenRouter credit is low in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq 'ASJ OpenRouter credit is low' } | Select-Object -First 1
+            if ($existing) { gh issue close $existing.number --comment ("Credit is back to `${0:N2}. Closing." -f $remaining) }
+          }
+
       - name: Write on-site stories
         if: steps.guard.outputs.stale == 'true'
         shell: pwsh
@@ -164,7 +198,9 @@ jobs:
             # Freshness means 'did this country get new reporting today', not 'did it hit five'.
             # Comoros and Guinea-Bissau field two sound stories a day; counting those as
             # stale made the gate reward a blank page over a thin one.
-            ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 180 -MinFreshCountries 45 -FreshStoriesPerCountry 1
+            # Partial publish: ten fresh countries is enough to ship. Countries the writer
+            # missed keep their last good stories (add-briefs merges, it never blanks).
+            ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 150 -MinFreshCountries 10 -FreshStoriesPerCountry 1
           }
 
       - name: Audit sources and quality
@@ -174,7 +210,24 @@ jobs:
           # Fetches every cited URL. Only 404/410 fails the run - that is a citation with
           # nothing behind it. 401/403 are bot walls on live pages and must not fail the
           # desk, or Cloudflare-fronted outlets would block publication every night.
+          ./scripts/audit-briefs.ps1 -CheckLinks -Worst 8 -RejectFile data/audit-reject.json
+          if ($LASTEXITCODE -eq 0) { exit 0 }
+          # Degrade, don't die: drop only the stories behind critical findings, re-merge
+          # from the last committed state, and audit again (strictly) before publishing.
+          $ids = @()
+          if (Test-Path data/audit-reject.json) { $ids = @(Get-Content data/audit-reject.json -Raw | ConvertFrom-Json) }
+          if (-not $ids.Count) { Write-Host 'Audit failed with nothing droppable.'; exit 1 }
+          Write-Host "Dropping $($ids.Count) story(ies) with critical findings and re-merging: $($ids -join ', ')"
+          git checkout -- data/briefs.js data/briefs-full.js data/briefs-state.json data/archive
+          $auto = Get-Content data/auto-briefs.json -Raw -Encoding utf8 | ConvertFrom-Json
+          foreach ($p in $auto.PSObject.Properties) { $p.Value = @($p.Value | Where-Object { $ids -notcontains [string]$_.articleId }) }
+          [IO.File]::WriteAllText("$PWD/data/auto-briefs.json", ($auto | ConvertTo-Json -Depth 12), (New-Object Text.UTF8Encoding($false)))
+          ./scripts/add-briefs.ps1 -InFile data/auto-briefs.json
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          ./scripts/validate-briefs.ps1 -MinCountries 55 -MinStoryPackages 150 -MinFreshCountries 1 -FreshStoriesPerCountry 1
+          if ($LASTEXITCODE -ne 0) { exit 1 }
           ./scripts/audit-briefs.ps1 -CheckLinks -Worst 8
+          exit $LASTEXITCODE
 
       - name: Rebuild crawlable pages and sitemap
         if: steps.guard.outputs.stale == 'true'

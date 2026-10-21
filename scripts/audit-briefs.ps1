@@ -26,7 +26,10 @@ param(
   [switch]$CheckLinks,
   [int]$Worst = 8,
   [int]$LinkTimeoutSec = 20,
-  [int]$LinkThrottle = 12
+  [int]$LinkThrottle = 12,
+  # Optional: write the articleIds behind critical findings here, so the desk can drop
+  # just those stories and republish instead of losing the whole edition.
+  [string]$RejectFile = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -117,6 +120,7 @@ if ($CheckLinks) {
   }
 }
 
+$rejectIds = New-Object 'System.Collections.Generic.HashSet[string]'
 foreach ($prop in $byCountry.PSObject.Properties) {
   $code = $prop.Name
   $list = @($prop.Value)
@@ -131,11 +135,11 @@ foreach ($prop in $byCountry.PSObject.Properties) {
     $body = Get-StoryBodyText $b
     $srcs = @($b.sources | Where-Object { $_ -and $_.url })
 
-    if (-not $head -or -not $body) { $critical.Add("$code : brief missing headline or body"); continue }
-    if ($srcs.Count -eq 0) { $critical.Add("$code : '$($head.Substring(0,[Math]::Min(50,$head.Length)))' has no source"); continue }
+    if (-not $head -or -not $body) { $critical.Add("$code : brief missing headline or body"); [void]$rejectIds.Add([string]$b.articleId); continue }
+    if ($srcs.Count -eq 0) { $critical.Add("$code : '$($head.Substring(0,[Math]::Min(50,$head.Length)))' has no source"); [void]$rejectIds.Add([string]$b.articleId); continue }
 
     foreach ($s in $srcs) {
-      if ($s.url -notmatch '^https?://') { $critical.Add("$code : non-http source $($s.url)"); continue }
+      if ($s.url -notmatch '^https?://') { $critical.Add("$code : non-http source $($s.url)"); [void]$rejectIds.Add([string]$b.articleId); continue }
       if ($CheckLinks) {
         $status = if ($linkCache.ContainsKey([string]$s.url)) { $linkCache[[string]$s.url] } else { 0 }
         # Only 404/410 prove the page is not there - that is a fabricated citation.
@@ -144,6 +148,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
         # fake URL, so warn rather than fail - a gate that cries wolf gets ignored.
         if ($status -eq 404 -or $status -eq 410) {
           $critical.Add("$code : FABRICATED source ($status) $($s.url)")
+          [void]$rejectIds.Add([string]$b.articleId)
         } elseif ($status -eq 0) {
           $penalty += 1
           $notes.Add('unreachable source (not proof of fabrication)')
@@ -207,6 +212,10 @@ foreach ($s in ($ranked | Select-Object -First $Worst)) {
   Write-Host ("  {0}  penalty {1,-3} {2}" -f $s.Code, $s.Penalty, $s.Notes)
 }
 
+if ($RejectFile) {
+  $ids = @($rejectIds | Where-Object { $_ })
+  [IO.File]::WriteAllText($RejectFile, (ConvertTo-Json -InputObject $ids -Compress), (New-Object Text.UTF8Encoding($false)))
+}
 if ($critical.Count) {
   Write-Host ''
   Write-Host "[audit] $($critical.Count) CRITICAL finding(s) - do not publish:" -ForegroundColor Red
