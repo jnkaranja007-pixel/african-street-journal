@@ -131,7 +131,7 @@ function rankStoryEntries(stories, lens = activeStoryLens) {
 }
 
 function updateStoryLensControls() {
-  document.querySelectorAll('[data-story-lens]').forEach(button => {
+  document.querySelectorAll('button[data-story-lens]').forEach(button => {
     button.setAttribute('aria-pressed', String(normalizeStoryLens(button.dataset.storyLens) === activeStoryLens));
   });
 }
@@ -878,11 +878,27 @@ const microHitTargets = paths
   .filter(({ p }) => p.bbox && !ISLAND_MARKERS[p.id] && (p.bbox.width * p.bbox.height) < 620)
   .map(({ p, idx }) => ({ idx, cx: (p.bbox.minX + p.bbox.maxX) / 2, cy: (p.bbox.minY + p.bbox.maxY) / 2 }));
 
+// The ocean wash is identical every frame, so it is painted once to an offscreen canvas
+// and blitted. Rebuilding two radial gradients 60 times a second was most of the
+// landing page's main-thread time on a throttled Android profile.
+let oceanLayer = null;
 function drawOcean(elapsed) {
   const alpha = Math.min(1, elapsed / 1.2);
   if (alpha === 0) return;
+  if (!oceanLayer) {
+    oceanLayer = document.createElement('canvas');
+    oceanLayer.width = 1000 * dpr; oceanLayer.height = 1001 * dpr;
+    const off = oceanLayer.getContext('2d');
+    off.scale(dpr, dpr);
+    paintOcean(off);
+  }
   ctx.save();
   ctx.globalAlpha = alpha;
+  ctx.drawImage(oceanLayer, 0, 0, 1000, 1001);
+  ctx.restore();
+}
+function paintOcean(ctx) {
+  ctx.save();
   // Deep-water wash that fades to transparent — no hard rectangle seam against the page.
   const wash = ctx.createRadialGradient(500, 480, 60, 500, 480, 640);
   wash.addColorStop(0, 'rgba(22,30,24,0.5)');
@@ -903,7 +919,7 @@ function drawOcean(elapsed) {
   const fade = ctx.createRadialGradient(500, 480, 320, 500, 480, 470);
   fade.addColorStop(0, 'rgba(0,0,0,0)');
   fade.addColorStop(1, 'rgba(0,0,0,1)');
-  ctx.globalAlpha = 1; // the erase must be full-strength even while the wash is fading in
+  ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = 'destination-out';
   ctx.fillStyle = fade;
   ctx.fillRect(0, 0, 1000, 1001);
@@ -1002,18 +1018,31 @@ function render(elapsed) {
   drawIslandMarkers(elapsed);
 }
 
+// Low-end or data-saving devices, and readers who ask for reduced motion, get the
+// finished map in one paint instead of a 3.5 s assembly animation.
+const MAP_STATIC = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+  !!(navigator.connection && navigator.connection.saveData) ||
+  (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+  (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
+function finishAssembly() {
+  if (assemblyDone) return;
+  assemblyDone = true;
+  render(3.5);
+}
 function frame(now) {
+  if (assemblyDone) return;
   if (!startTime) startTime = now;
   const elapsed = (now - startTime) / 1000;
-  render(elapsed);
-  if (elapsed < 3.5 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    requestAnimationFrame(frame);
-  } else {
-    assemblyDone = true;
-    render(3.5);
-  }
+  if (elapsed < 3.5) { render(elapsed); requestAnimationFrame(frame); }
+  else finishAssembly();
 }
-requestAnimationFrame(frame);
+if (MAP_STATIC) finishAssembly();
+else requestAnimationFrame(frame);
+// Safety net: rAF is paused in background tabs and can be starved on slow phones,
+// which left the map half-assembled (missing countries, one shape stuck mid-flight).
+// Whatever happens to the animation, the finished map is on screen by 4.2 s.
+setTimeout(finishAssembly, 4200);
+document.addEventListener('visibilitychange', () => { if (document.hidden) finishAssembly(); });
 
 function eventToLocal(e) {
   const rect = canvas.getBoundingClientRect();
