@@ -1773,3 +1773,134 @@ main{position:relative}
 .story-reader-actions{justify-self:end;display:inline-flex;gap:6px;align-items:center}
 .story-reader-wa{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#dff3e1;background:#1d3a24;border-color:#2f6b3b}
 .country-hub{padding-left:20px}.country-hub li{margin:0 0 10px}
+
+/* ── wire-v2: one calm control row, one summary line, a lead, one list ───────────
+   The Wire had two filter rows sharing one line (four audience buttons, eleven topic
+   pills), a stats row, a result count and three tool buttons above the first headline,
+   set in 10px tracked caps on a desktop and 8px on a phone. This replaces all of that.
+
+   Type follows the rest of the site: Playfair for the one display line on a screen -
+   here the lead story, which now matches how the same headline looks once it is opened
+   - and system sans for controls, lists and body. Every label is >= 13px, every control
+   is at least 40px tall (44px on a phone). */
+#wire-view .wire-controls{
+  display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;
+  padding:12px 22px 0;flex-shrink:0;
+}
+#wire-view .wire-pick{display:inline-flex;align-items:center;gap:8px;margin:0;cursor:pointer}
+#wire-view .wire-pick[hidden]{display:none}
+#wire-view .wire-pick-label{font:500 13px/1.2 var(--sans);color:var(--text-muted)}
+#wire-view .wire-pick select{
+  -webkit-appearance:none;appearance:none;
+  font:600 15px/1.2 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;
+  color:var(--text);background-color:rgba(255,255,255,.03);
+  border:1px solid rgba(232,230,227,.18);border-radius:8px;
+  min-height:40px;padding:0 34px 0 12px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a8a39d' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;background-size:16px;
+}
+#wire-view .wire-pick select:hover{border-color:rgba(232,230,227,.32)}
+#wire-view .wire-pick select:focus-visible{outline:2px solid var(--green-bright);outline-offset:2px;border-color:var(--green)}
+#wire-view .wire-pick select option{background:var(--bg);color:var(--text)}
+
+/* More: Compare / Copy / Share live behind one button, as a small menu. */
+#wire-view .wire-more{position:relative;margin-left:auto}
+#wire-view .wire-mobile-actions-toggle{
+  display:inline-flex!important;align-items:center;gap:6px;
+  font:600 14px/1.2 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;
+  color:var(--text-muted);background:none;border:1px solid rgba(232,230,227,.18);border-radius:8px;
+  min-height:40px;padding:0 12px;cursor:pointer;
+}
+#wire-view .wire-mobile-actions-toggle svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .15s}
+#wire-view .wire-mobile-actions-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+#wire-view .wire-mobile-actions-toggle:hover,#wire-view .wire-mobile-actions-toggle:focus-visible{color:var(--text);border-color:rgba(232,230,227,.32);outline:none}
+#wire-view .wire-actions{
+  display:none!important;position:absolute;right:0;top:calc(100% + 6px);z-index:30;
+  flex-direction:column;align-items:stretch;gap:0;min-width:220px;padding:6px;
+  background:var(--surface-raised);border:1px solid rgba(232,230,227,.14);border-radius:10px;
+  box-shadow:0 12px 32px rgba(0,0,0,.45);
+}
+#wire-view .wire-actions.mobile-open{display:flex!important}
+#wire-view .wire-action{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+  font:500 14px/1.3 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;
+  color:var(--text);background:none;border:0;border-radius:6px;padding:10px 12px;min-height:40px;text-align:left;cursor:pointer;
+}
+#wire-view .wire-action:hover,#wire-view .wire-action:focus-visible{background:rgba(255,255,255,.06);outline:none}
+#wire-view .wire-action b{font-weight:500;color:var(--text-dim)}
+
+/* The summary: one sentence that answers "what am I looking at". */
+#wire-view .wire-summary{
+  margin:0;padding:10px 22px 12px;flex-shrink:0;border-bottom:1px solid var(--rule);
+  font:400 14px/1.45 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;color:var(--text-muted);
+}
+#wire-view .wire-compare-body{padding:12px 22px;border-bottom:1px solid var(--rule)}
+
+/* Retired by this redesign. The markup is gone; these keep any stale cached copy calm. */
+#wire-view .wire-filter-bar,#wire-view .wire-tools,#wire-view .wire-lens-note,
+#wire-view .wire-front-grid,#wire-view .wire-movement{display:none!important}
+
+/* The lead: the Wire's one display line. */
+#wire-view .wire-hero{display:block;padding:26px 22px 22px;border-bottom:1px solid var(--rule)}
+#wire-view .wire-hero-title{
+  font:700 clamp(26px,2.6vw,36px)/1.15 var(--serif)!important;letter-spacing:0!important;
+  color:var(--text);margin:8px 0 0;max-width:30ch;text-wrap:balance;
+}
+#wire-view .wire-hero-sum{font:400 16px/1.55 var(--sans);color:var(--text-muted);margin:10px 0 0;max-width:68ch}
+#wire-view .wire-hero-kicker{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#wire-view .wire-hero-kicker .wire-hero-lead{color:var(--green-bright)}
+#wire-view .wire-hero-kicker .wire-item-country{color:var(--text)}
+#wire-view .wire-hero .wire-item-meta{margin-top:12px}
+
+/* The list. */
+#wire-view .wire-list{display:block}
+#wire-view .wire-item{
+  display:grid;grid-template-columns:22px minmax(0,1fr);gap:14px;align-items:start;
+  padding:16px 22px;border:0;border-bottom:1px solid rgba(232,230,227,.07);
+}
+#wire-view .wire-item-flag{width:22px;height:auto;margin-top:3px;border-radius:2px}
+#wire-view .wire-item-kicker{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 0 5px}
+#wire-view .wire-item-kicker *{font:600 13px/1.3 var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
+#wire-view .wire-item-kicker .wire-item-country{color:var(--text)}
+#wire-view .wire-item-kicker .wire-item-topic{color:var(--green-bright)}
+#wire-view .wire-item-title{font:650 17px/1.32 var(--sans)!important;color:var(--text);max-width:72ch}
+#wire-view .wire-item-sum{font:400 14.5px/1.5 var(--sans);color:var(--text-muted);margin-top:5px;max-width:72ch}
+#wire-view .wire-item-meta{font:400 13px/1.4 var(--sans);color:var(--text-dim);margin-top:7px}
+#wire-view .wire-item.is-read .wire-item-title{color:var(--text-muted)}
+/* The lead stays at full strength once read: a grey 36px headline reads as disabled. */
+#wire-view .wire-hero.is-read .wire-hero-title{color:var(--text)!important}
+#wire-view .wire-item:hover .wire-item-title,#wire-view .wire-item:focus-visible .wire-item-title{color:var(--green-bright)}
+#wire-view .wire-movement-line{margin:0;padding:12px 22px;border-bottom:1px solid var(--rule);font:400 14px/1.45 var(--sans);color:var(--green-bright)}
+#wire-view .wire-empty{padding:40px 22px;font:400 15px/1.55 var(--sans);color:var(--text-muted);max-width:60ch}
+
+@media (max-width:720px){
+  #wire-view .wire-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px 0}
+  #wire-view .wire-pick{display:flex;flex-direction:column;align-items:stretch;gap:5px}
+  #wire-view .wire-pick select{width:100%;min-height:44px;font-size:16px!important}
+  #wire-view .wire-more{grid-column:1 / -1;margin-left:0}
+  #wire-view .wire-mobile-actions-toggle{width:100%;justify-content:center;min-height:44px}
+  #wire-view .wire-actions{left:0;right:0;min-width:0}
+  #wire-view .wire-summary{padding:10px 16px 12px}
+  #wire-view .wire-hero{padding:20px 16px 18px}
+  #wire-view .wire-hero-title{font-size:25px!important}
+  #wire-view .wire-item{padding:15px 16px;gap:12px}
+  #wire-view .wire-item-title{font-size:17px!important}
+}
+
+/* Wire header on a phone: name and Close on one line, search full width under them.
+   It used to give the search what was left after the date, which was about 60px. */
+#wire-view .wire-close{font:600 14px/1.2 var(--sans)!important;border-radius:8px;min-height:40px;padding:0 14px}
+@media (max-width:720px){
+  #wire-view .wire-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;padding:12px 16px}
+  #wire-view .wire-head h2{grid-column:1;grid-row:1;flex-wrap:wrap;gap:4px 12px;min-width:0}
+  #wire-view .wire-close{grid-column:2;grid-row:1;margin-left:0;min-height:44px}
+  #wire-view .wire-search{grid-column:1 / -1;grid-row:2;max-width:none}
+  #wire-view .wire-search input{min-height:44px;font-size:16px;border-radius:8px}
+}
+/* Compare's three country pickers match the Reading for / Topic pickers. */
+#wire-view .wire-compare-body select{
+  font:600 15px/1.2 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;
+  color:var(--text);background-color:rgba(255,255,255,.03);border:1px solid rgba(232,230,227,.18);border-radius:8px;min-height:40px;padding:0 10px;
+}
+#wire-view .wire-compare-body select:focus-visible{outline:2px solid var(--green-bright);outline-offset:2px}
+@media (max-width:720px){#wire-view .wire-compare-body select{min-height:44px;font-size:16px!important}}

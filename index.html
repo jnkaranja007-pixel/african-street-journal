@@ -33,7 +33,7 @@
      GoatCounter site code nor a Cloudflare beacon token is a secret.
      Both supported providers are cookieless and neither profiles readers across sites,
      which is the only reason this page can measure traffic without a consent banner. -->
-<script src="data/analytics-config.js?v=67" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=68" onerror="window.ASJ_ANALYTICS=null"></script>
 <script>
 (function () {
   var cfg = window.ASJ_ANALYTICS;
@@ -69,10 +69,10 @@
      behaviour for a reader with JavaScript off. -->
 <link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=67" as="script">
-<link rel="preload" href="data/app-core.js?v=67" as="script">
-<link rel="preload" href="data/briefs.js?v=67" as="script">
-<link rel="stylesheet" href="styles.css?v=67">
+<link rel="preload" href="app.js?v=68" as="script">
+<link rel="preload" href="data/app-core.js?v=68" as="script">
+<link rel="preload" href="data/briefs.js?v=68" as="script">
+<link rel="stylesheet" href="styles.css?v=68">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
@@ -358,36 +358,50 @@
     </div>
     <button class="wire-close" id="wire-close" type="button">Close ✕</button>
   </div>
-  <div class="wire-filter-bar">
-    <div class="wire-lenses" id="wire-lenses" role="group" aria-label="Rank stories for a reader lens">
-      <button class="wire-lens" type="button" data-story-lens="general" aria-pressed="true">Top</button>
-      <button class="wire-lens" type="button" data-story-lens="farmers" aria-pressed="false">Farmers</button>
-      <button class="wire-lens" type="button" data-story-lens="investors" aria-pressed="false">Investors</button>
-      <button class="wire-lens" type="button" data-story-lens="diaspora" aria-pressed="false">Diaspora</button>
-    </div>
-    <div class="wire-topics" id="wire-topics" role="group" aria-label="Filter by topic"></div>
-  </div>
-  <div class="wire-tools" id="wire-tools">
-    <div class="wire-trust" id="wire-trust"></div>
-    <div class="wire-result-count" id="wire-result-count" aria-live="polite"></div>
-    <button class="wire-mobile-actions-toggle" id="wire-mobile-actions-toggle" type="button" aria-expanded="false" aria-controls="wire-actions">
-      <span>More</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
-    </button>
-    <div class="wire-actions" id="wire-actions">
-      <select class="wire-edition" id="wire-edition" aria-label="Edition" hidden></select>
-      <button class="wire-action wire-compare-toggle" id="wire-compare-toggle" type="button" aria-expanded="false" aria-controls="wire-compare-body"><span>Compare</span><b id="wire-compare-summary">Optional</b></button>
-      <button class="wire-action" id="wire-copy" type="button">Copy Desk</button>
-      <button class="wire-action" id="wire-share" type="button">Share</button>
-    </div>
-    <div class="wire-compare-body" id="wire-compare-body" hidden>
-      <div class="wire-compare" id="wire-compare" aria-label="Compare countries">
-        <span class="wire-compare-label">Compare countries</span>
-        <select id="wire-compare-a" aria-label="First country"></select>
-        <select id="wire-compare-b" aria-label="Second country"></select>
-        <select id="wire-compare-c" aria-label="Third country"></select>
+  <!-- One row of plain controls. This used to be two rows of filters fighting for the
+       same line - four audience buttons and eleven topic pills, 10px uppercase on a
+       desktop and 8px on a phone - then a stats row, a result count and three tool
+       buttons before the first headline. Native selects on purpose: a real picker on a
+       phone, full keyboard support, and nothing to learn. -->
+  <div class="wire-controls" id="wire-controls">
+    <label class="wire-pick">
+      <span class="wire-pick-label">Reading for</span>
+      <select id="wire-lens-select">
+        <option value="general">Everyone</option>
+        <option value="farmers">Farmers</option>
+        <option value="investors">Investors</option>
+        <option value="diaspora">Diaspora</option>
+      </select>
+    </label>
+    <label class="wire-pick">
+      <span class="wire-pick-label">Topic</span>
+      <select id="wire-topic-select"></select>
+    </label>
+    <label class="wire-pick" id="wire-edition-pick" hidden>
+      <span class="wire-pick-label">Edition</span>
+      <select class="wire-edition" id="wire-edition"></select>
+    </label>
+    <div class="wire-more">
+      <button class="wire-mobile-actions-toggle" id="wire-mobile-actions-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="wire-actions">
+        More <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+      </button>
+      <div class="wire-actions" id="wire-actions">
+        <button class="wire-action wire-compare-toggle" id="wire-compare-toggle" type="button" aria-expanded="false" aria-controls="wire-compare-body"><span>Compare countries</span><b id="wire-compare-summary"></b></button>
+        <button class="wire-action" id="wire-copy" type="button">Copy today's desk</button>
+        <button class="wire-action" id="wire-share" type="button">Share the Wire</button>
       </div>
-      <div class="wire-compare-panel" id="wire-compare-panel"></div>
     </div>
+  </div>
+  <p class="wire-summary" id="wire-trust" aria-live="polite"></p>
+  <div class="wire-result-count" id="wire-result-count" hidden></div>
+  <div class="wire-compare-body" id="wire-compare-body" hidden>
+    <div class="wire-compare" id="wire-compare" aria-label="Compare countries">
+      <span class="wire-compare-label">Compare countries</span>
+      <select id="wire-compare-a" aria-label="First country"></select>
+      <select id="wire-compare-b" aria-label="Second country"></select>
+      <select id="wire-compare-c" aria-label="Third country"></select>
+    </div>
+    <div class="wire-compare-panel" id="wire-compare-panel"></div>
   </div>
   <div class="wire-results" id="wire-results"></div>
 </div>
@@ -421,18 +435,18 @@
   </div>
 </article>
 
-<script src="data/app-core.js?v=67"></script>
+<script src="data/app-core.js?v=68"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
-<script>window.ASJ_ASSET_VERSION='65';</script>
-<script src="data/indices.js?v=67" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=67" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=67" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=67" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=67" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script>window.ASJ_ASSET_VERSION='68';</script>
+<script src="data/indices.js?v=68" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=68" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=68" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=68" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=68" onerror="window.ASJ_NEWSLETTER=null"></script>
 
-<script src="app.js?v=67"></script>
-<script src="country-sidebar.js?v=67" defer></script>
-<script src="/info-panel.js?v=67" defer></script>
+<script src="app.js?v=68"></script>
+<script src="country-sidebar.js?v=68" defer></script>
+<script src="/info-panel.js?v=68" defer></script>
 </body>
 </html>

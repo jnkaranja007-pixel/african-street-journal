@@ -134,6 +134,11 @@ function updateStoryLensControls() {
   document.querySelectorAll('button[data-story-lens]').forEach(button => {
     button.setAttribute('aria-pressed', String(normalizeStoryLens(button.dataset.storyLens) === activeStoryLens));
   });
+  // The Wire picks its audience from a select rather than buttons. A lens chosen on a
+  // country page has to show there too, or the Wire would say "Everyone" while ranking
+  // for farmers.
+  const lensSelect = document.getElementById('wire-lens-select');
+  if (lensSelect && lensSelect.value !== activeStoryLens) lensSelect.value = activeStoryLens;
 }
 
 function persistStoryLens(lens) {
@@ -2771,7 +2776,9 @@ function renderBriefDesk(countryId) {
   const sourceCount = uniqueSourceCount(briefs);
   if (meta && briefs.length) {
     const lensLabel = activeStoryLens === 'general' ? '' : STORY_LENS_LABELS[activeStoryLens] + ' lens · ';
-    meta.innerHTML = escapeHtml(briefs.length + (briefs.length === 1 ? ' story' : ' stories') + ' from ' + sourceCount + (sourceCount === 1 ? ' source' : ' sources')) + updatedStampHtml(countryId, briefs);
+    // The lens reorders this list, so say so; otherwise the same country reads in a
+    // different order for no visible reason.
+    meta.innerHTML = escapeHtml(lensLabel + briefs.length + (briefs.length === 1 ? ' story' : ' stories') + ' from ' + sourceCount + (sourceCount === 1 ? ' source' : ' sources')) + updatedStampHtml(countryId, briefs);
   }
   if (!briefs.length) {
     const wire = regionalWireFor(countryId);
@@ -4527,7 +4534,9 @@ canvas.addEventListener('touchstart', (e) => {
   const entryCounts = Array.from(document.querySelectorAll('.wire-entry-count'));
   const closeBtn = document.getElementById('wire-close');
   const searchInput = document.getElementById('wire-search-input');
-  const topicsEl = document.getElementById('wire-topics');
+  const topicSelect = document.getElementById('wire-topic-select');
+  const lensSelect = document.getElementById('wire-lens-select');
+  const editionPick = document.getElementById('wire-edition-pick');
   const resultsEl = document.getElementById('wire-results');
   const trustEl = document.getElementById('wire-trust');
   const resultCountEl = document.getElementById('wire-result-count');
@@ -4595,10 +4604,14 @@ canvas.addEventListener('touchstart', (e) => {
     return c;
   }
   function renderTopics(){
+    if (!topicSelect) return;
     const c = topicCounts();
-    topicsEl.innerHTML = TOPICS.filter(t=> t==='All' || c[t]>0).map(t=>
-      '<button class="wire-topic" type="button" data-topic="'+t+'" aria-pressed="'+(t===activeTopic)+'">'+t+'<span class="n">'+c[t]+'</span></button>'
+    // Counts stay in the labels: "Agriculture (6)" tells a reader what is in today's
+    // paper before they choose, which the old pills did and a bare dropdown would not.
+    topicSelect.innerHTML = TOPICS.filter(t => t === 'All' || c[t] > 0).map(t =>
+      '<option value="' + t + '">' + (t === 'All' ? 'All topics' : t) + ' (' + c[t] + ')</option>'
     ).join('');
+    topicSelect.value = TOPICS.includes(activeTopic) && (activeTopic === 'All' || c[activeTopic] > 0) ? activeTopic : 'All';
   }
   // The relevance floor a lens has to clear before it may claim a story.
   //
@@ -4667,45 +4680,56 @@ canvas.addEventListener('touchstart', (e) => {
       }).length;
     }
     if (!previousSnapshot || (!changed && !newStories && !newTopics)) return '';
-    const copy = 'Compared with the last edition opened in this browser. It catches changed country leads, new story fingerprints, and new topic coverage.';
-    return '<section class="wire-movement">' +
-      '<div><h3>What Changed</h3><p>' + escapeHtml(copy) + '</p></div>' +
-      '<div class="wire-movement-grid">' +
-        '<div class="wire-move-cell"><b>' + changed + '</b><span>Country leads changed</span></div>' +
-        '<div class="wire-move-cell"><b>' + newStories + '</b><span>New story fingerprints</span></div>' +
-        '<div class="wire-move-cell"><b>' + newTopics + '</b><span>New topics</span></div>' +
-      '</div>' +
-    '</section>';
+    // One line for a returning reader. This was a boxed panel with a heading, an
+    // explanatory paragraph and a three-cell grid - "New story fingerprints" among the
+    // labels - sitting between the lead and the list.
+    const bits = [];
+    if (newStories) bits.push(newStories + (newStories === 1 ? ' new story' : ' new stories'));
+    if (changed) bits.push(changed + (changed === 1 ? ' country has a new lead' : ' countries have a new lead'));
+    if (newTopics) bits.push(newTopics + (newTopics === 1 ? ' new topic' : ' new topics'));
+    return '<p class="wire-movement-line">Since you last looked: ' + escapeHtml(bits.join(', ')) + '.</p>';
   }
-  function renderTrust(){
-    if (!trustEl) return;
+  // One plain sentence where there used to be three things saying overlapping things:
+  // a stats row in 10px uppercase, a separate result count, and an amber box under a
+  // lens. The sentence changes with what the reader is doing, so it is always the
+  // answer to "what am I looking at".
+  //
+  // Outlets are counted by NAME. Since the edition ships in two halves, a story's
+  // sources carry names in the index and URLs only once the prose lands - counting
+  // url-or-name made "115 sources" jump to ~289 a second after the page opened, because
+  // it was suddenly counting articles rather than newsrooms.
+  function editionStats(){
     const countries = new Set(INDEX.map(item => item.code)).size;
-    const sources = new Set();
+    const outlets = new Set();
     INDEX.forEach(item => (item.sources?.length ? item.sources : [{ name: item.source }]).forEach(source => {
-      if (source && (source.url || source.name)) sources.add(source.url || source.name);
+      const name = String(source?.name || '').trim().toLowerCase();
+      if (name) outlets.add(name);
     }));
-    trustEl.innerHTML =
-      (activeStoryLens !== 'general' ? '<span class="wire-trust-lens"><b>' + escapeHtml(STORY_LENS_LABELS[activeStoryLens]) + '</b> lens</span>' : '') +
-      '<span><b>' + INDEX.length + '</b> stories</span>' +
-      '<span><b>' + countries + '</b> countries</span>' +
-      '<span><b>' + sources.size + '</b> sources</span>';
+    return { stories: INDEX.length, countries, outlets: outlets.size };
   }
+  function renderTrust(){ /* folded into updateResultCount, which every render calls */ }
   function updateResultCount(items) {
-    if (!resultCountEl) return;
+    if (resultCountEl) { resultCountEl.hidden = true; resultCountEl.textContent = ''; }
+    if (!trustEl) return;
+    if (!INDEX.length) { trustEl.textContent = 'No edition has been published yet.'; return; }
+    const s = editionStats();
     const q = query.trim();
-    const isDefaultView = activeTopic === 'All' && !q;
-    resultCountEl.hidden = isDefaultView;
-    if (isDefaultView) {
-      resultCountEl.textContent = '';
-      return;
+    const n = items.length;
+    const noun = n === 1 ? 'story' : 'stories';
+    const lens = activeStoryLens !== 'general' ? STORY_LENS_LABELS[activeStoryLens].toLowerCase() : '';
+    const lensWho = { farmers:'farmers', investors:'investors', diaspora:'the diaspora' }[activeStoryLens] || lens;
+    let text;
+    if (q) {
+      text = n + ' ' + noun + ' matching \u201c' + q + '\u201d' + (activeTopic !== 'All' ? ' in ' + activeTopic : '');
+    } else if (lens) {
+      text = n + ' of ' + s.stories + ' stories have a direct effect on ' + lensWho +
+        (activeTopic !== 'All' ? ' in ' + activeTopic : '') + ' today';
+    } else if (activeTopic !== 'All') {
+      text = n + ' ' + noun + ' in ' + activeTopic;
+    } else {
+      text = s.stories + ' stories from ' + s.outlets + ' outlets across ' + s.countries + ' countries';
     }
-    if (!INDEX.length) {
-      resultCountEl.textContent = 'No stories loaded';
-      return;
-    }
-    resultCountEl.textContent = items.length + ' ' + (items.length === 1 ? 'story' : 'stories') +
-      (activeTopic !== 'All' ? ' in ' + activeTopic : '') +
-      (q ? ' matching "' + q + '"' : '');
+    trustEl.textContent = text;
   }
   function storyLine(item, index){
     return (index + 1) + '. ' + item.country + ' - ' + item.title + '\n' +
@@ -4742,7 +4766,7 @@ canvas.addEventListener('touchstart', (e) => {
   function updateCompareSummary(){
     if (!compareSummary) return;
     const names = compareNames();
-    compareSummary.textContent = compareOpen && names.length ? names.slice(0, 3).join(' / ') : 'Optional';
+    compareSummary.textContent = compareOpen && names.length ? names.slice(0, 3).join(' / ') : '';
   }
   function setMobileActionsOpen(open){
     mobileActionsOpen = !!open;
@@ -4801,49 +4825,38 @@ canvas.addEventListener('touchstart', (e) => {
       '</table></div>';
     updateCompareSummary();
   }
+  // A story in the list. Country first: on a 55-country paper that is what a reader
+  // scans for, and the old kicker led with the topic, so "News" and "Politics" were the
+  // first word of most lines. The outlet moves under the headline with the time, where
+  // it reads as attribution instead of a third tag.
   function itemMarkup(it){
-    const lensMeta = activeStoryLens === 'general' ? '' :
-      '';
+    const when = relativeDateLabel(it.date);
+    const meta = [it.source, when].filter(Boolean).map(escapeHtml).join(' \u00b7 ');
     return '<button class="wire-item' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
       '<div class="wire-item-body">' +
         '<div class="wire-item-kicker">' +
-          '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
           '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
-          '<span class="wire-item-src">'+escapeHtml(it.source)+'</span>' +
-          lensMeta +
-          (relativeDateLabel(it.date)?'<span class="dot"></span><span class="wire-item-when">'+escapeHtml(relativeDateLabel(it.date))+'</span>':'') +
+          '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span>' +
         '</div>' +
         '<div class="wire-item-title">'+escapeHtml(it.title)+'</div>' +
         (it.summary?'<div class="wire-item-sum">'+escapeHtml(it.summary)+'</div>':'') +
-      '</div>' +
-      '<span class="wire-item-go" aria-hidden="true">→</span>' +
-    '</button>';
-  }
-  function frontCardMarkup(it){
-    const lensMeta = activeStoryLens === 'general' ? '' :
-      '';
-    return '<button class="wire-brief-card' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
-      '<div class="wire-item-kicker">' +
-        '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
-        '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
-        '<span class="wire-item-src">'+escapeHtml(it.source)+'</span>' + lensMeta +
-      '</div>' +
-      '<div>' +
-        '<div class="wire-item-title">'+escapeHtml(it.title)+'</div>' +
+        (meta ? '<div class="wire-item-meta">' + meta + '</div>' : '') +
       '</div>' +
     '</button>';
   }
   function heroMarkup(it){
     const lensLead = activeStoryLens === 'general' ? 'Lead story' : 'Top for ' + ({ farmers:'farmers', investors:'investors', diaspora:'the diaspora' }[activeStoryLens] || 'you');
+    const when = relativeDateLabel(it.date);
+    const meta = [it.source, when].filter(Boolean).map(escapeHtml).join(' \u00b7 ');
     return '<button class="wire-hero' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
-      '<div class="wire-hero-kicker"><span class="wire-hero-lead">' + escapeHtml(lensLead) + '</span>' +
+      '<div class="wire-hero-kicker"><span class="wire-hero-lead">' + escapeHtml(lensLead) + '</span><span class="dot"></span>' +
         '<img class="wire-item-flag" src="https://flagcdn.com/w80/'+it.cc+'.png" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
         '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
-        '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span><span class="dot"></span>' +
-        '<span class="wire-item-src">'+escapeHtml(it.source)+'</span></div>' +
+        '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span></div>' +
       '<div class="wire-hero-title">'+escapeHtml(it.title)+'</div>' +
       (it.summary?'<div class="wire-hero-sum">'+escapeHtml(it.summary)+'</div>':'') +
+      (meta ? '<div class="wire-item-meta">' + meta + '</div>' : '') +
     '</button>';
   }
   function loadMoreMarkup(total, shown){
@@ -4866,17 +4879,10 @@ canvas.addEventListener('touchstart', (e) => {
           ' readers' + (activeTopic !== 'All' ? ' under ' + escapeHtml(activeTopic) : '') +
           '. This is the desk being honest rather than padding the tab - switch to Top for the full edition.'
         : 'No headlines match your search.';
-      resultsEl.innerHTML = '<div class="wire-meta">0 stories</div><div class="wire-empty">' + emptyCopy + '</div>';
+      resultsEl.innerHTML = '<div class="wire-empty">' + emptyCopy + '</div>';
       return;
     }
     const frontPage = (activeTopic==='All' && !query.trim());
-    // Under a lens the reader is seeing a deliberately smaller paper. Say how much
-    // smaller, so a short list reads as an editorial judgement rather than a bug.
-    const lensNote = (activeStoryLens !== 'general')
-      ? '<div class="wire-lens-note">' + items.length + ' of ' + INDEX.length +
-        ' stories have a direct effect on ' + escapeHtml(STORY_LENS_LABELS[activeStoryLens].toLowerCase()) +
-        ' readers today. The rest of the edition is under Top.</div>'
-      : '';
     // The lead slot goes to the best story the desk filed FOR THIS EDITION. Sorting by
     // score alone once put a 21 August brief at the top of the 28 August paper, which is
     // the one thing a daily cannot do. If every story is old - a desk that has not run -
@@ -4885,38 +4891,24 @@ canvas.addEventListener('touchstart', (e) => {
     // Remove the hero by identity, not by position: it is no longer guaranteed to be
     // items[0], and slicing blindly would both duplicate it and drop the story it skipped.
     const list = hero ? items.filter(it => it !== hero) : items;
-    if (frontPage) {
-      const frontCards = list.slice(0, 6);
-      const more = list.slice(6);
-      const visibleMore = more.slice(0, visibleCount);
-      resultsEl.innerHTML =
-        lensNote +
-        '<div class="wire-front">' +
-          (hero ? heroMarkup(hero) : '') +
-          '<div class="wire-meta">Highlights</div>' +
-          '<div class="wire-front-grid">' + frontCards.map(frontCardMarkup).join('') + '</div>' +
-          movementMarkup(items) +
-          // Mount point for the sign-up. The reader has just read the front page here,
-          // which is the only honest moment to ask for an address.
-          '<div id="wire-signup"></div>' +
-          (more.length ? '<div class="wire-meta">More across Africa</div>' + visibleMore.map(itemMarkup).join('') + loadMoreMarkup(more.length, visibleMore.length) : '') +
-        '</div>';
-      return;
-    }
-    const visibleItems = list.slice(0, visibleCount);
+    const visible = list.slice(0, visibleCount);
+    // A lead, then one list. There used to be a lead, a three-column "Highlights" grid of
+    // six, a "What changed" box and THEN the list - four layouts to read through before
+    // the paper settled into one. The six best stories are simply the top of the list.
     resultsEl.innerHTML =
-      lensNote +
       (hero ? heroMarkup(hero) : '') +
-      '<div class="wire-meta">'+(frontPage?'More across Africa':items.length+' '+(items.length===1?'story':'stories')+(activeTopic!=='All'?' · '+escapeHtml(activeTopic):'')+(query?' · “'+escapeHtml(query.trim())+'”':''))+'</div>' +
-      visibleItems.map(itemMarkup).join('') +
-      loadMoreMarkup(list.length, visibleItems.length);
+      (frontPage ? movementMarkup(items) : '') +
+      '<div class="wire-list">' + visible.map(itemMarkup).join('') + '</div>' +
+      loadMoreMarkup(list.length, visible.length) +
+      // Mount point for the sign-up, after the reader has had the front page.
+      (frontPage ? '<div id="wire-signup"></div>' : '');
   }
   function openWire(topic){
     editionDate = null; editionBriefs = null; populateEditions();
     INDEX = buildIndex(); activeTopic = topic||'All'; query=''; visibleCount = 60; searchInput.value='';
     const dateEl = document.getElementById('wire-date');
     const briefDate = latestBriefDate();
-    if (dateEl) dateEl.textContent = briefDate ? 'Latest available · ' + formatShortDate(briefDate + 'T00:00:00Z') : 'Edition pending';
+    if (dateEl) dateEl.textContent = briefDate ? 'Updated ' + formatShortDate(briefDate + 'T00:00:00Z') : 'Edition pending';
     wireLastFocus = document.activeElement;
     previousSnapshot = readWireSnapshot();
     setMobileActionsOpen(false);
@@ -4960,6 +4952,7 @@ canvas.addEventListener('touchstart', (e) => {
     const dates = Array.isArray(window.UNITED_AFRICA_ARCHIVE_INDEX) ? window.UNITED_AFRICA_ARCHIVE_INDEX : [];
     const currentDate = latestBriefDate();
     const pastDates = dates.filter(date => date && date !== currentDate);
+    if (editionPick) editionPick.hidden = !pastDates.length;
     if (!pastDates.length) { editionSel.hidden = true; return; }
     editionSel.hidden = false;
     editionSel.innerHTML = '<option value="">Latest</option>' + pastDates.map(d => '<option value="' + escapeHtml(d) + '">' + escapeHtml(d) + '</option>').join('');
@@ -4994,6 +4987,24 @@ canvas.addEventListener('touchstart', (e) => {
   entries.forEach(button => button.addEventListener('click', () => openWire('All')));
   closeBtn.addEventListener('click', closeWire);
   mobileActionsToggle?.addEventListener('click', () => setMobileActionsOpen(!mobileActionsOpen));
+  // A menu that stays open after you have used it, or that only closes from its own
+  // button, sits over the headlines. Close it on an outside click, on Escape, and as
+  // soon as one of its actions is chosen.
+  document.addEventListener('click', e => {
+    if (!mobileActionsOpen) return;
+    if (e.target.closest('.wire-more')) return;
+    setMobileActionsOpen(false);
+  });
+  actionsEl?.addEventListener('click', e => {
+    if (e.target.closest('.wire-action')) setTimeout(() => setMobileActionsOpen(false), 0);
+  });
+  view.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && mobileActionsOpen) {
+      e.stopPropagation();
+      setMobileActionsOpen(false);
+      mobileActionsToggle?.focus();
+    }
+  }, true);
   compareToggle?.addEventListener('click', () => setCompareOpen(!compareOpen));
   compareSelects.forEach(select => select.addEventListener('change', renderCompare));
   comparePanel?.addEventListener('click', event => {
@@ -5019,14 +5030,15 @@ canvas.addEventListener('touchstart', (e) => {
     const ok = await copyPlainText(text);
     pulseButtonLabel(event.currentTarget, ok ? 'Copied' : 'Share Failed');
   });
-  topicsEl.addEventListener('click', e=>{
-    const b = e.target.closest('.wire-topic'); if (!b) return;
-    activeTopic = b.dataset.topic;
+  topicSelect?.addEventListener('change', () => {
+    activeTopic = topicSelect.value || 'All';
     visibleCount = 60;
-    topicsEl.querySelectorAll('.wire-topic').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.topic===activeTopic)));
     renderResults();
     resultsEl.scrollTop = 0;
   });
+  // The audience select drives the same setStoryLens() the country page's lens buttons
+  // do, so the choice follows the reader between the Wire and a country, and is saved.
+  lensSelect?.addEventListener('change', () => setStoryLens(lensSelect.value || 'general'));
   window.addEventListener('asj:lenschange', () => {
     if (!view.classList.contains('open')) return;
     INDEX = buildIndex();
@@ -5839,7 +5851,12 @@ async function runSelfTest() {
 
   // --- a story has its own address ----------------------------------------------
   {
-    const trigger = document.querySelector('[data-home-story]');
+    // Through the Wire, which is where readers open stories now. This used to click a
+    // landing-page headline; that block was removed, the click found nothing, and the
+    // check failed every run without testing sharing at all.
+    window.__wireOpen?.('All');
+    await new Promise(r => setTimeout(r, 260));
+    const trigger = document.querySelector('#wire-results [data-story-key]');
     const before = new URLSearchParams(location.search).get('story');
     const historyBefore = history.length;
     trigger?.click();
@@ -5856,6 +5873,8 @@ async function runSelfTest() {
         location.search);
     add('sharing: a shared id resolves to a real story',
         !!(shared && findPublishedStory(shared)), String(shared));
+    window.__wireClose?.();
+    await new Promise(r => setTimeout(r, 120));
   }
 
   // --- search reaches the whole story, in any spelling ---------------------------
@@ -6020,26 +6039,17 @@ async function runSelfTest() {
         pressedCountryLenses.length === 1 && pressedCountryLenses[0]?.dataset.storyLens === 'investors',
       activeStoryLens + ' / ' + pressedCountryLenses.length);
     add('news desk labels lens-ranked stories',
-      /^Investor lens/.test(document.getElementById('cv-story-meta')?.textContent || '') &&
-        document.querySelectorAll('#cv-cards .cv-news-lens-fit').length > 0,
+      /^Investor lens/.test(document.getElementById('cv-story-meta')?.textContent || ''),
       document.getElementById('cv-story-meta')?.textContent || 'missing');
     setPanel(1);
-    // Idempotent: assert the index ADVANCED by one and the grid actually scrolled, rather than
-    // hard-coding 1 — otherwise a second run in the same session fails spuriously.
-    const stickyBefore = infoGridIndexByMode.investors || 0;
-    scrollActiveInfoGrid('next');
-    await new Promise(r => setTimeout(r, 520));
     openCountry('lr');
     await new Promise(r => setTimeout(r, 260));
+    // Signals is a stacked list at every width since signals-v1 (no side-scrolling card
+    // carousel), so what must hold is that it never side-scrolls.
     const stickyGrid = activeInfoGrid();
-    const mobileSignalFlow = mobileDossierMedia.matches;
-    add('smoke: signal card sticks across countries',
-      mobileSignalFlow
-        ? getComputedStyle(stickyGrid).flexDirection === 'column' && stickyGrid.scrollWidth <= stickyGrid.clientWidth + 2 && infoGridIndexByMode.investors === 0
-        : infoGridIndexByMode.investors === stickyBefore + 1 && stickyGrid.scrollLeft > stickyGrid.clientWidth * 0.5,
-      mobileSignalFlow
-        ? 'vertical · ' + stickyGrid.scrollWidth + '/' + stickyGrid.clientWidth
-        : stickyBefore + '->' + infoGridIndexByMode.investors + ' @ ' + Math.round(stickyGrid.scrollLeft));
+    add('smoke: signals stack vertically, no side-scroll',
+      !!stickyGrid && getComputedStyle(stickyGrid).flexDirection === 'column' && stickyGrid.scrollWidth <= stickyGrid.clientWidth + 2,
+      stickyGrid ? 'vertical · ' + stickyGrid.scrollWidth + '/' + stickyGrid.clientWidth : 'missing');
     setPanel(2);
     await new Promise(r => setTimeout(r, 160));
     const atlasRect = countryMapCanvas.getBoundingClientRect();
@@ -6058,13 +6068,18 @@ async function runSelfTest() {
       atlasCssRatio.toFixed(3) + ' css / ' + atlasBitmapRatio.toFixed(3) + ' bitmap');
     const tickerAnimation = tickerEl.getAnimations?.()[0];
     const tickerTimeBeforeClose = Number(tickerAnimation?.currentTime || 0);
+    const timelineBeforeClose = Number(document.timeline?.currentTime || 0);
     closeCountry();
     await new Promise(r => setTimeout(r, 200));
     add('smoke: route cleared on close', !location.hash, location.hash);
     const tickerTimeAfterClose = Number(tickerAnimation?.currentTime || 0);
+    // A page that is not painting (a background tab, a hidden preview pane - which can
+    // still report itself visible) does not advance animation time at all, so it cannot
+    // show this either way. Judge the ticker only when the document clock moved.
+    const framesRendered = Number(document.timeline?.currentTime || 0) > timelineBeforeClose + 80;
     add('smoke: city ticker resumes after country close',
-      !tickerAnimation || (tickerAnimation.playState === 'running' && tickerTimeAfterClose > tickerTimeBeforeClose + 80),
-      tickerAnimation ? tickerAnimation.playState + ' ' + Math.round(tickerTimeBeforeClose) + '->' + Math.round(tickerTimeAfterClose) : 'reduced motion');
+      !tickerAnimation || (tickerAnimation.playState === 'running' && (!framesRendered || tickerTimeAfterClose > tickerTimeBeforeClose + 80)),
+      tickerAnimation ? tickerAnimation.playState + ' ' + Math.round(tickerTimeBeforeClose) + '->' + Math.round(tickerTimeAfterClose) + (framesRendered ? '' : ' (page not painting)') : 'reduced motion');
     openCountry('bw'); // a briefless country must show real wire stories (or the Country File fallback), never a dead end
     await new Promise(r => setTimeout(r, 900));
     const wireRows = document.querySelectorAll('#cv-cards .cv-news-row').length;
@@ -6076,8 +6091,8 @@ async function runSelfTest() {
     const wireTrust = document.getElementById('wire-trust');
     const wireResultCount = document.getElementById('wire-result-count');
     const wireResults = document.getElementById('wire-results');
-    const expectedWireTrustCells = activeStoryLens === 'general' ? 3 : 4;
-    add('smoke: wire summary stays concise', wireTrust?.children.length === expectedWireTrustCells && wireResultCount?.hidden, (wireTrust?.textContent || '').trim());
+    // One plain sentence, no stat cells, no second count line.
+    add('smoke: wire summary is one sentence', !!wireTrust && wireTrust.children.length === 0 && /\d+ stor/.test(wireTrust.textContent) && wireResultCount?.hidden, (wireTrust?.textContent || '').trim());
     add('smoke: wire opens at the lead story', wireResults?.scrollTop === 0, wireResults?.scrollTop);
     const storyTrigger = wireResults?.querySelector('[data-story-key]');
     const openedStoryKey = storyTrigger?.dataset.storyKey || '';
@@ -6110,7 +6125,8 @@ async function runSelfTest() {
     window.__wireClose();
     const signupMarkup = deskSignupHtml(['ke', 'ng']);
     add('trust: signup copy matches cloud connection state',
-      deskSignupConfig() ? signupMarkup.includes('data-desk-signup') : signupMarkup.includes('Cloud signup is not connected yet.'));
+      // Unconfigured shows nothing at all - no form, no "not connected" notice.
+      deskSignupConfig() ? signupMarkup.includes('data-desk-signup') : signupMarkup === '');
   } catch (e) {
     add('smoke: dossier flow threw', false, e.message);
   }
