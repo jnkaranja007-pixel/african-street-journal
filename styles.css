@@ -1523,3 +1523,9 @@ html,body{overflow-x:hidden}
 }
 @media (max-width:640px){.cv-header{background:var(--bg)!important;-webkit-backdrop-filter:none;backdrop-filter:none}}
 .cv-brief-body{color:#d6d2cc!important}
+/* stress-v1: exchange index line (one real number + its date) */
+.cv-index-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 10px;font-size:14px;line-height:1.5;color:rgba(232,230,227,0.86)}
+.cv-index-level{font-variant-numeric:tabular-nums;color:#f1efe9}
+.cv-index-chg.is-up{color:#7ccf80}.cv-index-chg.is-down{color:#e58a7a}
+.cv-index-asof{flex-basis:100%;font-size:12px;color:rgba(232,230,227,0.6)}
+.cv-index-line.is-stale .cv-index-level{color:rgba(232,230,227,0.6)}

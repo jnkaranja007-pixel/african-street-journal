@@ -34,6 +34,15 @@ jobs:
         timeout-minutes: 6
         run: ./scripts/update-markets.ps1
 
+      - name: Fetch exchange indices
+        id: indices
+        shell: pwsh
+        continue-on-error: true
+        timeout-minutes: 3
+        # Headline index per exchange from a source the runner can reach. Independent of
+        # the company listings above, so one dead host cannot blank both.
+        run: ./scripts/update-indices.ps1
+
       - name: Report unreachable source
         if: steps.fetch.outcome == 'failure'
         shell: pwsh
@@ -46,12 +55,12 @@ jobs:
           Write-Host 'The panel keeps showing its last asOf date rather than a wrong number.'
 
       - name: Commit refreshed markets
-        if: steps.fetch.outcome == 'success'
+        if: steps.fetch.outcome == 'success' || steps.indices.outcome == 'success'
         shell: pwsh
         run: |
           git config user.name  "asj-news-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/markets.json
+          git add data/markets.json data/indices.js
           git diff --staged --quiet
           if ($LASTEXITCODE -eq 0) { Write-Host 'Markets unchanged.'; exit 0 }
           $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')

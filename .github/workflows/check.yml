@@ -13,6 +13,7 @@ on:
       - 'index.html'
       - 'styles.css'
       - 'data/**'
+      - 'tools/stress/**'
   pull_request:
     paths:
       - '.github/workflows/**'
@@ -21,6 +22,7 @@ on:
       - 'index.html'
       - 'styles.css'
       - 'data/**'
+      - 'tools/stress/**'
   workflow_dispatch: {}
 
 permissions:
@@ -85,3 +87,22 @@ jobs:
           }
           if ($bad) { Write-Host 'Replace with ASCII equivalents (em dash -> hyphen).'; exit 1 }
           Write-Host 'OK - all build files are ASCII'
+
+  browser:
+    # Map hit-testing for all 55 countries, island tags clear of every coast, no
+    # NaN/undefined in any country panel or lens, sane market numbers, and no private
+    # owner details anywhere in the shipped files.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright
+        run: |
+          mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i playwright@1 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Site check
+        run: NODE_PATH=/tmp/pw/node_modules node tools/stress/site-check.mjs

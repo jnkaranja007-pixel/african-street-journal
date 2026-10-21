@@ -885,7 +885,7 @@ const easeOut = t => 1 - Math.pow(1 - t, 3);
 
 // Island nations are 1-3px paths on the continental map — invisible and untappable. Each gets
 // a ringed, tagged marker sharing the country's hover/click behavior via a forgiving hit radius.
-const ISLAND_MARKERS = { cv: { tag: 'CPV', side: 'below' }, st: { tag: 'STP', side: 'left' }, km: { tag: 'COM', side: 'left' }, sc: { tag: 'SYC', side: 'above' }, mu: { tag: 'MUS', side: 'below' } };
+const ISLAND_MARKERS = { cv: { tag: 'CPV', side: 'below' }, st: { tag: 'STP', side: 'left' }, km: { tag: 'COM', side: 'right', prefer: ['right','above','below'] }, sc: { tag: 'SYC', side: 'above' }, mu: { tag: 'MUS', side: 'below' } };
 const islandHitTargets = Object.keys(ISLAND_MARKERS)
   .map(id => {
     const idx = paths.findIndex(p => p.id === id);
@@ -957,6 +957,73 @@ function paintOcean(ctx) {
   ctx.restore();
 }
 
+
+// Island tags are placed, not hard-coded: each candidate side (and a farther ring of
+// fallbacks with a leader line) is tested against every country path and every other
+// marker/tag, so a tag never sits on a coast (Comoros' old left-hand tag touched
+// Mozambique) at any width. Cached per layout because the answer only changes on resize.
+const labelProbeCtx = document.createElement('canvas').getContext('2d');
+let islandLabelCache = { key: '', map: {} };
+function islandLabelRect(t, side, dist, w, h) {
+  const vert = side === 'above' || side === 'below';
+  const x = t.cx + (vert ? 0 : (side === 'left' ? -dist : dist));
+  const y = t.cy + (side === 'below' ? dist : side === 'above' ? -dist : 0);
+  const align = vert ? 'center' : (side === 'left' ? 'right' : 'left');
+  const x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+  return { x, y, align, side, dist, r: { x0, y0: y - h / 2, x1: x0 + w, y1: y + h / 2 } };
+}
+function rectHitsLand(r, pad) {
+  const xs = [], ys = [];
+  for (let i = 0; i <= 6; i++) xs.push(r.x0 - pad + (r.x1 - r.x0 + 2 * pad) * i / 6);
+  for (let i = 0; i <= 3; i++) ys.push(r.y0 - pad + (r.y1 - r.y0 + 2 * pad) * i / 3);
+  for (const p of paths) {
+    const b = p.bbox;
+    if (!b || r.x1 + pad < b.minX || r.x0 - pad > b.maxX || r.y1 + pad < b.minY || r.y0 - pad > b.maxY) continue;
+    for (const x of xs) for (const y of ys) if (labelProbeCtx.isPointInPath(p.shape, x, y)) return true;
+  }
+  return false;
+}
+function rectsOverlap(a, b, pad) { return !(a.x1 + pad < b.x0 || b.x1 + pad < a.x0 || a.y1 + pad < b.y0 || b.y1 + pad < a.y0); }
+function computeIslandLabels(u, ring, gap) {
+  const map = {}, placed = [];
+  const h = 9 * u, w = 3 * 8.5 * 0.62 * u; // three monospace glyphs
+  const pad = 3 * u;
+  // Other markers' rings are obstacles too.
+  for (const o of islandHitTargets) placed.push({ x0: o.cx - ring, y0: o.cy - ring, x1: o.cx + ring, y1: o.cy + ring });
+  for (const t of islandHitTargets) {
+    const base = ISLAND_MARKERS[t.id].prefer || [t.side];
+    const sides = base.concat(['above', 'below', 'right', 'left'].filter(s => !base.includes(s)));
+    let pick = null;
+    for (const mult of [1, 1.8, 2.6]) {
+      for (const side of sides) {
+        const c = islandLabelRect(t, side, gap * mult, w, h);
+        const off = c.r.x0 < 4 || c.r.x1 > 996 || c.r.y0 < 4 || c.r.y1 > 997;
+        if (off || rectHitsLand(c.r, pad) || placed.some(q => rectsOverlap(c.r, q, pad * 0.5))) continue;
+        pick = c; break;
+      }
+      if (pick) break;
+    }
+    if (!pick) pick = islandLabelRect(t, t.side, gap, w, h);
+    pick.leader = pick.dist > gap * 1.05;
+    if (pick.leader) {
+      const vx = Math.sign(pick.x - t.cx) * (pick.side === 'left' || pick.side === 'right' ? 1 : 0);
+      const vy = pick.side === 'below' ? 1 : pick.side === 'above' ? -1 : 0;
+      pick.lx0 = t.cx + vx * (ring + 1 * u); pick.ly0 = t.cy + vy * (ring + 1 * u);
+      pick.lx1 = pick.x - vx * (2 * u) - (vy ? 0 : 0); pick.ly1 = pick.y - vy * (h / 2 + 1.5 * u);
+      if (vx) pick.lx1 = pick.side === 'left' ? pick.r.x1 + 2 * u : pick.r.x0 - 2 * u;
+    }
+    placed.push(pick.r);
+    map[t.id] = pick;
+  }
+  return map;
+}
+function islandLabelPlacement(t, u, ring, gap) {
+  const key = u.toFixed(3) + '|' + islandHitTargets.map(o => o.cx.toFixed(1) + ',' + o.cy.toFixed(1) + o.side).join(';');
+  if (islandLabelCache.key !== key) islandLabelCache = { key, map: computeIslandLabels(u, ring, gap) };
+  return islandLabelCache.map[t.id];
+}
+window.__islandLabels = () => islandLabelCache.map;
+
 function drawIslandMarkers(elapsed) {
   const alpha = Math.max(0, Math.min(1, (elapsed - 2.4) / 0.8));
   if (alpha === 0) return;
@@ -981,10 +1048,18 @@ function drawIslandMarkers(elapsed) {
     ctx.arc(t.cx, t.cy, dot, 0, Math.PI * 2);
     ctx.fillStyle = hovered ? '#bfe8c1' : '#5cae60';
     ctx.fill();
-    const vert = t.side === 'above' || t.side === 'below';
-    ctx.textAlign = vert ? 'center' : (t.side === 'left' ? 'right' : 'left');
+    const L = islandLabelPlacement(t, u, ring, gap);
+    if (L.leader) {
+      // Pushed past the default gap to clear a coast: a hairline ties the tag to its ring.
+      ctx.beginPath();
+      ctx.moveTo(L.lx0, L.ly0); ctx.lineTo(L.lx1, L.ly1);
+      ctx.strokeStyle = 'rgba(140,180,146,0.38)';
+      ctx.lineWidth = 0.8 * u;
+      ctx.stroke();
+    }
+    ctx.textAlign = L.align;
     ctx.fillStyle = hovered ? 'rgba(232,246,233,0.98)' : 'rgba(170,196,174,0.78)';
-    ctx.fillText(ISLAND_MARKERS[t.id].tag, t.cx + (vert ? 0 : (t.side === 'left' ? -gap : gap)), t.cy + (t.side === 'below' ? gap : t.side === 'above' ? -gap : 0));
+    ctx.fillText(ISLAND_MARKERS[t.id].tag, L.x, L.y);
   }
   ctx.restore();
 }
@@ -3997,6 +4072,40 @@ function heatColor(ch) {
   return 'rgb(' + Math.round(70 + 130 * a) + ',' + Math.round(40 - 14 * a) + ',' + Math.round(40 - 14 * a) + ')';
 }
 
+
+// Headline exchange index (data/indices.js, refreshed daily from a source GitHub's runners
+// can reach). One real number with the session date it is from; never padded or guessed.
+function indexForCountry(countryId) {
+  const d = window.ASJ_INDICES && window.ASJ_INDICES.indices;
+  if (!d) return null;
+  for (const k of Object.keys(d)) {
+    const r = d[k];
+    if (r && Array.isArray(r.countries) && r.countries.includes(countryId) && Number.isFinite(r.level) && r.level > 0) return r;
+  }
+  return null;
+}
+function formatMarketDate(iso) {
+  const t = Date.parse(String(iso || '').slice(0, 10) + 'T12:00:00Z');
+  if (!Number.isFinite(t)) return '';
+  return new Date(t).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', timeZone:'UTC' });
+}
+function marketAgeDays(iso) {
+  const t = Date.parse(String(iso || '').slice(0, 10) + 'T12:00:00Z');
+  return Number.isFinite(t) ? Math.floor((Date.now() - t) / 86400000) : Infinity;
+}
+function renderIndexLine(countryId) {
+  const r = indexForCountry(countryId);
+  if (!r) return '';
+  const stale = marketAgeDays(r.date) > 7;
+  const pct = Number.isFinite(r.changePct) ? r.changePct : null;
+  const cls = pct == null ? '' : pct > 0 ? ' is-up' : pct < 0 ? ' is-down' : '';
+  return '<div class="cv-index-line' + (stale ? ' is-stale' : '') + '">' +
+    '<span class="cv-index-name">' + escapeHtml(r.name) + '</span> ' +
+    '<b class="cv-index-level">' + escapeHtml(r.level.toLocaleString('en-US', { maximumFractionDigits: 2 })) + '</b> ' +
+    (pct == null ? '<span class="cv-index-chg">flat / n.a.</span>' : '<span class="cv-index-chg' + cls + '">' + (pct > 0 ? '+' : '') + pct.toFixed(2) + '%</span>') +
+    '<span class="cv-index-asof">' + (stale ? 'Stale · ' : '') + 'as of ' + escapeHtml(formatMarketDate(r.date)) + ' · ' + escapeHtml(window.ASJ_INDICES.source || '') + '</span>' +
+  '</div>';
+}
 function renderInvestorMarkets(countryId) {
   const wrap = document.getElementById('cv-heatmap');
   const meta = document.getElementById('cv-heat-meta');
@@ -4005,12 +4114,12 @@ function renderInvestorMarkets(countryId) {
   const m = marketsForCountry(countryId);
   if (!profile.exchange) {
     if (meta) meta.textContent = 'Capital market directory';
-    wrap.innerHTML = '<div class="cv-heat-empty"><b>N/A</b><br>No domestic securities exchange has been verified for this country. Review regional listings, private markets, and bank financing instead.</div>';
+    wrap.innerHTML = renderIndexLine(countryId) + '<div class="cv-heat-empty"><b>N/A</b><br>No domestic securities exchange has been verified for this country. Review regional listings, private markets, and bank financing instead.</div>';
     return;
   }
   if (!m) {
     if (meta) meta.textContent = profile.exchange + ' · ' + profile.name;
-    wrap.innerHTML = '<div class="cv-heat-empty"><b>' + escapeHtml(profile.exchange) + '</b> · ' + escapeHtml(profile.scope) + ' market<br>' +
+    wrap.innerHTML = renderIndexLine(countryId) + '<div class="cv-heat-empty"><b>' + escapeHtml(profile.exchange) + '</b> · ' + escapeHtml(profile.scope) + ' market<br>' +
       'A current listed-company dataset is not available.' +
       (profile.url ? '<br><a href="' + escapeHtml(safeUrl(profile.url)) + '" target="_blank" rel="noopener noreferrer">Open ' + escapeHtml(profile.exchange) + ' official site ↗</a>' : '') +
       '</div>';
@@ -4018,11 +4127,15 @@ function renderInvestorMarkets(countryId) {
   }
   const isLive = !!m.isLive;
   if (meta) meta.textContent = profile.exchange + ' · ' + profile.name;
-  const sorted = m.companies.slice().filter(c => c && c.t && c.cap > 0).sort((a, b) => b.cap - a.cap);
+  // The 'cap' field is a SHARE PRICE (AFX publishes price, not market cap). Sizing tiles by
+  // it made a KES 284 small-cap dwarf KCB and was captioned 'company size'. Live: size by
+  // the size of the move. Stale: equal tiles, tickers only, with the fetch date shown.
+  const sorted = m.companies.slice().filter(c => c && c.t && Number.isFinite(Number(c.cap)) && Number(c.cap) > 0)
+    .sort((a, b) => isLive ? Math.abs(Number(b.change) || 0) - Math.abs(Number(a.change) || 0) : String(a.t).localeCompare(String(b.t)));
   const items = sorted.map((c, i) => {
     const issuer = issuerForCountry(countryId, c.t);
     return {
-      value:c.cap,
+      value:isLive ? 1 + Math.abs(Number(c.change) || 0) : 1,
       t:c.t,
       name:c.name || issuer?.name || '',
       change:isLive ? Number(c.change) || 0 : 0,
@@ -4032,14 +4145,14 @@ function renderInvestorMarkets(countryId) {
   });
   const W = 1000, H = 560;
   const rects = squarifyTreemap(items, W, H);
-  wrap.innerHTML =
+  wrap.innerHTML = renderIndexLine(countryId) +
     '<div class="cv-heat-grid">' +
       rects.map(r => {
         const wp = (r.w / W * 100), hp = (r.h / H * 100);
         const big = (r.w / W > 0.16 && r.h / H > 0.18);
         const fs = Math.max(8, Math.min(20, Math.round(Math.min(r.w / W * 70, r.h / H * 52))));
         const sign = r.change > 0 ? '+' : '';
-        const title = isLive ? r.t + ' ' + sign + r.change + '%' : r.t + ' · reference company';
+        const title = isLive ? r.t + ' ' + sign + r.change + '%' : r.t + ' · price data stale';
         return '<button class="cv-heat-tile" type="button" data-tkr="' + escapeHtml(r.t) + '" data-name="' + escapeHtml(r.name) + '" data-chg="' + r.change + '" data-rank="' + r.rank + '" data-total="' + r.total + '" style="left:' + (r.x / W * 100) + '%;top:' + (r.y / H * 100) + '%;width:' + wp + '%;height:' + hp + '%;background:' + (isLive ? heatColor(r.change) : 'rgb(28,66,42)') + '" title="' + escapeHtml(title) + '">' +
           '<span class="cv-heat-tkr" style="font-size:' + fs + 'px">' + escapeHtml(r.t) + '</span>' +
           (isLive && big ? '<span class="cv-heat-chg">' + sign + r.change.toFixed(1) + '%</span>' : '') +
@@ -4047,7 +4160,7 @@ function renderInvestorMarkets(countryId) {
       }).join('') +
     '</div>' +
     '<div class="cv-heat-detail" id="cv-heat-detail" hidden></div>' +
-    '<div class="cv-heat-key"><span class="cv-heat-note">' + (isLive ? 'Latest reported move · ' + escapeHtml(String(m.asOf || '').slice(0,10)) : 'Reference company size · no live price claim') + '</span></div>';
+    '<div class="cv-heat-key"><span class="cv-heat-note">' + (isLive ? 'Biggest movers, share-price change · as of ' + escapeHtml(formatMarketDate(m.asOf)) : (m.asOf ? 'Listed companies · prices last fetched ' + escapeHtml(formatMarketDate(m.asOf)) + ', too old to show' : 'Listed companies · no current price data')) + '</span></div>';
   wrap.onclick = (e) => {
     const tile = e.target.closest('.cv-heat-tile'); if (!tile) return;
     const detail = document.getElementById('cv-heat-detail'); if (!detail) return;
