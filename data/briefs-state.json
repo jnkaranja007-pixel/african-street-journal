@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-21T05:11:50+00:00",
+  "generated": "2026-10-21T05:26:12+00:00",
   "dates": {
     "dz": "2026-10-21T05:11:50+00:00",
     "ao": "2026-10-21T05:11:50+00:00",
@@ -15,11 +15,11 @@
     "eg": "2026-10-21T05:11:50+00:00",
     "gq": "2026-10-21T05:11:50+00:00",
     "er": "2026-10-21T05:11:50+00:00",
-    "ke": "2026-10-21T05:11:50+00:00",
+    "ke": "2026-10-21T05:26:12+00:00",
     "za": "2026-10-21T05:11:50+00:00",
-    "ng": "2026-10-21T05:11:50+00:00",
+    "ng": "2026-10-21T05:26:12+00:00",
     "et": "2026-09-06T06:56:45+00:00",
-    "gh": "2026-10-21T05:11:50+00:00",
+    "gh": "2026-10-21T05:26:12+00:00",
     "cd": "2026-10-21T05:11:50+00:00",
     "tz": "2026-10-21T05:11:50+00:00",
     "ma": "2026-10-21T05:11:50+00:00",
@@ -3824,19 +3824,19 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://capitalfm.africa/ruto-to-expand-internship-programme-by-50000-places-from-january-2027/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news",
             "published": "2026-10-20T13:00:00Z",
-            "name": "Capital FM",
-            "url": "https://capitalfm.africa/ruto-to-expand-internship-programme-by-50000-places-from-january-2027/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"
+            "name": "Capital FM"
           },
           {
+            "url": "https://www.businessdailyafrica.com/bd/corporate/companies/mystery-investors-transfer-kpc-shares-worth-sh42bn-5638330",
             "published": "2026-10-19T18:30:00Z",
-            "name": "Business Daily Africa",
-            "url": "https://www.businessdailyafrica.com/bd/corporate/companies/mystery-investors-transfer-kpc-shares-worth-sh42bn-5638330"
+            "name": "Business Daily Africa"
           },
           {
+            "url": "https://www.kenyans.co.ke/news/128725-kipchoge-keino-stadium-get-canopy-ahead-2027-afcon-ruto-says",
             "published": "2026-10-20T12:29:32Z",
-            "name": "Kenyans.co.ke",
-            "url": "https://www.kenyans.co.ke/news/128725-kipchoge-keino-stadium-get-canopy-ahead-2027-afcon-ruto-says"
+            "name": "Kenyans.co.ke"
           }
         ]
       },
@@ -3869,15 +3869,15 @@
         "topic": "News",
         "published": "2026-10-19T17:19:04Z",
         "sourceTitle": "Guilty as charged: Kenyan court finds cult leader responsible of 191 starvation deaths",
-        "editorialScore": 14.6,
-        "selectionScore": 14.6,
+        "editorialScore": 13.1,
+        "selectionScore": 13.1,
         "confidence": "medium",
         "corroboration": 2,
         "scoreBreakdown": {
           "relevance": 4.0,
           "corroboration": 4.0,
           "sourceQuality": 1.75,
-          "freshness": 2.5,
+          "freshness": 1.0,
           "publicImpact": 1.35,
           "evidence": 1.25,
           "materiality": 1.25,
@@ -3886,7 +3886,6 @@
         "rankReasons": [
           "country in headline",
           "2-source corroboration",
-          "published within 36h",
           "public-policy consequence",
           "specific figure",
           "thin source evidence",
@@ -3897,14 +3896,14 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "http://www.africanews.com/2026/10/19/guilty-as-charged-kenyan-court-finds-cult-leader-responsible-of-191-starvation-deaths/",
             "published": "2026-10-19T17:19:04Z",
-            "name": "Africanews",
-            "url": "http://www.africanews.com/2026/10/19/guilty-as-charged-kenyan-court-finds-cult-leader-responsible-of-191-starvation-deaths/"
+            "name": "Africanews"
           },
           {
+            "url": "https://www.aa.com.tr/en/africa/kenyan-court-convicts-cult-leader-paul-mackenzie-of-murdering-190-children-1-adult/4093759",
             "published": "2026-10-19T16:39:49Z",
-            "name": "Anadolu Africa",
-            "url": "https://www.aa.com.tr/en/africa/kenyan-court-convicts-cult-leader-paul-mackenzie-of-murdering-190-children-1-adult/4093759"
+            "name": "Anadolu Africa"
           }
         ]
       },
@@ -3963,14 +3962,14 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://www.kenyans.co.ke/news/128732-el-salvador-imposes-visa-restrictions-kenya-and-7-other-african-countries",
             "published": "2026-10-21T04:36:10Z",
-            "name": "Kenyans.co.ke",
-            "url": "https://www.kenyans.co.ke/news/128732-el-salvador-imposes-visa-restrictions-kenya-and-7-other-african-countries"
+            "name": "Kenyans.co.ke"
           },
           {
+            "url": "https://www.bbc.co.uk/news/articles/c693z948px0jo?at_medium=RSS&at_campaign=rss",
             "published": "2026-10-20T23:41:30Z",
-            "name": "BBC Africa",
-            "url": "https://www.bbc.co.uk/news/articles/c693z948px0jo?at_medium=RSS&at_campaign=rss"
+            "name": "BBC Africa"
           }
         ]
       }
@@ -4389,19 +4388,19 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://www.vanguardngr.com/2026/10/just-in-fg-confirms-ebola-case-in-fct-begins-contact-tracing/",
             "published": "2026-10-21T01:15:22Z",
-            "name": "Vanguard",
-            "url": "https://www.vanguardngr.com/2026/10/just-in-fg-confirms-ebola-case-in-fct-begins-contact-tracing/"
+            "name": "Vanguard"
           },
           {
+            "url": "https://www.premiumtimesng.com/health/health-news/918701-ebola-44-identified-contacts-to-stay-isolated-for-three-weeks-minister.html",
             "published": "2026-10-20T21:40:08Z",
-            "name": "Premium Times",
-            "url": "https://www.premiumtimesng.com/health/health-news/918701-ebola-44-identified-contacts-to-stay-isolated-for-three-weeks-minister.html"
+            "name": "Premium Times"
           },
           {
+            "url": "https://www.bbc.co.uk/news/articles/cm2l4xw7xpjgo?at_medium=RSS&at_campaign=rss",
             "published": "2026-10-20T19:11:15Z",
-            "name": "BBC Africa",
-            "url": "https://www.bbc.co.uk/news/articles/cm2l4xw7xpjgo?at_medium=RSS&at_campaign=rss"
+            "name": "BBC Africa"
           }
         ]
       },
@@ -4410,21 +4409,21 @@
         "headline": "Court Voids EFCC Probe Report on London/Paris Club Refunds",
         "dek": "A High Court judge ruled the EFCC overstepped its authority by investigating court-ordered payments to a consultant.",
         "paragraphs": [
-          "A Federal Capital Territory High Court has nullified an Economic and Financial Crimes Commission (EFCC) report alleging fraud in the London/Paris Club refunds for Nigeria's 774 local government areas. Justice Suleiman Belgore stated the Federal Government acted improperly by directing the EFCC to probe the matter, especially after two prior court decisions had already addressed the payments. The court found the EFCC's report constituted an affront to judicial authority.",
-          "The judge emphasized that the government should have pursued legal avenues to set aside court judgments rather than initiating an investigation. He noted that negotiated terms for legal services rendered by consultant Dr. Ted Iseghohi-Edwards were renegotiated in open court. The court recognized the validity of ten promissory notes issued to the consultant, authorized by former President Muhammadu Buhari, following a Federal High Court order.",
-          "The ruling upheld a suit filed by Dr. Iseghohi-Edwards, confirming his retainer by the Incorporated Trustees of the Association of Local Governments of Nigeria (ALGON) for the refund matter. The court also prohibited the Federal Government and its agencies from arresting, detaining, or prosecuting the lawyer concerning these refunds, safeguarding his fundamental rights."
+          "A Federal Capital Territory High Court has nullified an Economic and Financial Crimes Commission (EFCC) report that alleged fraud in the London/Paris Club refunds for Nigeria's 774 local government areas. Justice Suleiman Belgore stated the Federal Government acted improperly by directing the EFCC to investigate the matter, especially after two prior court decisions had already addressed the payments. The judge emphasized that the government should have pursued legal avenues to set aside the judgments instead of initiating a probe.",
+          "The court found that the EFCC's report was an affront to judicial authority, as it questioned judgments ordering payments to consultant Dr. Ted Iseghohi-Edwards for legal services. Justice Belgore noted that the government had already issued promissory notes for these payments following clearance from the Department of State Services. The judge affirmed that the terms of engagement between the Association of Local Governments of Nigeria (ALGON) and the consultant were renegotiated in court, and the subsequent promissory notes were validly issued.",
+          "The ruling upheld a suit filed by Dr. Iseghohi-Edwards, confirming he was legitimately retained by ALGON to represent the local government areas in the refund process. As part of the judgment, the court prohibited the Federal Government and its agencies from arresting, detaining, or prosecuting the plaintiff concerning this matter, thereby protecting his fundamental rights."
         ],
-        "body": "A Federal Capital Territory High Court has nullified an Economic and Financial Crimes Commission (EFCC) report alleging fraud in the London/Paris Club refunds for Nigeria's 774 local government areas. Justice Suleiman Belgore stated the Federal Government acted improperly by directing the EFCC to probe the matter, especially after two prior court decisions had already addressed the payments. The court found the EFCC's report constituted an affront to judicial authority.\n\nThe judge emphasized that the government should have pursued legal avenues to set aside court judgments rather than initiating an investigation. He noted that negotiated terms for legal services rendered by consultant Dr. Ted Iseghohi-Edwards were renegotiated in open court. The court recognized the validity of ten promissory notes issued to the consultant, authorized by former President Muhammadu Buhari, following a Federal High Court order.\n\nThe ruling upheld a suit filed by Dr. Iseghohi-Edwards, confirming his retainer by the Incorporated Trustees of the Association of Local Governments of Nigeria (ALGON) for the refund matter. The court also prohibited the Federal Government and its agencies from arresting, detaining, or prosecuting the lawyer concerning these refunds, safeguarding his fundamental rights.",
-        "why": "Investors are affected as the court ruling clarifies the legality of payments related to the London/Paris Club refunds, impacting financial settlements.",
+        "body": "A Federal Capital Territory High Court has nullified an Economic and Financial Crimes Commission (EFCC) report that alleged fraud in the London/Paris Club refunds for Nigeria's 774 local government areas. Justice Suleiman Belgore stated the Federal Government acted improperly by directing the EFCC to investigate the matter, especially after two prior court decisions had already addressed the payments. The judge emphasized that the government should have pursued legal avenues to set aside the judgments instead of initiating a probe.\n\nThe court found that the EFCC's report was an affront to judicial authority, as it questioned judgments ordering payments to consultant Dr. Ted Iseghohi-Edwards for legal services. Justice Belgore noted that the government had already issued promissory notes for these payments following clearance from the Department of State Services. The judge affirmed that the terms of engagement between the Association of Local Governments of Nigeria (ALGON) and the consultant were renegotiated in court, and the subsequent promissory notes were validly issued.\n\nThe ruling upheld a suit filed by Dr. Iseghohi-Edwards, confirming he was legitimately retained by ALGON to represent the local government areas in the refund process. As part of the judgment, the court prohibited the Federal Government and its agencies from arresting, detaining, or prosecuting the plaintiff concerning this matter, thereby protecting his fundamental rights.",
+        "why": "Investors are affected because the court's decision impacts the legality and finality of payments related to government refunds, potentially influencing perceptions of regulatory and judicial processes.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 0,
+            "score": 20,
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
             "score": 90,
-            "why": "The ruling directly impacts financial settlements and the legal standing of payments related to government refunds, affecting investor confidence and financial dealings."
+            "why": "Investors are directly impacted by the court's ruling on the EFCC's investigative powers and the validity of government payments, affecting confidence in regulatory actions and financial settlements."
           },
           "diaspora": {
             "score": 20,
@@ -4456,23 +4455,23 @@
           "specific figure"
         ],
         "countryMatch": "lede",
-        "wordCount": 188,
+        "wordCount": 216,
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://www.vanguardngr.com/2026/10/london-paris-club-refunds-court-voids-efcc-probe-report/",
             "published": "2026-10-21T04:24:00Z",
-            "name": "Vanguard",
-            "url": "https://www.vanguardngr.com/2026/10/london-paris-club-refunds-court-voids-efcc-probe-report/"
+            "name": "Vanguard"
           },
           {
-            "published": "2026-10-21T04:13:16Z",
-            "name": "The Punch",
-            "url": "https://punchng.com/abuja-bizman-arrested-over-alleged-120m-fraud/?utm_source=rss.punchng.com&utm_medium=web"
+            "url": "https://punchng.com/abuja-bizman-arrested-over-alleged-120m-fraud/?utm_source=rss.punchng.com&utm_medium=web",
+            "published": "2026-10-21T06:02:16Z",
+            "name": "The Punch"
           },
           {
+            "url": "https://nairametrics.com/2026/10/20/exclusivecourt-dismisses-intels-bid-to-restrain-efcc-probe-over-alleged-74-million-npa-debt/",
             "published": "2026-10-20T13:48:08Z",
-            "name": "Nairametrics",
-            "url": "https://nairametrics.com/2026/10/20/exclusivecourt-dismisses-intels-bid-to-restrain-efcc-probe-over-alleged-74-million-npa-debt/"
+            "name": "Nairametrics"
           }
         ]
       },
@@ -4530,9 +4529,9 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://nairametrics.com/2026/10/20/i-invest-wins-2026-bafi-award-for-expanding-access-to-nigerias-capital-markets/",
             "published": "2026-10-20T11:50:35Z",
-            "name": "Nairametrics",
-            "url": "https://nairametrics.com/2026/10/20/i-invest-wins-2026-bafi-award-for-expanding-access-to-nigerias-capital-markets/"
+            "name": "Nairametrics"
           }
         ]
       },
@@ -4592,9 +4591,9 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://punchng.com/absu-students-win-n35m-car-laptops-from-mtn/?utm_source=rss.punchng.com&utm_medium=web",
             "published": "2026-10-21T01:41:21Z",
-            "name": "The Punch",
-            "url": "https://punchng.com/absu-students-win-n35m-car-laptops-from-mtn/?utm_source=rss.punchng.com&utm_medium=web"
+            "name": "The Punch"
           }
         ]
       }
@@ -4776,9 +4775,9 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://www.myjoyonline.com/basenord-launched-to-deepen-ghana-sweden-trade-ties-and-support-investors/",
             "published": "2026-10-20T20:02:00Z",
-            "name": "MyJoyOnline",
-            "url": "https://www.myjoyonline.com/basenord-launched-to-deepen-ghana-sweden-trade-ties-and-support-investors/"
+            "name": "MyJoyOnline"
           }
         ]
       },
@@ -4837,9 +4836,9 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://www.myjoyonline.com/ghanas-judiciary-has-become-vulnerable-to-partisan-influence-yaw-nsarkoh/",
             "published": "2026-10-20T19:27:15Z",
-            "name": "MyJoyOnline",
-            "url": "https://www.myjoyonline.com/ghanas-judiciary-has-become-vulnerable-to-partisan-influence-yaw-nsarkoh/"
+            "name": "MyJoyOnline"
           }
         ]
       },
@@ -4897,9 +4896,9 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://www.myjoyonline.com/npa-umat-explore-partnership-to-strengthen-ghanas-downstream-petroleum-sector/",
             "published": "2026-10-20T20:35:00Z",
-            "name": "MyJoyOnline",
-            "url": "https://www.myjoyonline.com/npa-umat-explore-partnership-to-strengthen-ghanas-downstream-petroleum-sector/"
+            "name": "MyJoyOnline"
           }
         ]
       },
@@ -4957,9 +4956,9 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://www.myjoyonline.com/one-or-two-teachers-in-almost-every-school-engage-in-sexual-misconduct-teacher-alleges/",
             "published": "2026-10-20T23:50:00Z",
-            "name": "MyJoyOnline",
-            "url": "https://www.myjoyonline.com/one-or-two-teachers-in-almost-every-school-engage-in-sexual-misconduct-teacher-alleges/"
+            "name": "MyJoyOnline"
           }
         ]
       },
@@ -5016,9 +5015,9 @@
         "readMinutes": 1,
         "sources": [
           {
+            "url": "https://www.myjoyonline.com/google-resolves-cloud-outage-affecting-uk-banks-and-websites/",
             "published": "2026-10-20T23:01:00Z",
-            "name": "MyJoyOnline",
-            "url": "https://www.myjoyonline.com/google-resolves-cloud-outage-affecting-uk-banks-and-websites/"
+            "name": "MyJoyOnline"
           }
         ]
       }
