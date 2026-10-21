@@ -1547,3 +1547,22 @@ html,body{overflow-x:hidden}
 .wire-item-kicker,.wire-item-kicker *{font-family:var(--sans)!important;letter-spacing:0!important;text-transform:none!important;font-size:13px!important}
 .cv-audience-tab,.cv-feed-tab{font:600 14px/1.2 var(--sans)!important;min-height:44px}
 .cv-map-title b{font:700 15px/1.2 var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
+
+/* strip-v1: slim, flush bottom band. Even padding, centred text, page-coloured, one hairline. */
+main{position:relative}
+.rule--bottom{display:none!important}
+.ticker-wrap{min-height:0!important;height:40px;margin:0!important;padding:0!important;display:flex;align-items:center;background:var(--bg)!important;border:0!important;border-top:1px solid rgba(232,230,227,.09)!important;box-shadow:none!important}
+.ticker{height:100%;align-items:center!important}
+.ticker span,.ticker button{line-height:1!important;padding-block:0!important;display:inline-flex;align-items:center;height:100%}
+/* My Africa: tucked into the empty bottom-left corner, out of the layout flow, so the map keeps
+   (and gains) the height the old row took. Only when collapsed; expanded stays in flow. */
+@media (min-width:641px){
+  .your-desk.is-collapsed .yd-toggle{border:0!important;background:none!important}
+  .your-desk.is-collapsed{position:absolute;left:max(20px,calc((100vw - 1400px)/2 + 20px));bottom:52px;margin:0!important;z-index:3}
+}
+@media (max-width:640px){
+  .ticker-wrap{height:42px}
+  .your-desk.is-collapsed{margin:0 14px 6px!important;padding:0!important}
+  .your-desk.is-collapsed .yd-toggle{border:0!important;background:none!important;padding:6px 0!important;min-height:36px}
+}
+@media (min-width:641px){.landing-stage-row{padding-bottom:12px;box-sizing:border-box}}

@@ -3751,9 +3751,9 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
       const shouldLabel = place.capital || place.pop > 180000 || placedLabels.length < 14;
       if (mapLayers.labels && shouldLabel) {
         countryMapCtx.font = place.capital
-          ? '800 10px ui-monospace, SFMono-Regular, Consolas, monospace'
-          : '700 9px ui-monospace, SFMono-Regular, Consolas, monospace';
-        labelDrawn = drawSmartLabel(place.name.toUpperCase(), x, y, place.capital ? '#f1f7ef' : '#e0ecdf', placedLabels, width, height, place.capital ? 'right' : 'top', !!place.capital);
+          ? '700 13px system-ui, -apple-system, "Segoe UI", sans-serif'
+          : '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
+        labelDrawn = drawSmartLabel(place.name, x, y, place.capital ? '#f1f7ef' : '#e0ecdf', placedLabels, width, height, place.capital ? 'right' : 'top', !!place.capital);
       }
       if (!place.capital) {
         if (!mapLayers.labels || !labelDrawn) continue;
@@ -3771,8 +3771,8 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
       if (landmark.kind === 'city') continue;
       const [x, y] = project(landmark.lon, landmark.lat);
       if (mapLayers.labels) {
-        countryMapCtx.font = '700 10px ui-monospace, SFMono-Regular, Consolas, monospace';
-        const labelDrawn = drawSmartLabel(landmark.name.toUpperCase(), x, y, '#eef6ec', placedLabels, width, height, landmark.kind === 'water' ? 'left' : 'right');
+        countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
+        const labelDrawn = drawSmartLabel(landmark.name, x, y, '#eef6ec', placedLabels, width, height, landmark.kind === 'water' ? 'left' : 'right');
         if (!labelDrawn) continue;
       }
       const color = landmark.kind === 'water' ? '#55b8df' : '#e7eadf';
@@ -3796,8 +3796,8 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
       });
       if (overlapsPlace) continue;
       if (mapLayers.labels) {
-        countryMapCtx.font = '800 9px ui-monospace, SFMono-Regular, Consolas, monospace';
-        const labelDrawn = drawSmartLabel(item.name.toUpperCase(), x, y, '#fff0a9', placedLabels, width, height, 'right');
+        countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
+        const labelDrawn = drawSmartLabel(item.name, x, y, '#fff0a9', placedLabels, width, height, 'right');
         if (!labelDrawn) continue;
       }
       countryMapCtx.save();
@@ -3998,8 +3998,8 @@ function drawLinearFeatures(countryId, project, placedLabels, width, height) {
     if (mapLayers.labels) {
       const mid = line.points[Math.floor(line.points.length / 2)];
       const [x, y] = project(mid[0], mid[1]);
-      countryMapCtx.font = '700 10px ui-monospace, SFMono-Regular, Consolas, monospace';
-      drawSmartLabel(line.name.toUpperCase(), x, y, line.kind === 'water' ? '#c9f1ff' : '#e9f2df', placedLabels, width, height, 'top');
+      countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
+      drawSmartLabel(line.name, x, y, line.kind === 'water' ? '#c9f1ff' : '#e9f2df', placedLabels, width, height, 'top');
     }
   }
 }
