@@ -7,11 +7,11 @@
 // v16. Nothing broke - the fetch handler matches with ignoreSearch, and GitHub Pages
 // ignores query strings - but the numbers lied, and a version that lies is worse than
 // no version. Bump V alone; index.html's ?v= must match it.
-const V = '50';
+const V = '51';
 const CACHE = 'asj-v' + V;
 // briefs-full.js (~500 KB of prose) is no longer precached on install; app.js fetches
 // it after first paint and the network-first handler caches it then.
-const SHELL = ['./', 'index.html', 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/archive/index.js?v=' + V, 'data/supabase-config.js?v=' + V, 'data/analytics-config.js?v=' + V, 'data/newsletter-config.js?v=' + V, 'manifest.json', 'icon.svg'];
+const SHELL = ['./', 'index.html', 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/archive/index.js?v=' + V, 'data/supabase-config.js?v=' + V, 'data/analytics-config.js?v=' + V, 'data/newsletter-config.js?v=' + V, 'manifest.json', 'icon.svg', 'info-panel.js'];
 
 self.addEventListener('install', event => {
   event.waitUntil(

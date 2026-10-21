@@ -97,15 +97,39 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 .morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8a847b;margin:0 0 12px}
 .morenav a{display:inline-block;margin:0 14px 7px 0;font:400 13px/1.5 'Playfair Display',Georgia,'Times New Roman',serif;color:#9a958e;text-decoration:none;border-bottom:1px solid transparent}
 .morenav a:hover{color:#66bb6a;border-bottom-color:#2f5c33}
-.sitelinks{margin-top:10px}
-.sitelinks a{color:#8a847b;text-decoration:none;margin-right:14px}
-.sitelinks a:hover{color:#66bb6a}
+.sitelinks{margin-top:8px;font:400 10px/1.8 ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:none}
+.sitelinks a{color:#8f8a83;text-decoration:none}
+.sitelinks a+a::before{content:'\00b7';display:inline-block;margin:0 8px;color:#5f5b56}
+.sitelinks a:hover,.sitelinks a:focus-visible{color:#66bb6a}
 .page p,.page li{color:#c9c5c0;font-size:16.5px;line-height:1.65}
+/* Story pages only (scoped to .story / .related / .share so country pages are unchanged). */
+.skip-link{position:absolute;left:12px;top:-60px;padding:10px 14px;background:#66bb6a;color:#0c0c0c;font:700 12px/1 ui-monospace,Consolas,monospace;text-decoration:none;z-index:9}
+.skip-link:focus{top:12px}
+.story :focus-visible,.related :focus-visible{outline:2px solid #66bb6a;outline-offset:3px}
+.story{padding:0;border-bottom:0}
+.story-head{padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid #232323}
+.story-head h1{font-size:clamp(32px,6vw,49px);line-height:1.08;margin:14px 0}
+.story-head .dek{font-size:clamp(18px,2.4vw,21px);line-height:1.45;color:#e2dfda;margin:0 0 16px}
+.byline{font:12px/1.6 ui-monospace,Consolas,monospace;letter-spacing:.06em;color:#948e85;margin:0 0 16px}
+.byline a{color:#66bb6a;text-decoration:none;border-bottom:1px solid #2f5c33}
+.story p{font-size:17.5px;line-height:1.7;color:#d3cfc9;max-width:66ch}
+.share{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.share a,.share button{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid #2e2e2e;background:#181818;color:#e8e6e3;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.share a:hover,.share button:hover{border-color:#66bb6a}
+.share .share-wa{background:#1d3a24;border-color:#2f6b3b;color:#dff3e1}
+.share-status{font:12px ui-monospace,monospace;color:#66bb6a}
+.section-label{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#948e85;margin:30px 0 12px}
+.related{margin-top:34px}
+.related ul{list-style:none;margin:0;padding:0}
+.related li a{display:block;padding:10px 0;border-bottom:1px solid #1f1f1f;color:#ebe8e4;text-decoration:none;font:700 17px/1.3 'Playfair Display',Georgia,serif}
+.related li a:hover{color:#66bb6a}
+.rel-topic{display:block;font:700 10px/1.6 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#66bb6a;margin-bottom:2px}
+
 .page h2{margin-top:30px}
 .page ul{padding-left:20px}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<nav class="sitelinks"><a href="'+$BaseUrl+'/about/">About</a> <a href="'+$BaseUrl+'/privacy/">Privacy</a> <a href="'+$BaseUrl+'/contact/">Contact</a> <a href="'+$BaseUrl+'/corrections/">Corrections</a> <a href="'+$BaseUrl+'/feed.xml">RSS</a></nav>'
+$siteLinks = '<nav class="sitelinks"><a href="'+$BaseUrl+'/about/">About</a> <a href="'+$BaseUrl+'/privacy/">Privacy</a> <a href="'+$BaseUrl+'/contact/">Contact</a> <a href="'+$BaseUrl+'/corrections/">Corrections</a> <a href="'+$BaseUrl+'/feed.xml">RSS</a></nav><script src="'+$BaseUrl+'/info-panel.js" defer></script>'
 
 
 # Same analytics loader as index.html. These pages are where search traffic lands, so
@@ -279,6 +303,8 @@ $($navLinks.ToString())
 # its country page rather than a dead end.
 $storyKept = @{}
 $storyBuilt = 0
+# Lead story of each country, newest first, for the "Latest across Africa" rail.
+$leadPages = @($storyPages | Group-Object code | ForEach-Object { $_.Group[0] } | Sort-Object { [string](Get-IsoInstant $_.brief.published) } -Descending)
 $feedItems = New-Object System.Collections.Generic.List[object]
 foreach ($sp in $storyPages) {
   $b = $sp.brief
@@ -324,6 +350,15 @@ foreach ($sp in $storyPages) {
   }
   [void]$ld.Append('}')
 
+  $words = (($paragraphs -join ' ') -split '\s+' | Where-Object { $_ }).Count
+  $readMin = [Math]::Max(1, [int][Math]::Ceiling($words / 200))
+  $encUrl = [Uri]::EscapeDataString($storyCanonical)
+  $waText = [Uri]::EscapeDataString(([string]$b.headline) + ' ' + $storyCanonical)
+  $xText = [Uri]::EscapeDataString([string]$b.headline)
+  $moreHtml = (@($storyPages | Where-Object { $_.code -eq $sp.code -and $_.slug -ne $sp.slug } | Select-Object -First 4 | ForEach-Object {
+    "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""rel-topic"">$(Esc $_.brief.topic)</span>$(Esc $_.brief.headline)</a></li>" }) -join '')
+  $latestHtml = (@($leadPages | Where-Object { $_.code -ne $sp.code } | Select-Object -First 4 | ForEach-Object {
+    "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""rel-topic"">$(Esc $_.country)</span>$(Esc $_.brief.headline)</a></li>" }) -join '')
   $storyTitle = "$([string]$b.headline) | The African Street Journal"
   $storyHtml = @"
 <!doctype html>
@@ -345,26 +380,49 @@ $analytics
 <meta property="og:title" content="$(Esc $b.headline)">
 <meta property="og:description" content="$(Esc $dek)">
 <meta property="og:url" content="$storyCanonical">
-<meta property="og:image" content="$BaseUrl/og-image.png">
+<meta property="og:image" content="$BaseUrl/og/$($sp.code).jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="$(Esc $sp.country) - The African Street Journal">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="$(Esc $b.headline)">
 <meta name="twitter:description" content="$(Esc $dek)">
-<meta name="twitter:image" content="$BaseUrl/og-image.png">
+<meta name="twitter:image" content="$BaseUrl/og/$($sp.code).jpg">
 <script type="application/ld+json">$($ld.ToString())</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to story</a>
 <div class="wrap">
-  <div class="masthead"><a href="$BaseUrl/">The African Street Journal</a> &middot; <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a></div>
-  <div class="meta">$(Esc $b.topic)$(if($sp.when){" &middot; $($sp.when)"})</div>
+  <header class="masthead"><a href="$BaseUrl/">The African Street Journal</a> <span aria-hidden="true">/</span> <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a></header>
+  <main id="main">
+  <article class="story">
+  <header class="story-head">
+  <div class="meta">$(Esc $b.topic)</div>
   <h1>$(Esc $b.headline)</h1>
   <p class="dek">$(Esc $dek)</p>
+  <p class="byline">$(if($srcs.Count){"Source: <a href=""$(Esc $srcs[0].url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $srcs[0].name)</a> &middot; "})$(if($published){"<time datetime=""$published"">$(Esc $sp.when)</time> &middot; "})$readMin min read</p>
+  <div class="share" data-url="$storyCanonical" data-title="$(Esc $b.headline)">
+    <a class="share-wa" href="https://wa.me/?text=$waText" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://x.com/intent/post?text=$xText&amp;url=$encUrl" target="_blank" rel="noopener">X</a>
+    <button type="button" class="share-copy">Copy link</button>
+    <button type="button" class="share-native" hidden>Share&hellip;</button>
+    <span class="share-status" role="status" aria-live="polite"></span>
+  </div>
+  </header>
 $($bodyHtml.ToString())
+  $(if($srcs.Count){"<h2 class=""section-label"">Sources</h2>"})
 $($srcHtml.ToString())
-  <a class="open" href="$appUrl">Read in the ASJ desk &rarr;</a>
-  <div class="morenav"><h2>More from $(Esc $sp.country)</h2><a href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories</a></div>
+  </article>
+  <nav class="related" aria-label="More stories">
+    $(if($moreHtml){"<h2 class=""section-label"">More from $(Esc $sp.country)</h2><ul>$moreHtml</ul>"})
+    $(if($latestHtml){"<h2 class=""section-label"">Latest across Africa</h2><ul>$latestHtml</ul>"})
+    <p><a class="open" href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories &rarr;</a> &nbsp; <a class="open" href="$appUrl">Open the full desk &rarr;</a></p>
+  </nav>
+  </main>
   <footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
 </div>
+<script src="$BaseUrl/share.js" defer></script>
 </body>
 </html>
 "@
@@ -402,7 +460,6 @@ Write-Host "[static] $storyBuilt story pages, $swept swept past $StoryDays days"
 # --- trust pages ---------------------------------------------------------------
 # About, Privacy, Contact, Corrections. Added 20 Oct 2026: a news site with none of
 # these reads as anonymous, and Google News expects them.
-$ContactEmail = 'jnkaranja007@gmail.com'
 $trustPages = [ordered]@{
   about = @{ title = 'About'; desc = 'What The African Street Journal is, how its stories are made, and who runs it.'; body = @"
 <p>The African Street Journal is an independent daily digest of news from all 55 African countries, written for readers on the continent and in the diaspora.</p>
@@ -424,12 +481,12 @@ $trustPages = [ordered]@{
 <p>The site stores a copy of its own pages in your browser so it can open quickly and work offline. That copy stays on your device and is never sent to us.</p>
 <h2>Email</h2>
 <p>If you email us, we use your message and address only to reply. We do not run a mailing list at the moment.</p>
-<p>Questions about privacy: <a href="mailto:$ContactEmail">$ContactEmail</a>.</p>
+<p>A contact channel for privacy questions is coming soon.</p>
 "@ }
   contact = @{ title = 'Contact'; desc = 'How to reach The African Street Journal with tips, corrections or questions.'; body = @"
-<p>Email: <a href="mailto:$ContactEmail">$ContactEmail</a></p>
+<p>A contact channel is coming soon. Once it is open, we welcome:</p>
 <ul>
-<li><b>Corrections:</b> put &ldquo;Correction&rdquo; in the subject and include the story link. See the <a href="$BaseUrl/corrections/">corrections policy</a>.</li>
+<li><b>Corrections:</b> include the story link. See the <a href="$BaseUrl/corrections/">corrections policy</a>.</li>
 <li><b>Outlets and publishers:</b> if you think we have summarised or credited your reporting wrongly, or you want your feed removed, tell us and we will act promptly.</li>
 <li><b>Tips and suggestions:</b> sources we should be reading, countries we cover thinly, or features you would like.</li>
 </ul>
@@ -442,7 +499,7 @@ $trustPages = [ordered]@{
 <li>If a story should not have run at all (for example a misattributed report, or an item that is not news), we take it down.</li>
 <li>Because stories are summaries generated with an AI model and checked automatically, mistakes are possible. Reader reports are an important part of catching them.</li>
 </ul>
-<p>To report an error, email <a href="mailto:$ContactEmail">$ContactEmail</a> with &ldquo;Correction&rdquo; in the subject and the link to the story.</p>
+<p>A channel for reporting errors is coming soon.</p>
 "@ }
 }
 foreach ($slug in $trustPages.Keys) {

@@ -495,7 +495,7 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
   $headers = @{
     'Authorization' = "Bearer $apiKey"
     'Content-Type'  = 'application/json'
-    'HTTP-Referer'  = 'https://jnkaranja007-pixel.github.io/african-street-journal'
+    'HTTP-Referer'  = 'https://africanstreetjournal.com'
     'X-Title'       = 'The African Street Journal'
   }
   # Google keys (incl. the newer 'AQ.' style) are also accepted via x-goog-api-key.
