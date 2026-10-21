@@ -75,7 +75,7 @@ $css = @'
 body{margin:0;background:#131313;color:#e8e6e3;font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;padding:0 20px}
 .wrap{max-width:760px;margin:0 auto;padding:48px 0 80px}
 a{color:#66bb6a}
-.masthead{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.24em;text-transform:uppercase;color:#8a847b;padding-bottom:28px;border-bottom:1px solid #2a2a2a}
+.masthead{display:flex;flex-wrap:nowrap;white-space:nowrap;align-items:baseline;gap:0 8px;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.24em;text-transform:uppercase;color:#8a847b;padding-bottom:28px;border-bottom:1px solid #2a2a2a}
 .masthead a{color:#8a847b;text-decoration:none}
 h1{font:700 clamp(34px,7vw,56px)/1 'Playfair Display',Georgia,'Times New Roman',serif;margin:34px 0 10px;letter-spacing:0}
 .meta{font:700 11px/1.7 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a847b;margin-bottom:8px}
@@ -97,10 +97,17 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 .morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8a847b;margin:0 0 12px}
 .morenav a{display:inline-block;margin:0 14px 7px 0;font:400 13px/1.5 'Playfair Display',Georgia,'Times New Roman',serif;color:#9a958e;text-decoration:none;border-bottom:1px solid transparent}
 .morenav a:hover{color:#66bb6a;border-bottom-color:#2f5c33}
-.sitelinks{margin-top:8px;font:400 10px/1.8 ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:none}
-.sitelinks a{color:#8f8a83;text-decoration:none}
-.sitelinks a+a::before{content:'\00b7';display:inline-block;margin:0 8px;color:#5f5b56}
-.sitelinks a:hover,.sitelinks a:focus-visible{color:#66bb6a}
+.asj-info{position:relative;display:inline-block;margin-left:14px;font:inherit;letter-spacing:inherit;text-transform:uppercase;vertical-align:baseline}
+.asj-info>summary{list-style:none;cursor:pointer;color:#8f8a83;padding:2px 0;white-space:nowrap}
+.asj-info>summary::-webkit-details-marker{display:none}
+.asj-info>summary:hover,.asj-info>summary:focus-visible,.asj-info[open]>summary{color:#66bb6a}
+.asj-info-menu{position:absolute;top:calc(100% + 8px);left:0;z-index:900;min-width:170px;display:flex;flex-direction:column;background:#171717;border:1px solid #2a2a2a;box-shadow:0 14px 36px rgba(0,0,0,.5);padding:6px 0;text-align:left}
+.asj-info-menu a{display:block;padding:9px 16px;color:#c9c5c0;text-decoration:none;font:700 11px/1.2 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;border:0}
+.asj-info-menu a:hover,.asj-info-menu a:focus-visible{background:#202020;color:#66bb6a}
+.asj-info--right{margin-left:auto;padding-left:10px}
+.masthead>a{overflow:hidden;text-overflow:ellipsis;min-width:0}.masthead>a:last-of-type{flex-shrink:1}.masthead>a:first-child{flex-shrink:2}
+@media (max-width:520px){.masthead{font-size:10px;letter-spacing:.12em}}.asj-info--right .asj-info-menu{left:auto;right:0}
+
 .page p,.page li{color:#c9c5c0;font-size:16.5px;line-height:1.65}
 /* Story pages only (scoped to .story / .related / .share so country pages are unchanged). */
 .skip-link{position:absolute;left:12px;top:-60px;padding:10px 14px;background:#66bb6a;color:#0c0c0c;font:700 12px/1 ui-monospace,Consolas,monospace;text-decoration:none;z-index:9}
@@ -129,7 +136,8 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 .page ul{padding-left:20px}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<nav class="sitelinks"><a href="'+$BaseUrl+'/about/">About</a> <a href="'+$BaseUrl+'/privacy/">Privacy</a> <a href="'+$BaseUrl+'/contact/">Contact</a> <a href="'+$BaseUrl+'/corrections/">Corrections</a> <a href="'+$BaseUrl+'/feed.xml">RSS</a></nav><script src="'+$BaseUrl+'/info-panel.js" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js" defer></script>'
+$infoMenu = '<details class="asj-info asj-info--right"><summary>About &#9662;</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/privacy/">Privacy</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/feed.xml">RSS</a></div></details>'
 
 
 # Same analytics loader as index.html. These pages are where search traffic lands, so
@@ -268,7 +276,7 @@ $analytics
 </head>
 <body>
 <div class="wrap">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a></div>
+<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
 <div class="meta">$(Esc $meta.region)$(if($meta.capital){" &middot; Capital $(Esc $meta.capital)"})</div>
 <h1>$(Esc $name)</h1>
 <div class="meta">$($stories.Count) stories$(if($when){" &middot; updated $when"})</div>
@@ -394,7 +402,7 @@ $analytics
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
 <div class="wrap">
-  <header class="masthead"><a href="$BaseUrl/">The African Street Journal</a> <span aria-hidden="true">/</span> <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a></header>
+  <header class="masthead"><a href="$BaseUrl/">The African Street Journal</a> <span aria-hidden="true">/</span> <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a>$infoMenu</header>
   <main id="main">
   <article class="story">
   <header class="story-head">
@@ -521,7 +529,7 @@ $analytics
 </head>
 <body>
 <div class="wrap page">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a></div>
+<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
 <h1>$($tp.title)</h1>
 $($tp.body)
 <footer>The African Street Journal &middot; from the streets, for the streets$siteLinks</footer>

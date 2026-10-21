@@ -84,7 +84,11 @@
     }).catch(function () { location.href = '/' + slug + '/'; });
   }
 
+  function closeMenus(except) {
+    Array.prototype.forEach.call(document.querySelectorAll('details.asj-info[open]'), function (d) { if (d !== except) d.removeAttribute('open'); });
+  }
   document.addEventListener('click', function (e) {
+    closeMenus(e.target.closest && e.target.closest('details.asj-info:not([open]) summary') ? e.target.closest('details') : (e.target.closest && e.target.closest('summary') ? null : null));
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a || a.closest('.ip')) return;
@@ -95,6 +99,11 @@
     if (location.pathname === '/' + m[1] + '/') return;
     e.preventDefault();
     open(m[1], true);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || back) return;
+    var d = document.querySelector('details.asj-info[open]');
+    if (d) { d.removeAttribute('open'); d.querySelector('summary').focus(); }
   });
   window.addEventListener('popstate', function () {
     var h = location.hash.slice(1);
