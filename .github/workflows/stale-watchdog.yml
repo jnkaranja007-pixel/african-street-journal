@@ -1,0 +1,37 @@
+name: Stale edition watchdog
+
+# Independent of the desk: if the live edition is more than 36 hours old for any
+# reason (desk failing, runs queued, Pages not deploying), @mention James on issue #1's
+# title so GitHub emails him. Costs nothing - no model calls.
+on:
+  schedule:
+    - cron: '30 13 * * *'   # 13:30 UTC, well after both desk attempts
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check live edition age
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          $raw = (Invoke-WebRequest -Uri "https://africanstreetjournal.com/data/briefs.js?nocache=$(Get-Random)" -TimeoutSec 30 -UseBasicParsing).Content
+          $m = [regex]::Match($raw, "generated:\s*'([^']+)'")
+          if (-not $m.Success) { $ageH = 999; $gen = 'unreadable' } else {
+            $gen = $m.Groups[1].Value
+            $ageH = [Math]::Round(((Get-Date).ToUniversalTime() - ([datetimeoffset]::Parse($gen)).UtcDateTime).TotalHours, 1)
+          }
+          Write-Host "Live edition generated $gen ($ageH h old)"
+          if ($ageH -le 36) { exit 0 }
+          $title = 'ASJ desk is failing'
+          $body = "@jnkaranja007-pixel - watchdog: the live edition is $ageH hours old (generated $gen). The desk has not published since. Check https://github.com/$env:GH_REPO/actions/workflows/update-news.yml"
+          $existing = gh issue list --state open --search "$title in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq $title } | Select-Object -First 1
+          if ($existing) { gh issue comment $existing.number --body $body } else { gh issue create --title $title --body $body }
+          exit 1
