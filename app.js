@@ -2550,12 +2550,12 @@ function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) 
     published,
     rank: sourceRank
   });
-  const preview = b.dek || storyParagraphs(b)[0] || '';
+  const preview = (b.dek ? storyParagraphs(b)[0] : '') || b.dek || storyParagraphs(b)[0] || '';
   const readMinutes = Math.max(1, Number(b.readMinutes) || Math.ceil(storyWordCount(b) / 210));
   const lens = normalizeStoryLens(activeStoryLens);
   const lensData = storyLensData(b, lens);
   const read = isStoryReadKey(storyKey);
-  const whyLabel = lens === 'general' ? 'Why it matters' : STORY_LENS_LABELS[lens] + ' lens';
+  const whyLabel = lens === 'general' ? 'Why it matters' : 'Why it matters for ' + ({ farmers:'farmers', investors:'investors', diaspora:'the diaspora' }[lens] || 'you');
   return '<article class="cv-news-row' + (read ? ' is-read' : '') + '">' +
     '<button class="cv-news-summary" id="' + domId + '-summary" type="button" aria-expanded="false" aria-controls="' + domId + '-detail">' +
       '<span class="cv-brief-rank">' + String(i + 1).padStart(2, '0') + '</span>' +
@@ -2564,7 +2564,7 @@ function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) 
           (countryTag ? '<span class="cv-news-country">' + escapeHtml(countryTag) + '</span><span>·</span>' : '') +
           '<span class="cv-brief-topic">' + escapeHtml(b.topic || 'News') + '</span>' +
           '<span>·</span><span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span>' +
-          (lens !== 'general' ? '<span>·</span><span class="cv-news-lens-fit">' + escapeHtml(STORY_LENS_LABELS[lens]) + ' fit ' + lensData.score + '</span>' : '') +
+          
           (read ? '<span>·</span><span class="cv-news-read-state">Read</span>' : '') + '</div>' +
         '<h4 class="cv-brief-title">' + escapeHtml(b.headline) + '</h4>' +
         (b.dek ? '<p class="cv-brief-dek">' + escapeHtml(b.dek) + '</p>' : '') +
@@ -2641,7 +2641,7 @@ function renderBriefDesk(countryId) {
   const sourceCount = uniqueSourceCount(briefs);
   if (meta && briefs.length) {
     const lensLabel = activeStoryLens === 'general' ? '' : STORY_LENS_LABELS[activeStoryLens] + ' lens · ';
-    meta.textContent = lensLabel + briefs.length + ' stories · ' + sourceCount + ' sources';
+    meta.textContent = briefs.length + ' stories from ' + sourceCount + ' sources';
   }
   if (!briefs.length) {
     const wire = regionalWireFor(countryId);

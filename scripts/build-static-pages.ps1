@@ -128,6 +128,17 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 
 .page h2{margin-top:30px}
 .page ul{padding-left:20px}
+/* readability-v1: BDA style guide - sans body, no caps tracking, calm spacing */
+.page p,.page li{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:18px;line-height:1.6;letter-spacing:.01em;word-spacing:.06em;max-width:65ch}
+.story-head h1{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-weight:700;font-size:clamp(28px,5.4vw,42px);line-height:1.2;letter-spacing:-.005em}
+.story-head .dek{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:19px;line-height:1.5;color:#d6d2cc}
+.story p{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:18px;line-height:1.65;color:#dcd8d2;letter-spacing:.01em;word-spacing:.06em;max-width:65ch;margin:0 0 1.1em}
+.byline{font:15px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;color:#b4aea6}
+.share a,.share button{min-height:44px;font:600 15px/1 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none;border-radius:8px}
+.section-label{font:700 15px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none;color:#cfcac3}
+.related li a{font:600 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;padding:14px 0}
+.rel-topic{font:500 13px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none}
+.why{font-style:normal}
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=56" defer></script>'

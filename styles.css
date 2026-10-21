@@ -1484,3 +1484,42 @@ body.asj-waiting .home-story,body.asj-waiting .wire-item,body.asj-waiting [data-
 html,body{overflow-x:hidden}
 @supports (overflow:clip){html,body{overflow-x:clip}}
 .asj-info--m .asj-info-menu{left:0!important;right:auto!important}
+
+/* ── readability-v1: calm country panel (BDA style guide / WCAG 2.2) ──
+   Sans-serif upright text, no all-caps tracking on content, ≥16px reading text,
+   1.5 line height, fewer boxes, 44px targets. */
+.cv-brief-title{font-family:var(--sans)!important;font-weight:650!important;font-size:18px!important;line-height:1.35!important;letter-spacing:0!important;font-style:normal!important}
+.cv-brief-dek{font-size:16px!important;line-height:1.5!important;color:var(--text-muted)!important;letter-spacing:.01em}
+.cv-news-summary-meta{font:500 13px/1.4 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;color:var(--text-muted)!important;gap:6px!important}
+.cv-news-summary-meta .cv-brief-topic{color:var(--front-green)}
+.cv-news-source{max-width:none!important;overflow:visible!important;text-overflow:clip!important;white-space:normal!important}
+.cv-brief-body,.cv-brief-why{font-size:16px!important;line-height:1.55!important;letter-spacing:.01em}
+.cv-brief-why b{display:block;font:600 14px/1.4 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;margin-bottom:4px}
+.cv-brief-actions,.cv-brief-actions span{font:500 14px/1.4 var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
+.cv-read-story{font:600 15px/1 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;min-height:44px;border-radius:8px}
+.cv-news-lens{font:600 15px/1 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;min-height:44px}
+#cv-dots button,.cv-dot{font:600 15px/1 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;min-height:44px}
+.cv-panel-head .meta,#cv-story-meta{font:400 14px/1.4 var(--sans)!important;letter-spacing:0!important;text-transform:none!important;color:var(--text-muted)!important}
+.cv-panel-head h3{font:700 17px/1.3 var(--sans)!important;letter-spacing:0!important;text-transform:none!important}
+.cv-region,.cv-alm-key,.cv-file-kicker{letter-spacing:.02em!important}
+@media (max-width:640px){
+  #cv-copy-brief{display:none!important}            /* power-user tool: desktop only */
+  .cv-brief-rank{display:none!important}             /* 01/02 numbers add noise on a phone */
+  .cv-panel-head{border:0!important;padding-bottom:4px!important}
+  .cv-panel-head h3{display:none!important}          /* tab already says "News" */
+  .cv-news-lenses{border:0!important;gap:6px!important;padding:4px 0 10px!important}
+  .cv-news-lens{border:1px solid rgba(232,230,227,.14)!important;border-radius:999px!important;background:transparent!important;padding:0 6px!important;font-size:14px!important;min-width:0!important}
+  .cv-news-lenses{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .cv-news-lens[aria-pressed="true"]{background:rgba(102,187,106,.16)!important;border-color:rgba(102,187,106,.6)!important;color:#dff3e1!important;box-shadow:none!important}
+  .cv-news-row{padding:16px 2px!important}
+  .cv-news-summary{grid-template-columns:minmax(0,1fr) 32px!important;gap:10px!important}
+  .cv-news-toggle{border:0!important}
+  .cv-brief-why{border-left-width:2px!important}
+  .cv-brief-main{padding-left:16px!important;margin-left:0!important}
+  .cv-news-summary[aria-expanded="true"] .cv-brief-dek{display:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .ticker,.ticker *{animation:none!important;transition:none!important}
+}
+@media (max-width:640px){.cv-header{background:var(--bg)!important;-webkit-backdrop-filter:none;backdrop-filter:none}}
+.cv-brief-body{color:#d6d2cc!important}
