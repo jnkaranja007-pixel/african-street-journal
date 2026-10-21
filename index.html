@@ -28,7 +28,7 @@
      GoatCounter site code nor a Cloudflare beacon token is a secret.
      Both supported providers are cookieless and neither profiles readers across sites,
      which is the only reason this page can measure traffic without a consent banner. -->
-<script src="data/analytics-config.js?v=50" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=51" onerror="window.ASJ_ANALYTICS=null"></script>
 <script>
 (function () {
   var cfg = window.ASJ_ANALYTICS;
@@ -53,23 +53,18 @@
   }
 }());
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Non-blocking. A stylesheet link in the head stops first paint until a third-party
-     round trip completes; on a slow connection that is a blank screen for a second or
-     more, and the audience for this paper is on exactly those connections. Loading it
-     as print media and switching to all on load takes it off the critical path. The
-     font URL already carries display=swap, so headlines render in Georgia immediately
-     and reflow to Playfair when it arrives. The noscript copy keeps the original
-     behaviour for a reader with JavaScript off. -->
-<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="stylesheet" href="styles.css?v=50">
+<!-- Self-hosted Playfair Display (latin subset, ~62 KB, cached for a year by the SW and
+     the browser). No third-party round trip, and no reader IP sent to Google. -->
+<link rel="preload" href="/fonts/playfair-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="styles.css?v=51">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
 
-<div class="masthead">
+<a class="skip-link" href="#today">Skip to today's stories</a>
+<div class="hero-screen">
+<header class="masthead">
   <span>VOL. I &middot; EST. 2026 &middot; AFRICA</span>
   <div class="masthead-kicker"><span>INDEPENDENT</span><span class="kicker-dot" aria-hidden="true">&middot;</span><span>AFRICAN JOURNALISM</span></div>
   <span>EFFICIENT JOURNALISM</span>
@@ -81,7 +76,7 @@
       <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
     </button>
   </div>
-</div>
+</header>
 <div class="rule"></div>
 <div class="sub-rule">
   <p class="tagline-footer">&mdash; from the streets, for the streets &mdash;</p>
@@ -96,7 +91,7 @@
   <div class="landing-core">
     <div class="title-block">
       <h1><em>The</em> African Street <span class="g">Journal</span></h1>
-      <p class="tagline">Culture &middot; Politics &middot; People</p>
+      <p class="tagline">Politics &middot; Business &middot; People</p>
     </div>
 
     <div class="pop-counter" aria-label="Estimated population across 55 African countries">
@@ -114,7 +109,7 @@
     </div>
   </div>
 
-  <div class="your-desk" id="your-desk" hidden aria-label="Your followed countries"></div>
+  <section class="your-desk" id="your-desk" hidden aria-label="Your followed countries"></section>
   <div class="rule rule--bottom"></div>
   <div class="ticker-wrap" aria-label="Featured cities">
     <div class="ticker" id="ticker"></div>
@@ -124,11 +119,36 @@
        rendered here because a narrow screen has vertical room and no horizontal room. -->
   <aside class="home-front home-front--mobile" id="home-front-mobile" aria-label="Today's lead stories"></aside>
 
-  <nav class="site-links" aria-label="About this site">
-    <a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/feed.xml">RSS</a>
-  </nav>
-
+  <a class="scroll-cue" href="#today"><span>Today&rsquo;s stories</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"/></svg></a>
 </main>
+</div>
+
+<section class="today" id="today" aria-labelledby="today-title">
+  <div class="today-inner">
+    <header class="today-head">
+      <p class="today-kicker" id="today-date">Today</p>
+      <h2 class="today-title" id="today-title">The day across Africa</h2>
+      <p class="today-meta" id="today-meta"></p>
+    </header>
+    <div class="today-grid">
+      <article class="today-lead" id="today-lead"></article>
+      <ol class="today-list" id="today-list"></ol>
+    </div>
+    <div class="today-actions">
+      <button class="today-desk" type="button" data-wire-entry>Open the full desk <span aria-hidden="true">&rarr;</span></button>
+    </div>
+    <nav class="today-countries" aria-labelledby="today-countries-title">
+      <h3 class="today-sub" id="today-countries-title">Country desks</h3>
+      <ul id="today-country-list"></ul>
+    </nav>
+  </div>
+  <footer class="site-footer">
+    <p class="site-footer-brand">The African Street Journal &middot; every story carries its source</p>
+    <nav class="site-links" aria-label="About this site">
+      <a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/feed.xml">RSS</a>
+    </nav>
+  </footer>
+</section>
 
 <div id="country-view" role="dialog" aria-modal="true" aria-labelledby="cv-name">
   <div class="cv-header">
@@ -419,15 +439,16 @@
   </div>
 </article>
 
-<script src="data/app-core.js?v=50"></script>
+<script src="data/app-core.js?v=51" defer></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
-<script>window.ASJ_ASSET_VERSION='50';</script>
-<script src="data/briefs.js?v=50" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=50" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=50" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=50" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script>window.ASJ_ASSET_VERSION='51';</script>
+<script src="data/briefs.js?v=51" defer onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=51" defer onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=51" defer onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=51" defer onerror="window.ASJ_NEWSLETTER=null"></script>
 
-<script src="app.js?v=50"></script>
+<script src="app.js?v=51" defer></script>
+<script src="today.js?v=51" defer></script>
 </body>
 </html>
