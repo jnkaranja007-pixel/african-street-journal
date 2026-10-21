@@ -816,7 +816,7 @@ const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('tooltip');
 const FRONT_GREEN = getComputedStyle(document.documentElement).getPropertyValue('--front-green').trim() || '#439447';
 
-const dpr = Math.min(2, window.devicePixelRatio || 1);
+const dpr = Math.min(3, window.devicePixelRatio || 1);
 canvas.width = 1000 * dpr;
 canvas.height = 1001 * dpr;
 ctx.scale(dpr, dpr);
@@ -835,6 +835,7 @@ const paths = drawableCountries.map(country => ({
   bbox: pathBounds(country.d)
 }));
 
+const LAKES = window.UNITED_AFRICA_DATA && window.UNITED_AFRICA_DATA.lakes ? new Path2D(window.UNITED_AFRICA_DATA.lakes) : null;
 const pathById = Object.fromEntries(paths.map(path => [path.id, path]));
 function pathBounds(d) {
   const nums = d.match(/-?\d+(?:\.\d+)?/g)?.map(Number) || [];
@@ -990,29 +991,53 @@ function render(elapsed) {
   ctx.clearRect(0, 0, 1000, 1001);
   drawOcean(elapsed);
   ctx.lineJoin = 'round';
-  ctx.lineWidth = 0.8;
   const pulse = pulseAmount();
+  const hair = 1 / dpr;           // one device pixel: crisp borders at any density
+  const settled = Math.max(0, Math.min(1, (elapsed - 2.6) / 0.9));
+
+  // Soft drop shade under the landmass once it has settled: depth without a gimmick.
+  if (settled > 0) {
+    ctx.save();
+    ctx.translate(0.41, 2);
+    ctx.shadowColor = 'rgba(0,0,0,' + (0.55 * settled).toFixed(3) + ')';
+    ctx.shadowBlur = 28; ctx.shadowOffsetY = 8;
+    ctx.fillStyle = '#163a18';
+    for (let i = 0; i < paths.length; i++) ctx.fill(paths[i].shape);
+    ctx.restore();
+  }
 
   for (let i = 0; i < paths.length; i++) {
     const c = paths[i];
     const t = c.dur === 0 ? 1 : Math.max(0, Math.min(1, (elapsed - c.delay) / c.dur));
     if (t === 0) continue;
-
     const eased = easeOut(t);
     const isHover = i === hoveredIdx && assemblyDone;
+    if (isHover) continue;          // drawn last, on top
     ctx.save();
     ctx.translate(0.41 + c.sx * (1 - eased), 2 + c.sy * (1 - eased));
     ctx.globalAlpha = Math.min(1, t / 0.18);
-    const pulsing = i === pulseIdx && pulse > 0 && !isHover;
-    if (isHover) { ctx.shadowColor = 'rgba(76,175,80,0.5)'; ctx.shadowBlur = 18; }
-    else if (pulsing) { ctx.shadowColor = 'rgba(102,187,106,' + (0.45 * pulse).toFixed(3) + ')'; ctx.shadowBlur = 22 * pulse; }
-    ctx.fillStyle = isHover ? '#66bb6a'
-      : pulsing ? 'rgb(' + Math.round(61 + 41 * pulse) + ',' + Math.round(139 + 48 * pulse) + ',' + Math.round(64 + 42 * pulse) + ')'
-      : FRONT_GREEN;
-    ctx.strokeStyle = '#1a1a1a';
+    const pulsing = i === pulseIdx && pulse > 0;
+    ctx.fillStyle = pulsing ? 'rgb(' + Math.round(67 + 35 * pulse) + ',' + Math.round(148 + 39 * pulse) + ',' + Math.round(71 + 35 * pulse) + ')' : FRONT_GREEN;
     ctx.fill(c.shape);
-    ctx.shadowBlur = 0;
+    ctx.lineWidth = 2.4 * hair + 0.35; ctx.strokeStyle = 'rgba(12,32,14,0.85)';
     ctx.stroke(c.shape);
+    ctx.restore();
+  }
+  if (LAKES) {
+    ctx.save(); ctx.translate(0.41, 2);
+    ctx.globalAlpha = Math.min(1, Math.max(0, (elapsed - 1.2) / 1.2));
+    ctx.fillStyle = '#141a17'; ctx.fill(LAKES);
+    ctx.lineWidth = 2 * hair; ctx.strokeStyle = 'rgba(12,32,14,0.9)'; ctx.stroke(LAKES);
+    ctx.restore();
+  }
+  if (hoveredIdx >= 0 && assemblyDone) {
+    const c = paths[hoveredIdx];
+    ctx.save(); ctx.translate(0.41, 2);
+    ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 3;
+    ctx.fillStyle = '#5cb860'; ctx.fill(c.shape);
+    ctx.shadowColor = 'transparent';
+    if (LAKES) { ctx.save(); ctx.clip(c.shape); ctx.fillStyle = '#141a17'; ctx.fill(LAKES); ctx.restore(); }
+    ctx.lineWidth = 1.4; ctx.strokeStyle = '#d7efd8'; ctx.stroke(c.shape);
     ctx.restore();
   }
   drawIslandMarkers(elapsed);
