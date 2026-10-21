@@ -145,7 +145,7 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=64" defer></script>'
-$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/privacy/">Privacy</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/feed.xml">RSS</a></div></details>'
+$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">All 55 countries</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/privacy/">Privacy</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/feed.xml">RSS</a></div></details>'
 
 
 # Same analytics loader as index.html. These pages are where search traffic lands, so
@@ -262,6 +262,9 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <title>$(Esc $titleText)</title>
 <meta name="description" content="$(Esc $desc)">
 <link rel="canonical" href="$canonical">
+<link rel="alternate" hreflang="en" href="$canonical">
+<link rel="alternate" hreflang="x-default" href="$canonical">
+<link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta name="theme-color" content="#131313">
 $analytics
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -276,9 +279,9 @@ $analytics
 <meta property="og:description" content="$(Esc $desc)">
 <meta property="og:type" content="website">
 <meta property="og:url" content="$canonical">
-<meta property="og:image" content="$BaseUrl/og-image.png">
+<meta property="og:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="$BaseUrl/og-image.png">
+<meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=64">
 </head>
@@ -354,7 +357,10 @@ foreach ($sp in $storyPages) {
   [void]$ld.Append(",""url"":""$storyCanonical""")
   if ($published) { [void]$ld.Append(",""datePublished"":""$published"",""dateModified"":""$published""") }
   [void]$ld.Append(",""inLanguage"":""en"",""isAccessibleForFree"":true")
-  [void]$ld.Append(",""publisher"":{""@type"":""NewsMediaOrganization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/""}")
+  # Organization as author: the desk is the byline; no personal name is ever published.
+  [void]$ld.Append(",""publisher"":{""@type"":""NewsMediaOrganization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/"",""logo"":{""@type"":""ImageObject"",""url"":""$BaseUrl/icon-512.png""}}")
+  [void]$ld.Append(",""author"":{""@type"":""Organization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/about/""}")
+  [void]$ld.Append(",""image"":[""$BaseUrl/og/$($sp.code).jpg""],""mainEntityOfPage"":""$storyCanonical""")
   [void]$ld.Append(",""contentLocation"":{""@type"":""Country"",""name"":""$(JsonEsc $sp.country)""}")
   if ($srcs.Count) {
     [void]$ld.Append(',"citation":[')
@@ -385,6 +391,9 @@ foreach ($sp in $storyPages) {
 <title>$(Esc $storyTitle)</title>
 <meta name="description" content="$(Esc $dek)">
 <link rel="canonical" href="$storyCanonical">
+<link rel="alternate" hreflang="en" href="$storyCanonical">
+<link rel="alternate" hreflang="x-default" href="$storyCanonical">
+<link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta name="theme-color" content="#131313">
 $analytics
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -421,6 +430,7 @@ $analytics
   <div class="share" data-url="$storyCanonical" data-title="$(Esc $b.headline)">
     <a class="share-wa" href="https://wa.me/?text=$waText" target="_blank" rel="noopener">WhatsApp</a>
     <a href="https://x.com/intent/post?text=$xText&amp;url=$encUrl" target="_blank" rel="noopener">X</a>
+    <a href="https://t.me/share/url?url=$encUrl&amp;text=$([Uri]::EscapeDataString([string]$b.headline))" target="_blank" rel="noopener">Telegram</a>
     <button type="button" class="share-copy">Copy link</button>
     <button type="button" class="share-native" hidden>Share&hellip;</button>
     <span class="share-status" role="status" aria-live="polite"></span>
@@ -551,6 +561,54 @@ $($tp.body)
   $urls.Add($tpUrl)
 }
 
+# --- countries hub ------------------------------------------------------------
+# The homepage is a canvas map: crawlers find no country links there. This plain-HTML
+# index links every country page and is linked from the About menu everywhere.
+$hubList = New-Object System.Text.StringBuilder
+foreach ($c in ($pageCodes | Sort-Object { $info[$_].name })) {
+  $hubLead = ''
+  $cs = @($byCountry.$c | Where-Object { Test-StoryIsRenderable $_ })
+  if ($cs.Count) { $hubLead = [string]$cs[0].headline }
+  [void]$hubList.Append("<li><a href=""$BaseUrl/$c/""><b>$(Esc $info[$c].name)</b></a>$(if($hubLead){" &middot; $(Esc $hubLead)"})</li>`n")
+}
+$hubHtml = @"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>News from all 55 African countries | The African Street Journal</title>
+<meta name="description" content="Today's source-cited news from every African country, from Algeria to Zimbabwe. One page per country, updated daily.">
+<link rel="canonical" href="$BaseUrl/countries/">
+<link rel="alternate" hreflang="en" href="$BaseUrl/countries/">
+<link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The African Street Journal">
+<meta property="og:title" content="News from all 55 African countries">
+<meta property="og:url" content="$BaseUrl/countries/">
+<meta property="og:image" content="$BaseUrl/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=64">
+$analytics
+</head>
+<body>
+<div class="wrap">
+<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
+<main id="main">
+<h1>All 55 countries</h1>
+<ul class="country-hub">
+$($hubList.ToString())</ul>
+</main>
+<footer>The African Street Journal &middot; from the streets, for the streets$siteLinks</footer>
+</div>
+</body>
+</html>
+"@
+$hubDir = Join-Path $root 'countries'
+if (-not (Test-Path $hubDir)) { New-Item -ItemType Directory -Path $hubDir -Force | Out-Null }
+[IO.File]::WriteAllText((Join-Path $hubDir 'index.html'), $hubHtml, (New-Object Text.UTF8Encoding($false)))
+$urls.Add("$BaseUrl/countries/")
+
 # --- RSS feed and Google News sitemap ------------------------------------------
 function XmlEsc([string]$t) { if ($null -eq $t) { return '' }; return [Security.SecurityElement]::Escape($t) }
 $sortedFeed = @($feedItems | Sort-Object { try { [datetime]::Parse([string]$_.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { [datetime]::MinValue } } -Descending)
@@ -563,14 +621,18 @@ $news = New-Object System.Text.StringBuilder
 [void]$news.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
 [void]$news.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">')
 $newsCut = (Get-Date).ToUniversalTime().AddDays(-2)
-foreach ($fi in ($sortedFeed | Select-Object -First 100)) {
+$newsCount = 0
+foreach ($fi in $sortedFeed) {
+  $inFeed = ($newsCount -lt 100); $newsCount++
   $pd = $null
   try { $pd = [datetime]::Parse([string]$fi.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { }
+  if ($inFeed) {
   [void]$rss.Append("<item><title>$(XmlEsc $fi.title)</title><link>$(XmlEsc $fi.link)</link><guid isPermaLink=""true"">$(XmlEsc $fi.link)</guid><category>$(XmlEsc $fi.country)</category><description>$(XmlEsc $fi.dek)</description>")
   if ($pd) { [void]$rss.Append("<pubDate>$($pd.ToString('r', [Globalization.CultureInfo]::InvariantCulture))</pubDate>") }
   [void]$rss.AppendLine('</item>')
+  }
   # Google News sitemaps list only articles from the last two days.
-  if ($pd -and $pd -ge $newsCut) {
+  if ($pd -and $pd -ge $newsCut -and $newsCount -le 1000) {
     [void]$news.AppendLine("  <url><loc>$(XmlEsc $fi.link)</loc><news:news><news:publication><news:name>The African Street Journal</news:name><news:language>en</news:language></news:publication><news:publication_date>$($pd.ToString('yyyy-MM-ddTHH:mm:ssZ'))</news:publication_date><news:title>$(XmlEsc $fi.title)</news:title></news:news></url>")
   }
 }

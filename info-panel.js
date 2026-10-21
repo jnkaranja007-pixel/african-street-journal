@@ -137,3 +137,22 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 }());
+
+/* Follow-channel slot: WhatsApp / Telegram channel and email-digest links appear in every
+   About menu only once a URL is set in data/channels.json. Empty values render nothing. */
+(function () {
+  'use strict';
+  var LABELS = { whatsapp: 'WhatsApp channel', telegram: 'Telegram channel', email: 'Daily email' };
+  function ok(u) { return typeof u === 'string' && /^https:\/\/[^\s"<>]+$/.test(u); }
+  fetch('/data/channels.json', { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : {}; }).then(function (cfg) {
+    var keys = Object.keys(LABELS).filter(function (k) { return ok(cfg && cfg[k]); });
+    if (!keys.length) return;
+    Array.prototype.forEach.call(document.querySelectorAll('.asj-info-menu'), function (menu) {
+      keys.forEach(function (k) {
+        var a = document.createElement('a');
+        a.href = cfg[k]; a.target = '_blank'; a.rel = 'noopener'; a.textContent = LABELS[k]; a.dataset.channel = k;
+        menu.appendChild(a);
+      });
+    });
+  }).catch(function () {});
+})();

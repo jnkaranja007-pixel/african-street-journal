@@ -1769,3 +1769,7 @@ main{position:relative}
   .cv-rail-sponsor img{display:block;width:100%;height:auto;border-radius:6px;margin-bottom:6px}
   .cv-panel-head,.cv-news-lenses,.cv-brief-desk,.cv-news-row,#cv-panel-signals .cv-info-grid,#cv-panel-signals .cv-panel-head{max-width:none!important}
 }
+/* traffic-v1: one-tap WhatsApp beside Share in the story reader */
+.story-reader-actions{justify-self:end;display:inline-flex;gap:6px;align-items:center}
+.story-reader-wa{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#dff3e1;background:#1d3a24;border-color:#2f6b3b}
+.country-hub{padding-left:20px}.country-hub li{margin:0 0 10px}

@@ -20,6 +20,11 @@
 <meta name="twitter:title" content="The African Street Journal">
 <meta name="twitter:description" content="Original, source-cited stories and practical signals from all 55 African countries.">
 <link rel="canonical" href="https://africanstreetjournal.com/">
+<link rel="apple-touch-icon" href="/icon-512.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"NewsMediaOrganization","@id":"https://africanstreetjournal.com/#org","name":"The African Street Journal","url":"https://africanstreetjournal.com/","logo":{"@type":"ImageObject","url":"https://africanstreetjournal.com/icon-512.png"},"publishingPrinciples":"https://africanstreetjournal.com/about/","correctionsPolicy":"https://africanstreetjournal.com/corrections/"},{"@type":"WebSite","name":"The African Street Journal","url":"https://africanstreetjournal.com/","publisher":{"@id":"https://africanstreetjournal.com/#org"},"inLanguage":"en"}]}</script>
+<link rel="alternate" hreflang="en" href="https://africanstreetjournal.com/">
+<link rel="alternate" hreflang="x-default" href="https://africanstreetjournal.com/">
+
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23131313'/%3E%3Ctext x='32' y='47' font-family='Georgia,serif' font-size='46' font-weight='700' fill='%234caf50' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
 <!-- Analytics. Nothing loads unless data/analytics-config.js names a provider; the
@@ -64,18 +69,21 @@
      behaviour for a reader with JavaScript off. -->
 <link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
+<link rel="preload" href="app.js?v=64" as="script">
+<link rel="preload" href="data/app-core.js?v=64" as="script">
+<link rel="preload" href="data/briefs.js?v=64" as="script">
 <link rel="stylesheet" href="styles.css?v=64">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
 
 <div class="masthead">
-  <span class="masthead-left"><details class="asj-info" style="margin-left:0"><summary>About</summary><div class="asj-info-menu"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/feed.xml">RSS</a></div></details></span>
+  <span class="masthead-left"><details class="asj-info" style="margin-left:0"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">All 55 countries</a><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/feed.xml">RSS</a></div></details></span>
   <div class="masthead-kicker"><span>INDEPENDENT</span><span class="kicker-dot" aria-hidden="true">&middot;</span><span>AFRICAN JOURNALISM</span></div>
   <span aria-hidden="true"></span>
   <div class="mobile-masthead">
     <a class="mobile-wordmark" href="./" aria-label="The African Street Journal home">ASJ</a>
-    <span class="mobile-wordmark-name">African Street<br>Journal</span><details class="asj-info asj-info--m"><summary>About</summary><div class="asj-info-menu"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/feed.xml">RSS</a></div></details>
+    <span class="mobile-wordmark-name">African Street<br>Journal</span><details class="asj-info asj-info--m"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">All 55 countries</a><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/feed.xml">RSS</a></div></details>
     <button class="wire-entry mobile-wire-entry" data-wire-entry type="button" aria-label="Open today's Africa desk" title="Open today's Africa desk">
       <span class="wire-entry-count">ASJ Wire</span>
       <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
@@ -391,7 +399,7 @@
       Back
     </button>
     <span class="story-reader-brand">The African Street <b>Journal</b></span>
-    <button class="story-reader-share" id="story-reader-share" type="button">Share</button>
+    <span class="story-reader-actions"><a class="story-reader-share story-reader-wa" id="story-reader-wa" href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a><button class="story-reader-share" id="story-reader-share" type="button">Share</button></span>
   </header>
   <div class="story-reader-scroll">
     <div class="story-reader-inner">

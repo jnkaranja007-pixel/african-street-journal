@@ -2512,6 +2512,7 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   sourcesEl.hidden = !uniqueSources.length;
   updateReaderContinuation();
   document.getElementById('story-reader-share').textContent = 'Share';
+  try { updateReaderWhatsApp(); } catch {}
   // A story gets its own address. Without this the URL never changed when a story
   // opened, which cost two things that matter more on a phone than anywhere else:
   // the hardware Back button left the site instead of closing the story, and anyone
@@ -2583,6 +2584,28 @@ document.getElementById('story-reader-next')?.addEventListener('click', () => {
   if (!record) return;
   openStoryReader(record.story, record.context, storyReaderLastFocus, { continueQueue:true });
 });
+function readerShareUrl(record) {
+  const story = record.story;
+  const shareUrl = new URL(window.location.href);
+  shareUrl.search = '';
+  shareUrl.hash = '';
+  const shareCc = record.context?.countryCode;
+  if (story.slug && shareCc) {
+    shareUrl.pathname = '/' + shareCc + '/' + story.slug + '/';
+  } else {
+    // No page of its own: a hand-written brief with no articleId, or an edition older
+    // than the retention window. The app link still opens the right story.
+    shareUrl.searchParams.set('story', record.clientId);
+  }
+  return shareUrl;
+}
+// WhatsApp is how most of the audience passes news on; one tap, no share sheet.
+function updateReaderWhatsApp() {
+  const a = document.getElementById('story-reader-wa');
+  if (!a || !activeReaderRecord) return;
+  const u = readerShareUrl(activeReaderRecord).href;
+  a.href = 'https://wa.me/?text=' + encodeURIComponent(activeReaderRecord.story.headline + ' ' + u);
+}
 document.getElementById('story-reader-share')?.addEventListener('click', async event => {
   if (!activeReaderRecord) return;
   const story = activeReaderRecord.story;
@@ -2592,17 +2615,7 @@ document.getElementById('story-reader-share')?.addEventListener('click', async e
   // a story sent to a chat app arrived as the masthead and a generic blurb. The slug
   // comes from the payload rather than being recomputed here - two implementations of
   // a URL is two chances to send someone somewhere that is not there.
-  const shareUrl = new URL(window.location.href);
-  shareUrl.search = '';
-  shareUrl.hash = '';
-  const shareCc = activeReaderRecord.context?.countryCode;
-  if (story.slug && shareCc) {
-    shareUrl.pathname = '/' + shareCc + '/' + story.slug + '/';
-  } else {
-    // No page of its own: a hand-written brief with no articleId, or an edition older
-    // than the retention window. The app link still opens the right story.
-    shareUrl.searchParams.set('story', activeReaderRecord.clientId);
-  }
+  const shareUrl = readerShareUrl(activeReaderRecord);
   const text = [story.headline, story.dek || storyParagraphs(story)[0] || '', country ? 'The African Street Journal · ' + country : 'The African Street Journal']
     .filter(Boolean).join('\n\n');
   if (navigator.share) {
