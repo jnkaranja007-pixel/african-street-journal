@@ -75,10 +75,10 @@ $css = @'
 body{margin:0;background:#131313;color:#e8e6e3;font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;padding:0 20px}
 .wrap{max-width:760px;margin:0 auto;padding:48px 0 80px}
 a{color:#66bb6a}
-.masthead{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.24em;text-transform:uppercase;color:#8a847b;padding-bottom:28px;border-bottom:1px solid #2a2a2a}
-.masthead a{color:#8a847b;text-decoration:none}
+.masthead{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.24em;text-transform:uppercase;color:#948e85;padding-bottom:28px;border-bottom:1px solid #2a2a2a}
+.masthead a{color:#948e85;text-decoration:none}
 h1{font:700 clamp(34px,7vw,56px)/1 'Playfair Display',Georgia,'Times New Roman',serif;margin:34px 0 10px;letter-spacing:0}
-.meta{font:700 11px/1.7 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a847b;margin-bottom:8px}
+.meta{font:700 11px/1.7 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#948e85;margin-bottom:8px}
 .open{display:inline-block;margin:18px 0 6px;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid #4caf50;padding-bottom:5px}
 article{padding:26px 0;border-bottom:1px solid #232323}
 h2{font:700 clamp(22px,3.2vw,28px)/1.2 'Playfair Display',Georgia,'Times New Roman',serif;margin:0 0 10px;color:#f2f0ed}
@@ -87,20 +87,48 @@ h2 a:hover,h2 a:focus-visible{color:#66bb6a;outline:none}
 .kicker{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#66bb6a;margin-bottom:9px}
 .dek{font-size:17px;line-height:1.45;color:#e8e6e3;margin-bottom:18px}
 p{margin:0 0 12px;color:#c9c5c0}
-.why{color:#8a847b;font-size:14.5px}
+.why{color:#948e85;font-size:14.5px}
 .why b{color:#e8e6e3;font-weight:600;margin-right:8px}
 .src{font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase}
 .src a{margin-right:14px;text-decoration:none;border-bottom:1px solid #2f5c33}
 .read{display:inline-block;margin-top:8px;font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid #4caf50;padding-bottom:5px}
-footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:#66615b}
+footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:#948e85}
 .morenav{margin-top:34px;padding-top:20px;border-top:1px solid #232323}
-.morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8a847b;margin:0 0 12px}
+.morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#948e85;margin:0 0 12px}
 .morenav a{display:inline-block;margin:0 14px 7px 0;font:400 13px/1.5 'Playfair Display',Georgia,'Times New Roman',serif;color:#9a958e;text-decoration:none;border-bottom:1px solid transparent}
 .morenav a:hover{color:#66bb6a;border-bottom-color:#2f5c33}
 .sitelinks{margin-top:10px}
-.sitelinks a{color:#8a847b;text-decoration:none;margin-right:14px}
+.sitelinks a{color:#948e85;text-decoration:none;margin-right:14px}
 .sitelinks a:hover{color:#66bb6a}
 .page p,.page li{color:#c9c5c0;font-size:16.5px;line-height:1.65}
+/* redesign v1 */
+:focus-visible{outline:2px solid #66bb6a;outline-offset:3px}
+.skip-link{position:absolute;left:12px;top:-60px;padding:10px 14px;background:#66bb6a;color:#0c0c0c;font:700 12px/1 ui-monospace,Consolas,monospace;text-decoration:none;z-index:9}
+.skip-link:focus{top:12px}
+.masthead a{text-decoration:none}
+.page-head{margin-bottom:8px}
+.story-head{padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid #232323}
+.story-head h1{font-size:clamp(32px,6vw,49px);line-height:1.08;letter-spacing:-.01em;margin:14px 0 14px}
+.story-head .dek{font-size:clamp(18px,2.4vw,21px);line-height:1.45;color:#e2dfda;margin:0 0 16px}
+.byline{font:12px/1.6 ui-monospace,Consolas,monospace;letter-spacing:.06em;color:#948e85;margin:0 0 16px}
+.byline a{color:#66bb6a;text-decoration:none;border-bottom:1px solid #2f5c33}
+article p{font-size:17.5px;line-height:1.7;color:#d3cfc9;max-width:66ch}
+.share{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.share a,.share button{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid #2e2e2e;background:#181818;color:#e8e6e3;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:border-color .16s,background .16s}
+.share a:hover,.share button:hover{border-color:#66bb6a}
+.share .share-wa{background:#1d3a24;border-color:#2f6b3b;color:#dff3e1}
+.share-status{font:12px ui-monospace,monospace;color:#66bb6a}
+.section-label{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#948e85;margin:30px 0 12px}
+.toc{margin:18px 0 8px;padding:18px 0;border-block:1px solid #232323}
+.toc-title{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#948e85;margin:0 0 10px}
+.toc ol,.related ul{list-style:none;margin:0;padding:0}
+.toc a,.related a:not(.open){display:block;padding:10px 0;border-bottom:1px solid #1f1f1f;color:#ebe8e4;text-decoration:none;font:700 17px/1.3 'Playfair Display',Georgia,serif}
+.toc a:hover,.related a:not(.open):hover{color:#66bb6a}
+.toc-topic{display:block;font:700 10px/1.6 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#66bb6a;margin-bottom:2px}
+.related{margin-top:34px}
+article{scroll-margin-top:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
 .page h2{margin-top:30px}
 .page ul{padding-left:20px}
 '@
@@ -158,6 +186,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   if ($desc.Length -gt 300) { $desc = $desc.Substring(0,297) + '...' }
 
   $body = New-Object System.Text.StringBuilder
+  $toc = New-Object System.Text.StringBuilder
   $storyIndex = 0
   foreach ($b in $stories) {
     $storyKey = if ($b.articleId) { 'id:' + [string]$b.articleId } else { "slot:$code`:$storyIndex" }
@@ -167,7 +196,8 @@ foreach ($prop in $byCountry.PSObject.Properties) {
     $storySlug = Get-StorySlug $b.headline $b.articleId
     $storyUrl = "$BaseUrl/$code/$storySlug/"
     [void]$storyPages.Add([pscustomobject]@{ code = $code; slug = $storySlug; brief = $b; when = $when; country = $name; key = $storyKey })
-    [void]$body.Append("<div class=""kicker"">$(Esc $b.topic)$(if($when){" &middot; $when"})</div>`n")
+    [void]$toc.Append("<li><a href=""#story-$($storyIndex + 1)""><span class=""toc-topic"">$(Esc $b.topic)</span>$(Esc $b.headline)</a></li>")
+    [void]$body.Append("<article id=""story-$($storyIndex + 1)"">`n<div class=""kicker"">$(Esc $b.topic)$(if($when){" &middot; $when"})</div>`n")
     [void]$body.Append("<h2><a href=""$storyUrl"">$(Esc $b.headline)</a></h2>`n")
     if ($b.dek) { [void]$body.Append("<p class=""dek"">$(Esc $b.dek)</p>`n") }
     $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
@@ -224,32 +254,35 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <link rel="canonical" href="$canonical">
 <meta name="theme-color" content="#131313">
 $analytics
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Non-blocking: a stylesheet link here stops first paint until a third-party round
-     trip finishes. display=swap is already in the URL, so text renders in Georgia and
-     reflows when Playfair arrives. -->
-<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
+<link rel="preload" href="$BaseUrl/fonts/playfair-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="$BaseUrl/fonts/fonts.css">
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:title" content="$(Esc $name) news and country file">
 <meta property="og:description" content="$(Esc $desc)">
 <meta property="og:type" content="website">
 <meta property="og:url" content="$canonical">
-<meta property="og:image" content="$BaseUrl/og-image.png">
+<meta property="og:image" content="$BaseUrl/og/$code.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="$BaseUrl/og-image.png">
+<meta name="twitter:image" content="$BaseUrl/og/$code.jpg">
 <script type="application/ld+json">$($ld.ToString())</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to stories</a>
 <div class="wrap">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a></div>
+<header class="masthead"><a href="$BaseUrl/">The African Street Journal</a></header>
+<main id="main">
+<header class="page-head">
 <div class="meta">$(Esc $meta.region)$(if($meta.capital){" &middot; Capital $(Esc $meta.capital)"})</div>
 <h1>$(Esc $name)</h1>
 <div class="meta">$($stories.Count) stories$(if($when){" &middot; updated $when"})</div>
-<a class="open" href="$BaseUrl/#/$code">Open the interactive $(Esc $name) dossier &rarr;</a>
+</header>
+<nav class="toc" aria-label="Today's $(Esc $name) headlines"><h2 class="toc-title">Today's headlines</h2><ol>$($toc.ToString())</ol></nav>
 $($body.ToString())
+<a class="open" href="$BaseUrl/#/$code">Open the interactive $(Esc $name) dossier &rarr;</a>
+</main>
 <nav class="morenav">
 <h2>Explore country desks</h2>
 $($navLinks.ToString())
@@ -279,6 +312,8 @@ $($navLinks.ToString())
 # its country page rather than a dead end.
 $storyKept = @{}
 $storyBuilt = 0
+# Lead story of each country, newest first, for the "Latest across Africa" rail.
+$leadPages = @($storyPages | Group-Object code | ForEach-Object { $_.Group[0] } | Sort-Object { [string](Get-IsoInstant $_.brief.published) } -Descending)
 $feedItems = New-Object System.Collections.Generic.List[object]
 foreach ($sp in $storyPages) {
   $b = $sp.brief
@@ -324,6 +359,15 @@ foreach ($sp in $storyPages) {
   }
   [void]$ld.Append('}')
 
+  $words = (($paragraphs -join ' ') -split '\s+' | Where-Object { $_ }).Count
+  $readMin = [Math]::Max(1, [int][Math]::Ceiling($words / 200))
+  $encUrl = [Uri]::EscapeDataString($storyCanonical)
+  $waText = [Uri]::EscapeDataString(([string]$b.headline) + ' ' + $storyCanonical)
+  $xText = [Uri]::EscapeDataString([string]$b.headline)
+  $moreHtml = (@($storyPages | Where-Object { $_.code -eq $sp.code -and $_.slug -ne $sp.slug } | Select-Object -First 4 | ForEach-Object {
+    "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""toc-topic"">$(Esc $_.brief.topic)</span>$(Esc $_.brief.headline)</a></li>" }) -join '')
+  $latestHtml = (@($leadPages | Where-Object { $_.code -ne $sp.code } | Select-Object -First 4 | ForEach-Object {
+    "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""toc-topic"">$(Esc $_.country)</span>$(Esc $_.brief.headline)</a></li>" }) -join '')
   $storyTitle = "$([string]$b.headline) | The African Street Journal"
   $storyHtml = @"
 <!doctype html>
@@ -336,35 +380,56 @@ foreach ($sp in $storyPages) {
 <link rel="canonical" href="$storyCanonical">
 <meta name="theme-color" content="#131313">
 $analytics
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
+<link rel="preload" href="$BaseUrl/fonts/playfair-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="$BaseUrl/fonts/fonts.css">
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:type" content="article">
 <meta property="og:title" content="$(Esc $b.headline)">
 <meta property="og:description" content="$(Esc $dek)">
 <meta property="og:url" content="$storyCanonical">
-<meta property="og:image" content="$BaseUrl/og-image.png">
+<meta property="og:image" content="$BaseUrl/og/$($sp.code).jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="$(Esc $sp.country) - The African Street Journal">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="$(Esc $b.headline)">
 <meta name="twitter:description" content="$(Esc $dek)">
-<meta name="twitter:image" content="$BaseUrl/og-image.png">
+<meta name="twitter:image" content="$BaseUrl/og/$($sp.code).jpg">
 <script type="application/ld+json">$($ld.ToString())</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to story</a>
 <div class="wrap">
-  <div class="masthead"><a href="$BaseUrl/">The African Street Journal</a> &middot; <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a></div>
-  <div class="meta">$(Esc $b.topic)$(if($sp.when){" &middot; $($sp.when)"})</div>
+  <header class="masthead"><a href="$BaseUrl/">The African Street Journal</a> <span aria-hidden="true">/</span> <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a></header>
+  <main id="main">
+  <article>
+  <header class="story-head">
+  <div class="meta">$(Esc $b.topic)</div>
   <h1>$(Esc $b.headline)</h1>
   <p class="dek">$(Esc $dek)</p>
+  <p class="byline">$(if($srcs.Count){"Source: <a href=""$(Esc $srcs[0].url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $srcs[0].name)</a> &middot; "})$(if($published){"<time datetime=""$published"">$(Esc $sp.when)</time> &middot; "})$readMin min read</p>
+  <div class="share" data-url="$storyCanonical" data-title="$(Esc $b.headline)">
+    <a class="share-wa" href="https://wa.me/?text=$waText" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://x.com/intent/post?text=$xText&amp;url=$encUrl" target="_blank" rel="noopener">X</a>
+    <button type="button" class="share-copy">Copy link</button>
+    <button type="button" class="share-native" hidden>Share&hellip;</button>
+    <span class="share-status" role="status" aria-live="polite"></span>
+  </div>
+  </header>
 $($bodyHtml.ToString())
+  $(if($srcs.Count){"<h2 class=""section-label"">Sources</h2>"})
 $($srcHtml.ToString())
-  <a class="open" href="$appUrl">Read in the ASJ desk &rarr;</a>
-  <div class="morenav"><h2>More from $(Esc $sp.country)</h2><a href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories</a></div>
+  </article>
+  <nav class="related" aria-label="More stories">
+    $(if($moreHtml){"<h2 class=""section-label"">More from $(Esc $sp.country)</h2><ul>$moreHtml</ul>"})
+    $(if($latestHtml){"<h2 class=""section-label"">Latest across Africa</h2><ul>$latestHtml</ul>"})
+    <p><a class="open" href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories &rarr;</a> &nbsp; <a class="open" href="$appUrl">Open in the ASJ desk &rarr;</a></p>
+  </nav>
+  </main>
   <footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
 </div>
+<script src="$BaseUrl/share.js" defer></script>
 </body>
 </html>
 "@
@@ -460,6 +525,8 @@ foreach ($slug in $trustPages.Keys) {
 <meta name="theme-color" content="#131313">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
+<link rel="preload" href="$BaseUrl/fonts/playfair-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="$BaseUrl/fonts/fonts.css">
 <link rel="stylesheet" href="$BaseUrl/static-pages.css">
 </head>
 <body>
