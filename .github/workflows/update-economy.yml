@@ -29,10 +29,12 @@ jobs:
         run: ./scripts/build-economy.ps1
 
       # Signals and Atlas facts: World Bank indicators, World Port Index, OurAirports,
-      # GeoNames - the same sources and rules for every country.
+      # GeoNames - the same sources and rules for every country. WFP food prices take
+      # about an hour (280 MB of CSVs) and run on their own in update-food-rail.yml;
+      # this keeps last month's.
       - name: Refresh country facts
         shell: pwsh
-        run: ./scripts/build-country-facts.ps1
+        run: ./scripts/build-country-facts.ps1 -SkipFoodPrices
 
       - name: Commit refreshed economy data
         shell: pwsh

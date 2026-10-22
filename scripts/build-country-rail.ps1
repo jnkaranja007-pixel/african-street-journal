@@ -51,7 +51,8 @@ function Get-RailJson([string]$cc) {
   }
   $iso = $cc.ToUpperInvariant()
   $q = "[out:json][timeout:180];area[`"ISO3166-1`"=`"$iso`"][admin_level=2]->.a;way[`"railway`"=`"rail`"][!`"service`"](area.a);out tags geom;"
-  foreach ($endpoint in @('https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter')) {
+  # overpass-api.de and kumi returned 502/504 for much of Oct 2026; mail.ru answered.
+  foreach ($endpoint in @('https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://maps.mail.ru/osm/tools/overpass/api/interpreter')) {
     for ($attempt = 1; $attempt -le 3; $attempt++) {
       try {
         # -OutFile keeps the raw bytes; .Content would be decoded as Latin-1.

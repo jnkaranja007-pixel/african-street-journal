@@ -1,0 +1,93 @@
+name: Update Food Prices and Railways
+
+# Monthly, a week after the economy layer: WFP food prices (via HDX) and OpenStreetMap
+# railways for all 55 countries. Both are slow - the WFP files are about 280 MB and take
+# an hour to read; Overpass answers one country at a time - so they run here rather than
+# holding up the World Bank refresh. Each job keeps the previous data for any country
+# whose source fails, and commits only what changed.
+
+on:
+  schedule:
+    - cron: '0 4 10 * *'   # 04:00 UTC on the 10th of each month
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-economy     # shares data/country-facts.js and the chunks with update-economy.yml
+  cancel-in-progress: false
+
+jobs:
+  food:
+    runs-on: windows-latest
+    timeout-minutes: 150
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Market rules behave
+        shell: pwsh
+        run: ./scripts/test-food-basket.ps1
+
+      - name: Refresh country facts with WFP food prices
+        shell: pwsh
+        run: ./scripts/build-country-facts.ps1
+
+      - name: Commit refreshed food prices
+        shell: pwsh
+        run: |
+          git config user.name  "asj-economy-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/country-facts.js
+          # See update-news.yml: `(cmd; $LASTEXITCODE -eq 0)` is a ParserError.
+          git diff --staged --quiet
+          if ($LASTEXITCODE -eq 0) { Write-Host 'No food price changes this run.'; exit 0 }
+          $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM')
+          git commit -m "chore(facts): refresh WFP food prices ($stamp)"
+          if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
+          $pushed = $false
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            git push
+            if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
+            Write-Host "Push rejected (attempt $attempt) - rebasing onto origin/main and retrying."
+            git pull --rebase origin main
+            if ($LASTEXITCODE -ne 0) { Write-Host 'Rebase failed - resolve by hand.'; exit 1 }
+          }
+          if (-not $pushed) { Write-Host 'Push failed after 3 attempts.'; exit 1 }
+
+  rail:
+    needs: food
+    if: ${{ !cancelled() }}
+    runs-on: windows-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Refresh railways from OpenStreetMap
+        shell: pwsh
+        run: ./scripts/build-country-rail.ps1
+
+      - name: Commit refreshed railways
+        shell: pwsh
+        run: |
+          git config user.name  "asj-economy-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/country-rail.json data/app-core.js data/countries
+          git diff --staged --quiet
+          if ($LASTEXITCODE -eq 0) { Write-Host 'No railway changes this run.'; exit 0 }
+          $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM')
+          git commit -m "chore(atlas): refresh OpenStreetMap railways ($stamp)"
+          if ($LASTEXITCODE -ne 0) { Write-Host 'Commit failed.'; exit 1 }
+          $pushed = $false
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            git push
+            if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
+            Write-Host "Push rejected (attempt $attempt) - rebasing onto origin/main and retrying."
+            git pull --rebase origin main
+            if ($LASTEXITCODE -ne 0) { Write-Host 'Rebase failed - resolve by hand.'; exit 1 }
+          }
+          if (-not $pushed) { Write-Host 'Push failed after 3 attempts.'; exit 1 }
