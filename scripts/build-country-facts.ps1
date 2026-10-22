@@ -46,6 +46,7 @@ $GATEWAYS = @{
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $root = Split-Path $PSScriptRoot -Parent
+. (Join-Path $PSScriptRoot 'food-basket.ps1')
 $outPath = Join-Path $root 'data\country-facts.js'
 $tmp = Join-Path ([IO.Path]::GetTempPath()) ('asj-facts-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $tmp -Force | Out-Null
@@ -260,8 +261,9 @@ if ($citiesOk) {
 }
 
 # --- Food prices: WFP market monitoring, via HDX ----------------------------------
-# WFP publishes retail prices for about 45 African countries. For each: the four foods
-# it records most often in the last year, at the market with the most records, the
+# WFP publishes retail prices for about 45 African countries. For each: one market (a
+# national average, else the capital, else the largest town, a camp only as a last
+# resort) and four foods, staples first - see scripts/food-basket.ps1 - with the
 # latest price and the price a year before at the same market. Fuel, wages and soap are
 # monitored too and left out. A country whose latest record is more than six months old
 # gets no prices, and the page says WFP has no current prices for it.
@@ -312,23 +314,11 @@ if (-not $SkipFoodPrices) {
     }
     $p.Close()
     if ($latest -lt $staleCut) { Write-Host "  $cc WFP latest $latest - not current"; continue }
-    $recent = @($rows | Where-Object { $_.date -ge $yearCut })
-    if (-not $recent.Count) { continue }
-    $market = ($recent | Group-Object market | Sort-Object Count -Descending | Select-Object -First 1).Name
-    $atMarket = @($rows | Where-Object { $_.market -eq $market })
-    $topFoods = @($atMarket | Where-Object { $_.date -ge $yearCut } | Group-Object commodity, unit | Sort-Object Count -Descending | Select-Object -First 4)
-    $items = foreach ($g in $topFoods) {
-      $series = @($g.Group | Sort-Object date)
-      $last = $series[-1]
-      $target = ([datetime]::ParseExact($last.date, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)).AddYears(-1).ToString('yyyy-MM')
-      $before = @($atMarket | Where-Object { $_.commodity -eq $last.commodity -and $_.unit -eq $last.unit -and $_.date.StartsWith($target) } | Select-Object -First 1)
-      [ordered]@{
-        commodity = $last.commodity; unit = $last.unit; currency = $last.currency
-        price = [Math]::Round($last.price, 2); usd = [Math]::Round($last.usd, 2); date = $last.date.Substring(0, 7)
-        yearAgo = if ($before.Count) { [Math]::Round($before[0].price, 2) } else { $null }
-      }
-    }
-    $facts[$cc].food = [ordered]@{ market = $market; date = $latest.Substring(0, 7); items = @($items) }
+    $basket = Select-FoodBasket $rows.ToArray() @($facts[$cc].cities) $staleCut $yearCut
+    if (-not $basket) { continue }
+    $market = $basket.market
+    $items = $basket.items
+    $facts[$cc].food = [ordered]@{ market = $market; camp = $basket.camp; date = $latest.Substring(0, 7); items = @($items) }
     Write-Host ("  {0} WFP {1} at {2}: {3}" -f $cc, $latest.Substring(0, 7), $market, ((@($items) | ForEach-Object { $_.commodity }) -join ', '))
   }
 } elseif ($previous) {

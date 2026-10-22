@@ -2852,7 +2852,7 @@ function foodPricesHtml(countryId) {
       '<em class="cv-food-change' + cls + '">' + (change === null ? '—' : (change > 0 ? '+' : '') + Math.round(change) + '% on a year') + '</em></li>';
   }).join('');
   return '<ul class="cv-food-list">' + rows + '</ul>' +
-    '<div class="cv-fact-source">' + escapeHtml(food.market) + ' market · retail · ' + escapeHtml(monthLabel(food.date)) + ' · World Food Programme</div>';
+    '<div class="cv-fact-source">' + escapeHtml(food.market) + (food.camp ? ' refugee camp' : '') + ' market · retail · ' + escapeHtml(monthLabel(food.date)) + ' · World Food Programme</div>';
 }
 
 // Railways, from the OpenStreetMap lines the Atlas draws: total length, how much is
