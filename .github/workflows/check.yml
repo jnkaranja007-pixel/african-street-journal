@@ -111,3 +111,16 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Site check
         run: NODE_PATH=/tmp/pw/node_modules node tools/stress/site-check.mjs
+
+  desk:
+    # The writer's repair loop end to end: write-briefs.ps1 runs for real against a
+    # stand-in model on 127.0.0.1 (no key, no network). Clean drafts, style rewrites,
+    # off-country drops, capped speculative lens scores and the fact-checked fallback.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Desk harness
+        shell: pwsh
+        run: ./scripts/test-desk-harness.ps1

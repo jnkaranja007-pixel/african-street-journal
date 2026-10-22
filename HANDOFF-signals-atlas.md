@@ -157,8 +157,12 @@ Done (commits on this branch):
    and fix the cause without lowering `-MinEvidenceWords`. Ghana still lacks a strong
    domestic feed set (Citi, GhanaWeb, GNA feeds are off; 3News works at
    `https://3news.com/feed.xml`).
-7. **Investors lens**: 68% of fresh stories score >= 41 for investors after the prompt
-   fix; likely `Get-LensRelevanceBand` floors in `scripts/write-briefs.ps1`.
+7. **Investors lens**: done 22 Oct (`story-v14`). The cause was `Get-LensRelevanceBand`
+   floors (any "trade"/"business"/"tax" mention forced investors >= 65) plus model
+   reasons that hedge ("may", "could"). Floors removed, hedged reasons scored 0-20 by
+   `Resolve-LensScore`, a style check with one rewrite (`Get-DraftStyleIssues`), and an
+   off-country drop (`countryLink`). End-to-end test: `scripts/test-desk-harness.ps1`.
+   Watch the first desk log line `[write] style: ...` and `data/desk-run-metrics.json`.
 8. Minor: the inline "Hargeisa" dot sits under the Egal (HGA) airport diamond (5 km
    apart); Western Sahara labels tiny Lemsid (pop 100) and Dawra (pop 10).
 

@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle')) {
+foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -139,21 +139,67 @@ try {
   if ($lensIssues.Count) { throw "grounded lens package was rejected: $($lensIssues -join '; ')" }
   Write-Host 'PASS structurally complete lens package is accepted'
 
+  # The band is a ceiling. The only floor left is a farming story for farmers.
   $band = Get-LensRelevanceBand 'farmers' 'Business' 'Italian firms will modernize agricultural machinery and farming methods.'
-  if ($band.Mode -ne 'direct' -or $band.Min -ne 75) { throw 'agriculture did not enter the strong farmer band' }
-  Write-Host 'PASS agricultural story enters strong farmer band'
+  if ($band.Mode -ne 'direct' -or $band.Min -ne 0 -or $band.Max -ne 100) { throw 'farm-related business story should allow the full farmer range with no floor' }
+  $band = Get-LensRelevanceBand 'farmers' 'Agriculture' 'The ministry distributed maize seed to 4,000 farmers.'
+  if ($band.Mode -ne 'direct' -or $band.Min -ne 61) { throw 'an Agriculture story lost its farmer floor' }
+  Write-Host 'PASS farming text opens the farmer range; only Agriculture stories keep a floor'
 
   $band = Get-LensRelevanceBand 'investors' 'Sport' 'Tournament regulations set the squad size while a player retains market value.'
   if ($band.Mode -ne 'none' -or $band.Max -ne 20) { throw 'sports story escaped the low investor band' }
   Write-Host 'PASS sports story stays in low investor band'
 
   $band = Get-LensRelevanceBand 'diaspora' 'Sport' 'The national football team begins its tournament on Saturday.'
-  if ($band.Mode -ne 'identity' -or $band.Min -ne 30 -or $band.Max -ne 60) { throw 'sports story missed diaspora identity band' }
+  if ($band.Mode -ne 'identity' -or $band.Min -ne 21 -or $band.Max -ne 40) { throw 'sports story missed the diaspora reader-interest band (21-40)' }
   Write-Host 'PASS national sports story enters diaspora identity band'
 
   $band = Get-LensRelevanceBand 'diaspora' 'Business' 'Ferry passengers traveling abroad must report to the port early.'
-  if ($band.Mode -ne 'direct' -or $band.Min -ne 75) { throw 'ferry travel missed direct diaspora band' }
+  if ($band.Mode -ne 'direct' -or $band.Min -ne 0 -or $band.Max -ne 100) { throw 'ferry travel missed direct diaspora band' }
   Write-Host 'PASS ferry travel enters direct diaspora band'
+
+  # Lens scores: the model's score stands; a hedged reason is scored as no direct link.
+  $entry = { param($s, $w) [pscustomobject]@{ score = $s; why = $w } }
+  $r = Resolve-LensScore 'investors' 'Politics' 'Parliament debated a trade union law on Tuesday.' (& $entry 10 'Parliament debated a law on trade unions with no company or market named.') 15 'fallback why line for this story here'
+  if ($r.Score -ne 10) { throw "a trade mention lifted the investor score to $($r.Score) (the old floor was 65)" }
+  Write-Host 'PASS a keyword mention no longer lifts the investor score'
+  $r = Resolve-LensScore 'investors' 'Politics' 'Police arrested 55 protesters over housing costs and rental reforms backed by property companies.' (& $entry 65 'Investors may be concerned about social unrest and potential government policy changes in housing.') 15 'fallback why line for this story here'
+  if ($r.Score -gt 20 -or -not $r.Capped -or $r.Why -notmatch 'no direct effect') { throw "speculative investor reason kept score $($r.Score)" }
+  Write-Host 'PASS a may/could investor reason is scored as no direct link'
+  $r = Resolve-LensScore 'investors' 'Business' 'Standard Chartered Bank confirmed its chief executive after central bank approval.' (& $entry 85 'The bank named a chief executive after central bank approval, setting its leadership for clients and markets.') 55 'fallback why line for this story here'
+  if ($r.Score -ne 85 -or $r.Capped) { throw "a direct, unhedged investor reason was changed to $($r.Score)" }
+  Write-Host 'PASS a direct investor reason keeps its score'
+  $r = Resolve-LensScore 'investors' 'Business' 'The central bank cut its policy rate in May.' (& $entry 70 'The central bank cut its policy rate in May, lowering borrowing costs for firms.') 55 'fallback why line for this story here'
+  if ($r.Score -ne 70 -or $r.Capped) { throw 'the month May was read as a hedge' }
+  Write-Host 'PASS the month May is not a hedge'
+  $r = Resolve-LensScore 'diaspora' 'Politics' 'The president named a new cabinet on Monday.' (& $entry 60 'Diaspora readers could follow the new cabinet, which might change consular policy abroad.') 25 'fallback why line for this story here'
+  if ($r.Score -lt 21 -or $r.Score -gt 40 -or $r.Why -notmatch 'may interest diaspora readers') { throw "hedged diaspora politics reason scored $($r.Score)" }
+  Write-Host 'PASS hedged diaspora politics falls to reader interest (21-40)'
+  $r = Resolve-LensScore 'farmers' 'Agriculture' 'Farmers received maize seed and fertiliser.' (& $entry 80 'Farmers could plant earlier with the seed and fertiliser handed out on Monday.') 70 'fallback why line for this story here'
+  if ($r.Score -lt 61 -or $r.Capped) { throw 'an Agriculture story lost its farmer score to a hedge' }
+  Write-Host 'PASS a farming story keeps its farmer score'
+
+  # House style.
+  $hits = @(Get-StockPhraseHits 'The deal marks a significant step and is crucial for exporters.' 'The ministry signed the deal with exporters on Monday.')
+  if ($hits.Count -lt 2) { throw "expected at least two stock phrases, got: $($hits -join ', ')" }
+  $hits = @(Get-StockPhraseHits 'Officials called the vote crucial for the budget.' "Les responsables ont jug\u00e9 le vote crucial pour le budget.")
+  if ($hits.Count) { throw 'a phrase the source itself used was flagged' }
+  $hits = @(Get-StockPhraseHits 'Minister Tavares highlighted the importance of coordination.' 'Tavares spoke on Monday.')
+  if ($hits.Count) { throw 'an attributed "highlighted the importance" was flagged' }
+  $hits = @(Get-StockPhraseHits 'The visit underscores the growing ties between the two states.' 'The president visited on Monday.')
+  if ($hits.Count -ne 1) { throw 'commentary "the visit underscores" was not flagged' }
+  Write-Host 'PASS stock phrases are flagged unless the source used them or a person said them'
+  $rep = @(Get-RepeatedSentences @('The assembly limited deputies to two oral questions each month to clear a backlog of unanswered questions.', 'The rule aims to clear the backlog of unanswered oral questions, limiting deputies to two questions each month.', 'Written questions remain unlimited.'))
+  if ($rep.Count -ne 1) { throw 'a restated fact was not detected' }
+  $rep = @(Get-RepeatedSentences @('The ministry opened a freight checkpoint in Kisumu on Tuesday.', 'Inspectors will publish daily queue estimates for drivers.', 'Two trade groups reported shorter waits during the trial.'))
+  if ($rep.Count) { throw 'distinct sentences were reported as repeats' }
+  Write-Host 'PASS a restated fact is detected and distinct sentences are not'
+  $draft = [pscustomobject]@{ item = 0; headline = 'Algeria limits oral questions'; dek = 'Deputies may ask two oral questions a month under the new rule.'; paragraphs = @('The assembly set a limit of two oral questions a month.', 'Written questions remain unlimited, the assembly said.', 'This move underscores a broader strategy for parliamentary oversight.'); why = 'Citizens may see faster government answers on local issues.' }
+  $style = Get-DraftStyleIssues $draft 'The assembly limits deputies to two oral questions a month. Written questions remain unlimited.'
+  if (-not $style.SpeculativeWhy -or @($style.Phrases).Count -lt 2) { throw "style issues missed: $(@($style.Issues) -join '; ')" }
+  $note = Get-StyleRepairNote $style $draft
+  if ($note -notmatch 'Previous draft:' -or $note -notmatch 'broader strategy' -or $note -notmatch '"item":0') { throw 'the repair note lacks the phrases or the previous draft' }
+  Write-Host 'PASS style issues produce a repair note carrying the phrases and the previous draft'
 
 
   $longDek = ('The transport authority changed the passenger reporting window after publishing a detailed operational notice for every ticket holder. ' * 2).Trim()
@@ -254,5 +300,5 @@ foreach ($case in @(
   if ($got -ne $case[1]) { throw "numeral style: '$($case[0])' became '$got', expected '$($case[1])'" }
 }
 Write-Host 'PASS numbers from ten up are set as numerals; ordinals, years and small numbers are not'
-Write-Host '[story-contract] OK - 21 checks'
+Write-Host '[story-contract] OK - 31 checks'
 exit 0
