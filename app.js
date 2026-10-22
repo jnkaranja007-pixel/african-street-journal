@@ -131,12 +131,9 @@ function rankStoryEntries(stories, lens = activeStoryLens) {
 }
 
 function updateStoryLensControls() {
-  document.querySelectorAll('button[data-story-lens]').forEach(button => {
-    button.setAttribute('aria-pressed', String(normalizeStoryLens(button.dataset.storyLens) === activeStoryLens));
-  });
-  // The Wire picks its audience from a select rather than buttons. A lens chosen on a
-  // country page has to show there too, or the Wire would say "Everyone" while ranking
-  // for farmers.
+  // The lens is chosen in one place only: the Wire's "Reading for" select. Country pages
+  // used to carry their own Top / Farmers / Investors / Diaspora buttons; they read in
+  // the desk's own order now.
   const lensSelect = document.getElementById('wire-lens-select');
   if (lensSelect && lensSelect.value !== activeStoryLens) lensSelect.value = activeStoryLens;
 }
@@ -2049,11 +2046,6 @@ dots.forEach(dot => dot.addEventListener('click', () => {
   syncRoute();
   showMobilePanelStart();
 }));
-document.addEventListener('click', event => {
-  const lensButton = event.target.closest('button[data-story-lens]');
-  if (!lensButton) return;
-  setStoryLens(lensButton.dataset.storyLens);
-});
 document.getElementById('cv-dots')?.addEventListener('keydown', event => {
   if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
   event.preventDefault();
@@ -2074,7 +2066,9 @@ document.querySelectorAll('.audience-mode.cv-info-grid').forEach(grid => {
   }, { passive: true });
 });
 audienceSelect?.addEventListener('change', () => {
-  setStoryLens(audienceSelect.value, { syncSignals:false });
+  // Picks which Signals set to show, nothing more. It used to set the story lens too,
+  // which - with the lens chosen only in the Wire - would quietly filter the Wire to
+  // whichever Signals tab was last opened.
   updateAudienceMeta();
   if (!activeCountryMap) { syncRoute(); return; }
   const countryId = activeCountryMap.countryId;
@@ -2654,7 +2648,8 @@ function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) 
   });
   const preview = (b.dek ? storyParagraphs(b)[0] : '') || b.dek || storyParagraphs(b)[0] || '';
   const readMinutes = Math.max(1, Number(b.readMinutes) || Math.ceil(storyWordCount(b) / 210));
-  const lens = normalizeStoryLens(activeStoryLens);
+  // Country pages have no lens control, so they read for everyone.
+  const lens = 'general';
   const lensData = storyLensData(b, lens);
   const read = isStoryReadKey(storyKey);
   const whyLabel = lens === 'general' ? 'Why it matters' : 'Why it matters for ' + ({ farmers:'farmers', investors:'investors', diaspora:'the diaspora' }[lens] || 'you');
@@ -2714,12 +2709,6 @@ function regionalWireFor(countryId) {
     if (!any) break;
   }
   if (!picks.length) return null;
-  if (activeStoryLens !== 'general') {
-    picks.sort((a, b) =>
-      storyLensRank(b.brief, activeStoryLens, b.sourceRank) - storyLensRank(a.brief, activeStoryLens, a.sourceRank) ||
-      a.sourceRank - b.sourceRank
-    );
-  }
   const html = '<div class="cv-brief-desk">' +
     '<div class="cv-brief-head"><span class="t">' + escapeHtml(scope) + ' <b>wire</b></span>' +
       '<span class="m">' + escapeHtml(info.name || '') + ' file pending</span></div>' +
@@ -2774,13 +2763,12 @@ function renderBriefDesk(countryId) {
   cards.classList.add('news-brief');
   updateStoryLensControls();
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline && (b.body || b.dek));
-  const rankedBriefs = rankStoryEntries(briefs, activeStoryLens);
+  // The desk's own order. A lens chosen in the Wire does not reach in here: with no
+  // control on this page, it would reorder the list for no visible reason.
+  const rankedBriefs = rankStoryEntries(briefs, 'general');
   const sourceCount = uniqueSourceCount(briefs);
   if (meta && briefs.length) {
-    const lensLabel = activeStoryLens === 'general' ? '' : STORY_LENS_LABELS[activeStoryLens] + ' lens · ';
-    // The lens reorders this list, so say so; otherwise the same country reads in a
-    // different order for no visible reason.
-    meta.innerHTML = escapeHtml(lensLabel + briefs.length + (briefs.length === 1 ? ' story' : ' stories') + ' from ' + sourceCount + (sourceCount === 1 ? ' source' : ' sources')) + updatedStampHtml(countryId, briefs);
+    meta.innerHTML = escapeHtml(briefs.length + (briefs.length === 1 ? ' story' : ' stories') + ' from ' + sourceCount + (sourceCount === 1 ? ' source' : ' sources')) + updatedStampHtml(countryId, briefs);
   }
   if (!briefs.length) {
     const wire = regionalWireFor(countryId);
@@ -3450,10 +3438,10 @@ function uniqueSourceCount(briefs) {
 function countryBriefText(countryId) {
   const info = COUNTRY_INFO[countryId] || {};
   const briefs = (AI_BRIEFS[countryId] || []).filter(b => b && b.headline);
-  const rankedBriefs = rankStoryEntries(briefs, activeStoryLens);
+  // Copies what the country page shows: the desk's order, no lens.
+  const rankedBriefs = rankStoryEntries(briefs, 'general');
   const date = String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || latestBriefDate() || new Date().toISOString()).slice(0, 10);
-  const lensName = activeStoryLens === 'general' ? '' : ' · ' + STORY_LENS_LABELS[activeStoryLens] + ' lens';
-  const lines = ['The African Street Journal', (info.name || 'Country') + ' desk - ' + date + lensName, ''];
+  const lines = ['The African Street Journal', (info.name || 'Country') + ' desk - ' + date, ''];
   if (!briefs.length) {
     lines.push('No ASJ story desk is loaded for this country yet.');
     return lines.join('\n');
@@ -3463,7 +3451,7 @@ function countryBriefText(countryId) {
     const sources = (brief.sources || []).map(source => source.name || source.url).filter(Boolean).join(', ');
     lines.push((index + 1) + '. ' + brief.headline);
     lines.push('   ' + (brief.body || ''));
-    lines.push('   Why it matters: ' + storyLensData(brief, activeStoryLens).why);
+    lines.push('   Why it matters: ' + storyLensData(brief, 'general').why);
     if (sources) lines.push('   Sources: ' + sources);
     lines.push('');
   });
@@ -6053,18 +6041,23 @@ async function runSelfTest() {
     add('mobile dossier starts compact with sections above content', mobileDossierLayoutOk,
       mobileDossierMedia.matches ? Math.round(sectionTabsRect?.bottom || 0) + '/' + Math.round(carouselRect?.top || 0) : 'desktop skipped');
     add('a11y: ticker clones skip keyboard', !document.querySelector('.ticker-segment[aria-hidden="true"] button:not([tabindex="-1"])'));
-    audienceSelect.value = 'investors';
+    // A tab other than the current lens, so the check below can tell if it leaked.
+    audienceSelect.value = originalStoryLens === 'diaspora' ? 'farmers' : 'diaspora';
     audienceSelect.dispatchEvent(new Event('change'));
     add('routing: lens changes replace the country history entry', history.length === countryRouteHistoryLength,
       countryRouteHistoryLength + '->' + history.length);
-    const pressedCountryLenses = Array.from(document.querySelectorAll('#cv-news-lenses [data-story-lens][aria-pressed="true"]'));
-    add('news lens persists and keeps one active control',
-      activeStoryLens === 'investors' && localStorage.getItem(STORY_LENS_KEY) === 'investors' &&
-        pressedCountryLenses.length === 1 && pressedCountryLenses[0]?.dataset.storyLens === 'investors',
-      activeStoryLens + ' / ' + pressedCountryLenses.length);
-    add('news desk labels lens-ranked stories',
-      /^Investor lens/.test(document.getElementById('cv-story-meta')?.textContent || ''),
-      document.getElementById('cv-story-meta')?.textContent || 'missing');
+    // The lens lives in the Wire alone. A Signals tab must not set it, and a lens set in
+    // the Wire must not reorder a country page that has no control to show it.
+    add('signals tab does not set the Wire lens', activeStoryLens === originalStoryLens,
+      originalStoryLens + ' -> ' + activeStoryLens);
+    const generalOrder = Array.from(document.querySelectorAll('#cv-cards .cv-brief-title'), el => el.textContent);
+    setStoryLens('investors', { syncSignals:false });
+    const lensOrder = Array.from(document.querySelectorAll('#cv-cards .cv-brief-title'), el => el.textContent);
+    add('country news has no lens control and keeps the desk order',
+      !document.querySelector('#country-view [data-story-lens]') &&
+        !/lens/i.test(document.getElementById('cv-story-meta')?.textContent || '') &&
+        generalOrder.length > 0 && generalOrder.join('|') === lensOrder.join('|'),
+      (document.getElementById('cv-story-meta')?.textContent || 'missing') + ' / ' + generalOrder.length + ' rows');
     setPanel(1);
     openCountry('lr');
     await new Promise(r => setTimeout(r, 260));
