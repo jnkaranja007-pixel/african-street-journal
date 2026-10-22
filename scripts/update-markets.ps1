@@ -89,10 +89,16 @@ function Get-Page([string]$url) {
 }
 
 function Get-Listings([string]$html) {
-  # The listing table is the widest one on the page; gainers/losers tables are small.
-  $tables = [regex]::Matches($html, '(?is)<table.*?</table>')
-  if (-not $tables.Count) { return @() }
-  $main = ($tables | Sort-Object { $_.Value.Length } -Descending)[0].Value
+  # The listing table is the one headed Ticker / Name / Volume / Price / Change. AFX's
+  # minified HTML now omits that table's closing tag, so "the widest <table>...</table>"
+  # found the Top Gainers box instead, and from 22 September every exchange "failed" -
+  # or, worse, shipped a day's biggest movers as its listings. Take it from its header
+  # to the next closing tag, or to the end of the page.
+  $start = $html.IndexOf('<th>Ticker', [StringComparison]::OrdinalIgnoreCase)
+  if ($start -lt 0) { return @() }
+  $start = $html.LastIndexOf('<table', $start, [StringComparison]::OrdinalIgnoreCase)
+  $end = $html.IndexOf('</table>', $start, [StringComparison]::OrdinalIgnoreCase)
+  $main = if ($end -gt $start) { $html.Substring($start, $end - $start) } else { $html.Substring($start) }
   $rows = New-Object System.Collections.Generic.List[object]
   # Ticker cell, name cell, volume, price, change. Volume and change can be empty for a
   # listing that did not trade.

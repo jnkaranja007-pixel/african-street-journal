@@ -1912,3 +1912,32 @@ main{position:relative}
   .mobile-wire-entry .wire-entry-count{font-size:13px!important;letter-spacing:.06em!important}
   .mobile-wire-entry{min-height:44px}
 }
+
+/* ── facts-v1: sourced figures, laid out the same for every country ───────────────── */
+.cv-sectors:has(> .cv-facts),#cv-dia-sectors:has(> .cv-facts){display:block!important}
+.cv-facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:0 18px;border-bottom:1px solid var(--rule)}
+.cv-fact{padding:13px 0 12px;min-width:0;border-top:1px solid var(--rule)}
+.cv-fact-key{font:500 14px/1.3 var(--sans);color:var(--text-muted)}
+.cv-fact-val{font:650 22px/1.2 var(--sans);color:var(--text);margin:6px 0 4px;font-variant-numeric:tabular-nums}
+.cv-fact-sub{font:400 13px/1.35 var(--sans);color:var(--text-dim)}
+.cv-fact.is-missing .cv-fact-val{font-size:15px;font-weight:500;color:var(--text-dim)}
+.cv-fact-source{margin-top:10px;font:400 13px/1.4 var(--sans);color:var(--text-dim)}
+.cv-ag .cv-ag-line{margin-top:14px}
+.cv-route-group{margin:0 0 16px}
+.cv-route-title{font:600 15px/1.3 var(--sans);color:var(--text);margin:0 0 6px}
+.cv-route-title b{color:var(--green-bright);font-weight:650;margin-left:4px}
+.cv-route-list{list-style:none;margin:0;padding:0}
+.cv-route-list li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid rgba(232,230,227,.07);font:400 15px/1.35 var(--sans);color:var(--text)}
+.cv-route-list li small{font:400 13px/1.35 var(--sans);color:var(--text-dim);text-align:right;white-space:nowrap}
+.cv-route-empty{margin:0;font:400 14px/1.45 var(--sans);color:var(--text-dim)}
+@media (max-width:720px){.cv-facts{grid-template-columns:1fr 1fr}.cv-fact-val{font-size:19px}}
+.cv-map-legend .infra.airport i{background:#8fc3ff}
+.cv-map-legend .rail i{width:14px!important;height:3px!important;border-radius:2px;background:#e8d9b5}
+.cv-food-list{list-style:none;margin:0;padding:0}
+.cv-food-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid rgba(232,230,227,.07)}
+.cv-food-list li span{font:500 15px/1.35 var(--sans);color:var(--text)}
+.cv-food-list li span small{font:400 13px/1.35 var(--sans);color:var(--text-dim)}
+.cv-food-list li b{font:650 15px/1.35 var(--sans);color:var(--text);text-align:right;font-variant-numeric:tabular-nums}
+.cv-food-change{grid-column:2;font:400 13px/1.3 var(--sans);font-style:normal;color:var(--text-dim);text-align:right}
+.cv-food-change.up{color:#e0a458}
+.cv-food-change.down{color:var(--green-bright)}

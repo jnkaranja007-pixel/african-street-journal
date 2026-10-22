@@ -462,59 +462,6 @@ const FARM_EXPORTS = {
   sc: ['Fish', 'Vanilla', 'Banana']
 };
 
-const CRITICAL_INFRA_SEEDS = {
-  ke: [
-    { name: 'Mombasa Port', kind: 'port', place: 'Mombasa', lon: 39.67, lat: -4.05, note: 'Indian Ocean cargo gateway' },
-    { name: 'Naivasha ICD', kind: 'dry_port', place: 'Naivasha', lon: 36.43, lat: -0.72, note: 'SGR-linked inland container depot' },
-    { name: 'Nairobi SGR Terminal', kind: 'rail', place: 'Nairobi', lon: 36.89, lat: -1.36, note: 'Rail freight and passenger interchange' },
-    { name: 'JKIA Air Cargo', kind: 'airport', place: 'Nairobi', lon: 36.93, lat: -1.32, note: 'Regional air cargo hub' },
-    { name: 'Busia Border Post', kind: 'border', place: 'Busia', lon: 34.11, lat: 0.46, note: 'Kenya-Uganda trade crossing' },
-    { name: 'Northern Corridor', kind: 'corridor', place: 'Mombasa-Nairobi', lon: 37.7, lat: -1.85, note: 'Port-to-interior freight spine' }
-  ],
-  ng: [
-    { name: 'Apapa Port Complex', kind: 'port', place: 'Lagos', lon: 3.36, lat: 6.45, note: 'Container and bulk cargo gateway' },
-    { name: 'Lekki Deep Sea Port', kind: 'port', place: 'Lekki', lon: 4.02, lat: 6.43, note: 'Deep-water maritime terminal' },
-    { name: 'Lagos-Ibadan Rail', kind: 'rail', place: 'Lagos', lon: 3.38, lat: 6.52, note: 'Southwest freight corridor' },
-    { name: 'Kano Dry Port', kind: 'dry_port', place: 'Kano', lon: 8.52, lat: 12.0, note: 'Inland cargo clearance node' },
-    { name: 'Abuja Airport', kind: 'airport', place: 'Abuja', lon: 7.27, lat: 9.01, note: 'Central passenger and cargo hub' },
-    { name: 'Seme Border Post', kind: 'border', place: 'Seme', lon: 2.75, lat: 6.37, note: 'Nigeria-Benin coastal crossing' }
-  ],
-  za: [
-    { name: 'Durban Port', kind: 'port', place: 'Durban', lon: 31.02, lat: -29.88, note: 'Primary container gateway' },
-    { name: 'Cape Town Port', kind: 'port', place: 'Cape Town', lon: 18.43, lat: -33.91, note: 'Atlantic maritime terminal' },
-    { name: 'City Deep Dry Port', kind: 'dry_port', place: 'Johannesburg', lon: 28.07, lat: -26.23, note: 'Inland container depot' },
-    { name: 'OR Tambo Cargo', kind: 'airport', place: 'Johannesburg', lon: 28.24, lat: -26.14, note: 'Air freight gateway' },
-    { name: 'N3 Freight Corridor', kind: 'corridor', place: 'Durban-Johannesburg', lon: 29.4, lat: -28.1, note: 'Port-to-Gauteng road spine' },
-    { name: 'Beitbridge Crossing', kind: 'border', place: 'Beitbridge', lon: 29.99, lat: -22.22, note: 'Southern Africa border gateway' }
-  ],
-  eg: [
-    { name: 'Suez Canal', kind: 'corridor', place: 'Suez', lon: 32.55, lat: 29.97, note: 'Global maritime transit corridor' },
-    { name: 'Port Said', kind: 'port', place: 'Port Said', lon: 32.3, lat: 31.26, note: 'Mediterranean container gateway' },
-    { name: 'Alexandria Port', kind: 'port', place: 'Alexandria', lon: 29.9, lat: 31.2, note: 'Mediterranean import hub' },
-    { name: 'Cairo Airport Cargo', kind: 'airport', place: 'Cairo', lon: 31.41, lat: 30.12, note: 'Air cargo interchange' },
-    { name: '6th of October Dry Port', kind: 'dry_port', place: 'Giza', lon: 30.9, lat: 29.95, note: 'Inland customs and rail terminal' }
-  ],
-  gh: [
-    { name: 'Tema Port', kind: 'port', place: 'Tema', lon: -0.02, lat: 5.64, note: 'Main container and industrial gateway' },
-    { name: 'Takoradi Port', kind: 'port', place: 'Takoradi', lon: -1.75, lat: 4.89, note: 'Minerals and energy export terminal' },
-    { name: 'Boankra Inland Port', kind: 'dry_port', place: 'Kumasi', lon: -1.41, lat: 6.74, note: 'Inland logistics platform' },
-    { name: 'Kotoka Air Cargo', kind: 'airport', place: 'Accra', lon: -0.17, lat: 5.61, note: 'Air cargo and passenger hub' }
-  ],
-  cd: [
-    { name: 'Matadi Port', kind: 'port', place: 'Matadi', lon: 13.45, lat: -5.82, note: 'Atlantic river-sea gateway' },
-    { name: 'Kinshasa River Port', kind: 'port', place: 'Kinshasa', lon: 15.31, lat: -4.32, note: 'Congo River cargo node' },
-    { name: 'Lubumbashi Rail Node', kind: 'rail', place: 'Lubumbashi', lon: 27.48, lat: -11.66, note: 'Copperbelt rail connection' },
-    { name: 'N’djili Air Cargo', kind: 'airport', place: 'Kinshasa', lon: 15.44, lat: -4.39, note: 'National air cargo hub' },
-    { name: 'Kasumbalesa Border', kind: 'border', place: 'Kasumbalesa', lon: 27.79, lat: -12.21, note: 'DRC-Zambia copperbelt crossing' }
-  ],
-  tz: [
-    { name: 'Dar es Salaam Port', kind: 'port', place: 'Dar es Salaam', lon: 39.28, lat: -6.82, note: 'Regional maritime gateway' },
-    { name: 'Central Railway', kind: 'rail', place: 'Dodoma', lon: 35.75, lat: -6.17, note: 'Interior rail spine' },
-    { name: 'Julius Nyerere Cargo', kind: 'airport', place: 'Dar es Salaam', lon: 39.2, lat: -6.88, note: 'Air cargo hub' },
-    { name: 'Isaka Dry Port', kind: 'dry_port', place: 'Isaka', lon: 32.93, lat: -3.9, note: 'Inland gateway to Great Lakes markets' }
-  ]
-};
-
 const ISLAND_FULLSCREEN_BOUNDS = {
   mu: { minX: 57.28, maxX: 57.88, minY: 19.92, maxY: 20.58 },
   sc: { minX: 55.34, maxX: 55.56, minY: 4.54, maxY: 4.82 },
@@ -620,39 +567,6 @@ const LANDMARK_POINTS = [
   { name: 'Lake Volta', kind: 'water', lon: -0.15, lat: 7.4, countries: ['gh'] },
   { name: 'Okavango Delta', kind: 'landmark', lon: 22.9, lat: -19.3, countries: ['bw'] },
   { name: 'Mount Cameroon', kind: 'mountain', lon: 9.17, lat: 4.20, countries: ['cm'] }
-];
-
-const LANDMARK_LINES = [
-  {
-    name: 'Nile River',
-    kind: 'water',
-    countries: ['eg', 'sd', 'ss', 'ug'],
-    points: [[32.3, 0.4], [31.6, 5.6], [31.8, 12.0], [32.5, 18.0], [31.2, 24.1], [31.8, 30.1]]
-  },
-  {
-    name: 'Great Rift Valley',
-    kind: 'landmark',
-    countries: ['er', 'et', 'ke', 'tz', 'mw', 'mz'],
-    points: [[39.5, 14.5], [40.2, 8.8], [38.5, 2.5], [36.8, -1.3], [36.0, -6.0], [34.7, -11.5], [35.0, -16.0]]
-  },
-  {
-    name: 'Niger River',
-    kind: 'water',
-    countries: ['gn', 'ml', 'ne', 'ng'],
-    points: [[-10.2, 12.1], [-6.1, 12.7], [-3.2, 12.2], [1.5, 14.9], [3.9, 13.5], [4.0, 11.7], [6.5, 7.6]]
-  },
-  {
-    name: 'Congo River',
-    kind: 'water',
-    countries: ['cd', 'cg'],
-    points: [[26.0, -9.8], [23.2, -6.5], [18.5, -5.8], [17.2, -2.5], [18.4, 0.3], [16.5, -4.3], [15.3, -4.4]]
-  },
-  {
-    name: 'Zambezi River',
-    kind: 'water',
-    countries: ['zm', 'zw', 'mz', 'bw'],
-    points: [[22.1, -12.1], [24.5, -14.8], [25.8, -17.9], [30.2, -17.5], [32.5, -16.2], [35.0, -18.1]]
-  }
 ];
 
 const BASELINE = new Date('2025-07-01T00:00:00Z').getTime();
@@ -1427,7 +1341,7 @@ const layerPills = Array.from(document.querySelectorAll('.cv-layer-pill'));
 const layerStatus = document.getElementById('cv-layer-status');
 const mapToolbarRegion = document.getElementById('cv-map-toolbar-region');
 const mapToolbarCountry = document.getElementById('cv-map-toolbar-country');
-const mapLayers = { terrain: true, water: true, places: true, infra: true, labels: true };
+const mapLayers = { terrain: true, water: true, places: true, rail: true, infra: true, labels: true };
 const GDP_SERIES_CACHE = {};
 const GDP_SERIES_PENDING = {};
 const MAP_TEXTURE_CACHE = new Map();
@@ -2218,9 +2132,7 @@ function renderCountryFile(countryId) {
     rows.push({ tag: 'Live FX reference', text: '$1 buys <b>' + formatFxRate(rate) + ' ' + escapeHtml(inv.currency) + '</b> at the automatic reference rate.' });
   }
 
-  const stats = countryDeskStats(countryId);
-  const dominant = Object.entries(stats.agCounts || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
-  const crops = farmExportsForCountry(countryId, dominant).slice(0, 3).filter(c => CROP_SEASONS[c]);
+  const crops = farmExportsForCountry(countryId).slice(0, 3).filter(c => CROP_SEASONS[c]);
   if (crops.length) {
     const month = new Date().getMonth() + 1;
     const status = crops.map(crop => {
@@ -2234,13 +2146,15 @@ function renderCountryFile(countryId) {
     rows.push({ tag: 'Crop calendar · indicative', text: status.join(' · ') + '.' });
   }
 
-  const dia = DIASPORA[countryId];
-  if (dia && dia.remit) {
-    rows.push({ tag: 'WB / KNOMAD 2024', text: 'Remittance inflows around <b>' + escapeHtml(dia.remit) + '</b> a year' + (dia.dia ? ', diaspora roughly <b>' + escapeHtml(dia.dia) + '</b> abroad.' : '.') });
+  const remit = countryFact(countryId, 'remitUsd');
+  if (remit) {
+    rows.push({ tag: 'World Bank ' + remit.y, text: 'Remittances received: <b>' + escapeHtml(formatFactValue('usd', remit.v)) + '</b> a year.' });
   }
 
-  const infra = criticalInfraForCountry(countryId).slice(0, 2).map(item => item.name).filter(Boolean);
-  rows.push({ tag: 'GIS layer', text: 'Capital <b>' + escapeHtml(info.capital || '—') + '</b>' + (infra.length ? '; watching <b>' + infra.map(escapeHtml).join('</b> and <b>') + '</b>.' : '.') });
+  const port = countryPorts(countryId)[0];
+  const airport = countryAirports(countryId)[0];
+  const links = [port ? port.name + ' (seaport)' : '', airport ? airport.name : ''].filter(Boolean);
+  rows.push({ tag: 'Ports · airports', text: 'Capital <b>' + escapeHtml(info.capital || '—') + '</b>' + (links.length ? '; main links <b>' + links.map(escapeHtml).join('</b> and <b>') + '</b>.' : '.') });
 
   return '<div class="cv-brief-desk cv-deskfile">' +
     '<div class="cv-brief-head"><span class="t">Country <b>file</b></span><span class="m">Compiled from sourced desk layers</span></div>' +
@@ -2870,111 +2784,101 @@ function renderAlmanacFromGis(countryId, info) {
   const gis = COUNTRY_GIS[countryId] || { places: [] };
   const places = gis.places || [];
 
-  // Agriculture profile
-  const agCounts = { crop_zone: 0, pastoral: 0, mixed: 0 };
-  for (const p of places) if (p.ag_type && agCounts[p.ag_type] !== undefined) agCounts[p.ag_type]++;
-  const agTotal = agCounts.crop_zone + agCounts.pastoral + agCounts.mixed;
+  // Agriculture: World Bank figures, then the desk's list of main farm exports.
   const ag = document.getElementById('cv-ag');
   const agMeta = document.getElementById('cv-ag-meta');
+  const exportItems = farmExportsForCountry(countryId);
+  if (agMeta) agMeta.textContent = '';
+  ag.innerHTML = factGridHtml(countryId, 'farmers') +
+    (exportItems.length
+      ? '<div class="cv-ag-line"><span class="cv-ag-line-key">Main farm exports</span><span class="cv-ag-line-val">' + exportItems.slice(0, 3).map(escapeHtml).join(' · ') + '</span></div>'
+      : '');
 
-  if (agTotal === 0) {
-    ag.innerHTML = '<div class="cv-empty">No agricultural classification on record.</div>';
-    agMeta.textContent = '';
-  } else {
-    const pct = {
-      crop_zone: Math.round((agCounts.crop_zone / agTotal) * 100),
-      pastoral: Math.round((agCounts.pastoral / agTotal) * 100),
-      mixed: Math.round((agCounts.mixed / agTotal) * 100)
-    };
-    const dominant = Object.entries(agCounts).sort((a, b) => b[1] - a[1])[0][0];
-    const dominantLabel = dominant === 'crop_zone' ? 'Crop belt' : dominant === 'pastoral' ? 'Pastoral' : 'Mixed farming';
-    const exportItems = farmExportsForCountry(countryId, dominant);
-    const segs = [
-      { cls: 'crop', label: 'Crop', val: pct.crop_zone },
-      { cls: 'pastoral', label: 'Pastoral', val: pct.pastoral },
-      { cls: 'mixed', label: 'Mixed', val: pct.mixed }
-    ].filter(s => s.val > 0);
-    agMeta.textContent = '';
-    ag.innerHTML =
-      '<div class="cv-ag-type"><em>' + dominantLabel + '</em></div>' +
-      '<div class="cv-ag-bar" role="img" aria-label="Agriculture mix">' +
-        segs.map(s => '<div class="' + s.cls + '" style="width:' + s.val + '%"></div>').join('') +
-      '</div>' +
-      '<div class="cv-ag-legend">' +
-        segs.map(s => '<span><i class="' + s.cls + '"></i>' + s.label + ' <b>' + s.val + '%</b></span>').join('') +
-      '</div>' +
-      '<div class="cv-ag-line"><span class="cv-ag-line-key">Planting</span><span class="cv-ag-line-val">' + farmSeasonLabel(countryId) + '</span></div>' +
-      '<div class="cv-ag-line"><span class="cv-ag-line-key">Exports</span><span class="cv-ag-line-val">' + exportItems.slice(0, 3).map(escapeHtml).join(' · ') + '</span></div>';
-  }
+  // Food prices: WFP's retail prices at its best-covered market, against a year earlier.
+  const foodEl = document.getElementById('cv-food');
+  if (foodEl) foodEl.innerHTML = foodPricesHtml(countryId);
 
-  // Market hubs — include all is_market places, plus high-pop places with regional/export market_type
-  const markets = places.filter(p => p.is_market).sort((a, b) => {
-    const order = { export_hub: 0, regional: 1, local: 2 };
-    return (order[a.market_type] ?? 3) - (order[b.market_type] ?? 3) || (b.pop || 0) - (a.pop || 0);
-  });
+  // Largest cities, by Natural Earth population.
+  const cities = largestCities(countryId);
   const mkt = document.getElementById('cv-markets');
   const mktMeta = document.getElementById('cv-mkt-meta');
-  if (!markets.length) {
-    mkt.innerHTML = '<div class="cv-empty">No designated market hubs in registry.</div>';
-    mktMeta.textContent = '';
-  } else {
-    mktMeta.textContent = markets.length + ' ' + (markets.length === 1 ? 'hub' : 'hubs');
-    const tierLabel = t => t === 'export_hub' ? 'Export hub' : t === 'regional' ? 'Regional' : 'Local';
-    mkt.innerHTML =
-      '<div class="cv-mkt-row head"><span>City</span><span>Tier</span><span>Pop</span></div>' +
-      markets.map(p =>
+  if (mktMeta) mktMeta.textContent = 'Population · Natural Earth, GeoNames';
+  mkt.innerHTML = cities.length
+    ? '<div class="cv-mkt-row head"><span>City</span><span></span><span>Population</span></div>' +
+      cities.map(p =>
         '<div class="cv-mkt-row">' +
-          '<div class="cv-mkt-name"><i class="dot ' + (p.market_type || 'local') + '"></i><span>' + escapeHtml(p.name) + '</span></div>' +
-          '<div class="cv-mkt-tier">' + tierLabel(p.market_type) + '</div>' +
+          '<div class="cv-mkt-name"><span>' + escapeHtml(p.name) + '</span></div>' +
+          '<div class="cv-mkt-tier">' + (p.capital ? 'Capital' : '') + '</div>' +
           '<div class="cv-mkt-pop">' + formatCompactPop(p.pop) + '</div>' +
         '</div>'
-      ).join('');
-  }
+      ).join('')
+    : '<div class="cv-empty">No city population figures on file.</div>';
 
-  // Critical infrastructure roster
-  const criticalInfra = criticalInfraForCountry(countryId);
-  const infraCounts = countInfraKinds(criticalInfra);
+  // Ports and airports: World Port Index and OurAirports, nothing inferred.
   const infra = document.getElementById('cv-infra');
-  const cell = (key) => {
-    const meta = infraKindMeta(key);
-    const count = infraCounts[key];
-    const sample = criticalInfra.find(item => item.kind === key)?.place;
-    return '<div class="cv-infra-cell' + (count === 0 ? ' zero' : '') + '">' +
-      '<div class="cv-infra-icon">' + meta.glyph + '</div>' +
-      '<div class="cv-infra-count">' + count + '</div>' +
-      '<div class="cv-infra-key">' + meta.label + '</div>' +
-      '<div class="cv-infra-sub">' + (sample ? 'incl. ' + escapeHtml(sample) : (count ? '&nbsp;' : 'None on file')) + '</div>' +
+  const ports = countryPorts(countryId);
+  const airports = countryAirports(countryId);
+  const list = (title, items, line, empty) =>
+    '<div class="cv-route-group"><div class="cv-route-title">' + title + ' <b>' + items.length + '</b></div>' +
+      (items.length ? '<ul class="cv-route-list">' + items.map(line).join('') + '</ul>' : '<p class="cv-route-empty">' + empty + '</p>') +
     '</div>';
-  };
   infra.innerHTML =
-    '<div class="cv-infra-summary">' +
-      cell('port') + cell('rail') + cell('dry_port') + cell('airport') +
-    '</div>';
+    list('Seaports', ports, p => '<li><span>' + escapeHtml(p.name) + '</span><small>' + escapeHtml(p.size || '') + (p.size ? ' harbour' : '') + '</small></li>',
+      LANDLOCKED.has(countryId) ? 'Landlocked: no seaport.' : 'None in the World Port Index.') +
+    list('Airports with scheduled flights', airports, a => '<li><span>' + escapeHtml(a.name) + (a.iata ? ' (' + escapeHtml(a.iata) + ')' : '') + '</span><small>' + escapeHtml(a.city || '') + '</small></li>',
+      'None listed in OurAirports.') +
+    railSummaryHtml(countryId) +
+    '<div class="cv-fact-source">NGA World Port Index · OurAirports · OpenStreetMap</div>';
 }
 
-function farmExportsForCountry(countryId, dominant) {
-  if (FARM_EXPORTS[countryId]) return FARM_EXPORTS[countryId];
-  if (dominant === 'pastoral') return ['Livestock', 'Hides', 'Dairy'];
-  if (dominant === 'mixed') return ['Maize', 'Beans', 'Oilseed'];
-  return ['Cereals', 'Coffee', 'Horticulture'];
+// WFP retail prices for the four foods it tracks most at one market. Where WFP has no
+// current monitoring the section says so - it does not borrow a neighbour's prices.
+function foodPricesHtml(countryId) {
+  const food = countryFacts(countryId)?.food;
+  const name = COUNTRY_INFO[countryId]?.name || 'this country';
+  if (!food || !(food.items || []).length) {
+    return '<div class="cv-empty">The World Food Programme publishes no current market prices for ' + escapeHtml(name) + '.</div>';
+  }
+  const monthLabel = ym => {
+    const [y, m] = String(ym || '').split('-').map(Number);
+    return y && m ? new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(y, m - 1, 1))) : '';
+  };
+  const num = v => Number(v).toLocaleString('en-US', { maximumFractionDigits: v >= 100 ? 0 : 2 });
+  const rows = food.items.map(item => {
+    const change = Number.isFinite(item.yearAgo) && item.yearAgo > 0 ? ((item.price - item.yearAgo) / item.yearAgo) * 100 : null;
+    const cls = change === null ? '' : change > 0 ? ' up' : ' down';
+    return '<li><span>' + escapeHtml(item.commodity) + ' <small>per ' + escapeHtml(item.unit) + '</small></span>' +
+      '<b>' + escapeHtml(item.currency) + ' ' + num(item.price) + '</b>' +
+      '<em class="cv-food-change' + cls + '">' + (change === null ? '—' : (change > 0 ? '+' : '') + Math.round(change) + '% on a year') + '</em></li>';
+  }).join('');
+  return '<ul class="cv-food-list">' + rows + '</ul>' +
+    '<div class="cv-fact-source">' + escapeHtml(food.market) + ' market · retail · ' + escapeHtml(monthLabel(food.date)) + ' · World Food Programme</div>';
 }
 
-function farmSeasonLabel(countryId) {
-  const info = COUNTRY_INFO[countryId];
-  const region = (info?.region || '').toLowerCase();
-  if (['ug', 'ke', 'rw', 'bi'].includes(countryId)) return 'Mar-May';
-  if (['tz', 'mw', 'zm', 'zw', 'mz'].includes(countryId)) return 'Nov-Apr';
-  if (['sn', 'gm', 'ml', 'ne', 'bf', 'ng', 'bj', 'tg'].includes(countryId)) return 'Jun-Sep';
-  if (['ma', 'dz', 'tn', 'ly', 'eg'].includes(countryId)) return 'Oct-Feb';
-  if (['so', 'er', 'dj', 'km'].includes(countryId)) return 'Mar-May';
-  if (['sd', 'ss', 'td', 'cf', 'mr'].includes(countryId)) return 'Jun-Sep';
-  if (['za', 'na', 'bw', 'ls', 'sz'].includes(countryId)) return 'Nov-Feb';
-  if (['ao', 'cd', 'cg', 'cm', 'ga', 'gq', 'st'].includes(countryId)) return 'Mar-Jun';
-  if (region.includes('north')) return 'Oct-Feb';
-  if (region.includes('southern')) return 'Nov-Mar';
-  if (region.includes('west')) return 'May-Oct';
-  return 'Seasonal';
+// Railways, from the OpenStreetMap lines the Atlas draws: total length, how much is
+// standard gauge (the SGR-type lines), and the longest named lines.
+function railSummaryHtml(countryId) {
+  const rail = COUNTRY_GIS[countryId]?.rail;
+  const km = Number(rail?.km) || 0;
+  const named = (rail?.lines || []).filter(l => l.name && l.km >= 20).slice(0, 4);
+  const fmt = n => Math.round(n).toLocaleString('en-US') + ' km';
+  return '<div class="cv-route-group"><div class="cv-route-title">Railways <b>' + (km ? fmt(km) : '0') + '</b></div>' +
+    (km
+      ? (rail.sgrKm >= 20 ? '<p class="cv-route-empty">' + fmt(rail.sgrKm) + ' of it standard gauge.</p>' : '') +
+        (named.length ? '<ul class="cv-route-list">' + named.map(l => '<li><span>' + escapeHtml(l.name) + '</span><small>' + fmt(l.km) + (l.gauge === 1435 ? ' · standard' : l.gauge ? ' · ' + l.gauge + ' mm' : '') + '</small></li>').join('') + '</ul>' : '')
+      : '<p class="cv-route-empty">No active railway in OpenStreetMap.</p>') +
+  '</div>';
 }
+
+// The desk's curated list of each country's main farm exports. Every country has one;
+// there is no generic fallback any more ("Cereals, Coffee, Horticulture" was shown for
+// any country missing from the list).
+function farmExportsForCountry(countryId) {
+  return FARM_EXPORTS[countryId] || [];
+}
+
+// Africa's 16 landlocked countries, so "no seaport" can say why.
+const LANDLOCKED = new Set(['bw', 'bf', 'bi', 'cf', 'td', 'sz', 'et', 'ls', 'mw', 'ml', 'ne', 'rw', 'ss', 'ug', 'zm', 'zw']);
 
 function formatCompactPop(n) {
   if (!n) return '—';
@@ -2986,172 +2890,9 @@ function formatCompactPop(n) {
 function countryDeskStats(countryId) {
   const gis = COUNTRY_GIS[countryId] || { places: [], rivers: [], lakes: [] };
   const places = gis.places || [];
-  const agCounts = { crop_zone: 0, pastoral: 0, mixed: 0 };
-  const infraCounts = { port: 0, rail: 0, road: 0 };
-  for (const place of places) {
-    if (place.ag_type && agCounts[place.ag_type] !== undefined) agCounts[place.ag_type]++;
-    for (const tag of (place.infrastructure || [])) if (infraCounts[tag] !== undefined) infraCounts[tag]++;
-  }
-  const markets = places.filter(p => p.is_market);
-  const agTotal = agCounts.crop_zone + agCounts.pastoral + agCounts.mixed;
-  const dominant = Object.entries(agCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
-  const dominantLabel = dominant === 'crop_zone' ? 'Crop belt' : dominant === 'pastoral' ? 'Pastoral' : 'Mixed';
-  return { gis, places, agCounts, agTotal, dominantLabel, markets, infraCounts };
-}
-
-function signalCardHtml(card) {
-  const actionUrl = card.actionUrl ? safeUrl(card.actionUrl) : '';
-  const action = actionUrl && actionUrl !== '#'
-    ? '<a class="cv-signal-action" href="' + escapeHtml(actionUrl) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(card.actionLabel || 'Open source') + ' <span aria-hidden="true">↗</span></a>'
-    : '';
-  return (
-    '<article class="cv-signal-card">' +
-      '<div class="cv-signal-kicker">' + escapeHtml(card.kicker) + '</div>' +
-      '<h5 class="cv-signal-title">' + escapeHtml(card.title) + '</h5>' +
-      '<p class="cv-signal-copy">' + escapeHtml(card.copy) + '</p>' +
-      '<div class="cv-signal-footer"><span>' + escapeHtml(card.metric || 'Desk signal') + '</span>' + action + '</div>' +
-    '</article>'
-  );
-}
-
-function renderSignalCards(target, cards) {
-  if (!target) return;
-  if (!cards.length) {
-    target.innerHTML = '<div class="cv-signal-empty">No decision signals generated yet.</div>';
-    return;
-  }
-  target.innerHTML = '<div class="cv-signal-grid">' + cards.map(signalCardHtml).join('') + '</div>';
-}
-
-function renderFarmerSignals(countryId, stats) {
-  const target = document.getElementById('cv-farmer-signals');
-  if (!target) return;
-  const info = COUNTRY_INFO[countryId] || {};
-  const critical = criticalInfraForCountry(countryId);
-  const dominant = Object.entries(stats.agCounts || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
-  const exports = farmExportsForCountry(countryId, dominant);
-  const firstMarket = stats.markets?.[0]?.name || info.capital || 'capital market';
-  const waterCount = ((stats.gis?.rivers || []).length + (stats.gis?.lakes || []).length);
-  const route = critical.find(item => ['corridor', 'road', 'rail', 'dry_port', 'port'].includes(item.kind));
-  const cards = [
-    {
-      kicker: 'Crop read',
-      title: (exports[0] || 'Food') + ' pricing window',
-      copy: 'Watch ' + firstMarket + ' quotes during ' + farmSeasonLabel(countryId) + '. Treat it as a crop window, not a national forecast.',
-      metric: stats.dominantLabel + ' profile'
-    },
-    {
-      kicker: 'Water risk',
-      title: waterCount + ' mapped water points',
-      copy: 'Use rivers and lakes as the first irrigation and flood check. Live gauge data still needs local sourcing.',
-      metric: 'Hydrology'
-    },
-    {
-      kicker: 'Route watch',
-      title: route ? route.name : 'Nearest market corridor',
-      copy: route ? route.note + ' Watch dwell time, fuel cost, and road disruption here.' : 'No corridor lead is tagged yet; start with the capital market and nearest border route.',
-      metric: route ? infraKindMeta(route.kind).label : 'Needs survey'
-    },
-    {
-      kicker: 'Agtech wedge',
-      title: 'Mechanization + market proof',
-      copy: 'Best wedge: planting timing, buyer access, and transport reliability in one simple grower workflow.',
-      metric: 'Operator angle'
-    }
-  ];
-  renderSignalCards(target, cards);
-}
-
-function signalCardsHtml(cards) {
-  if (!cards.length) return '<div class="cv-signal-empty">No decision signals generated yet.</div>';
-  return '<div class="cv-signal-grid">' + cards.map(signalCardHtml).join('') + '</div>';
-}
-
-function sectorInsight(sector, inv, countryId) {
-  const s = String(sector || '').toLowerCase();
-  const access = inv.access || 'Open';
-  const currency = inv.currency || 'local';
-  const market = marketsForCountry(countryId);
-  if (s.includes('oil') || s.includes('gas') || s.includes('lng') || s.includes('energy')) {
-    return { demand: 'Export-linked', risk: inv.risk === 'high' ? 'Permit + security' : 'Policy watch', route: 'Ports + grid' };
-  }
-  if (s.includes('agri') || s.includes('cocoa') || s.includes('cashew') || s.includes('beef') || s.includes('coffee')) {
-    return { demand: 'Food security', risk: 'Weather + logistics', route: 'Farmgate markets' };
-  }
-  if (s.includes('tour') || s.includes('hospitality')) {
-    return { demand: 'Visitor spend', risk: 'FX + airlift', route: 'Airport access' };
-  }
-  if (s.includes('tech') || s.includes('ict') || s.includes('fintech') || s.includes('telecom')) {
-    return { demand: 'Urban adoption', risk: 'Regulation', route: 'Mobile rails' };
-  }
-  if (s.includes('mining') || s.includes('gold') || s.includes('copper') || s.includes('diamond')) {
-    return { demand: 'Commodity cycle', risk: 'License + ESG', route: 'Rail/port corridor' };
-  }
-  if (s.includes('finance') || s.includes('bank')) {
-    return { demand: market ? market.exchange : 'Capital access', risk: 'Rates + FX', route: currency + ' liquidity' };
-  }
-  if (s.includes('manufact') || s.includes('automotive') || s.includes('textile') || s.includes('construction')) {
-    return { demand: 'Industrial buildout', risk: 'Power + inputs', route: 'Supplier corridors' };
-  }
-  return { demand: 'Local demand', risk: access + ' access', route: currency + ' exposure' };
-}
-
-function renderInvestorSignals(countryId, inv, info) {
-  const stats = countryDeskStats(countryId);
-  const profile = marketProfileForCountry(countryId);
-  const market = profile.market;
-  const sectors = (inv.sectors || []).slice(0, 4);
-  const topSector = sectors[0] || 'Growth sectors';
-  const insight = sectorInsight(topSector, inv, countryId);
-  const access = inv.access || 'Unrated';
-  const currency = inv.currency || 'local currency';
-  const countryName = info.name || 'This country';
-  const capital = info.capital || countryName;
-  const mappedMarkets = stats.markets || [];
-  const mappedNames = mappedMarkets.slice(0, 2).map(place => place.name).join(' and ');
-  const marketTitle = profile.exchange
-    ? profile.exchange + ' · ' + profile.scope
-    : 'No domestic exchange verified';
-  const marketCopy = profile.exchange
-    ? profile.name + ' is verified in the market directory. ' +
-      (market?.companies?.length
-        ? market.companies.length + ' reference listings are loaded; verify current prices, filings, liquidity, and free float before acting.'
-        : 'Company-level data is not loaded here, so use the official venue for current listings, filings, and broker requirements.')
-    : 'The directory has no verified domestic venue for ' + countryName + '. Check regional exchanges, licensed banks, and private financing instead.';
-  return signalCardsHtml([
-    {
-      kicker: 'Sector hypothesis',
-      title: topSector,
-      copy: 'Demand lens: ' + insight.demand + '. Test ' + insight.risk.toLowerCase() + ', unit economics, and the route to market with customers and local operators.',
-      metric: insight.route + ' · validate locally'
-    },
-    {
-      kicker: 'Capital route',
-      title: marketTitle,
-      copy: marketCopy,
-      metric: profile.exchange
-        ? (market?.companies?.length ? market.companies.length + ' reference listings' : 'Official venue · current data')
-        : 'Regional · bank · private capital',
-      actionUrl: profile.url,
-      actionLabel: profile.exchange ? 'Open ' + profile.exchange : ''
-    },
-    {
-      kicker: 'Entry checks',
-      title: access + ' access flag',
-      copy: 'This is a screening label, not clearance. Confirm ownership rules, permits, tax treatment, and ' + currency + ' capital repatriation with licensed local advisers.',
-      metric: 'Legal · tax · currency'
-    },
-    {
-      kicker: 'Local evidence',
-      title: mappedMarkets.length
-        ? mappedMarkets.length + ' mapped market hub' + (mappedMarkets.length === 1 ? '' : 's')
-        : 'Atlas coverage gap',
-      copy: mappedMarkets.length
-        ? mappedNames + (mappedMarkets.length === 1 ? ' is a starting point' : ' are starting points') + ', not proof of distribution. Confirm transport time, warehousing, customs, and counterparties locally.'
-        : 'No market hub is verified in the ' + countryName + ' Atlas file yet. Start with ' + capital + ', then confirm distributors, warehousing, and transport routes locally.',
-      metric: mappedMarkets.length ? 'Mapped lead · verify locally' : 'Missing data · verify locally'
-    }
-  ]);
+  // The GIS file's ag_type / is_market / infrastructure tags were generated, not
+  // sourced, and are no longer read. "markets" is the largest cities.
+  return { gis, places, markets: largestCities(countryId) };
 }
 
 function setKpiCells(items) {
@@ -3188,68 +2929,49 @@ function renderAudienceKpis(countryId, info) {
   loadGdpHistory(countryId, info);
 }
 
+function kpiFact(countryId, key, keyLabel, explain) {
+  const fact = countryFact(countryId, key);
+  return {
+    key: keyLabel || FACT_DEFS[key].label,
+    value: fact ? formatFactValue(FACT_DEFS[key].fmt, fact.v) : '—',
+    sub: fact ? 'World Bank ' + fact.y : (countryId === 'eh' ? 'No World Bank data' : 'Not reported'),
+    explain
+  };
+}
+
 function renderDiasporaKpis(countryId, info) {
   const inv = investorForCountry(countryId, info);
-  const dia = DIASPORA[countryId] || {};
   setKpiCells([
     { key: 'Population', value: formatPop(livePopulation(info.pop, info.gr)), sub: 'At home', explain: 'Resident population estimate for the country.' },
-    { key: 'Remittances', value: dia.remit || '—', sub: 'World Bank/KNOMAD 2024', explain: 'Annual inbound remittance scale where a sourced estimate is available.' },
-    { key: 'Abroad', value: dia.dia || '—', sub: 'People in diaspora', explain: 'Approximate diaspora size where a sourced estimate is available.' },
-    { key: 'Payout rail', value: inv.currency || '—', sub: 'Local currency', explain: 'Currency families and payout quotes should be checked against providers.' }
+    kpiFact(countryId, 'remitUsd', 'Remittances', 'Personal remittances received, current US dollars, World Bank.'),
+    kpiFact(countryId, 'remitCost', 'Cost to send $200', 'Average total cost of sending $200 to this country, World Bank Remittance Prices Worldwide.'),
+    { key: 'Currency', value: inv.currency || '—', sub: CCY_NAME[inv.currency] || 'Local currency', explain: 'The currency a transfer pays out in.' }
   ]);
 }
 
 function renderFarmerKpis(countryId) {
   const stats = countryDeskStats(countryId);
-  const criticalInfra = criticalInfraForCountry(countryId);
-  const infraTotal = criticalInfra.length;
-  const infraKinds = countInfraKinds(criticalInfra);
+  const ports = countryPorts(countryId);
+  const airports = countryAirports(countryId);
   const waterCount = (stats.gis.rivers || []).length + (stats.gis.lakes || []).length;
   setKpiCells([
     { key: 'Weather · Live', value: '—', sub: 'Fetching station data', explain: 'Live weather is fetched for the capital or closest mapped reference point.' },
-    { key: 'Market hubs', value: String(stats.markets.length), sub: stats.markets.length === 1 ? 'Designated hub' : 'Designated hubs', explain: 'Mapped market hubs from the country atlas layer.' },
-    { key: 'Critical infra', value: String(infraTotal), sub: infraKinds.port + ' ports · ' + infraKinds.rail + ' rail · ' + infraKinds.dry_port + ' dry ports', explain: 'Tagged infrastructure nodes that matter for movement, trade, and access.' },
-    { key: 'Water registry', value: String(waterCount), sub: (stats.gis.rivers || []).length + ' rivers · ' + (stats.gis.lakes || []).length + ' lakes', explain: 'Mapped rivers and lakes from the GIS country file.' }
+    { key: 'Seaports', value: String(ports.length), sub: ports.length ? 'incl. ' + ports[0].name : (LANDLOCKED.has(countryId) ? 'Landlocked' : 'None listed'), explain: 'Ports in the NGA World Port Index, offshore oil terminals excluded.' },
+    { key: 'Airports', value: String(airports.length), sub: airports.length ? 'With scheduled flights' : 'None listed', explain: 'Airports with scheduled passenger service, from OurAirports.' },
+    { key: 'Water registry', value: String(waterCount), sub: (stats.gis.rivers || []).length + ' rivers · ' + (stats.gis.lakes || []).length + ' lakes', explain: 'Mapped rivers and lakes from Natural Earth.' }
   ]);
 }
 
+// Ports and airports for the Atlas and the country file - real ones only. This used to
+// invent nodes when nothing was on file: "<capital> Air Gateway", "<country> Primary
+// Corridor", and an "Inland Freight Desk" dry port for any country without a port.
 function criticalInfraForCountry(countryId) {
-  const info = COUNTRY_INFO[countryId] || {};
-  const gis = COUNTRY_GIS[countryId] || { places: [] };
-  const seeded = CRITICAL_INFRA_SEEDS[countryId] || [];
   const items = [];
-  const seen = new Set();
-  const add = item => {
-    if (!item || !item.name) return;
-    const key = (item.kind || 'node') + ':' + normalizeName(item.name);
-    if (seen.has(key)) return;
-    seen.add(key);
-    items.push({
-      kind: item.kind || 'node',
-      name: item.name,
-      place: item.place || item.name,
-      lon: item.lon,
-      lat: item.lat,
-      note: item.note || infraKindMeta(item.kind).note
-    });
-  };
-  seeded.forEach(add);
-  for (const place of (gis.places || [])) {
-    for (const tag of (place.infrastructure || [])) {
-      if (tag === 'port') add({ name: place.name + ' Port', kind: 'port', place: place.name, lon: place.lon, lat: place.lat, note: 'Cargo and passenger gateway' });
-      if (tag === 'rail') add({ name: place.name + ' Rail Node', kind: 'rail', place: place.name, lon: place.lon, lat: place.lat, note: 'Rail logistics interchange' });
-      if (tag === 'road') add({ name: place.name + ' Road Hub', kind: 'road', place: place.name, lon: place.lon, lat: place.lat, note: 'Road corridor junction' });
-    }
+  for (const p of countryPorts(countryId)) {
+    items.push({ kind: 'port', name: p.name, place: p.name, lon: p.lon, lat: p.lat, note: (p.size ? p.size + ' harbour' : 'Seaport') });
   }
-  const capital = (gis.places || []).find(p => p.capital) || (gis.places || [])[0];
-  if (capital && !items.some(item => item.kind === 'airport')) {
-    add({ name: capital.name + ' Air Gateway', kind: 'airport', place: capital.name, lon: capital.lon, lat: capital.lat, note: 'Air access and emergency logistics' });
-  }
-  if (capital && !items.some(item => item.kind === 'dry_port') && !items.some(item => item.kind === 'port')) {
-    add({ name: capital.name + ' Inland Freight Desk', kind: 'dry_port', place: capital.name, lon: capital.lon, lat: capital.lat, note: 'Customs, warehousing, and inland cargo' });
-  }
-  if (capital && !items.some(item => item.kind === 'corridor')) {
-    add({ name: info.name ? info.name + ' Primary Corridor' : capital.name + ' Corridor', kind: 'corridor', place: capital.name, lon: capital.lon, lat: capital.lat, note: 'Main movement corridor for people and goods' });
+  for (const a of countryAirports(countryId)) {
+    items.push({ kind: 'airport', name: a.name, place: a.city || a.name, lon: a.lon, lat: a.lat, note: 'Scheduled flights' + (a.iata ? ' · ' + a.iata : '') });
   }
   return items.slice(0, 10);
 }
@@ -3267,20 +2989,116 @@ function infraKindMeta(kind) {
     rail: { label: 'Rail', short: 'RL', glyph: 'R', note: 'Rail logistics node' },
     road: { label: 'Road hubs', short: 'RD', glyph: 'X', note: 'Road corridor hub' },
     dry_port: { label: 'Dry ports', short: 'DP', glyph: 'D', note: 'Inland cargo clearance' },
-    airport: { label: 'Air cargo', short: 'AIR', glyph: 'A', note: 'Air logistics hub' },
+    airport: { label: 'Airports', short: 'AIR', glyph: 'A', note: 'Scheduled flights' },
     border: { label: 'Borders', short: 'BR', glyph: 'B', note: 'Cross-border trade post' },
     corridor: { label: 'Corridors', short: 'CO', glyph: 'C', note: 'Freight movement spine' }
   })[kind] || { label: 'Node', short: 'ND', glyph: 'N', note: 'Critical node' };
 }
 
+/* ── Country facts: the same sourced figures, by the same rules, for all 55 ──────────
+   Built by scripts/build-country-facts.ps1 into data/country-facts.js. Signals used to
+   be a template filled in 55 times: sector words mapped to stock phrases, made-up city
+   attributes, a dry port invented for an island. Every figure here is a published value
+   with its year; a figure a source does not report is shown as not reported. */
+const FACT_DEFS = {
+  growth:         { label: 'GDP growth',             sub: 'real, annual',        fmt: 'signedPct' },
+  inflation:      { label: 'Inflation',              sub: 'consumer prices',     fmt: 'pct' },
+  fdi:            { label: 'Foreign investment',     sub: 'net FDI inflows',     fmt: 'usd' },
+  exports:        { label: 'Exports',                sub: 'share of GDP',        fmt: 'pct' },
+  unemployment:   { label: 'Unemployment',           sub: 'of labour force',     fmt: 'pct' },
+  extDebt:        { label: 'External debt',          sub: 'of national income',  fmt: 'pct' },
+  agShare:        { label: 'Farming in the economy', sub: 'share of GDP',        fmt: 'pct' },
+  agJobs:         { label: 'Jobs in farming',        sub: 'of all employment',   fmt: 'pct' },
+  agLand:         { label: 'Farmland',               sub: 'of land area',        fmt: 'pct' },
+  cerealYield:    { label: 'Cereal yield',           sub: 'per hectare',         fmt: 'kg' },
+  undernourished: { label: 'Undernourishment',       sub: 'of population',       fmt: 'pct' },
+  remitUsd:       { label: 'Remittances received',   sub: 'per year',            fmt: 'usd' },
+  remitGdp:       { label: 'Remittances',            sub: 'share of GDP',        fmt: 'pct' },
+  remitCost:      { label: 'Cost to send $200',      sub: 'average fee',         fmt: 'pct' },
+  internet:       { label: 'Internet users',         sub: 'of population',       fmt: 'pct' },
+  electricity:    { label: 'Electricity access',     sub: 'of population',       fmt: 'pct' }
+};
+const FACT_GROUPS = {
+  farmers:   ['agShare', 'agJobs', 'agLand', 'cerealYield', 'undernourished'],
+  investors: ['growth', 'inflation', 'fdi', 'exports', 'unemployment', 'extDebt'],
+  diaspora:  ['remitUsd', 'remitGdp', 'remitCost', 'internet', 'electricity']
+};
+
+function countryFacts(countryId) {
+  return window.ASJ_COUNTRY_FACTS?.countries?.[countryId] || null;
+}
+
+function countryFact(countryId, key) {
+  const fact = countryFacts(countryId)?.wb?.[key];
+  return fact && Number.isFinite(Number(fact.v)) ? { v: Number(fact.v), y: fact.y } : null;
+}
+
+function formatFactValue(fmt, v) {
+  if (!Number.isFinite(v)) return '';
+  if (fmt === 'usd') {
+    const a = Math.abs(v);
+    const sign = v < 0 ? '-' : '';
+    if (a >= 1e9) return sign + '$' + (a / 1e9).toFixed(a >= 1e10 ? 0 : 1) + 'B';
+    if (a >= 1e6) return sign + '$' + (a / 1e6).toFixed(a >= 1e8 ? 0 : 1) + 'M';
+    return sign + '$' + Math.round(a).toLocaleString('en-US');
+  }
+  if (fmt === 'kg') return Math.round(v).toLocaleString('en-US') + ' kg';
+  const pct = (Math.abs(v) >= 10 ? Math.round(v) : Math.round(v * 10) / 10) + '%';
+  return fmt === 'signedPct' && v > 0 ? '+' + pct : pct;
+}
+
+function factCellHtml(countryId, key) {
+  const def = FACT_DEFS[key];
+  const fact = countryFact(countryId, key);
+  return '<div class="cv-fact' + (fact ? '' : ' is-missing') + '">' +
+    '<div class="cv-fact-key">' + escapeHtml(def.label) + '</div>' +
+    '<div class="cv-fact-val">' + (fact ? escapeHtml(formatFactValue(def.fmt, fact.v)) : 'Not reported') + '</div>' +
+    '<div class="cv-fact-sub">' + escapeHtml(def.sub) + (fact ? ' · ' + fact.y : '') + '</div>' +
+  '</div>';
+}
+
+function factGridHtml(countryId, group) {
+  if (!window.ASJ_COUNTRY_FACTS) return '<div class="cv-empty">Country figures are still loading.</div>';
+  if (countryId === 'eh') {
+    // Not a World Bank member, so there are no WDI series. Morocco's figures are not
+    // substituted: that would answer a sovereignty question by spreadsheet.
+    return '<div class="cv-empty">The World Bank does not publish figures for Western Sahara.</div>';
+  }
+  return '<div class="cv-facts">' + FACT_GROUPS[group].map(key => factCellHtml(countryId, key)).join('') + '</div>' +
+    '<div class="cv-fact-source">World Bank, World Development Indicators · latest year reported since 2015</div>';
+}
+
+// Ports and airports from the facts file, the capital's airport first.
+// 30 km of tolerance: outlines are simplified, so real coastal ports sit a few km
+// "offshore", and small islands (Corisco, Equatorial Guinea) are not in the outline.
+function countryPorts(countryId) {
+  return (countryFacts(countryId)?.ports || []).filter(p => p && p.name && insideCountry(countryId, p.lon, p.lat, 30));
+}
+
+// In the build's order: each country's main international gateways first, then size.
+function countryAirports(countryId) {
+  return (countryFacts(countryId)?.airports || []).filter(a => a && a.name && insideCountry(countryId, a.lon, a.lat, 30));
+}
+
+// The largest cities by population. Natural Earth first: its places are curated metro
+// areas (Nairobi, Mombasa, Kisumu). GeoNames lists communes and towns with county-sized
+// counts (Kakamega as Kenya's second city, Njeru in Uganda), so it is used only where
+// Natural Earth has fewer than four places - the island states and Western Sahara.
+function largestCities(countryId, limit = 6) {
+  const byPop = list => list.filter(c => c && c.name && Number(c.pop) > 0).sort((a, b) => b.pop - a.pop);
+  const natural = byPop(atlasPlaces(countryId));
+  if (natural.length >= 4) return natural.slice(0, limit);
+  return byPop((countryFacts(countryId)?.cities || []).slice()).slice(0, limit);
+}
+
 function renderInvestorKpis(countryId, info) {
   const inv = investorForCountry(countryId, info);
-  const riskLabel = inv.risk === 'low' ? 'Low' : inv.risk === 'med' ? 'Medium' : 'High';
+  // The fourth cell was "Risk / access: Medium · Open", a desk label with no source.
   setKpiCells([
     { key: 'GDP', value: inv.gdp, sub: gdpSubLabel(inv), green: true, explain: 'Nominal GDP in current US dollars from the latest available economy file.' },
     { key: 'GDP growth', value: (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%', sub: growthSubLabel(inv), green: inv.gdp_growth >= 4, explain: 'Latest annual real GDP growth rate available in the country file.' },
     { key: 'FDI inflows', value: inv.fdi, sub: inv.fdiYear ? 'World Bank ' + inv.fdiYear : (inv.estimated ? 'Desk model estimate' : 'Desk file · UNCTAD 2023-24'), explain: 'Foreign direct investment inflows where a sourced estimate is available.' },
-    { key: 'Risk / access', value: riskLabel, sub: inv.access + ' · ' + inv.currency, explain: 'Qualitative access flag used to prompt due diligence, not an investment recommendation.' }
+    kpiFact(countryId, 'inflation', 'Inflation', 'Annual change in consumer prices, World Bank.')
   ]);
 }
 
@@ -3558,12 +3376,65 @@ function mapPinsForCountry(countryId, liveStories) {
   return pins.length ? pins : liveStories;
 }
 
-function atlasFeaturePoints(countryId) {
-  return LANDMARK_POINTS.filter(item => item.countries?.includes(countryId));
+// Is a point inside the country's own outline (within toleranceKm of its edge)?
+// Every Atlas point is checked, because the sources were not: a landmark list put
+// Kilimanjaro in Kenya, the place file put Mandera (Kenya) in Somalia and Laayoune in
+// Morocco, and the port index files Mayotte's Dzaoudzi under Comoros. Returns true when
+// the outline is not loaded yet, so nothing disappears for want of a shape.
+const OUTLINE_TESTERS = new Map();
+const OUTLINE_SCALE = 1000;
+let outlineTestCtx = null;
+function countryOutlineTester(countryId) {
+  if (OUTLINE_TESTERS.has(countryId)) return OUTLINE_TESTERS.get(countryId);
+  const d = window.UNITED_AFRICA_DATA?.countryDetail?.[countryId]?.d;
+  if (!d || typeof Path2D === 'undefined') return null;
+  outlineTestCtx = outlineTestCtx || document.createElement('canvas').getContext('2d');
+  const S = OUTLINE_SCALE;
+  const path = new Path2D();
+  path.addPath(new Path2D(d), new DOMMatrix([S, 0, 0, S, 200 * S, 100 * S]));
+  const nums = d.match(/-?\d+(?:\.\d+)?/g).map(Number);
+  const vertices = [];
+  for (let i = 0; i + 1 < nums.length; i += 2) vertices.push([nums[i], -nums[i + 1]]);
+  const tester = { path, vertices };
+  OUTLINE_TESTERS.set(countryId, tester);
+  return tester;
 }
 
-function linesForCountry(countryId) {
-  return LANDMARK_LINES.filter(item => item.countries?.includes(countryId));
+function insideCountry(countryId, lon, lat, toleranceKm = 0) {
+  if (!Number.isFinite(lon) || !Number.isFinite(lat)) return false;
+  const tester = countryOutlineTester(countryId);
+  if (!tester) return true;
+  const S = OUTLINE_SCALE;
+  if (outlineTestCtx.isPointInPath(tester.path, lon * S + 200 * S, -lat * S + 100 * S)) return true;
+  if (!toleranceKm) return false;
+  const kx = 111.32 * Math.cos(lat * Math.PI / 180);
+  return tester.vertices.some(([x, y]) => Math.hypot((x - lon) * kx, (y - lat) * 111.32) <= toleranceKm);
+}
+
+function atlasFeaturePoints(countryId) {
+  return LANDMARK_POINTS.filter(item => item.countries?.includes(countryId) && insideCountry(countryId, item.lon, item.lat));
+}
+
+// What the map marks: the significant ports and airports, not all of them. A port of
+// "Very Small" harbour size and a medium regional airport are listed in Signals, but on
+// a phone-sized map they crowd out the gateways. Labels are short ("Mombasa port",
+// "JKIA (NBO)"-style IATA), since the city name is usually already on the map.
+function atlasInfraForCountry(countryId) {
+  const ports = countryPorts(countryId);
+  const majorPorts = ports.filter(p => p.size && p.size !== 'Very Small');
+  const portPick = (majorPorts.length ? majorPorts : ports).slice(0, 4);
+  const airports = countryAirports(countryId);
+  const largeAirports = airports.filter(a => a.gateway || a.type === 'Large');
+  const airportPick = (largeAirports.length ? largeAirports : airports).slice(0, 4);
+  return [
+    ...portPick.map((p, i) => ({ kind: 'port', label: p.name + ' port', lon: p.lon, lat: p.lat, priority: i === 0 })),
+    ...airportPick.map(a => ({ kind: 'airport', label: a.iata ? a.name.replace(/ International Airport$| Airport$/, '') + ' (' + a.iata + ')' : a.name, lon: a.lon, lat: a.lat, priority: !!a.gateway, short: a.iata || '' }))
+  ];
+}
+
+// Natural Earth places, minus any that fall in a neighbour.
+function atlasPlaces(countryId) {
+  return (COUNTRY_GIS[countryId]?.places || []).filter(place => insideCountry(countryId, place.lon, place.lat, 5));
 }
 
 function detailPoint(lon, lat) {
@@ -3785,23 +3656,53 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
     countryMapCtx.restore();
   }
 
+  const places = mapLayers.places
+    ? atlasPlaces(countryId)
+        .slice()
+        .sort((a, b) => Number(!!b.capital) - Number(!!a.capital) || (b.pop || 0) - (a.pop || 0))
+        .slice(0, 35)
+    : [];
+  // Label order: the capital (pinned), then the main port and gateway airports, then
+  // towns. The capital label is drawn regardless of collisions, so anything placed
+  // before it can be painted over - "Jomo Kenyatta (NBO)" was, under "Nairobi".
+  const labelledPlaces = new Set();
+  const capitalPlace = places.find(p => p.capital);
+  if (capitalPlace && mapLayers.labels) {
+    const [x, y] = project(capitalPlace.lon, capitalPlace.lat);
+    countryMapCtx.font = '700 13px system-ui, -apple-system, "Segoe UI", sans-serif';
+    drawSmartLabel(capitalPlace.name, x, y, '#f1f7ef', placedLabels, width, height, 'right', true);
+    labelledPlaces.add(capitalPlace);
+  }
+  const infraItems = mapLayers.infra ? atlasInfraForCountry(countryId) : [];
+  const labelledInfra = new Set();
+  if (mapLayers.infra && mapLayers.labels) {
+    countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
+    for (const item of infraItems.filter(i => i.priority)) {
+      const [x, y] = project(item.lon, item.lat);
+      // Full name if it fits, else the IATA code: on a 330px phone map JKIA sits 4px
+      // from Nairobi and "Jomo Kenyatta (NBO)" has nowhere to go.
+      if (drawSmartLabel(item.label, x, y, '#fff0a9', placedLabels, width, height, 'top') ||
+          (item.short && drawSmartLabel(item.short, x, y, '#fff0a9', placedLabels, width, height, 'top'))) labelledInfra.add(item);
+    }
+  }
+
   if (mapLayers.places) {
-    const places = (gis.places || [])
-      .slice()
-      .sort((a, b) => Number(!!b.capital) - Number(!!a.capital) || (b.pop || 0) - (a.pop || 0))
-      .slice(0, 35);
     for (const place of places) {
       const [x, y] = project(place.lon, place.lat);
-      let labelDrawn = false;
+      let labelDrawn = labelledPlaces.has(place);
       const shouldLabel = place.capital || place.pop > 180000 || placedLabels.length < 14;
-      if (mapLayers.labels && shouldLabel) {
-        countryMapCtx.font = place.capital
-          ? '700 13px system-ui, -apple-system, "Segoe UI", sans-serif'
-          : '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
-        labelDrawn = drawSmartLabel(place.name, x, y, place.capital ? '#f1f7ef' : '#e0ecdf', placedLabels, width, height, place.capital ? 'right' : 'top', !!place.capital);
+      if (mapLayers.labels && shouldLabel && !labelDrawn) {
+        countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
+        labelDrawn = drawSmartLabel(place.name, x, y, '#e0ecdf', placedLabels, width, height, 'top');
       }
       if (!place.capital) {
+        // A small dot under every labelled town, so a label nudged aside by a
+        // neighbour still shows which point it names.
         if (!mapLayers.labels || !labelDrawn) continue;
+        countryMapCtx.beginPath();
+        countryMapCtx.arc(x, y, 2.2, 0, Math.PI * 2);
+        countryMapCtx.fillStyle = 'rgba(232,240,228,0.85)';
+        countryMapCtx.fill();
         continue;
       }
       countryMapCtx.beginPath();
@@ -3832,23 +3733,22 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
   }
 
   if (mapLayers.infra) {
-    for (const item of criticalInfraForCountry(countryId).slice(0, 9)) {
+    // Every marker is drawn; only a label that has no room is dropped. This used to skip
+    // any port or airport within 18px of a city, which hid exactly the ones that matter
+    // most - Jomo Kenyatta beside Nairobi, Mombasa port beside Mombasa - and left the
+    // map showing Amboseli's airstrip instead.
+    for (const item of infraItems) {
       if (!Number.isFinite(item.lon) || !Number.isFinite(item.lat)) continue;
       const [x, y] = project(item.lon, item.lat);
-      const overlapsPlace = mapLayers.places && (gis.places || []).some(place => {
-        const [placeX, placeY] = project(place.lon, place.lat);
-        return Math.hypot(placeX - x, placeY - y) < 18;
-      });
-      if (overlapsPlace) continue;
-      if (mapLayers.labels) {
+      if (mapLayers.labels && !labelledInfra.has(item)) {
         countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
-        const labelDrawn = drawSmartLabel(item.name, x, y, '#fff0a9', placedLabels, width, height, 'right');
-        if (!labelDrawn) continue;
+        drawSmartLabel(item.label, x, y, '#fff0a9', placedLabels, width, height, 'right') ||
+          (item.short && drawSmartLabel(item.short, x, y, '#fff0a9', placedLabels, width, height, 'right'));
       }
       countryMapCtx.save();
       countryMapCtx.translate(x, y);
       countryMapCtx.rotate(Math.PI / 4);
-      countryMapCtx.fillStyle = '#d6b74d';
+      countryMapCtx.fillStyle = item.kind === 'airport' ? '#8fc3ff' : '#d6b74d';
       countryMapCtx.strokeStyle = 'rgba(17,17,17,0.82)';
       countryMapCtx.lineWidth = 1;
       countryMapCtx.fillRect(-4, -4, 8, 8);
@@ -4027,24 +3927,30 @@ function drawContours(width, height, countryId) {
   }
 }
 
+// Railways from OpenStreetMap (active lines, sidings and yards excluded), built into
+// each country's GIS file by scripts/build-country-rail.ps1. This used to draw a few
+// hand-placed points as a "Great Rift Valley" and a "Nile River" - straight lines across
+// the map that read as roads - while the real Nairobi-Mombasa SGR was absent.
 function drawLinearFeatures(countryId, project, placedLabels, width, height) {
-  for (const line of linesForCountry(countryId)) {
-    if (line.kind === 'water' && !mapLayers.water) continue;
-    if (line.kind !== 'water' && !mapLayers.places) continue;
-    countryMapCtx.beginPath();
-    line.points.forEach(([lon, lat], index) => {
-      const [x, y] = project(lon, lat);
-      if (index === 0) countryMapCtx.moveTo(x, y);
-      else countryMapCtx.lineTo(x, y);
-    });
-    countryMapCtx.strokeStyle = line.kind === 'water' ? 'rgba(78,188,225,0.82)' : 'rgba(220,235,212,0.42)';
-    countryMapCtx.lineWidth = line.kind === 'water' ? 2.2 : 1.1;
-    countryMapCtx.stroke();
-    if (mapLayers.labels) {
-      const mid = line.points[Math.floor(line.points.length / 2)];
-      const [x, y] = project(mid[0], mid[1]);
-      countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
-      drawSmartLabel(line.name, x, y, line.kind === 'water' ? '#c9f1ff' : '#e9f2df', placedLabels, width, height, 'top');
+  if (mapLayers.rail === false) return;
+  const rail = COUNTRY_GIS[countryId]?.rail?.lines || [];
+  for (const line of rail) {
+    const sgr = line.gauge === 1435;
+    for (const part of line.parts || []) {
+      countryMapCtx.beginPath();
+      part.forEach(([lon, lat], index) => {
+        const [x, y] = project(lon, lat);
+        if (index === 0) countryMapCtx.moveTo(x, y);
+        else countryMapCtx.lineTo(x, y);
+      });
+      countryMapCtx.strokeStyle = 'rgba(14,16,14,0.85)';
+      countryMapCtx.lineWidth = sgr ? 3.4 : 2.6;
+      countryMapCtx.stroke();
+      countryMapCtx.strokeStyle = sgr ? '#f2dfae' : 'rgba(232,217,181,0.78)';
+      countryMapCtx.lineWidth = sgr ? 1.8 : 1.2;
+      countryMapCtx.setLineDash(sgr ? [] : [5, 3]);
+      countryMapCtx.stroke();
+      countryMapCtx.setLineDash([]);
     }
   }
 }
@@ -4250,14 +4156,6 @@ function renderInvestorMarkets(countryId) {
   };
 }
 
-// Diaspora population + annual remittance inflows (USD bn) — World Bank/KNOMAD scale, approximate.
-const DIASPORA = {
-  ng:{remit:'$20B',dia:'1.7M'}, eg:{remit:'$29B',dia:'3.6M'}, ma:{remit:'$12B',dia:'5.1M'}, gh:{remit:'$4.6B',dia:'1.0M'},
-  ke:{remit:'$4.9B',dia:'0.5M'}, sn:{remit:'$2.7B',dia:'0.6M'}, zw:{remit:'$2.0B',dia:'1.1M'}, ug:{remit:'$1.4B',dia:'0.7M'},
-  dz:{remit:'$1.8B',dia:'1.8M'}, tn:{remit:'$2.8B',dia:'1.3M'}, et:{remit:'$0.5B',dia:'0.8M'}, za:{remit:'$0.9B',dia:'0.9M'},
-  ml:{remit:'$1.1B',dia:'1.2M'}, cd:{remit:'$1.3B',dia:'1.4M'}, ci:{remit:'$0.5B',dia:'1.1M'}, so:{remit:'$1.7B',dia:'2.0M'},
-  tz:{remit:'$0.6B',dia:'0.3M'}, lr:{remit:'$0.6B',dia:'0.2M'}
-};
 const CCY_NAME = {
   AOA:'Kwanza',BIF:'Burundian franc',BWP:'Pula',CDF:'Congolese franc',CVE:'Cabo Verde escudo',
   DJF:'Djiboutian franc',DZD:'Algerian dinar',EGP:'Egyptian pound',ERN:'Nakfa',ETB:'Birr',
@@ -4280,17 +4178,11 @@ function renderDiasporaPanel(countryId, info) {
   const rates = window.__FX || {};
   const rate = rates[ccy];
   const rateStr = Number.isFinite(rate) ? formatFxRate(rate) : 'Unavailable';
-  const dia = DIASPORA[countryId] || {};
-  const capitalPath = (inv.sectors || [])[0] || 'Family support';
   if (fxMeta) fxMeta.textContent = formatFxDate(window.__FX_AT) ? ('USD reference · ' + formatFxDate(window.__FX_AT)) : ccy;
   fxEl.innerHTML =
     '<div class="cv-dia-rate"><div class="cv-dia-rate-key">$1 USD buys</div>' +
       '<div class="cv-dia-rate-val">' + rateStr + ' <span>' + escapeHtml(ccy || '') + '</span></div>' +
       '<div class="cv-dia-rate-sub">' + escapeHtml(CCY_NAME[ccy] || 'local currency') + (Number.isFinite(rate) ? ' · automatic reference rate' : ' · reference unavailable') + '</div>' +
-    '</div>' +
-    '<div class="cv-dia-facts">' +
-      '<div class="cv-dia-fact"><b>Fee spread</b><span>Compare provider quote</span></div>' +
-      '<div class="cv-dia-fact"><b>' + escapeHtml(capitalPath) + '</b><span>Capital path</span></div>' +
     '</div>' +
     (Number.isFinite(rate)
       ? '<div class="cv-dia-calc"><label for="cv-dia-amount">Sending</label><span>$</span><input id="cv-dia-amount" type="number" min="0" step="10" inputmode="decimal" aria-label="Amount in US dollars"><span aria-hidden="true">=</span><b id="cv-dia-converted">—</b></div>'
@@ -4313,7 +4205,9 @@ function renderDiasporaPanel(countryId, info) {
     amountEl.addEventListener('input', updateConversion);
     updateConversion();
   }
-  if (secEl) secEl.innerHTML = inv.sectors.map(s => '<div class="cv-sector">' + escapeHtml(s) + '</div>').join('');
+  // Remittances and connection, from the World Bank, where "Where Capital Goes" listed
+  // four sector words.
+  if (secEl) secEl.innerHTML = factGridHtml(countryId, 'diaspora');
 }
 
 function renderInvestorPanel(countryId, info) {
@@ -4352,22 +4246,10 @@ function renderInvestorPanel(countryId, info) {
     '</div>' +
     renderGdpChart(inv, summary);
 
-  sectorsEl.innerHTML = inv.sectors.slice(0, 4).map((sector, index) => {
-    const insight = sectorInsight(sector, inv, countryId);
-    return '<div class="cv-sector" data-rank="' + String(index + 1).padStart(2, '0') + '">' +
-      '<div class="cv-sector-main">' +
-        '<div class="cv-sector-name">' + escapeHtml(sector) + '</div>' +
-        '<div class="cv-sector-grid">' +
-          '<div class="cv-sector-stat"><b>Demand</b><span>' + escapeHtml(insight.demand) + '</span></div>' +
-          '<div class="cv-sector-stat"><b>Risk</b><span>' + escapeHtml(insight.risk) + '</span></div>' +
-          '<div class="cv-sector-stat"><b>Route</b><span>' + escapeHtml(insight.route) + '</span></div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  }
-  ).join('');
-
-  briefWrap.innerHTML = renderInvestorSignals(countryId, inv, info);
+  // Published indicators, not "Key Sectors" (each sector word mapped to the same three
+  // stock phrases for every country) or an "Investor Checklist" of generic advice.
+  if (sectorsEl) sectorsEl.innerHTML = factGridHtml(countryId, 'investors');
+  if (briefWrap) briefWrap.innerHTML = '';
 }
 
 function renderGdpChart(inv, summary = economySeriesSummary(inv)) {
@@ -5684,9 +5566,7 @@ function seasonRowNote(spec) {
 function renderCropCalendar(countryId) {
   const el = document.getElementById('cv-crop-cal');
   if (!el) return;
-  const stats = countryDeskStats(countryId);
-  const dominant = Object.entries(stats.agCounts || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
-  const crops = farmExportsForCountry(countryId, dominant).slice(0, 3);
+  const crops = farmExportsForCountry(countryId).slice(0, 3);
   if (!crops.length) { el.innerHTML = '<div class="cv-heat-empty">No crop calendar on file yet.</div>'; return; }
   const months = ['J','F','M','A','M','J','J','A','S','O','N','D'];
   let html = '<div class="cv-cal-months"><i></i>' + months.map(m => '<u>' + m + '</u>').join('') + '</div>';
@@ -5994,18 +5874,30 @@ async function runSelfTest() {
   add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);
   const badIds = obj => Object.keys(obj || {}).filter(id => !COUNTRY_INFO[id]);
   add('INVESTOR_INFO ids valid', badIds(INVESTOR_INFO).length === 0, badIds(INVESTOR_INFO).join(','));
-  add('DIASPORA ids valid', badIds(DIASPORA).length === 0, badIds(DIASPORA).join(','));
   add('FARM_EXPORTS ids valid', badIds(FARM_EXPORTS).length === 0, badIds(FARM_EXPORTS).join(','));
   add('MARKETS_SEED ids valid', badIds(MARKETS_SEED).length === 0, badIds(MARKETS_SEED).join(','));
-  const investorSignalProblems = sortedCountryIds.filter(id => {
-    const profile = marketProfileForCountry(id);
-    const html = renderInvestorSignals(id, investorForCountry(id, COUNTRY_INFO[id]), COUNTRY_INFO[id]);
-    return (profile.exchange && !html.includes(profile.exchange)) ||
-      /0 market hubs mapped|Pair the sector read|ND-GAIN rank/i.test(html);
-  });
-  add('investor checklist honors market directory', investorSignalProblems.length === 0, investorSignalProblems.join(','));
-  const malawiInvestorHtml = renderInvestorSignals('mw', investorForCountry('mw', COUNTRY_INFO.mw), COUNTRY_INFO.mw);
-  add('Malawi investor route uses verified MSE', /Malawi Stock Exchange/.test(malawiInvestorHtml) && /Open MSE/.test(malawiInvestorHtml), malawiInvestorHtml.includes('MSE') ? 'MSE present' : 'MSE missing');
+  // Every country gets the same sourced figures. Western Sahara has no World Bank data
+  // and says so; everyone else must carry most of the set.
+  const factIds = Object.keys(window.ASJ_COUNTRY_FACTS?.countries || {});
+  add('facts: one sourced file covers all 55', sortedCountryIds.every(id => factIds.includes(id)), factIds.length + ' countries');
+  const thinFacts = sortedCountryIds.filter(id => id !== 'eh' &&
+    Object.keys(FACT_DEFS).filter(key => countryFact(id, key)).length < 8);
+  add('facts: every World Bank member has at least 8 of 16 figures', thinFacts.length === 0, thinFacts.join(',') || 'all');
+  // Nothing on the Atlas or in Signals is invented to fill a gap.
+  const invented = sortedCountryIds.filter(id => criticalInfraForCountry(id).some(item =>
+    !['port', 'airport'].includes(item.kind) || /Air Gateway|Inland Freight Desk|Primary Corridor|Rail Node|Road Hub/.test(item.name)));
+  add('atlas: ports and airports only, none invented', invented.length === 0, invented.join(',') || 'none');
+  // Borders. ASJ follows the African Union: Somaliland is part of Somalia, and Western
+  // Sahara is its own country, so Laayoune is not in Morocco.
+  for (const id of ['so', 'eh', 'ma', 'ke', 'km']) { try { await ensureCountryData(id); } catch {} }
+  add('outline: Berbera and Hargeisa are inside Somalia', insideCountry('so', 45.03, 10.44) && insideCountry('so', 44.06, 9.56));
+  add('outline: Laayoune is in Western Sahara, not Morocco', insideCountry('eh', -13.2, 27.15) && !insideCountry('ma', -13.2, 27.15));
+  add('atlas: Kilimanjaro is not drawn in Kenya', !atlasFeaturePoints('ke').some(l => /Kilimanjaro/.test(l.name)));
+  add('atlas: Mayotte is not listed as a Comoros port', !countryPorts('km').some(p => /Dzaoudzi/i.test(p.name)));
+  add('atlas: Kenya marks JKIA and the Mombasa SGR', atlasInfraForCountry('ke').some(i => i.short === 'NBO') &&
+    (COUNTRY_GIS.ke?.rail?.lines || []).some(l => l.gauge === 1435 && l.km > 300));
+  add('facts: every coastal country has a seaport', sortedCountryIds.filter(id => !LANDLOCKED.has(id) && !countryPorts(id).length).length === 0,
+    sortedCountryIds.filter(id => !LANDLOCKED.has(id) && !countryPorts(id).length).join(',') || 'all');
   const noSeason = Array.from(new Set([].concat(...Object.values(FARM_EXPORTS)))).filter(c => !CROP_SEASONS[c]);
   add('CROP_SEASONS covers every export crop', noSeason.length === 0, noSeason.join(','));
   const noPlantingKinds = new Set(['fishery', 'livestock', 'fiber']);

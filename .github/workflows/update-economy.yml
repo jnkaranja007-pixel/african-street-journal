@@ -28,12 +28,18 @@ jobs:
         shell: pwsh
         run: ./scripts/build-economy.ps1
 
+      # Signals and Atlas facts: World Bank indicators, World Port Index, OurAirports,
+      # GeoNames - the same sources and rules for every country.
+      - name: Refresh country facts
+        shell: pwsh
+        run: ./scripts/build-country-facts.ps1
+
       - name: Commit refreshed economy data
         shell: pwsh
         run: |
           git config user.name  "asj-economy-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/app-data.js data/app-core.js data/countries
+          git add data/app-data.js data/app-core.js data/countries data/country-facts.js
           # See update-news.yml: `(cmd; $LASTEXITCODE -eq 0)` is a ParserError.
           git diff --staged --quiet
           if ($LASTEXITCODE -eq 0) { Write-Host 'No economy changes this run.'; exit 0 }

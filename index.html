@@ -252,12 +252,16 @@
                 <header class="cv-section-head"><h4>Agriculture</h4><span class="meta" id="cv-ag-meta"></span></header>
                 <div class="cv-ag" id="cv-ag"></div>
               </div>
+              <div class="info-food">
+                <header class="cv-section-head"><h4>Food prices</h4><span class="meta" id="cv-food-meta">WFP market monitoring</span></header>
+                <div id="cv-food"></div>
+              </div>
               <div class="info-markets">
-                <header class="cv-section-head"><h4>Market Hubs</h4><span class="meta" id="cv-mkt-meta"></span></header>
+                <header class="cv-section-head"><h4>Largest cities</h4><span class="meta" id="cv-mkt-meta"></span></header>
                 <div class="cv-markets" id="cv-markets"></div>
               </div>
               <div class="info-infra">
-                <header class="cv-section-head"><h4>Routes</h4><span class="meta">Linked cities</span></header>
+                <header class="cv-section-head"><h4>Ports &amp; airports</h4><span class="meta">Seaports and scheduled flights</span></header>
                 <div class="cv-infra" id="cv-infra"></div>
               </div>
               <div class="info-cal">
@@ -275,12 +279,8 @@
                 <div class="cv-heatmap" id="cv-heatmap"></div>
               </div>
               <div>
-                <header class="cv-section-head"><h4>Key Sectors</h4><span class="meta">Where capital is moving</span></header>
+                <header class="cv-section-head"><h4>Indicators</h4><span class="meta">World Bank</span></header>
                 <div class="cv-sectors" id="cv-sectors"></div>
-              </div>
-              <div>
-                <header class="cv-section-head"><h4>Investor Checklist</h4><span class="meta">Facts · gaps · next checks</span></header>
-                <div id="cv-brief-wrap"></div>
               </div>
             </div>
             <div class="audience-mode cv-info-grid" data-mode="diaspora">
@@ -289,7 +289,7 @@
                 <div id="cv-dia-fx"></div>
               </div>
               <div>
-                <header class="cv-section-head"><h4>Where Capital Goes</h4><span class="meta">Diaspora-relevant sectors</span></header>
+                <header class="cv-section-head"><h4>Remittances &amp; connection</h4><span class="meta">World Bank</span></header>
                 <div class="cv-sectors" id="cv-dia-sectors"></div>
               </div>
             </div>
@@ -315,7 +315,8 @@
                       <button class="cv-layer-pill" data-layer="terrain" aria-pressed="true" type="button" title="Stylized relief shading — decorative, not survey elevation data">Stylized relief</button>
                       <button class="cv-layer-pill" data-layer="water" aria-pressed="true" type="button">Water</button>
                       <button class="cv-layer-pill" data-layer="places" aria-pressed="true" type="button">Places</button>
-                      <button class="cv-layer-pill" data-layer="infra" aria-pressed="true" type="button">Infra</button>
+                      <button class="cv-layer-pill" data-layer="rail" aria-pressed="true" type="button">Railways</button>
+                      <button class="cv-layer-pill" data-layer="infra" aria-pressed="true" type="button">Ports &amp; airports</button>
                       <button class="cv-layer-pill" data-layer="labels" aria-pressed="true" type="button">Labels</button>
                     </div>
                   </details>
@@ -330,7 +331,9 @@
                 <span class="city" data-legend-layer="places"><i></i>Capital</span>
                 <span class="water" data-legend-layer="water"><i></i>Hydrography</span>
                 <span class="mountain" data-legend-layer="places"><i></i>Landmark</span>
-                <span class="infra" data-legend-layer="infra"><i></i>Critical infra</span>
+                <span class="infra" data-legend-layer="infra"><i></i>Seaport</span>
+                <span class="infra airport" data-legend-layer="infra"><i></i>Airport</span>
+                <span class="rail" data-legend-layer="rail"><i></i>Railway</span>
               </div>
             </div>
           </div>
@@ -433,6 +436,7 @@
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
 <script>window.ASJ_ASSET_VERSION='69';</script>
+<script src="data/country-facts.js?v=69" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
 <script src="data/indices.js?v=69" onerror="window.ASJ_INDICES=null"></script>
 <script src="data/briefs.js?v=69" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
 <script src="data/archive/index.js?v=69" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>

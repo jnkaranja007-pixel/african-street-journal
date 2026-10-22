@@ -53,6 +53,19 @@ jobs:
           # inferred from an unchanged file.
           Write-Host 'Market source unreachable from this runner; existing data left in place.'
           Write-Host 'The panel keeps showing its last asOf date rather than a wrong number.'
+          # One bad day is not news. A week is: from 22 September to 22 October 2026 AFX's
+          # layout change failed every exchange, this step said the above thirty times, and
+          # nobody looked. Past seven days the job goes red so the failure is seen.
+          # pwsh's ConvertFrom-Json hands back asOf as [datetime], not the string in the
+          # file; take either.
+          $m = Get-Content data/markets.json -Raw | ConvertFrom-Json
+          $ages = @($m.PSObject.Properties | ForEach-Object {
+            $d = $_.Value.asOf
+            if ($d -isnot [datetime]) { $d = [datetime]::Parse([string]$d, [Globalization.CultureInfo]::InvariantCulture) }
+            ((Get-Date).ToUniversalTime() - $d).TotalDays
+          })
+          $age = ($ages | Measure-Object -Minimum).Minimum
+          if ($age -gt 7) { Write-Host "::error::Exchange listings are $([int]$age) days old. Check scripts/update-markets.ps1 against afx.kwayisi.org."; exit 1 }
 
       - name: Commit refreshed markets
         if: steps.fetch.outcome == 'success' || steps.indices.outcome == 'success'

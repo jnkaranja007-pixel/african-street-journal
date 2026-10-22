@@ -46,6 +46,13 @@
         "tier": 2,
         "scope": "regional",
         "state": "ok"
+      },
+      {
+        "name": "TSA Algerie",
+        "home": "https://www.tsa-algerie.com/",
+        "feed": "https://www.tsa-algerie.com/feed/",
+        "tier": 2,
+        "state": "ok"
       }
     ]
   },
@@ -389,6 +396,27 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
+        "state": "ok"
+      },
+      {
+        "name": "Weekend Post",
+        "home": "https://www.weekendpost.co.bw/",
+        "feed": "https://www.weekendpost.co.bw/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
+        "name": "The Botswana Gazette",
+        "home": "https://www.thegazette.news/",
+        "feed": "https://www.thegazette.news/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
+        "name": "The Voice Botswana",
+        "home": "https://news.thevoicebw.com/",
+        "feed": "https://news.thevoicebw.com/feed/",
+        "tier": 3,
         "state": "ok"
       }
     ]
@@ -1133,7 +1161,7 @@
         "home": "https://www.adiac-congo.com/",
         "feed": "https://www.adiac-congo.com/rss.xml",
         "tier": 1,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Vox Congo",
@@ -1170,6 +1198,20 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
+        "state": "ok"
+      },
+      {
+        "name": "Vox.cg",
+        "home": "https://www.vox.cg/",
+        "feed": "https://www.vox.cg/feed/",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
+        "name": "Congopage",
+        "home": "https://www.congopage.com/",
+        "feed": "https://www.congopage.com/spip.php?page=backend",
+        "tier": 3,
         "state": "ok"
       }
     ]
@@ -1219,6 +1261,13 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
+        "state": "ok"
+      },
+      {
+        "name": "Zoom Eco",
+        "home": "https://zoom-eco.net/",
+        "feed": "https://zoom-eco.net/feed/",
+        "tier": 3,
         "state": "ok"
       }
     ]
@@ -1379,7 +1428,7 @@
         "home": "https://www.adi.dj/",
         "feed": "https://www.adi.dj/rss",
         "tier": 1,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Djibouti Actu",
@@ -1636,6 +1685,13 @@
         "tier": 2,
         "scope": "regional",
         "state": "ok"
+      },
+      {
+        "name": "Real Equatorial Guinea",
+        "home": "https://realequatorialguinea.com/",
+        "feed": "https://realequatorialguinea.com/feed/",
+        "tier": 3,
+        "state": "ok"
       }
     ]
   },
@@ -1819,6 +1875,13 @@
         "tier": 2,
         "scope": "regional",
         "state": "ok"
+      },
+      {
+        "name": "Eswatini Positive News",
+        "home": "https://eswatinipositivenews.online/",
+        "feed": "https://eswatinipositivenews.online/feed/",
+        "tier": 3,
+        "state": "missing"
       }
     ]
   },
@@ -2190,6 +2253,27 @@
         "tier": 2,
         "scope": "regional",
         "state": "ok"
+      },
+      {
+        "name": "3News",
+        "home": "https://3news.com/",
+        "feed": "https://3news.com/feed.xml",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
+        "name": "Ghanaian Times",
+        "home": "https://www.ghanaiantimes.com.gh/",
+        "feed": "https://www.ghanaiantimes.com.gh/feed/",
+        "tier": 1,
+        "state": "ok"
+      },
+      {
+        "name": "The High Street Journal",
+        "home": "https://thehighstreetjournal.com/",
+        "feed": "https://thehighstreetjournal.com/feed/",
+        "tier": 3,
+        "state": "missing"
       }
     ]
   },
@@ -2569,6 +2653,13 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
+        "state": "ok"
+      },
+      {
+        "name": "GNN Liberia",
+        "home": "https://gnnliberia.com/",
+        "feed": "https://gnnliberia.com/feed/",
+        "tier": 3,
         "state": "ok"
       }
     ]
@@ -2991,9 +3082,9 @@
       {
         "name": "Yabiladi",
         "home": "https://www.yabiladi.com/",
-        "feed": "https://www.yabiladi.com/rss",
+        "feed": "https://www.yabiladi.com/rss/news.xml",
         "tier": 2,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Barlamane",
@@ -3016,6 +3107,13 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
+        "state": "ok"
+      },
+      {
+        "name": "TelQuel",
+        "home": "https://telquel.ma/",
+        "feed": "https://telquel.ma/feed",
+        "tier": 2,
         "state": "ok"
       }
     ]
@@ -3085,7 +3183,7 @@
         "home": "https://www.namibian.com.na/",
         "feed": "https://www.namibian.com.na/feed/",
         "tier": 1,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "New Era Live",
@@ -3122,6 +3220,20 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
+        "state": "ok"
+      },
+      {
+        "name": "Namibia Economist",
+        "home": "https://economist.com.na/",
+        "feed": "https://economist.com.na/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
+        "name": "The Brief",
+        "home": "https://thebrief.com.na/",
+        "feed": "https://thebrief.com.na/feed/",
+        "tier": 3,
         "state": "ok"
       }
     ]
@@ -3829,6 +3941,20 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
+        "state": "ok"
+      },
+      {
+        "name": "Sierraloaded",
+        "home": "https://sierraloaded.sl/",
+        "feed": "https://sierraloaded.sl/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
+        "name": "The Calabash",
+        "home": "https://thecalabashnewspaper.com/",
+        "feed": "https://thecalabashnewspaper.com/feed/",
+        "tier": 2,
         "state": "ok"
       }
     ]
@@ -4552,6 +4678,20 @@
         "tier": 2,
         "scope": "regional",
         "state": "ok"
+      },
+      {
+        "name": "La Presse de Tunisie",
+        "home": "https://lapresse.tn/",
+        "feed": "https://lapresse.tn/feed/",
+        "tier": 1,
+        "state": "ok"
+      },
+      {
+        "name": "Leaders",
+        "home": "https://www.leaders.com.tn/",
+        "feed": "https://www.leaders.com.tn/rss",
+        "tier": 2,
+        "state": "ok"
       }
     ]
   },
@@ -4589,9 +4729,9 @@
       {
         "name": "Nile Post",
         "home": "https://nilepost.co.ug/",
-        "feed": "https://nilepost.co.ug/feed/",
+        "feed": "https://nilepost.co.ug/feed",
         "tier": 1,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "The Observer Uganda",
@@ -4603,9 +4743,9 @@
       {
         "name": "Watchdog Uganda",
         "home": "https://www.watchdoguganda.com/",
-        "feed": "https://www.watchdoguganda.com/feed/",
+        "feed": "https://www.watchdoguganda.com/feed",
         "tier": 3,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Farmers Review Africa",
@@ -4621,6 +4761,13 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
+        "state": "ok"
+      },
+      {
+        "name": "Softpower News",
+        "home": "https://www.softpower.ug/",
+        "feed": "https://www.softpower.ug/feed/",
+        "tier": 3,
         "state": "ok"
       }
     ]

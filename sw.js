@@ -11,7 +11,7 @@ const V = '69';
 const CACHE = 'asj-v' + V;
 // briefs-full.js (~500 KB of prose) is no longer precached on install; app.js fetches
 // it after first paint and the network-first handler caches it then.
-const SHELL = ['./', 'index.html', 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/indices.js?v=' + V, 'data/archive/index.js?v=' + V, 'data/supabase-config.js?v=' + V, 'data/analytics-config.js?v=' + V, 'data/newsletter-config.js?v=' + V, 'manifest.json', 'icon.svg', 'info-panel.js', 'country-sidebar.js?v=' + V];
+const SHELL = ['./', 'index.html', 'data/country-facts.js?v=' + V, 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/indices.js?v=' + V, 'data/archive/index.js?v=' + V, 'data/supabase-config.js?v=' + V, 'data/analytics-config.js?v=' + V, 'data/newsletter-config.js?v=' + V, 'manifest.json', 'icon.svg', 'info-panel.js', 'country-sidebar.js?v=' + V];
 
 self.addEventListener('install', event => {
   event.waitUntil(
