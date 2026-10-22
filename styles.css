@@ -1941,3 +1941,20 @@ main{position:relative}
 .cv-food-change{grid-column:2;font:400 13px/1.3 var(--sans);font-style:normal;color:var(--text-dim);text-align:right}
 .cv-food-change.up{color:#e0a458}
 .cv-food-change.down{color:var(--green-bright)}
+
+/* Wire on a wide screen. Every row ran the full width with its text capped at 72ch, so a
+   2000px window was 60% empty on the right. From 1100px: one frame of at most 1640px,
+   centred (rules stay full width, content lines up on the frame); the lead sets its
+   headline beside the summary; the list runs in two columns of equal-height rows. */
+@media (min-width:1100px){
+  #wire-view{--wire-gutter:max(22px,calc((100% - 1640px) / 2 + 22px))}
+  #wire-view .wire-head,#wire-view .wire-controls,#wire-view .wire-summary,#wire-view .wire-compare-body{padding-left:var(--wire-gutter);padding-right:var(--wire-gutter)}
+  #wire-view .wire-results{padding-left:max(0px,calc((100% - 1640px) / 2));padding-right:max(0px,calc((100% - 1640px) / 2))}
+  #wire-view .wire-hero{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);column-gap:clamp(32px,4vw,64px);align-items:end;padding:28px 22px 26px}
+  #wire-view .wire-hero-kicker{grid-column:1 / -1}
+  #wire-view .wire-hero-title{grid-column:1;grid-row:2 / span 2;max-width:24ch;align-self:end}
+  #wire-view .wire-hero-sum{grid-column:2;grid-row:2;margin:0;align-self:end}
+  #wire-view .wire-hero .wire-item-meta{grid-column:2;grid-row:3;margin-top:10px}
+  #wire-view .wire-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  #wire-view .wire-list .wire-item:nth-child(odd){border-right:1px solid rgba(232,230,227,.07)}
+}
