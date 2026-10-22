@@ -3279,8 +3279,8 @@ function countryBriefText(countryId) {
 function countryFocusPoint(countryId, info) {
   const gis = COUNTRY_GIS[countryId] || { places: [] };
   const capitalName = normalizeName(info.capital);
-  return gis.places.find(place => place.capital) ||
-    gis.places.find(place => normalizeName(place.name) === capitalName) ||
+  return gis.places.find(place => normalizeName(place.name) === capitalName) ||
+    gis.places.find(place => place.capital) ||
     gis.places[0] ||
     { name: info.capital, lat: 0, lon: 20 };
 }
@@ -3432,9 +3432,15 @@ function atlasInfraForCountry(countryId) {
   ];
 }
 
-// Natural Earth places, minus any that fall in a neighbour.
+// Natural Earth places, minus any that fall in a neighbour. The capital is the one the
+// country file names: Natural Earth flags the old or biggest city (Bujumbura, Cotonou,
+// Dar es Salaam), all three of South Africa's, and none for Juba or Laayoune.
 function atlasPlaces(countryId) {
-  return (COUNTRY_GIS[countryId]?.places || []).filter(place => insideCountry(countryId, place.lon, place.lat, 5));
+  const capital = normalizeName(COUNTRY_INFO[countryId]?.capital);
+  const isCapital = place => { const key = normalizeName(place.name); return key === capital || key + 'city' === capital; };
+  const places = (COUNTRY_GIS[countryId]?.places || []).filter(place => insideCountry(countryId, place.lon, place.lat, 5));
+  if (!capital || !places.some(isCapital)) return places;
+  return places.map(place => isCapital(place) === !!place.capital ? place : { ...place, capital: isCapital(place) });
 }
 
 function detailPoint(lon, lat) {
@@ -3573,10 +3579,17 @@ function drawSmartLabel(text, x, y, color, placed, width, height, anchor = 'righ
   const labelHeight = 12;
   const margin = 10;
 
-  // Capital labels are orientation anchors. Pin them before collision checks so
-  // a resize cannot make nearby labels push the capital name into another slot.
+  // Capital labels are orientation anchors: drawn whatever is in the way, in the first
+  // free slot if there is one, else pinned to the first slot.
   if (force) {
-    const [dx, dy] = order[0];
+    const free = order.find(([dx, dy]) => {
+      const left = dx >= 0 ? x + dx : x + dx - labelWidth;
+      const top = y + dy - labelHeight / 2;
+      const box = { left: left - 3, top: top - 2, right: left + labelWidth + 3, bottom: top + labelHeight + 2 };
+      return box.left >= margin && box.right <= width - margin && box.top >= margin && box.bottom <= height - margin &&
+        !placed.some(other => boxesOverlap(box, other));
+    });
+    const [dx, dy] = free || order[0];
     const alignLeft = dx >= 0;
     let left = alignLeft ? x + dx : x + dx - labelWidth;
     let top = y + dy - labelHeight / 2;
@@ -3662,9 +3675,16 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
         .sort((a, b) => Number(!!b.capital) - Number(!!a.capital) || (b.pop || 0) - (a.pop || 0))
         .slice(0, 35)
     : [];
-  // Label order: the capital (pinned), then the main port and gateway airports, then
-  // towns. The capital label is drawn regardless of collisions, so anything placed
-  // before it can be painted over - "Jomo Kenyatta (NBO)" was, under "Nairobi".
+  // The capital label is drawn regardless of collisions, so it goes first; anything
+  // placed before it could be painted over - "Jomo Kenyatta (NBO)" was, under "Nairobi".
+  const infraItems = mapLayers.infra ? atlasInfraForCountry(countryId) : [];
+  // The diamonds are drawn last, over everything; reserve their squares now so no label
+  // is placed under one ("K<diamond>sumu" under Kisumu's airport, Borama under Hargeisa's).
+  const markerBoxes = infraItems.filter(i => Number.isFinite(i.lon) && Number.isFinite(i.lat)).map(i => {
+    const [x, y] = project(i.lon, i.lat);
+    return { left: x - 6, top: y - 6, right: x + 6, bottom: y + 6, marker: true };
+  });
+  placedLabels.push(...markerBoxes);
   const labelledPlaces = new Set();
   const capitalPlace = places.find(p => p.capital);
   if (capitalPlace && mapLayers.labels) {
@@ -3673,7 +3693,38 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
     drawSmartLabel(capitalPlace.name, x, y, '#f1f7ef', placedLabels, width, height, 'right', true);
     labelledPlaces.add(capitalPlace);
   }
-  const infraItems = mapLayers.infra ? atlasInfraForCountry(countryId) : [];
+  // Label order: capital, cities of a million or more, the main port and gateway
+  // airports, landmarks, other cities, small towns. Cape Town lost its name to "Cape Town
+  // port" and "CPT" when ports came first; Mount Kenya lost out to Sotik when landmarks
+  // came last.
+  const majorPlace = place => place.capital || place.pop > 180000;
+  const drawPlace = place => {
+    const [x, y] = project(place.lon, place.lat);
+    let labelDrawn = labelledPlaces.has(place);
+    const shouldLabel = majorPlace(place) || placedLabels.length - markerBoxes.length < 14;
+    if (mapLayers.labels && shouldLabel && !labelDrawn) {
+      countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
+      labelDrawn = drawSmartLabel(place.name, x, y, '#e0ecdf', placedLabels, width, height, 'top');
+    }
+    if (!place.capital) {
+      // A small dot under every labelled town, so a label nudged aside by a
+      // neighbour still shows which point it names.
+      if (!mapLayers.labels || !labelDrawn) return;
+      countryMapCtx.beginPath();
+      countryMapCtx.arc(x, y, 2.2, 0, Math.PI * 2);
+      countryMapCtx.fillStyle = 'rgba(232,240,228,0.85)';
+      countryMapCtx.fill();
+      return;
+    }
+    countryMapCtx.beginPath();
+    countryMapCtx.arc(x, y, 4.4, 0, Math.PI * 2);
+    countryMapCtx.fillStyle = '#b9f2bc';
+    countryMapCtx.fill();
+    countryMapCtx.strokeStyle = 'rgba(9,28,14,0.88)';
+    countryMapCtx.lineWidth = 1.2;
+    countryMapCtx.stroke();
+  };
+  if (mapLayers.places) places.filter(p => !p.capital && p.pop >= 1000000).forEach(drawPlace);
   const labelledInfra = new Set();
   if (mapLayers.infra && mapLayers.labels) {
     countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
@@ -3687,32 +3738,6 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
   }
 
   if (mapLayers.places) {
-    for (const place of places) {
-      const [x, y] = project(place.lon, place.lat);
-      let labelDrawn = labelledPlaces.has(place);
-      const shouldLabel = place.capital || place.pop > 180000 || placedLabels.length < 14;
-      if (mapLayers.labels && shouldLabel && !labelDrawn) {
-        countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
-        labelDrawn = drawSmartLabel(place.name, x, y, '#e0ecdf', placedLabels, width, height, 'top');
-      }
-      if (!place.capital) {
-        // A small dot under every labelled town, so a label nudged aside by a
-        // neighbour still shows which point it names.
-        if (!mapLayers.labels || !labelDrawn) continue;
-        countryMapCtx.beginPath();
-        countryMapCtx.arc(x, y, 2.2, 0, Math.PI * 2);
-        countryMapCtx.fillStyle = 'rgba(232,240,228,0.85)';
-        countryMapCtx.fill();
-        continue;
-      }
-      countryMapCtx.beginPath();
-      countryMapCtx.arc(x, y, 4.4, 0, Math.PI * 2);
-      countryMapCtx.fillStyle = '#b9f2bc';
-      countryMapCtx.fill();
-      countryMapCtx.strokeStyle = 'rgba(9,28,14,0.88)';
-      countryMapCtx.lineWidth = 1.2;
-      countryMapCtx.stroke();
-    }
     for (const landmark of atlasFeaturePoints(countryId)) {
       if (landmark.kind === 'city') continue;
       const [x, y] = project(landmark.lon, landmark.lat);
@@ -3730,6 +3755,9 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
       countryMapCtx.lineWidth = 1.2;
       countryMapCtx.stroke();
     }
+    places.filter(p => p.capital).forEach(drawPlace);
+    places.filter(p => !p.capital && p.pop > 180000 && p.pop < 1000000).forEach(drawPlace);
+    places.filter(p => !p.capital && !(p.pop > 180000)).forEach(drawPlace);
   }
 
   if (mapLayers.infra) {
@@ -5892,6 +5920,13 @@ async function runSelfTest() {
   for (const id of ['so', 'eh', 'ma', 'ke', 'km']) { try { await ensureCountryData(id); } catch {} }
   add('outline: Berbera and Hargeisa are inside Somalia', insideCountry('so', 45.03, 10.44) && insideCountry('so', 44.06, 9.56));
   add('outline: Laayoune is in Western Sahara, not Morocco', insideCountry('eh', -13.2, 27.15) && !insideCountry('ma', -13.2, 27.15));
+  for (const id of ['za', 'tz', 'bi', 'ss']) { try { await ensureCountryData(id); } catch {} }
+  const capitalOf = id => atlasPlaces(id).filter(p => p.capital).map(p => p.name).join(',');
+  add('atlas: the capital is the one the country file names', capitalOf('za') === 'Pretoria' && capitalOf('tz') === 'Dodoma' &&
+    capitalOf('bi') === 'Gitega' && capitalOf('ss') === 'Juba' && capitalOf('eh') === 'Laayoune', ['za', 'tz', 'bi', 'ss', 'eh'].map(capitalOf).join(' '));
+  add('atlas: Somalia labels Hargeisa and Burao, Western Sahara Laayoune and Dakhla',
+    ['Hargeisa', 'Burco'].every(n => atlasPlaces('so').some(p => p.name === n)) &&
+    ['Laayoune', 'Ad Dakhla'].every(n => atlasPlaces('eh').some(p => p.name === n)));
   add('atlas: Kilimanjaro is not drawn in Kenya', !atlasFeaturePoints('ke').some(l => /Kilimanjaro/.test(l.name)));
   add('atlas: Mayotte is not listed as a Comoros port', !countryPorts('km').some(p => /Dzaoudzi/i.test(p.name)));
   add('atlas: Kenya marks JKIA and the Mombasa SGR', atlasInfraForCountry('ke').some(i => i.short === 'NBO') &&
