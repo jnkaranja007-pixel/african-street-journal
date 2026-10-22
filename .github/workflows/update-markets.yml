@@ -53,9 +53,11 @@ jobs:
           # inferred from an unchanged file.
           Write-Host 'Market source unreachable from this runner; existing data left in place.'
           Write-Host 'The panel keeps showing its last asOf date rather than a wrong number.'
-          # One bad day is not news. A week is: from 22 September to 22 October 2026 AFX's
-          # layout change failed every exchange, this step said the above thirty times, and
-          # nobody looked. Past seven days the job goes red so the failure is seen.
+          # One bad day is not news. A week is: from 22 September 2026 every exchange failed
+          # (AFX stopped answering GitHub's runners - it still answers a desktop - and its
+          # listing table also lost a closing tag), this step said the above for a month,
+          # and nobody looked. Past seven days the job goes red so the failure is seen. The
+          # commit step below still runs, so index levels keep updating.
           # pwsh's ConvertFrom-Json hands back asOf as [datetime], not the string in the
           # file; take either.
           $m = Get-Content data/markets.json -Raw | ConvertFrom-Json
@@ -68,7 +70,9 @@ jobs:
           if ($age -gt 7) { Write-Host "::error::Exchange listings are $([int]$age) days old. Check scripts/update-markets.ps1 against afx.kwayisi.org."; exit 1 }
 
       - name: Commit refreshed markets
-        if: steps.fetch.outcome == 'success' || steps.indices.outcome == 'success'
+        # always(): the stale-listings alarm above fails the job on purpose, and must not
+        # stop the index levels it does not concern from being saved.
+        if: always() && (steps.fetch.outcome == 'success' || steps.indices.outcome == 'success')
         shell: pwsh
         run: |
           git config user.name  "asj-news-bot"
