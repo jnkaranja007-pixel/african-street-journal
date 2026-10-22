@@ -37,7 +37,9 @@ Set-Location $root
 git fetch -q origin main
 if ($LASTEXITCODE -ne 0) { Log 'git fetch failed'; exit 1 }
 git reset -q --hard origin/main
-& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $root 'scripts\update-markets.ps1') *>> $log
+# Out-File -Encoding utf8: Windows PowerShell's *>> writes UTF-16, which interleaves with
+# Add-Content's text and makes the log unreadable.
+& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $root 'scripts\update-markets.ps1') 2>&1 | Out-File -FilePath $log -Append -Encoding utf8
 if ($LASTEXITCODE -ne 0) { Log "update-markets.ps1 failed (exit $LASTEXITCODE)"; exit 1 }
 
 git add data/markets.json
