@@ -5954,6 +5954,11 @@ async function runSelfTest() {
     add('smoke: header growth/vintage', /%/.test(document.getElementById('cv-growth')?.textContent || ''));
     add('smoke: news panel has content', (document.getElementById('cv-cards').innerHTML || '').length > 400);
     add('smoke: crop calendar rows', document.querySelectorAll('#cv-crop-cal .cv-cal-row').length > 0, document.querySelectorAll('#cv-crop-cal .cv-cal-row').length);
+    // The rows were there but invisible for weeks: a blanket Signals rule cleared every
+    // "-cell" background, the calendar's bars included.
+    const harvestCell = document.querySelector('#cv-crop-cal .cv-cal-cell.h');
+    const harvestBg = harvestCell ? getComputedStyle(harvestCell).backgroundColor : '';
+    add('smoke: crop calendar bars are coloured', !!harvestBg && !/rgba\(0, 0, 0, 0\)|transparent/.test(harvestBg), harvestBg || 'no harvest cell');
     add('smoke: route set', location.hash.indexOf('#/ke') === 0, location.hash);
     const countryRouteHistoryLength = history.length;
     add('a11y: one country panel exposed', document.querySelectorAll('.cv-panel[aria-hidden="false"]').length === 1, document.querySelectorAll('.cv-panel[aria-hidden="false"]').length);

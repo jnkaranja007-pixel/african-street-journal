@@ -1695,7 +1695,9 @@ main{position:relative}
 #cv-panel-signals [class*="-sub"],#cv-panel-signals small,#cv-panel-signals [class*="-note"]{font-size:13px!important;line-height:1.45!important;color:var(--text-muted)!important}
 #cv-panel-signals [class*="-val"]:not(.cv-ag-line-val){font-weight:600!important}
 #cv-panel-signals .cv-econ-val{font-size:26px!important}
-#cv-panel-signals [class*="-cell"],#cv-panel-signals [class*="-card"],#cv-panel-signals [class*="sector"]:not([class*="sector-"]),#cv-panel-signals .cv-econ,#cv-panel-signals [class*="-chart"]{background:transparent!important;box-shadow:none!important}
+/* Not the season calendar: its cells are the bars (fill = harvest, outline = planting), and
+   this rule left the calendar empty for every country. */
+#cv-panel-signals [class*="-cell"]:not(.cv-cal-cell),#cv-panel-signals [class*="-card"],#cv-panel-signals [class*="sector"]:not([class*="sector-"]),#cv-panel-signals .cv-econ,#cv-panel-signals [class*="-chart"]{background:transparent!important;box-shadow:none!important}
 #cv-panel-signals [class*="-cell"]:not(.cv-cal-cell),#cv-panel-signals [class*="-card"]{border-color:var(--rule)!important}
 #cv-panel-signals .cv-econ-cell{padding:14px 16px 14px 0!important}
 #cv-panel-signals .cv-econ-cell+.cv-econ-cell{padding-left:16px!important}
