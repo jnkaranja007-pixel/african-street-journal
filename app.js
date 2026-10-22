@@ -549,24 +549,54 @@ const STORY_PINS = {
   ]
 };
 
+// One point per country for each landmark ([lon, lat] keyed by country), so a feature
+// shared by several countries is marked inside each of them. With a single point, the
+// inside-the-outline check kept Lake Victoria only in Uganda, the Nile only in Sudan
+// and the Sahara only in Niger, and Kilimanjaro - in Tanzania - was drawn in Kenya.
+// Every country has at least one; the self-test checks both rules for all 55.
 const LANDMARK_POINTS = [
-  { name: 'Nairobi', kind: 'city', lon: 36.8219, lat: -1.2921, countries: ['ke'] },
-  { name: 'Mombasa', kind: 'city', lon: 39.6682, lat: -4.0435, countries: ['ke'] },
-  { name: 'Lake Victoria', kind: 'water', lon: 33.0, lat: -1.0, countries: ['ke', 'ug', 'tz'] },
-  { name: 'Mount Kenya', kind: 'mountain', lon: 37.3075, lat: -0.1521, countries: ['ke'] },
-  { name: 'Mount Kilimanjaro', kind: 'mountain', lon: 37.3556, lat: -3.0674, countries: ['ke', 'tz'] },
-  { name: 'Nile River', kind: 'water', lon: 31.2, lat: 20.0, countries: ['eg', 'sd', 'ss', 'ug'] },
-  { name: 'Sahara Desert', kind: 'landmark', lon: 13.0, lat: 23.0, countries: ['dz', 'ly', 'eg', 'td', 'ne', 'ml', 'mr', 'sd'] },
-  { name: 'Congo Basin', kind: 'landmark', lon: 22.0, lat: -1.5, countries: ['cd', 'cg', 'cf', 'cm', 'ga'] },
-  { name: 'Atlas Mountains', kind: 'mountain', lon: -5.0, lat: 31.5, countries: ['ma', 'dz', 'tn'] },
-  { name: 'Lake Tanganyika', kind: 'water', lon: 29.6, lat: -6.0, countries: ['tz', 'bi', 'cd', 'zm'] },
-  { name: 'Lake Malawi', kind: 'water', lon: 34.5, lat: -12.2, countries: ['mw', 'mz', 'tz'] },
-  { name: 'Victoria Falls', kind: 'water', lon: 25.8572, lat: -17.9243, countries: ['zm', 'zw'] },
-  { name: 'Lake Chad', kind: 'water', lon: 13.5, lat: 13.3, countries: ['td', 'ne', 'ng', 'cm'] },
-  { name: 'Lake Turkana', kind: 'water', lon: 36.2, lat: 3.5, countries: ['ke', 'et'] },
-  { name: 'Lake Volta', kind: 'water', lon: -0.15, lat: 7.4, countries: ['gh'] },
-  { name: 'Okavango Delta', kind: 'landmark', lon: 22.9, lat: -19.3, countries: ['bw'] },
-  { name: 'Mount Cameroon', kind: 'mountain', lon: 9.17, lat: 4.20, countries: ['cm'] }
+  { name: 'Lake Victoria', kind: 'water', at: { ke: [34.35, -0.3], ug: [32.9, -0.4], tz: [32.9, -2.1] } },
+  { name: 'Mount Kenya', kind: 'mountain', at: { ke: [37.3075, -0.1521] } },
+  { name: 'Mount Kilimanjaro', kind: 'mountain', at: { tz: [37.3556, -3.0674] } },
+  { name: 'Nile River', kind: 'water', at: { eg: [32.64, 25.7], sd: [32.55, 16.5], ss: [31.65, 6.8], ug: [31.75, 2.3] } },
+  { name: 'Sahara Desert', kind: 'landmark', at: { dz: [3.5, 26.5], ly: [16.0, 25.0], eg: [28.0, 25.0], td: [18.5, 19.5], ne: [10.0, 19.5], ml: [-2.0, 20.5], mr: [-10.0, 21.5], sd: [28.5, 19.0], eh: [-12.5, 24.5], tn: [9.6, 31.6] } },
+  { name: 'Congo Basin', kind: 'landmark', at: { cd: [22.0, -1.5], cg: [15.8, 0.5], cf: [17.5, 3.7], cm: [14.5, 3.0], ga: [12.0, -0.5] } },
+  { name: 'Atlas Mountains', kind: 'mountain', at: { ma: [-5.0, 31.5], dz: [2.5, 34.5], tn: [8.8, 35.3] } },
+  { name: 'Lake Tanganyika', kind: 'water', at: { tz: [29.9, -6.0], bi: [29.35, -3.9], cd: [29.3, -6.0], zm: [30.9, -8.5] } },
+  { name: 'Lake Malawi', kind: 'water', at: { mw: [34.6, -12.0], mz: [34.75, -12.9], tz: [34.55, -10.4] } },
+  { name: 'Victoria Falls', kind: 'water', at: { zm: [25.85, -17.92], zw: [25.86, -17.93] } },
+  { name: 'Lake Chad', kind: 'water', at: { td: [14.0, 13.3], ne: [13.25, 13.75], ng: [13.6, 12.9], cm: [14.4, 12.6] } },
+  { name: 'Lake Turkana', kind: 'water', at: { ke: [36.1, 3.4], et: [36.05, 4.6] } },
+  { name: 'Lake Volta', kind: 'water', at: { gh: [-0.15, 7.4] } },
+  { name: 'Okavango Delta', kind: 'landmark', at: { bw: [22.9, -19.3] } },
+  { name: 'Mount Cameroon', kind: 'mountain', at: { cm: [9.17, 4.2] } },
+  { name: 'Kalandula Falls', kind: 'water', at: { ao: [15.99, -9.07] } },
+  { name: 'Lake Nokoue', kind: 'water', at: { bj: [2.45, 6.45] } },
+  { name: 'Sindou Peaks', kind: 'landmark', at: { bf: [-5.17, 10.67] } },
+  { name: 'Pico do Fogo', kind: 'mountain', at: { cv: [-24.35, 14.95] } },
+  { name: 'Mount Karthala', kind: 'mountain', at: { km: [43.26, -11.75] } },
+  { name: 'Tai National Park', kind: 'landmark', at: { ci: [-7.3, 5.75] } },
+  { name: 'Lake Assal', kind: 'water', at: { dj: [42.42, 11.65] } },
+  { name: 'Pico Basile', kind: 'mountain', at: { gq: [8.78, 3.58] } },
+  { name: 'Mount Soira', kind: 'mountain', at: { er: [39.63, 14.65] } },
+  { name: 'Sibebe Rock', kind: 'mountain', at: { sz: [31.18, -26.28] } },
+  { name: 'Gambia River', kind: 'water', at: { gm: [-15.5, 13.45] } },
+  { name: 'Fouta Djallon', kind: 'mountain', at: { gn: [-12.0, 11.3] } },
+  { name: 'Cacheu Mangroves', kind: 'water', at: { gw: [-16.2, 12.25] } },
+  { name: 'Maletsunyane Falls', kind: 'water', at: { ls: [28.07, -29.86] } },
+  { name: 'Sapo National Park', kind: 'landmark', at: { lr: [-8.6, 5.3] } },
+  { name: 'Tsingy de Bemaraha', kind: 'landmark', at: { mg: [44.8, -18.7] } },
+  { name: 'Le Morne Brabant', kind: 'mountain', at: { mu: [57.32, -20.45] } },
+  { name: 'Sossusvlei', kind: 'landmark', at: { na: [15.29, -24.73] } },
+  { name: 'Nyungwe Forest', kind: 'landmark', at: { rw: [29.25, -2.47] } },
+  { name: 'Pico Cao Grande', kind: 'mountain', at: { st: [6.58, 0.12] } },
+  { name: 'Lake Retba', kind: 'water', at: { sn: [-17.23, 14.84] } },
+  { name: 'Morne Seychellois', kind: 'mountain', at: { sc: [55.45, -4.65] } },
+  { name: 'Mount Bintumani', kind: 'mountain', at: { sl: [-11.12, 9.17] } },
+  { name: 'Laas Geel', kind: 'landmark', at: { so: [44.36, 9.78] } },
+  { name: 'Table Mountain', kind: 'mountain', at: { za: [18.4, -33.96] } },
+  { name: 'Mount Agou', kind: 'mountain', at: { tg: [0.75, 6.87] } },
+  { name: 'Saguia el-Hamra', kind: 'landmark', at: { eh: [-12.5, 27.0] } }
 ];
 
 const BASELINE = new Date('2025-07-01T00:00:00Z').getTime();
@@ -2844,7 +2874,12 @@ function foodPricesHtml(countryId) {
     return y && m ? new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(y, m - 1, 1))) : '';
   };
   const num = v => Number(v).toLocaleString('en-US', { maximumFractionDigits: v >= 100 ? 0 : 2 });
-  const rows = food.items.map(item => {
+  const rows = food.items.map(raw => {
+    // Sierra Leone redenominated in 2022 (1 new leone = 1,000 old); WFP still records
+    // old leones, which no shop has priced in since. Show the currency people use.
+    const item = raw.currency === 'SLL'
+      ? { ...raw, currency: 'SLE', price: raw.price / 1000, yearAgo: Number.isFinite(raw.yearAgo) ? raw.yearAgo / 1000 : raw.yearAgo }
+      : raw;
     let change = Number.isFinite(item.yearAgo) && item.yearAgo > 0 ? ((item.price - item.yearAgo) / item.yearAgo) * 100 : null;
     // A fivefold jump (Nigeria's sugar, Oct 2026: NGN 968 to 4,800 for the same 500 g)
     // is far likelier a recording error than a price. Show no change rather than a
@@ -3038,9 +3073,20 @@ function countryFacts(countryId) {
   return window.ASJ_COUNTRY_FACTS?.countries?.[countryId] || null;
 }
 
+// Values a series cannot physically take. The World Bank publishes the odd recording
+// error - Malawi's cost of sending $200 was -49.7% in the October 2026 pull - and one
+// is better shown as not reported than as a number nobody can use.
+const FACT_LIMITS = {
+  remitCost: [0, 100], internet: [0, 100], electricity: [0, 100], undernourished: [0, 100],
+  agJobs: [0, 100], agLand: [0, 100], agShare: [0, 100], unemployment: [0, 100], exports: [0, 400]
+};
+
 function countryFact(countryId, key) {
   const fact = countryFacts(countryId)?.wb?.[key];
-  return fact && Number.isFinite(Number(fact.v)) ? { v: Number(fact.v), y: fact.y } : null;
+  if (!fact || !Number.isFinite(Number(fact.v))) return null;
+  const v = Number(fact.v);
+  const [lo, hi] = FACT_LIMITS[key] || [-Infinity, Infinity];
+  return v < lo || v > hi ? null : { v, y: fact.y };
 }
 
 function formatFactValue(fmt, v) {
@@ -3097,8 +3143,17 @@ function countryAirports(countryId) {
 function largestCities(countryId, limit = 6) {
   const byPop = list => list.filter(c => c && c.name && Number(c.pop) > 0).sort((a, b) => b.pop - a.pop);
   const natural = byPop(atlasPlaces(countryId));
-  if (natural.length >= 4) return natural.slice(0, limit);
-  return byPop((countryFacts(countryId)?.cities || []).slice()).slice(0, limit);
+  const list = natural.length >= 4 ? natural : byPop((countryFacts(countryId)?.cities || []).slice());
+  const top = list.slice(0, limit);
+  // The capital is always listed. Natural Earth's figure for Juba (112,000) put South
+  // Sudan's capital and largest city below Yei, Malakal and Wau and off the list.
+  const capital = normalizeName(COUNTRY_INFO[countryId]?.capital || '');
+  const isCapital = c => c.capital || normalizeName(c.name) === capital || normalizeName(c.name) + 'city' === capital;
+  if (capital && !top.some(isCapital)) {
+    const cap = list.find(isCapital);
+    if (cap) top.splice(Math.max(0, top.length - (top.length >= limit ? 1 : 0)), top.length >= limit ? 1 : 0, cap);
+  }
+  return top;
 }
 
 function renderInvestorKpis(countryId, info) {
@@ -3421,8 +3476,17 @@ function insideCountry(countryId, lon, lat, toleranceKm = 0) {
   return tester.vertices.some(([x, y]) => Math.hypot((x - lon) * kx, (y - lat) * 111.32) <= toleranceKm);
 }
 
+// This country's point for each landmark it has. Water gets 15 km of tolerance: many
+// outlines cut lakes out, so a point on Lake Malawi is in no country's land shape.
 function atlasFeaturePoints(countryId) {
-  return LANDMARK_POINTS.filter(item => item.countries?.includes(countryId) && insideCountry(countryId, item.lon, item.lat));
+  const out = [];
+  for (const item of LANDMARK_POINTS) {
+    const at = item.at?.[countryId];
+    if (!at) continue;
+    const [lon, lat] = at;
+    if (insideCountry(countryId, lon, lat, item.kind === 'water' ? 15 : 0)) out.push({ name: item.name, kind: item.kind, lon, lat });
+  }
+  return out;
 }
 
 // What the map marks: the significant ports and airports, not all of them. A port of
@@ -5938,6 +6002,25 @@ async function runSelfTest() {
     ['Hargeisa', 'Burco'].every(n => atlasPlaces('so').some(p => p.name === n)) &&
     ['Laayoune', 'Ad Dakhla'].every(n => atlasPlaces('eh').some(p => p.name === n)));
   add('atlas: Kilimanjaro is not drawn in Kenya', !atlasFeaturePoints('ke').some(l => /Kilimanjaro/.test(l.name)));
+  // Every landmark point sits inside the country it is listed for, and every country
+  // has one - the two rules a single shared point broke.
+  const landmarkMisses = [];
+  for (const item of LANDMARK_POINTS) {
+    for (const id of Object.keys(item.at || {})) {
+      try { await ensureCountryData(id); } catch {}
+      if (!atlasFeaturePoints(id).some(l => l.name === item.name)) landmarkMisses.push(item.name + '@' + id);
+    }
+  }
+  add('atlas: every landmark point is inside its country', landmarkMisses.length === 0, landmarkMisses.join(', ') || 'all inside');
+  const noLandmark = sortedCountryIds.filter(id => !LANDMARK_POINTS.some(item => item.at?.[id]));
+  add('atlas: every country has a landmark', noLandmark.length === 0, noLandmark.join(',') || 'all 55');
+  const capitalMissing = [];
+  for (const id of sortedCountryIds) {
+    try { await ensureCountryData(id); } catch {}
+    const cap = normalizeName(COUNTRY_INFO[id].capital);
+    if (!largestCities(id).some(c => c.capital || normalizeName(c.name) === cap || normalizeName(c.name) + 'city' === cap)) capitalMissing.push(id);
+  }
+  add('facts: every country lists its capital among its largest cities', capitalMissing.length === 0, capitalMissing.join(',') || 'all 55');
   add('atlas: Mayotte is not listed as a Comoros port', !countryPorts('km').some(p => /Dzaoudzi/i.test(p.name)));
   add('atlas: Kenya marks JKIA and the Mombasa SGR', atlasInfraForCountry('ke').some(i => i.short === 'NBO') &&
     (COUNTRY_GIS.ke?.rail?.lines || []).some(l => l.gauge === 1435 && l.km > 300));
@@ -6010,7 +6093,13 @@ async function runSelfTest() {
       !!stickyGrid && getComputedStyle(stickyGrid).flexDirection === 'column' && stickyGrid.scrollWidth <= stickyGrid.clientWidth + 2,
       stickyGrid ? 'vertical · ' + stickyGrid.scrollWidth + '/' + stickyGrid.clientWidth : 'missing');
     setPanel(2);
-    await new Promise(r => setTimeout(r, 160));
+    // Wait for the redraw rather than a fixed 160 ms: Liberia's atlas takes 160-210 ms
+    // to draw, so the old fixed wait raced it and failed on a slow frame.
+    for (let waited = 0; waited < 1500; waited += 50) {
+      await new Promise(r => setTimeout(r, 50));
+      const r = countryMapCanvas.getBoundingClientRect();
+      if (waited >= 150 && Math.abs(r.width / Math.max(1, r.height) - countryMapCanvas.width / Math.max(1, countryMapCanvas.height)) < 0.01) break;
+    }
     const atlasRect = countryMapCanvas.getBoundingClientRect();
     add('mobile atlas viewport is bounded and page-width safe',
       !mobileDossierMedia.matches || (

@@ -35,6 +35,19 @@ param(
 # OurAirports carries no traffic figures, and sorting by size then name put Bram
 # Fischer ahead of O.R. Tambo and dropped Lagos, Casablanca and Durban from the top 8.
 # Sudan leads with Port Sudan: Khartoum's airport has been out of service since 2023.
+# Each country's main seaport, matched on the start of the World Port Index name, used
+# only to ORDER the ports WPI lists. Within one harbour-size class WPI ties were broken
+# alphabetically, so the map led with Cabinda (not Luanda), Takoradi (not Tema), Beira
+# (not Maputo), Luderitz (not Walvis Bay), Boma (not Matadi) and Cape Town (not Durban).
+$MAIN_PORTS = @{
+  dz='Alger'; ao='Luanda'; bj='Cotonou'; cm='Douala'; cv='Porto Da Praia'; km='Moroni'; cg='Pointe Noire';
+  cd='Matadi'; ci='Abidjan'; dj='Djibouti'; eg='Al Iskandariyh'; gq='Malabo'; er='Mitsiwa'; ga='Port Owendo';
+  gm='Banjul'; gh='Tema'; gn='Conakry'; gw='Bissau'; ke='Mombasa'; lr='Monrovia'; ly='Mina Tarabulus';
+  mg='Toamasina'; mr='Nouakchott'; mu='Port Louis'; ma='Casablanca'; mz='Maputo'; na='Walvis Bay'; ng='Lagos';
+  st='Sao Tome'; sn='Dakar'; sc='Victoria'; sl='Freetown'; so='Muqdisho'; za='Durban'; sd='Port Sudan';
+  tz='Dar Es Salaam'; tg='Lome'; tn='Rades'; eh='Laayoune'
+}
+
 $GATEWAYS = @{
   dz='ALG'; ao='NBJ,LAD'; bj='COO'; bw='GBE'; bf='OUA'; bi='BJM'; cm='DLA,NSI'; cv='RAI,SID'; cf='BGF';
   td='NDJ'; km='HAH'; cg='BZV,PNR'; cd='FIH,FBM'; ci='ABJ'; dj='JIB'; eg='CAI,HRG,SSH'; gq='SSG'; er='ASM';
@@ -165,7 +178,16 @@ if ($portsOk) {
     $byCountry[$cc].Add([ordered]@{ name = $name; size = $size; lat = [Math]::Round($lat, 3); lon = [Math]::Round($lon, 3); rank = [int]$sizeRank[$size] })
   }
   foreach ($cc in $COUNTRIES.Keys) {
-    $list = if ($byCountry.ContainsKey($cc)) { @($byCountry[$cc] | Sort-Object @{ e = { $_.rank }; Descending = $true }, @{ e = { $_.name } } | Select-Object -First $MaxPorts) } else { @() }
+    $main = [string]$MAIN_PORTS[$cc]
+    $list = @()
+    if ($byCountry.ContainsKey($cc)) {
+      $list = @($byCountry[$cc] | Sort-Object `
+        @{ e = { if ($main -and $_.name.StartsWith($main, [StringComparison]::OrdinalIgnoreCase)) { 0 } else { 1 } } }, `
+        @{ e = { $_.rank }; Descending = $true }, @{ e = { $_.name } } | Select-Object -First $MaxPorts)
+      if ($main -and -not ($list | Where-Object { $_.name.StartsWith($main, [StringComparison]::OrdinalIgnoreCase) })) {
+        Write-Host "  $cc main port '$main' not in the World Port Index list" -ForegroundColor Yellow
+      }
+    }
     $facts[$cc].ports = @($list | ForEach-Object { [ordered]@{ name = $_.name; size = $_.size; lat = $_.lat; lon = $_.lon } })
   }
 } elseif ($previous) {

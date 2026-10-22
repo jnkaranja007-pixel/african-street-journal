@@ -22,11 +22,11 @@ $staleCut = '2026-04-22'
 $yearCut = '2025-10-22'
 
 # One market's prices: each food priced monthly for Months months up to Sep 2026.
-function New-Prices([string]$Market, [string[]]$Foods, [int]$Months = 12, [string]$Last = '2026-09-15') {
+function New-Prices([string]$Market, [string[]]$Foods, [int]$Months = 12, [string]$Last = '2026-09-15', [string]$Currency = 'XXX') {
   $end = [datetime]::ParseExact($Last, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
   foreach ($food in $Foods) {
     for ($m = 0; $m -lt $Months; $m++) {
-      [pscustomobject]@{ date = $end.AddMonths(-$m).ToString('yyyy-MM-dd'); market = $Market; commodity = $food; unit = 'KG'; currency = 'XXX'; price = 100 + $m; usd = 1; }
+      [pscustomobject]@{ date = $end.AddMonths(-$m).ToString('yyyy-MM-dd'); market = $Market; commodity = $food; unit = 'KG'; currency = $Currency; price = 100 + $m; usd = 1; }
     }
   }
 }
@@ -56,6 +56,19 @@ $dz2Rows = @(New-Prices 'Laayoun' @('Rice', 'Oil', 'Wheat flour', 'Lentils (blac
            @(New-Prices 'Tindouf' @('Rice', 'Oil', 'Wheat flour') 12)
 $dz2 = Select-FoodBasket $dz2Rows @((City 'Algiers' 2700000 $true), (City 'Oran' 850000)) $staleCut $yearCut
 Assert-Food 'Algeria: WFP spelling Laayoun is a camp; Tindouf, the town, wins' ($dz2.market -eq 'Tindouf' -and -not $dz2.camp)
+
+# Somalia (22 Oct 2026): Borama, in Somaliland, priced in Somaliland shillings, beat
+# Mogadishu. Most of the country's rows are Somali shillings; a market in them wins.
+$soRows = @(New-Prices 'Borama' @('Cowpeas', 'Maize (white)', 'Oil (vegetable)', 'Rice (imported)') 12 '2026-08-15' 'SLS') +
+          @(New-Prices 'Mogadishu' @('Maize (white)', 'Rice (imported)', 'Sugar') 12 '2026-08-15' 'SOS') +
+          @(New-Prices 'Baidoa' @('Sorghum', 'Maize (white)', 'Beans') 12 '2026-08-15' 'SOS')
+$so = Select-FoodBasket $soRows @((City 'Mogadishu' 2500000 $true), (City 'Borama' 400000)) $staleCut $yearCut
+Assert-Food 'Somalia: the capital in Somali shillings, not Borama in Somaliland shillings' ($so.market -eq 'Mogadishu')
+
+# Madagascar (22 Oct 2026): a market with cassava alone was picked.
+$mgRows = @(New-Prices 'Antananarivo' @('Cassava (fresh)') 12) + @(New-Prices 'Toamasina' @('Rice (local)', 'Beans', 'Oil (vegetable)', 'Sugar') 12)
+$mg = Select-FoodBasket $mgRows @((City 'Antananarivo' 1300000 $true), (City 'Toamasina' 300000)) $staleCut $yearCut
+Assert-Food 'Madagascar: more than one food, so Toamasina over a one-food market' ($mg.market -eq 'Toamasina' -and @($mg.items).Count -ge 3)
 
 $ugRows = @(New-Prices 'Oruchinga (refugee settlement)' @('Salt', 'Maize flour', 'Beans') 12) + @(New-Prices 'Mbarara' @('Maize flour', 'Beans', 'Cassava flour') 8)
 $ug = Select-FoodBasket $ugRows @((City 'Kampala' 1600000 $true), (City 'Mbarara' 195000)) $staleCut $yearCut

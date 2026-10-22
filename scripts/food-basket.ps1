@@ -57,10 +57,17 @@ function Select-FoodBasket([object[]]$Rows, [object[]]$Cities, [string]$StaleCut
   $recent = @($Rows | Where-Object { $_.date -ge $YearCut -and $_.commodity -notmatch $FOOD_SKIP_PATTERN })
   if (-not $recent.Count) { return $null }
 
+  # The country's own currency is the one most of its rows are priced in. Somalia's file
+  # mixes Somali shillings with Somaliland shillings (SLS, no dollar rate); a market in
+  # the minority currency is used only when nothing else qualifies.
+  $mainCurrency = (@($recent | Group-Object currency | Sort-Object Count -Descending) | Select-Object -First 1).Name
   $markets = @($recent | Group-Object market | ForEach-Object {
     $staples = @($_.Group | Where-Object { $_.commodity -match $FOOD_STAPLE_PATTERN } | Select-Object -ExpandProperty commodity -Unique)
+    $foods = @($_.Group | Select-Object -ExpandProperty commodity -Unique)
+    $own = @($_.Group | Where-Object { $_.currency -eq $mainCurrency }).Count
     [pscustomobject]@{
-      name = $_.Name; records = $_.Count; staples = $staples.Count
+      name = $_.Name; records = $_.Count; staples = $staples.Count; foods = $foods.Count
+      ownCurrency = ($own * 2 -gt $_.Count)
       current = [bool](@($_.Group | Where-Object { $_.date -ge $StaleCut }).Count)
       camp = ($_.Name -match $FOOD_CAMP_PATTERN)
     }
@@ -85,7 +92,11 @@ function Select-FoodBasket([object[]]$Rows, [object[]]$Cities, [string]$StaleCut
   & $add $towns
   & $add @($markets | Where-Object { $_.camp })
 
-  $pick = @($ordered | Where-Object { $_.staples -gt 0 } | Select-Object -First 1)
+  # First a market in the country's currency with staples and at least two foods
+  # (Madagascar's pick had cassava alone); then relax one rule at a time.
+  $pick = @($ordered | Where-Object { $_.staples -gt 0 -and $_.foods -ge 2 -and $_.ownCurrency } | Select-Object -First 1)
+  if (-not $pick.Count) { $pick = @($ordered | Where-Object { $_.staples -gt 0 -and $_.foods -ge 2 } | Select-Object -First 1) }
+  if (-not $pick.Count) { $pick = @($ordered | Where-Object { $_.staples -gt 0 } | Select-Object -First 1) }
   if (-not $pick.Count) { $pick = @($ordered | Select-Object -First 1) }
   $market = $pick[0]
 
