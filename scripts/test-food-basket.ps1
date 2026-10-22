@@ -48,6 +48,15 @@ $dz = Select-FoodBasket $dzRows @((City 'Algiers' 2700000 $true), (City 'Tindouf
 Assert-Food 'Algeria: only camps, so a camp with staples, flagged' ($dz.market -eq 'Smara' -and $dz.camp)
 Assert-Food 'Algeria: staples, not yogurt and cheese' ((Foods $dz) -notcontains 'Yogurt' -and (Foods $dz) -contains 'Wheat flour')
 
+# The real Algeria file (22 Oct 2026): five Sahrawi camps, spelt as WFP spells them
+# ("Laayoun", no final e), and Tindouf, the Algerian town beside them. The camp list had
+# "laayoune", so Laayoun passed as a town and won.
+$dz2Rows = @(New-Prices 'Laayoun' @('Rice', 'Oil', 'Wheat flour', 'Lentils (black)') 12) +
+           @(New-Prices 'Awserd' @('Rice', 'Oil', 'Wheat flour', 'Sugar') 12) +
+           @(New-Prices 'Tindouf' @('Rice', 'Oil', 'Wheat flour') 12)
+$dz2 = Select-FoodBasket $dz2Rows @((City 'Algiers' 2700000 $true), (City 'Oran' 850000)) $staleCut $yearCut
+Assert-Food 'Algeria: WFP spelling Laayoun is a camp; Tindouf, the town, wins' ($dz2.market -eq 'Tindouf' -and -not $dz2.camp)
+
 $ugRows = @(New-Prices 'Oruchinga (refugee settlement)' @('Salt', 'Maize flour', 'Beans') 12) + @(New-Prices 'Mbarara' @('Maize flour', 'Beans', 'Cassava flour') 8)
 $ug = Select-FoodBasket $ugRows @((City 'Kampala' 1600000 $true), (City 'Mbarara' 195000)) $staleCut $yearCut
 Assert-Food 'Uganda: a town, not the settlement' ($ug.market -eq 'Mbarara')

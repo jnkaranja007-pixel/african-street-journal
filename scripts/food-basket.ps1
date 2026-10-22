@@ -11,8 +11,9 @@
 #>
 
 # Camps and settlements. The Sahrawi refugee camps near Tindouf (Algeria) carry the
-# names of Western Sahara towns, so those names count as camps too.
-$FOOD_CAMP_PATTERN = '(?i)\b(camps?|refugees?|settlements?|idps?|dadaab|daadab|ifo|dagahaley|hagadera|kakuma|kalobeyei|awserd|ausserd|smara|boujdour|dakhla|laayoune|rabouni)\b'
+# names of Western Sahara towns, so those names count as camps too, in WFP's spellings
+# ("Laayoun", no final e - which is how it slipped through as a town).
+$FOOD_CAMP_PATTERN = '(?i)\b(camps?|refugees?|settlements?|idps?|dadaab|daadab|ifo|dagahaley|hagadera|kakuma|kalobeyei|awserd|ausserd|smara|boujdour|dakhla|laayoune?|aaiun|rabouni)\b'
 # Foods most households buy every week, matched on the start of WFP's commodity name.
 $FOOD_STAPLE_PATTERN = '(?i)^(maize|rice|sorghum|millet|wheat|teff|bread|beans|cowpeas|lentils|cassava|gari|yam|plantains|oil|sugar)\b'
 # Live animals are sold by the head, and food-aid rations are not a shop price.
@@ -90,7 +91,10 @@ function Select-FoodBasket([object[]]$Rows, [object[]]$Cities, [string]$StaleCut
 
   # Foods: staples first, then the rest, each by how often WFP priced it in the last
   # year; one per kind (first word), so a basket is not four kinds of beans.
-  $groups = @($recent | Where-Object { $_.market -eq $market.name } | Group-Object commodity, unit | Sort-Object Count -Descending)
+  # Ties broken by name: Windows PowerShell and pwsh order equal counts differently, so
+  # without it the same file gave a different basket on the desktop than on the runner.
+  $groups = @($recent | Where-Object { $_.market -eq $market.name } | Group-Object commodity, unit |
+    Sort-Object @{ Expression = 'Count'; Descending = $true }, @{ Expression = 'Name'; Descending = $false })
   $chosen = New-Object System.Collections.Generic.List[object]
   $kinds = @{}
   foreach ($pass in @($true, $false)) {

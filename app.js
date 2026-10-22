@@ -2845,13 +2845,23 @@ function foodPricesHtml(countryId) {
   };
   const num = v => Number(v).toLocaleString('en-US', { maximumFractionDigits: v >= 100 ? 0 : 2 });
   const rows = food.items.map(item => {
-    const change = Number.isFinite(item.yearAgo) && item.yearAgo > 0 ? ((item.price - item.yearAgo) / item.yearAgo) * 100 : null;
+    let change = Number.isFinite(item.yearAgo) && item.yearAgo > 0 ? ((item.price - item.yearAgo) / item.yearAgo) * 100 : null;
+    // A fivefold jump (Nigeria's sugar, Oct 2026: NGN 968 to 4,800 for the same 500 g)
+    // is far likelier a recording error than a price. Show no change rather than a
+    // number nobody should act on.
+    if (change !== null && (change > 300 || change < -75)) change = null;
     const cls = change === null ? '' : change > 0 ? ' up' : ' down';
     return '<li><span>' + escapeHtml(item.commodity) + ' <small>per ' + escapeHtml(item.unit) + '</small></span>' +
       '<b>' + escapeHtml(item.currency) + ' ' + num(item.price) + '</b>' +
       '<em class="cv-food-change' + cls + '">' + (change === null ? '—' : (change > 0 ? '+' : '') + Math.round(change) + '% on a year') + '</em></li>';
   }).join('');
-  return '<ul class="cv-food-list">' + rows + '</ul>' +
+  // In Kenya and Uganda WFP's only current retail monitoring is in refugee camps and
+  // settlements. Those prices are real, but they are not the country's, so say so
+  // before the list rather than in the source line under it.
+  const campNote = food.camp
+    ? '<p class="cv-food-warning">WFP currently records food prices in ' + escapeHtml(name) + ' only in refugee camps. These are prices at ' + escapeHtml(food.market) + ', not a national average.</p>'
+    : '';
+  return campNote + '<ul class="cv-food-list">' + rows + '</ul>' +
     '<div class="cv-fact-source">' + escapeHtml(food.market) + (food.camp ? ' refugee camp' : '') + ' market · retail · ' + escapeHtml(monthLabel(food.date)) + ' · World Food Programme</div>';
 }
 
