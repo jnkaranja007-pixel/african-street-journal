@@ -35,7 +35,9 @@ news site for all 55 African countries. Repo: `jnkaranja007-pixel/african-street
   `window.ASJ_ASSET_VERSION`, and `const V` in `sw.js` (currently `69`).
 - Commit trailer: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 - In the cloud (Linux) install PowerShell first if `pwsh` is missing
-  (`sudo apt-get install -y powershell` from Microsoft's repo, or the tarball). The
+  (the apt package may be missing; the GitHub release tarball works:
+  `powershell-7.4.6-linux-x64.tar.gz` into /opt/pwsh). Two tests call `powershell` by
+  name - symlink it to pwsh. The
   browser self-test needs a browser: CI uses Playwright (`tools/stress/site-check.mjs`);
   otherwise serve the folder (`python3 -m http.server` is fine in the cloud sandbox,
   only the project itself avoids Python) and open `/?selftest=1`, read `window.__selftest`.
@@ -99,46 +101,73 @@ news site for all 55 African countries. Repo: `jnkaranja007-pixel/african-street
   `update-markets.yml`: job now fails when listings are more than 7 days old.
 - `update-economy.yml`: also runs `build-country-facts.ps1` monthly.
 
+## Progress in the 22 Oct cloud session
+
+The cloud sandbox could only reach package registries and GitHub: HDX, World Bank,
+GeoNames, OurAirports, Overpass, FAOSTAT and the news feeds were all blocked, so no data
+build was re-run there. To rebuild data from the cloud, add those hosts under the
+environment's Network access, or run the builds locally / via the workflows.
+
+Done (commits on this branch):
+- **Food-price picks** (`eeb40d5`): rules moved to `scripts/food-basket.ps1`: market =
+  national average > capital > largest GeoNames cities > any town > camp (last resort,
+  flagged `camp: true`, page says "refugee camp market"); foods = staples first, one per
+  kind, no livestock or food-aid rations. 17 deterministic tests in
+  `scripts/test-food-basket.ps1` (in `check.yml`). **`data/country-facts.js` still holds
+  the old picks** (IFO, Awserd, ...) until the facts build runs with food prices.
+- **55-country browser check** (`2474a07`): `tools/stress/country-check.mjs` opens every
+  country's Farmers/Investors/Diaspora and Atlas at 390px, fails on page errors, empty
+  sections, "undefined"/"NaN"/"null", or a blank canvas; screenshots ke,so,eh,ma,za,ng,
+  st,km,et,eg; lists what the inside-outline filter drops. Result: 55/55 clean.
+  Run: `npm i playwright` somewhere, then
+  `NODE_PATH=<that>/node_modules PW_CHROMIUM=/opt/pw-browsers/chromium node tools/stress/country-check.mjs <outDir>`.
+- Fixes it led to (same commit): Somalia now labels Hargeisa, Burao, Berbera, Borama,
+  Erigavo, Las Anod (from Natural Earth's "Somaliland" unit); Western Sahara gets
+  Laayoune, Dakhla, Smara back from Morocco's list - `scripts/set-country-places.ps1`.
+  The atlas capital now follows `COUNTRY_INFO` (was Bujumbura, Cotonou, Dar es Salaam,
+  Cape Town; none for Juba/Laayoune). Labels no longer sit under port/airport diamonds;
+  label order capital > 1M+ cities > main port/airports > landmarks > other cities >
+  towns, so Cape Town and Mount Kenya are labelled. Self-test now 77/77.
+- **Workflow split** (`fab8f9c`): `update-economy.yml` runs facts with
+  `-SkipFoodPrices`; new `update-food-rail.yml` (10th monthly) runs WFP food prices then
+  OSM rail. Rail script now also tries the mail.ru Overpass mirror.
+
 ## What to do next, in order
 
-1. **Fix the food-price picks** in `build-country-facts.ps1` (WFP section). "Market with
-   most records" picks refugee camps and odd baskets: Kenya -> IFO (Dadaab), Algeria ->
-   Awserd (bananas, yogurt, milk, cheese), Uganda -> Oruchinga settlement, Mali and
-   Mauritania -> livestock. Prefer, in order: a "National Average" market, the capital,
-   the largest city; prefer staples (maize/maize flour, rice, sorghum, millet, wheat flour,
-   beans/cowpeas, cooking oil, sugar) over the rest; never a camp unless nothing else. Say
-   the market on the page (already shown under the list). Re-run, then check 10 countries
-   by eye.
-2. **Verify every country in the browser**: for all 55 open Signals (Farmers, Investors,
-   Diaspora) and Atlas and confirm no console errors, no "undefined"/"NaN", every section
-   present. Screenshot at phone width at least: ke, so, eh, ma, za, ng, st, km, et, eg.
-   Re-run the inside-outline audit (the browser snippet: for each country, every port,
-   airport, place and landmark must pass `insideCountry`).
-3. **Workflow cost**: `update-economy.yml` now runs the facts build with food prices
-   (~65 min on a runner). Either split food prices into its own monthly job or accept it.
-   Add a monthly job for `build-country-rail.ps1` (it needs Overpass and is slow).
-4. **Publish an audit report** for the owner: what was wrong, sources evaluated, what each
-   tab shows now, and a 55-row table (WB figures n/16, ports, airports, gateway present,
-   rail km / standard-gauge km, WFP prices current or not, domestic news feeds, last
-   filed). Coverage facts from the 22 Oct build: WB 54/55 (Western Sahara none); WFP
-   current for ~38; stale or none for ao, cv, er, ga, gh, za, cg, mz plus non-WFP bw, km,
-   gq, ma, mu, sc, st, tn, eh.
-5. **News supply still missing**: Djibouti and Western Sahara have not filed since 6 Sep.
-   Their feeds exist; the desk drops candidates in fetch/clustering gates ("nothing
-   published recently", `eligible=0`). Read the desk log of the next run (`gh run view
-   <id> --log`) and fix the cause without lowering `-MinEvidenceWords`. Ghana still lacks a
-   strong domestic feed set (Citi, GhanaWeb, GNA feeds are off; 3News works at
+1. **Rebuild facts with food prices** (needs HDX): locally `pwsh scripts/build-country-facts.ps1`,
+   or after merge `gh workflow run update-food-rail.yml`. Then check 10 countries by eye
+   (ke, ug, dz, ml, mr, bj, dj, eg, sd, ng): market is a town, basket is staples.
+2. **Landmarks are single points**: the outline filter drops shared features from the
+   countries they belong to - Egypt loses the Nile, Tanzania/Uganda Lake Victoria,
+   Zambia Victoria Falls, Kenya Lake Victoria and "Mombasa"; Sahara/Congo Basin/Lake Chad
+   likewise. Give `LANDMARK_POINTS` per-country points (or a list of points) instead
+   of one shared point. Kenya's part of Lake Victoria is also not drawn as water.
+3. **Rivers are not clipped to the country**: Kenya's atlas description lists Jubba,
+   Pangani, Genale and an unnamed "River".
+4. **Curated lists**: Kenya's season calendar is Tea / Cut flowers / Coffee - no maize.
+   `FARM_EXPORTS` and `CROP_SEASONS` in `app.js` are still hand-made; replace with
+   FAOSTAT top crops when its API is up.
+5. **Publish an audit report** for the owner (after step 1, so food prices are real):
+   what was wrong, sources, what each tab shows, and a 55-row table. `country-check.json`
+   from the checker already holds per country: WB n/16, ports, airports, gateway, rail km
+   / standard-gauge km, food market/date/camp, and what the outline filter drops.
+6. **News supply**: Djibouti and Western Sahara have not filed since 6 Sep. Their feeds
+   exist; the desk drops candidates in fetch/clustering gates ("nothing published
+   recently", `eligible=0`). Read the desk log of the next run (`gh run view <id> --log`)
+   and fix the cause without lowering `-MinEvidenceWords`. Ghana still lacks a strong
+   domestic feed set (Citi, GhanaWeb, GNA feeds are off; 3News works at
    `https://3news.com/feed.xml`).
-6. **Investors lens**: 68% of fresh stories score >= 41 for investors after the prompt
+7. **Investors lens**: 68% of fresh stories score >= 41 for investors after the prompt
    fix; likely `Get-LensRelevanceBand` floors in `scripts/write-briefs.ps1`.
-7. Curated lists still unsourced: `FARM_EXPORTS` and `CROP_SEASONS` in `app.js`. FAOSTAT's
-   API was down (HTTP 521) on 22 Oct; when it is up, replace crop lists with FAOSTAT top
-   crops by production value.
+8. Minor: the inline "Hargeisa" dot sits under the Egal (HGA) airport diamond (5 km
+   apart); Western Sahara labels tiny Lemsid (pop 100) and Dawra (pop 10).
 
 ## Before merging to main
 
 - `pwsh scripts/check-workflows.ps1`, and every `scripts/test-*.ps1` pass
   (`test-static-pages.ps1 -UnitOnly`).
-- Browser self-test all green; the 55-country check in step 2 done with screenshots.
+- Browser self-test all green (77/77 on 22 Oct); `tools/stress/country-check.mjs` 55/55
+  with screenshots looked at.
 - Bump asset version to 70 (three places).
-- After merge, trigger `gh workflow run update-markets.yml` so listings refresh.
+- After merge, trigger `gh workflow run update-markets.yml` so listings refresh, and
+  `gh workflow run update-food-rail.yml` so food prices use the new market rules.
