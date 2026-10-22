@@ -159,10 +159,21 @@ footer{font-size:13px!important;font-weight:400!important;line-height:1.8!import
 article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI',sans-serif!important}
 .story-head h1{font:700 clamp(30px,5.6vw,46px)/1.12 'Playfair Display',Georgia,'Times New Roman',serif!important;letter-spacing:0!important}
 .related li a{font:650 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif!important}
+.hub-intro{color:#a8a39d!important}
+.country-hub{list-style:none;padding:0!important;margin:24px 0 0}
+.country-hub li{display:flex;flex-direction:column;gap:4px;padding:14px 0;border-bottom:1px solid #2a2a2a;max-width:none!important}
+.country-hub .hub-country{font:600 14px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;color:#8f8a83;text-decoration:none}
+.country-hub .hub-story{font:650 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;color:#e8e6e3;text-decoration:none}
+.country-hub span.hub-story{font-weight:400;color:#8f8a83}
+.country-hub a:hover,.country-hub a:focus-visible{color:#66bb6a}
+.hub-note{margin-top:28px;color:#a8a39d!important}
+.page code{font:14px/1.4 ui-monospace,Consolas,monospace;color:#e8e6e3;word-break:break-all}
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=67" defer></script>'
-$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">All 55 countries</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/privacy/">Privacy</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="mailto:hello@africanstreetjournal.com">Email us</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/feed.xml">RSS</a></div></details>'
+# Five entries: "Email us" repeated Contact (whose first line is the address), and RSS
+# opened a raw XML file - it is explained on About and the text-only edition instead.
+$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">Text-only edition</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/privacy/">Privacy</a></div></details>'
 
 
 # Same analytics loader as index.html. These pages are where search traffic lands, so
@@ -304,7 +315,7 @@ $analytics
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=68">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=69">
 </head>
 <body>
 <div class="wrap">
@@ -435,7 +446,7 @@ $analytics
 <meta name="twitter:description" content="$(Esc $dek)">
 <meta name="twitter:image" content="$BaseUrl/og/$($sp.code).jpg">
 <script type="application/ld+json">$($ld.ToString())</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=68">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=69">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
@@ -508,14 +519,18 @@ Write-Host "[static] $storyBuilt story pages, $swept swept past $StoryDays days"
 # About, Privacy, Contact, Corrections. Added 20 Oct 2026: a news site with none of
 # these reads as anonymous, and Google News expects them.
 $trustPages = [ordered]@{
-  about = @{ title = 'About'; desc = 'What The African Street Journal is, how its stories are made, and who runs it.'; body = @"
-<p>The African Street Journal is an independent daily digest of news from all 55 African countries, written for readers on the continent and in the diaspora.</p>
+  about = @{ title = 'About'; desc = 'Why The African Street Journal exists, how its stories are made, and how to reach us.'; body = @"
+<p>The African Street Journal exists so that people across Africa and in the diaspora can keep up with current events in all 55 countries: in plain language, on any phone and on any connection.</p>
+<p>Most of the continent's news is spread across hundreds of outlets, and much of it is hard to find from outside the country it happened in. We use AI language models to read that reporting every day, pick out what matters most and summarise it, so that our people stay informed and knowledgeable about their continent. The journalists who did the reporting are always credited and linked.</p>
 <h2>How the desk works</h2>
 <p>Every morning an automated desk reads public news feeds from outlets across Africa, groups reports of the same event, and ranks them for public importance: elections, budgets, courts, health, food, power, jobs, trade and security come first. Gossip, sponsored copy, opinion columns and tabloid items are filtered out.</p>
 <p>Each selected report is rewritten into a short original summary by an AI language model, working only from the facts in that report. Software then checks every story: figures must appear in the source, the story must name and link the outlet it came from, and anything that fails is dropped rather than published.</p>
 <p>Stories are summaries, not original reporting from the ground. The outlet that broke the story is always credited and linked; please read and support them.</p>
+<h2 id="low-data">Reading on a small data bundle</h2>
+<p>The <a href="$BaseUrl/countries/">text-only edition</a> lists the latest lead story from every country as plain text, with no maps or pictures. Story pages are mostly text too.</p>
+<p>If you use a news reader app such as Feedly, Inoreader or NetNewsWire, add <code>$BaseUrl/feed.xml</code> to it. The latest headlines then arrive in the app as they are published, using very little data. This kind of feed is called RSS.</p>
 <h2>Get in touch</h2>
-<p>The African Street Journal is an independent desk. Questions, tips and complaints are welcome on the <a href="$BaseUrl/contact/">contact page</a>.</p>
+<p>Email <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a> with questions, tips or complaints; the <a href="$BaseUrl/contact/">contact page</a> says what helps us act quickly. To report a mistake in a story, see <a href="$BaseUrl/corrections/">corrections</a>.</p>
 "@ }
   privacy = @{ title = 'Privacy'; desc = 'What The African Street Journal collects about readers (very little) and why.'; body = @"
 <p>This site does not use cookies, does not ask you to sign in, and does not run advertising trackers.</p>
@@ -566,7 +581,7 @@ foreach ($slug in $trustPages.Keys) {
 <meta name="theme-color" content="#131313">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=68">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=69">
 </head>
 <body>
 <div class="wrap page">
@@ -584,15 +599,24 @@ $($tp.body)
   $urls.Add($tpUrl)
 }
 
-# --- countries hub ------------------------------------------------------------
-# The homepage is a canvas map: crawlers find no country links there. This plain-HTML
-# index links every country page and is linked from the About menu everywhere.
+# --- countries hub: the text-only edition ------------------------------------------
+# The homepage is a canvas map: crawlers find no country links there, and on a small
+# data bundle it is the heaviest page on the site. This plain-HTML page lists every
+# country with its lead story (linked straight to the story page) and is the menu's
+# "Text-only edition".
 $hubList = New-Object System.Text.StringBuilder
 foreach ($c in ($pageCodes | Sort-Object { $info[$_].name })) {
   $hubLead = ''
   $cs = @($byCountry.$c | Where-Object { Test-StoryIsRenderable $_ })
-  if ($cs.Count) { $hubLead = [string]$cs[0].headline }
-  [void]$hubList.Append("<li><a href=""$BaseUrl/$c/""><b>$(Esc $info[$c].name)</b></a>$(if($hubLead){" &middot; $(Esc $hubLead)"})</li>`n")
+  $hubStory = '<span class="hub-story">No recent story</span>'
+  if ($cs.Count) {
+    $hubLead = [string]$cs[0].headline
+    $hubHref = "$BaseUrl/$c/"
+    $hubSlug = Get-StorySlug $cs[0].headline $cs[0].articleId
+    if ($storyKept.ContainsKey("$c/$hubSlug")) { $hubHref = "$BaseUrl/$c/$hubSlug/" }
+    $hubStory = "<a class=""hub-story"" href=""$hubHref"">$(Esc $hubLead)</a>"
+  }
+  [void]$hubList.Append("<li><a class=""hub-country"" href=""$BaseUrl/$c/"">$(Esc $info[$c].name)</a>$hubStory</li>`n")
 }
 $hubHtml = @"
 <!doctype html>
@@ -611,16 +635,18 @@ $hubHtml = @"
 <meta property="og:url" content="$BaseUrl/countries/">
 <meta property="og:image" content="$BaseUrl/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=68">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=69">
 $analytics
 </head>
 <body>
-<div class="wrap">
+<div class="wrap page">
 <div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
 <main id="main">
-<h1>All 55 countries</h1>
+<h1>Text-only edition</h1>
+<p class="hub-intro">The latest lead story from each of the 55 African countries, as plain text with no maps or pictures, for slow connections and small data bundles. Tap a headline to read it, or a country for all of its stories.</p>
 <ul class="country-hub">
 $($hubList.ToString())</ul>
+<p class="hub-note">Use a news reader app? Add <code>$BaseUrl/feed.xml</code> to get the latest headlines as they are published. <a href="$BaseUrl/about/#low-data">How this works</a></p>
 </main>
 <footer>The African Street Journal &middot; from the streets, for the streets$siteLinks</footer>
 </div>
@@ -637,6 +663,9 @@ function XmlEsc([string]$t) { if ($null -eq $t) { return '' }; return [Security.
 $sortedFeed = @($feedItems | Sort-Object { try { [datetime]::Parse([string]$_.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { [datetime]::MinValue } } -Descending)
 $rss = New-Object System.Text.StringBuilder
 [void]$rss.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
+# Feed readers ignore this; a browser that opens feed.xml shows a readable page
+# (feed.xsl) instead of one run-on block of titles, links and dates.
+[void]$rss.AppendLine('<?xml-stylesheet type="text/xsl" href="/feed.xsl"?>')
 [void]$rss.AppendLine('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>')
 [void]$rss.AppendLine("<title>The African Street Journal</title><link>$BaseUrl/</link><description>Daily news from all 55 African countries, every source cited.</description><language>en</language>")
 [void]$rss.AppendLine("<atom:link href=""$BaseUrl/feed.xml"" rel=""self"" type=""application/rss+xml""/>")
