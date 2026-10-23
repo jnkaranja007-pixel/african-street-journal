@@ -111,6 +111,26 @@ public class AsjRouteMeter {
 }
 '@
 
+function Get-WayGauge($w) {
+  $gauge = 0; [void][int]::TryParse(([string]$w.tags.gauge -split ';')[0], [ref]$gauge)
+  return $gauge
+}
+
+# English, then French (the working language of most francophone networks), then
+# whatever the line is locally called.
+function Get-WayName($w) {
+  $name = ([string]$w.tags.'name:en').Trim()
+  if (-not $name) { $name = ([string]$w.tags.'name:fr').Trim() }
+  if (-not $name) { $name = ([string]$w.tags.name).Trim() }
+  return $name
+}
+
+# One key for a line however its tracks are named: Morocco's high-speed line has one track
+# named "Tanger - Kenitra" and the other "Kenitra-Tanger", and was listed twice.
+function Get-LineKey([string]$Name) {
+  return (@($Name.ToLowerInvariant() -split '[^\p{L}\p{N}]+' | Where-Object { $_ } | Sort-Object) -join ' ')
+}
+
 $previous = $null
 if (Test-Path $outPath) { try { $previous = [IO.File]::ReadAllText($outPath, [Text.Encoding]::UTF8) | ConvertFrom-Json } catch { } }
 
@@ -132,24 +152,29 @@ foreach ($cc in $todo) {
     $routeAll = New-Object AsjRouteMeter
     $routeSg = New-Object AsjRouteMeter
     $lineMeters = @{}
-    foreach ($w in @($osm.elements | Where-Object { $_.type -eq 'way' -and $_.geometry })) {
+    $wayList = @($osm.elements | Where-Object { $_.type -eq 'way' -and $_.geometry })
+    # A way with no gauge tag joins the line of the same name when that line has a single
+    # gauge: Algeria's "Ligne de Bechar a Gara Djebilet" was listed twice, 514 km untagged
+    # and 415 km standard gauge.
+    $nameGauges = @{}
+    foreach ($w in $wayList) {
+      $g = Get-WayGauge $w; $n = Get-WayName $w
+      if ($n -and $g) { if (-not $nameGauges.ContainsKey($n)) { $nameGauges[$n] = @{} }; $nameGauges[$n][$g] = $true }
+    }
+    foreach ($w in $wayList) {
       $pts = @($w.geometry)
       $lats = [double[]]@($pts | ForEach-Object { [double]$_.lat })
       $lons = [double[]]@($pts | ForEach-Object { [double]$_.lon })
-      $gauge = 0; [void][int]::TryParse(([string]$w.tags.gauge -split ';')[0], [ref]$gauge)
-      # English, then French (the working language of most francophone networks), then
-      # whatever the line is locally called.
-      $name = ([string]$w.tags.'name:en').Trim()
-      if (-not $name) { $name = ([string]$w.tags.'name:fr').Trim() }
-      if (-not $name) { $name = ([string]$w.tags.name).Trim() }
-      if (-not $name) { $name = '' }
+      $gauge = Get-WayGauge $w
+      $name = Get-WayName $w
+      if (-not $gauge -and $name -and $nameGauges.ContainsKey($name) -and $nameGauges[$name].Count -eq 1) { $gauge = @($nameGauges[$name].Keys)[0] }
       # Route km for the country, for its standard-gauge lines, and for this named line.
       $total += $routeAll.AddWay($lats, $lons)
       if ($gauge -eq 1435) { $sgr += $routeSg.AddWay($lats, $lons) }
-      $lineKey = $name + '|' + $gauge
+      $lineKey = (Get-LineKey $name) + '|' + $gauge
       if (-not $lineMeters.ContainsKey($lineKey)) { $lineMeters[$lineKey] = New-Object AsjRouteMeter }
       $km = $lineMeters[$lineKey].AddWay($lats, $lons)
-      $ways.Add(@{ pts = $pts; km = $km; gauge = $gauge; name = $name })
+      $ways.Add(@{ pts = $pts; km = $km; gauge = $gauge; name = $name; key = $lineKey })
     }
     # Coarser drawing for big networks, so no country chunk carries much over ~5,000
     # rail points: South Africa's 21,700 km at 0.02 degrees made its chunk 577 KB.
@@ -163,7 +188,7 @@ foreach ($cc in $todo) {
     $decimals = if ($countryStep -ge 0.03) { 2 } else { 3 }
     foreach ($way in $ways) {
       $pts = $way.pts; $km = $way.km; $gauge = $way.gauge; $name = $way.name
-      $key = $name + '|' + $gauge
+      $key = $way.key
       if (-not $groups.Contains($key)) { $groups[$key] = @{ name = $name; gauge = $gauge; km = 0.0; parts = New-Object System.Collections.Generic.List[string] } }
       $g = $groups[$key]; $g.km += $km
       if ($km -lt $drawMinKm) { continue }

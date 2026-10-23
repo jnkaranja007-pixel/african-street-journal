@@ -295,6 +295,32 @@ if (Test-Path $cityPopPath) {
   $citySource = 'Median of Natural Earth, GeoNames and Wikidata (' + $cityPop.generated + ')'
 }
 
+# Main farm exports (scripts/build-farm-exports.ps1, FAOSTAT) and, for those crops, the
+# FAO Crop Calendar's months (scripts/build-crop-calendar.ps1). Both are built by hand
+# and checked in; a country FAO's calendar does not cover keeps app.js's typical months.
+$farmPath = Join-Path $root 'data\farm-exports.json'
+$calPath = Join-Path $root 'data\crop-calendar.json'
+$farmSource = $null
+$calSource = $null
+if (Test-Path $farmPath) {
+  $farm = [IO.File]::ReadAllText($farmPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+  $cal = if (Test-Path $calPath) { [IO.File]::ReadAllText($calPath, [Text.Encoding]::UTF8) | ConvertFrom-Json } else { $null }
+  foreach ($cc in $COUNTRIES.Keys) {
+    $entry = $farm.countries.$cc
+    if (-not $entry) { continue }
+    $items = @($entry.items | Where-Object { $_ -and $_.label } | ForEach-Object { [ordered]@{ label = $_.label; usd = [long]$_.usd } })
+    $facts[$cc].farm = [ordered]@{ items = $items; note = $entry.note }
+    $months = [ordered]@{}
+    foreach ($it in $items) {
+      $c = if ($cal) { $cal.countries.$cc.($it.label) } else { $null }
+      if ($c) { $months[$it.label] = [ordered]@{ s = @($c.s | ForEach-Object { [int]$_ }); h = @($c.h | ForEach-Object { [int]$_ }); zones = [int]$c.zones } }
+    }
+    if ($months.Count) { $facts[$cc].cropCal = $months }
+  }
+  $farmSource = $farm.source + ', ' + $farm.period + ' average'
+  if ($cal) { $calSource = $cal.source }
+}
+
 # --- Food prices: WFP market monitoring, via HDX ----------------------------------
 # WFP publishes retail prices for about 45 African countries. For each: one market (a
 # national average, else the capital, else the largest town, a camp only as a last
@@ -378,6 +404,8 @@ $payload = [ordered]@{
     ports = 'NGA World Port Index (Pub. 150)'
     airports = 'OurAirports (scheduled service)'
     cities = $citySource
+    farm = $farmSource
+    cropCal = $calSource
   }
   indicators = $INDICATORS
   countries = $facts

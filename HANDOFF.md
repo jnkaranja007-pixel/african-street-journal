@@ -18,6 +18,7 @@ GitHub Pages serves `main`, so **whatever is on `main` is live**.
 
 | Commit | What |
 |---|---|
+| (this push) | **Farm exports and crop calendar from FAO (desktop, 23 Oct).** Main farm exports come from FAOSTAT with their value (`scripts/build-farm-exports.ps1`); the hand-made `FARM_EXPORTS` list is gone. Season months come from the FAO Crop Calendar where FAO lists the crop (`scripts/build-crop-calendar.ps1`), with typical months labelled as such. Rail: Algeria's duplicate line merged; Morocco's LGV shown once. Renamed towns use their current names. Self-test 89 checks. Asset version 79. |
 | `307f52da` | **Second-source checks (desktop, 23 Oct).** Rail is now route length (OSM counted each track of a double line: Algeria 6,606 -> 5,130 km, Morocco 3,314 -> 1,953), with the CIA World Factbook total shown beside it. Libya, Chad and Niger say "no railway in service". City populations are the median of Natural Earth, GeoNames and Wikidata (fixes Juba 112k, Benoni 2.99M, Kakamega's county figure; drops single-source entries such as Iran's Arak placed in Algeria). World Bank figures more than 7 years old show "last reported <year>". Landmarks were checked against Wikidata, OSM water and drawn river vertices. Lake Chad is now shown only in Chad and Cameroon; Niger and Nigeria get the Niger River; Ethiopia gets Lake Tana. Build-script sorts give the same order on PS 5.1 and pwsh. Six new self-tests (87 total). Asset version 78. |
 | `10a00a28` | **News on the landing screen** (cloud, 23 Oct): a "Top story" card under the map on phones and tablets; a column beside the map at 1080px+. `renderHomeFront` in app.js. |
 | `76e05017` | **Reader speed + data saver** (cloud): deep links skip the map animation (blocking time 2.4 -> 1.1 s); in Save-Data or 3G mode `briefs-full.js` (146 KB) is not downloaded; fixed a tab freeze. |
@@ -26,7 +27,7 @@ GitHub Pages serves `main`, so **whatever is on `main` is live**.
 | `d75605e0`, `5faa7551` | Exchange listings refresh from the **owner's PC** (AFX blocks GitHub runners): `scripts/refresh-markets-desktop.ps1`, run by the Windows scheduled task "ASJ markets refresh" (daily 18:30, from the worktree `C:\Users\karan\Documents\James Code\asj-markets-refresh`). Log: `%LOCALAPPDATA%\ASJ\markets-refresh.log`. |
 | `836eae90` | Desk writer harness (`scripts/write-briefs.ps1`, prompt `story-v14`). See "How the desk writer works". |
 
-Asset version is now **78** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
+Asset version is now **79** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
 `sw.js`). `static-pages.css?v=69` is set inside `scripts/build-static-pages.ps1`.
 
 ## Do first (in order)
@@ -64,11 +65,32 @@ Asset version is now **78** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, 
 | Food prices | 75% | WFP; ~38 countries current; Kenya and Uganda only have camp markets (flagged). |
 | Listings | 70% | Depends on the owner's PC being on at 18:30. |
 | News | 70% | Off-country stories and the Djibouti / Western Sahara supply gap (since 6 Sep). |
-| Crop lists and calendar | 60% | **Next job**: see A1-A2. |
+| Crop lists and calendar | 90% | **Done 23 Oct (desktop):** exports from FAOSTAT with their dollar value; months from the FAO Crop Calendar where FAO lists the crop for that country, and "typical months" (labelled as such) for tea, cocoa, livestock and the rest. |
 
-### A. Next jobs, in order
+### A. Data jobs
 
-**A1. Replace `FARM_EXPORTS` (app.js) with FAOSTAT.** This list is already computed from FAOSTAT
+**A1-A3 are DONE (desktop, 23 Oct, second push).** What was built:
+- `scripts/build-farm-exports.ps1` -> `data/farm-exports.json` (FAOSTAT bulk trade file; rules
+  below). The hand-made `FARM_EXPORTS` constant is gone; `farmExportsForCountry()` reads
+  `facts.farm.items`, and the Signals row shows each item's value plus a FAOSTAT source line.
+  Countries with no list show a note instead.
+- `scripts/build-crop-calendar.ps1` -> `data/crop-calendar.json` (FAO Crop Calendar, 39
+  countries; Lesotho's request returned 503, but its exports are wool and mohair, so nothing is
+  lost). `build-country-facts.ps1` attaches `facts.cropCal` for each country's export labels.
+  `seasonSpecForCountry()` uses FAO months when present (`source: 'FAO'`) and otherwise
+  `CROP_SEASONS` (`source: 'typical'`). The calendar legend and the country-file tag say which.
+- Rail: Algeria's duplicate line is merged (an untagged way takes the line's only gauge). A line
+  whose tracks carry the same words in a different order is one line (Morocco's LGV
+  "Tanger - Kenitra" / "Kenitra-Tanger").
+- Cities: renamed towns get their current name (`$NAME_NOW` in
+  `build-city-populations.ps1`: Adama, Musanze, Baidoa, Mutsamudu, Ali Sabieh, Tadjourah,
+  Mekelle).
+- All of these are run by hand (desktop) and checked in. CI's monthly `build-country-facts.ps1`
+  reads the JSON files, so it keeps them.
+
+For reference, the list A1 produced, with the rules it used:
+
+**A1 (done). FAOSTAT farm exports.** This list was computed from FAOSTAT
 "Trade: crops and livestock products" (bulk file `Trade_CropsLivestock_E_Africa.zip` from
 `https://bulks-faostat.fao.org/production/`, 12 MB, CC BY 4.0). Export value is the 2022-24
 average. Rules used: the country must be a net exporter of the item (so Kenya's palm oil and
@@ -111,7 +133,7 @@ To do with it:
   (Lesotho shears in Feb-Mar and Aug-Sep).
 - The self-test "CROP_SEASONS covers every export crop" enforces coverage.
 
-**A2. Replace the generic crop calendar with FAO's** where FAO covers the crop. Source:
+**A2 (done). The FAO crop calendar**, used where FAO covers the crop. Source:
 `https://api-cropcalendar.apps.fao.org/api/v1/countries/<ISO2>/cropCalendar?language=en`.
 - Coverage: 40 of 55 countries. Not covered: ao, bj, bw, bf, cf, km, cg, cd, gm, ly, ng, sc, za, ss, eh.
 - The API is slow (~15 s per country).
@@ -131,22 +153,26 @@ To do with it:
   previous" on failure, like the other sources. Needs desktop network access (the cloud cannot
   reach FAO).
 
-**A3. Small data fixes found on 23 Oct:**
-- Algeria's rail list shows "Ligne de Bechar a Gara Djebilet" twice (514 km with no gauge tag,
-  415 km standard). In `scripts/build-country-rail.ps1`, merge a no-gauge group into a same-name
-  group that has a gauge.
-- Old town names in the city list: Nazret (now Adama), Ruhengeri (Musanze), Gitarama (Muhanga),
-  Gisenyi (Rubavu), Butare (Huye), Baydhabo (Baidoa), Moutsamoudou (Mutsamudu), Ali Sabih
-  (Ali Sabieh). Add an alias map in `scripts/build-city-populations.ps1`.
+**A3. Small data fixes found on 23 Oct.** Done: Algeria's duplicate rail line, Morocco's LGV
+listed twice, and old town names (Adama, Musanze, Baidoa, Mutsamudu, Ali Sabieh, Tadjourah,
+Mekelle). Left:
+- Rwanda's other towns keep the names the sources use (Gitarama, Gisenyi, Butare). The official
+  names are Muhanga, Rubavu and Huye. Check which English sources use before changing them.
 - South Africa's Factbook figure (30,400 km, 2021) is probably track length; OSM route length is
   14,234 km. Consider a note.
-- Mauritania lists Cotton (FAOSTAT shows $9M; likely transit from Mali). Decide whether to keep it.
+- Mauritania lists Cotton (FAOSTAT shows $9M; likely transit from Mali). It is what the source
+  says, so it stays unless the owner wants a transit rule.
+- OSM line names that aren't line names show in rail lists only if 20 km or longer. Sudan shows
+  "Railway market cross" (103 km). An exclusion list in `build-country-rail.ps1` would drop it.
+- Tanzania's rice calendar is all months: the union of FAO's 7 zones, irrigated ones included.
+  It's true, but not useful. Option: use only rain-fed sessions.
 
-**A4. Food markets after the next monthly run (10 Nov).** The basket's city matching now uses
-the new city list. Check that Algeria is still Tindouf, Kenya is still flagged as camp-only, and
-Somalia picks a Somali-shilling market. Today's picks: Kenya IFO (Dadaab, flagged), Uganda
-Imvepi (flagged), Ethiopia Jijiga, Somalia Kismayo, Zambia Kaputa (sugar, fish, meat; no
-staple). Zambia's pick deserves a look.
+**A4. Food markets with the new city list: checked 23 Oct** (full local rebuild). Five picks
+moved to the larger town under the cross-checked populations, none to a camp: DR Congo
+Lubumbashi -> Mbuji-Mayi, Gambia Farafenni -> Banjul (the capital), Liberia Gbarnga -> Buchanan,
+Malawi Karonga -> Mangochi, Niger Maradi -> Zinder. Algeria is still Tindouf, Kenya and Uganda
+are still flagged camp-only, and Somalia is Kismayo. Zambia's Kaputa basket (sugar, fish, meat;
+no staple) deserves a look.
 
 ### B. How the second-source checks were done (reuse them)
 
@@ -237,7 +263,7 @@ banned phrases live in `Get-StockPhraseRules` and are injected into the prompt.
   `test-article-evidence.ps1`, `test-publication-gate.ps1`, `test-static-pages.ps1 -UnitOnly`,
   `test-food-basket.ps1` (21 checks), `test-desk-harness.ps1`, `check-workflows.ps1`,
   `validate-briefs.ps1`.
-- Browser: `?selftest=1` (87 checks; the result is in `window.__selftest`; run
+- Browser: `?selftest=1` (89 checks; the result is in `window.__selftest`; run
   `await runSelfTest()` again if the hydration check fails on a cold load).
 - `node tools/stress/site-check.mjs` (what CI runs) and `node tools/stress/country-check.mjs <outDir>`
   both need Playwright. The desktop has no Node, so those run in CI or the cloud.
@@ -250,5 +276,5 @@ The cloud sandbox reaches GitHub and package registries only. These are blocked 
 HDX/WFP, World Bank, GeoNames, OurAirports, Overpass, FAOSTAT, the FAO crop calendar, Wikidata,
 OpenRouter and the live site. Workflow dispatch is refused and CI logs can't be downloaded.
 
-The cloud can do A1 with the list above (no network needed). A2, A4 and the city or rail rebuilds
-need the desktop.
+Data rebuilds (food, rail, cities, farm exports, crop calendar) need the desktop. The owner
+prefers heavy work on the desktop.

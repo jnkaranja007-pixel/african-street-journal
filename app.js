@@ -404,64 +404,6 @@ const INVESTOR_INFO = {
   }
 };
 
-const FARM_EXPORTS = {
-  so: ['Sesame', 'Banana', 'Beef'],
-  ug: ['Coffee', 'Fish', 'Tea'],
-  ke: ['Tea', 'Cut flowers', 'Coffee'],
-  tz: ['Tobacco', 'Coffee', 'Cashew'],
-  et: ['Coffee', 'Sesame', 'Pulses'],
-  er: ['Sorghum', 'Millet', 'Sesame'],
-  ci: ['Cocoa', 'Cashew', 'Coffee'],
-  gh: ['Cocoa', 'Cashew', 'Shea'],
-  sn: ['Groundnuts', 'Fish', 'Cotton'],
-  ng: ['Cocoa', 'Sesame', 'Cashew'],
-  ma: ['Citrus', 'Tomatoes', 'Olives'],
-  za: ['Citrus', 'Grapes', 'Wine'],
-  eg: ['Citrus', 'Potatoes', 'Cotton'],
-  dz: ['Dates', 'Citrus', 'Olive oil'],
-  ly: ['Dates', 'Olives', 'Citrus'],
-  ao: ['Coffee', 'Cassava', 'Sesame'],
-  cd: ['Palm oil', 'Coffee', 'Cocoa'],
-  cg: ['Cassava', 'Palm oil', 'Cocoa'],
-  ga: ['Palm oil', 'Cocoa', 'Rubber'],
-  gq: ['Cocoa', 'Cassava', 'Palm oil'],
-  cf: ['Cotton', 'Coffee', 'Cassava'],
-  rw: ['Coffee', 'Tea', 'Pyrethrum'],
-  ss: ['Sorghum', 'Sesame', 'Maize'],
-  sd: ['Sesame', 'Groundnuts', 'Cotton'],
-  td: ['Cotton', 'Sesame', 'Groundnuts'],
-  zm: ['Tobacco', 'Maize', 'Sugar'],
-  zw: ['Tobacco', 'Soya', 'Cotton'],
-  mz: ['Cashew', 'Prawns', 'Tobacco'],
-  bw: ['Beef', 'Sorghum', 'Pulses'],
-  na: ['Beef', 'Grapes', 'Fish'],
-  sz: ['Sugar', 'Citrus', 'Maize'],
-  ls: ['Maize', 'Sorghum', 'Wool'],
-  cm: ['Cocoa', 'Coffee', 'Banana'],
-  eh: ['Fish', 'Dates', 'Beef'],
-  ml: ['Cotton', 'Millet', 'Shea'],
-  ne: ['Cowpea', 'Millet', 'Onion'],
-  mr: ['Fish', 'Dates', 'Millet'],
-  bf: ['Cotton', 'Sesame', 'Shea'],
-  gn: ['Coffee', 'Groundnuts', 'Cashew'],
-  gw: ['Cashew', 'Rice', 'Groundnuts'],
-  gm: ['Groundnuts', 'Fish', 'Millet'],
-  mg: ['Vanilla', 'Cloves', 'Coffee'],
-  mw: ['Tobacco', 'Sugar', 'Tea'],
-  tn: ['Olive oil', 'Dates', 'Citrus'],
-  lr: ['Rubber', 'Cocoa', 'Coffee'],
-  sl: ['Coffee', 'Cocoa', 'Palm oil'],
-  bi: ['Coffee', 'Tea', 'Cotton'],
-  bj: ['Cotton', 'Cashew', 'Pineapple'],
-  tg: ['Cotton', 'Cocoa', 'Coffee'],
-  st: ['Cocoa', 'Coffee', 'Palm oil'],
-  cv: ['Fish', 'Banana', 'Sugar'],
-  dj: ['Beef', 'Sorghum', 'Millet'],
-  km: ['Cloves', 'Vanilla', 'Banana'],
-  mu: ['Sugar', 'Tea', 'Fish'],
-  sc: ['Fish', 'Vanilla', 'Banana']
-};
-
 const ISLAND_FULLSCREEN_BOUNDS = {
   mu: { minX: 57.28, maxX: 57.88, minY: 19.92, maxY: 20.58 },
   sc: { minX: 55.34, maxX: 55.56, minY: 4.54, maxY: 4.82 },
@@ -2184,7 +2126,9 @@ function renderCountryFile(countryId) {
       const nextH = h.length ? h.find(m => m > month) || h[0] : null;
       return nextH ? '<b>' + escapeHtml(crop) + '</b> ' + seasonHarvestLabel(spec).toLowerCase() + ' opens ' + MONTHS[nextH - 1] : '<b>' + escapeHtml(crop) + '</b>';
     });
-    rows.push({ tag: 'Crop calendar · indicative', text: status.join(' · ') + '.' });
+    const faoCount = crops.filter(crop => seasonSpecForCountry(countryId, crop)?.source === 'FAO').length;
+    const calSource = faoCount === crops.length ? 'FAO' : faoCount ? 'FAO and typical months' : 'typical months';
+    rows.push({ tag: 'Crop calendar · ' + calSource, text: status.join(' · ') + '.' });
   }
 
   const remit = countryFact(countryId, 'remitUsd');
@@ -2857,14 +2801,20 @@ function renderAlmanacFromGis(countryId, info) {
   const gis = COUNTRY_GIS[countryId] || { places: [] };
   const places = gis.places || [];
 
-  // Agriculture: World Bank figures, then the desk's list of main farm exports.
+  // Agriculture: World Bank figures, then FAOSTAT's main farm exports with their value.
   const ag = document.getElementById('cv-ag');
   const agMeta = document.getElementById('cv-ag-meta');
-  const exportItems = farmExportsForCountry(countryId);
+  const farm = countryFacts(countryId)?.farm;
+  const farmItems = (farm?.items || []).slice(0, 3);
   if (agMeta) agMeta.textContent = '';
   ag.innerHTML = factGridHtml(countryId, 'farmers') +
-    (exportItems.length
-      ? '<div class="cv-ag-line"><span class="cv-ag-line-key">Main farm exports</span><span class="cv-ag-line-val">' + exportItems.slice(0, 3).map(escapeHtml).join(' · ') + '</span></div>'
+    (farmItems.length || farm?.note
+      ? '<div class="cv-ag-line"><span class="cv-ag-line-key">Main farm exports</span><span class="cv-ag-line-val">' +
+          (farmItems.length
+            ? farmItems.map(i => escapeHtml(i.label) + ' ' + escapeHtml(formatFactValue('usd', i.usd))).join(' · ')
+            : escapeHtml(farm.note)) +
+        '</span></div>' +
+        '<div class="cv-fact-source">' + escapeHtml(window.ASJ_COUNTRY_FACTS?.sources?.farm || 'FAOSTAT') + ' · a year</div>'
       : '');
 
   // Food prices: WFP's retail prices at its best-covered market, against a year earlier.
@@ -2989,11 +2939,11 @@ function railSummaryHtml(countryId) {
   return '<div class="cv-route-group"><div class="cv-route-title">Railways <b>' + (km ? fmt(km) : '0') + '</b></div>' + body + factbook + '</div>';
 }
 
-// The desk's curated list of each country's main farm exports. Every country has one;
-// there is no generic fallback any more ("Cereals, Coffee, Horticulture" was shown for
-// any country missing from the list).
+// Each country's main farm exports by value, from FAOSTAT (scripts/build-farm-exports.ps1
+// via the facts file). This was a hand-made list (Fish for Uganda, Coffee for Tanzania);
+// a country FAOSTAT shows little for gets a note, never a generic fallback.
 function farmExportsForCountry(countryId) {
-  return FARM_EXPORTS[countryId] || [];
+  return (countryFacts(countryId)?.farm?.items || []).map(i => i.label);
 }
 
 // Africa's 16 landlocked countries, so "no seaport" can say why.
@@ -5765,14 +5715,28 @@ const CROP_SEASONS = {
   'Vanilla': { kind:'perennial', plantLabel:'Plant cuttings', s: [9,10,11], h: [6,7,8] },
   'Cloves': { kind:'perennial', plantLabel:'Plant seedlings', s: [11,12,1], h: [10,11,12,1] },
   'Rubber': { kind:'perennial', plantLabel:'Plant seedlings', s: [4,5,6,7], h: [1,2,3,4,5,6,7,8,9,10,11,12] },
-  'Shea': { kind:'perennial', plantLabel:'Establish', s: [5,6,7], h: [5,6,7,8] }
+  'Shea': { kind:'perennial', plantLabel:'Establish', s: [5,6,7], h: [5,6,7,8] },
+  // FAOSTAT export labels that are not crops: sold all year, shorn twice (Lesotho's
+  // mohair, Feb-Mar and Aug-Sep), or distilled from flowers picked all year (ylang-ylang).
+  'Cattle': { kind:'livestock', h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Sheep and goats': { kind:'livestock', h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Camels': { kind:'livestock', h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Mohair': { kind:'fiber', h: [2,3,8,9] },
+  'Essential oils': { kind:'perennial', plantLabel:'Establish', s: [11,12,1], h: [1,2,3,4,5,6,7,8,9,10,11,12] },
+  'Berries': { s: [9,10], h: [12,1,2,3,4,5] },
+  'Melons': { s: [10,11,12], h: [1,2,3,4,5] },
+  'Avocados': { kind:'perennial', plantLabel:'Establish', s: [3,4,10,11], h: [3,4,5,6,7,8,9] }
 };
+// FAO Crop Calendar months for this country (scripts/build-crop-calendar.ps1) where FAO
+// lists the crop; otherwise the typical months above. `source` says which.
 function seasonSpecForCountry(countryId, crop) {
   const base = CROP_SEASONS[crop];
+  const fao = countryFacts(countryId)?.cropCal?.[crop];
+  if (fao && (fao.s?.length || fao.h?.length)) return { ...(base || {}), s: fao.s || [], h: fao.h || [], south: undefined, source: 'FAO' };
   if (!base) return null;
   const info = COUNTRY_INFO[countryId] || {};
   const southern = /southern/i.test(info.region || '');
-  return southern && base.south ? { ...base, ...base.south } : base;
+  return { ...(southern && base.south ? { ...base, ...base.south } : base), source: 'typical' };
 }
 function seasonPlantLabel(spec) {
   if (!spec) return 'Planting';
@@ -5799,11 +5763,13 @@ function renderCropCalendar(countryId) {
   const el = document.getElementById('cv-crop-cal');
   if (!el) return;
   const crops = farmExportsForCountry(countryId).slice(0, 3);
-  if (!crops.length) { el.innerHTML = '<div class="cv-heat-empty">No crop calendar on file yet.</div>'; return; }
+  if (!crops.length) { el.innerHTML = '<div class="cv-heat-empty">' + escapeHtml(countryFacts(countryId)?.farm?.note || 'No farm exports on file.') + '</div>'; return; }
   const months = ['J','F','M','A','M','J','J','A','S','O','N','D'];
   let html = '<div class="cv-cal-months"><i></i>' + months.map(m => '<u>' + m + '</u>').join('') + '</div>';
+  const fromFao = [], typical = [];
   for (const crop of crops) {
     const spec = seasonSpecForCountry(countryId, crop);
+    (spec?.source === 'FAO' ? fromFao : typical).push(crop);
     const note = seasonRowNote(spec);
     const sow = new Set(spec?.s || []);
     const harvest = new Set(spec?.h || []);
@@ -5816,7 +5782,13 @@ function renderCropCalendar(countryId) {
       return '<span class="' + cls + '"></span>';
     }).join('') + '</div>';
   }
-  html += '<div class="cv-cal-legend"><span><em class="h"></em>Harvest / market</span><span><em class="s"></em>Planting / establish</span><span>Indicative; rainfall and irrigation shift timing</span></div>';
+  // Say where each row's months come from: FAO's calendar for this country, or typical
+  // months for the crop where FAO does not list it (tea, cocoa, livestock...).
+  const sourceNote = [
+    fromFao.length ? 'FAO Crop Calendar for ' + fromFao.join(', ') + ' (any zone of the country)' : '',
+    typical.length ? 'typical months for ' + typical.join(', ') : ''
+  ].filter(Boolean).join('; ');
+  html += '<div class="cv-cal-legend"><span><em class="h"></em>Harvest / market</span><span><em class="s"></em>Planting / establish</span><span>' + escapeHtml(sourceNote) + '</span></div>';
   el.innerHTML = html;
 }
 
@@ -6106,7 +6078,6 @@ async function runSelfTest() {
   add('core: WB economy coverage 50+', Object.keys(D.worldBankEconomy || {}).length >= 50, Object.keys(D.worldBankEconomy || {}).length);
   const badIds = obj => Object.keys(obj || {}).filter(id => !COUNTRY_INFO[id]);
   add('INVESTOR_INFO ids valid', badIds(INVESTOR_INFO).length === 0, badIds(INVESTOR_INFO).join(','));
-  add('FARM_EXPORTS ids valid', badIds(FARM_EXPORTS).length === 0, badIds(FARM_EXPORTS).join(','));
   add('MARKETS_SEED ids valid', badIds(MARKETS_SEED).length === 0, badIds(MARKETS_SEED).join(','));
   // Every country gets the same sourced figures. Western Sahara has no World Bank data
   // and says so; everyone else must carry most of the set.
@@ -6173,12 +6144,21 @@ async function runSelfTest() {
     (COUNTRY_GIS.ke?.rail?.lines || []).some(l => l.gauge === 1435 && l.km > 300));
   add('facts: every coastal country has a seaport', sortedCountryIds.filter(id => !LANDLOCKED.has(id) && !countryPorts(id).length).length === 0,
     sortedCountryIds.filter(id => !LANDLOCKED.has(id) && !countryPorts(id).length).join(',') || 'all');
-  const noSeason = Array.from(new Set([].concat(...Object.values(FARM_EXPORTS)))).filter(c => !CROP_SEASONS[c]);
+  const exportLabels = Array.from(new Set([].concat(...sortedCountryIds.map(farmExportsForCountry))));
+  const noSeason = exportLabels.filter(c => !CROP_SEASONS[c]);
   add('CROP_SEASONS covers every export crop', noSeason.length === 0, noSeason.join(','));
   const noPlantingKinds = new Set(['fishery', 'livestock', 'fiber']);
-  const noPlanting = Array.from(new Set([].concat(...Object.values(FARM_EXPORTS))))
+  const noPlanting = exportLabels
     .filter(c => CROP_SEASONS[c] && !(CROP_SEASONS[c].s || []).length && !noPlantingKinds.has(CROP_SEASONS[c].kind));
   add('crop calendar planting coverage', noPlanting.length === 0, noPlanting.join(','));
+  // Farm exports are FAOSTAT's, with a note where it shows little (22 Oct 2026 check:
+  // Kenya Tea / Cut flowers / Coffee; Uganda's "Fish" and Tanzania's "Coffee" were hand-made).
+  const noFarm = sortedCountryIds.filter(id => !farmExportsForCountry(id).length && !countryFacts(id)?.farm?.note);
+  add('farm: every country has FAOSTAT exports or says why not', noFarm.length === 0, noFarm.join(',') || 'all 55');
+  add('farm: Kenya is Tea, Cut flowers, Coffee; Uganda has no Fish', farmExportsForCountry('ke').join() === 'Tea,Cut flowers,Coffee' &&
+    !farmExportsForCountry('ug').includes('Fish'), farmExportsForCountry('ke').join(', '));
+  add('crop calendar: Sudan sesame uses FAO months (sown Jun-Jul)', seasonSpecForCountry('sd', 'Sesame')?.source === 'FAO' &&
+    seasonSpecForCountry('sd', 'Sesame').s.join() === '6,7');
   const briefProblems = [];
   Object.entries(AI_BRIEFS).forEach(([c, list]) => (list || []).forEach((b, i) => {
     if (!b || !b.headline || !b.body) briefProblems.push(c + '#' + i);

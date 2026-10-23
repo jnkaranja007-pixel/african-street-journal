@@ -30,6 +30,10 @@ New-Item -ItemType Directory -Force -Path $CacheDir | Out-Null
 $CODES = @('dz','ao','bj','bw','bf','bi','cm','cv','cf','td','km','cg','cd','ci','dj','eg','gq','er','sz','et',
            'ga','gm','gh','gn','gw','ke','ls','lr','ly','mg','mw','ml','mr','mu','ma','mz','na','ne','ng','rw',
            'st','sn','sc','sl','so','za','ss','sd','tz','tg','tn','ug','zm','zw','eh')
+# Names the sources still use for towns that were renamed, or English spellings, where
+# Wikidata did not supply the current one.
+$NAME_NOW = @{ 'Nazret' = 'Adama'; 'Ruhengeri' = 'Musanze'; 'Baydhabo' = 'Baidoa'; 'Moutsamoudou' = 'Mutsamudu';
+               'Ali Sabih' = 'Ali Sabieh'; 'Tadjoura' = 'Tadjourah'; 'Mekele' = 'Mekelle' }
 # Wikidata files some cities under another state: Hargeisa under Somaliland, Laayoune
 # under Morocco. Those are asked too; only cities near this country's own are used.
 $WD_EXTRA = @{ so = @('wd:Q34754'); eh = @('"MA"') }
@@ -229,7 +233,8 @@ foreach ($cc in $CODES) {
     if ($k.spread -gt 2.5) { $review.Add(('{0} {1}: ne {2} gn {3} wd {4} -> {5}' -f $cc, $k.name, (& $fmt $k.ne), (& $fmt $k.gn), (& $fmt $k.wd), (& $fmt $k.pop))) }
   }
   $json = @($kept | ForEach-Object {
-    '{"name":' + (ConvertTo-Json ([string]$_.name)) + ',"pop":' + [Math]::Round($_.pop).ToString($inv) +
+    $shown = if ($NAME_NOW.ContainsKey([string]$_.name)) { $NAME_NOW[[string]$_.name] } else { [string]$_.name }
+    '{"name":' + (ConvertTo-Json $shown) + ',"pop":' + [Math]::Round($_.pop).ToString($inv) +
     ',"capital":' + ([string]$_.capital).ToLowerInvariant() + ',"lat":' + [Math]::Round($_.lat, 3).ToString($inv) + ',"lon":' + [Math]::Round($_.lon, 3).ToString($inv) +
     ',"sources":' + $_.n + '}'
   }) -join ','
