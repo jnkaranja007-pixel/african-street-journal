@@ -1,168 +1,254 @@
-# Handoff: The African Street Journal (after the 22 Oct 2026 cloud session)
+# Handoff: The African Street Journal (after the 23 Oct 2026 desktop session)
 
 Site: africanstreetjournal.com. Repo: `jnkaranja007-pixel/african-street-journal`.
 GitHub Pages serves `main`, so **whatever is on `main` is live**.
 
 ## Where things stand
 
-- Everything from this session is **merged and live**. `main` and `signals-atlas-real-data`
-  point at the same commit. On the desktop:
-  `git fetch origin && git checkout main && git pull`
-  (the branch can be deleted once you are happy).
-- CI (`check.yml`: syntax on Windows, browser checks and the new desk harness on Ubuntu)
-  was green on the last push.
-- The owner merges/pushes to `main` only after saying yes. Ask before going live.
+- Everything is **pushed and live**. `main` is at `307f52da` plus this handoff commit. Nothing is
+  left uncommitted on the desktop. To start: `git checkout main && git pull`.
+- CI (`check.yml`) for `307f52da` was queued when this was written. Check it first:
+  `gh run list -L 4`.
+- The owner pushes to `main` only after saying yes. **Ask before every push.**
+- Owner's goal: **98-100% confidence that what a reader sees for any country is correct.**
+  The method: check every figure against a second, independent source, then fix it, hide it,
+  or label it plainly. The "Confidence work" section below shows what is done and what is left.
 
-## What shipped this session (newest first)
+## What shipped (newest first)
 
 | Commit | What |
 |---|---|
-| `10a00a28` | **News on the landing screen** (owner approved 23 Oct, reversing the "map stands alone" design): phones/tablets get one "Top story" card under the map (still one screen, measured flush 320-915px tall phones and 768/820 tablets); 1080px+ gets a column beside the map (top story + dek, 3 more from other countries, "All N stories"). `renderHomeFront` in app.js, mounts `#home-front-side` / `#home-front-top`. site-check asserts both and that a phone landing page is one screen. |
-| `76e05017` | **Reader speed**: Atlas not drawn while hidden; deep links skip the home-map animation (country link on a slow phone: blocking time 2.4 s -> 1.1 s). **Data saver** (Save-Data or 3G and slower): no 146 KB `briefs-full.js` per visit; an opened story fetches its own static page; Wire search fetches prose on demand. Fixed: a failed prose download froze the tab when a story was tapped. site-check covers both. |
-| `836eae90` | **Desk writer harness** (`scripts/write-briefs.ps1`, prompt `story-v14`): lens floors removed, hedged lens reasons scored 0-20, style check with one rewrite and a fact-checked fallback, off-country drop via `countryLink`, rewritten prompt. New `scripts/test-desk-harness.ps1` + `desk` CI job. |
-| `b889aa34` | About menu cut to 5 items (Text-only edition, About, Contact, Corrections, Privacy); `/countries/` became the **text-only edition**; new About copy (mission, low-data reading, RSS explained); `feed.xsl` makes `feed.xml` readable in a browser. |
-| `b940b806` | Season calendar bars were invisible on every country (a blanket `#cv-panel-signals [class*="-cell"]` rule cleared their background). Fixed + self-test check. |
-| `1fea8957` | ASJ Wire uses the width on wide screens (centred frame, two-column list, lead headline beside its summary). |
-| `e3a8066d` | Restored the map-v2 landing map: `data/app-data.js` now carries map-v2's countries + lakes, so re-splitting no longer reverts `data/app-core.js`. |
-| `2474a073` | Atlas: Somaliland towns in Somalia, Laayoune/Dakhla/Smara in Western Sahara (`scripts/set-country-places.ps1`), capitals follow `COUNTRY_INFO`, labels clear of port/airport diamonds, label priority order. `tools/stress/country-check.mjs` (55 countries x 4 views). |
-| `eeb40d56` | WFP food prices: market = national average > capital > largest towns > camp (flagged), staples first (`scripts/food-basket.ps1`, `scripts/test-food-basket.ps1`). |
-| `fab8f9cb` | `update-economy.yml` uses `-SkipFoodPrices`; new monthly `update-food-rail.yml` (food prices, then OSM rail). |
-| `a4ba15bd` | The original Signals/Atlas real-data rebuild for all 55 countries. |
+| `307f52da` | **Second-source checks (desktop, 23 Oct).** Rail is now route length (OSM counted each track of a double line: Algeria 6,606 -> 5,130 km, Morocco 3,314 -> 1,953), with the CIA World Factbook total shown beside it. Libya, Chad and Niger say "no railway in service". City populations are the median of Natural Earth, GeoNames and Wikidata (fixes Juba 112k, Benoni 2.99M, Kakamega's county figure; drops single-source entries such as Iran's Arak placed in Algeria). World Bank figures more than 7 years old show "last reported <year>". Landmarks were checked against Wikidata, OSM water and drawn river vertices. Lake Chad is now shown only in Chad and Cameroon; Niger and Nigeria get the Niger River; Ethiopia gets Lake Tana. Build-script sorts give the same order on PS 5.1 and pwsh. Six new self-tests (87 total). Asset version 78. |
+| `10a00a28` | **News on the landing screen** (cloud, 23 Oct): a "Top story" card under the map on phones and tablets; a column beside the map at 1080px+. `renderHomeFront` in app.js. |
+| `76e05017` | **Reader speed + data saver** (cloud): deep links skip the map animation (blocking time 2.4 -> 1.1 s); in Save-Data or 3G mode `briefs-full.js` (146 KB) is not downloaded; fixed a tab freeze. |
+| `f1eabfda` | **55-country audit (desktop, 22 Oct):** per-country landmark points (42 landmarks, all 55 countries); main seaports from a checked list (Luanda, Tema, Maputo, Matadi, Durban...); the capital is always listed among the largest cities; impossible WB values hidden (`FACT_LIMITS`). |
+| `344051eb` | Food: Algeria's Sahrawi camps (WFP spells "Laayoun") are camps; a camp-only country shows a warning; Sierra Leone SLL -> SLE; markets priced in the national currency preferred (Somalia); a market needs 2+ foods. |
+| `d75605e0`, `5faa7551` | Exchange listings refresh from the **owner's PC** (AFX blocks GitHub runners): `scripts/refresh-markets-desktop.ps1`, run by the Windows scheduled task "ASJ markets refresh" (daily 18:30, from the worktree `C:\Users\karan\Documents\James Code\asj-markets-refresh`). Log: `%LOCALAPPDATA%\ASJ\markets-refresh.log`. |
+| `836eae90` | Desk writer harness (`scripts/write-briefs.ps1`, prompt `story-v14`). See "How the desk writer works". |
 
-Asset version is now **77** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
+Asset version is now **78** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
 `sw.js`). `static-pages.css?v=69` is set inside `scripts/build-static-pages.ps1`.
 
 ## Do first (in order)
 
-1. **Check the first desk run on the new writer** (01:40 UTC, retry 03:40 UTC, 23 Oct).
+1. **CI for `307f52da`.** If `site-check` fails on "payload: every story has prose after
+   hydration", see open item C1 below. Locally that check fails only on the first `?selftest=1`
+   load (0/231) and passes on a rerun (`await runSelfTest()`).
+2. **The first desk run on the new writer** has not happened yet (no `update-news.yml` run since
+   22 Oct 08:54 UTC; GitHub's schedule is running hours late).
    `gh run list --workflow update-news.yml -L 3`, then `gh run view <id> --log | Select-String '\[write\]'`.
-   Look for the new line `[write] style: N rewrite(s), N fixed, N kept with notes; N off-country
-   story(ies) dropped; N speculative lens score(s) capped`. The desk also writes these counts to
-   `data/desk-run-metrics.json` (styleRewrites, styleFixedByRewrite, styleKeptWithNotes,
-   offCountryDropped, lensScoresCappedAsSpeculative).
-   Then re-measure the published edition against the 22 Oct baseline:
-   - stock phrases ("crucial", "underscores", "broader strategy"...): 22 Oct = 68 of 231 stories
-   - investors lens >= 41: 22 Oct = 157 of 231 (68%); expected <= 25%
-   - diaspora lens >= 41: 22 Oct = 55 (24%); expected ~5-10% (see decision 1)
-   - off-country stories: 22 Oct ~7 (Namibia: Lisbon, Yemen; Burundi: Paris v Barcelona; Sao Tome: Lisbon)
-   If the edition looks wrong: `git revert 836eae90` restores the previous writer exactly.
-2. **Run the food-price and rail job** (the cloud session could not dispatch workflows):
-   `gh workflow run update-food-rail.yml`. About 1 hour for food, then rail. Afterwards check
-   10 countries by eye (ke, ug, dz, ml, mr, bj, dj, eg, sd, ng): market is a town (or flagged
-   "refugee camp market"), basket is staples. Until it runs, Kenya still shows IFO (Dadaab).
-3. **Refresh exchange listings**: `gh workflow run update-markets.yml`.
-4. **Confirm the static pages rebuilt** after the desk run: the About page has the new copy,
-   `/countries/` is titled "Text-only edition", `feed.xml` starts with an
-   `<?xml-stylesheet ... /feed.xsl?>` line.
+   Look for `[write] style: N rewrite(s), N fixed, N kept with notes; N off-country story(ies)
+   dropped; N speculative lens score(s) capped` (also in `data/desk-run-metrics.json`).
+   Re-measure against the 22 Oct baseline: stock phrases 68 of 231 stories; investors lens >= 41:
+   157/231 (expect <= 25%); diaspora >= 41: 55 (expect ~5-10%); off-country ~7 (Namibia: Lisbon,
+   Yemen; Burundi: Paris v Barcelona; Sao Tome: Lisbon). If it looks wrong: `git revert 836eae90`.
+3. **Listings task first run**: 23 Oct 18:30 local. Check `%LOCALAPPDATA%\ASJ\markets-refresh.log`
+   and for a commit "chore(markets): refresh exchange listings from desktop". The task has never
+   run yet (`Get-ScheduledTaskInfo -TaskName 'ASJ markets refresh'`).
+4. **Static pages after the desk run**: the About page has the new copy, `/countries/` is titled
+   "Text-only edition", `feed.xml` starts with `<?xml-stylesheet ... /feed.xsl?>`.
 
-## Next fixes (proposed 23 Oct cloud session, not started)
+## Confidence work (owner's 98% target): done, and what is left
 
-In this order; 1-4 are small and safe.
-1. **Data saver, part two**: in `ASJ_SAVE_DATA` mode (app.js, `loadDeferredHalf`) also skip
-   the Playfair Display web font (~60-90 KB first visit, index.html lines ~61-71) and the Wire's
-   flagcdn images (up to ~55 x 2 KB; country names are already text).
-2. **Wire on phones**: filters take ~300px before the first story (one and a half headlines
-   visible at 390x844). Compact them so 3-4 stories show on the first screen.
-3. **Map accuracy**: rivers not clipped to the country (Kenya's atlas alt text lists Jubba,
-   Pangani, Genale and an unnamed "River"); Western Sahara labels Lemsid (pop 100) and Dawra
-   (pop 10); Hargeisa's dot hides under the Egal (HGA) airport diamond.
-4. **Off-country stories at ranking**: the writer drops them via `countryLink` after a model
-   call; add a check in `scripts/news-ranking.ps1` (tests: `test-news-ranking.ps1`) so they
-   never reach the model.
-5. Per-country RSS (`/<cc>/feed.xml`) for readers following one country.
-6. Home map assembly animation is choppy on mid-range phones (~100 ms per frame at 4x CPU
-   throttling): make frames cheaper or the animation shorter.
-7. `styles.css` (177 KB) carries many overrides of retired designs; trim with before/after
-   screenshots of every screen.
+### Current honest confidence, by area
 
-How this session measured things (reuse for before/after): Playwright with
-`executablePath: '/opt/pw-browsers/chromium'` in the cloud, CPU throttling 4x via CDP
-(`Emulation.setCPUThrottlingRate`), long tasks via `PerformanceObserver({type:'longtask'})`
-for total blocking time, axe-core 4.10 for WCAG 2.2 AA (0 failures on all 8 screens on 23 Oct).
+| Area | Now | What it rests on / what would raise it |
+|---|---|---|
+| Borders and placement | 95% | 55 capitals match; every port, airport and landmark is tested inside its own country. Somaliland is in Somalia; Western Sahara is separate. |
+| World Bank figures | 95% | Official, year shown, nothing older than 7 years shown as current (`FACT_MAX_AGE`). |
+| Landmarks | 95% | Peaks, falls and parks within ~2 km of Wikidata (Mount Kenya and Bintumani differ only because Wikidata rounds); lakes inside OSM/Natural Earth water; rivers on drawn vertices. |
+| Airports | 90% | Main gateways from a checked list (`$GATEWAYS`), OurAirports scheduled service. |
+| Seaports | 90% | NGA World Port Index; main port per country from a checked list (`$MAIN_PORTS`). |
+| Railways | 90% | OSM route length beside the Factbook total. The gap is mostly disused track (Kenya 1,886 vs 3,819). OSM's "in use" tagging varies by country. |
+| City populations | 85-90% | Median of 3 sources, 2 required. "City" means city proper in some sources and metro in others, so Tunis shows 693k (city) while Cairo shows 9.8M; Kumasi ranks above Accra. |
+| Food prices | 75% | WFP; ~38 countries current; Kenya and Uganda only have camp markets (flagged). |
+| Listings | 70% | Depends on the owner's PC being on at 18:30. |
+| News | 70% | Off-country stories and the Djibouti / Western Sahara supply gap (since 6 Sep). |
+| Crop lists and calendar | 60% | **Next job**: see A1-A2. |
+
+### A. Next jobs, in order
+
+**A1. Replace `FARM_EXPORTS` (app.js) with FAOSTAT.** This list is already computed from FAOSTAT
+"Trade: crops and livestock products" (bulk file `Trade_CropsLivestock_E_Africa.zip` from
+`https://bulks-faostat.fao.org/production/`, 12 MB, CC BY 4.0). Export value is the 2022-24
+average. Rules used: the country must be a net exporter of the item (so Kenya's palm oil and
+Djibouti's sugar, which are re-exports, are dropped); at least $2M; at least 10% of the
+country's top item; at most 3 items. FAOSTAT items were mapped to labels, and processed goods
+were excluded (flour, bran, beer, cigarettes, food preparations, refined sugar made from imported
+cane). Cut flowers are FAOSTAT's "crude organic material n.e.c."; that mapping is used for Kenya
+and Ethiopia only. The generic "Nuts" label was dropped (Gambia showed Brazil nuts). Paste this
+list in place of the current one:
+
+```
+so ['Sheep and goats','Camels','Cattle']   ug ['Coffee','Cocoa']            ke ['Tea','Cut flowers','Coffee']
+tz ['Tobacco','Cashew','Rice']             et ['Coffee','Cut flowers','Sesame']
+ci ['Cocoa','Rubber','Cashew']             gh ['Cocoa','Cashew']            sn ['Groundnuts','Cashew','Melons']
+ng ['Cocoa','Sesame','Soya']               ma ['Tomatoes','Berries','Citrus'] za ['Citrus','Maize','Grapes']
+eg ['Citrus','Potatoes','Grapes']          dz ['Dates']                     ly ['Dates']
+ao ['Banana']                              cd ['Cocoa']                     cg ['Cocoa','Coffee']
+ga ['Palm oil','Rubber']                   gq ['Palm oil']                  cf ['Cattle']
+rw ['Coffee','Tea']                        sd ['Sheep and goats','Sesame','Groundnuts']
+td ['Sesame','Cotton']                     zm ['Tobacco','Soya','Sugar']    zw ['Tobacco']
+mz ['Pulses','Tobacco','Sesame']           bw ['Cattle']                    na ['Cattle','Grapes','Sheep and goats']
+sz ['Sugar']                               ls ['Wool','Mohair']             cm ['Cocoa','Cotton']
+ml ['Cotton','Cattle']                     ne ['Onion','Cattle','Pulses']   mr ['Sheep and goats','Melons','Cotton']
+bf ['Cotton','Cashew','Sesame']            gn ['Cocoa','Cashew','Rubber']   gw ['Cashew']
+gm ['Groundnuts','Cashew']                 mg ['Vanilla','Cloves','Essential oils']
+mw ['Tobacco','Pulses','Tea']              tn ['Olive oil','Dates']         lr ['Rubber','Cocoa','Palm oil']
+sl ['Cocoa','Palm oil']                    bi ['Coffee','Tea']              bj ['Cotton','Cashew']
+tg ['Soya','Cotton','Cocoa']               st ['Cocoa','Palm oil']          km ['Cloves','Essential oils','Vanilla']
+mu ['Sugar']
+none: cv, er, sc, ss (FAOSTAT records under $2M a year); dj (FAOSTAT's figures are re-exports
+      through the port); eh (FAOSTAT does not report Western Sahara)
+```
+
+To do with it:
+- Show a note for the "none" countries instead of an empty row.
+- Change the row label to "Main farm exports" with a source line "FAOSTAT, export value 2022-24".
+- Fish is not in this FAOSTAT domain, so the old "Fish" and "Prawns" entries go away.
+- Add `CROP_SEASONS` entries for the new labels: Berries, Melons, Cattle, Sheep and goats, Camels,
+  Mohair, Essential oils. Use `kind:'livestock'` for the animals and `kind:'fiber'` for Mohair
+  (Lesotho shears in Feb-Mar and Aug-Sep).
+- The self-test "CROP_SEASONS covers every export crop" enforces coverage.
+
+**A2. Replace the generic crop calendar with FAO's** where FAO covers the crop. Source:
+`https://api-cropcalendar.apps.fao.org/api/v1/countries/<ISO2>/cropCalendar?language=en`.
+- Coverage: 40 of 55 countries. Not covered: ao, bj, bw, bf, cf, km, cg, cd, gm, ly, ng, sc, za, ss, eh.
+- The API is slow (~15 s per country).
+- Each record has `crop.name`, `aez.name` and `sessions[].early_sowing / later_sowing /
+  early_harvest / late_harvest` (month, day), plus `all_year`.
+- Map FAO crop names to labels:
+  - Corn, sweet -> Maize; Peanut -> Groundnuts; Upland cotton / Cotonnier -> Cotton
+  - Bean / Cowpea / Pigeon pea / Chick-pea / Lentil / Pea, dry -> Pulses
+  - Potato -> Potatoes; Soybean -> Soya; Onion / Shallot -> Onion; Tomato -> Tomatoes
+  - Watermelon / Melon -> Melons; Sugarcane -> Sugar; Coffee; Cashewnut -> Cashew
+  - Avocado; Banana; Mandarin -> Citrus
+- Take each window's months, wrapping past December, and the union over the agro-ecological
+  zones.
+- Tobacco is missing for Malawi and Tanzania. Keep `CROP_SEASONS` as the labelled fallback
+  ("typical") where FAO has nothing.
+- Best home for the data: `scripts/build-country-facts.ps1` as `facts[cc].cropCal`, with "keep
+  previous" on failure, like the other sources. Needs desktop network access (the cloud cannot
+  reach FAO).
+
+**A3. Small data fixes found on 23 Oct:**
+- Algeria's rail list shows "Ligne de Bechar a Gara Djebilet" twice (514 km with no gauge tag,
+  415 km standard). In `scripts/build-country-rail.ps1`, merge a no-gauge group into a same-name
+  group that has a gauge.
+- Old town names in the city list: Nazret (now Adama), Ruhengeri (Musanze), Gitarama (Muhanga),
+  Gisenyi (Rubavu), Butare (Huye), Baydhabo (Baidoa), Moutsamoudou (Mutsamudu), Ali Sabih
+  (Ali Sabieh). Add an alias map in `scripts/build-city-populations.ps1`.
+- South Africa's Factbook figure (30,400 km, 2021) is probably track length; OSM route length is
+  14,234 km. Consider a note.
+- Mauritania lists Cotton (FAOSTAT shows $9M; likely transit from Mali). Decide whether to keep it.
+
+**A4. Food markets after the next monthly run (10 Nov).** The basket's city matching now uses
+the new city list. Check that Algeria is still Tindouf, Kenya is still flagged as camp-only, and
+Somalia picks a Somali-shilling market. Today's picks: Kenya IFO (Dadaab, flagged), Uganda
+Imvepi (flagged), Ethiopia Jijiga, Somalia Kismayo, Zambia Kaputa (sugar, fish, meat; no
+staple). Zambia's pick deserves a look.
+
+### B. How the second-source checks were done (reuse them)
+
+- **Rail**: CIA World Factbook via `github.com/factbook/factbook.json` (`africa/<gec>.json`,
+  `Transportation.Railways.total.text`). Totals are in `RAIL_FACTBOOK` (app.js). Track with no
+  trains (checked on Wikipedia) is in `RAIL_NOT_IN_SERVICE`. Route length comes from the C#
+  `AsjRouteMeter` in `scripts/build-country-rail.ps1`: ~300 m cells, and a step within one cell of
+  an already-counted line is not counted again.
+- **Cities**: `scripts/build-city-populations.ps1` (run by hand a few times a year, not in CI).
+  It writes `data/city-populations.json`, which `build-country-facts.ps1` uses for `cities`.
+  Wikidata is matched by **English** label only, because French labels name counties by the bare
+  name (fr "Kakamega" is Kakamega County). A merged GeoNames district name (Dixinn in Conakry)
+  must be at least half the city's size. It prints every city whose sources differ by more than
+  2.5x.
+- **Landmarks**: Wikidata P625 for point features; OSM Overpass `is_in(lat,lon)` with
+  `area[natural=water]` for lakes (the maps.mail.ru endpoint answers best); Natural Earth lake
+  polygons and river vertices from the country chunks. Lake Chad's Natural Earth polygon is the
+  current open water (14.25-14.77E, 12.87-13.25N).
+- **World Bank staleness**: `FACT_MAX_AGE = 7` in app.js; `staleFactYear()` supplies "last reported".
+
+### C. Open problems
+
+1. On a cold local load, the self-test "payload: every story has prose after hydration" reports
+   0/231 and passes on a rerun. It is a race between the self-test and story hydration, and it
+   happened before the cloud's data-saver change too. If CI flakes on it, have the check wait for
+   hydration.
+2. News: Djibouti and Western Sahara have not filed since 6 Sep (read the desk log; do not lower
+   `-MinEvidenceWords`). Ghana lacks strong domestic feeds (3News works: `https://3news.com/feed.xml`).
+
+## Next fixes from the cloud session (not started)
+
+1. Data saver part two: in `ASJ_SAVE_DATA` mode also skip Playfair Display (~60-90 KB) and the
+   Wire's flagcdn images (~55 x 2 KB).
+2. Wire on phones: the filters take ~300 px before the first story. Compact them so 3-4 stories show.
+3. Map accuracy: rivers are not clipped to the country (Kenya's alt text lists Jubba, Pangani,
+   Genale and an unnamed "River"); Western Sahara labels Lemsid (pop 100) and Dawra (pop 10);
+   Hargeisa's dot hides under the HGA airport diamond.
+4. Off-country stories: catch them at ranking (`scripts/news-ranking.ps1`) before the model call.
+5. Per-country RSS (`/<cc>/feed.xml`).
+6. The home map animation is choppy on mid-range phones (~100 ms per frame at 4x throttling).
+7. `styles.css` (177 KB): trim overrides of retired designs, with before/after screenshots.
+
+Measuring (cloud): Playwright, 4x CPU throttling via CDP, long tasks for blocking time, axe-core
+4.10 for WCAG 2.2 AA (0 failures on all 8 screens on 23 Oct).
 
 ## Decisions waiting for the owner
 
-1. **Diaspora tab size.** The Wire's reader tabs show only stories rated >= 41
-   (`LENS_RELEVANCE_FLOOR` in `app.js`). With honest scoring the Diaspora tab may drop from ~55
-   to ~10-20 stories a day. Option: let that tab include reader-interest stories (21-40).
-2. **Frontier model or not.** The desk uses `google/gemini-2.5-flash-lite` with fallbacks
-   `google/gemini-3.1-flash-lite`, `deepseek/deepseek-v3.2` (~$2.80/month). A frontier model would
-   write better prose and translations; estimated $40-170/month (unverified, check OpenRouter).
-   The About page says "AI language models", not "frontier", for accuracy. To test: the
-   `update-news.yml` dispatch has `model` and `only` inputs, but a dispatched run **publishes**,
-   so test on a copy or with care. Changing the default is the `ASJ_MODEL` repository variable.
+1. **Diaspora tab size**: `LENS_RELEVANCE_FLOOR` (>= 41) may leave ~10-20 stories a day. Option:
+   include reader-interest stories (21-40).
+2. **Frontier model or not**: the desk uses `google/gemini-2.5-flash-lite` (~$2.80/month); a
+   frontier model is an estimated $40-170/month (unverified). Repository variable `ASJ_MODEL`.
 
-## Open work, by priority
+## How the desk writer works (`scripts/write-briefs.ps1`)
 
-1. **Landmarks are single points**, so the inside-outline filter drops shared features from the
-   countries they belong to: Egypt loses the Nile, Tanzania/Uganda Lake Victoria, Zambia Victoria
-   Falls, Kenya Lake Victoria and "Mombasa"; Sahara/Congo Basin/Lake Chad likewise. Give
-   `LANDMARK_POINTS` (app.js) per-country points. Kenya's part of Lake Victoria is not drawn as water.
-2. **Rivers are not clipped to the country**: Kenya's atlas alt text lists Jubba, Pangani, Genale
-   and an unnamed "River".
-3. **Curated crop lists**: `FARM_EXPORTS` and `CROP_SEASONS` (app.js) are hand-made; Kenya's
-   calendar is Tea / Cut flowers / Coffee, no maize. Replace with FAOSTAT top crops when its API is up.
-4. **Audit report for the owner**: what was wrong, sources, what each tab shows, a 55-row table.
-   `node tools/stress/country-check.mjs <outDir>` writes `country-check.json` with WB n/16, ports,
-   airports, gateway, rail km / standard-gauge km, food market/date/camp, and what the outline
-   filter drops. Do it after step 2 so food prices are real.
-5. **News supply**: Djibouti and Western Sahara have not filed since 6 Sep (feeds exist; the desk
-   drops candidates in fetch/clustering gates; read the desk log, do not lower
-   `-MinEvidenceWords`). Ghana lacks strong domestic feeds (3News works:
-   `https://3news.com/feed.xml`). Off-country items are now dropped by the writer; fixing them
-   upstream in `scripts/news-ranking.ps1` / `fetch-news.ps1` would save the model calls.
-6. Optional: per-country RSS (`/<cc>/feed.xml`) for readers following one country. Note that
-   Chrome is removing XSLT, so `feed.xsl` will eventually stop styling the feed there (it degrades
-   to raw XML, as before).
-7. Minor: Hargeisa's dot sits under the Egal (HGA) airport diamond; Western Sahara labels tiny
-   Lemsid (pop 100) and Dawra (pop 10).
+There is one model call per assignment. The checks then run in this order: item index, lens
+shape, dek trim, story contract (3 paragraphs, 70-220 words), every figure grounded in the
+source, `countryLink` ("none" -> dropped, reserve used), and house style (`Get-DraftStyleIssues`).
 
-## How the desk writer works now (`scripts/write-briefs.ps1`)
-
-Per assignment, one model call; then in order: item index, lens shape, dek trim, story contract
-(3 paragraphs, 70-220 words), every figure grounded in the source, **countryLink** ("none" ->
-dropped, reserve candidate used), **house style** (`Get-DraftStyleIssues`: stock phrases not in
-the source, restated facts, hedged why). A style failure gets one rewrite with the previous draft
-and the exact phrases (`Get-StyleRepairNote`); if the rewrite is no better or fails a fact check,
-the best fact-checked draft is published. Lens scores: `Resolve-LensScore` (no floors except
-farmers on Agriculture stories; diaspora identity topics 21-40; a reason with may/might/could is
-scored 0-20 with the canned "no direct effect" reason). The banned list lives in
-`Get-StockPhraseRules` and is injected into the prompt, so prompt and checker cannot drift.
-`ASJ_OPENROUTER_URL` exists only for `test-desk-harness.ps1`.
+A draft that fails the style check gets one rewrite (`Get-StyleRepairNote`). If the rewrite is no
+better, the best fact-checked draft is published. Lens scores come from `Resolve-LensScore`. The
+banned phrases live in `Get-StockPhraseRules` and are injected into the prompt.
 
 ## Ground rules for this repo
 
-- Static vanilla JS site (`index.html`, `app.js`, `styles.css`, `sw.js`); no build step. Build
-  scripts are PowerShell and must run on **Windows PowerShell 5.1 and pwsh 7** (no `&&`, `||`,
-  `??`, ternary). Known traps: pwsh's `ConvertFrom-Json` turns ISO dates into `[datetime]`
-  (use `Get-IsoDay`); `$x = if (...) { @(a) }` unrolls one-item arrays; 5.1 `Invoke-WebRequest`
-  `.Content` decodes as Latin-1 (use `-OutFile`); 5.1 does not follow HTTP 308.
+- Static vanilla JS (`index.html`, `app.js`, `styles.css`, `sw.js`); no build step.
+- Build scripts are PowerShell and must run on **Windows PowerShell 5.1 and pwsh 7**:
+  - Don't use `&&`, `||`, `??` or the ternary operator.
+  - pwsh's `ConvertFrom-Json` turns ISO dates into `[datetime]`; use `Get-IsoDay`.
+  - `$x = if (...) { @(a) }` unrolls one-item arrays.
+  - In 5.1, `Invoke-WebRequest .Content` decodes as Latin-1; use `-OutFile`.
+  - 5.1 does not follow HTTP 308.
+  - **Sort-Object orders ties and apostrophes differently**; tie-break with `Get-SortKey`
+    (in `scripts/food-basket.ps1`).
 - Scripts and workflows must be **ASCII-only** (CI enforces it).
-- **Never commit pages built locally** (`<cc>/index.html`, story pages, `about/` etc.,
-  `countries/`, sitemaps, `feed.xml`). The nightly desk (`update-news.yml` ->
-  `scripts/build-static-pages.ps1`) rebuilds them; change the generator instead.
+- **Never commit pages built locally** (`<cc>/index.html`, story pages, `about/`, `countries/`,
+  sitemaps, `feed.xml`).
 - **`data/app-data.js` is the source for `data/app-core.js`** and the country chunks
-  (`scripts/split-app-data.ps1`). Never hand-edit `app-core.js`; it will be reverted on the next
-  split (that is how the map-v2 landing map was lost and restored this session).
-- `#cv-panel-signals` in `styles.css` has blanket `!important` rules matching class fragments
-  (`-cell`, `-card`, `-chart`). New Signals classes can be silently styled away.
+  (`scripts/split-app-data.ps1`). Never hand-edit `app-core.js`. Rail is attached from
+  `data/country-rail.json` at split time.
+- `#cv-panel-signals` has blanket `!important` rules matching class fragments (`-cell`, `-card`,
+  `-note`, `-chart`...), so new Signals classes can be silently styled away.
 - Bump the asset version (three places) when shipping front-end changes.
 - Commit trailer: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
 ## How to verify
 
-- PowerShell tests (all must pass; the desk runs the first five before writing):
-  `scripts/test-news-ranking.ps1`, `test-story-contract.ps1`, `test-article-evidence.ps1`,
-  `test-publication-gate.ps1`, `test-static-pages.ps1 -UnitOnly`, plus `test-food-basket.ps1`,
-  `test-desk-harness.ps1`, `check-workflows.ps1`, `validate-briefs.ps1`.
-- Browser: `?selftest=1` on the site (78 checks; result in `window.__selftest`);
-  `node tools/stress/site-check.mjs` (what CI runs); `node tools/stress/country-check.mjs <outDir>`
-  (every country, every Signals set and the Atlas, phone-width screenshots).
-  Both need Playwright (`npm i playwright` somewhere, then `NODE_PATH=<that>/node_modules`).
+- PowerShell tests: `scripts/test-news-ranking.ps1`, `test-story-contract.ps1`,
+  `test-article-evidence.ps1`, `test-publication-gate.ps1`, `test-static-pages.ps1 -UnitOnly`,
+  `test-food-basket.ps1` (21 checks), `test-desk-harness.ps1`, `check-workflows.ps1`,
+  `validate-briefs.ps1`.
+- Browser: `?selftest=1` (87 checks; the result is in `window.__selftest`; run
+  `await runSelfTest()` again if the hydration check fails on a cold load).
+- `node tools/stress/site-check.mjs` (what CI runs) and `node tools/stress/country-check.mjs <outDir>`
+  both need Playwright. The desktop has no Node, so those run in CI or the cloud.
+- Desktop preview: `.claude/launch.json` in `C:\Users\karan\Documents\James Code` starts
+  `united-africa/serve.ps1` on port 8733.
 
-## Cloud-session limits (why some things were not done there)
+## Cloud-session limits
 
-The cloud sandbox could reach only GitHub and package registries: HDX/WFP, World Bank,
-GeoNames, OurAirports, Overpass, FAOSTAT, OpenRouter and the live site were blocked, workflow
-dispatch was refused, and CI log downloads were blocked. Data builds, model tests and workflow
-runs belong on the desktop or in the workflows.
+The cloud sandbox reaches GitHub and package registries only. These are blocked there:
+HDX/WFP, World Bank, GeoNames, OurAirports, Overpass, FAOSTAT, the FAO crop calendar, Wikidata,
+OpenRouter and the live site. Workflow dispatch is refused and CI logs can't be downloaded.
+
+The cloud can do A1 with the list above (no network needed). A2, A4 and the city or rail rebuilds
+need the desktop.
