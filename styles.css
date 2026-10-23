@@ -1961,3 +1961,71 @@ main{position:relative}
   #wire-view .wire-list .wire-item:nth-child(odd){border-right:1px solid rgba(232,230,227,.07)}
 }
 .cv-food-warning{margin:0 0 10px;padding:10px 12px;border-left:3px solid #e0a458;background:rgba(224,164,88,.08);font:400 14px/1.5 var(--sans);color:var(--text)}
+
+
+/* -- Today's news on the landing screen ---------------------------------------------
+   The map-only landing page showed a phone reader no news at all: reading anything meant
+   knowing to tap a country (Rwanda and Gambia are a few pixels wide) or a small corner
+   link. Wide screens had two empty columns beside the map. Now: one top-story card under
+   the map on phones and tablets, still a single screen; a column of the top story and
+   three more headlines beside the map on wide screens. Same ranking as the Wire's lead. */
+.home-front[hidden]{display:none!important}
+.home-front-kicker-label{color:var(--green-bright)}
+.home-front--top{display:none}
+.home-front--side{display:none}
+@media (max-width:1079px){
+  .home-front--top{
+    display:flex;flex-direction:column;gap:4px;flex:none;
+    width:calc(100% - 32px);max-width:560px;margin:2px auto 4px;padding:10px 14px;
+    border:1px solid rgba(102,187,106,.32);border-radius:12px;background:rgba(76,175,80,.06);
+    text-align:left;max-height:none;overflow:visible;
+  }
+  .home-front--top .home-story{border:0;padding:0;min-height:44px}
+  .home-front--top .home-story-kicker{font:600 12px/1.3 var(--sans);letter-spacing:0;text-transform:none;margin-bottom:5px}
+  .home-front--top .home-story-title{font:700 19px/1.24 var(--serif)}
+  .home-front--top .home-front-all{
+    align-self:flex-start;min-height:40px;padding:0;border:0;
+    font:600 13px/40px var(--sans);letter-spacing:0;text-transform:none;color:var(--text-muted);
+  }
+  .home-front--top .home-front-all:hover,.home-front--top .home-front-all:focus-visible{color:var(--green-bright)}
+}
+@media (min-width:1080px){
+  .landing-stage-row{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);justify-content:stretch}
+  .landing-stage-row > .stage{grid-column:2}
+  .home-front--side{
+    display:flex;grid-column:3;justify-self:start;align-self:center;
+    width:100%;max-width:360px;gap:18px;text-align:left;
+  }
+  .home-front--side .home-story{border-left:1px solid var(--rule);padding-left:14px}
+  .home-front--side .home-story:hover,.home-front--side .home-story:focus-visible{border-left-color:var(--green)}
+  .home-front--side .home-story-kicker{font:600 12px/1.3 var(--sans);letter-spacing:0;text-transform:none}
+  .home-front--side .home-story-title{font-size:17px;line-height:1.25}
+  .home-front--side .home-story--lead .home-story-title{font-size:clamp(20px,1.6vw,26px);line-height:1.15}
+  .home-front--side .home-story-dek{font-size:14px}
+  .home-front--side .home-front-all{
+    align-self:flex-start;font:600 13px/1.2 var(--sans);letter-spacing:0;text-transform:none;
+    color:var(--text-muted);padding:6px 0;margin-left:15px;
+  }
+}
+/* Tablets of ordinary height: the landing page is one screen again (the scrolling rule
+   below 1080px served a headline list that no longer exists), so the map's grid row has
+   a real height and the card takes its own row under it instead of the fold. Short
+   screens (a phone on its side) keep scrolling. */
+@media (min-width:641px) and (max-width:1079px) and (min-height:700px){
+  body{height:100svh;min-height:0;overflow:hidden}
+  main{overflow:hidden}
+  .landing-core{grid-template-rows:auto auto minmax(0,1fr) auto}
+}
+/* Phones: main's floor assumed a 39px masthead; it is 44px plus a 1px rule, so the
+   landing page was always 6px taller than the screen. On the narrowest phones the map
+   is width-limited and cannot give up room for the top-story card, so the spacing
+   around it tightens instead. Measured flush at 360x640, 360x740, 390x844, 412x915. */
+@media (max-width:640px){
+  main{min-height:calc(100svh - 45px)}
+}
+@media (max-width:380px){
+  .landing-stage-row{padding:3px 0}
+  .pop-counter{margin-top:6px}
+  .home-front--top{padding:8px 12px}
+  .home-front--top .home-story-title{font-size:17px}
+}

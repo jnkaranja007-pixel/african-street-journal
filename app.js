@@ -5118,10 +5118,15 @@ canvas.addEventListener('touchstart', (e) => {
    sit under the ticker on a phone. Ranking is the desk's own: same scores, same lens,
    so the landing page and the Wire never disagree about what today's lead is. */
 (function renderHomeFront(){
+  // A column beside the map on wide screens, one top-story card under it on phones and
+  // tablets. CSS shows one or the other; both are filled so a rotation or resize needs
+  // no repaint. (The sign-up form mounts into #home-front-mobile, which no longer
+  // exists: the landing screen stays news, not a form.)
   const slots = {
-    mobile: document.getElementById('home-front-mobile')
+    side: document.getElementById('home-front-side'),
+    top: document.getElementById('home-front-top')
   };
-  if (!slots.mobile) return;
+  if (!slots.side && !slots.top) return;
 
   function topStories(limit) {
     const out = [];
@@ -5178,12 +5183,13 @@ canvas.addEventListener('touchstart', (e) => {
     return n;
   }
 
-  function storyMarkup(item, isLead) {
-    const dek = item.story.dek || storyParagraphs(item.story)[0] || '';
+  function storyMarkup(item, isLead, opts = {}) {
+    const dek = opts.dek === false ? '' : (item.story.dek || storyParagraphs(item.story)[0] || '');
     return '<button class="home-story' + (isLead ? ' home-story--lead' : '') +
         (isStoryReadKey(item.key) ? ' is-read' : '') +
         '" type="button" data-home-story="' + escapeHtml(item.key) + '">' +
       '<span class="home-story-kicker">' +
+        (isLead && opts.label ? '<span class="home-front-kicker-label">' + escapeHtml(opts.label) + '</span>' : '') +
         '<span>' + escapeHtml(item.country) + '</span>' +
         '<span>' + escapeHtml(item.topic) + '</span>' +
         (item.source ? '<span class="home-story-src">' + escapeHtml(item.source) + '</span>' : '') +
@@ -5194,21 +5200,36 @@ canvas.addEventListener('touchstart', (e) => {
   }
 
   function fill(el, items, opts) {
-    if (!el) return;
-    if (!items.length) { el.innerHTML = ''; return; }
+    if (!el) return false;
+    if (!items.length) { el.innerHTML = ''; el.hidden = true; return false; }
     // No column heading. The headlines carry their own country, topic and outlet, and
     // a label above them only repeated the masthead or made a claim about the clock.
     el.innerHTML =
-      items.map((item, i) => storyMarkup(item, opts.lead && i === 0)).join('') +
-      // One call to action on the screen, not one per column.
-      (opts.cta ? '<button class="home-front-all" type="button" data-home-all>Read the desk</button>' : '');
+      items.map((item, i) => storyMarkup(item, opts.lead && i === 0, opts)).join('') +
+      // One call to action per block, and it says what is behind it.
+      (opts.cta ? '<button class="home-front-all" type="button" data-home-all>' + escapeHtml(opts.cta) + ' &rarr;</button>' : '');
+    const wasHidden = el.hidden;
+    el.hidden = false;
+    return wasHidden;
   }
 
   function paint() {
-    const items = topStories(7);
+    const items = topStories(4);
     if (!items.length) return;
     const fresh = newSinceLastVisit();
-    fill(slots.mobile, items.slice(0, 5), { lead: true, cta: true });
+    const total = Object.values(AI_BRIEFS || {}).reduce((n, list) => n + (Array.isArray(list) ? list.filter(s => s && s.headline).length : 0), 0);
+    const countries = Object.values(AI_BRIEFS || {}).filter(list => Array.isArray(list) && list.length).length;
+    const cta = fresh > 0
+      ? fresh + ' new since your last visit'
+      : 'All ' + total + ' stories from ' + countries + ' countries';
+    fill(slots.side, items, { lead: true, cta, label: 'Top story' });
+    // The phone card is one story, no dek and no button, so the landing page stays one
+    // screen: the masthead's own "231 stories" entry (it turns into "N new" for a
+    // returning reader, below) already leads to the rest. The map is re-fitted to the
+    // space left the first time the card appears.
+    if (fill(slots.top, items.slice(0, 1), { lead: true, cta: '', label: 'Top story', dek: false }) && typeof layoutPhoneMap === 'function') {
+      requestAnimationFrame(layoutPhoneMap);
+    }
     // The sign-up form lives inside these blocks and is wiped by the repaint above.
     try { window.dispatchEvent(new CustomEvent('asj:front-painted')); } catch {}
     // The entry button is the other place a returning reader looks. Saying "12 new"
