@@ -55,6 +55,31 @@ Asset version is now **77** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, 
    `/countries/` is titled "Text-only edition", `feed.xml` starts with an
    `<?xml-stylesheet ... /feed.xsl?>` line.
 
+## Next fixes (proposed 23 Oct cloud session, not started)
+
+In this order; 1-4 are small and safe.
+1. **Data saver, part two**: in `ASJ_SAVE_DATA` mode (app.js, `loadDeferredHalf`) also skip
+   the Playfair Display web font (~60-90 KB first visit, index.html lines ~61-71) and the Wire's
+   flagcdn images (up to ~55 x 2 KB; country names are already text).
+2. **Wire on phones**: filters take ~300px before the first story (one and a half headlines
+   visible at 390x844). Compact them so 3-4 stories show on the first screen.
+3. **Map accuracy**: rivers not clipped to the country (Kenya's atlas alt text lists Jubba,
+   Pangani, Genale and an unnamed "River"); Western Sahara labels Lemsid (pop 100) and Dawra
+   (pop 10); Hargeisa's dot hides under the Egal (HGA) airport diamond.
+4. **Off-country stories at ranking**: the writer drops them via `countryLink` after a model
+   call; add a check in `scripts/news-ranking.ps1` (tests: `test-news-ranking.ps1`) so they
+   never reach the model.
+5. Per-country RSS (`/<cc>/feed.xml`) for readers following one country.
+6. Home map assembly animation is choppy on mid-range phones (~100 ms per frame at 4x CPU
+   throttling): make frames cheaper or the animation shorter.
+7. `styles.css` (177 KB) carries many overrides of retired designs; trim with before/after
+   screenshots of every screen.
+
+How this session measured things (reuse for before/after): Playwright with
+`executablePath: '/opt/pw-browsers/chromium'` in the cloud, CPU throttling 4x via CDP
+(`Emulation.setCPUThrottlingRate`), long tasks via `PerformanceObserver({type:'longtask'})`
+for total blocking time, axe-core 4.10 for WCAG 2.2 AA (0 failures on all 8 screens on 23 Oct).
+
 ## Decisions waiting for the owner
 
 1. **Diaspora tab size.** The Wire's reader tabs show only stories rated >= 41
