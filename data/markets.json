@@ -1,78 +1,78 @@
 {
     "ke":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
-                                     "cap":  9.78,
+                                     "cap":  6.88,
+                                     "t":  "OCH",
+                                     "name":  "Olympia Capital Holdings Ltd",
+                                     "change":  -9.95
+                                 },
+                                 {
+                                     "cap":  10.75,
                                      "t":  "KPC",
                                      "name":  "Kenya Pipeline Company",
-                                     "change":  7.95
+                                     "change":  9.92
                                  },
                                  {
-                                     "cap":  2.75,
-                                     "t":  "LKL",
-                                     "name":  "Longhorn Publishers Ltd",
-                                     "change":  4.96
+                                     "cap":  15.95,
+                                     "t":  "SKL",
+                                     "name":  "Shri Krishana Overseas Ltd",
+                                     "change":  7.41
                                  },
                                  {
-                                     "cap":  1.03,
-                                     "t":  "HAFR",
-                                     "name":  "Home Afrika Ltd",
-                                     "change":  4.04
-                                 },
-                                 {
-                                     "cap":  330,
-                                     "t":  "AMAC",
-                                     "name":  "Africa Mega Agricorp",
-                                     "change":  3.94
-                                 },
-                                 {
-                                     "cap":  16.7,
-                                     "t":  "TPSE",
-                                     "name":  "TPS Eastern Africa Serena Ltd",
-                                     "change":  -3.75
+                                     "cap":  111,
+                                     "t":  "PORT",
+                                     "name":  "East African Portland Cement",
+                                     "change":  -6.13
                                  },
                                  {
                                      "cap":  14.8,
-                                     "t":  "SKL",
-                                     "name":  "Shri Krishana Overseas Ltd",
-                                     "change":  -2.95
+                                     "t":  "NMG",
+                                     "name":  "Nation Media Group",
+                                     "change":  6.09
                                  },
                                  {
-                                     "cap":  158,
-                                     "t":  "WTK",
-                                     "name":  "Williamson Tea Kenya Ltd",
-                                     "change":  2.6
+                                     "cap":  16.5,
+                                     "t":  "TPSE",
+                                     "name":  "TPS Eastern Africa Serena Ltd",
+                                     "change":  -5.44
                                  },
                                  {
-                                     "cap":  5.68,
-                                     "t":  "KQ",
-                                     "name":  "Kenya Airways Ltd",
-                                     "change":  -2.41
+                                     "cap":  5.8,
+                                     "t":  "UMME",
+                                     "name":  "Umeme Ltd",
+                                     "change":  -5.23
                                  },
                                  {
-                                     "cap":  23.95,
-                                     "t":  "SASN",
-                                     "name":  "Sasini Tea and Coffee Ltd",
-                                     "change":  2.35
+                                     "cap":  27.1,
+                                     "t":  "EGAD",
+                                     "name":  "Eaagads Ltd",
+                                     "change":  -5.08
                                  },
                                  {
-                                     "cap":  7.48,
-                                     "t":  "XPRS",
-                                     "name":  "Express Kenya Ltd",
-                                     "change":  -2.35
+                                     "cap":  4.9,
+                                     "t":  "CIC",
+                                     "name":  "CIC Insurance Group Ltd",
+                                     "change":  -5.04
                                  },
                                  {
-                                     "cap":  10.45,
-                                     "t":  "KEGN",
-                                     "name":  "KenGen Plc",
-                                     "change":  -2.34
+                                     "cap":  1.28,
+                                     "t":  "TRFC",
+                                     "name":  "TRIFIC Green USD I-REIT",
+                                     "change":  4.07
                                  },
                                  {
-                                     "cap":  1.4,
-                                     "t":  "UCHM",
-                                     "name":  "Uchumi Supermarket Ltd",
-                                     "change":  2.19
+                                     "cap":  10.4,
+                                     "t":  "SLAM",
+                                     "name":  "Sanlam Allianz Holdings",
+                                     "change":  4
+                                 },
+                                 {
+                                     "cap":  317,
+                                     "t":  "AMAC",
+                                     "name":  "Africa Mega Agricorp",
+                                     "change":  -3.94
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/nse/",
@@ -80,7 +80,7 @@
                "name":  "Nairobi Securities Exchange"
            },
     "ng":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  7.25,
@@ -160,7 +160,7 @@
                "name":  "Nigerian Exchange Group"
            },
     "za":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  53.99,
@@ -199,16 +199,16 @@
                                      "change":  -5.88
                                  },
                                  {
+                                     "cap":  0.4,
+                                     "t":  "APF",
+                                     "name":  "Accelerate Property Fund Limited",
+                                     "change":  5.26
+                                 },
+                                 {
                                      "cap":  803.41,
                                      "t":  "AGL",
                                      "name":  "Anglo American plc",
                                      "change":  -5.24
-                                 },
-                                 {
-                                     "cap":  0.38,
-                                     "t":  "APF",
-                                     "name":  "Accelerate Property Fund Limited",
-                                     "change":  -5
                                  },
                                  {
                                      "cap":  1431.02,
@@ -240,7 +240,7 @@
                "name":  "Johannesburg Stock Exchange"
            },
     "gh":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  1.89,
@@ -320,7 +320,7 @@
                "name":  "Ghana Stock Exchange"
            },
     "ug":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  473.92,
@@ -400,7 +400,7 @@
                "name":  "Uganda Securities Exchange"
            },
     "zw":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  0.0935,
@@ -480,7 +480,7 @@
                "name":  "Zimbabwe Stock Exchange"
            },
     "bw":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  0.28,
@@ -560,7 +560,7 @@
                "name":  "Botswana Stock Exchange"
            },
     "zm":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3.94,
@@ -640,7 +640,7 @@
                "name":  "Lusaka Securities Exchange"
            },
     "mw":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  8963.99,
@@ -720,7 +720,7 @@
                "name":  "Malawi Stock Exchange"
            },
     "ci":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3700,
@@ -800,7 +800,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "bj":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3700,
@@ -880,7 +880,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "bf":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3700,
@@ -960,7 +960,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "ml":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3700,
@@ -1040,7 +1040,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "ne":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3700,
@@ -1120,7 +1120,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "sn":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3700,
@@ -1200,7 +1200,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "tg":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3700,
@@ -1280,7 +1280,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "gw":  {
-               "asOf":  "2026-10-22",
+               "asOf":  "2026-10-23",
                "companies":  [
                                  {
                                      "cap":  3700,
