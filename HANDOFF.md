@@ -18,7 +18,8 @@ GitHub Pages serves `main`, so **whatever is on `main` is live**.
 
 | Commit | What |
 |---|---|
-| (this push) | **Farm exports and crop calendar from FAO (desktop, 23 Oct).** Main farm exports come from FAOSTAT with their value (`scripts/build-farm-exports.ps1`); the hand-made `FARM_EXPORTS` list is gone. Season months come from the FAO Crop Calendar where FAO lists the crop (`scripts/build-crop-calendar.ps1`), with typical months labelled as such. Rail: Algeria's duplicate line merged; Morocco's LGV shown once. Renamed towns use their current names. Self-test 89 checks. Asset version 79. |
+| (this push) | **Reader and engineering batch (desktop, 23 Oct).** Readers: each World Bank figure shows the Africa median (`africaMedian()`; not for dollar totals); every country's figures end with "How we check these figures" (new `/methods/` page, opened in the in-site sheet) and "Report an error" (mailto with the country). Phones: Signals gets a sticky row of section links (`renderSignalsJump`; the Signals header itself is static on phones by design), and the Wire's filters are one row plus the edition (2 -> 3 stories on the first screen; More is a three-dot button; options say "All readers", "All topics", "Latest edition"). Data saver: no Playfair font, and the Wire shows country codes instead of 55 flags. Engineering: the self-test moved to `selftest.js`, loaded only with `?selftest=1` (app.js -32 KB), and its cold-load race is fixed (it waits for the prose). `country-facts.js` 137 KB -> 34 KB: ports, airports, cities, food and crop months are in `data/facts/<cc>.js`, loaded with the country (workflows commit `data/facts`). New `scripts/check-data-health.ps1` + `data-health.yml`: daily freshness, monthly second-source audit; problems open or update one "Data health" issue. Desk: big foreign cities and countries mark a story external at ranking, so it needs a second outlet before a model call (Paris v Barcelona on the Burundi desk). Cities take the capital from `COUNTRY_INFO`. Sierra Leone's freight railway is explained (`RAIL_NOTES`). `tools/afx-relay` (optional) lets GitHub fetch listings without the PC. Self-test 93 checks. Asset version 80. |
+| `8e95a97a` | **Farm exports and crop calendar from FAO (desktop, 23 Oct).** Main farm exports come from FAOSTAT with their value (`scripts/build-farm-exports.ps1`); the hand-made `FARM_EXPORTS` list is gone. Season months come from the FAO Crop Calendar where FAO lists the crop (`scripts/build-crop-calendar.ps1`), with typical months labelled as such. Rail: Algeria's duplicate line merged; Morocco's LGV shown once. Renamed towns use their current names. Self-test 89 checks. Asset version 79. |
 | `307f52da` | **Second-source checks (desktop, 23 Oct).** Rail is now route length (OSM counted each track of a double line: Algeria 6,606 -> 5,130 km, Morocco 3,314 -> 1,953), with the CIA World Factbook total shown beside it. Libya, Chad and Niger say "no railway in service". City populations are the median of Natural Earth, GeoNames and Wikidata (fixes Juba 112k, Benoni 2.99M, Kakamega's county figure; drops single-source entries such as Iran's Arak placed in Algeria). World Bank figures more than 7 years old show "last reported <year>". Landmarks were checked against Wikidata, OSM water and drawn river vertices. Lake Chad is now shown only in Chad and Cameroon; Niger and Nigeria get the Niger River; Ethiopia gets Lake Tana. Build-script sorts give the same order on PS 5.1 and pwsh. Six new self-tests (87 total). Asset version 78. |
 | `10a00a28` | **News on the landing screen** (cloud, 23 Oct): a "Top story" card under the map on phones and tablets; a column beside the map at 1080px+. `renderHomeFront` in app.js. |
 | `76e05017` | **Reader speed + data saver** (cloud): deep links skip the map animation (blocking time 2.4 -> 1.1 s); in Save-Data or 3G mode `briefs-full.js` (146 KB) is not downloaded; fixed a tab freeze. |
@@ -27,14 +28,13 @@ GitHub Pages serves `main`, so **whatever is on `main` is live**.
 | `d75605e0`, `5faa7551` | Exchange listings refresh from the **owner's PC** (AFX blocks GitHub runners): `scripts/refresh-markets-desktop.ps1`, run by the Windows scheduled task "ASJ markets refresh" (daily 18:30, from the worktree `C:\Users\karan\Documents\James Code\asj-markets-refresh`). Log: `%LOCALAPPDATA%\ASJ\markets-refresh.log`. |
 | `836eae90` | Desk writer harness (`scripts/write-briefs.ps1`, prompt `story-v14`). See "How the desk writer works". |
 
-Asset version is now **79** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
+Asset version is now **80** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
 `sw.js`). `static-pages.css?v=69` is set inside `scripts/build-static-pages.ps1`.
 
 ## Do first (in order)
 
-1. **CI for `307f52da`.** If `site-check` fails on "payload: every story has prose after
-   hydration", see open item C1 below. Locally that check fails only on the first `?selftest=1`
-   load (0/231) and passes on a rerun (`await runSelfTest()`).
+1. **CI for the latest push** (`gh run list -L 4`). The self-test's cold-load race is fixed (it
+   waits for the prose before checking it).
 2. **The first desk run on the new writer** has not happened yet (no `update-news.yml` run since
    22 Oct 08:54 UTC; GitHub's schedule is running hours late).
    `gh run list --workflow update-news.yml -L 3`, then `gh run view <id> --log | Select-String '\[write\]'`.
@@ -195,25 +195,34 @@ no staple) deserves a look.
 
 ### C. Open problems
 
-1. On a cold local load, the self-test "payload: every story has prose after hydration" reports
-   0/231 and passes on a rerun. It is a race between the self-test and story hydration, and it
-   happened before the cloud's data-saver change too. If CI flakes on it, have the check wait for
-   hydration.
-2. News: Djibouti and Western Sahara have not filed since 6 Sep (read the desk log; do not lower
+1. News: Djibouti and Western Sahara have not filed since 6 Sep (read the desk log; do not lower
    `-MinEvidenceWords`). Ghana lacks strong domestic feeds (3News works: `https://3news.com/feed.xml`).
 
-## Next fixes from the cloud session (not started)
+## Owner actions (optional)
 
-1. Data saver part two: in `ASJ_SAVE_DATA` mode also skip Playfair Display (~60-90 KB) and the
-   Wire's flagcdn images (~55 x 2 KB).
-2. Wire on phones: the filters take ~300 px before the first story. Compact them so 3-4 stories show.
-3. Map accuracy: rivers are not clipped to the country (Kenya's alt text lists Jubba, Pangani,
+- **Listings without the PC**: deploy `tools/afx-relay` (Cloudflare dashboard; no Node needed),
+  then set the repository variable `ASJ_AFX_RELAY`. The steps, including how to tell whether AFX
+  also blocks Cloudflare, are in `tools/afx-relay/README.md`. Until then the desktop task does it.
+- **The `/methods/` page** is built by the nightly desk (`build-static-pages.ps1`; committed by
+  `publish-edition.ps1`). Until the first desk run after this push, the "How we check these
+  figures" link opens a 404.
+- **Data health**: a "Data health" issue opens if a source goes stale. The monthly audit runs on
+  the 2nd. Either mode can be run by hand: Actions > Data health > Run workflow.
+
+## Next fixes (not started)
+
+Done 23 Oct: data saver part two, Wire on phones, off-country stories at ranking. Left:
+1. Map accuracy: rivers are not clipped to the country (Kenya's alt text lists Jubba, Pangani,
    Genale and an unnamed "River"); Western Sahara labels Lemsid (pop 100) and Dawra (pop 10);
    Hargeisa's dot hides under the HGA airport diamond.
-4. Off-country stories: catch them at ranking (`scripts/news-ranking.ps1`) before the model call.
-5. Per-country RSS (`/<cc>/feed.xml`).
-6. The home map animation is choppy on mid-range phones (~100 ms per frame at 4x throttling).
-7. `styles.css` (177 KB): trim overrides of retired designs, with before/after screenshots.
+2. Per-country RSS (`/<cc>/feed.xml`).
+3. The home map animation is choppy on mid-range phones (~100 ms per frame at 4x throttling).
+4. `styles.css` (now ~180 KB): trim overrides of retired designs, with before/after screenshots.
+   Several later "-v2" blocks override earlier rules; for example, the Signals header was made
+   static on phones after an earlier rule made it sticky.
+5. The country page on phones: an "At a glance" card at the top of Signals (population, growth,
+   main export, main port and airport, food-price trend) would answer most visits without
+   scrolling.
 
 Measuring (cloud): Playwright, 4x CPU throttling via CDP, long tasks for blocking time, axe-core
 4.10 for WCAG 2.2 AA (0 failures on all 8 screens on 23 Oct).
@@ -263,8 +272,9 @@ banned phrases live in `Get-StockPhraseRules` and are injected into the prompt.
   `test-article-evidence.ps1`, `test-publication-gate.ps1`, `test-static-pages.ps1 -UnitOnly`,
   `test-food-basket.ps1` (21 checks), `test-desk-harness.ps1`, `check-workflows.ps1`,
   `validate-briefs.ps1`.
-- Browser: `?selftest=1` (89 checks; the result is in `window.__selftest`; run
-  `await runSelfTest()` again if the hydration check fails on a cold load).
+- Browser: `?selftest=1` (93 checks, from `selftest.js`; the result is in `window.__selftest`).
+- Data: `scripts/check-data-health.ps1 -Mode Daily` (files only) and `-Mode Monthly`
+  (Factbook and Wikidata cross-checks).
 - `node tools/stress/site-check.mjs` (what CI runs) and `node tools/stress/country-check.mjs <outDir>`
   both need Playwright. The desktop has no Node, so those run in CI or the cloud.
 - Desktop preview: `.claude/launch.json` in `C:\Users\karan\Documents\James Code` starts

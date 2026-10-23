@@ -10,6 +10,7 @@ on:
       - '.github/workflows/**'
       - 'scripts/**'
       - 'app.js'
+      - 'selftest.js'
       - 'index.html'
       - 'styles.css'
       - 'data/**'
@@ -19,6 +20,7 @@ on:
       - '.github/workflows/**'
       - 'scripts/**'
       - 'app.js'
+      - 'selftest.js'
       - 'index.html'
       - 'styles.css'
       - 'data/**'
@@ -37,7 +39,9 @@ jobs:
 
       - name: Browser script parses
         shell: pwsh
-        run: node --check app.js
+        run: |
+          node --check app.js;      if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          node --check selftest.js
 
       - name: Workflow PowerShell parses
         shell: pwsh

@@ -33,7 +33,7 @@
      GoatCounter site code nor a Cloudflare beacon token is a secret.
      Both supported providers are cookieless and neither profiles readers across sites,
      which is the only reason this page can measure traffic without a consent banner. -->
-<script src="data/analytics-config.js?v=79" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=80" onerror="window.ASJ_ANALYTICS=null"></script>
 <script>
 (function () {
   var cfg = window.ASJ_ANALYTICS;
@@ -58,21 +58,40 @@
   }
 }());
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Non-blocking. A stylesheet link in the head stops first paint until a third-party
-     round trip completes; on a slow connection that is a blank screen for a second or
-     more, and the audience for this paper is on exactly those connections. Loading it
-     as print media and switching to all on load takes it off the critical path. The
-     font URL already carries display=swap, so headlines render in Georgia immediately
-     and reflow to Playfair when it arrives. The noscript copy keeps the original
-     behaviour for a reader with JavaScript off. -->
-<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
+<!-- Data saver: with Save-Data on, or on 3G and slower, the decorative headline font
+     (~60-90 KB on a first visit) is not fetched at all; headlines use Georgia. The same
+     test sets window.ASJ_SAVE_DATA in app.js. -->
+<script>
+(function () {
+  var c = navigator.connection;
+  if (c && (c.saveData || /^(slow-2g|2g|3g)$/.test(String(c.effectiveType || '')))) {
+    document.documentElement.classList.add('save-data');
+    window.ASJ_SAVE_DATA = true;
+    return;
+  }
+  var head = document.head;
+  ['https://fonts.googleapis.com', 'https://fonts.gstatic.com'].forEach(function (href, i) {
+    var p = document.createElement('link'); p.rel = 'preconnect'; p.href = href;
+    if (i) p.crossOrigin = '';
+    head.appendChild(p);
+  });
+  var l = document.createElement('link');
+  l.rel = 'stylesheet'; l.media = 'print';
+  l.onload = function () { this.media = 'all'; this.onload = null; };
+  l.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap';
+  head.appendChild(l);
+}());
+</script>
+<!-- Otherwise the font is non-blocking (above): a stylesheet link in the head stops first
+     paint until a third-party round trip completes, so it loads as print media and
+     switches to all on load. The URL carries display=swap, so headlines render in Georgia
+     immediately and reflow to Playfair when it arrives. The noscript copy keeps the
+     original behaviour for a reader with JavaScript off. -->
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=79" as="script">
-<link rel="preload" href="data/app-core.js?v=79" as="script">
-<link rel="preload" href="data/briefs.js?v=79" as="script">
-<link rel="stylesheet" href="styles.css?v=79">
+<link rel="preload" href="app.js?v=80" as="script">
+<link rel="preload" href="data/app-core.js?v=80" as="script">
+<link rel="preload" href="data/briefs.js?v=80" as="script">
+<link rel="stylesheet" href="styles.css?v=80">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
@@ -366,7 +385,7 @@
     <label class="wire-pick">
       <span class="wire-pick-label">Reading for</span>
       <select id="wire-lens-select">
-        <option value="general">Everyone</option>
+        <option value="general">All readers</option>
         <option value="farmers">Farmers</option>
         <option value="investors">Investors</option>
         <option value="diaspora">Diaspora</option>
@@ -382,7 +401,7 @@
     </label>
     <div class="wire-more">
       <button class="wire-mobile-actions-toggle" id="wire-mobile-actions-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="wire-actions">
-        More <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+        <span class="wire-more-text">More</span><svg class="wire-more-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg><svg class="wire-more-dots" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
       </button>
       <div class="wire-actions" id="wire-actions">
         <button class="wire-action wire-compare-toggle" id="wire-compare-toggle" type="button" aria-expanded="false" aria-controls="wire-compare-body"><span>Compare countries</span><b id="wire-compare-summary"></b></button>
@@ -434,19 +453,19 @@
   </div>
 </article>
 
-<script src="data/app-core.js?v=79"></script>
+<script src="data/app-core.js?v=80"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
-<script>window.ASJ_ASSET_VERSION='79';</script>
-<script src="data/country-facts.js?v=79" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
-<script src="data/indices.js?v=79" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=79" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=79" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=79" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=79" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script>window.ASJ_ASSET_VERSION='80';</script>
+<script src="data/country-facts.js?v=80" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
+<script src="data/indices.js?v=80" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=80" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=80" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=80" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=80" onerror="window.ASJ_NEWSLETTER=null"></script>
 
-<script src="app.js?v=79"></script>
-<script src="country-sidebar.js?v=79" defer></script>
-<script src="/info-panel.js?v=79" defer></script>
+<script src="app.js?v=80"></script>
+<script src="country-sidebar.js?v=80" defer></script>
+<script src="/info-panel.js?v=80" defer></script>
 </body>
 </html>

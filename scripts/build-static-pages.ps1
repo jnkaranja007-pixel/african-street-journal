@@ -564,6 +564,27 @@ $trustPages = [ordered]@{
 <li>Because stories are summaries generated with an AI model and checked automatically, mistakes are possible. Reader reports are an important part of catching them.</li>
 </ul>
 <p>To report an error, email <a href="mailto:hello@africanstreetjournal.com?subject=Correction">hello@africanstreetjournal.com</a> with the story link and what is wrong.</p>
+<p>For the figures on country pages, see <a href="$BaseUrl/methods/">how we check our figures</a>.</p>
+"@ }
+  # Linked from every country page's figures (23 Oct 2026): where each number comes
+  # from, and the second-source checks behind it.
+  methods = @{ title = 'How we check our figures'; desc = 'Where the figures on The African Street Journal country pages come from, and how each is checked against a second source.'; body = @"
+<p>Every figure on a country page comes from a named public source, shown with its year. Where a second, independent source exists, we check one against the other, and we fix, hide or label anything that does not agree.</p>
+<h2>What we show and where it comes from</h2>
+<ul>
+<li><b>Economy and farming figures:</b> the World Bank's World Development Indicators. We show the latest year reported, never present a figure more than seven years old as current, and give the median of the African countries that report the same figure.</li>
+<li><b>Main farm exports:</b> FAOSTAT trade data from the UN Food and Agriculture Organization, as the average export value of the last three years it reports. Goods a country imports more of than it exports are left out, so re-exports do not count as farm produce.</li>
+<li><b>Planting and harvest months:</b> the FAO Crop Calendar where it covers the crop for that country; otherwise typical months for the crop, labelled as typical.</li>
+<li><b>Food prices:</b> World Food Programme market monitoring. We use a national average, or a market in the capital or a large town. A refugee-camp market is used only when WFP monitors nothing else, and the page says so.</li>
+<li><b>Largest cities:</b> the middle value of three sources: Natural Earth, GeoNames and Wikidata. A city needs at least two of them. Sources draw city limits differently, so treat populations as approximate.</li>
+<li><b>Ports and airports:</b> the NGA World Port Index, and OurAirports for airports with scheduled flights.</li>
+<li><b>Railways:</b> the OpenStreetMap route length of lines not marked disused, shown beside the CIA World Factbook's total for the whole network. Where track is mapped but no trains run (Libya, Chad, Niger), we say so.</li>
+<li><b>Maps and landmarks:</b> Natural Earth outlines, following African Union membership: Somaliland is shown as part of Somalia, and Western Sahara as its own territory. Landmark positions are checked against Wikidata and OpenStreetMap.</li>
+</ul>
+<h2>How the checks keep running</h2>
+<p>Most sources refresh automatically every month. A monthly audit repeats the cross-checks (railway lengths against the Factbook, city figures against each other, landmark positions) and flags anything that has drifted, and a daily check flags any source that has stopped updating.</p>
+<h2>Report an error</h2>
+<p>If a figure looks wrong, email <a href="mailto:hello@africanstreetjournal.com?subject=Data%20correction">hello@africanstreetjournal.com</a> with the country and the figure. We check it against its source and correct it.</p>
 "@ }
 }
 foreach ($slug in $trustPages.Keys) {

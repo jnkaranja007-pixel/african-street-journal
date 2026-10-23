@@ -90,6 +90,8 @@ foreach ($cc in $CODES) {
   $out = [ordered]@{}
   foreach ($label in $byLabel.Keys) {
     $e = $byLabel[$label]
+    # Some entries carry no dates at all (Ghana's cashew); leave those to typical months.
+    if (-not $e.s.Count -and -not $e.h.Count) { continue }
     $out[$label] = [ordered]@{ s = @($e.s.Keys | Sort-Object); h = @($e.h.Keys | Sort-Object); zones = $e.zones.Count }
   }
   $countries[$cc] = $out

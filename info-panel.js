@@ -3,7 +3,7 @@
    with a modifier-click, they still go to the standalone pages. Deep-linkable: #about. */
 (function () {
   'use strict';
-  var PAGES = { about: 'About', privacy: 'Privacy', contact: 'Contact', corrections: 'Corrections' };
+  var PAGES = { about: 'About', privacy: 'Privacy', contact: 'Contact', corrections: 'Corrections', methods: 'How we check our figures' };
   var css = '.ip-back{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s}' +
     '.ip-back.ip-on{opacity:1}' +
     '.ip{position:relative;width:min(560px,calc(100vw - 32px));max-height:min(80vh,720px);overflow:auto;background:#171717;border:1px solid #2a2a2a;color:#e8e6e3;padding:28px 28px 24px;box-shadow:0 24px 64px rgba(0,0,0,.5);transform:translateY(8px);transition:transform .2s;font:15.5px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif;text-align:left}' +
@@ -96,7 +96,7 @@
     if (!a || a.closest('.ip')) return;
     var u; try { u = new URL(a.getAttribute('href'), location.href); } catch (err) { return; }
     var sameSite = u.origin === location.origin || /(^|\.)africanstreetjournal\.com$/.test(u.hostname);
-    var m = sameSite && u.pathname.match(/^\/(about|privacy|contact|corrections)\/?$/);
+    var m = sameSite && u.pathname.match(/^\/(about|privacy|contact|corrections|methods)\/?$/);
     if (!m || u.hash) return;
     if (location.pathname === '/' + m[1] + '/') return;
     e.preventDefault();

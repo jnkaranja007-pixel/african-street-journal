@@ -30,6 +30,15 @@ New-Item -ItemType Directory -Force -Path $CacheDir | Out-Null
 $CODES = @('dz','ao','bj','bw','bf','bi','cm','cv','cf','td','km','cg','cd','ci','dj','eg','gq','er','sz','et',
            'ga','gm','gh','gn','gw','ke','ls','lr','ly','mg','mw','ml','mr','mu','ma','mz','na','ne','ng','rw',
            'st','sn','sc','sl','so','za','ss','sd','tz','tg','tn','ug','zm','zw','eh')
+# The capital the site names (COUNTRY_INFO in app.js). The sources flag their own:
+# Cotonou, Bujumbura, both Cape Town and Pretoria - and nothing for Laayoune.
+$CAPITALS = @{}
+$appText = [IO.File]::ReadAllText((Join-Path $root 'app.js'), [Text.Encoding]::UTF8)
+# Single quotes, except where the name has an apostrophe: "Cote d'Ivoire", "N'Djamena".
+foreach ($m in [regex]::Matches($appText, "(\w\w): \{ name: (?:'[^']*'|""[^""]*""),\s*region: '[^']*',\s*capital: (?:'([^']+)'|""([^""]+)"")")) {
+  $CAPITALS[$m.Groups[1].Value] = if ($m.Groups[2].Success) { $m.Groups[2].Value } else { $m.Groups[3].Value }
+}
+if ($CAPITALS.Count -ne 55) { throw "Expected 55 capitals in COUNTRY_INFO (app.js), found $($CAPITALS.Count)" }
 # Names the sources still use for towns that were renamed, or English spellings, where
 # Wikidata did not supply the current one.
 $NAME_NOW = @{ 'Nazret' = 'Adama'; 'Ruhengeri' = 'Musanze'; 'Baydhabo' = 'Baidoa'; 'Moutsamoudou' = 'Mutsamudu';
@@ -201,6 +210,9 @@ foreach ($cc in $CODES) {
     }
   }
 
+  if ($CAPITALS.ContainsKey($cc) -and @($cands | Where-Object { Test-SameName $_.names $CAPITALS[$cc] }).Count) {
+    foreach ($c in $cands) { $c.capital = [bool](Test-SameName $c.names $CAPITALS[$cc]) }
+  }
   $rows = foreach ($c in $cands) {
     $vals = @(@($c.ne, $c.gn, $c.wd) | Where-Object { $null -ne $_ -and $_ -gt 0 })
     if (-not $vals.Count) { continue }

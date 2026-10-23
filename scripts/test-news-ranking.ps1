@@ -73,6 +73,24 @@ Assert-Desk 'single-source external story fails the country-link gate' `
 Assert-Desk 'corroborated external story can serve the diaspora lens' `
   (Test-NewsCountryLink $franceOnSenegalDesk.Match 2)
 
+# The 22 Oct 2026 edition: club football on the Burundi desk, Lisbon on Namibia's.
+$footballOnBurundiDesk = Get-CountryRelevance `
+  'Paris Saint-Germain beat Barcelona in a five-goal thriller' `
+  'The French champions came from behind in the second half' `
+  @('Burundi','Burundian','Bujumbura','Gitega') '' $false @()
+Assert-Desk 'European club football on a domestic feed is external, not domestic' ($footballOnBurundiDesk.Match -eq 'external')
+Assert-Desk 'and a single outlet cannot carry it past the country-link gate' (-not (Test-NewsCountryLink $footballOnBurundiDesk.Match 1))
+$lisbonOnNamibiaDesk = Get-CountryRelevance `
+  'Lisbon tram derailment kills 15' `
+  'Portuguese authorities opened an inquiry' `
+  @('Namibia','Namibian','Windhoek') '' $false @()
+Assert-Desk 'a Lisbon story on a Namibian feed is external' ($lisbonOnNamibiaDesk.Match -eq 'external')
+$namibiaInLisbon = Get-CountryRelevance `
+  'Namibia signs green hydrogen deal in Lisbon' `
+  'The agreement was signed on Monday' `
+  @('Namibia','Namibian','Windhoek') '' $false @()
+Assert-Desk 'a Namibian story set in Lisbon stays Namibian' ($namibiaInLisbon.Match -eq 'title' -and -not $namibiaInLisbon.HardReject)
+
 Write-Host '[ranking-test] event identity' -ForegroundColor Cyan
 $ignore = @('Togo','Togolese','Lome')
 $leftTitle = Get-NewsSignature 'Arrestation de deux journalistes francais au Togo' $ignore

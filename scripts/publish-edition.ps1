@@ -49,7 +49,7 @@ Set-Location $root
 $script:EDITION_PATHS = @(
   'data/briefs.js','data/briefs-full.js','data/briefs-state.json','data/archive',
   'sitemap.xml','news-sitemap.xml','feed.xml','robots.txt','static-pages.css','404.html',
-  'about','privacy','contact','corrections','countries'
+  'about','privacy','contact','corrections','methods','countries'
 )
 
 function Add-EditionFiles {

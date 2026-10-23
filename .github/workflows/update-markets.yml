@@ -32,6 +32,10 @@ jobs:
         shell: pwsh
         continue-on-error: true
         timeout-minutes: 6
+        # AFX drops runner traffic. With the ASJ_AFX_RELAY repository variable set to the
+        # tools/afx-relay Worker's URL, the pages come through Cloudflare instead.
+        env:
+          ASJ_AFX_RELAY: ${{ vars.ASJ_AFX_RELAY }}
         run: ./scripts/update-markets.ps1
 
       - name: Fetch exchange indices

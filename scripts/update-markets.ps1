@@ -41,6 +41,10 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $outPath = Join-Path $root 'data\markets.json'
 $UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36'
+# AFX drops GitHub runner traffic, so the listings were refreshed from the owner's PC.
+# With ASJ_AFX_RELAY set (a repository variable; tools/afx-relay is the Worker), the
+# runner fetches the same pages through Cloudflare instead. Unset: AFX directly.
+$AfxBase = if ($env:ASJ_AFX_RELAY) { $env:ASJ_AFX_RELAY.TrimEnd('/') } else { 'https://afx.kwayisi.org' }
 
 # AFX exchange slug -> the countries it serves. BRVM is the regional WAEMU exchange, so
 # eight countries legitimately share one listing table.
@@ -134,7 +138,7 @@ foreach ($ex in $EXCHANGES) {
     $wanted = @($wanted | Where-Object { $want -contains $_ })
     if (-not $wanted.Count) { continue }
   }
-  $url = "https://afx.kwayisi.org/$($ex.slug)/"
+  $url = "$AfxBase/$($ex.slug)/"
   if ($consecutiveFailures -ge $MaxConsecutiveFailures) {
     Write-Host ("  {0,-6} SKIPPED: source host unreachable ({1} consecutive failures)" -f $ex.slug, $consecutiveFailures) -ForegroundColor DarkYellow
     $failed.Add($ex.slug); continue

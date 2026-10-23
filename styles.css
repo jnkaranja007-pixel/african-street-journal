@@ -2029,3 +2029,41 @@ main{position:relative}
   .home-front--top{padding:8px 12px}
   .home-front--top .home-story-title{font-size:17px}
 }
+
+/* data-saver-v1: the Wire shows the country code in text instead of fetching 55 flags. */
+.wire-item-code{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:15px;padding:0 2px;box-sizing:border-box;font:700 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.06em;color:var(--text-muted);border:1px solid var(--rule);border-radius:2px;opacity:1}
+#wire-view .wire-item-code{height:15px}
+
+/* facts-v2: the links under every country's figures (how we check, report an error). */
+.cv-fact-source a{color:var(--green-bright);text-decoration:underline;text-underline-offset:2px}
+.cv-fact-source a:hover,.cv-fact-source a:focus-visible{color:var(--text)}
+
+/* signals-jump-v1: section links at the top of Signals, sticky under the tab bar, phones only. */
+.cv-jump{display:none}
+@media (max-width:720px){
+  #cv-panel-signals .cv-jump:not([hidden]){display:flex;position:sticky;top:var(--cv-jump-top,111px);z-index:14;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:-10px -10px 0;padding:6px 10px;background:rgba(19,19,19,.97);border-bottom:1px solid var(--rule)}
+  #cv-panel-signals .cv-jump::-webkit-scrollbar{display:none}
+  #cv-panel-signals .cv-jump-btn{flex:0 0 auto;min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:17px;background:transparent;color:var(--text-muted);font:600 12px/1 var(--sans);white-space:nowrap;cursor:pointer}
+  #cv-panel-signals .cv-jump-btn:hover,#cv-panel-signals .cv-jump-btn:focus-visible{color:var(--green-bright);border-color:var(--green-dim);outline:none}
+}
+/* wire-phone-v2: on a phone the filters took 205px (three labelled boxes and a full-width
+   More button), so two stories showed on the first screen. The labels stay for screen
+   readers; the options name themselves ("All readers", "All topics", "Latest edition"). */
+@media (max-width:720px){
+  #wire-view .wire-controls{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px;padding:10px 16px 0}
+  #wire-view .wire-pick{gap:0}
+  #wire-view .wire-pick-label{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  /* Row one: readers, topic, More. The edition picker, when there are past editions, gets
+     the second row to itself. */
+  #wire-view .wire-more{grid-column:auto;order:3}
+  #wire-view #wire-edition-pick{order:4;grid-column:1 / -1}
+  /* More becomes a 44px three-dot button; its name stays "More" for screen readers. */
+  #wire-view .wire-mobile-actions-toggle{width:44px;min-width:44px;min-height:44px;padding:0!important;justify-content:center}
+  #wire-view .wire-more-text{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  #wire-view .wire-more-chevron{display:none}
+  #wire-view .wire-more-dots{display:block;width:18px!important;height:18px!important;fill:currentColor!important;stroke:none!important;transform:none!important}
+  #wire-view .wire-actions{left:auto;right:0;min-width:220px}
+  #wire-view .wire-summary{padding:8px 16px 8px;font-size:13px}
+}
+
+.wire-more-dots{display:none}

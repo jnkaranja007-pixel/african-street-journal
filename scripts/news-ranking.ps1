@@ -96,7 +96,16 @@ $script:NEWS_EXTERNAL_COUNTRIES = @(
   'etats unis','american','americain','americaine','canada','canadian','australia','australian',
   'australie','china','chinese','chine','india','indian','inde','japan','japanese','japon','russia',
   'russian','russie','ukraine','ukrainian','iran','iranian','israel','israeli','turkey','turkish',
-  'turquie','saudi arabia','arabie saoudite','qatar','uae','emirats arabes unis'
+  'turquie','saudi arabia','arabie saoudite','qatar','uae','emirats arabes unis',
+  # Added 23 Oct 2026: the 22 Oct edition carried Paris v Barcelona on the Burundi desk,
+  # Lisbon on the Namibia and Sao Tome desks and Yemen on Namibia's. Big foreign cities
+  # and countries make a story "external": it then needs a second outlet before the desk
+  # spends a model call on it (Test-NewsCountryLink). A headline that also names the
+  # desk's own country is unaffected - that check comes first.
+  'portugal','portuguese','lisbon','lisbonne','lisboa','paris','barcelona','madrid','london','londres',
+  'berlin','brussels','bruxelles','belgium','belgian','belgique','netherlands','dutch','washington',
+  'beijing','pekin','moscow','moscou','yemen','yemeni','brazil','brazilian','bresil','gaza','lebanon',
+  'liban','syria','syrie','pakistan','afghanistan','iraq','irak','mexico','argentina'
 )
 
 function Get-NewsWordCount([string]$Text) {
