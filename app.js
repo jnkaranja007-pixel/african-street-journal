@@ -1324,7 +1324,7 @@ const layerPills = Array.from(document.querySelectorAll('.cv-layer-pill'));
 const layerStatus = document.getElementById('cv-layer-status');
 const mapToolbarRegion = document.getElementById('cv-map-toolbar-region');
 const mapToolbarCountry = document.getElementById('cv-map-toolbar-country');
-const mapLayers = { terrain: true, water: true, places: true, rail: true, infra: true, labels: true };
+const mapLayers = { terrain: true, water: true, places: true, roads: true, rail: true, infra: true, labels: true };
 const GDP_SERIES_CACHE = {};
 const GDP_SERIES_PENDING = {};
 const MAP_TEXTURE_CACHE = new Map();
@@ -3707,9 +3707,20 @@ function drawCountryMap(countryId, countryPath) {
   applyMapClip(mapPath, offsetX, offsetY, scale, mapDpr);
   countryMapCtx.fillStyle = FRONT_GREEN;
   countryMapCtx.fillRect(0, 0, width, height);
+  // Relief: Natural Earth's shaded relief, one image per country (built by
+  // scripts/build-country-relief.ps1), drawn under every verified layer. It replaced a
+  // "stylized relief" of sine waves seeded by the country code, plus contour lines from the
+  // same noise - decorative, and labelled as such, but terrain that was not there. Until
+  // the image arrives (and for data-saver readers, always) the country is plain green.
   if (mapLayers.terrain) {
-    drawRelief(width, height, countryId);
-    drawContours(width, height, countryId);
+    const relief = reliefImageFor(countryId);
+    if (relief) {
+      const [x0, y0] = project(relief.meta.west, relief.meta.north);
+      const [x1, y1] = project(relief.meta.east, relief.meta.south);
+      countryMapCtx.imageSmoothingEnabled = true;
+      countryMapCtx.imageSmoothingQuality = 'high';
+      countryMapCtx.drawImage(relief.img, x0, y0, x1 - x0, y1 - y0);
+    }
   } else {
     drawPaperTexture(width, height, countryId);
   }
@@ -4008,71 +4019,54 @@ function drawCountryOutline(mapPath, offsetX, offsetY, scale) {
   countryMapCtx.restore();
 }
 
+// Main roads from Natural Earth (scripts/build-country-roads.ps1): one small file per
+// country, fetched the first time its Atlas is drawn - not in the country chunk, where
+// it cost 7-19 KB on every country open. The chunk only says whether there are roads.
+const ROAD_FILES = new Map();
+function countryRoads(countryId) {
+  if (!(COUNTRY_GIS[countryId]?.roads?.km > 0)) return null;
+  let entry = ROAD_FILES.get(countryId);
+  if (!entry) {
+    entry = { lines: null };
+    ROAD_FILES.set(countryId, entry);
+    fetch('data/roads/' + countryId + '.json?v=' + (window.ASJ_ASSET_VERSION || '1'))
+      .then(response => response.ok ? response.json() : null)
+      .then(data => {
+        entry.lines = Array.isArray(data?.lines) ? data.lines : [];
+        if (activeCountryMap?.countryId !== countryId) return;
+        drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
+      })
+      .catch(() => { entry.lines = []; });
+  }
+  return entry.lines;
+}
+
+// One image per country, fetched the first time its Atlas is drawn (the Atlas is only
+// drawn while its panel is open), then reused. ~40-80 KB each; nothing for data saver.
+const RELIEF_IMAGES = new Map();
+function reliefImageFor(countryId) {
+  const meta = COUNTRY_GIS[countryId]?.relief;
+  if (!meta || window.ASJ_SAVE_DATA) return null;
+  let img = RELIEF_IMAGES.get(countryId);
+  if (!img) {
+    img = new Image();
+    img.decoding = 'async';
+    img.onload = () => {
+      if (activeCountryMap?.countryId !== countryId) return;
+      drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
+    };
+    img.src = 'data/relief/' + countryId + '.png?v=' + (window.ASJ_ASSET_VERSION || '1');
+    RELIEF_IMAGES.set(countryId, img);
+  }
+  return img.complete && img.naturalWidth ? { img, meta } : null;
+}
+
 function reliefNoise(x, y, seed) {
   return (
     Math.sin((x * 0.018 + seed) + Math.cos(y * 0.011)) +
     0.62 * Math.sin((x + y) * 0.032 + seed * 1.7) +
     0.38 * Math.cos((x * 0.051 - y * 0.043) + seed * 2.3)
   ) / 2;
-}
-
-function terrainHeight(x, y, width, height, seed) {
-  const nx = x / Math.max(1, width) - 0.5;
-  const ny = y / Math.max(1, height) - 0.5;
-  const angle = seed * 0.017;
-  const rx = nx * Math.cos(angle) - ny * Math.sin(angle);
-  const ry = nx * Math.sin(angle) + ny * Math.cos(angle);
-  const broad =
-    Math.sin(rx * 8.5 + seed * 0.13) * 0.24 +
-    Math.cos(ry * 7.2 - seed * 0.09) * 0.22 +
-    Math.sin((rx + ry) * 10.8 + seed * 0.04) * 0.18;
-  const folded =
-    (1 - Math.abs(Math.sin(rx * 24 + ry * 11 + seed * 0.31))) * 0.24 +
-    (1 - Math.abs(Math.sin(rx * -17 + ry * 29 + seed * 0.23))) * 0.18;
-  const drainage = -Math.abs(Math.sin(rx * 15 - ry * 19 + seed * 0.19)) * 0.16;
-  const fine =
-    Math.sin(rx * 58 + Math.cos(ry * 23 + seed)) * 0.055 +
-    Math.cos(ry * 61 + Math.sin(rx * 18 + seed)) * 0.045;
-  return broad + folded + drainage + fine;
-}
-
-function drawRelief(width, height, countryId) {
-  const seed = countryId.charCodeAt(0) * 17 + countryId.charCodeAt(1) * 31;
-  const step = width > 900 ? 3 : 4;
-  const cacheKey = 'green-relief:' + countryId + ':' + width + 'x' + height + ':' + step;
-  const cached = MAP_TEXTURE_CACHE.get(cacheKey);
-  if (cached) {
-    countryMapCtx.drawImage(cached, 0, 0);
-    return;
-  }
-  const off = document.createElement('canvas');
-  off.width = width;
-  off.height = height;
-  const octx = off.getContext('2d');
-  const img = octx.createImageData(width, height);
-  const d = img.data;
-  for (let y = 0; y < height; y += step) {
-    for (let x = 0; x < width; x += step) {
-      const h = terrainHeight(x, y, width, height, seed);
-      const elevation = Math.max(0, Math.min(1, (h + 0.62) / 1.28));
-      const grain = reliefNoise(x * 0.7, y * 0.7, seed) * 3;
-      const r = Math.max(38, Math.min(82, 46 + elevation * 29 + grain));
-      const g = Math.max(94, Math.min(158, 104 + elevation * 48 + grain));
-      const b = Math.max(46, Math.min(91, 53 + elevation * 30 + grain * 0.5));
-      for (let dy = 0; dy < step && y + dy < height; dy++) {
-        for (let dx = 0; dx < step && x + dx < width; dx++) {
-          const i = ((y + dy) * width + (x + dx)) * 4;
-          d[i] = r;
-          d[i + 1] = g;
-          d[i + 2] = b;
-          d[i + 3] = 255;
-        }
-      }
-    }
-  }
-  octx.putImageData(img, 0, 0);
-  rememberMapTexture(cacheKey, off);
-  countryMapCtx.drawImage(off, 0, 0);
 }
 
 function drawPaperTexture(width, height, countryId) {
@@ -4112,47 +4106,39 @@ function drawPaperTexture(width, height, countryId) {
   countryMapCtx.drawImage(off, 0, 0);
 }
 
-function drawContours(width, height, countryId) {
-  const seed = countryId.charCodeAt(0) * 13 + countryId.charCodeAt(1) * 19;
-  const grid = width > 900 ? 18 : 22;
-  const levels = [-0.42, -0.28, -0.14, 0, 0.14, 0.28, 0.42, 0.56];
-  countryMapCtx.lineWidth = 0.55;
-  countryMapCtx.lineCap = 'round';
-  countryMapCtx.strokeStyle = 'rgba(224,246,226,0.18)';
-
-  const interp = (a, b, level) => Math.max(0, Math.min(1, (level - a) / ((b - a) || 1)));
-  for (const level of levels) {
-    countryMapCtx.beginPath();
-    for (let y = -grid; y < height + grid; y += grid) {
-      for (let x = -grid; x < width + grid; x += grid) {
-        const h00 = terrainHeight(x, y, width, height, seed);
-        const h10 = terrainHeight(x + grid, y, width, height, seed);
-        const h11 = terrainHeight(x + grid, y + grid, width, height, seed);
-        const h01 = terrainHeight(x, y + grid, width, height, seed);
-        const points = [];
-        if ((h00 < level) !== (h10 < level)) points.push([x + grid * interp(h00, h10, level), y]);
-        if ((h10 < level) !== (h11 < level)) points.push([x + grid, y + grid * interp(h10, h11, level)]);
-        if ((h11 < level) !== (h01 < level)) points.push([x + grid * (1 - interp(h11, h01, level)), y + grid]);
-        if ((h01 < level) !== (h00 < level)) points.push([x, y + grid * (1 - interp(h01, h00, level))]);
-        if (points.length >= 2) {
-          countryMapCtx.moveTo(points[0][0], points[0][1]);
-          countryMapCtx.lineTo(points[1][0], points[1][1]);
-          if (points.length === 4) {
-            countryMapCtx.moveTo(points[2][0], points[2][1]);
-            countryMapCtx.lineTo(points[3][0], points[3][1]);
-          }
-        }
-      }
-    }
-    countryMapCtx.stroke();
-  }
-}
-
 // Railways from OpenStreetMap (active lines, sidings and yards excluded), built into
 // each country's GIS file by scripts/build-country-rail.ps1. This used to draw a few
 // hand-placed points as a "Great Rift Valley" and a "Nile River" - straight lines across
 // the map that read as roads - while the real Nairobi-Mombasa SGR was absent.
 function drawLinearFeatures(countryId, project, placedLabels, width, height) {
+  // Main roads under the railways: a thin light line on a dark casing for the trunk
+  // network, a fainter hairline for secondary roads - quieter than the railway's double
+  // line, so neither reads as the other.
+  if (mapLayers.roads !== false) {
+    for (const line of countryRoads(countryId) || []) {
+      const pts = line.p || [];
+      if (pts.length < 2) continue;
+      countryMapCtx.beginPath();
+      pts.forEach(([lon, lat], index) => {
+        const [x, y] = project(lon, lat);
+        if (index === 0) countryMapCtx.moveTo(x, y);
+        else countryMapCtx.lineTo(x, y);
+      });
+      countryMapCtx.lineJoin = 'round';
+      countryMapCtx.lineCap = 'round';
+      if (line.c === 1) {
+        countryMapCtx.strokeStyle = 'rgba(10,20,12,0.5)';
+        countryMapCtx.lineWidth = 2.4;
+        countryMapCtx.stroke();
+        countryMapCtx.strokeStyle = 'rgba(255,247,226,0.78)';
+        countryMapCtx.lineWidth = 1.1;
+      } else {
+        countryMapCtx.strokeStyle = 'rgba(255,247,226,0.42)';
+        countryMapCtx.lineWidth = 0.75;
+      }
+      countryMapCtx.stroke();
+    }
+  }
   if (mapLayers.rail === false) return;
   const rail = countryRail(countryId)?.lines || [];
   for (const line of rail) {
@@ -5886,7 +5872,7 @@ function renderAtlasAltText(countryId, landmarks) {
   if (lakes.length) parts.push('Lakes: ' + lakes.join(', '));
   const marks = uniq((landmarks || []).map(l => l.name)).slice(0, 10);
   if (marks.length) parts.push('Landmarks and infrastructure: ' + marks.join(', '));
-  el.textContent = 'Stylized map of ' + (info.name || countryId) + '. ' + (parts.length ? parts.join('. ') + '.' : 'Feature data is still being compiled.');
+  el.textContent = 'Map of ' + (info.name || countryId) + '. ' + (parts.length ? parts.join('. ') + '.' : 'Feature data is still being compiled.');
 }
 
 /* ── Deep links: #/ke/news, #/ke/farmers, #/ke/investors, #/ke/diaspora, #/ke/atlas ── */

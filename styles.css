@@ -1935,6 +1935,7 @@ main{position:relative}
 @media (max-width:720px){.cv-facts{grid-template-columns:1fr 1fr}.cv-fact-val{font-size:19px}}
 .cv-map-legend .infra.airport i{background:#8fc3ff}
 .cv-map-legend .rail i{width:14px!important;height:3px!important;border-radius:2px;background:#e8d9b5}
+.cv-map-legend .road i{width:14px!important;height:2px!important;border-radius:1px;background:rgba(255,247,226,.78);box-shadow:0 0 0 1px rgba(10,20,12,.5)}
 .cv-food-list{list-style:none;margin:0;padding:0}
 .cv-food-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid rgba(232,230,227,.07)}
 .cv-food-list li span{font:500 15px/1.35 var(--sans);color:var(--text)}

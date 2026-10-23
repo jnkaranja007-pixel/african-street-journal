@@ -18,7 +18,8 @@ GitHub Pages serves `main`, so **whatever is on `main` is live**.
 
 | Commit | What |
 |---|---|
-| (this push) | **Reader and engineering batch (desktop, 23 Oct).** Readers: each World Bank figure shows the Africa median (`africaMedian()`; not for dollar totals); every country's figures end with "How we check these figures" (new `/methods/` page, opened in the in-site sheet) and "Report an error" (mailto with the country). Phones: Signals gets a sticky row of section links (`renderSignalsJump`; the Signals header itself is static on phones by design), and the Wire's filters are one row plus the edition (2 -> 3 stories on the first screen; More is a three-dot button; options say "All readers", "All topics", "Latest edition"). Data saver: no Playfair font, and the Wire shows country codes instead of 55 flags. Engineering: the self-test moved to `selftest.js`, loaded only with `?selftest=1` (app.js -32 KB), and its cold-load race is fixed (it waits for the prose). `country-facts.js` 137 KB -> 34 KB: ports, airports, cities, food and crop months are in `data/facts/<cc>.js`, loaded with the country (workflows commit `data/facts`). New `scripts/check-data-health.ps1` + `data-health.yml`: daily freshness, monthly second-source audit; problems open or update one "Data health" issue. Desk: big foreign cities and countries mark a story external at ranking, so it needs a second outlet before a model call (Paris v Barcelona on the Burundi desk). Cities take the capital from `COUNTRY_INFO`. Sierra Leone's freight railway is explained (`RAIL_NOTES`). `tools/afx-relay` (optional) lets GitHub fetch listings without the PC. Self-test 93 checks. Asset version 80. |
+| (this push) | **Real relief and a Roads layer in the Atlas (cloud, 23 Oct).** The made-up "stylized relief" (noise hills and contours) is gone. Each country's Atlas draws real shaded relief from Natural Earth (`data/relief/<cc>.png`, 55 images, 1.4 MB in all, ~1-70 KB each, built by `scripts/build-country-relief.ps1`) and Natural Earth main roads (`data/roads/<cc>.json`, 50 files; the five island states have none; built by `scripts/build-country-roads.ps1`). Both are fetched only when the Atlas tab is drawn, never on News or Signals. Data saver keeps roads but skips the relief image (plain green). Country chunks carry only the image bounds and road lengths (`countryGis[cc].relief`, `.roads`). New "Roads" layer pill and legend entry. Asset version 81. |
+| `d8f77c3f` | **Reader and engineering batch (desktop, 23 Oct).** Readers: each World Bank figure shows the Africa median (`africaMedian()`; not for dollar totals); every country's figures end with "How we check these figures" (new `/methods/` page, opened in the in-site sheet) and "Report an error" (mailto with the country). Phones: Signals gets a sticky row of section links (`renderSignalsJump`; the Signals header itself is static on phones by design), and the Wire's filters are one row plus the edition (2 -> 3 stories on the first screen; More is a three-dot button; options say "All readers", "All topics", "Latest edition"). Data saver: no Playfair font, and the Wire shows country codes instead of 55 flags. Engineering: the self-test moved to `selftest.js`, loaded only with `?selftest=1` (app.js -32 KB), and its cold-load race is fixed (it waits for the prose). `country-facts.js` 137 KB -> 34 KB: ports, airports, cities, food and crop months are in `data/facts/<cc>.js`, loaded with the country (workflows commit `data/facts`). New `scripts/check-data-health.ps1` + `data-health.yml`: daily freshness, monthly second-source audit; problems open or update one "Data health" issue. Desk: big foreign cities and countries mark a story external at ranking, so it needs a second outlet before a model call (Paris v Barcelona on the Burundi desk). Cities take the capital from `COUNTRY_INFO`. Sierra Leone's freight railway is explained (`RAIL_NOTES`). `tools/afx-relay` (optional) lets GitHub fetch listings without the PC. Self-test 93 checks. Asset version 80. |
 | `8e95a97a` | **Farm exports and crop calendar from FAO (desktop, 23 Oct).** Main farm exports come from FAOSTAT with their value (`scripts/build-farm-exports.ps1`); the hand-made `FARM_EXPORTS` list is gone. Season months come from the FAO Crop Calendar where FAO lists the crop (`scripts/build-crop-calendar.ps1`), with typical months labelled as such. Rail: Algeria's duplicate line merged; Morocco's LGV shown once. Renamed towns use their current names. Self-test 89 checks. Asset version 79. |
 | `307f52da` | **Second-source checks (desktop, 23 Oct).** Rail is now route length (OSM counted each track of a double line: Algeria 6,606 -> 5,130 km, Morocco 3,314 -> 1,953), with the CIA World Factbook total shown beside it. Libya, Chad and Niger say "no railway in service". City populations are the median of Natural Earth, GeoNames and Wikidata (fixes Juba 112k, Benoni 2.99M, Kakamega's county figure; drops single-source entries such as Iran's Arak placed in Algeria). World Bank figures more than 7 years old show "last reported <year>". Landmarks were checked against Wikidata, OSM water and drawn river vertices. Lake Chad is now shown only in Chad and Cameroon; Niger and Nigeria get the Niger River; Ethiopia gets Lake Tana. Build-script sorts give the same order on PS 5.1 and pwsh. Six new self-tests (87 total). Asset version 78. |
 | `10a00a28` | **News on the landing screen** (cloud, 23 Oct): a "Top story" card under the map on phones and tablets; a column beside the map at 1080px+. `renderHomeFront` in app.js. |
@@ -28,11 +29,15 @@ GitHub Pages serves `main`, so **whatever is on `main` is live**.
 | `d75605e0`, `5faa7551` | Exchange listings refresh from the **owner's PC** (AFX blocks GitHub runners): `scripts/refresh-markets-desktop.ps1`, run by the Windows scheduled task "ASJ markets refresh" (daily 18:30, from the worktree `C:\Users\karan\Documents\James Code\asj-markets-refresh`). Log: `%LOCALAPPDATA%\ASJ\markets-refresh.log`. |
 | `836eae90` | Desk writer harness (`scripts/write-briefs.ps1`, prompt `story-v14`). See "How the desk writer works". |
 
-Asset version is now **80** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
+Asset version is now **81** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
 `sw.js`). `static-pages.css?v=69` is set inside `scripts/build-static-pages.ps1`.
 
 ## Do first (in order)
 
+0. **Desktop: throw away the local relief work.** The desktop built its own relief script and
+   images before it ran out of credits and never pushed them. The cloud version is on `main`
+   now. On the PC: `git status`; delete any untracked `scripts/build-country-relief.ps1`,
+   `data/relief/` or `data/country-relief.json` (or `git stash -u`), then `git pull`.
 1. **CI for the latest push** (`gh run list -L 4`). The self-test's cold-load race is fixed (it
    waits for the prose before checking it).
 2. **The first desk run on the new writer** has not happened yet (no `update-news.yml` run since
@@ -223,6 +228,14 @@ Done 23 Oct: data saver part two, Wire on phones, off-country stories at ranking
 5. The country page on phones: an "At a glance" card at the top of Signals (population, growth,
    main export, main port and airport, food-price trend) would answer most visits without
    scrolling.
+
+Rebuilding the Atlas relief and roads (only needed if the outlines change; both run in seconds):
+- Relief: download `https://naturalearth.s3.amazonaws.com/10m_raster/GRAY_HR_SR.zip` (Natural
+  Earth gray shaded relief, 1:10m, 21600x10800; 75 MB zip, 233 MB unzipped; naciscdn.org is blocked in the
+  cloud), unzip, then `scripts/build-country-relief.ps1 -Tif <path>\GRAY_HR_SR.tif`.
+- Roads: download `https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_roads.geojson`
+  (50 MB), then `scripts/build-country-roads.ps1 -GeoJson <path>`.
+- Neither download is committed. Both scripts re-run `split-app-data.ps1` at the end.
 
 Measuring (cloud): Playwright, 4x CPU throttling via CDP, long tasks for blocking time, axe-core
 4.10 for WCAG 2.2 AA (0 failures on all 8 screens on 23 Oct).
