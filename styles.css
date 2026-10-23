@@ -2067,3 +2067,6 @@ main{position:relative}
 }
 
 .wire-more-dots{display:none}
+
+/* atlas-roads-v1: legend swatch for the Natural Earth main roads layer. */
+.cv-map-legend .road i{width:14px!important;height:2px!important;border-radius:1px;background:rgba(250,242,220,.78)}

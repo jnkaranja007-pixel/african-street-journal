@@ -1324,7 +1324,7 @@ const layerPills = Array.from(document.querySelectorAll('.cv-layer-pill'));
 const layerStatus = document.getElementById('cv-layer-status');
 const mapToolbarRegion = document.getElementById('cv-map-toolbar-region');
 const mapToolbarCountry = document.getElementById('cv-map-toolbar-country');
-const mapLayers = { terrain: true, water: true, places: true, rail: true, infra: true, labels: true };
+const mapLayers = { terrain: true, water: true, places: true, roads: true, rail: true, infra: true, labels: true };
 const GDP_SERIES_CACHE = {};
 const GDP_SERIES_PENDING = {};
 const MAP_TEXTURE_CACHE = new Map();
@@ -3707,12 +3707,8 @@ function drawCountryMap(countryId, countryPath) {
   applyMapClip(mapPath, offsetX, offsetY, scale, mapDpr);
   countryMapCtx.fillStyle = FRONT_GREEN;
   countryMapCtx.fillRect(0, 0, width, height);
-  if (mapLayers.terrain) {
-    drawRelief(width, height, countryId);
-    drawContours(width, height, countryId);
-  } else {
-    drawPaperTexture(width, height, countryId);
-  }
+  if (!(mapLayers.terrain && drawCountryRelief(countryId, project))) drawPaperTexture(width, height, countryId);
+  drawRoads(countryId, project);
   drawLinearFeatures(countryId, project, placedLabels, width, height);
   countryMapCtx.restore();
 
@@ -4016,63 +4012,50 @@ function reliefNoise(x, y, seed) {
   ) / 2;
 }
 
-function terrainHeight(x, y, width, height, seed) {
-  const nx = x / Math.max(1, width) - 0.5;
-  const ny = y / Math.max(1, height) - 0.5;
-  const angle = seed * 0.017;
-  const rx = nx * Math.cos(angle) - ny * Math.sin(angle);
-  const ry = nx * Math.sin(angle) + ny * Math.cos(angle);
-  const broad =
-    Math.sin(rx * 8.5 + seed * 0.13) * 0.24 +
-    Math.cos(ry * 7.2 - seed * 0.09) * 0.22 +
-    Math.sin((rx + ry) * 10.8 + seed * 0.04) * 0.18;
-  const folded =
-    (1 - Math.abs(Math.sin(rx * 24 + ry * 11 + seed * 0.31))) * 0.24 +
-    (1 - Math.abs(Math.sin(rx * -17 + ry * 29 + seed * 0.23))) * 0.18;
-  const drainage = -Math.abs(Math.sin(rx * 15 - ry * 19 + seed * 0.19)) * 0.16;
-  const fine =
-    Math.sin(rx * 58 + Math.cos(ry * 23 + seed)) * 0.055 +
-    Math.cos(ry * 61 + Math.sin(rx * 18 + seed)) * 0.045;
-  return broad + folded + drainage + fine;
+/* Real relief: Natural Earth's 1:10m "Gray Earth with Shaded Relief", cut per country
+   and tinted green by scripts/build-country-relief.ps1 (data/relief/<cc>.jpg, 2-260 KB;
+   data/relief/index.json gives each image's edges). Raster and Atlas share one plain
+   longitude/latitude projection, so the image is placed by its corners. This replaced a
+   "Stylized relief" that was sine waves seeded by the country code, with contour lines
+   drawn on them: hills and ridges where there are none. Not drawn in data-saver mode. */
+const RELIEF = { index: null, loading: null, images: new Map() };
+
+function loadReliefIndex() {
+  if (RELIEF.index || RELIEF.loading) return RELIEF.loading;
+  RELIEF.loading = fetch('data/relief/index.json?v=' + (window.ASJ_ASSET_VERSION || '1'))
+    .then(r => (r.ok ? r.json() : null))
+    .then(j => { RELIEF.index = j?.countries || {}; return RELIEF.index; })
+    .catch(() => { RELIEF.index = {}; return RELIEF.index; });
+  return RELIEF.loading;
 }
 
-function drawRelief(width, height, countryId) {
-  const seed = countryId.charCodeAt(0) * 17 + countryId.charCodeAt(1) * 31;
-  const step = width > 900 ? 3 : 4;
-  const cacheKey = 'green-relief:' + countryId + ':' + width + 'x' + height + ':' + step;
-  const cached = MAP_TEXTURE_CACHE.get(cacheKey);
-  if (cached) {
-    countryMapCtx.drawImage(cached, 0, 0);
-    return;
+// Draws the country's relief image; false when it is not there (yet), and the caller
+// draws the flat texture. A first call starts the load and repaints when it lands.
+function drawCountryRelief(countryId, project) {
+  if (window.ASJ_SAVE_DATA) return false;
+  if (!RELIEF.index) { loadReliefIndex()?.then(() => repaintAtlasFor(countryId)); return false; }
+  const box = RELIEF.index[countryId];
+  if (!box) return false;
+  let img = RELIEF.images.get(countryId);
+  if (!img) {
+    img = new Image();
+    img.decoding = 'async';
+    img.onload = () => repaintAtlasFor(countryId);
+    img.src = 'data/relief/' + countryId + '.jpg?v=' + (window.ASJ_ASSET_VERSION || '1');
+    RELIEF.images.set(countryId, img);
   }
-  const off = document.createElement('canvas');
-  off.width = width;
-  off.height = height;
-  const octx = off.getContext('2d');
-  const img = octx.createImageData(width, height);
-  const d = img.data;
-  for (let y = 0; y < height; y += step) {
-    for (let x = 0; x < width; x += step) {
-      const h = terrainHeight(x, y, width, height, seed);
-      const elevation = Math.max(0, Math.min(1, (h + 0.62) / 1.28));
-      const grain = reliefNoise(x * 0.7, y * 0.7, seed) * 3;
-      const r = Math.max(38, Math.min(82, 46 + elevation * 29 + grain));
-      const g = Math.max(94, Math.min(158, 104 + elevation * 48 + grain));
-      const b = Math.max(46, Math.min(91, 53 + elevation * 30 + grain * 0.5));
-      for (let dy = 0; dy < step && y + dy < height; dy++) {
-        for (let dx = 0; dx < step && x + dx < width; dx++) {
-          const i = ((y + dy) * width + (x + dx)) * 4;
-          d[i] = r;
-          d[i + 1] = g;
-          d[i + 2] = b;
-          d[i + 3] = 255;
-        }
-      }
-    }
-  }
-  octx.putImageData(img, 0, 0);
-  rememberMapTexture(cacheKey, off);
-  countryMapCtx.drawImage(off, 0, 0);
+  if (!img.complete || !img.naturalWidth) return false;
+  const [x0, y0] = project(box.w, box.n);
+  const [x1, y1] = project(box.e, box.s);
+  countryMapCtx.imageSmoothingEnabled = true;
+  countryMapCtx.imageSmoothingQuality = 'high';
+  countryMapCtx.drawImage(img, x0, y0, x1 - x0, y1 - y0);
+  return true;
+}
+
+function repaintAtlasFor(countryId) {
+  if (activeCountryMap?.countryId !== countryId) return;
+  drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
 }
 
 function drawPaperTexture(width, height, countryId) {
@@ -4112,40 +4095,35 @@ function drawPaperTexture(width, height, countryId) {
   countryMapCtx.drawImage(off, 0, 0);
 }
 
-function drawContours(width, height, countryId) {
-  const seed = countryId.charCodeAt(0) * 13 + countryId.charCodeAt(1) * 19;
-  const grid = width > 900 ? 18 : 22;
-  const levels = [-0.42, -0.28, -0.14, 0, 0.14, 0.28, 0.42, 0.56];
-  countryMapCtx.lineWidth = 0.55;
-  countryMapCtx.lineCap = 'round';
-  countryMapCtx.strokeStyle = 'rgba(224,246,226,0.18)';
-
-  const interp = (a, b, level) => Math.max(0, Math.min(1, (level - a) / ((b - a) || 1)));
-  for (const level of levels) {
+// Main roads from Natural Earth (scripts/build-country-roads.ps1: the trunk network and
+// main regional roads, scalerank 3-6), attached to each country's GIS file. Drawn under
+// the railways and labels, inside the outline clip, quieter than rail: a road map, not a
+// road atlas. The Atlas had railways and no roads at all.
+function drawRoads(countryId, project) {
+  if (mapLayers.roads === false) return;
+  const roads = COUNTRY_GIS[countryId]?.roads;
+  if (!roads) return;
+  const stroke = (lines, width, color) => {
     countryMapCtx.beginPath();
-    for (let y = -grid; y < height + grid; y += grid) {
-      for (let x = -grid; x < width + grid; x += grid) {
-        const h00 = terrainHeight(x, y, width, height, seed);
-        const h10 = terrainHeight(x + grid, y, width, height, seed);
-        const h11 = terrainHeight(x + grid, y + grid, width, height, seed);
-        const h01 = terrainHeight(x, y + grid, width, height, seed);
-        const points = [];
-        if ((h00 < level) !== (h10 < level)) points.push([x + grid * interp(h00, h10, level), y]);
-        if ((h10 < level) !== (h11 < level)) points.push([x + grid, y + grid * interp(h10, h11, level)]);
-        if ((h11 < level) !== (h01 < level)) points.push([x + grid * (1 - interp(h11, h01, level)), y + grid]);
-        if ((h01 < level) !== (h00 < level)) points.push([x, y + grid * (1 - interp(h01, h00, level))]);
-        if (points.length >= 2) {
-          countryMapCtx.moveTo(points[0][0], points[0][1]);
-          countryMapCtx.lineTo(points[1][0], points[1][1]);
-          if (points.length === 4) {
-            countryMapCtx.moveTo(points[2][0], points[2][1]);
-            countryMapCtx.lineTo(points[3][0], points[3][1]);
-          }
-        }
-      }
+    for (const line of lines || []) {
+      line.forEach(([lon, lat], index) => {
+        const [x, y] = project(lon, lat);
+        if (index === 0) countryMapCtx.moveTo(x, y);
+        else countryMapCtx.lineTo(x, y);
+      });
     }
+    countryMapCtx.lineWidth = width;
+    countryMapCtx.strokeStyle = color;
     countryMapCtx.stroke();
-  }
+  };
+  countryMapCtx.save();
+  countryMapCtx.lineJoin = 'round';
+  countryMapCtx.lineCap = 'round';
+  countryMapCtx.setLineDash([]);
+  stroke(roads.secondary, 1, 'rgba(246,238,214,0.42)');
+  stroke(roads.major, 2.4, 'rgba(18,22,18,0.35)');
+  stroke(roads.major, 1.5, 'rgba(250,242,220,0.78)');
+  countryMapCtx.restore();
 }
 
 // Railways from OpenStreetMap (active lines, sidings and yards excluded), built into
@@ -5886,7 +5864,7 @@ function renderAtlasAltText(countryId, landmarks) {
   if (lakes.length) parts.push('Lakes: ' + lakes.join(', '));
   const marks = uniq((landmarks || []).map(l => l.name)).slice(0, 10);
   if (marks.length) parts.push('Landmarks and infrastructure: ' + marks.join(', '));
-  el.textContent = 'Stylized map of ' + (info.name || countryId) + '. ' + (parts.length ? parts.join('. ') + '.' : 'Feature data is still being compiled.');
+  el.textContent = 'Map of ' + (info.name || countryId) + ' with shaded relief from Natural Earth. ' + (parts.length ? parts.join('. ') + '.' : 'Feature data is still being compiled.');
 }
 
 /* ── Deep links: #/ke/news, #/ke/farmers, #/ke/investors, #/ke/diaspora, #/ke/atlas ── */

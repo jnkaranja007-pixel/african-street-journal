@@ -269,6 +269,14 @@ async function runSelfTest() {
     Array.from(jumpButtons).every(b => document.getElementById(b.dataset.jump)), jumpButtons.length + ' links');
   renderSignalsJump();
   add('rail: Sierra Leone shows its freight line with a note', /Pepel-Tonkolili/.test(railSummaryHtml('sl')));
+  // The Atlas relief is Natural Earth's shaded relief, not shapes generated from the
+  // country code; and the Atlas has roads (Natural Earth), not only railways.
+  await loadReliefIndex();
+  const noRelief = sortedCountryIds.filter(id => !RELIEF.index?.[id]);
+  add('atlas: every country has a real relief image', noRelief.length === 0 && typeof terrainHeight === 'undefined', noRelief.join(',') || 'all 55');
+  const islands = new Set(['cv', 'km', 'mu', 'sc', 'st']);
+  const noRoads = sortedCountryIds.filter(id => !islands.has(id) && !(COUNTRY_GIS[id]?.roads?.major || []).length);
+  add('atlas: every mainland country has main roads', noRoads.length === 0, noRoads.join(',') || 'all');
   add('atlas: Lake Chad is marked only where it has open water', Object.keys(LANDMARK_POINTS.find(l => l.name === 'Lake Chad').at).sort().join() === 'cm,td');
   add('atlas: Mayotte is not listed as a Comoros port', !countryPorts('km').some(p => /Dzaoudzi/i.test(p.name)));
   add('atlas: Kenya marks JKIA and the Mombasa SGR', atlasInfraForCountry('ke').some(i => i.short === 'NBO') &&

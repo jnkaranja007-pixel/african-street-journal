@@ -90,6 +90,19 @@ if (Test-Path $railPath) {
   }
   $s = $saved
 }
+# Roads the same way (data/country-roads.json, Natural Earth, scripts/build-country-roads.ps1).
+$roadPath = Join-Path $dataDir 'country-roads.json'
+$roadE = @{}
+if (Test-Path $roadPath) {
+  $saved = $s
+  $s = [IO.File]::ReadAllText($roadPath, [Text.Encoding]::UTF8)
+  $roadMarker = $s.IndexOf('"countries":')
+  if ($roadMarker -ge 0) {
+    $open = $s.IndexOf('{', $roadMarker)
+    $roadE = Split-TopLevelEntries @{ start = $open; end = [AsjSplit]::MatchBrace($s, $open) }
+  }
+  $s = $saved
+}
 
 $ids = @(@($detE.Keys) + @($gisE.Keys) | Sort-Object -Unique)
 foreach ($id in $ids) {
@@ -97,6 +110,7 @@ foreach ($id in $ids) {
   if ($detE.Contains($id)) { $parts += 'window.UNITED_AFRICA_DATA.countryDetail["' + $id + '"] = ' + $detE[$id] + ';' }
   if ($gisE.Contains($id)) { $parts += 'window.UNITED_AFRICA_DATA.countryGis["' + $id + '"] = ' + $gisE[$id] + ';' }
   if ($gisE.Contains($id) -and $railE.Contains($id)) { $parts += 'window.UNITED_AFRICA_DATA.countryGis["' + $id + '"].rail = ' + $railE[$id] + ';' }
+  if ($gisE.Contains($id) -and $roadE.Contains($id)) { $parts += 'window.UNITED_AFRICA_DATA.countryGis["' + $id + '"].roads = ' + $roadE[$id] + ';' }
   [IO.File]::WriteAllText((Join-Path $outDir "$id.js"), (($parts -join "`n") + "`n"), $utf8)
 }
 
