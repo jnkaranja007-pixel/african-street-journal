@@ -17,6 +17,8 @@ GitHub Pages serves `main`, so **whatever is on `main` is live**.
 
 | Commit | What |
 |---|---|
+| `10a00a28` | **News on the landing screen** (owner approved 23 Oct, reversing the "map stands alone" design): phones/tablets get one "Top story" card under the map (still one screen, measured flush 320-915px tall phones and 768/820 tablets); 1080px+ gets a column beside the map (top story + dek, 3 more from other countries, "All N stories"). `renderHomeFront` in app.js, mounts `#home-front-side` / `#home-front-top`. site-check asserts both and that a phone landing page is one screen. |
+| `76e05017` | **Reader speed**: Atlas not drawn while hidden; deep links skip the home-map animation (country link on a slow phone: blocking time 2.4 s -> 1.1 s). **Data saver** (Save-Data or 3G and slower): no 146 KB `briefs-full.js` per visit; an opened story fetches its own static page; Wire search fetches prose on demand. Fixed: a failed prose download froze the tab when a story was tapped. site-check covers both. |
 | `836eae90` | **Desk writer harness** (`scripts/write-briefs.ps1`, prompt `story-v14`): lens floors removed, hedged lens reasons scored 0-20, style check with one rewrite and a fact-checked fallback, off-country drop via `countryLink`, rewritten prompt. New `scripts/test-desk-harness.ps1` + `desk` CI job. |
 | `b889aa34` | About menu cut to 5 items (Text-only edition, About, Contact, Corrections, Privacy); `/countries/` became the **text-only edition**; new About copy (mission, low-data reading, RSS explained); `feed.xsl` makes `feed.xml` readable in a browser. |
 | `b940b806` | Season calendar bars were invisible on every country (a blanket `#cv-panel-signals [class*="-cell"]` rule cleared their background). Fixed + self-test check. |
@@ -27,7 +29,7 @@ GitHub Pages serves `main`, so **whatever is on `main` is live**.
 | `fab8f9cb` | `update-economy.yml` uses `-SkipFoodPrices`; new monthly `update-food-rail.yml` (food prices, then OSM rail). |
 | `a4ba15bd` | The original Signals/Atlas real-data rebuild for all 55 countries. |
 
-Asset version is now **73** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
+Asset version is now **77** (`?v=` in `index.html`, `window.ASJ_ASSET_VERSION`, `const V` in
 `sw.js`). `static-pages.css?v=69` is set inside `scripts/build-static-pages.ps1`.
 
 ## Do first (in order)
