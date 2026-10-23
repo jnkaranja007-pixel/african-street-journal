@@ -1183,20 +1183,23 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
         }
         # House style, last: only a draft that has passed every fact check gets here, so
         # the best of these is always publishable. One rewrite is the budget.
-        $style = Get-DraftStyleIssues $candidate (Get-ItemEvidenceText $it)
-        $styleCount = @($style.Issues).Count
+        # Not "$style": PowerShell names ignore case, so that overwrote $STYLE - the system
+        # prompt - and every later call sent this object as its instructions (23 Oct 2026:
+        # "messages.0.content: Invalid input" from every model, no edition published).
+        $draftStyle = Get-DraftStyleIssues $candidate (Get-ItemEvidenceText $it)
+        $styleCount = @($draftStyle.Issues).Count
         if ($styleCount) {
           if ($null -eq $styleBest -or $styleCount -le $styleBestCount) { $styleBest = $candidate; $styleBestCount = $styleCount }
           if ($styleRepairsThisItem -lt 1 -and $attempt -le $Retries) {
             $styleRepairsThisItem++
             $styleRepairs++
-            $lastErr = "item $i style: " + (@($style.Issues) -join '; ')
-            $repairNote = Get-StyleRepairNote $style $candidate
+            $lastErr = "item $i style: " + (@($draftStyle.Issues) -join '; ')
+            $repairNote = Get-StyleRepairNote $draftStyle $candidate
             continue
           }
           $oneBrief = $styleBest
           $styleAccepted++
-          Write-Host ("      {0}#{1}: kept with style notes after one rewrite: {2}" -f $code, $i, (@($style.Issues) -join '; ')) -ForegroundColor DarkGray
+          Write-Host ("      {0}#{1}: kept with style notes after one rewrite: {2}" -f $code, $i, (@($draftStyle.Issues) -join '; ')) -ForegroundColor DarkGray
           break
         }
         if ($styleRepairsThisItem) { $styleFixed++ }

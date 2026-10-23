@@ -157,7 +157,20 @@ $server = [PowerShell]::Create()
     try { $ctx = $Listener.GetContext() } catch { break }
     try {
       $reader = New-Object IO.StreamReader($ctx.Request.InputStream, [Text.Encoding]::UTF8)
-      $req = $reader.ReadToEnd() | ConvertFrom-Json
+      $raw = $reader.ReadToEnd()
+      # As OpenRouter does: every message's content must be a string. The 23 Oct 2026 desk
+      # run died on "messages.0.content: Invalid input" - the style check's result had
+      # overwritten $STYLE (PowerShell names ignore case) - and a stand-in that accepted
+      # anything let it through.
+      $req = $raw | ConvertFrom-Json
+      $badContent = @($req.messages | Where-Object { $_.content -isnot [string] }).Count
+      if ($badContent) {
+        [void]$Log.prompts.Add('INVALID-CONTENT')
+        $ctx.Response.StatusCode = 400
+        $err = [Text.Encoding]::UTF8.GetBytes('{"error":{"message":"messages.0.content: Invalid input","code":400}}')
+        $ctx.Response.OutputStream.Write($err, 0, $err.Length)
+        continue
+      }
       $prompt = [string]$req.messages[1].content
       [void]$Log.prompts.Add($prompt)
       $content = & $respond $prompt
@@ -201,6 +214,7 @@ try {
   Write-Host '[harness] writer against the stand-in model' -ForegroundColor Cyan
   if ($writerExit -ne 0) { Get-Content $logPath | Select-Object -Last 30 | ForEach-Object { Write-Host "    $_" } }
   Assert-Harness 'writer exits cleanly' ($writerExit -eq 0) "exit $writerExit"
+  Assert-Harness 'every request sends text messages (the system prompt survives a style check)' (@($log.prompts | Where-Object { $_ -eq 'INVALID-CONTENT' }).Count -eq 0)
   $out = [IO.File]::ReadAllText($outPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
   $stories = @($out.xx)
   $metrics = [IO.File]::ReadAllText($metricsPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
