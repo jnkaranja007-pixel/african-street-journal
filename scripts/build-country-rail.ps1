@@ -69,12 +69,47 @@ function Get-RailJson([string]$cc) {
   return $null
 }
 
-function Get-Km([double]$lat1, [double]$lon1, [double]$lat2, [double]$lon2) {
-  $r = [Math]::PI / 180
-  $dLat = ($lat2 - $lat1) * $r; $dLon = ($lon2 - $lon1) * $r
-  $a = [Math]::Sin($dLat / 2) * [Math]::Sin($dLat / 2) + [Math]::Cos($lat1 * $r) * [Math]::Cos($lat2 * $r) * [Math]::Sin($dLon / 2) * [Math]::Sin($dLon / 2)
-  return 6371.0 * 2 * [Math]::Atan2([Math]::Sqrt($a), [Math]::Sqrt(1 - $a))
+# Route length, not track length. OpenStreetMap maps each track of a double-track line
+# as its own way, so summing ways counted Algeria's network as 6,606 km (CIA World
+# Factbook: 4,020) and Morocco's as 3,314 (2,067). A RouteMeter walks each way in
+# ~300 m steps and counts only the steps that do not fall within one cell (about 330 m)
+# of a line already counted by another way.
+Add-Type -TypeDefinition @'
+using System;
+using System.Collections.Generic;
+public class AsjRouteMeter {
+  const double Cell = 0.003;
+  readonly HashSet<long> covered = new HashSet<long>();
+  static long Key(long y, long x) { return y * 4000003L + x; }
+  static double Km(double la1, double lo1, double la2, double lo2) {
+    double r = Math.PI / 180, dLa = (la2 - la1) * r, dLo = (lo2 - lo1) * r;
+    double a = Math.Sin(dLa / 2) * Math.Sin(dLa / 2) + Math.Cos(la1 * r) * Math.Cos(la2 * r) * Math.Sin(dLo / 2) * Math.Sin(dLo / 2);
+    return 6371.0 * 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+  }
+  bool Near(double la, double lo) {
+    long y = (long)Math.Floor(la / Cell), x = (long)Math.Floor(lo / Cell);
+    for (long dy = -1; dy <= 1; dy++) for (long dx = -1; dx <= 1; dx++) if (covered.Contains(Key(y + dy, x + dx))) return true;
+    return false;
+  }
+  // Returns the length of this way that is new route; then marks the way as covered.
+  public double AddWay(double[] lat, double[] lon) {
+    double km = 0; var mine = new List<long>();
+    for (int i = 1; i < lat.Length; i++) {
+      double seg = Km(lat[i - 1], lon[i - 1], lat[i], lon[i]);
+      int n = Math.Max(1, (int)Math.Ceiling(Math.Max(Math.Abs(lat[i] - lat[i - 1]), Math.Abs(lon[i] - lon[i - 1])) / Cell));
+      int fresh = 0;
+      for (int k = 0; k < n; k++) {
+        double t = (k + 0.5) / n, la = lat[i - 1] + (lat[i] - lat[i - 1]) * t, lo = lon[i - 1] + (lon[i] - lon[i - 1]) * t;
+        if (!Near(la, lo)) fresh++;
+        mine.Add(Key((long)Math.Floor(la / Cell), (long)Math.Floor(lo / Cell)));
+      }
+      km += seg * fresh / n;
+    }
+    foreach (long c in mine) covered.Add(c);
+    return km;
+  }
 }
+'@
 
 $previous = $null
 if (Test-Path $outPath) { try { $previous = [IO.File]::ReadAllText($outPath, [Text.Encoding]::UTF8) | ConvertFrom-Json } catch { } }
@@ -94,10 +129,13 @@ foreach ($cc in $todo) {
     $groups = [ordered]@{}
     $total = 0.0; $sgr = 0.0
     $ways = New-Object System.Collections.Generic.List[object]
+    $routeAll = New-Object AsjRouteMeter
+    $routeSg = New-Object AsjRouteMeter
+    $lineMeters = @{}
     foreach ($w in @($osm.elements | Where-Object { $_.type -eq 'way' -and $_.geometry })) {
       $pts = @($w.geometry)
-      $km = 0.0
-      for ($i = 1; $i -lt $pts.Count; $i++) { $km += Get-Km $pts[$i-1].lat $pts[$i-1].lon $pts[$i].lat $pts[$i].lon }
+      $lats = [double[]]@($pts | ForEach-Object { [double]$_.lat })
+      $lons = [double[]]@($pts | ForEach-Object { [double]$_.lon })
       $gauge = 0; [void][int]::TryParse(([string]$w.tags.gauge -split ';')[0], [ref]$gauge)
       # English, then French (the working language of most francophone networks), then
       # whatever the line is locally called.
@@ -105,8 +143,13 @@ foreach ($cc in $todo) {
       if (-not $name) { $name = ([string]$w.tags.'name:fr').Trim() }
       if (-not $name) { $name = ([string]$w.tags.name).Trim() }
       if (-not $name) { $name = '' }
+      # Route km for the country, for its standard-gauge lines, and for this named line.
+      $total += $routeAll.AddWay($lats, $lons)
+      if ($gauge -eq 1435) { $sgr += $routeSg.AddWay($lats, $lons) }
+      $lineKey = $name + '|' + $gauge
+      if (-not $lineMeters.ContainsKey($lineKey)) { $lineMeters[$lineKey] = New-Object AsjRouteMeter }
+      $km = $lineMeters[$lineKey].AddWay($lats, $lons)
       $ways.Add(@{ pts = $pts; km = $km; gauge = $gauge; name = $name })
-      $total += $km; if ($gauge -eq 1435) { $sgr += $km }
     }
     # Coarser drawing for big networks, so no country chunk carries much over ~5,000
     # rail points: South Africa's 21,700 km at 0.02 degrees made its chunk 577 KB.

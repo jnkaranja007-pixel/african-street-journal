@@ -183,7 +183,7 @@ if ($portsOk) {
     if ($byCountry.ContainsKey($cc)) {
       $list = @($byCountry[$cc] | Sort-Object `
         @{ e = { if ($main -and $_.name.StartsWith($main, [StringComparison]::OrdinalIgnoreCase)) { 0 } else { 1 } } }, `
-        @{ e = { $_.rank }; Descending = $true }, @{ e = { $_.name } } | Select-Object -First $MaxPorts)
+        @{ e = { $_.rank }; Descending = $true }, @{ e = { Get-SortKey $_.name } } | Select-Object -First $MaxPorts)
       if ($main -and -not ($list | Where-Object { $_.name.StartsWith($main, [StringComparison]::OrdinalIgnoreCase) })) {
         Write-Host "  $cc main port '$main' not in the World Port Index list" -ForegroundColor Yellow
       }
@@ -224,7 +224,7 @@ if ($airportsOk) {
     if ($byCountry.ContainsKey($cc)) {
       $list = @($byCountry[$cc] | Sort-Object `
         @{ e = { $i = [array]::IndexOf($gw, $_.iata); if ($i -lt 0) { 99 } else { $i } } }, `
-        @{ e = { $_.rank }; Descending = $true }, @{ e = { $_.name } } | Select-Object -First $MaxAirports)
+        @{ e = { $_.rank }; Descending = $true }, @{ e = { Get-SortKey $_.name } } | Select-Object -First $MaxAirports)
     }
     $missing = @($gw | Where-Object { $code = $_; -not ($list | Where-Object { $_.iata -eq $code }) })
     if ($missing.Count) { Write-Host "  $cc gateway not in OurAirports scheduled list: $($missing -join ', ')" -ForegroundColor Yellow }
@@ -280,6 +280,19 @@ if ($citiesOk) {
 } elseif ($previous) {
   Write-Host '[facts] GeoNames unavailable; keeping previous cities' -ForegroundColor Yellow
   foreach ($cc in $COUNTRIES.Keys) { if ($previous.countries.$cc) { $facts[$cc].cities = @($previous.countries.$cc.cities) } }
+}
+# Cross-checked populations (scripts/build-city-populations.ps1: the median of Natural
+# Earth, GeoNames and Wikidata) replace GeoNames' own where present. GeoNames alone gave
+# Kakamega, a town of about 100,000, its county's 1.87 million.
+$cityPopPath = Join-Path $root 'data\city-populations.json'
+$citySource = 'GeoNames (cities of 15,000+)'
+if (Test-Path $cityPopPath) {
+  $cityPop = [IO.File]::ReadAllText($cityPopPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+  foreach ($cc in $COUNTRIES.Keys) {
+    $list = @($cityPop.countries.$cc | Where-Object { $_ -and $_.name })
+    if ($list.Count) { $facts[$cc].cities = @($list | ForEach-Object { [ordered]@{ name = $_.name; pop = [long]$_.pop; capital = [bool]$_.capital; lat = $_.lat; lon = $_.lon; sources = $_.sources } }) }
+  }
+  $citySource = 'Median of Natural Earth, GeoNames and Wikidata (' + $cityPop.generated + ')'
 }
 
 # --- Food prices: WFP market monitoring, via HDX ----------------------------------
@@ -364,7 +377,7 @@ $payload = [ordered]@{
     wb = 'World Bank, World Development Indicators'
     ports = 'NGA World Port Index (Pub. 150)'
     airports = 'OurAirports (scheduled service)'
-    cities = 'GeoNames (cities of 15,000+)'
+    cities = $citySource
   }
   indicators = $INDICATORS
   countries = $facts

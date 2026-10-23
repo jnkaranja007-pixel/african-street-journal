@@ -554,38 +554,45 @@ const STORY_PINS = {
 // inside-the-outline check kept Lake Victoria only in Uganda, the Nile only in Sudan
 // and the Sahara only in Niger, and Kilimanjaro - in Tanzania - was drawn in Kenya.
 // Every country has at least one; the self-test checks both rules for all 55.
+// Positions checked on 22 Oct 2026: peaks, falls and parks against Wikidata's
+// coordinates; lakes inside their mapped water and the country (OpenStreetMap, Natural
+// Earth); rivers on a vertex of the river the Atlas draws. Lake Chad's open water is now
+// only in Chad and Cameroon, so Niger and Nigeria are marked on the Niger instead.
 const LANDMARK_POINTS = [
-  { name: 'Lake Victoria', kind: 'water', at: { ke: [34.35, -0.3], ug: [32.9, -0.4], tz: [32.9, -2.1] } },
+  { name: 'Lake Victoria', kind: 'water', at: { ke: [34.55, -0.3], ug: [32.9, -0.4], tz: [32.9, -2.1] } },
   { name: 'Mount Kenya', kind: 'mountain', at: { ke: [37.3075, -0.1521] } },
   { name: 'Mount Kilimanjaro', kind: 'mountain', at: { tz: [37.3556, -3.0674] } },
-  { name: 'Nile River', kind: 'water', at: { eg: [32.64, 25.7], sd: [32.55, 16.5], ss: [31.65, 6.8], ug: [31.75, 2.3] } },
+  { name: 'Nile River', kind: 'water', at: { eg: [32.596, 25.636], sd: [30.479, 19.25], ss: [31.522, 6.198], ug: [31.755, 2.298] } },
+  { name: 'Niger River', kind: 'water', at: { ne: [2.13, 13.448], ng: [6.758, 7.77] } },
   { name: 'Sahara Desert', kind: 'landmark', at: { dz: [3.5, 26.5], ly: [16.0, 25.0], eg: [28.0, 25.0], td: [18.5, 19.5], ne: [10.0, 19.5], ml: [-2.0, 20.5], mr: [-10.0, 21.5], sd: [28.5, 19.0], eh: [-12.5, 24.5], tn: [9.6, 31.6] } },
   { name: 'Congo Basin', kind: 'landmark', at: { cd: [22.0, -1.5], cg: [15.8, 0.5], cf: [17.5, 3.7], cm: [14.5, 3.0], ga: [12.0, -0.5] } },
   { name: 'Atlas Mountains', kind: 'mountain', at: { ma: [-5.0, 31.5], dz: [2.5, 34.5], tn: [8.8, 35.3] } },
-  { name: 'Lake Tanganyika', kind: 'water', at: { tz: [29.9, -6.0], bi: [29.35, -3.9], cd: [29.3, -6.0], zm: [30.9, -8.5] } },
+  { name: 'Lake Tanganyika', kind: 'water', at: { tz: [29.65, -6.0], bi: [29.25, -3.9], cd: [29.3, -6.0], zm: [30.9, -8.5] } },
   { name: 'Lake Malawi', kind: 'water', at: { mw: [34.6, -12.0], mz: [34.75, -12.9], tz: [34.55, -10.4] } },
   { name: 'Victoria Falls', kind: 'water', at: { zm: [25.85, -17.92], zw: [25.86, -17.93] } },
-  { name: 'Lake Chad', kind: 'water', at: { td: [14.0, 13.3], ne: [13.25, 13.75], ng: [13.6, 12.9], cm: [14.4, 12.6] } },
-  { name: 'Lake Turkana', kind: 'water', at: { ke: [36.1, 3.4], et: [36.05, 4.6] } },
-  { name: 'Lake Volta', kind: 'water', at: { gh: [-0.15, 7.4] } },
+  { name: 'Lake Chad', kind: 'water', at: { td: [14.54, 13.11], cm: [14.37, 12.98] } },
+  { name: 'Lake Turkana', kind: 'water', at: { ke: [36.19, 3.51] } },
+  // Ethiopia's corner of Lake Turkana is the Omo delta, land in OpenStreetMap.
+  { name: 'Lake Tana', kind: 'water', at: { et: [37.3, 12.0] } },
+  { name: 'Lake Volta', kind: 'water', at: { gh: [-0.24, 7.63] } },
   { name: 'Okavango Delta', kind: 'landmark', at: { bw: [22.9, -19.3] } },
   { name: 'Mount Cameroon', kind: 'mountain', at: { cm: [9.17, 4.2] } },
   { name: 'Kalandula Falls', kind: 'water', at: { ao: [15.99, -9.07] } },
   { name: 'Lake Nokoue', kind: 'water', at: { bj: [2.45, 6.45] } },
   { name: 'Sindou Peaks', kind: 'landmark', at: { bf: [-5.17, 10.67] } },
   { name: 'Pico do Fogo', kind: 'mountain', at: { cv: [-24.35, 14.95] } },
-  { name: 'Mount Karthala', kind: 'mountain', at: { km: [43.26, -11.75] } },
-  { name: 'Tai National Park', kind: 'landmark', at: { ci: [-7.3, 5.75] } },
+  { name: 'Mount Karthala', kind: 'mountain', at: { km: [43.35, -11.75] } },
+  { name: 'Tai National Park', kind: 'landmark', at: { ci: [-7.12, 5.75] } },
   { name: 'Lake Assal', kind: 'water', at: { dj: [42.42, 11.65] } },
   { name: 'Pico Basile', kind: 'mountain', at: { gq: [8.78, 3.58] } },
-  { name: 'Mount Soira', kind: 'mountain', at: { er: [39.63, 14.65] } },
+  { name: 'Mount Soira', kind: 'mountain', at: { er: [39.53, 14.75] } },
   { name: 'Sibebe Rock', kind: 'mountain', at: { sz: [31.18, -26.28] } },
   { name: 'Gambia River', kind: 'water', at: { gm: [-15.5, 13.45] } },
   { name: 'Fouta Djallon', kind: 'mountain', at: { gn: [-12.0, 11.3] } },
   { name: 'Cacheu Mangroves', kind: 'water', at: { gw: [-16.2, 12.25] } },
   { name: 'Maletsunyane Falls', kind: 'water', at: { ls: [28.07, -29.86] } },
-  { name: 'Sapo National Park', kind: 'landmark', at: { lr: [-8.6, 5.3] } },
-  { name: 'Tsingy de Bemaraha', kind: 'landmark', at: { mg: [44.8, -18.7] } },
+  { name: 'Sapo National Park', kind: 'landmark', at: { lr: [-8.5, 5.37] } },
+  { name: 'Tsingy de Bemaraha', kind: 'landmark', at: { mg: [44.81, -18.9] } },
   { name: 'Le Morne Brabant', kind: 'mountain', at: { mu: [57.32, -20.45] } },
   { name: 'Sossusvlei', kind: 'landmark', at: { na: [15.29, -24.73] } },
   { name: 'Nyungwe Forest', kind: 'landmark', at: { rw: [29.25, -2.47] } },
@@ -2864,11 +2871,11 @@ function renderAlmanacFromGis(countryId, info) {
   const foodEl = document.getElementById('cv-food');
   if (foodEl) foodEl.innerHTML = foodPricesHtml(countryId);
 
-  // Largest cities, by Natural Earth population.
+  // Largest cities: the median of three sources' populations.
   const cities = largestCities(countryId);
   const mkt = document.getElementById('cv-markets');
   const mktMeta = document.getElementById('cv-mkt-meta');
-  if (mktMeta) mktMeta.textContent = 'Population · Natural Earth, GeoNames';
+  if (mktMeta) mktMeta.textContent = 'Population · median of Natural Earth, GeoNames, Wikidata';
   mkt.innerHTML = cities.length
     ? '<div class="cv-mkt-row head"><span>City</span><span></span><span>Population</span></div>' +
       cities.map(p =>
@@ -2936,19 +2943,50 @@ function foodPricesHtml(countryId) {
     '<div class="cv-fact-source">' + escapeHtml(food.market) + (food.camp ? ' refugee camp' : '') + ' market · retail · ' + escapeHtml(monthLabel(food.date)) + ' · World Food Programme</div>';
 }
 
-// Railways, from the OpenStreetMap lines the Atlas draws: total length, how much is
-// standard gauge (the SGR-type lines), and the longest named lines.
+// CIA World Factbook railway totals (factbook.json, October 2026), [km, year]: the whole
+// network, lines out of use included. A second, independent figure beside
+// OpenStreetMap's, which maps only what is not marked disused - so Kenya is 1,886 km in
+// OpenStreetMap against 3,819 in the Factbook, most of the old metre-gauge network idle.
+const RAIL_FACTBOOK = {
+  ao: [2761, 2022], bf: [622, 2014], bj: [438, 2014], bw: [888, 2014], cd: [4007, 2014], cg: [510, 2014],
+  ci: [660, 2008], cm: [987, 2014], dj: [97, 2017], dz: [4020, 2019], eg: [5085, 2014], er: [306, 2018],
+  et: [659, 2017], ga: [649, 2014], gh: [947, 2022], gn: [1086, 2017], ke: [3819, 2018], lr: [429, 2008],
+  ma: [2067, 2014], mg: [836, 2018], ml: [593, 2014], mr: [728, 2014], mw: [767, 2014], mz: [4787, 2014],
+  na: [2628, 2014], ng: [3798, 2014], sd: [7251, 2014], sn: [906, 2017], ss: [248, 2018], sz: [301, 2014],
+  tg: [568, 2014], tn: [2173, 2014], tz: [4097, 2022], ug: [1244, 2014], za: [30400, 2021], zm: [3126, 2014],
+  zw: [3427, 2014]
+};
+// Track OpenStreetMap maps as railway where no train runs (checked against Wikipedia,
+// October 2026). Libya's 136 km were scraps of unfinished line and a road.
+const RAIL_NOT_IN_SERVICE = {
+  ly: 'Libya has had no railway in service since 1965. Work on new lines stopped in 2011.',
+  td: 'Chad has no railway.',
+  ne: 'The Niamey–Dosso line, about 145 km built in 2014–16, is not in service.'
+};
+
+function countryRail(countryId) {
+  return RAIL_NOT_IN_SERVICE[countryId] ? null : COUNTRY_GIS[countryId]?.rail || null;
+}
+
+// Railways, from the OpenStreetMap lines the Atlas draws: route length (each double
+// track counted once), how much is standard gauge (the SGR-type lines), the longest
+// named lines, and the Factbook's figure for the whole network.
 function railSummaryHtml(countryId) {
-  const rail = COUNTRY_GIS[countryId]?.rail;
+  const rail = countryRail(countryId);
   const km = Number(rail?.km) || 0;
   const named = (rail?.lines || []).filter(l => l.name && l.km >= 20).slice(0, 4);
   const fmt = n => Math.round(n).toLocaleString('en-US') + ' km';
-  return '<div class="cv-route-group"><div class="cv-route-title">Railways <b>' + (km ? fmt(km) : '0') + '</b></div>' +
-    (km
-      ? (rail.sgrKm >= 20 ? '<p class="cv-route-empty">' + fmt(rail.sgrKm) + ' of it standard gauge.</p>' : '') +
+  const fb = RAIL_FACTBOOK[countryId];
+  const note = text => '<p class="cv-route-empty">' + text + '</p>';
+  const body = RAIL_NOT_IN_SERVICE[countryId]
+    ? note(escapeHtml(RAIL_NOT_IN_SERVICE[countryId]))
+    : km
+      ? note('Route length of lines not marked disused in OpenStreetMap' + (rail.sgrKm >= 20 ? '; ' + fmt(rail.sgrKm) + ' of it standard gauge' : '') + '.') +
         (named.length ? '<ul class="cv-route-list">' + named.map(l => '<li><span>' + escapeHtml(l.name) + '</span><small>' + fmt(l.km) + (l.gauge === 1435 ? ' · standard' : l.gauge ? ' · ' + l.gauge + ' mm' : '') + '</small></li>').join('') + '</ul>' : '')
-      : '<p class="cv-route-empty">No active railway in OpenStreetMap.</p>') +
-  '</div>';
+      : note('No railway in OpenStreetMap.');
+  // Its own year: Algeria has opened lines since the Factbook's 2019 figure.
+  const factbook = fb ? note('CIA World Factbook, whole network including idle lines: ' + fmt(fb[0]) + ' (' + fb[1] + ').') : '';
+  return '<div class="cv-route-group"><div class="cv-route-title">Railways <b>' + (km ? fmt(km) : '0') + '</b></div>' + body + factbook + '</div>';
 }
 
 // The desk's curated list of each country's main farm exports. Every country has one;
@@ -3012,10 +3050,11 @@ function renderAudienceKpis(countryId, info) {
 
 function kpiFact(countryId, key, keyLabel, explain) {
   const fact = countryFact(countryId, key);
+  const old = staleFactYear(countryId, key);
   return {
     key: keyLabel || FACT_DEFS[key].label,
     value: fact ? formatFactValue(FACT_DEFS[key].fmt, fact.v) : '—',
-    sub: fact ? 'World Bank ' + fact.y : (countryId === 'eh' ? 'No World Bank data' : 'Not reported'),
+    sub: fact ? 'World Bank ' + fact.y : (countryId === 'eh' ? 'No World Bank data' : (old ? 'Last reported ' + old : 'Not reported')),
     explain
   };
 }
@@ -3117,12 +3156,28 @@ const FACT_LIMITS = {
   agJobs: [0, 100], agLand: [0, 100], agShare: [0, 100], unemployment: [0, 100], exports: [0, 400]
 };
 
-function countryFact(countryId, key) {
+// A figure more than seven years old describes another economy: the World Bank's latest
+// inflation figure for DR Congo is 2.9% for 2016, South Sudan's growth -10.8% for 2015.
+// Those are shown as "last reported 2016", not as a number.
+const FACT_MAX_AGE = 7;
+
+function rawCountryFact(countryId, key) {
   const fact = countryFacts(countryId)?.wb?.[key];
-  if (!fact || !Number.isFinite(Number(fact.v))) return null;
+  if (!fact || !Number.isFinite(Number(fact.v)) || !Number(fact.y)) return null;
   const v = Number(fact.v);
   const [lo, hi] = FACT_LIMITS[key] || [-Infinity, Infinity];
-  return v < lo || v > hi ? null : { v, y: fact.y };
+  return v < lo || v > hi ? null : { v, y: Number(fact.y) };
+}
+
+function countryFact(countryId, key) {
+  const fact = rawCountryFact(countryId, key);
+  return fact && fact.y >= new Date().getFullYear() - FACT_MAX_AGE ? fact : null;
+}
+
+// The year of a figure too old to show, or null.
+function staleFactYear(countryId, key) {
+  const fact = rawCountryFact(countryId, key);
+  return fact && !countryFact(countryId, key) ? fact.y : null;
 }
 
 function formatFactValue(fmt, v) {
@@ -3142,10 +3197,11 @@ function formatFactValue(fmt, v) {
 function factCellHtml(countryId, key) {
   const def = FACT_DEFS[key];
   const fact = countryFact(countryId, key);
+  const old = staleFactYear(countryId, key);
   return '<div class="cv-fact' + (fact ? '' : ' is-missing') + '">' +
     '<div class="cv-fact-key">' + escapeHtml(def.label) + '</div>' +
-    '<div class="cv-fact-val">' + (fact ? escapeHtml(formatFactValue(def.fmt, fact.v)) : 'Not reported') + '</div>' +
-    '<div class="cv-fact-sub">' + escapeHtml(def.sub) + (fact ? ' · ' + fact.y : '') + '</div>' +
+    '<div class="cv-fact-val">' + (fact ? escapeHtml(formatFactValue(def.fmt, fact.v)) : (old ? 'No recent figure' : 'Not reported')) + '</div>' +
+    '<div class="cv-fact-sub">' + escapeHtml(def.sub) + (fact ? ' · ' + fact.y : (old ? ' · last reported ' + old : '')) + '</div>' +
   '</div>';
 }
 
@@ -3157,7 +3213,7 @@ function factGridHtml(countryId, group) {
     return '<div class="cv-empty">The World Bank does not publish figures for Western Sahara.</div>';
   }
   return '<div class="cv-facts">' + FACT_GROUPS[group].map(key => factCellHtml(countryId, key)).join('') + '</div>' +
-    '<div class="cv-fact-source">World Bank, World Development Indicators · latest year reported since 2015</div>';
+    '<div class="cv-fact-source">World Bank, World Development Indicators · latest year reported, none older than ' + (new Date().getFullYear() - FACT_MAX_AGE) + '</div>';
 }
 
 // Ports and airports from the facts file, the capital's airport first.
@@ -3172,19 +3228,24 @@ function countryAirports(countryId) {
   return (countryFacts(countryId)?.airports || []).filter(a => a && a.name && insideCountry(countryId, a.lon, a.lat, 30));
 }
 
-// The largest cities by population. Natural Earth first: its places are curated metro
-// areas (Nairobi, Mombasa, Kisumu). GeoNames lists communes and towns with county-sized
-// counts (Kakamega as Kenya's second city, Njeru in Uganda), so it is used only where
-// Natural Earth has fewer than four places - the island states and Western Sahara.
+// The largest cities by population. Each figure is the median of Natural Earth,
+// GeoNames and Wikidata (scripts/build-city-populations.ps1): any one of them alone was
+// badly wrong somewhere - Natural Earth had Juba at 112,000 and Benoni at 2.99 million,
+// GeoNames gave Kakamega its county's 1.87 million. Natural Earth alone only if the
+// facts file has no cities.
 function largestCities(countryId, limit = 6) {
   const byPop = list => list.filter(c => c && c.name && Number(c.pop) > 0).sort((a, b) => b.pop - a.pop);
-  const natural = byPop(atlasPlaces(countryId));
-  const list = natural.length >= 4 ? natural : byPop((countryFacts(countryId)?.cities || []).slice());
+  const checked = byPop((countryFacts(countryId)?.cities || []).slice());
+  const capital = normalizeName(COUNTRY_INFO[countryId]?.capital || '');
+  const named = c => normalizeName(c.name) === capital || normalizeName(c.name) + 'city' === capital;
+  // The capital is the one the country file names. The sources also flag Cotonou,
+  // Bujumbura, Abidjan and Cape Town, so their own flag counts only when none matches.
+  const list = (checked.length ? checked : byPop(atlasPlaces(countryId))).map(c =>
+    capital && checked.some(named) ? { ...c, capital: named(c) } : c);
   const top = list.slice(0, limit);
   // The capital is always listed. Natural Earth's figure for Juba (112,000) put South
   // Sudan's capital and largest city below Yei, Malakal and Wau and off the list.
-  const capital = normalizeName(COUNTRY_INFO[countryId]?.capital || '');
-  const isCapital = c => c.capital || normalizeName(c.name) === capital || normalizeName(c.name) + 'city' === capital;
+  const isCapital = c => c.capital || named(c);
   if (capital && !top.some(isCapital)) {
     const cap = list.find(isCapital);
     if (cap) top.splice(Math.max(0, top.length - (top.length >= limit ? 1 : 0)), top.length >= limit ? 1 : 0, cap);
@@ -3386,8 +3447,9 @@ function countryFocusPoint(countryId, info) {
     { name: info.capital, lat: 0, lon: 20 };
 }
 
+// Accents folded first: without it "Lomé" was "lom" and never matched "Lome".
 function normalizeName(value) {
-  return String(value || '').toLowerCase().replace(/[^a-z]/g, '');
+  return String(value || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z]/g, '');
 }
 
 function weatherCodeLabel(code) {
@@ -4077,7 +4139,7 @@ function drawContours(width, height, countryId) {
 // the map that read as roads - while the real Nairobi-Mombasa SGR was absent.
 function drawLinearFeatures(countryId, project, placedLabels, width, height) {
   if (mapLayers.rail === false) return;
-  const rail = COUNTRY_GIS[countryId]?.rail?.lines || [];
+  const rail = countryRail(countryId)?.lines || [];
   for (const line of rail) {
     const sgr = line.gauge === 1435;
     for (const part of line.parts || []) {
@@ -6089,6 +6151,23 @@ async function runSelfTest() {
     if (!largestCities(id).some(c => c.capital || normalizeName(c.name) === cap || normalizeName(c.name) + 'city' === cap)) capitalMissing.push(id);
   }
   add('facts: every country lists its capital among its largest cities', capitalMissing.length === 0, capitalMissing.join(',') || 'all 55');
+  // Figures checked against a second source (22 Oct 2026): a city figure needs two of
+  // three sources to agree, a railway total is route length beside the Factbook's, and
+  // a World Bank figure older than seven years is not shown as current.
+  const keCities = largestCities('ke').map(c => c.name);
+  const juba = largestCities('ss')[0];
+  add('cities: Juba leads South Sudan; Kakamega (a county figure) is not Kenya\'s second city',
+    juba?.name === 'Juba' && juba.pop > 300000 && !keCities.includes('Kakamega') && keCities[1] === 'Mombasa', keCities.join(', '));
+  const singleSource = sortedCountryIds.filter(id => (countryFacts(id)?.cities || []).filter(c => c.sources < 2).length > 2);
+  add('cities: at most two single-source towns, only to fill a short list', singleSource.length === 0, singleSource.join(',') || 'all');
+  add('facts: a figure older than seven years shows its year, not a value',
+    !countryFact('cd', 'inflation') && staleFactYear('cd', 'inflation') === 2016 && !countryFact('ss', 'growth'));
+  add('rail: Libya, Chad and Niger show no railway in service',
+    ['ly', 'td', 'ne'].every(id => !countryRail(id) && /not in service|no railway/i.test(railSummaryHtml(id))));
+  add('rail: route length, not track length (Algeria under 1.5x the Factbook)',
+    (COUNTRY_GIS.dz?.rail?.km || 0) < RAIL_FACTBOOK.dz[0] * 1.5 && (COUNTRY_GIS.ma?.rail?.km || 0) < RAIL_FACTBOOK.ma[0] * 1.3,
+    COUNTRY_GIS.dz?.rail?.km + ' / ' + COUNTRY_GIS.ma?.rail?.km);
+  add('atlas: Lake Chad is marked only where it has open water', Object.keys(LANDMARK_POINTS.find(l => l.name === 'Lake Chad').at).sort().join() === 'cm,td');
   add('atlas: Mayotte is not listed as a Comoros port', !countryPorts('km').some(p => /Dzaoudzi/i.test(p.name)));
   add('atlas: Kenya marks JKIA and the Mombasa SGR', atlasInfraForCountry('ke').some(i => i.short === 'NBO') &&
     (COUNTRY_GIS.ke?.rail?.lines || []).some(l => l.gauge === 1435 && l.km > 300));

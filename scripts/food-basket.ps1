@@ -19,6 +19,13 @@ $FOOD_STAPLE_PATTERN = '(?i)^(maize|rice|sorghum|millet|wheat|teff|bread|beans|c
 # Live animals are sold by the head, and food-aid rations are not a shop price.
 $FOOD_SKIP_PATTERN = '(?i)^livestock\b|food aid'
 
+# A tie-break key both PowerShells sort the same way. Windows PowerShell ignores an
+# apostrophe when comparing names and pwsh does not, so "M'Vengue" and "Makokou" (Gabon's
+# airports) came out in a different order on the desktop than on the runner.
+function Get-SortKey([string]$Text) {
+  return (Get-FoodNameKey $Text) -replace ' ', ''
+}
+
 function Get-FoodNameKey([string]$Text) {
   $plain = $Text.Normalize([Text.NormalizationForm]::FormD)
   $sb = New-Object System.Text.StringBuilder
@@ -80,7 +87,7 @@ function Select-FoodBasket([object[]]$Rows, [object[]]$Cities, [string]$StaleCut
   $ordered = New-Object System.Collections.Generic.List[object]
   $add = {
     param($list)
-    foreach ($m in @($list | Sort-Object @{ Expression = 'staples'; Descending = $true }, @{ Expression = 'records'; Descending = $true })) {
+    foreach ($m in @($list | Sort-Object @{ Expression = 'staples'; Descending = $true }, @{ Expression = 'records'; Descending = $true }, @{ Expression = { Get-SortKey $_.name } })) {
       if (-not $ordered.Contains($m)) { $ordered.Add($m) }
     }
   }
@@ -105,7 +112,7 @@ function Select-FoodBasket([object[]]$Rows, [object[]]$Cities, [string]$StaleCut
   # Ties broken by name: Windows PowerShell and pwsh order equal counts differently, so
   # without it the same file gave a different basket on the desktop than on the runner.
   $groups = @($recent | Where-Object { $_.market -eq $market.name } | Group-Object commodity, unit |
-    Sort-Object @{ Expression = 'Count'; Descending = $true }, @{ Expression = 'Name'; Descending = $false })
+    Sort-Object @{ Expression = 'Count'; Descending = $true }, @{ Expression = { Get-SortKey $_.Name }; Descending = $false })
   $chosen = New-Object System.Collections.Generic.List[object]
   $kinds = @{}
   foreach ($pass in @($true, $false)) {

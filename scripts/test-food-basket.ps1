@@ -113,6 +113,11 @@ $keItems = (Select-FoodBasket $keRows $keCities $staleCut $yearCut).items
 $maize = @($keItems | Where-Object { $_.commodity -eq 'Maize flour' })[0]
 Assert-Food 'Price a year before is found at the same market' ($maize.price -eq 100 -and $maize.yearAgo -eq 112)
 
+Write-Host '[food-test] sort keys' -ForegroundColor Cyan
+# Both PowerShells must put these in one order (Gabon's airports, 22 Oct 2026).
+$order = @(@("M'Vengue El Hadj Omar Bongo Ondimba", 'Makokou Airport') | Sort-Object { Get-SortKey $_ })
+Assert-Food 'Sort key ignores the apostrophe the same way everywhere' ($order[0] -eq 'Makokou Airport')
+
 Write-Host ''
 Write-Host "[food-test] passed=$passed failed=$failed"
 if ($failed) { exit 1 }
