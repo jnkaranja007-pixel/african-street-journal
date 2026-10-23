@@ -74,6 +74,47 @@ for (const [w, h, dpr] of [[320, 568, 2], [390, 844, 3], [768, 1024, 2], [1440, 
   errs.forEach(e => fail(tag + ' page error: ' + e));
   await ctx.close();
 }
+// Low-data readers. With Save-Data (or 3G or slower) the ~146 KB prose file must not
+// download on every visit, an opened story must fetch only its own page, and a failed
+// prose download must never freeze the tab (it used to loop forever on a resolved promise).
+const openFirstKenyaStory = pg => pg.evaluate(() => {
+  const key = document.querySelector('#cv-cards [data-story-key]')?.getAttribute('data-story-key');
+  const rec = key && STORY_REGISTRY.get(key);
+  if (!rec) return false;
+  openStoryReader(rec.story, rec.context);
+  return true;
+});
+const readerState = pg => pg.evaluate(() => {
+  const r = document.getElementById('story-reader');
+  return { open: !!r && r.getAttribute('aria-hidden') !== 'true', text: r ? r.innerText.length : 0, waiting: document.body.classList.contains('asj-waiting') };
+});
+// A frozen page never answers evaluate() and never closes; bound both so a regression
+// fails this check in seconds instead of hanging the CI job.
+const within = (p, ms) => Promise.race([p, new Promise(r => setTimeout(() => r('timeout'), ms))]);
+for (const mode of ['save-data', 'prose-fails']) {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  await ctx.route(/cloudflareinsights|googleapis|gstatic|supabase|open\.er-api|open-meteo|flagcdn/, r => r.abort());
+  if (mode === 'prose-fails') await ctx.route(/briefs-full\.js/, r => r.abort());
+  if (mode === 'save-data') await ctx.addInitScript(() => Object.defineProperty(navigator, 'connection', { value: { saveData: true, effectiveType: '3g', addEventListener() {} }, configurable: true }));
+  const pg = await ctx.newPage(); const errs = []; const paths = [];
+  pg.on('pageerror', e => errs.push(String(e)));
+  pg.on('request', r => paths.push(new URL(r.url()).pathname));
+  await pg.goto(BASE + '#/ke', { waitUntil: 'load' }); await pg.waitForTimeout(2500);
+  const opened = await within(openFirstKenyaStory(pg), 5000);
+  if (opened === false) fail(mode + ': no Kenya story to open');
+  await new Promise(r => setTimeout(r, 3000));
+  const alive = await within(pg.evaluate(() => true), 5000);
+  if (alive !== true) { fail(mode + ': tab froze opening a story'); await within(ctx.close(), 3000); continue; }
+  const st = await readerState(pg);
+  if (!st.open || st.waiting) fail(mode + ': story reader did not open ' + JSON.stringify(st));
+  if (mode === 'save-data') {
+    if (paths.some(p => /briefs-full/.test(p))) fail('save-data: the prose file downloaded anyway');
+    if (!paths.some(p => /^\/ke\/[^/]+\/$/.test(p))) fail('save-data: the story page was not fetched');
+    if (st.text < 600) fail('save-data: reader is missing the story text (' + st.text + ' chars)');
+  }
+  errs.forEach(e => fail(mode + ' page error: ' + e));
+  await ctx.close();
+}
 await browser.close(); server.close();
 
 // Market data must never carry a fake or impossible number.

@@ -1181,7 +1181,11 @@ function frame(now) {
   if (elapsed < 3.5) { render(elapsed); requestAnimationFrame(frame); }
   else finishAssembly();
 }
-if (MAP_STATIC) finishAssembly();
+// A link straight to a country or the Wire (#/ke, #/wire - most WhatsApp shares) opens
+// an overlay over this map; animating it underneath cost a slow phone ~0.65 s of CPU
+// while the reader was trying to scroll the news. Paint it finished, once.
+const OPENED_ON_ROUTE = /^#\/./.test(location.hash || '');
+if (MAP_STATIC || OPENED_ON_ROUTE) finishAssembly();
 else requestAnimationFrame(frame);
 // Safety net: rAF is paused in background tabs and can be starved on slow phones,
 // which left the map half-assembled (missing countries, one shape stuck mid-flight).
@@ -2236,6 +2240,22 @@ function storySearchHaystack(story, context) {
   ].filter(Boolean).join(' '));
 }
 
+// The paragraphs of one story from its crawlable page (/<cc>/<slug>/, built nightly with
+// the edition). Data-saver readers get prose this way instead of downloading all of it.
+function fetchStoryParagraphs(story, countryCode) {
+  if (!story?.slug || !/^[a-z]{2}$/.test(String(countryCode || ''))) return Promise.resolve(false);
+  return fetch('/' + countryCode + '/' + encodeURIComponent(story.slug) + '/', { credentials: 'same-origin' })
+    .then(response => response.ok ? response.text() : Promise.reject(new Error(String(response.status))))
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const paragraphs = Array.from(doc.querySelectorAll('article.story > p:not([class])'), p => p.textContent.trim()).filter(Boolean);
+      if (!paragraphs.length) return false;
+      story.paragraphs = paragraphs;
+      return true;
+    })
+    .catch(() => false);
+}
+
 function storyParagraphs(story) {
   const filed = Array.isArray(story?.paragraphs)
     ? story.paragraphs.map(paragraph => String(paragraph || '').trim()).filter(Boolean)
@@ -2387,15 +2407,31 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   // that window would otherwise get a reader with a headline and nothing under it, so
   // wait for the half that has the paragraphs and then open properly. Once loaded this
   // is a synchronous path again.
-  if (!window.ASJ_FULL_LOADED && !storyParagraphs(story).length && window.ASJ_FULL_READY) {
+  // ASJ_FULL_SETTLED, not just LOADED: when the prose file failed (a flaky mobile
+  // connection), READY resolved, the reader reopened, still had no paragraphs, and waited
+  // on the same resolved promise again - forever, freezing the tab. Once the load has
+  // settled either way, the reader opens with what it has (the dek at worst).
+  if (!window.ASJ_FULL_SETTLED && !storyParagraphs(story).length && window.ASJ_FULL_READY) {
     // On the reader itself this would be invisible - it is still closed. The class goes
     // on body so a click that is waiting on the network looks like it did something.
     document.body.classList.add('asj-waiting');
-    window.ASJ_FULL_READY.then(() => {
+    const reopen = () => {
       document.body.classList.remove('asj-waiting');
-      openStoryReader(story, context, sourceElement, options);
-    });
-    return;
+      openStoryReader(story, context, sourceElement, { ...options, proseTried: true });
+    };
+    if (window.ASJ_SAVE_DATA && !options.proseTried) {
+      // Data saver: this one story's page (~4 KB) rather than every story's prose
+      // (~146 KB). Fall back to the full file only if the page cannot be read.
+      fetchStoryParagraphs(story, context.countryCode).then(ok => {
+        if (ok) reopen();
+        else window.ASJ_LOAD_FULL().then(reopen);
+      });
+    } else if (!options.proseTried) {
+      window.ASJ_LOAD_FULL().then(reopen);
+    } else {
+      document.body.classList.remove('asj-waiting');
+    }
+    if (!options.proseTried) return;
   }
   const country = context.country || COUNTRY_INFO[context.countryCode]?.name || '';
   const topic = story.topic || context.topic || 'News';
@@ -3541,6 +3577,12 @@ function syncMobileAtlasStage(countryId, mapPath, isFullscreen) {
 function drawCountryMap(countryId, countryPath) {
   if (!countryMapCanvas || !countryMapCtx) return;
   const isFs = document.getElementById('cv-map-portal').classList.contains('active');
+  // Nothing to see: the Atlas panel is hidden because the reader is on News or Signals.
+  // Every country open used to draw it anyway - relief, contours and labels, about 0.6 s
+  // of a slow phone's CPU - onto a canvas with no size (it fell back to 720x560), and
+  // then draw it again when the panel opened. Opening the panel (setPanel ->
+  // updateSlidePos -> repaintAtlas) draws it at its real size.
+  if (!isFs && countryMapCanvas.getClientRects().length === 0) return;
   const detail = COUNTRY_DETAIL[countryId];
   const mapPath = detail
     ? { shape: new Path2D(detail.d), bbox: detail.bbox }
@@ -5042,7 +5084,12 @@ canvas.addEventListener('touchstart', (e) => {
     renderTopics(); renderTrust(); renderResults();
     resultsEl.scrollTop = 0;
   });
-  searchInput.addEventListener('input', ()=>{ query = searchInput.value; visibleCount = 60; renderResults(); resultsEl.scrollTop = 0; });
+  searchInput.addEventListener('input', ()=>{
+    query = searchInput.value; visibleCount = 60; renderResults(); resultsEl.scrollTop = 0;
+    // Data saver skips the prose download; a reader who searches has asked for it, and
+    // without it search sees only headlines and deks. The index rebuilds on arrival.
+    if (window.ASJ_SAVE_DATA && query.trim().length >= 3 && window.ASJ_LOAD_FULL) window.ASJ_LOAD_FULL();
+  });
   resultsEl.addEventListener('click', event => {
     const loadMore = event.target.closest('[data-wire-load-more]');
     if (loadMore) {
@@ -6289,8 +6336,17 @@ async function runSelfTest() {
    opened story waits rather than rendering half of itself. */
 (function loadDeferredHalf(){
   let resolveReady;
+  let started = false;
   window.ASJ_FULL_READY = new Promise(r => { resolveReady = r; });
   window.ASJ_FULL_LOADED = false;
+  window.ASJ_FULL_SETTLED = false;
+  // Data saver: the phone asked to save data, or the connection is 3G or slower. The
+  // prose for every story (~146 KB gzipped, new every day) is then not fetched on every
+  // visit; an opened story fetches its own page instead (see openStoryReader), and Wire
+  // search fetches the prose only once the reader actually searches.
+  const conn = navigator.connection;
+  window.ASJ_SAVE_DATA = !!(conn && (conn.saveData || /^(slow-2g|2g|3g)$/.test(String(conn.effectiveType || ''))));
+  const settle = ok => { window.ASJ_FULL_SETTLED = true; resolveReady(ok); };
 
   function merge(full) {
     if (!full || !full.byCountry) return false;
@@ -6321,16 +6377,20 @@ async function runSelfTest() {
   }
 
   function start() {
-    if (window.UNITED_AFRICA_BRIEFS_FULL) { merge(window.UNITED_AFRICA_BRIEFS_FULL); resolveReady(true); return; }
+    if (started) return;
+    started = true;
+    if (window.UNITED_AFRICA_BRIEFS_FULL) { merge(window.UNITED_AFRICA_BRIEFS_FULL); settle(true); return; }
     const s = document.createElement('script');
     s.src = 'data/briefs-full.js?v=' + (window.ASJ_ASSET_VERSION || '1');
     s.async = true;
-    s.onload = () => { merge(window.UNITED_AFRICA_BRIEFS_FULL); resolveReady(true); };
+    s.onload = () => { merge(window.UNITED_AFRICA_BRIEFS_FULL); settle(true); };
     // A failed load is not fatal: headlines, deks and citations still render, and an
     // opened story falls back to its dek. Better a thin paper than a blank one.
-    s.onerror = () => { window.ASJ_FULL_LOADED = false; resolveReady(false); };
+    s.onerror = () => { window.ASJ_FULL_LOADED = false; settle(false); };
     document.head.appendChild(s);
   }
+  window.ASJ_LOAD_FULL = () => { start(); return window.ASJ_FULL_READY; };
+  if (window.ASJ_SAVE_DATA) return;
 
   // After first paint, not during it. requestIdleCallback where it exists, a timeout
   // where it does not - and never rAF, which does not run in a hidden tab, so a page
