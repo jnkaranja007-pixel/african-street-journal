@@ -917,14 +917,14 @@
         "home": "https://www.ialtchad.com/",
         "feed": "https://www.ialtchad.com/index.php?format=feed&amp;type=rss",
         "tier": 2,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Tchad Actuel",
         "home": "https://tchadactuel.com/",
         "feed": "https://tchadactuel.com/feed/",
         "tier": 3,
-        "state": "blocked"
+        "state": "missing"
       },
       {
         "name": "RFI Afrique",
@@ -1222,7 +1222,7 @@
       {
         "name": "Radio Okapi",
         "home": "https://www.radiookapi.net/",
-        "feed": "https://www.radiookapi.net/feed",
+        "feed": "https://www.radiookapi.net/feed/",
         "tier": 1,
         "state": "ok"
       },
@@ -1280,7 +1280,7 @@
         "home": "https://www.aip.ci/",
         "feed": "https://www.aip.ci/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Fraternite Matin",
@@ -1881,7 +1881,7 @@
         "home": "https://eswatinipositivenews.online/",
         "feed": "https://eswatinipositivenews.online/feed/",
         "tier": 3,
-        "state": "missing"
+        "state": "blocked"
       }
     ]
   },
@@ -2557,7 +2557,7 @@
         "home": "https://www.farmbizafrica.com/",
         "feed": "https://www.farmbizafrica.com/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "The Eastleigh Voice",
@@ -2630,7 +2630,7 @@
         "home": "https://www.liberianobserver.com/",
         "feed": "http://www.liberianobserver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
         "tier": 1,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "The New Dawn Liberia",
@@ -3084,7 +3084,7 @@
         "home": "https://www.yabiladi.com/",
         "feed": "https://www.yabiladi.com/rss/news.xml",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Barlamane",
@@ -3126,7 +3126,7 @@
         "home": "https://clubofmozambique.com/",
         "feed": "https://clubofmozambique.com/feed/",
         "tier": 1,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "O Pais",
@@ -3140,7 +3140,7 @@
         "home": "https://cartamz.com/",
         "feed": "https://cartamz.com/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Zitamar News",
@@ -3902,9 +3902,9 @@
       {
         "name": "Awoko Newspaper",
         "home": "https://awokonewspaper.sl/",
-        "feed": "https://awokonewspaper.sl/feed/",
+        "feed": "https://awokonewspaper.sl/feed.xml",
         "tier": 1,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Sierra Leone Telegraph",
@@ -5035,7 +5035,7 @@
         "home": "https://wsrw.org/en",
         "feed": "https://wsrw.org/feed/",
         "tier": 3,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Jeune Afrique",
