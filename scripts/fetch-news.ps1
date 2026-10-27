@@ -596,7 +596,8 @@ foreach ($code in $codes) {
       if ($others.Count -ge 2) { break }
     }
 
-    $eventKey = @($best._eventSig.Keys | Sort-Object | Select-Object -First 6) -join '-'
+    # get_Keys(): a headline word "keys" would answer .Keys (see Get-NewsSimilarity).
+    $eventKey = @($best._eventSig.get_Keys() | Sort-Object | Select-Object -First 6) -join '-'
     $scored.Add([pscustomobject]@{
       title          = $best.title
       url            = $best.url

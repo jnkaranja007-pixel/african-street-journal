@@ -105,6 +105,15 @@ $debtEvent = Get-NewsSignature 'Private companies wait for government arrears to
 Assert-Desk 'unrelated debt and detention stories remain separate' `
   (-not (Test-SameNewsEvent $leftTitle $leftEvent $debtTitle $debtEvent))
 
+# 25 and 27 Oct 2026: a headline with the word "count" crashed the desk - on a hashtable
+# keyed by words, .Count returned that key's value. "keys" would shadow .Keys the same way.
+$countTitle = Get-NewsSignature 'Vote count resumes as keys to ballot boxes are found' @()
+$countEvent = Get-NewsSignature 'Officials say the count will finish on Friday' @()
+$countOk = $true
+try { [void](Test-SameNewsEvent $countTitle $countEvent $leftTitle $leftEvent); [void](Get-NewsSimilarity $countTitle $countTitle) } catch { $countOk = $false }
+Assert-Desk 'a headline containing "count" or "keys" does not crash event matching' $countOk
+Assert-Desk 'and the same headline still matches itself' ((Get-NewsSimilarity $countTitle $countTitle).Containment -eq 1)
+
 Write-Host '[ranking-test] evidence and impact' -ForegroundColor Cyan
 Assert-Desk 'calendar date is not a substantive figure' `
   (-not (Test-SubstantiveFigure 'Conference opens' 'Asmara, 20 August 2026 - delegates met today.'))

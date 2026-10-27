@@ -235,13 +235,19 @@ function Get-NewsSignature([string]$Text, [string[]]$IgnoreTerms) {
 }
 
 function Get-NewsSimilarity($Left, $Right) {
-  if (-not $Left -or -not $Right -or $Left.Count -eq 0 -or $Right.Count -eq 0) {
+  # get_Count() and get_Keys(), not .Count and .Keys: these tables are keyed by headline
+  # words, and on a PowerShell hashtable a key named "count" answers .Count. A headline
+  # with "vote count" in it crashed the desk on 25 and 27 Oct 2026 ("Multiple ambiguous
+  # overloads found for Min") and no edition was published.
+  if ($null -eq $Left -or $null -eq $Right) { return [pscustomobject]@{ Shared = 0; Jaccard = 0.0; Containment = 0.0 } }
+  $leftCount = [int]$Left.get_Count(); $rightCount = [int]$Right.get_Count()
+  if ($leftCount -eq 0 -or $rightCount -eq 0) {
     return [pscustomobject]@{ Shared = 0; Jaccard = 0.0; Containment = 0.0 }
   }
   $shared = 0
-  foreach ($key in $Left.Keys) { if ($Right.ContainsKey($key)) { $shared++ } }
-  $union = $Left.Count + $Right.Count - $shared
-  $smaller = [Math]::Min($Left.Count, $Right.Count)
+  foreach ($key in @($Left.get_Keys())) { if ($Right.ContainsKey($key)) { $shared++ } }
+  $union = $leftCount + $rightCount - $shared
+  $smaller = [Math]::Min($leftCount, $rightCount)
   return [pscustomobject]@{
     Shared      = $shared
     Jaccard     = if ($union -gt 0) { [double]$shared / $union } else { 0.0 }
