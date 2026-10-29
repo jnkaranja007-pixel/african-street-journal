@@ -522,8 +522,12 @@ function Test-NewsCountryLink([string]$CountryMatch, [int]$OutletCount, [bool]$N
 
 # Whether any member of a cluster names the country (its name, people or places from the
 # registry's match list) in its headline or anywhere in its summary.
-function Test-NewsClusterNamesCountry([object[]]$Members, [string[]]$Terms) {
-  foreach ($member in @($Members)) {
+# $Members is untyped and enumerated through the pipeline on purpose: the desk passes a
+# cluster's Generic.List[object], and on PowerShell 7.4 both @($list) and binding it to an
+# [object[]] parameter throw "Argument types do not match". That killed the 29 Oct 2026
+# desk runs at this call and no edition was published.
+function Test-NewsClusterNamesCountry($Members, [string[]]$Terms) {
+  foreach ($member in ($Members | ForEach-Object { $_ })) {
     $text = ConvertTo-NewsText (([string]$member.title) + ' ' + ([string]$member.summary))
     if ((Get-NewsMatchCount $text $Terms 1) -gt 0) { return $true }
   }

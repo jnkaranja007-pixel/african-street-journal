@@ -88,6 +88,18 @@ $spainWithCaboVerdeans = @($spainTrains[0], [pscustomobject]@{ title = 'Spain tr
 Assert-Desk 'the same crash passes when an outlet reports the Cabo Verdeans hurt in it' `
   (Test-NewsCountryLink $spainTrainsMatch 2 (Test-NewsClusterNamesCountry $spainWithCaboVerdeans $caboVerdeTerms))
 
+# The 29 Oct 2026 desk runs: the desk passes a cluster's Generic.List[object], which the
+# old [object[]] parameter could not bind on PowerShell 7.4 ("Argument types do not match").
+$clusterList = New-Object System.Collections.Generic.List[object]
+foreach ($m in $spainWithCaboVerdeans) { $clusterList.Add($m) }
+$listCluster = [pscustomobject]@{ members = $clusterList }
+Assert-Desk 'a cluster passed as the desk passes it (a Generic.List) is checked, not a crash' `
+  (Test-NewsClusterNamesCountry $listCluster.members $caboVerdeTerms)
+$trainList = New-Object System.Collections.Generic.List[object]
+foreach ($m in $spainTrains) { $trainList.Add($m) }
+Assert-Desk 'and a Generic.List that never names the country still fails' `
+  (-not (Test-NewsClusterNamesCountry ([pscustomobject]@{ members = $trainList }).members $caboVerdeTerms))
+
 # The 22 Oct 2026 edition: club football on the Burundi desk, Lisbon on Namibia's.
 $footballOnBurundiDesk = Get-CountryRelevance `
   'Paris Saint-Germain beat Barcelona in a five-goal thriller' `
