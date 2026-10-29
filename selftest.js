@@ -45,13 +45,21 @@ async function runSelfTest() {
       .map(el => el.textContent.trim());
     add('landing: no headline appears twice', new Set(titles).size === titles.length, titles.length + ' shown');
     // A daily cannot lead on a story from a previous edition while a current one exists.
+    // Measured from the edition, not the clock (isBeforeEdition): after midnight UTC the
+    // clock test called the 28 October lead stale and the paper led on a bail hearing.
     const leadEl = document.querySelector('.home-story--lead .home-story-title');
     const leadTitle = leadEl ? leadEl.textContent.trim() : '';
     const lead = Object.values(AI_BRIEFS || {}).flat().find(s => s && s.headline === leadTitle);
-    const anyFresh = Object.values(AI_BRIEFS || {}).flat().some(s => s && s.published && !isStaleDate(s.published, 2));
+    const anyFresh = Object.values(AI_BRIEFS || {}).flat().some(s => s && s.published && !isBeforeEdition(s.published));
     add('landing: the lead story is from a current edition',
-        !lead || !anyFresh || !isStaleDate(lead.published || '', 2),
+        !lead || !anyFresh || !isBeforeEdition(lead.published || ''),
         leadTitle + ' @ ' + (lead ? lead.published : 'unknown'));
+    // The two-day clock rule, at 01:38 UTC on the 29th, failed a story from the 27th
+    // while the 28th's edition was still the current one.
+    add('landing: freshness is measured from the edition date', typeof isBeforeEdition === 'function' &&
+        !isBeforeEdition(latestBriefDate() + 'T00:00:00Z') &&
+        !isBeforeEdition(new Date(Date.parse(latestBriefDate() + 'T12:00:00Z') - 86400000).toISOString()) &&
+        isBeforeEdition(new Date(Date.parse(latestBriefDate() + 'T12:00:00Z') - 3 * 86400000).toISOString()), latestBriefDate());
   }
 
   // --- an unscored story must not outrank the desk ------------------------------
@@ -269,11 +277,28 @@ async function runSelfTest() {
     Array.from(jumpButtons).every(b => document.getElementById(b.dataset.jump)), jumpButtons.length + ' links');
   renderSignalsJump();
   add('rail: Sierra Leone shows its freight line with a note', /Pepel-Tonkolili/.test(railSummaryHtml('sl')));
-  // The Atlas relief is Natural Earth's shaded relief, not shapes generated from the
+  // The Atlas relief is shaded from real elevation, not shapes generated from the
   // country code; and the Atlas has roads (Natural Earth), not only railways.
   await loadReliefIndex();
   const noRelief = sortedCountryIds.filter(id => !RELIEF.index?.[id]);
   add('atlas: every country has a real relief image', noRelief.length === 0 && typeof terrainHeight === 'undefined', noRelief.join(',') || 'all 55');
+  // The screen-reader text named Kenya's neighbours' water (Lake Eyasi, the Pangani) and
+  // Natural Earth's unnamed "River"/"Lake" pieces.
+  renderAtlasAltText('ke');
+  const keAlt = document.getElementById('cv-atlas-alt')?.textContent || '';
+  add('atlas: the text alternative lists only this country\'s named water', /Lake Turkana/.test(keAlt) && !/Lake Eyasi|Pangani|\bRiver,|\bLake,|Res\./.test(keAlt), keAlt.slice(0, 160));
+  // Figures with no source are not shown as figures: Eritrea's "growth" was its
+  // population growth and its FDI a regional average.
+  const er = investorForCountry('er'), eh = investorForCountry('eh');
+  add('economy: no modelled growth or FDI is shown as a figure', !Number.isFinite(er.gdp_growth) && !er.fdi && !eh.gdp && !eh.fdi,
+    'er growth ' + er.gdp_growth + ', eh gdp ' + (eh.gdp || 'none'));
+  add('economy: no GDP history is drawn without published points', economySeriesSummary(eh).series.length === 0);
+  add('stories: no stock "why it matters" line stands in for a missing one', briefWhy({ topic: 'Business' }) === '' &&
+    briefWhy({ headline: 'Benin launches commune fund', dek: 'The FADeC VI program will support all 77 communes.', why: 'The FADeC VI program will support investments in all 77 communes.' }) === '');
+  add('wire: the catch-all "News" topic is not printed as a kicker', topicKicker('News') === '' && /Politics/.test(topicKicker('Politics')));
+  await loadMarketsFile();
+  const keMarket = marketsForCountry('ke');
+  add('markets: the investor panel uses the newest listings file', !LIVE_MARKETS.ke || String(keMarket?.asOf || '') >= String(LIVE_MARKETS.ke.asOf || ''), keMarket?.asOf || 'none');
   const islands = new Set(['cv', 'km', 'mu', 'sc', 'st']);
   const noRoads = sortedCountryIds.filter(id => !islands.has(id) && !(COUNTRY_GIS[id]?.roads?.major || []).length);
   add('atlas: every mainland country has main roads', noRoads.length === 0, noRoads.join(',') || 'all');

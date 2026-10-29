@@ -574,7 +574,8 @@ foreach ($code in $codes) {
                                                     @{ Expression = { $_.Item.published }; Descending = $true })[0]
     $best = $choice.Item
     $meter = $choice.Meter
-    if (-not (Test-NewsCountryLink ([string]$best.countryMatch) $outlets.Count)) {
+    $namesCountry = if ([string]$best.countryMatch -eq 'external') { Test-NewsClusterNamesCountry @($cluster.members) $matchTerms } else { $true }
+    if (-not (Test-NewsCountryLink ([string]$best.countryMatch) $outlets.Count $namesCountry)) {
       $countryLinkRejectedTotal++
       continue
     }

@@ -73,6 +73,21 @@ Assert-Desk 'single-source external story fails the country-link gate' `
 Assert-Desk 'corroborated external story can serve the diaspora lens' `
   (Test-NewsCountryLink $franceOnSenegalDesk.Match 2)
 
+# The 28 Oct 2026 edition: Cabo Verde's lead was a Spanish train crash, carried by two
+# Cabo Verdean sites that never mentioned Cabo Verde. Two outlets are not a country link.
+$caboVerdeTerms = @('Cabo Verde','Cape Verde','Cape Verdean','Cabo-verdiano','Praia','Mindelo')
+$spainTrains = @(
+  [pscustomobject]@{ title = 'Two trains collide in Spain'; summary = 'Dozens were hurt when two commuter trains collided near Barcelona on Monday.' },
+  [pscustomobject]@{ title = 'Spain train crash injures dozens'; summary = 'Spanish rail operator Renfe said an inquiry had opened.' }
+)
+$spainTrainsMatch = (Get-CountryRelevance $spainTrains[0].title $spainTrains[0].summary $caboVerdeTerms '' $false @()).Match
+Assert-Desk 'a Spanish train crash on a Cabo Verde feed is external' ($spainTrainsMatch -eq 'external')
+Assert-Desk 'two outlets that never name the country do not pass the gate' `
+  (-not (Test-NewsCountryLink $spainTrainsMatch 2 (Test-NewsClusterNamesCountry $spainTrains $caboVerdeTerms)))
+$spainWithCaboVerdeans = @($spainTrains[0], [pscustomobject]@{ title = 'Spain train crash injures dozens'; summary = 'Renfe said an inquiry had opened. Three Cape Verdean workers were among the injured.' })
+Assert-Desk 'the same crash passes when an outlet reports the Cabo Verdeans hurt in it' `
+  (Test-NewsCountryLink $spainTrainsMatch 2 (Test-NewsClusterNamesCountry $spainWithCaboVerdeans $caboVerdeTerms))
+
 # The 22 Oct 2026 edition: club football on the Burundi desk, Lisbon on Namibia's.
 $footballOnBurundiDesk = Get-CountryRelevance `
   'Paris Saint-Germain beat Barcelona in a five-goal thriller' `

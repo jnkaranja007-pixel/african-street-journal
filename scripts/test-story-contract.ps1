@@ -30,6 +30,8 @@ foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-Ungro
   $groundingDefinitions.Add($definition.Extent.Text)
 }
 Invoke-Expression ($groundingDefinitions.ToArray() -join "`n")
+# The writer dot-sources story-shape.ps1 (Test-WhyRestatesDek, used by Get-DraftStyleIssues).
+. (Join-Path $PSScriptRoot 'story-shape.ps1')
 $STORY_LENSES = @('farmers','investors','diaspora')
 
 function Write-Fixture([int]$ParagraphCount, [switch]$BadLens, [switch]$ShortStory) {
@@ -200,6 +202,14 @@ try {
   $note = Get-StyleRepairNote $style $draft
   if ($note -notmatch 'Previous draft:' -or $note -notmatch 'broader strategy' -or $note -notmatch '"item":0') { throw 'the repair note lacks the phrases or the previous draft' }
   Write-Host 'PASS style issues produce a repair note carrying the phrases and the previous draft'
+  # 28 Oct 2026: a quarter of the "why" lines said the dek again in other words.
+  $echo = [pscustomobject]@{ item = 0; headline = 'Benin launches sixth phase of commune development fund'; dek = 'The FADeC VI program will support investments in all 77 communes, with a resilience component for 27 northern communes.'; paragraphs = @('Benin launched the sixth phase of its commune fund on Monday.', 'All 77 communes will receive investment money.', 'Twenty-seven northern communes get an extra resilience component.'); why = 'Benin''s FADeC VI program will support investments in all 77 communes, with a specific resilience component for 27 northern communes.' }
+  $style = Get-DraftStyleIssues $echo 'Benin launched FADeC VI for 77 communes.'
+  if (-not $style.RestatedWhy) { throw "a why line that restates the dek was not flagged: $(@($style.Issues) -join '; ')" }
+  if ((Get-StyleRepairNote $style $echo) -notmatch 'says the headline and dek again') { throw 'the repair note does not ask for a new why line' }
+  $echo.why = 'Northern communes hit by flooding and attacks get money set aside to rebuild roads and markets.'
+  if ((Get-DraftStyleIssues $echo 'Benin launched FADeC VI for 77 communes.').RestatedWhy) { throw 'a why line that adds a consequence was flagged' }
+  Write-Host 'PASS a why line that restates the dek is sent back; one that adds a consequence is not'
 
 
   $longDek = ('The transport authority changed the passenger reporting window after publishing a detailed operational notice for every ticket holder. ' * 2).Trim()

@@ -33,7 +33,7 @@
      GoatCounter site code nor a Cloudflare beacon token is a secret.
      Both supported providers are cookieless and neither profiles readers across sites,
      which is the only reason this page can measure traffic without a consent banner. -->
-<script src="data/analytics-config.js?v=81" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=82" onerror="window.ASJ_ANALYTICS=null"></script>
 <script>
 (function () {
   var cfg = window.ASJ_ANALYTICS;
@@ -88,22 +88,22 @@
      immediately and reflow to Playfair when it arrives. The noscript copy keeps the
      original behaviour for a reader with JavaScript off. -->
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=81" as="script">
-<link rel="preload" href="data/app-core.js?v=81" as="script">
-<link rel="preload" href="data/briefs.js?v=81" as="script">
-<link rel="stylesheet" href="styles.css?v=81">
+<link rel="preload" href="app.js?v=82" as="script">
+<link rel="preload" href="data/app-core.js?v=82" as="script">
+<link rel="preload" href="data/briefs.js?v=82" as="script">
+<link rel="stylesheet" href="styles.css?v=82">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
 
 <div class="masthead">
   <span class="masthead-left"><details class="asj-info" style="margin-left:0"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">Text-only edition</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/privacy/">Privacy</a></div></details></span>
-  <div class="masthead-kicker"><span>INDEPENDENT</span><span class="kicker-dot" aria-hidden="true">&middot;</span><span>AFRICAN JOURNALISM</span></div>
+  <div class="masthead-kicker"><span>DAILY NEWS</span><span class="kicker-dot" aria-hidden="true">&middot;</span><span>ALL 55 COUNTRIES</span></div>
   <span aria-hidden="true"></span>
   <div class="mobile-masthead">
     <a class="mobile-wordmark" href="./" aria-label="The African Street Journal home">ASJ</a>
     <span class="mobile-wordmark-name">African Street<br>Journal</span><details class="asj-info asj-info--m"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">Text-only edition</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/privacy/">Privacy</a></div></details>
-    <button class="wire-entry mobile-wire-entry" data-wire-entry type="button" aria-label="Open today's Africa desk" title="Open today's Africa desk">
+    <button class="wire-entry mobile-wire-entry" data-wire-entry type="button" aria-label="Open today's stories" title="Open today's stories">
       <span class="wire-entry-count">ASJ Wire</span>
       <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
     </button>
@@ -112,8 +112,8 @@
 <div class="rule"></div>
 <div class="sub-rule">
   <p class="tagline-footer">&mdash; from the streets, for the streets &mdash;</p>
-  <button class="wire-entry" id="wire-entry" type="button" aria-label="Open today's Africa desk" title="Open today's Africa desk">
-    <span class="wire-entry-label">Open today's desk</span>
+  <button class="wire-entry" id="wire-entry" type="button" aria-label="Open today's stories" title="Open today's stories">
+    <span class="wire-entry-label">Today's stories</span>
     <span class="wire-entry-count" id="wire-entry-count">ASJ Wire</span>
     <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
   </button>
@@ -123,7 +123,7 @@
   <div class="landing-core">
     <div class="title-block">
       <h1><em>The</em> African Street <span class="g">Journal</span></h1>
-      <p class="tagline">Culture &middot; Politics &middot; People</p>
+      <p class="tagline" id="edition-line">Today's edition</p>
     </div>
 
     <div class="pop-counter" aria-label="Estimated population across 55 African countries">
@@ -188,8 +188,7 @@
             <h2 class="cv-name" id="cv-name"></h2>
             <div class="cv-id-meta">
               <span>Capital <b id="cv-capital"></b></span>
-              <span>ISO <b id="cv-iso"></b></span>
-              <span>Growth <b id="cv-growth">—</b></span>
+              <span>GDP growth <b id="cv-growth">—</b></span>
               <span class="cv-fx" id="cv-fx" style="display:none">$1 = <b id="cv-fx-rate"></b> <small id="cv-fx-ccy"></small></span>
               <span class="cv-exch" id="cv-exch" style="display:none">Market <b id="cv-exch-code"></b></span>
               <span class="cv-anthem" id="cv-anthem-wrap">Anthem <b id="cv-anthem"></b><button id="cv-anthem-btn" type="button" aria-label="National anthem preview">♪</button></span>
@@ -326,14 +325,14 @@
           <div class="cv-panel-body" style="padding:14px 16px 16px">
               <div class="cv-map-wrap">
               <div class="cv-map-toolbar">
-                <div class="cv-map-title"><b id="cv-map-toolbar-region">Map Layers</b><span class="country-name" id="cv-map-toolbar-country">Atlas</span><span id="cv-layer-status">5 active overlays</span></div>
+                <div class="cv-map-title"><b id="cv-map-toolbar-region">Map Layers</b><span class="country-name" id="cv-map-toolbar-country">Atlas</span><span id="cv-layer-status"></span></div>
                 <div class="cv-layers" id="cv-layers" role="group" aria-label="Map layers">
                   <button class="cv-nav-btn" id="cv-map-prev" type="button" aria-label="Previous country">‹</button>
                   <button class="cv-nav-btn" id="cv-map-next" type="button" aria-label="Next country">›</button>
                   <details class="cv-layer-menu" id="cv-layer-menu">
                     <summary>Layers</summary>
                     <div class="cv-layer-menu-list">
-                      <button class="cv-layer-pill" data-layer="terrain" aria-pressed="true" type="button" title="Shaded relief from Natural Earth (1:10m): real elevation, lit from the north-west">Relief</button>
+                      <button class="cv-layer-pill" data-layer="terrain" aria-pressed="true" type="button" title="Shaded relief from SRTM elevation (Mapzen Terrain Tiles), lit from the north-west">Relief</button>
                       <button class="cv-layer-pill" data-layer="water" aria-pressed="true" type="button">Water</button>
                       <button class="cv-layer-pill" data-layer="places" aria-pressed="true" type="button">Places</button>
                       <button class="cv-layer-pill" data-layer="roads" aria-pressed="true" type="button" title="Main roads from Natural Earth (1:10m)">Roads</button>
@@ -351,7 +350,7 @@
               </div>
               <div class="cv-map-legend">
                 <span class="city" data-legend-layer="places"><i></i>Capital</span>
-                <span class="water" data-legend-layer="water"><i></i>Hydrography</span>
+                <span class="water" data-legend-layer="water"><i></i>Rivers &amp; lakes</span>
                 <span class="mountain" data-legend-layer="places"><i></i>Landmark</span>
                 <span class="infra" data-legend-layer="infra"><i></i>Seaport</span>
                 <span class="infra airport" data-legend-layer="infra"><i></i>Airport</span>
@@ -407,7 +406,7 @@
       </button>
       <div class="wire-actions" id="wire-actions">
         <button class="wire-action wire-compare-toggle" id="wire-compare-toggle" type="button" aria-expanded="false" aria-controls="wire-compare-body"><span>Compare countries</span><b id="wire-compare-summary"></b></button>
-        <button class="wire-action" id="wire-copy" type="button">Copy today's desk</button>
+        <button class="wire-action" id="wire-copy" type="button">Copy today's headlines</button>
         <button class="wire-action" id="wire-share" type="button">Share the Wire</button>
       </div>
     </div>
@@ -455,19 +454,19 @@
   </div>
 </article>
 
-<script src="data/app-core.js?v=81"></script>
+<script src="data/app-core.js?v=82"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
-<script>window.ASJ_ASSET_VERSION='81';</script>
-<script src="data/country-facts.js?v=81" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
-<script src="data/indices.js?v=81" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=81" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=81" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=81" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=81" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script>window.ASJ_ASSET_VERSION='82';</script>
+<script src="data/country-facts.js?v=82" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
+<script src="data/indices.js?v=82" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=82" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=82" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=82" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=82" onerror="window.ASJ_NEWSLETTER=null"></script>
 
-<script src="app.js?v=81"></script>
-<script src="country-sidebar.js?v=81" defer></script>
-<script src="/info-panel.js?v=81" defer></script>
+<script src="app.js?v=82"></script>
+<script src="country-sidebar.js?v=82" defer></script>
+<script src="/info-panel.js?v=82" defer></script>
 </body>
 </html>

@@ -340,11 +340,13 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $phrases = @(Get-StockPhraseHits $prose $EvidenceText)
   $repeats = @(Get-RepeatedSentences $paragraphs)
   $speculativeWhy = Test-SpeculativeText ([string]$Brief.why)
+  $restatedWhy = Test-WhyRestatesDek $Brief
   $issues = New-Object System.Collections.Generic.List[string]
   if ($phrases.Count) { $issues.Add('stock phrasing: ' + (($phrases | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
   if ($repeats.Count) { $issues.Add('repeats a fact') }
   if ($speculativeWhy) { $issues.Add('why line speculates') }
-  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy }
+  if ($restatedWhy) { $issues.Add('why line restates the dek') }
+  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy }
 }
 
 function Get-StyleRepairNote($Style, $Candidate) {
@@ -359,6 +361,9 @@ function Get-StyleRepairNote($Style, $Candidate) {
   }
   if ($Style.SpeculativeWhy) {
     [void]$lines.Add('- The "why" line speculates (may / might / could). Say who is affected and how, as the packet reports it.')
+  }
+  if ($Style.RestatedWhy) {
+    [void]$lines.Add('- The "why" line says the headline and dek again. Say what the event changes and for whom - a consequence the packet reports, not the event again.')
   }
   [void]$lines.Add('Return the corrected story as the same JSON object. Keep the item number and every name, figure and date exactly as in the previous draft, and add nothing that is not in the packet. A shorter story is fine.')
   [void]$lines.Add('')
@@ -407,7 +412,8 @@ HEADLINE, DEK AND WHY
   for six historic Comorian." is a failed dek, and so is any dek whose last word is a
   preposition, article or conjunction.
 - "why": one sentence naming who is affected and how, as the packet reports it. Do not
-  use "may", "might" or "could" here. If the packet establishes no wider effect, name
+  use "may", "might" or "could" here, and do not restate the headline or dek: it has
+  to add something they do not say. If the packet establishes no wider effect, name
   the people directly involved and what happened to them.
 
 TOPIC

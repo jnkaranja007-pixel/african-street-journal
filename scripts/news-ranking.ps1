@@ -510,8 +510,24 @@ function Select-NewsCandidates([object[]]$Items, [int]$Limit, [int]$LiveSources)
     @{ Expression = { [string]$_.title }; Descending = $false })
 }
 
-function Test-NewsCountryLink([string]$CountryMatch, [int]$OutletCount) {
-  return ($CountryMatch -ne 'external' -or $OutletCount -ge 2)
+# A story set abroad needs a second outlet AND has to name the country somewhere in what
+# the outlets filed. Two outlets were not enough on their own: on 28 Oct 2026 Cabo Verde's
+# lead was "Two trains collide in Spain", carried by two Cabo Verdean sites with no word
+# about Cabo Verde or its people in either. $NamesCountry is the caller's check of every
+# member's headline and full summary; it defaults to true so older callers keep working.
+function Test-NewsCountryLink([string]$CountryMatch, [int]$OutletCount, [bool]$NamesCountry = $true) {
+  if ($CountryMatch -ne 'external') { return $true }
+  return ($OutletCount -ge 2 -and $NamesCountry)
+}
+
+# Whether any member of a cluster names the country (its name, people or places from the
+# registry's match list) in its headline or anywhere in its summary.
+function Test-NewsClusterNamesCountry([object[]]$Members, [string[]]$Terms) {
+  foreach ($member in @($Members)) {
+    $text = ConvertTo-NewsText (([string]$member.title) + ' ' + ([string]$member.summary))
+    if ((Get-NewsMatchCount $text $Terms 1) -gt 0) { return $true }
+  }
+  return $false
 }
 
 function Select-NewsWriteableCandidates([object[]]$Items, [int]$Limit, [int]$MinEvidenceWords = 45) {

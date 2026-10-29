@@ -534,3 +534,26 @@ function Repair-StoryCase($Story, [string]$Extra = '', [string]$Root = '') {
   }
   return $changed
 }
+
+# --- a "why" line that says the dek again --------------------------------------------
+# The reader shows "Why it matters" under the story. On 28 Oct 2026 about a third of them
+# restated the dek in other words ("Drone strike kills 102 civilians in Nyala market" /
+# "The strike killed 102 civilians at a market in Nyala") and told the reader nothing new.
+# Same test as app.js whyRestates: of the why line's content words (three letters or more,
+# minus common function words), the share already in the headline and dek. Six in ten is
+# a restatement; a why line that adds who is affected and how stays well under it.
+$script:WHY_STOP = @('the','and','for','with','from','that','this','these','those','will','would','could','may',
+  'might','has','have','had','their','his','her','they','she','our','not','but','over','after','into','more',
+  'than','about','who','which','what','when','are','was','were','been','its','also','can','said','says')
+function Get-WhyWords([string]$Text) {
+  return @([regex]::Matches($Text.ToLowerInvariant(), '[\p{L}\p{N}]+') | ForEach-Object { $_.Value } |
+    Where-Object { $_.Length -gt 2 -and $script:WHY_STOP -notcontains $_ })
+}
+function Test-WhyRestatesDek($Brief, [double]$Share = 0.6) {
+  $words = @(Get-WhyWords ([string]$Brief.why))
+  if ($words.Count -lt 4) { return $false }
+  $told = @{}
+  foreach ($w in (Get-WhyWords (([string]$Brief.headline) + ' ' + ([string]$Brief.dek)))) { $told[$w] = $true }
+  $hits = @($words | Where-Object { $told.ContainsKey($_) }).Count
+  return (($hits / [double]$words.Count) -ge $Share)
+}

@@ -29,6 +29,8 @@ const LIVE_MARKETS = (window.UNITED_AFRICA_BRIEFS && window.UNITED_AFRICA_BRIEFS
 const STORY_LENS_KEY = 'asj:story-lens:v1';
 const STORY_READ_KEY = 'asj:story-read:v1';
 const STORY_LENSES = ['general','farmers','investors','diaspora'];
+const WHY_STOP = new Set('the and for with from that this these those will would could may might has have had their his her they she our not but over after into more than about who which what when are was were been its also can said says'.split(' '));
+const WHY_RESTATE_SHARE = 0.6;
 const STORY_LENS_LABELS = { general:'Top', farmers:'Farmer', investors:'Investor', diaspora:'Diaspora' };
 const STORY_LENS_TOPIC_SCORES = {
   farmers: { Politics:48, Business:62, Sport:24, Tech:52, Climate:88, Agriculture:96, Culture:30, Health:58, Education:54, News:44 },
@@ -86,7 +88,8 @@ function storyLensData(story, lens = activeStoryLens) {
   const parsed = Number(raw?.score ?? story?.lensScores?.[mode]);
   const fallback = STORY_LENS_TOPIC_SCORES[mode]?.[story?.topic || 'News'] ?? 50;
   const score = Number.isFinite(parsed) ? Math.round(Math.max(0, Math.min(100, parsed))) : fallback;
-  const why = String(raw?.why || '').trim() || briefWhy(story);
+  const lensWhy = String(raw?.why || '').trim();
+  const why = lensWhy && !whyRestates(lensWhy, story) ? lensWhy : briefWhy(story);
   return { score, why, explicit:!!raw };
 }
 
@@ -237,62 +240,80 @@ const ISSUER_DIRECTORY = {
   }
 };
 
-// Reference company lists: cap controls tile size. Seeded `change` values are not
-// presented as current market movement; only fresh daily data may show direction.
+// Main listings for each exchange, tickers only. These carried made-up "cap" and "change"
+// numbers; nothing showed them, and nothing should.
 const MARKETS_SEED = {
   ng: { exchange:'NGX', name:'Nigerian Exchange', companies:[
-    {t:'AIRTELAFRI',cap:7.0,change:0.4},{t:'DANGCEM',cap:8.5,change:1.8},{t:'BUACEMENT',cap:4.2,change:0.9},
-    {t:'MTNN',cap:5.0,change:-0.6},{t:'SEPLAT',cap:1.6,change:2.4},{t:'GTCO',cap:1.6,change:2.1},
-    {t:'ZENITHBANK',cap:1.5,change:-0.3},{t:'UBA',cap:1.1,change:0.8},{t:'NESTLE',cap:0.9,change:-1.1},{t:'NB',cap:0.8,change:0.2} ] },
+    {t:'AIRTELAFRI'},{t:'DANGCEM'},{t:'BUACEMENT'},
+    {t:'MTNN'},{t:'SEPLAT'},{t:'GTCO'},
+    {t:'ZENITHBANK'},{t:'UBA'},{t:'NESTLE'},{t:'NB'} ] },
   za: { exchange:'JSE', name:'Johannesburg', companies:[
-    {t:'NPN',cap:12,change:1.2},{t:'CFR',cap:11,change:0.5},{t:'AGL',cap:6,change:0.9},{t:'FSR',cap:5.5,change:-0.4},
-    {t:'SBK',cap:5,change:0.7},{t:'CPI',cap:4.5,change:1.6},{t:'MTN',cap:4,change:1.5},{t:'VOD',cap:3,change:-0.2},
-    {t:'SOL',cap:2.2,change:-2.1},{t:'BTI',cap:5,change:0.3} ] },
+    {t:'NPN'},{t:'CFR'},{t:'AGL'},{t:'FSR'},
+    {t:'SBK'},{t:'CPI'},{t:'MTN'},{t:'VOD'},
+    {t:'SOL'},{t:'BTI'} ] },
   ke: { exchange:'NSE', name:'Nairobi', companies:[
-    {t:'SCOM',cap:10,change:1.1},{t:'EQTY',cap:2.0,change:0.6},{t:'KCB',cap:1.6,change:-0.8},{t:'EABL',cap:1.4,change:0.3},
-    {t:'COOP',cap:1.0,change:0.5},{t:'ABSA',cap:0.8,change:0.2},{t:'SBIC',cap:0.7,change:-0.4},{t:'BAT',cap:0.9,change:0.7} ] },
+    {t:'SCOM'},{t:'EQTY'},{t:'KCB'},{t:'EABL'},
+    {t:'COOP'},{t:'ABSA'},{t:'SBIC'},{t:'BAT'} ] },
   eg: { exchange:'EGX', name:'Egyptian Exchange', companies:[
-    {t:'COMI',cap:6,change:0.9},{t:'TMGH',cap:3,change:0.6},{t:'SWDY',cap:1.8,change:1.4},{t:'HRHO',cap:1.2,change:-1.2},
-    {t:'ETEL',cap:1.0,change:0.4},{t:'EFIH',cap:0.8,change:-0.5},{t:'FWRY',cap:0.6,change:-0.9},{t:'ABUK',cap:0.9,change:1.1} ] },
+    {t:'COMI'},{t:'TMGH'},{t:'SWDY'},{t:'HRHO'},
+    {t:'ETEL'},{t:'EFIH'},{t:'FWRY'},{t:'ABUK'} ] },
   ma: { exchange:'CSE', name:'Casablanca', companies:[
-    {t:'IAM',cap:9,change:-0.7},{t:'ATW',cap:8,change:0.5},{t:'BCP',cap:4,change:0.4},{t:'LHM',cap:3,change:1.0},
-    {t:'BOA',cap:2,change:0.2},{t:'MSA',cap:1.5,change:0.8},{t:'CMA',cap:1.2,change:-0.3},{t:'GAZ',cap:1.0,change:0.6} ] },
+    {t:'IAM'},{t:'ATW'},{t:'BCP'},{t:'LHM'},
+    {t:'BOA'},{t:'MSA'},{t:'CMA'},{t:'GAZ'} ] },
   gh: { exchange:'GSE', name:'Ghana', companies:[
-    {t:'MTNGH',cap:12,change:0.7},{t:'SCB',cap:1.5,change:0.6},{t:'GCB',cap:1.0,change:0.3},{t:'EGH',cap:1.0,change:-0.4},
-    {t:'TOTAL',cap:0.5,change:0.5},{t:'GOIL',cap:0.4,change:-0.2},{t:'CAL',cap:0.4,change:0.9} ] },
+    {t:'MTNGH'},{t:'SCB'},{t:'GCB'},{t:'EGH'},
+    {t:'TOTAL'},{t:'GOIL'},{t:'CAL'} ] },
   tn: { exchange:'BVMT', name:'Tunis', companies:[
-    {t:'SFBT',cap:3,change:0.4},{t:'BIAT',cap:2.5,change:0.6},{t:'POULINA',cap:1.5,change:-0.3},{t:'ATB',cap:1.0,change:0.2},
-    {t:'BT',cap:1.2,change:0.5},{t:'TELNET',cap:0.6,change:1.1} ] },
+    {t:'SFBT'},{t:'BIAT'},{t:'POULINA'},{t:'ATB'},
+    {t:'BT'},{t:'TELNET'} ] },
   mu: { exchange:'SEM', name:'Mauritius', companies:[
-    {t:'MCBG',cap:4,change:0.5},{t:'SBMH',cap:1.5,change:-0.2},{t:'IBL',cap:1.2,change:0.7},{t:'ENL',cap:0.9,change:0.3},
-    {t:'CIEL',cap:0.7,change:-0.4},{t:'ALTEO',cap:0.6,change:0.8} ] },
+    {t:'MCBG'},{t:'SBMH'},{t:'IBL'},{t:'ENL'},
+    {t:'CIEL'},{t:'ALTEO'} ] },
   ci: { exchange:'BRVM', name:'Abidjan · regional', companies:[
-    {t:'SNTS',cap:8,change:0.6},{t:'ETIT',cap:2.5,change:-0.3},{t:'ORAC',cap:2,change:0.4},{t:'SGBC',cap:1.5,change:0.2},
-    {t:'SLBC',cap:0.9,change:0.7},{t:'BOAB',cap:0.8,change:-0.4},{t:'NTLC',cap:0.7,change:0.3},{t:'PALC',cap:0.6,change:1.0} ] },
+    {t:'SNTS'},{t:'ETIT'},{t:'ORAC'},{t:'SGBC'},
+    {t:'SLBC'},{t:'BOAB'},{t:'NTLC'},{t:'PALC'} ] },
   tz: { exchange:'DSE', name:'Dar es Salaam', companies:[
-    {t:'TBL',cap:2.5,change:0.4},{t:'NMB',cap:1.8,change:0.9},{t:'CRDB',cap:1.6,change:1.2},{t:'VODA',cap:1.2,change:-0.3},
-    {t:'TPCC',cap:1.0,change:0.2},{t:'TCC',cap:0.8,change:-0.5},{t:'SWIS',cap:0.4,change:0.6} ] },
+    {t:'TBL'},{t:'NMB'},{t:'CRDB'},{t:'VODA'},
+    {t:'TPCC'},{t:'TCC'},{t:'SWIS'} ] },
   ug: { exchange:'USE', name:'Uganda', companies:[
-    {t:'MTNU',cap:3,change:0.7},{t:'SBU',cap:1.5,change:0.4},{t:'UMEME',cap:0.6,change:-0.6},{t:'DFCU',cap:0.4,change:0.3},
-    {t:'BATU',cap:0.3,change:0.2},{t:'EBL',cap:0.5,change:0.8} ] },
+    {t:'MTNU'},{t:'SBU'},{t:'UMEME'},{t:'DFCU'},
+    {t:'BATU'},{t:'EBL'} ] },
   zw: { exchange:'ZSE', name:'Zimbabwe', companies:[
-    {t:'DLTA',cap:2.0,change:0.5},{t:'ECO',cap:1.5,change:-0.4},{t:'INN',cap:1.2,change:0.6},{t:'OMU',cap:0.9,change:0.2},
-    {t:'SEED',cap:0.7,change:0.9},{t:'CBZ',cap:0.6,change:-0.3},{t:'NMBZ',cap:0.4,change:0.4} ] },
+    {t:'DLTA'},{t:'ECO'},{t:'INN'},{t:'OMU'},
+    {t:'SEED'},{t:'CBZ'},{t:'NMBZ'} ] },
   bw: { exchange:'BSE', name:'Botswana', companies:[
-    {t:'FNBB',cap:1.5,change:0.4},{t:'LETSHEGO',cap:0.9,change:-0.5},{t:'BIHL',cap:0.7,change:0.3},{t:'ABSA',cap:0.6,change:0.2},
-    {t:'SCBB',cap:0.5,change:-0.2},{t:'SEFA',cap:0.4,change:0.7} ] },
+    {t:'FNBB'},{t:'LETSHEGO'},{t:'BIHL'},{t:'ABSA'},
+    {t:'SCBB'},{t:'SEFA'} ] },
   zm: { exchange:'LuSE', name:'Lusaka', companies:[
-    {t:'ZCCM',cap:1.5,change:0.8},{t:'ZANACO',cap:0.8,change:0.3},{t:'CEC',cap:0.7,change:-0.4},{t:'ZSUG',cap:0.6,change:0.5},
-    {t:'LAFA',cap:0.5,change:-0.2},{t:'REIZ',cap:0.3,change:0.6} ] },
+    {t:'ZCCM'},{t:'ZANACO'},{t:'CEC'},{t:'ZSUG'},
+    {t:'LAFA'},{t:'REIZ'} ] },
   rw: { exchange:'RSE', name:'Rwanda', companies:[
-    {t:'BOK',cap:1.0,change:0.5},{t:'BRALIRWA',cap:0.5,change:-0.3},{t:'IMR',cap:0.4,change:0.4},{t:'CTL',cap:0.3,change:0.2},
-    {t:'RHB',cap:0.3,change:0.7} ] },
+    {t:'BOK'},{t:'BRALIRWA'},{t:'IMR'},{t:'CTL'},
+    {t:'RHB'} ] },
   na: { exchange:'NSX', name:'Namibia', companies:[
-    {t:'CAP',cap:0.9,change:0.4},{t:'FNB',cap:1.0,change:0.3},{t:'NBS',cap:0.8,change:-0.2},{t:'ORY',cap:0.4,change:0.6},
-    {t:'LHN',cap:0.3,change:0.2},{t:'NHL',cap:0.3,change:-0.4} ] }
+    {t:'CAP'},{t:'FNB'},{t:'NBS'},{t:'ORY'},
+    {t:'LHN'},{t:'NHL'} ] }
 };
+// Listings are refreshed on the owner's PC after the desk has run, so the copy inside
+// briefs.js can be days behind data/markets.json (23 October against 28 October on the
+// 28th). The investor panel fetches the file itself and keeps whichever copy is newer.
+const MARKETS_FILE = { data: null, loading: null };
+function loadMarketsFile() {
+  if (MARKETS_FILE.data || MARKETS_FILE.loading) return MARKETS_FILE.loading;
+  MARKETS_FILE.loading = fetch('data/markets.json?h=' + Math.floor(Date.now() / 3600000))
+    .then(r => r.ok ? r.json() : {})
+    .catch(() => ({}))
+    .then(j => { MARKETS_FILE.data = j && typeof j === 'object' ? j : {}; return MARKETS_FILE.data; });
+  return MARKETS_FILE.loading;
+}
+// A day's move this large is a listing error, not news: Nairobi caps a day at 10%, and
+// on 28 October AFX had Olympia Capital up 188.9%.
+const MARKET_MOVE_CEILING = 50;
+
 function marketsForCountry(id){
-  const live = LIVE_MARKETS[id];
+  const embedded = LIVE_MARKETS[id];
+  const fetched = MARKETS_FILE.data?.[id];
+  const live = String(fetched?.asOf || '') > String(embedded?.asOf || '') ? fetched : embedded;
   // Judge market data by ITS OWN asOf, not by when the stories were written. These were
   // the same test, and because stories refresh daily it was always true - so prices from
   // November 2025 were labelled isLive. That is the one thing a markets panel must not do.
@@ -358,6 +379,26 @@ function isStaleDate(value, days = 3) {
   const date = new Date(String(value || '').slice(0, 10) + 'T00:00:00Z');
   if (!Number.isFinite(date.getTime())) return false;
   return (Date.now() - date.getTime()) > days * 86400000;
+}
+
+// Dated more than `days` days before the edition on the page. This was measured from the
+// clock: at 01:00 UTC on 29 October the 28 October lead, a 27 October strike that killed
+// 102 people, was "over two days old" and a bail hearing led the paper instead.
+function isBeforeEdition(value, days = 1) {
+  const date = Date.parse(String(value || '').slice(0, 10) + 'T00:00:00Z');
+  const edition = Date.parse(latestBriefDate() + 'T00:00:00Z');
+  if (!Number.isFinite(date) || !Number.isFinite(edition)) return isStaleDate(value, 2);
+  return edition - date > days * 86400000;
+}
+
+// "News" is the desk's catch-all topic, not a section; a kicker that says "News" over a
+// news story says nothing, so it is left off.
+function shownTopic(topic) {
+  return topic && topic !== 'News' ? topic : '';
+}
+function topicKicker(topic) {
+  const shown = shownTopic(topic);
+  return shown ? '<span class="dot"></span><span class="wire-item-topic">' + escapeHtml(shown) + '</span>' : '';
 }
 
 const COUNTRIES = APP_DATA.countries || [];
@@ -568,6 +609,18 @@ function updateAfricaPop() {
 }
 updateAfricaPop();
 setInterval(() => { if (!document.hidden && !countryView.classList.contains('open')) updateAfricaPop(); }, 1000);
+
+// Which day's paper this is. The line under the title was "Culture · Politics · People",
+// a third tagline after the kicker and the title, and it told a reader nothing.
+const editionLineEl = document.getElementById('edition-line');
+if (editionLineEl && AI_BRIEFS_AT) {
+  const editionDate = new Date(AI_BRIEFS_AT);
+  if (Number.isFinite(editionDate.getTime())) {
+    const storyCount = Object.values(AI_BRIEFS).reduce((sum, list) => sum + (Array.isArray(list) ? list.length : 0), 0);
+    editionLineEl.textContent = editionDate.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'UTC' }) +
+      (storyCount ? ' · ' + storyCount + ' stories' : '');
+  }
+}
 
 const cities = Object.entries(COUNTRY_INFO)
   .map(([id, info]) => ({ city: String(info.capital || info.name).toUpperCase(), id }))
@@ -1570,7 +1623,7 @@ function updateInfoNavState() {
   const meta = document.getElementById('cv-audience-meta');
   if (meta && grid) {
     const mode = audienceSelect?.value || 'farmers';
-    const lens = mode === 'investors' ? 'capital lens' : mode === 'diaspora' ? 'diaspora lens' : 'farmer lens';
+    const lens = audienceLabel(mode);
     const total = grid.children.length;
     const current = Math.min(total, (infoGridIndexByMode[mode] || 0) + 1);
     meta.textContent = total > 1 ? lens + ' · ' + current + '/' + total : lens;
@@ -1632,7 +1685,8 @@ for (const pill of layerPills) {
 
 function updateLayerStatus() {
   const active = Object.values(mapLayers).filter(Boolean).length;
-  if (layerStatus) layerStatus.textContent = active + ' active overlay' + (active === 1 ? '' : 's');
+  // The pills already show what is on; "7 active overlays" said nothing more.
+  if (layerStatus) layerStatus.textContent = active ? '' : 'All layers off';
   document.querySelectorAll('[data-legend-layer]').forEach(item => {
     item.hidden = !mapLayers[item.dataset.legendLayer];
   });
@@ -1713,7 +1767,6 @@ function openCountry(countryId, sourceElement = document.activeElement, options 
   document.getElementById('cv-region').textContent = info.region;
   document.getElementById('cv-name').textContent = info.name;
   document.getElementById('cv-capital').textContent = info.capital;
-  document.getElementById('cv-iso').textContent = info.cc.toUpperCase();
   updateCountryFileSummary(info);
   renderAnthem(countryId, info);
   renderHeaderMeta(countryId, info);
@@ -1908,12 +1961,17 @@ async function openCountryByOffset(offset) {
   openCountry(countryId, sourceElement);
 }
 
+// Who the panel is for, in the reader's words ("capital lens" was the desk's).
+function audienceLabel(mode) {
+  return mode === 'investors' ? 'For investors' : mode === 'diaspora' ? 'For the diaspora' : 'For farmers';
+}
+
 function updateAudienceMeta() {
   const meta = document.getElementById('cv-audience-meta');
   const mode = audienceSelect?.value || 'farmers';
   document.body.dataset.audience = mode;
   audienceTabs.forEach(tab => tab.setAttribute('aria-pressed', String(tab.dataset.audience === mode)));
-  if (meta) meta.textContent = mode === 'investors' ? 'capital lens' : mode === 'diaspora' ? 'diaspora lens' : 'farmer lens';
+  if (meta) meta.textContent = audienceLabel(mode);
   restoreInfoGridPosition(mode);
   renderSignalsJump(mode);
 }
@@ -2103,7 +2161,7 @@ function renderCountryDesk(countryId, countryPath) {
   }
   renderNewsPanel(countryId, stories);
   renderCropCalendar(countryId);
-  renderAtlasAltText(countryId, landmarks);
+  renderAtlasAltText(countryId);
   if (activePanelIndex === 2 || mapPortal?.classList.contains('active')) {
     preloadAdjacentCountryData(countryId);
   }
@@ -2137,7 +2195,7 @@ function renderCountryFile(countryId) {
       const s = economySeriesSummary(inv);
       if (s && s.hasTrend) econ += ' Up from <b>$' + Math.round(s.first.value) + 'B</b> in ' + s.first.year + '.';
     }
-    rows.push({ tag: inv.source === 'World Bank' ? 'World Bank ' + (inv.gdpYear || '') : 'Desk file', text: econ });
+    rows.push({ tag: inv.source === 'World Bank' ? 'World Bank ' + (inv.gdpYear || '') : 'Economy', text: econ });
   }
 
   const profile = marketProfileForCountry(countryId);
@@ -2147,7 +2205,7 @@ function renderCountryFile(countryId) {
 
   const rate = (window.__FX || {})[inv.currency];
   if (Number.isFinite(rate)) {
-    rows.push({ tag: 'Live FX reference', text: '$1 buys <b>' + formatFxRate(rate) + ' ' + escapeHtml(inv.currency) + '</b> at the automatic reference rate.' });
+    rows.push({ tag: 'Exchange rate', text: '$1 buys <b>' + formatFxRate(rate) + ' ' + escapeHtml(inv.currency) + '</b> at today\'s reference rate.' });
   }
 
   const crops = farmExportsForCountry(countryId).slice(0, 3).filter(c => CROP_SEASONS[c]);
@@ -2177,9 +2235,9 @@ function renderCountryFile(countryId) {
   rows.push({ tag: 'Ports · airports', text: 'Capital <b>' + escapeHtml(info.capital || '—') + '</b>' + (links.length ? '; main links <b>' + links.map(escapeHtml).join('</b> and <b>') + '</b>.' : '.') });
 
   return '<div class="cv-brief-desk cv-deskfile">' +
-    '<div class="cv-brief-head"><span class="t">Country <b>file</b></span><span class="m">Compiled from sourced desk layers</span></div>' +
+    '<div class="cv-brief-head"><span class="t">Country <b>file</b></span><span class="m">From public data</span></div>' +
     rows.map(r => '<div class="cv-df-row"><span class="cv-df-tag">' + r.tag + '</span><p>' + r.text + '</p></div>').join('') +
-    '<div class="cv-df-note">The ASJ desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — ranked, source-cited stories replace this file after the next daily run.</div>' +
+    '<div class="cv-df-note">No stories from ' + escapeHtml(info.name || 'this country') + ' in today\'s edition. They appear here when outlets report from it.</div>' +
   '</div>';
 }
 
@@ -2431,7 +2489,6 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   const sourceMap = new Map();
   sources.forEach(source => sourceMap.set(source.url, source));
   const uniqueSources = Array.from(sourceMap.values());
-  const confidence = String(story.confidence || '').trim();
   const readerLens = normalizeStoryLens(activeStoryLens);
   const lensData = storyLensData(story, readerLens);
   const clientId = storyClientId(story, context);
@@ -2446,7 +2503,7 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
     }
   });
   if (!options.continueQueue) storyReaderLastFocus = sourceElement;
-  document.getElementById('story-reader-kicker').textContent = [topic, country].filter(Boolean).join(' · ');
+  document.getElementById('story-reader-kicker').textContent = [shownTopic(topic), country].filter(Boolean).join(' · ');
   document.getElementById('story-reader-title').textContent = story.headline;
   const dek = document.getElementById('story-reader-dek');
   dek.textContent = story.dek || '';
@@ -2455,8 +2512,8 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   if (published) meta.push('<span><b>' + escapeHtml(formatShortDate(published) || String(published).slice(0, 10)) + '</b></span>');
   meta.push('<span><b>' + readMinutes + ' min</b> read</span>');
   if (uniqueSources.length) meta.push('<span><b>' + uniqueSources.length + '</b> ' + (uniqueSources.length === 1 ? 'source' : 'sources') + '</span>');
-  if (confidence) meta.push('<span><b>' + escapeHtml(confidence) + '</b> confidence</span>');
-  if (readerLens !== 'general') meta.push('<span><b>' + escapeHtml(STORY_LENS_LABELS[readerLens]) + '</b> lens</span>');
+  // 'high confidence' was the desk's own grade of its draft, not something a reader can use.
+  if (readerLens !== 'general') meta.push('<span>' + escapeHtml(audienceLabel(readerLens)) + '</span>');
   document.getElementById('story-reader-meta').innerHTML = meta.join('');
   document.getElementById('story-reader-copy').innerHTML = paragraphs
     .map(paragraph => '<p>' + escapeHtml(paragraph) + '</p>').join('');
@@ -2625,8 +2682,8 @@ function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) 
       '<div class="cv-news-summary-main">' +
         '<div class="cv-news-summary-meta">' +
           (countryTag ? '<span class="cv-news-country">' + escapeHtml(countryTag) + '</span><span>·</span>' : '') +
-          '<span class="cv-brief-topic">' + escapeHtml(b.topic || 'News') + '</span>' +
-          '<span>·</span><span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span>' +
+          (shownTopic(b.topic) ? '<span class="cv-brief-topic">' + escapeHtml(b.topic) + '</span><span>·</span>' : '') +
+          '<span class="cv-news-source">' + escapeHtml((b.sources?.[0]?.name) || 'Sourced report') + '</span>' +
           
           (read ? '<span>·</span><span class="cv-news-read-state">Read</span>' : '') + '</div>' +
         '<h4 class="cv-brief-title">' + escapeHtml(b.headline) + '</h4>' +
@@ -2636,7 +2693,7 @@ function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) 
     '</button>' +
     '<div class="cv-brief-main" id="' + domId + '-detail" role="region" aria-labelledby="' + domId + '-summary" hidden>' +
       '<p class="cv-brief-body">' + escapeHtml(preview) + '</p>' +
-      '<p class="cv-brief-why"><b>' + escapeHtml(whyLabel) + '</b>' + escapeHtml(lensData.why) + '</p>' +
+      (lensData.why ? '<p class="cv-brief-why"><b>' + escapeHtml(whyLabel) + '</b>' + escapeHtml(lensData.why) + '</p>' : '') +
       '<div class="cv-brief-actions">' +
         '<span>' + readMinutes + ' min read</span>' +
         '<button class="cv-read-story" type="button" data-story-key="' + escapeHtml(storyKey) + '">Read on ASJ <span aria-hidden="true">→</span></button>' +
@@ -2743,7 +2800,7 @@ function renderBriefDesk(countryId) {
       cards.innerHTML = wire.html;
       wireBriefAccordion(cards);
     } else {
-      if (meta) meta.textContent = 'Desk file · no wire stories yet';
+      if (meta) meta.textContent = 'No stories today';
       cards.innerHTML = renderCountryFile(countryId);
     }
     return;
@@ -2819,16 +2876,23 @@ function wireBriefAccordion(cards) {
   };
 }
 
+// "Why it matters" is shown only when it adds something. Many came back as the dek in
+// other words, and a story without one got a stock line for its topic ("This can affect
+// prices, jobs, investment, or the cost of moving money.") - the same sentence under
+// every business story on the site. Neither is shown now.
 function briefWhy(brief) {
-  if (brief && brief.why) return brief.why;
-  const topic = String(brief?.topic || 'News').toLowerCase();
-  if (topic.includes('business')) return 'This can affect prices, jobs, investment, or the cost of moving money.';
-  if (topic.includes('politics')) return 'This can change public services, legal risk, investor confidence, or daily civic life.';
-  if (topic.includes('agriculture')) return 'This can affect food supply, farm income, market prices, or planting decisions.';
-  if (topic.includes('health')) return 'This can affect household safety, clinics, public spending, or travel decisions.';
-  if (topic.includes('climate')) return 'This can affect water, roads, crops, power, and how quickly communities need to adapt.';
-  if (topic.includes('sport') || topic.includes('culture')) return 'This is part of the public conversation shaping identity, attention, and national mood.';
-  return 'This is worth tracking because it may affect how people move, spend, work, or plan today.';
+  const why = String(brief?.why || '').trim();
+  return why && !whyRestates(why, brief) ? why : '';
+}
+
+function whyWords(text) {
+  return (String(text || '').toLowerCase().match(/[\p{L}\p{N}]+/gu) || []).filter(w => w.length > 2 && !WHY_STOP.has(w));
+}
+function whyRestates(why, story) {
+  const words = whyWords(why);
+  if (words.length < 4) return false;
+  const told = new Set(whyWords((story?.headline || '') + ' ' + (story?.dek || '')));
+  return words.filter(w => told.has(w)).length / words.length >= WHY_RESTATE_SHARE;
 }
 
 
@@ -2844,12 +2908,12 @@ function renderAlmanacFromGis(countryId, info) {
   if (agMeta) agMeta.textContent = '';
   ag.innerHTML = factGridHtml(countryId, 'farmers') +
     (farmItems.length || farm?.note
-      ? '<div class="cv-ag-line"><span class="cv-ag-line-key">Main farm exports</span><span class="cv-ag-line-val">' +
+      ? '<div class="cv-ag-line"><span class="cv-ag-line-key">Main farm exports, a year</span><span class="cv-ag-line-val">' +
           (farmItems.length
             ? farmItems.map(i => escapeHtml(i.label) + ' ' + escapeHtml(formatFactValue('usd', i.usd))).join(' · ')
             : escapeHtml(farm.note)) +
         '</span></div>' +
-        '<div class="cv-fact-source">' + escapeHtml(window.ASJ_COUNTRY_FACTS?.sources?.farm || 'FAOSTAT') + ' · a year</div>'
+        '<div class="cv-fact-source">' + escapeHtml(window.ASJ_COUNTRY_FACTS?.sources?.farm || 'FAOSTAT') + '</div>'
       : '');
 
   // Food prices: WFP's retail prices at its best-covered market, against a year earlier.
@@ -3061,15 +3125,17 @@ function renderDiasporaKpis(countryId, info) {
 }
 
 function renderFarmerKpis(countryId) {
-  const stats = countryDeskStats(countryId);
   const ports = countryPorts(countryId);
   const airports = countryAirports(countryId);
-  const waterCount = (stats.gis.rivers || []).length + (stats.gis.lakes || []).length;
+  // The fourth cell was "Water registry", a count of mapped rivers and lakes that
+  // included the neighbours' (Kenya's 17 took in Lake Tanganyika).
+  const farm = countryFacts(countryId)?.farm;
+  const topExport = (farm?.items || [])[0];
   setKpiCells([
     { key: 'Weather · Live', value: '—', sub: 'Fetching station data', explain: 'Live weather is fetched for the capital or closest mapped reference point.' },
     { key: 'Seaports', value: String(ports.length), sub: ports.length ? 'incl. ' + ports[0].name : (LANDLOCKED.has(countryId) ? 'Landlocked' : 'None listed'), explain: 'Ports in the NGA World Port Index, offshore oil terminals excluded.' },
     { key: 'Airports', value: String(airports.length), sub: airports.length ? 'With scheduled flights' : 'None listed', explain: 'Airports with scheduled passenger service, from OurAirports.' },
-    { key: 'Water registry', value: String(waterCount), sub: (stats.gis.rivers || []).length + ' rivers · ' + (stats.gis.lakes || []).length + ' lakes', explain: 'Mapped rivers and lakes from Natural Earth.' }
+    { key: 'Top farm export', value: topExport ? topExport.label : '—', sub: topExport ? formatFactValue('usd', topExport.usd) + ' a year' : 'Not published', explain: 'Largest crop or livestock export by value, FAOSTAT, 2022–24 average.' }
   ]);
 }
 
@@ -3271,20 +3337,21 @@ function largestCities(countryId, limit = 6) {
 function renderInvestorKpis(countryId, info) {
   const inv = investorForCountry(countryId, info);
   // The fourth cell was "Risk / access: Medium · Open", a desk label with no source.
+  const hasGrowth = Number.isFinite(inv.gdp_growth);
   setKpiCells([
-    { key: 'GDP', value: inv.gdp, sub: gdpSubLabel(inv), green: true, explain: 'Nominal GDP in current US dollars from the latest available economy file.' },
-    { key: 'GDP growth', value: (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%', sub: growthSubLabel(inv), green: inv.gdp_growth >= 4, explain: 'Latest annual real GDP growth rate available in the country file.' },
-    { key: 'FDI inflows', value: inv.fdi, sub: inv.fdiYear ? 'World Bank ' + inv.fdiYear : (inv.estimated ? 'Desk model estimate' : 'Desk file · UNCTAD 2023-24'), explain: 'Foreign direct investment inflows where a sourced estimate is available.' },
+    { key: 'GDP', value: inv.gdp || '—', sub: gdpSubLabel(inv), green: !!inv.gdp, explain: 'Gross domestic product in current US dollars.' },
+    { key: 'GDP growth', value: hasGrowth ? (inv.gdp_growth > 0 ? '+' : '') + inv.gdp_growth + '%' : '—', sub: hasGrowth ? growthSubLabel(inv) : 'Not published', green: inv.gdp_growth >= 4, explain: 'Annual real GDP growth.' },
+    { key: 'FDI inflows', value: inv.fdi || '—', sub: !inv.fdi ? 'Not published' : inv.fdiYear ? 'World Bank ' + inv.fdiYear : 'UNCTAD, 2023–24', explain: 'Foreign direct investment flowing into the country in a year.' },
     kpiFact(countryId, 'inflation', 'Inflation', 'Annual change in consumer prices, World Bank.')
   ]);
 }
 
 function gdpSubLabel(inv) {
-  return inv.gdpYear ? 'World Bank ' + inv.gdpYear : inv.estimated ? 'Desk model' : 'Nominal desk file';
+  return !inv.gdp ? 'Not published' : inv.gdpYear ? 'World Bank ' + inv.gdpYear : 'Current US dollars';
 }
 
 function growthSubLabel(inv) {
-  return inv.growthYear ? 'World Bank ' + inv.growthYear : inv.estimated ? 'Desk model' : 'Year-on-year';
+  return inv.growthYear ? 'World Bank ' + inv.growthYear : 'Year on year';
 }
 
 function formatPerResident(value) {
@@ -3312,7 +3379,9 @@ function economySeriesSummary(inv) {
         .slice()
         .sort((a, b) => a.year - b.year)
     : [];
-  const series = supplied.length ? supplied : gdpSeries(inv);
+  // Published points only. The fallback was a sine-wave line drawn back ten years from
+  // one figure, shown as "GDP history".
+  const series = supplied;
   const first = series[0] || { value: 0 };
   const latest = series[series.length - 1] || first;
   const hasTrend = series.length >= 2 && latest.year > first.year;
@@ -3353,7 +3422,8 @@ function investorEstimate(countryId, info = COUNTRY_INFO[countryId]) {
 function investorForCountry(countryId, info = COUNTRY_INFO[countryId]) {
   const cachedSeries = GDP_SERIES_CACHE[countryId];
   const worldBank = WORLD_BANK_ECONOMY[countryId];
-  const base = INVESTOR_INFO[countryId] || investorEstimate(countryId, info);
+  const listed = INVESTOR_INFO[countryId];
+  const base = listed || investorEstimate(countryId, info);
   const merged = { ...base };
   if (worldBank) {
     const wbSeries = Array.isArray(worldBank.gdpSeries) && worldBank.gdpSeries.length ? worldBank.gdpSeries : null;
@@ -3361,13 +3431,21 @@ function investorForCountry(countryId, info = COUNTRY_INFO[countryId]) {
     merged.gdp_growth = Number.isFinite(worldBank.gdp_growth) ? worldBank.gdp_growth : base.gdp_growth;
     merged.gdpYear = worldBank.gdpYear || base.gdpYear;
     merged.growthYear = worldBank.growthYear || base.growthYear;
-    merged.gdpSeries = cachedSeries || (wbSeries?.length >= 2 ? wbSeries : null) || base.gdpSeries || wbSeries;
+    merged.gdpSeries = (wbSeries?.length >= 2 ? wbSeries : null) || cachedSeries || base.gdpSeries || wbSeries;
     merged.estimated = false;
     merged.source = 'World Bank';
   } else {
     merged.gdpSeries = cachedSeries || base.gdpSeries;
     merged.estimated = base.estimated !== false;
-    merged.source = merged.estimated ? 'Desk model' : 'Desk file';
+    merged.source = '';
+  }
+  // investorEstimate is a regional per-person average, kept for the currency and sector
+  // words only. Its GDP, growth and FDI were shown as figures (Eritrea's "growth" was its
+  // population growth); with no published number the cell now says so.
+  if (!listed) {
+    if (!worldBank || !Number.isFinite(worldBank.gdp)) merged.gdp = '';
+    if (!worldBank || !Number.isFinite(worldBank.gdp_growth)) merged.gdp_growth = NaN;
+    merged.fdi = '';
   }
   return merged;
 }
@@ -3446,7 +3524,8 @@ function countryBriefText(countryId) {
     const sources = (brief.sources || []).map(source => source.name || source.url).filter(Boolean).join(', ');
     lines.push((index + 1) + '. ' + brief.headline);
     lines.push('   ' + (brief.body || ''));
-    lines.push('   Why it matters: ' + storyLensData(brief, 'general').why);
+    const why = storyLensData(brief, 'general').why;
+    if (why) lines.push('   Why it matters: ' + why);
     if (sources) lines.push('   Sources: ' + sources);
     lines.push('');
   });
@@ -3524,7 +3603,7 @@ function aiStoriesForCountry(countryId) {
     const src = (Array.isArray(item.sources) && item.sources[0]) || {};
     return {
     title: item.headline,
-    summary: item.why || item.body || '',
+    summary: item.dek || item.body || '',
     source: src.name || 'ASJ Desk',
     url: src.url || '',
     type: item.topic || 'News',
@@ -4012,8 +4091,9 @@ function reliefNoise(x, y, seed) {
   ) / 2;
 }
 
-/* Real relief: Natural Earth's 1:10m "Gray Earth with Shaded Relief", cut per country
-   and tinted green by scripts/build-country-relief.ps1 (data/relief/<cc>.jpg, 2-260 KB;
+/* Real relief: hill-shaded from elevation (Mapzen Terrain Tiles: SRTM, GMTED2010, ETOPO1)
+   by scripts/build-country-relief.ps1, about 1,400 px a country whatever its size
+   (data/relief/<cc>.jpg; Natural Earth's fixed 1.85 km pixels gave Rwanda 183 px;
    data/relief/index.json gives each image's edges). Raster and Atlas share one plain
    longitude/latitude projection, so the image is placed by its corners. This replaced a
    "Stylized relief" that was sine waves seeded by the country code, with contour lines
@@ -4281,6 +4361,11 @@ function renderInvestorMarkets(countryId) {
   const wrap = document.getElementById('cv-heatmap');
   const meta = document.getElementById('cv-heat-meta');
   if (!wrap) return;
+  if (!MARKETS_FILE.data) {
+    loadMarketsFile()?.then(() => {
+      if (activeCountryMap?.countryId === countryId && document.body.dataset.audience === 'investors') renderInvestorMarkets(countryId);
+    });
+  }
   const profile = marketProfileForCountry(countryId);
   const m = marketsForCountry(countryId);
   if (!profile.exchange) {
@@ -4298,10 +4383,21 @@ function renderInvestorMarkets(countryId) {
   }
   const isLive = !!m.isLive;
   if (meta) meta.textContent = profile.exchange + ' · ' + profile.name;
+  // Old or no prices: say so in words. This drew a grid of grey ticker tiles that looked
+  // like a market map and showed nothing, under "too old to show".
+  if (!isLive) {
+    const tickers = m.companies.map(c => c && c.t).filter(Boolean);
+    wrap.innerHTML = renderIndexLine(countryId) + '<div class="cv-heat-empty"><b>' + escapeHtml(profile.exchange) + '</b> · ' +
+      (m.asOf ? 'Prices last updated ' + escapeHtml(formatMarketDate(m.asOf)) + ', too long ago to show as today\'s.' : 'No current prices.') +
+      (tickers.length ? '<br>Main listings: ' + tickers.map(escapeHtml).join(', ') + '.' : '') +
+      (profile.url ? '<br><a href="' + escapeHtml(safeUrl(profile.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(profile.exchange) + ' official site ↗</a>' : '') +
+      '</div>';
+    return;
+  }
   // The 'cap' field is a SHARE PRICE (AFX publishes price, not market cap). Sizing tiles by
-  // it made a KES 284 small-cap dwarf KCB and was captioned 'company size'. Live: size by
-  // the size of the move. Stale: equal tiles, tickers only, with the fetch date shown.
-  const sorted = m.companies.slice().filter(c => c && c.t && Number.isFinite(Number(c.cap)) && Number(c.cap) > 0)
+  // it made a KES 284 small-cap dwarf KCB and was captioned 'company size'. Tiles are sized
+  // by the size of the day's move.
+  const sorted = m.companies.slice().filter(c => c && c.t && Number.isFinite(Number(c.cap)) && Number(c.cap) > 0 && Math.abs(Number(c.change) || 0) <= MARKET_MOVE_CEILING)
     .sort((a, b) => isLive ? Math.abs(Number(b.change) || 0) - Math.abs(Number(a.change) || 0) : String(a.t).localeCompare(String(b.t)));
   const items = sorted.map((c, i) => {
     const issuer = issuerForCountry(countryId, c.t);
@@ -4323,7 +4419,7 @@ function renderInvestorMarkets(countryId) {
         const big = (r.w / W > 0.16 && r.h / H > 0.18);
         const fs = Math.max(8, Math.min(20, Math.round(Math.min(r.w / W * 70, r.h / H * 52))));
         const sign = r.change > 0 ? '+' : '';
-        const title = isLive ? r.t + ' ' + sign + r.change + '%' : r.t + ' · price data stale';
+        const title = r.t + ' ' + sign + r.change + '%';
         return '<button class="cv-heat-tile" type="button" data-tkr="' + escapeHtml(r.t) + '" data-name="' + escapeHtml(r.name) + '" data-chg="' + r.change + '" data-rank="' + r.rank + '" data-total="' + r.total + '" style="left:' + (r.x / W * 100) + '%;top:' + (r.y / H * 100) + '%;width:' + wp + '%;height:' + hp + '%;background:' + (isLive ? heatColor(r.change) : 'rgb(28,66,42)') + '" title="' + escapeHtml(title) + '">' +
           '<span class="cv-heat-tkr" style="font-size:' + fs + 'px">' + escapeHtml(r.t) + '</span>' +
           (isLive && big ? '<span class="cv-heat-chg">' + sign + r.change.toFixed(1) + '%</span>' : '') +
@@ -4331,7 +4427,7 @@ function renderInvestorMarkets(countryId) {
       }).join('') +
     '</div>' +
     '<div class="cv-heat-detail" id="cv-heat-detail" hidden></div>' +
-    '<div class="cv-heat-key"><span class="cv-heat-note">' + (isLive ? 'Biggest movers, share-price change · as of ' + escapeHtml(formatMarketDate(m.asOf)) : (m.asOf ? 'Listed companies · prices last fetched ' + escapeHtml(formatMarketDate(m.asOf)) + ', too old to show' : 'Listed companies · no current price data')) + '</span></div>';
+    '<div class="cv-heat-key"><span class="cv-heat-note">' + 'Biggest movers, share-price change · ' + escapeHtml(formatMarketDate(m.asOf)) + '</span></div>';
   wrap.onclick = (e) => {
     const tile = e.target.closest('.cv-heat-tile'); if (!tile) return;
     const detail = document.getElementById('cv-heat-detail'); if (!detail) return;
@@ -4348,7 +4444,7 @@ function renderInvestorMarkets(countryId) {
       '<div class="cv-hd-main"><span class="cv-hd-tkr">' + escapeHtml(tkr) + '</span>' +
         (name ? '<span class="cv-hd-name">' + escapeHtml(name) + '</span>' : '') +
         (isLive ? '<span class="cv-hd-chg ' + cls + '">' + sign + chg.toFixed(1) + '%</span>' : '') + '</div>' +
-      '<div class="cv-hd-meta">#' + tile.dataset.rank + ' of ' + tile.dataset.total + ' in the ' + (isLive ? 'current market-cap view' : 'reference company view') + ' on ' + escapeHtml(profile.exchange) +
+      '<div class="cv-hd-meta">#' + tile.dataset.rank + ' of ' + tile.dataset.total + ' by size of move on ' + escapeHtml(profile.exchange) + ', ' + escapeHtml(formatMarketDate(m.asOf)) +
         destinationLink + '</div>';
     detail.hidden = false;
     wrap.querySelectorAll('.cv-heat-tile').forEach(t => t.classList.toggle('sel', t === tile));
@@ -4381,7 +4477,7 @@ function renderDiasporaPanel(countryId, info) {
   fxEl.innerHTML =
     '<div class="cv-dia-rate"><div class="cv-dia-rate-key">$1 USD buys</div>' +
       '<div class="cv-dia-rate-val">' + rateStr + ' <span>' + escapeHtml(ccy || '') + '</span></div>' +
-      '<div class="cv-dia-rate-sub">' + escapeHtml(CCY_NAME[ccy] || 'local currency') + (Number.isFinite(rate) ? ' · automatic reference rate' : ' · reference unavailable') + '</div>' +
+      '<div class="cv-dia-rate-sub">' + escapeHtml(CCY_NAME[ccy] || 'local currency') + (Number.isFinite(rate) ? ' · reference rate, updated daily' : ' · rate unavailable') + '</div>' +
     '</div>' +
     (Number.isFinite(rate)
       ? '<div class="cv-dia-calc"><label for="cv-dia-amount">Sending</label><span>$</span><input id="cv-dia-amount" type="number" min="0" step="10" inputmode="decimal" aria-label="Amount in US dollars"><span aria-hidden="true">=</span><b id="cv-dia-converted">—</b></div>'
@@ -4420,28 +4516,30 @@ function renderInvestorPanel(countryId, info) {
   const summary = economySeriesSummary(inv);
   const gdpB = parseMoneyToBillions(inv.gdp);
   const fdiB = parseMoneyToBillions(inv.fdi);
-  const perResident = formatPerResident((gdpB * 1000000000) / Math.max(1, info?.pop || 1));
-  const fdiIntensity = gdpB ? (fdiB / gdpB) * 100 : 0;
+  // Today's population over an old GDP is not GDP per person: Eritrea's 2011 figure over
+  // 2025 people gave $568. Five years is as far apart as the two may be.
+  const gdpYearShown = inv.gdpYear || economySeriesSummary(inv).latest.year;
+  const perPersonOk = !!inv.gdp && (!gdpYearShown || gdpYearShown >= new Date().getUTCFullYear() - 5);
+  const perResident = perPersonOk ? formatPerResident((gdpB * 1000000000) / Math.max(1, info?.pop || 1)) : '—';
+  const fdiShare = gdpB && Number.isFinite(fdiB) ? (fdiB / gdpB) * 100 : NaN;
   const gdpYear = inv.gdpYear || summary.latest.year;
   const fdiAligned = !inv.fdiYear || !gdpYear || inv.fdiYear === gdpYear;
-  const fdiMetric = fdiAligned ? formatPct(fdiIntensity).replace('+', '') : inv.fdi;
-  const fdiKey = fdiAligned ? 'FDI intensity' : 'Latest FDI';
-  const fdiSub = fdiAligned ? 'FDI share of GDP' : 'World Bank ' + inv.fdiYear;
-  const dataLabel = inv.source || (inv.estimated ? 'Desk model' : 'Desk file');
+  const fdiMetric = !inv.fdi ? '—' : fdiAligned ? formatPct(fdiShare).replace('+', '') : inv.fdi;
+  const fdiKey = fdiAligned ? 'Foreign investment' : 'FDI inflows';
+  const fdiSub = !inv.fdi ? 'Not published' : fdiAligned ? 'Share of GDP' : 'World Bank ' + inv.fdiYear;
+  const years = summary.hasTrend ? summary.first.year + '–' + summary.latest.year : (summary.latest.year || '');
 
   if (econMeta) {
-    econMeta.textContent = summary.hasTrend
-      ? 'Nominal GDP · ' + summary.first.year + '–' + summary.latest.year + (summary.reportingGap ? ' · reporting gap' : '')
-      : 'Nominal GDP · latest observation';
+    econMeta.textContent = 'Current US dollars' + (years ? ' · ' + years : '');
   }
 
   const trendClass = !Number.isFinite(summary.cagr) ? '' : summary.cagr >= 4 ? 'up' : summary.cagr >= 1 ? '' : 'down';
   econWrap.innerHTML =
     '<div class="cv-econ">' +
-      '<div class="cv-econ-cell"><div class="cv-econ-key">GDP / resident</div><div class="cv-econ-val">' + perResident + '</div><div class="cv-econ-sub">' + (gdpYear ? 'GDP ' + gdpYear + ' / current pop' : 'Output per person') + '</div></div>' +
+      '<div class="cv-econ-cell"><div class="cv-econ-key">GDP per person</div><div class="cv-econ-val">' + perResident + '</div><div class="cv-econ-sub">' + (perPersonOk ? (gdpYear ? gdpYear + ' GDP ÷ population' : 'GDP ÷ population') : inv.gdp ? 'GDP figure is from ' + gdpYear : 'Not published') + '</div></div>' +
       '<div class="cv-econ-cell"><div class="cv-econ-key">' + fdiKey + '</div><div class="cv-econ-val">' + fdiMetric + '</div><div class="cv-econ-sub">' + fdiSub + '</div></div>' +
-      '<div class="cv-econ-cell"><div class="cv-econ-key">GDP added</div><div class="cv-econ-val ' + trendClass + '">' + (summary.hasTrend ? signedBillions(summary.delta) : '—') + '</div><div class="cv-econ-sub">' + (summary.hasTrend ? 'Since ' + summary.first.year : 'Trend unavailable') + '</div></div>' +
-      '<div class="cv-econ-cell"><div class="cv-econ-key">Data source</div><div class="cv-econ-val">' + escapeHtml(dataLabel) + '</div><div class="cv-econ-sub">' + summary.observationCount + ' GDP observation' + (summary.observationCount === 1 ? '' : 's') + '</div></div>' +
+      '<div class="cv-econ-cell"><div class="cv-econ-key">GDP change</div><div class="cv-econ-val ' + trendClass + '">' + (summary.hasTrend ? signedBillions(summary.delta) : '—') + '</div><div class="cv-econ-sub">' + (summary.hasTrend ? 'Since ' + summary.first.year : 'No series') + '</div></div>' +
+      '<div class="cv-econ-cell"><div class="cv-econ-key">Source</div><div class="cv-econ-val">' + escapeHtml(inv.source || '—') + '</div><div class="cv-econ-sub">' + (inv.source ? 'Annual figures' : 'No published series') + '</div></div>' +
     '</div>' +
     renderGdpChart(inv, summary);
 
@@ -4455,21 +4553,19 @@ function renderGdpChart(inv, summary = economySeriesSummary(inv)) {
   const series = summary.series;
   const first = series[0] || {};
   const latest = series[series.length - 1] || first;
-  const period = first.year && latest.year ? first.year + '–' + latest.year : 'Latest observation';
-  const coverage = summary.reportingGap
-    ? summary.observationCount + ' observations · no published GDP after ' + latest.year
-    : summary.observationCount + ' annual observation' + (summary.observationCount === 1 ? '' : 's');
+  const period = !first.year ? '' : latest.year > first.year ? first.year + '–' + latest.year : String(first.year);
+  const coverage = summary.reportingGap && summary.hasTrend ? 'No figure published after ' + latest.year : '';
   const changeClass = Number.isFinite(summary.change) ? (summary.change >= 0 ? 'up' : 'down') : '';
   const head =
     '<div class="cv-gdp-chart-head">' +
-      '<div class="cv-gdp-chart-title"><span>Nominal GDP history</span><b>' + period + '</b><small>' + coverage + '</small></div>' +
+      '<div class="cv-gdp-chart-title"><span>GDP, current US dollars</span><b>' + period + '</b>' + (coverage ? '<small>' + coverage + '</small>' : '') + '</div>' +
       '<div class="cv-gdp-chart-stat"><span>Latest</span><b>' + (Number.isFinite(latest.value) ? formatBillions(latest.value) : '—') + '</b></div>' +
       '<div class="cv-gdp-chart-stat"><span>Period change</span><b class="' + changeClass + '">' + formatPct(summary.change) + '</b></div>' +
     '</div>';
 
   if (!summary.hasTrend) {
     return '<div class="cv-gdp-chart" aria-label="GDP history unavailable">' + head +
-      '<div class="cv-gdp-sparse"><div><b>Trend unavailable</b><span>Only one published GDP observation is on file. No modelled line is shown.</span></div></div>' +
+      '<div class="cv-gdp-sparse"><div><b>No GDP series</b><span>' + (summary.observationCount === 1 ? 'The World Bank has one figure, for ' + latest.year + '.' : 'No GDP figures are published for this country.') + '</span></div></div>' +
     '</div>';
   }
 
@@ -4546,6 +4642,10 @@ function formatBillions(value) {
 
 async function loadGdpHistory(countryId, info) {
   if (GDP_SERIES_CACHE[countryId] || GDP_SERIES_PENDING[countryId]) return;
+  // The pipeline ships the World Bank series (to 2025 for most countries). This fetch
+  // asks for 2011-2024 and, when it landed, replaced it: Kenya's chart ended at 2024 under
+  // a 2025 GDP figure. Only fetch for a country the pipeline has no series for.
+  if ((WORLD_BANK_ECONOMY[countryId]?.gdpSeries || []).length >= 2) return;
   const iso = (info?.cc || countryId || '').toLowerCase();
   if (!/^[a-z]{2}$/.test(iso)) return;
   GDP_SERIES_PENDING[countryId] = true;
@@ -4574,21 +4674,11 @@ async function loadGdpHistory(countryId, info) {
   }
 }
 
-function gdpSeries(inv) {
-  const current = parseMoneyToBillions(inv.gdp);
-  const growth = Math.max(-0.02, Math.min(0.09, Number(inv.gdp_growth || 2) / 100));
-  const currentYear = 2024;
-  return Array.from({ length: 10 }, (_, i) => {
-    const year = currentYear - 9 + i;
-    const yearsBack = 9 - i;
-    const cycle = Math.sin((i + current) * 1.7) * 0.018;
-    return { year, value: current / Math.pow(1 + growth + cycle, yearsBack) };
-  });
-}
-
 function parseMoneyToBillions(value) {
-  const text = String(value || '$10B').replace(/[$,]/g, '').trim();
-  const amount = parseFloat(text) || 10;
+  // A missing figure is NaN, not $10B.
+  const text = String(value || '').replace(/[$,]/g, '').trim();
+  const amount = parseFloat(text);
+  if (!Number.isFinite(amount)) return NaN;
   if (/T/i.test(text)) return amount * 1000;
   if (/M/i.test(text)) return amount / 1000;
   return amount;
@@ -4704,7 +4794,7 @@ canvas.addEventListener('touchstart', (e) => {
     topicSelect.innerHTML = TOPICS.filter(t => t === 'All' || c[t] > 0).map(t =>
       // "All topics" carries no count: the line under the filters already says how many
       // stories there are, and on a phone the count pushed the label out of its box.
-      '<option value="' + t + '">' + (t === 'All' ? 'All topics' : t + ' (' + c[t] + ')') + '</option>'
+      '<option value="' + t + '">' + (t === 'All' ? 'All topics' : (t === 'News' ? 'Other' : t) + ' (' + c[t] + ')') + '</option>'
     ).join('');
     topicSelect.value = TOPICS.includes(activeTopic) && (activeTopic === 'All' || c[activeTopic] > 0) ? activeTopic : 'All';
   }
@@ -4828,12 +4918,12 @@ canvas.addEventListener('touchstart', (e) => {
   }
   function storyLine(item, index){
     return (index + 1) + '. ' + item.country + ' - ' + item.title + '\n' +
-      '   Why it matters: ' + (item.why || 'Track for local impact.') + '\n' +
+      (item.why ? '   Why it matters: ' + item.why + '\n' : '') +
       (item.source ? '   Source: ' + item.source + '\n' : '');
   }
   function dailyBriefText(items){
     const date = latestBriefDate() || new Date().toISOString().slice(0, 10);
-    return ['The African Street Journal - Daily Desk', date, '']
+    return ['The African Street Journal - today\'s headlines', date, '']
       .concat(items.slice(0, 12).map(storyLine))
       .join('\n')
       .trim();
@@ -4891,7 +4981,6 @@ canvas.addEventListener('touchstart', (e) => {
         name: info.name || code.toUpperCase(),
         gdp: inv.gdp || '—',
         growth: Number.isFinite(inv.gdp_growth) ? formatPct(inv.gdp_growth) : '—',
-        risk: inv.risk === 'low' ? 'Low' : inv.risk === 'med' ? 'Medium' : 'High',
         currency: inv.currency || '—',
         sources: uniqueSourceCount(AI_BRIEFS[code] || []),
         story: top.headline || 'No current story'
@@ -4909,7 +4998,6 @@ canvas.addEventListener('touchstart', (e) => {
         '<tbody>' +
           row('GDP', 'gdp') +
           row('Growth', 'growth') +
-          row('Risk', 'risk', '') +
           row('Currency', 'currency', '') +
           row('Sources', 'sources', '') +
           row('Top story', 'story', 'story') +
@@ -4938,8 +5026,7 @@ canvas.addEventListener('touchstart', (e) => {
       wireFlagMarkup(it.cc) +
       '<div class="wire-item-body">' +
         '<div class="wire-item-kicker">' +
-          '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
-          '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span>' +
+          '<span class="wire-item-country">'+escapeHtml(it.country)+'</span>' + topicKicker(it.type) +
         '</div>' +
         '<div class="wire-item-title">'+escapeHtml(it.title)+'</div>' +
         (it.summary?'<div class="wire-item-sum">'+escapeHtml(it.summary)+'</div>':'') +
@@ -4954,8 +5041,7 @@ canvas.addEventListener('touchstart', (e) => {
     return '<button class="wire-hero' + (isStoryReadKey(it.storyKey) ? ' is-read' : '') + '" type="button" data-story-key="'+escapeHtml(it.storyKey)+'">' +
       '<div class="wire-hero-kicker"><span class="wire-hero-lead">' + escapeHtml(lensLead) + '</span><span class="dot"></span>' +
         wireFlagMarkup(it.cc) +
-        '<span class="wire-item-country">'+escapeHtml(it.country)+'</span><span class="dot"></span>' +
-        '<span class="wire-item-topic">'+escapeHtml(it.type)+'</span></div>' +
+        '<span class="wire-item-country">'+escapeHtml(it.country)+'</span>' + topicKicker(it.type) + '</div>' +
       '<div class="wire-hero-title">'+escapeHtml(it.title)+'</div>' +
       (it.summary?'<div class="wire-hero-sum">'+escapeHtml(it.summary)+'</div>':'') +
       (meta ? '<div class="wire-item-meta">' + meta + '</div>' : '') +
@@ -4989,7 +5075,7 @@ canvas.addEventListener('touchstart', (e) => {
     // score alone once put a 21 August brief at the top of the 28 August paper, which is
     // the one thing a daily cannot do. If every story is old - a desk that has not run -
     // the best of them still leads, because a front page with nothing on it is worse.
-    const hero = frontPage ? (items.find(it => !isStaleDate(it.date, 2)) || items[0]) : null;
+    const hero = frontPage ? (items.find(it => !isBeforeEdition(it.date)) || items[0]) : null;
     // Remove the hero by identity, not by position: it is no longer guaranteed to be
     // items[0], and slicing blindly would both duplicate it and drop the story it skipped.
     const list = hero ? items.filter(it => it !== hero) : items;
@@ -5213,8 +5299,8 @@ canvas.addEventListener('touchstart', (e) => {
     out.sort((a, b) => b.score - a.score || a.rank - b.rank || a.country.localeCompare(b.country));
     // Same rule the Wire's lead slot uses: a story from a previous edition does not
     // lead today's paper unless there is nothing else.
-    const fresh = out.filter(it => !isStaleDate(it.date, 2));
-    const ordered = fresh.length ? fresh.concat(out.filter(it => isStaleDate(it.date, 2))) : out;
+    const fresh = out.filter(it => !isBeforeEdition(it.date));
+    const ordered = fresh.length ? fresh.concat(out.filter(it => isBeforeEdition(it.date))) : out;
     // One story per country, so the front page reads as a continent rather than as
     // whichever country the ranker liked most that morning.
     const seen = new Set();
@@ -5255,7 +5341,7 @@ canvas.addEventListener('touchstart', (e) => {
       '<span class="home-story-kicker">' +
         (isLead && opts.label ? '<span class="home-front-kicker-label">' + escapeHtml(opts.label) + '</span>' : '') +
         '<span>' + escapeHtml(item.country) + '</span>' +
-        '<span>' + escapeHtml(item.topic) + '</span>' +
+        (shownTopic(item.topic) ? '<span>' + escapeHtml(item.topic) + '</span>' : '') +
         (item.source ? '<span class="home-story-src">' + escapeHtml(item.source) + '</span>' : '') +
       '</span>' +
       '<span class="home-story-title">' + escapeHtml(item.story.headline) + '</span>' +
@@ -5651,8 +5737,8 @@ function renderYourDesk() {
     const fp = countryStoryFingerprint(id);
     const isNew = !!fp && seen[id] && seen[id] !== fp;
     const name = info.name || id.toUpperCase();
-    const storyLabel = activeStoryLens === 'general' ? (top?.topic || 'News') : STORY_LENS_LABELS[activeStoryLens] + ' lens';
-    const story = top ? storyLabel + ' ' + String.fromCharCode(183) + ' ' + top.headline : 'Open country file';
+    const storyLabel = activeStoryLens === 'general' ? shownTopic(top?.topic) : audienceLabel(activeStoryLens);
+    const story = top ? (storyLabel ? storyLabel + ' ' + String.fromCharCode(183) + ' ' : '') + top.headline : 'Open country file';
     return '<button class="yd-country-card" type="button" data-country="' + id +
       '" aria-label="Open ' + escapeHtml(name) + ' country file">' +
       '<span class="yd-country"><span>' + escapeHtml(name) + '</span><span class="yd-country-meta">' +
@@ -5849,22 +5935,39 @@ function renderCropCalendar(countryId) {
 }
 
 /* ── Atlas text alternative: describe the canvas map for screen readers ── */
-function renderAtlasAltText(countryId, landmarks) {
+function renderAtlasAltText(countryId) {
   const el = document.getElementById('cv-atlas-alt');
   if (!el) return;
   const info = COUNTRY_INFO[countryId] || {};
   const gis = COUNTRY_GIS[countryId] || {};
   const parts = [];
   const uniq = list => Array.from(new Set(list.filter(Boolean)));
-  const places = uniq((gis.places || []).map(p => p.name)).slice(0, 12);
+  // Water is clipped to the map's box, so it includes the neighbours' (Kenya's listed
+  // Lake Eyasi and the Pangani) and Natural Earth's unnamed "River"/"Lake" pieces. Keep
+  // named water with a point in, or within 15 km of, this country.
+  const named = name => name && !/^(river|lake)$/i.test(name);
+  // The strict test is one isPointInPath a point; the 15 km one walks the outline, so it
+  // runs on every eighth point and only when no point is strictly inside.
+  const points = coords => (coords || []).flat().filter(pt => Array.isArray(pt));
+  const touches = coords => {
+    const pts = points(coords);
+    return pts.some(([lon, lat]) => insideCountry(countryId, lon, lat)) ||
+      pts.some(([lon, lat], i) => i % 8 === 0 && insideCountry(countryId, lon, lat, 15));
+  };
+  const waterNames = list => uniq((list || []).filter(w => named(w.name) && touches(w.lines || w.rings)).map(w => w.name.replace(/ Res\.$/, ' Reservoir')));
+  const places = uniq(atlasPlaces(countryId).map(p => p.name)).slice(0, 12);
   if (places.length) parts.push('Cities: ' + places.join(', '));
-  const rivers = uniq((gis.rivers || []).map(r => r.name));
+  const rivers = waterNames(gis.rivers);
   if (rivers.length) parts.push('Rivers: ' + rivers.join(', '));
-  const lakes = uniq((gis.lakes || []).map(l => l.name));
+  const lakes = waterNames(gis.lakes);
   if (lakes.length) parts.push('Lakes: ' + lakes.join(', '));
-  const marks = uniq((landmarks || []).map(l => l.name)).slice(0, 10);
-  if (marks.length) parts.push('Landmarks and infrastructure: ' + marks.join(', '));
-  el.textContent = 'Map of ' + (info.name || countryId) + ' with shaded relief from Natural Earth. ' + (parts.length ? parts.join('. ') + '.' : 'Feature data is still being compiled.');
+  const cityKeys = new Set(places.map(normalizeName));
+  const marks = uniq([
+    ...atlasFeaturePoints(countryId).map(l => l.name),
+    ...atlasInfraForCountry(countryId).map(l => l.label)
+  ]).filter(name => !cityKeys.has(normalizeName(name))).slice(0, 10);
+  if (marks.length) parts.push('Landmarks, ports and airports: ' + marks.join(', '));
+  el.textContent = 'Map of ' + (info.name || countryId) + ' with shaded relief. ' + (parts.length ? parts.join('. ') + '.' : '');
 }
 
 /* ── Deep links: #/ke/news, #/ke/farmers, #/ke/investors, #/ke/diaspora, #/ke/atlas ── */
