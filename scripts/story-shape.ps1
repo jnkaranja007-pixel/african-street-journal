@@ -397,3 +397,140 @@ function Select-FreshMarkets($Markets, [int]$MaxAgeDays = 120) {
   }
   return $out
 }
+
+# --- headline and dek casing ---------------------------------------------------
+# The model sometimes returns a headline or dek wholly in lower case - "book captures
+# botswana's dance heritage", 23 of 237 headlines on 28 Oct 2026 - while the story under
+# it is cased correctly. When a line starts in lower case, each lower-case word takes the
+# casing the story itself gives it ("Botswana", "VAT", "Nyala"), matched with the words
+# around it where possible, so the surname in "Irene Said" is capitalised and the verb
+# "said" is not. A line that starts with a capital was written in sentence case and is
+# left alone: a common word the story uses only inside a name ("Market" in "Tanqong
+# Market") must not be capitalised in a headline that was already right.
+$script:CASE_TITLE_WORDS = @('minister','ministers','president','presidents','governor','governors','secretary','director',
+  'chairman','chairperson','chair','mayor','senator','judge','justice','general','commissioner','ambassador','king','queen',
+  'prince','chief','speaker','deputy','prime','vice','minister''s','president''s','ministry','university','market','party',
+  'committee','council','court','parliament','assembly','government','police','army','school','hospital','bank','authority')
+function Get-CaseTokens([string]$Text) {
+  $out = New-Object System.Collections.Generic.List[object]
+  if (-not $Text) { return $out }
+  $prevEnd = 0
+  foreach ($m in [regex]::Matches($Text, $script:STORY_WORD_PATTERN)) {
+    $before = $Text.Substring(0, $m.Index).TrimEnd()
+    # Sentence-initial words are capitalised by grammar, not because they are names.
+    $initial = (-not $before) -or ('.!?:;"' + [char]0x201C + [char]0x2014).Contains([string]$before[$before.Length - 1])
+    $gap = $Text.Substring($prevEnd, $m.Index - $prevEnd)
+    $out.Add([pscustomobject]@{
+      Word = $m.Value; Key = $m.Value.ToLowerInvariant(); Index = $m.Index; Initial = $initial
+      # Joined to the previous word by a space or "/" only: "Wuling M/A Basic", not
+      # "Nyala, South Darfur".
+      # A possessive apostrophe joins too, so "Sudanese Teachers' Committee" is one name.
+      Joined = ($prevEnd -gt 0 -and $gap -match ("^['" + [char]0x2019 + "]?[\s/]+$"))
+    })
+    $prevEnd = $m.Index + $m.Length
+  }
+  return $out
+}
+
+function Test-CaseName($Tok) { return ($Tok.Word -cne $Tok.Key -and -not $Tok.Initial) }
+
+function Repair-LineCase([string]$Line, [string]$Reference) {
+  if (-not $Line -or $Line -cnotmatch '^\W*\p{Ll}') { return $Line }
+  $ref = @(Get-CaseTokens $Reference)
+  $byKey = @{}
+  for ($p = 0; $p -lt $ref.Count; $p++) {
+    if ($ref[$p].Initial) { continue }
+    if (-not $byKey.ContainsKey($ref[$p].Key)) { $byKey[$ref[$p].Key] = New-Object System.Collections.Generic.List[int] }
+    $byKey[$ref[$p].Key].Add($p)
+  }
+  $tokens = @(Get-CaseTokens $Line)
+  $chars = $Line.ToCharArray()
+  for ($i = 0; $i -lt $tokens.Count; $i++) {
+    $t = $tokens[$i]
+    if ($t.Word -cne $t.Key -or -not $byKey.ContainsKey($t.Key)) { continue }
+    $positions = $byKey[$t.Key]
+    $forms = @($positions | ForEach-Object { $ref[$_].Word })
+    $alsoLower = @($forms | Where-Object { $_ -ceq $_.ToLowerInvariant() }).Count -gt 0
+    # 1. A whole name from the story: the run of joined, capitalised words around this
+    #    word there ("Irene Said", "Wuling M/A Basic School", "North Darfur"), less a
+    #    leading title or acronym ("MP Irene Said"), all of it in this line in order. Part
+    #    of a name is not enough: "traffic congestion index" against the "Algerian Urban
+    #    Congestion Index", or "Sudanese teachers" against "Sudanese Teachers' Committee".
+    $best = $null
+    $isAcronym = { param($w) $w.Length -ge 2 -and $w -ceq $w.ToUpperInvariant() -and $w -cmatch '\p{Lu}' }
+    $starts = @{}
+    foreach ($p in $positions) {
+      if (-not (Test-CaseName $ref[$p])) { continue }
+      $s0 = $p; while ($s0 -gt 0 -and $ref[$s0].Joined -and (Test-CaseName $ref[$s0 - 1])) { $s0-- }
+      $s1 = $p; while ($s1 + 1 -lt $ref.Count -and $ref[$s1 + 1].Joined -and (Test-CaseName $ref[$s1 + 1])) { $s1++ }
+      $starts[$p] = $s0
+      while ($s0 -lt $p -and ((& $isAcronym $ref[$s0].Word) -or $script:CASE_TITLE_WORDS -contains $ref[$s0].Key)) { $s0++ }
+      if ($s1 -eq $s0) { continue }
+      $at = $i - ($p - $s0)
+      if ($at -lt 0 -or $at + ($s1 - $s0) -ge $tokens.Count) { continue }
+      $covered = $true
+      for ($k = 0; $k -le $s1 - $s0; $k++) { if ($tokens[$at + $k].Key -ne $ref[$s0 + $k].Key) { $covered = $false; break } }
+      if ($covered) { $best = $ref[$p].Word; break }
+    }
+    # 2. Otherwise a word the story never writes in lower case, and only as an acronym
+    #    ("VAT"), a one-word name ("in Nyala, South Darfur") or the first word of a name
+    #    ("Wuling" of "Wuling M/A Basic School") - not a later word ("Index", "Market" in
+    #    "Tanqong Market") - and never a title ("former minister").
+    if (-not $best) {
+      if ($alsoLower -or $script:CASE_TITLE_WORDS -contains $t.Key) { continue }
+      $good = @($positions | Where-Object { (& $isAcronym $ref[$_].Word) -or ($starts.ContainsKey($_) -and $starts[$_] -eq $_) })
+      if (-not $good.Count) { continue }
+      $best = @($good | ForEach-Object { $ref[$_].Word } | Group-Object -CaseSensitive | Sort-Object Count -Descending)[0].Name
+    }
+    if ($best -cne $t.Word -and $best.Length -eq $t.Word.Length) {
+      for ($k = 0; $k -lt $best.Length; $k++) { $chars[$t.Index + $k] = $best[$k] }
+    }
+  }
+  # And the first letter, always.
+  for ($k = 0; $k -lt $chars.Length; $k++) {
+    if ([char]::IsLetter($chars[$k])) { $chars[$k] = [char]::ToUpperInvariant($chars[$k]); break }
+  }
+  return -join $chars
+}
+
+# Country names, capitals and cities of 250,000+ (COUNTRY_INFO in app.js and
+# data/city-populations.json), written as names mid-sentence, as a fallback reference: a
+# story that only ever says "Sudanese" still capitalises "sudan" in its headline. A town
+# whose name is also an English word ("Same", Tanzania) is never small enough to be
+# listed, and a word the story itself writes in lower case is never changed.
+function Get-PlaceNameReference([string]$Root) {
+  if ($script:PLACE_NAME_REFERENCE) { return $script:PLACE_NAME_REFERENCE }
+  $names = New-Object System.Collections.Generic.List[string]
+  $names.Add('Africa'); $names.Add('African')
+  $appPath = Join-Path $Root 'app.js'
+  if (Test-Path $appPath) {
+    $app = [IO.File]::ReadAllText($appPath, [Text.Encoding]::UTF8)
+    foreach ($m in [regex]::Matches($app, "\w\w: \{ name: (?:'([^']*)'|""([^""]*)""),\s*region: '[^']*',\s*capital: (?:'([^']+)'|""([^""]+)"")")) {
+      foreach ($g in 1..4) { if ($m.Groups[$g].Success) { $names.Add($m.Groups[$g].Value) } }
+    }
+  }
+  $cityPath = Join-Path $Root 'data\city-populations.json'
+  if (Test-Path $cityPath) {
+    $cities = [IO.File]::ReadAllText($cityPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+    foreach ($p in $cities.countries.PSObject.Properties) {
+      foreach ($c in @($p.Value)) { if ([double]$c.pop -ge 250000) { $names.Add([string]$c.name) } }
+    }
+  }
+  $script:PLACE_NAME_REFERENCE = 'in ' + ($names -join ', in ')
+  return $script:PLACE_NAME_REFERENCE
+}
+
+# Headline and dek, cased against the story's own paragraphs (and, from the writer, the
+# source packet), then the place names. Returns the number of lines changed.
+function Repair-StoryCase($Story, [string]$Extra = '', [string]$Root = '') {
+  $places = if ($Root) { Get-PlaceNameReference $Root } else { '' }
+  $reference = ((@($Story.paragraphs) + @([string]$Story.why) + @($Extra) + @($places)) -join "`n")
+  $changed = 0
+  foreach ($field in @('headline', 'dek')) {
+    $value = [string]$Story.$field
+    if (-not $value) { continue }
+    $fixed = Repair-LineCase $value $reference
+    if ($fixed -cne $value) { $Story.$field = $fixed; $changed++ }
+  }
+  return $changed
+}

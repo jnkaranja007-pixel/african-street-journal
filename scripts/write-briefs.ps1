@@ -1008,6 +1008,7 @@ $styleFixed = 0
 $styleAccepted = 0
 $offCountryDropped = 0
 $lensCapped = 0
+$caseRepaired = 0
 
 foreach ($code in $codes) {
   $entry = $feed.byCountry.$code
@@ -1186,6 +1187,10 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
         # Not "$style": PowerShell names ignore case, so that overwrote $STYLE - the system
         # prompt - and every later call sent this object as its instructions (23 Oct 2026:
         # "messages.0.content: Invalid input" from every model, no edition published).
+        # A headline or dek returned in lower case ("book captures botswana's dance
+        # heritage", 23 of 237 on 28 Oct 2026) takes its casing from the story and the
+        # source packet. No model call: the story under it is already cased correctly.
+        if (Repair-StoryCase $candidate (Get-ItemEvidenceText $it) $root) { $caseRepaired++ }
         $draftStyle = Get-DraftStyleIssues $candidate (Get-ItemEvidenceText $it)
         $styleCount = @($draftStyle.Issues).Count
         if ($styleCount) {
@@ -1457,6 +1462,7 @@ $metrics = [ordered]@{
   styleKeptWithNotes = $styleAccepted
   offCountryDropped = $offCountryDropped
   lensScoresCappedAsSpeculative = $lensCapped
+  headlinesRecased = $caseRepaired
   countriesWritten = $result.Count
   storiesWritten = $stories
   apiCalls = $apiCalls
@@ -1498,8 +1504,8 @@ Write-Host "[write] model: $Model" -ForegroundColor DarkGray
 foreach ($k in $script:routeCalls.Keys) { Write-Host "[write] calls served via ${k}: $($script:routeCalls[$k])" -ForegroundColor DarkGray }
 Write-Host ("[write] usage: {0} input + {1} output = {2} tokens; {3} API calls; {4} cache hits; reported cost `${5}" -f `
            $usagePrompt, $usageCompletion, $usageTotal, $apiCalls, $cacheHits, ([Math]::Round($usageCost, 4))) -ForegroundColor DarkGray
-Write-Host ("[write] style: {0} rewrite(s), {1} fixed, {2} kept with notes; {3} off-country story(ies) dropped; {4} speculative lens score(s) capped" -f `
-           $styleRepairs, $styleFixed, $styleAccepted, $offCountryDropped, $lensCapped) -ForegroundColor DarkGray
+Write-Host ("[write] style: {0} rewrite(s), {1} fixed, {2} kept with notes; {3} off-country story(ies) dropped; {4} speculative lens score(s) capped; {5} headline(s) recased" -f `
+           $styleRepairs, $styleFixed, $styleAccepted, $offCountryDropped, $lensCapped, $caseRepaired) -ForegroundColor DarkGray
 if ($skipped.Count) {
   Write-Host "[write] $($skipped.Count) country(ies) skipped: $(($skipped | Select-Object -First 6) -join ', ')" -ForegroundColor DarkYellow
 }

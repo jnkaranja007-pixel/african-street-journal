@@ -72,6 +72,7 @@ jobs:
           ./scripts/test-story-contract.ps1;   if ($LASTEXITCODE) { exit $LASTEXITCODE }
           ./scripts/test-article-evidence.ps1; if ($LASTEXITCODE) { exit $LASTEXITCODE }
           ./scripts/test-food-basket.ps1;      if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ./scripts/test-story-case.ps1;       if ($LASTEXITCODE) { exit $LASTEXITCODE }
           # Built pages belong to the desk and are checked as it builds them.
           ./scripts/test-static-pages.ps1 -UnitOnly
 
