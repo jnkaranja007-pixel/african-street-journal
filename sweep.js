@@ -69,14 +69,20 @@
       if (t.length < 40) return;
       if (seen.has(t)) note('same text twice in one view', where, t); else seen.set(t, el);
     });
-    // KPI cells with no figure.
+    // KPI cells with no figure and no word on why. A blank that says "Not published",
+    // "Not reported" or "Last reported 2015" is the page working as designed (Western
+    // Sahara and Eritrea publish no economic figures); a bare dash is a fault.
     if (countryId) {
-      let empty = 0;
+      let unexplained = 0;
       ['cv-pop', 'cv-weather', 'cv-time', 'cv-daylight'].forEach(id => {
         const v = document.getElementById(id);
-        if (v && /^(—|-|)$/.test((v.textContent || '').trim()) && !/Weather/.test(document.getElementById(id + '-key')?.textContent || '')) empty++;
+        const sub = (document.getElementById(id + '-sub')?.textContent || '').trim();
+        if (!v || !/^(—|-|)$/.test((v.textContent || '').trim())) return;
+        if (/Weather/.test(document.getElementById(id + '-key')?.textContent || '')) return;
+        if (/not published|not reported|no .*data|last reported|unavailable/i.test(sub)) return;
+        unexplained++;
       });
-      if (empty >= 2) note('two or more empty headline figures', where, empty + ' of 4');
+      if (unexplained) note('headline figure blank with no reason given', where, unexplained + ' of 4');
     }
     // Text cut off by its box (a truncated label reads as a typo).
     root.querySelectorAll('h1, h2, h3, h4, .cv-alm-key, .cv-alm-val, .cv-econ-key, .cv-heat-tkr, .wire-item-title').forEach(el => {

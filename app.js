@@ -1986,6 +1986,7 @@ function updateAudienceMeta() {
   if (meta) meta.textContent = audienceLabel(mode);
   restoreInfoGridPosition(mode);
   renderSignalsJump(mode);
+  if (mode === 'investors') refitHeatTickers();
 }
 
 /* Section links for Signals on phones. There the sections stack into ~3,000px (three
@@ -4384,11 +4385,23 @@ function fitHeatTickers(wrap) {
     });
   };
   fit();
+  // Also refitted on the next frame whenever the panel or audience changes
+  // (refitHeatTickers): a grid rendered while hidden was sometimes shown before the
+  // observer fired, and the sweep still found STANDARD cut off.
+  wrap.__fitTickers = fit;
   if (typeof ResizeObserver === 'undefined') return;
   heatTickerObservers.get(wrap)?.disconnect();
   const observer = new ResizeObserver(() => fit());
   observer.observe(grid);
   heatTickerObservers.set(wrap, observer);
+}
+
+// Now and on the next frame: a page in a background tab runs no animation frames and no
+// resize observers, so a frame-only refit never happened there.
+function refitHeatTickers() {
+  const fit = () => document.getElementById('cv-heatmap')?.__fitTickers?.();
+  fit();
+  requestAnimationFrame(fit);
 }
 
 function renderInvestorMarkets(countryId) {
