@@ -80,6 +80,17 @@ jobs:
         shell: pwsh
         run: ./scripts/validate-briefs.ps1
 
+      - name: Static pages build under pwsh
+        shell: pwsh
+        run: |
+          # The desk builds these pages under PowerShell 7 on every run, and until now
+          # that run was the only place a builder change was exercised. On 29 Oct 2026 a
+          # ranking change that passed on Windows PowerShell 5.1 threw "Argument types do
+          # not match" under 7.4 and both morning runs published nothing. This checkout
+          # is thrown away, so the pages built here are never committed.
+          ./scripts/build-static-pages.ps1; if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ./scripts/test-static-pages.ps1
+
       - name: Scripts and workflows are ASCII-only
         shell: pwsh
         run: |
