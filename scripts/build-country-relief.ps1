@@ -31,6 +31,10 @@ param(
   [double]$MarginDeg = 0.5,
   [int]$MaxSide = 1400,
   [int]$Quality = 76,
+  # The tone curve: palette position = base + tint x height + gain x (shade - flat).
+  # Tuned so the mean, median and 95th percentile match the Natural Earth images within
+  # a few levels (Kenya 108/101/166 against 110/105/166) at nine times the detail.
+  [double]$ToneBase = 0.25, [double]$ToneTint = 0.52, [double]$ToneShadow = 2.7, [double]$ToneLight = 3.6,
   [string[]]$Only = @()
 )
 $ErrorActionPreference = 'Stop'
@@ -106,7 +110,8 @@ public static class AsjDem {
 
   public static long Build(string tileDir, int z, int tx0, int ty0, int nx, int ny,
                            double west, double north, double degPerPx, int W, int H,
-                           double exaggeration, string outPath, long quality) {
+                           double exaggeration, string outPath, long quality,
+                           double toneBase, double toneTint, double toneShadow, double toneLight) {
     int MW = nx * 256, MH = ny * 256;
     var dem = new float[MW * MH];
     var buf = new byte[256 * 256 * 4];
@@ -157,7 +162,7 @@ public static class AsjDem {
     var line = new byte[data.Stride];
     double cellY = degPerPx * 110574.0;
     double flat = Math.Sin(45 * Math.PI / 180);
-   for (int y = 0; y < H; y++) {
+    for (int y = 0; y < H; y++) {
       double lat = north - (y + 0.5) * degPerPx;
       double cellX = degPerPx * 111320.0 * Math.Cos(lat * Math.PI / 180);
       for (int x = 0; x < W; x++) {
@@ -169,9 +174,12 @@ public static class AsjDem {
         double hs = 0.6 * Shade(dzdx, dzdy, 315, 45) + 0.2 * Shade(dzdx, dzdy, 270, 45) + 0.2 * Shade(dzdx, dzdy, 0, 45);
         double e = grid[y * W + x];
         double tint = e <= 0 ? 0 : Math.Pow(Math.Min(1, e / 3000.0), 0.6);
-       // Flat lowland sits in the deep greens, high ground and lit slopes go toward sage,
-        // shadowed slopes darker - the same palette the Natural Earth crop used.
-        double v = 0.18 + 0.50 * tint + 2.2 * (hs - flat);
+        // Flat lowland sits in the deep greens, high ground and lit slopes go toward sage,
+        // shadowed slopes darker - the same palette the Natural Earth crop used. Lit
+        // slopes get their own gain: with one gain for both, the highlights sat 20-30
+        // levels below Natural Earth's and the relief read flat and dark.
+        double lit = hs - flat;
+        double v = toneBase + toneTint * tint + (lit > 0 ? toneLight : toneShadow) * lit;
         if (v < 0) v = 0; else if (v > 1) v = 1;
         double rr, gg, bb;
         if (v < 0.55) { double t = v / 0.55; rr = 34 + (78 - 34) * t; gg = 86 + (142 - 86) * t; bb = 44 + (76 - 44) * t; }
@@ -259,7 +267,7 @@ foreach ($p in $plans) {
   $metres = $p.deg * 111320 * [Math]::Cos($midLat * [Math]::PI / 180)
   $ex = [Math]::Max(2.0, [Math]::Min(12.0, [Math]::Pow($metres / 25, 0.55)))
   $out = Join-Path $outDir "$($p.cc).jpg"
-  $bytes = [AsjDem]::Build($CacheDir, $p.z, $p.tx0, $p.ty0, $p.nx, $p.ny, $p.west, $p.north, $p.deg, $p.W, $p.H, $ex, $out, $Quality)
+  $bytes = [AsjDem]::Build($CacheDir, $p.z, $p.tx0, $p.ty0, $p.nx, $p.ny, $p.west, $p.north, $p.deg, $p.W, $p.H, $ex, $out, $Quality, $ToneBase, $ToneTint, $ToneShadow, $ToneLight)
   $total += $bytes
   $index[$p.cc] = [ordered]@{
     w = [Math]::Round($p.west, 4); e = [Math]::Round($p.east, 4)

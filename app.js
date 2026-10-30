@@ -516,22 +516,6 @@ const drawableCountries = COUNTRIES.map(country => ({
   info: COUNTRY_INFO[country.id]
 })).filter(country => country.info);
 
-const STORY_PINS = {
-  ke: [
-    { title: 'Nairobi matatu routes test new fare pressure', place: 'Nairobi', type: 'Transport', popularity: 96, lon: 36.8219, lat: -1.2921 },
-    { title: 'Lake Victoria fishing towns watch water levels', place: 'Kisumu', type: 'Climate', popularity: 88, lon: 34.7617, lat: -0.1022 },
-    { title: 'Mombasa traders count port delays after rain', place: 'Mombasa', type: 'Business', popularity: 74, lon: 39.6682, lat: -4.0435 }
-  ],
-  ng: [
-    { title: 'Lagos commuters track bridge repairs in real time', place: 'Lagos', type: 'Transport', popularity: 94, lon: 3.3792, lat: 6.5244 },
-    { title: 'Abuja markets react to food price swings', place: 'Abuja', type: 'Markets', popularity: 83, lon: 7.4951, lat: 9.0579 }
-  ],
-  cd: [
-    { title: 'Kinshasa neighborhoods map flood-prone streets', place: 'Kinshasa', type: 'Climate', popularity: 91, lon: 15.2663, lat: -4.4419 },
-    { title: 'River transport crews report shifting Congo routes', place: 'Mbandaka', type: 'River desk', popularity: 79, lon: 18.2603, lat: 0.0478 }
-  ]
-};
-
 // One point per country for each landmark ([lon, lat] keyed by country), so a feature
 // shared by several countries is marked inside each of them. With a single point, the
 // inside-the-outline check kept Lake Victoria only in Uganda, the Nile only in Sudan
@@ -1369,7 +1353,7 @@ if (typeof ResizeObserver !== 'undefined') {
     // every intermediate size (which looks like a wobble). This is the single redraw-on-resize path.
     clearTimeout(mapResizeTimer);
     mapResizeTimer = setTimeout(() => {
-      if (activeCountryMap) drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
+      if (activeCountryMap) drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath);
     }, 80);
   }).observe(countryMapCanvas);
 }
@@ -1543,7 +1527,7 @@ function updateSlidePos() {
   // transform; the redraw is cheap and idempotent.
   const repaintAtlas = () => {
     if (!activeCountryMap) return;
-    drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
+    drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath);
   };
   requestAnimationFrame(() => requestAnimationFrame(repaintAtlas));
   setTimeout(repaintAtlas, 250);
@@ -1678,7 +1662,7 @@ for (const pill of layerPills) {
     mapLayers[key] = next;
     updateLayerStatus();
     if (activeCountryMap) {
-      drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
+      drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath);
     }
   });
 }
@@ -1742,7 +1726,7 @@ mapFsBtn.addEventListener('click', () => {
   // stretched to the new shape (the "shape shift"). The ResizeObserver settle-redraw stays as a
   // backup for genuine window resizes.
   if (activeCountryMap) {
-    drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
+    drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath);
   }
 });
 
@@ -1773,7 +1757,9 @@ function openCountry(countryId, sourceElement = document.activeElement, options 
 
   const flag = document.getElementById('cv-flag');
   flag.hidden = false;
-  flag.src = 'https://flagcdn.com/w160/' + info.cc + '.png';
+  // 72 CSS px wide: a 160 px image is soft on a 3x phone, so offer 320 there.
+  flag.srcset = 'https://flagcdn.com/w160/' + info.cc + '.png 2x, https://flagcdn.com/w320/' + info.cc + '.png 3x';
+  flag.src = 'https://flagcdn.com/w80/' + info.cc + '.png';
   flag.alt = info.name + ' flag';
   flag.onerror = () => { flag.hidden = true; };
 
@@ -2131,7 +2117,7 @@ function updateOverlayAccessibility() {
 updateOverlayAccessibility();
 window.addEventListener('resize', () => {
   if (!activeCountryMap) return;
-  requestAnimationFrame(() => drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks));
+  requestAnimationFrame(() => drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath));
 });
 
 function landmarksForCountry(countryId) {
@@ -2144,8 +2130,7 @@ function landmarksForCountry(countryId) {
 function renderCountryDesk(countryId, countryPath) {
   const stories = storyFeedForCountry(countryId);
   const landmarks = landmarksForCountry(countryId);
-  const mapPins = mapPinsForCountry(countryId, stories);
-  activeCountryMap = { countryId, countryPath, stories, landmarks, mapPins };
+  activeCountryMap = { countryId, countryPath, stories, landmarks };
   activeStoryFeed = stories;
   // Extreme-aspect countries (Gambia ~4:1) letterbox badly in the fixed 4:3 box — let the
   // embedded canvas flatten toward the country's own shape. Fullscreen is untouched (the
@@ -2167,9 +2152,9 @@ function renderCountryDesk(countryId, countryPath) {
   }
   // Fullscreen country changes must replace the header and final map in the same paint.
   if (mapPortal?.classList.contains('active')) {
-    drawCountryMap(countryId, countryPath, mapPins, landmarks);
+    drawCountryMap(countryId, countryPath);
   } else {
-    requestAnimationFrame(() => drawCountryMap(countryId, countryPath, mapPins, landmarks));
+    requestAnimationFrame(() => drawCountryMap(countryId, countryPath));
   }
 }
 
@@ -2734,10 +2719,10 @@ function regionalWireFor(countryId) {
   if (!picks.length) return null;
   const html = '<div class="cv-brief-desk">' +
     '<div class="cv-brief-head"><span class="t">' + escapeHtml(scope) + ' <b>wire</b></span>' +
-      '<span class="m">' + escapeHtml(info.name || '') + ' file pending</span></div>' +
+      '<span class="m">No ' + escapeHtml(info.name || 'local') + ' stories today</span></div>' +
     picks.map((p, i) => briefRowHtml(p.brief, i, p.country, p.countryCode, p.published, p.sourceRank)).join('') +
-    '<div class="cv-df-note">The ASJ desk has not filed from ' + escapeHtml(info.name || 'this country') + ' yet — these are current stories from the ' +
-      escapeHtml(scope === 'Across Africa' ? 'Africa-wide' : scope) + ' wire. ' + escapeHtml(info.name || 'Its') + '&rsquo;s data file lives under Signals.</div>' +
+    '<div class="cv-df-note">Today\'s edition has no stories from ' + escapeHtml(info.name || 'this country') + '. These are today\'s stories from ' +
+      escapeHtml(scope === 'Across Africa' ? 'across Africa' : scope) + '. ' + escapeHtml(info.name || 'The country') + '&rsquo;s figures are under Signals.</div>' +
   '</div>';
   return { html, label: scope === 'Across Africa' ? 'Africa-wide wire' : scope + ' wire' };
 }
@@ -2982,14 +2967,17 @@ function foodPricesHtml(countryId) {
       '<b>' + escapeHtml(item.currency) + ' ' + num(item.price) + '</b>' +
       '<em class="cv-food-change' + cls + '">' + (change === null ? '—' : (change > 0 ? '+' : '') + Math.round(change) + '% on a year') + '</em></li>';
   }).join('');
+  // WFP's market names, spelled as the places spell themselves ("IFO (Daadab)" is Ifo,
+  // one of the Dadaab camps).
+  const market = String(food.market || '').replace(/\bDaadab\b/g, 'Dadaab').replace(/^IFO\b/, 'Ifo');
   // In Kenya and Uganda WFP's only current retail monitoring is in refugee camps and
   // settlements. Those prices are real, but they are not the country's, so say so
   // before the list rather than in the source line under it.
   const campNote = food.camp
-    ? '<p class="cv-food-warning">WFP currently records food prices in ' + escapeHtml(name) + ' only in refugee camps. These are prices at ' + escapeHtml(food.market) + ', not a national average.</p>'
+    ? '<p class="cv-food-warning">WFP currently records food prices in ' + escapeHtml(name) + ' only in refugee camps. These are prices at ' + escapeHtml(market) + ', not a national average.</p>'
     : '';
   return campNote + '<ul class="cv-food-list">' + rows + '</ul>' +
-    '<div class="cv-fact-source">' + escapeHtml(food.market) + (food.camp ? ' refugee camp' : '') + ' market · retail · ' + escapeHtml(monthLabel(food.date)) + ' · World Food Programme</div>';
+    '<div class="cv-fact-source">' + escapeHtml(market) + (food.camp ? ' refugee camp' : '') + ' market · retail · ' + escapeHtml(monthLabel(food.date)) + ' · World Food Programme</div>';
 }
 
 // CIA World Factbook railway totals (factbook.json, October 2026), [km, year]: the whole
@@ -3514,9 +3502,9 @@ function countryBriefText(countryId) {
   // Copies what the country page shows: the desk's order, no lens.
   const rankedBriefs = rankStoryEntries(briefs, 'general');
   const date = String(AI_BRIEFS_DATES[countryId] || AI_BRIEFS_AT || latestBriefDate() || new Date().toISOString()).slice(0, 10);
-  const lines = ['The African Street Journal', (info.name || 'Country') + ' desk - ' + date, ''];
+  const lines = ['The African Street Journal', (info.name || 'Country') + ' - ' + date, ''];
   if (!briefs.length) {
-    lines.push('No ASJ story desk is loaded for this country yet.');
+    lines.push('No stories from this country in today\'s edition.');
     return lines.join('\n');
   }
   rankedBriefs.slice(0, 6).forEach((entry, index) => {
@@ -3604,15 +3592,15 @@ function aiStoriesForCountry(countryId) {
     return {
     title: item.headline,
     summary: item.dek || item.body || '',
-    source: src.name || 'ASJ Desk',
+    source: src.name || '',
     url: src.url || '',
     type: item.topic || 'News',
     place: info?.capital || (capital && capital.name) || '',
     lon: capital ? capital.lon : (info?.lon ?? 20),
     lat: capital ? capital.lat : (info?.lat ?? 0),
-    date: generatedDate || storyDate(index),
-    popularity: 90 - index * 3,
-    impact: 72,
+    // The story's own date. "popularity" and "impact" scores made up from its position
+    // and a date of "index days ago" stood in here; nothing read the scores.
+    date: item.published || generatedDate,
     live: true
     };
   });
@@ -3621,16 +3609,8 @@ function aiStoriesForCountry(countryId) {
 function storyFeedForCountry(countryId) {
   // Live stories only — real, attributed news. No templated/synthetic filler.
   return aiStoriesForCountry(countryId)
-    .map((story, index) => normalizeStory(story, index))
     .filter((story, index, all) => all.findIndex(other => other.title === story.title) === index)
     .slice(0, 14);
-}
-
-// Geo-located pins for the map only (not the news feed). Falls back to live-story
-// capital coords when a country has no curated pins.
-function mapPinsForCountry(countryId, liveStories) {
-  const pins = (STORY_PINS[countryId] || []).slice();
-  return pins.length ? pins : liveStories;
 }
 
 // Is a point inside the country's own outline (within toleranceKm of its edge)?
@@ -3994,10 +3974,21 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
   };
   if (mapLayers.places) places.filter(p => !p.capital && p.pop >= 1000000).forEach(drawPlace);
   const labelledInfra = new Set();
+  // A port or airport named after the city it sits beside needs no label of its own:
+  // the diamond is on the map and the city's name is next to it. On a phone, Kenya's
+  // Atlas read "Eldoret / Eldoret (EDL)", "Kisumu / KIS" and "Mombasa / Moi (MBA) /
+  // Mombasa port" in a pile. The marker is still drawn.
+  const besideNamesake = (item, x, y) => places.some(p => {
+    if (!(p.capital || p.pop > 180000)) return false;
+    if (!item.label.toLowerCase().startsWith(String(p.name).toLowerCase())) return false;
+    const [px, py] = project(p.lon, p.lat);
+    return Math.hypot(px - x, py - y) < 50;
+  });
   if (mapLayers.infra && mapLayers.labels) {
     countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
     for (const item of infraItems.filter(i => i.priority)) {
       const [x, y] = project(item.lon, item.lat);
+      if (besideNamesake(item, x, y)) { labelledInfra.add(item); continue; }
       // Full name if it fits, else the IATA code: on a 330px phone map JKIA sits 4px
       // from Nairobi and "Jomo Kenyatta (NBO)" has nowhere to go.
       if (drawSmartLabel(item.label, x, y, '#fff0a9', placedLabels, width, height, 'top') ||
@@ -4036,7 +4027,7 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
     for (const item of infraItems) {
       if (!Number.isFinite(item.lon) || !Number.isFinite(item.lat)) continue;
       const [x, y] = project(item.lon, item.lat);
-      if (mapLayers.labels && !labelledInfra.has(item)) {
+      if (mapLayers.labels && !labelledInfra.has(item) && !besideNamesake(item, x, y)) {
         countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
         drawSmartLabel(item.label, x, y, '#fff0a9', placedLabels, width, height, 'right') ||
           (item.short && drawSmartLabel(item.short, x, y, '#fff0a9', placedLabels, width, height, 'right'));
@@ -4135,7 +4126,7 @@ function drawCountryRelief(countryId, project) {
 
 function repaintAtlasFor(countryId) {
   if (activeCountryMap?.countryId !== countryId) return;
-  drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath, activeCountryMap.mapPins || activeCountryMap.stories, activeCountryMap.landmarks);
+  drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath);
 }
 
 function drawPaperTexture(width, height, countryId) {
@@ -4232,20 +4223,6 @@ function drawLinearFeatures(countryId, project, placedLabels, width, height) {
       countryMapCtx.setLineDash([]);
     }
   }
-}
-
-function normalizeStory(story, index) {
-  return {
-    ...story,
-    popularity: Number(story.popularity ?? (82 - index * 4)),
-    impact: Number(story.impact ?? Math.max(42, 74 - index * 3)),
-    date: story.date || storyDate(index)
-  };
-}
-
-function storyDate(daysAgo) {
-  const date = new Date(Date.now() - Number(daysAgo || 0) * 24 * 60 * 60 * 1000);
-  return date.toISOString().slice(0, 10);
 }
 
 // Calendar days between a story's date and a reference moment, in the reader's own time
@@ -5053,7 +5030,7 @@ canvas.addEventListener('touchstart', (e) => {
       Math.min(60, total - shown) + '</span></button></div>';
   }
   function renderResults(){
-    if (!INDEX.length){ activeWireStoryKeys = []; updateResultCount([]); resultsEl.innerHTML = '<div class="wire-empty">No stories loaded yet. The desk has not published an edition.</div>'; return; }
+    if (!INDEX.length){ activeWireStoryKeys = []; updateResultCount([]); resultsEl.innerHTML = '<div class="wire-empty">No edition has been published yet.</div>'; return; }
     const items = filtered();
     activeWireStoryKeys = items.map(item => item.storyKey);
     updateResultCount(items);
@@ -5065,7 +5042,7 @@ canvas.addEventListener('touchstart', (e) => {
       const emptyCopy = (activeStoryLens !== 'general' && !query.trim())
         ? 'Nothing in today\'s edition has a direct effect on ' + escapeHtml(lensName.toLowerCase()) +
           ' readers' + (activeTopic !== 'All' ? ' under ' + escapeHtml(activeTopic) : '') +
-          '. This is the desk being honest rather than padding the tab - switch to Top for the full edition.'
+          '. Choose All readers for the full edition.'
         : 'No headlines match your search.';
       resultsEl.innerHTML = '<div class="wire-empty">' + emptyCopy + '</div>';
       return;
@@ -5904,7 +5881,10 @@ function seasonRowNote(spec) {
 function renderCropCalendar(countryId) {
   const el = document.getElementById('cv-crop-cal');
   if (!el) return;
-  const crops = farmExportsForCountry(countryId).slice(0, 3);
+  // The two food crops FAO lists in the most zones, then the main exports: Kenya's showed
+  // tea, cut flowers and coffee, and never maize or beans (scripts/crop-calendar-facts.ps1).
+  const staples = (countryFacts(countryId)?.staples || []).filter(Boolean);
+  const crops = Array.from(new Set([...staples, ...farmExportsForCountry(countryId).slice(0, 3)])).slice(0, 5);
   if (!crops.length) { el.innerHTML = '<div class="cv-heat-empty">' + escapeHtml(countryFacts(countryId)?.farm?.note || 'No farm exports on file.') + '</div>'; return; }
   const months = ['J','F','M','A','M','J','J','A','S','O','N','D'];
   let html = '<div class="cv-cal-months"><i></i>' + months.map(m => '<u>' + m + '</u>').join('') + '</div>';
@@ -5927,7 +5907,7 @@ function renderCropCalendar(countryId) {
   // Say where each row's months come from: FAO's calendar for this country, or typical
   // months for the crop where FAO does not list it (tea, cocoa, livestock...).
   const sourceNote = [
-    fromFao.length ? 'FAO Crop Calendar for ' + fromFao.join(', ') + ' (any zone of the country)' : '',
+    fromFao.length ? 'FAO Crop Calendar for ' + fromFao.join(', ') + ' (months most growing zones share)' : '',
     typical.length ? 'typical months for ' + typical.join(', ') : ''
   ].filter(Boolean).join('; ');
   html += '<div class="cv-cal-legend"><span><em class="h"></em>Harvest / market</span><span><em class="s"></em>Planting / establish</span><span>' + escapeHtml(sourceNote) + '</span></div>';
@@ -6066,7 +6046,7 @@ if (new URLSearchParams(location.search).has('selftest')) {
    is worse than no form. */
 (function frontPageSignup(){
   if (!deskSignupConfig()) return;
-  const pitch = String(window.ASJ_NEWSLETTER?.pitch || 'One morning email from the desk.');
+  const pitch = String(window.ASJ_NEWSLETTER?.pitch || 'One morning email with the day\'s stories.');
 
   // Mounted where there is room to scroll: the phone front page, and the Wire, where
   // the reader has just finished the front page. The desktop side columns are capped

@@ -63,6 +63,18 @@ function Esc($s) {
   ([string]$s).Replace('&','&amp;').Replace('<','&lt;').Replace('>','&gt;').Replace('"','&quot;')
 }
 
+# The same two rules as app.js (shownTopic, whyRestates): "News" is the catch-all topic,
+# not a section, so it is not printed; a "why" that says the headline and dek again is
+# not printed either (Test-WhyRestatesDek, story-shape.ps1).
+function Get-ShownTopic($Topic) {
+  $t = [string]$Topic
+  if ($t -and $t -ne 'News') { return $t }
+  return ''
+}
+function Test-ShowWhy($Brief) {
+  return ([bool]$Brief.why -and -not (Test-WhyRestatesDek $Brief))
+}
+
 function JsonEsc($s) {
   # For values going inside the JSON-LD block. '<' is escaped as \u003c so a headline
   # containing markup cannot close the script element early.
@@ -239,13 +251,13 @@ foreach ($prop in $byCountry.PSObject.Properties) {
     # country page closed 4-5 articles it never opened, and the spacing and dividers the
     # stylesheet gives each story never applied.
     [void]$body.Append("<article>`n")
-    [void]$body.Append("<div class=""kicker"">$(Esc $b.topic)$(if($when){" &middot; $when"})</div>`n")
+    [void]$body.Append("<div class=""kicker"">$((@((Esc (Get-ShownTopic $b.topic)), $when) | Where-Object { $_ }) -join ' &middot; ')</div>`n")
     [void]$body.Append("<h2><a href=""$storyUrl"">$(Esc $b.headline)</a></h2>`n")
     if ($b.dek) { [void]$body.Append("<p class=""dek"">$(Esc $b.dek)</p>`n") }
     $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
     if (-not $paragraphs.Count) { $paragraphs = @([string]$b.body) }
     foreach ($paragraph in $paragraphs) { [void]$body.Append("<p>$(Esc $paragraph)</p>`n") }
-    if ($b.why) { [void]$body.Append("<p class=""why""><b>Why it matters</b>$(Esc $b.why)</p>`n") }
+    if (Test-ShowWhy $b) { [void]$body.Append("<p class=""why""><b>Why it matters</b>$(Esc $b.why)</p>`n") }
     $srcs = @($b.sources | Where-Object { $_ -and $_.url -and $_.url -match '^https?://' })
     if ($srcs.Count) {
       [void]$body.Append('<div class="src">')
@@ -326,7 +338,7 @@ $analytics
 <a class="open" href="$BaseUrl/#/$code">Open the interactive $(Esc $name) dossier &rarr;</a>
 $($body.ToString())
 <nav class="morenav">
-<h2>Explore country desks</h2>
+<h2>Other countries</h2>
 $($navLinks.ToString())
 </nav>
 <footer>The African Street Journal &middot; from the streets, for the streets<br>Every story carries its sources. Figures are labelled with their origin and date.$siteLinks</footer>
@@ -378,7 +390,7 @@ foreach ($sp in $storyPages) {
   }
   $bodyHtml = New-Object System.Text.StringBuilder
   foreach ($p in $paragraphs) { [void]$bodyHtml.Append("<p>$(Esc $p)</p>`n") }
-  if ($b.why) { [void]$bodyHtml.Append("<p class=""why""><b>Why it matters</b>$(Esc $b.why)</p>`n") }
+  if (Test-ShowWhy $b) { [void]$bodyHtml.Append("<p class=""why""><b>Why it matters</b>$(Esc $b.why)</p>`n") }
 
   # NewsArticle, not CollectionPage: this is one piece, with a date and a publisher,
   # and citation carries the outlets it was written from.
@@ -410,7 +422,7 @@ foreach ($sp in $storyPages) {
   $waText = [Uri]::EscapeDataString(([string]$b.headline) + ' ' + $storyCanonical)
   $xText = [Uri]::EscapeDataString([string]$b.headline)
   $moreHtml = (@($storyPages | Where-Object { $_.code -eq $sp.code -and $_.slug -ne $sp.slug } | Select-Object -First 4 | ForEach-Object {
-    "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""rel-topic"">$(Esc $_.brief.topic)</span>$(Esc $_.brief.headline)</a></li>" }) -join '')
+    "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/"">$(if (Get-ShownTopic $_.brief.topic) { '<span class="rel-topic">' + (Esc $_.brief.topic) + '</span>' })$(Esc $_.brief.headline)</a></li>" }) -join '')
   $latestHtml = (@($leadPages | Where-Object { $_.code -ne $sp.code } | Select-Object -First 4 | ForEach-Object {
     "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""rel-topic"">$(Esc $_.country)</span>$(Esc $_.brief.headline)</a></li>" }) -join '')
   $storyTitle = "$([string]$b.headline) | The African Street Journal"
@@ -455,7 +467,7 @@ $analytics
   <main id="main">
   <article class="story">
   <header class="story-head">
-  <div class="meta">$(Esc $b.topic)</div>
+  <div class="meta">$(Esc $(if (Get-ShownTopic $b.topic) { $b.topic } else { $sp.country }))</div>
   <h1>$(Esc $b.headline)</h1>
   <p class="dek">$(Esc $dek)</p>
   <p class="byline">$(if($srcs.Count){"Source: <a href=""$(Esc $srcs[0].url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $srcs[0].name)</a> &middot; "})$(if($published){"<time datetime=""$published"">$(Esc $sp.when)</time> &middot; "})$readMin min read</p>
@@ -475,7 +487,7 @@ $($srcHtml.ToString())
   <nav class="related" aria-label="More stories">
     $(if($moreHtml){"<h2 class=""section-label"">More from $(Esc $sp.country)</h2><ul>$moreHtml</ul>"})
     $(if($latestHtml){"<h2 class=""section-label"">Latest across Africa</h2><ul>$latestHtml</ul>"})
-    <p><a class="open" href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories &rarr;</a> &nbsp; <a class="open" href="$appUrl">Open the full desk &rarr;</a></p>
+    <p><a class="open" href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories &rarr;</a> &nbsp; <a class="open" href="$appUrl">Open today's edition &rarr;</a></p>
   </nav>
   </main>
   <footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
