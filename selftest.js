@@ -299,6 +299,19 @@ async function runSelfTest() {
   await loadMarketsFile();
   const keMarket = marketsForCountry('ke');
   add('markets: the investor panel uses the newest listings file', !LIVE_MARKETS.ke || String(keMarket?.asOf || '') >= String(LIVE_MARKETS.ke.asOf || ''), keMarket?.asOf || 'none');
+  // Island tags at every map scale, not just this window's: CI's 320x568 layout came out
+  // shorter than a local one and put Comoros' tag on Madagascar. u is map units per screen
+  // pixel; 1.6-4.2 runs from a wide desktop map to a phone map half the usual height.
+  const tagFails = [];
+  for (let u = 1.6; u <= 4.2; u += 0.1) {
+    const tags = Object.entries(computeIslandLabels(u, 6 * u, 11 * u));
+    for (const [id, L] of tags) {
+      if (rectHitsLand(L.r, 0)) tagFails.push(id + ' on land @' + u.toFixed(1));
+      for (const [id2, L2] of tags) if (id2 > id && rectsOverlap(L.r, L2.r, 0)) tagFails.push(id + '/' + id2 + ' @' + u.toFixed(1));
+    }
+  }
+  islandLabelCache = { key: '', map: {} };
+  add('map: island tags clear land and each other at every scale', tagFails.length === 0, tagFails.slice(0, 4).join(', ') || '1.6-4.2');
   const islands = new Set(['cv', 'km', 'mu', 'sc', 'st']);
   const noRoads = sortedCountryIds.filter(id => !islands.has(id) && !(COUNTRY_GIS[id]?.roads?.major || []).length);
   add('atlas: every mainland country has main roads', noRoads.length === 0, noRoads.join(',') || 'all');

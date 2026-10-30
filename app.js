@@ -924,21 +924,47 @@ function rectsOverlap(a, b, pad) { return !(a.x1 + pad < b.x0 || b.x1 + pad < a.
 function computeIslandLabels(u, ring, gap) {
   const map = {}, placed = [];
   const h = 9 * u, w = 3 * 8.5 * 0.62 * u; // three monospace glyphs
-  const pad = 3 * u;
   // Other markers' rings are obstacles too.
   for (const o of islandHitTargets) placed.push({ x0: o.cx - ring, y0: o.cy - ring, x1: o.cx + ring, y1: o.cy + ring });
+  const fits = (r, pad) => !(r.x0 < islandLabelBounds.x0 || r.x1 > islandLabelBounds.x1 || r.y0 < 4 || r.y1 > 997) &&
+    !rectHitsLand(r, pad) && !placed.some(q => rectsOverlap(r, q, pad * 0.5));
   for (const t of islandHitTargets) {
     const base = ISLAND_MARKERS[t.id].prefer || [t.side];
     const sides = base.concat(['above', 'below', 'right', 'left'].filter(s => !base.includes(s)));
     let pick = null;
-    for (const mult of [1, 1.8, 2.6]) {
-      for (const side of sides) {
-        const c = islandLabelRect(t, side, gap * mult, w, h);
-        const off = c.r.x0 < islandLabelBounds.x0 || c.r.x1 > islandLabelBounds.x1 || c.r.y0 < 4 || c.r.y1 > 997;
-        if (off || rectHitsLand(c.r, pad) || placed.some(q => rectsOverlap(c.r, q, pad * 0.5))) continue;
-        pick = c; break;
+    // The four sides at three distances, first with a full margin and then a thinner one.
+    for (const pad of [3 * u, 1.5 * u]) {
+      for (const mult of [1, 1.8, 2.6]) {
+        for (const side of sides) {
+          const c = islandLabelRect(t, side, gap * mult, w, h);
+          if (fits(c.r, pad)) { pick = c; break; }
+        }
+        if (pick) break;
       }
       if (pick) break;
+    }
+    // Still nothing: the nearest clear spot on a grid round the marker, tied by a leader.
+    // On a short phone map (CI's 320x568 on 30 Oct 2026) Comoros had no clear side - the
+    // Mozambique Channel on two, Madagascar below, the Seychelles ring above - and the old
+    // fallback put "COM" on Madagascar. Open water lies diagonally off it.
+    if (!pick) {
+      let best = null;
+      const step = h / 2;
+      for (let gy = -12; gy <= 12; gy++) for (let gx = -12; gx <= 12; gx++) {
+        const x = t.cx + gx * step, y = t.cy + gy * step, d = Math.hypot(x - t.cx, y - t.cy);
+        if (d < gap || (best && d >= best.d)) continue;
+        const r = { x0: x - w / 2, y0: y - h / 2, x1: x + w / 2, y1: y + h / 2 };
+        if (fits(r, 0.5 * u)) best = { d, x, y, r };
+      }
+      if (best) {
+        const vx = (best.x - t.cx) / best.d, vy = (best.y - t.cy) / best.d;
+        const k = Math.min(Math.abs(vx) > 1e-6 ? (w / 2) / Math.abs(vx) : Infinity, Math.abs(vy) > 1e-6 ? (h / 2) / Math.abs(vy) : Infinity);
+        pick = { x: best.x, y: best.y, align: 'center', side: 'free', dist: best.d, r: best.r, leader: true,
+          lx0: t.cx + vx * (ring + u), ly0: t.cy + vy * (ring + u), lx1: best.x - vx * (k + 2 * u), ly1: best.y - vy * (k + 2 * u) };
+        placed.push(pick.r);
+        map[t.id] = pick;
+        continue;
+      }
     }
     if (!pick) pick = islandLabelRect(t, t.side, gap, w, h);
     pick.leader = pick.dist > gap * 1.05;
