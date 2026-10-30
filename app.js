@@ -5721,12 +5721,12 @@ function deskSignupHtml(list) {
   const savedState = signup.synced ? 'Joined' : 'Ready to join';
   const selected = value => value === savedAudience ? ' selected' : '';
   return '<form class="yd-signup" data-desk-signup>' +
-    '<div class="yd-signup-copy"><b>Join the ASJ desk</b><span>Save the countries and lens you follow.</span></div>' +
+    '<div class="yd-signup-copy"><b>Get the morning email</b><span>The day\'s stories from the countries you follow.</span></div>' +
     '<label class="sr-only" for="yd-signup-email">Email address</label>' +
     '<input id="yd-signup-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="' + escapeHtml(savedEmail) + '" required>' +
-    '<label class="sr-only" for="yd-signup-audience">Desk lens</label>' +
-    '<select id="yd-signup-audience" name="audience" aria-label="Desk lens">' +
-      '<option value="general"' + selected('general') + '>Morning desk</option>' +
+    '<label class="sr-only" for="yd-signup-audience">Reading for</label>' +
+    '<select id="yd-signup-audience" name="audience" aria-label="Reading for">' +
+      '<option value="general"' + selected('general') + '>All readers</option>' +
       '<option value="farmers"' + selected('farmers') + '>Farmers</option>' +
       '<option value="investors"' + selected('investors') + '>Investors</option>' +
       '<option value="diaspora"' + selected('diaspora') + '>Diaspora</option>' +

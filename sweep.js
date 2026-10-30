@@ -15,7 +15,7 @@
    are legitimate ("desk" in the About page's description of how the desk works). */
 (function () {
   if (window.__sweep && window.__sweep.running) return;
-  const state = window.__sweep = { running: true, done: false, views: 0, findings: [], errors: [] };
+  const state = window.__sweep = { running: true, done: false, phase: 'app views', views: 0, findings: [], errors: [] };
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
   const byRule = new Map();
   const note = (rule, where, sample) => {
@@ -32,8 +32,11 @@
   // Patterns over visible text. Each match is reported with the words around it.
   const TEXT_RULES = [
     ['broken value', /\b(NaN|undefined|Infinity)\b|\[object Object\]|\bnull\b/g],
-    ['desk jargon', /\b(desk file|desk model|desk layers?|file pending|lens|observations?|overlays?|hydrography|registry|confidence)\b/gi],
-    ['the word desk', /\bdesk\b/gi],
+    // The interface's own phrases, not words a news story uses ("a national cancer
+    // registry", "public confidence" are fine in a story; "Water registry" and "high
+    // confidence" as labels were not).
+    ['desk jargon', /\b(desk file|desk model|desk layers?|file pending|(capital|farmer|diaspora|investor) lens|active overlays?|hydrography|water registry|high confidence|gdp observations?|annual observations?|copy desk)\b/gi],
+    ['the word desk', /\b(ASJ desk|the desk|desk)\b/g],
     ['placeholder', /\b(lorem|ipsum|todo|tbd|coming soon|placeholder|sample data)\b/gi],
     ['modelled figure', /\b(modell?ed|estimated by|desk estimate|inferred)\b/gi],
     ['stale stamp', /\b(updated|as of)\b[^.\n]{0,24}\b(\d{1,2}) (days|weeks|months) ago\b/gi]
@@ -41,6 +44,9 @@
   const context = (text, index, length) => text.slice(Math.max(0, index - 40), index + length + 40).replace(/\s+/g, ' ').trim();
   function scanText(where, text) {
     for (const [rule, re] of TEXT_RULES) {
+      // The About page describes how the automated desk works; that is the one place the
+      // word belongs. Story prose (the reader) is checked for the interface phrases only.
+      if (rule === 'the word desk' && (/^static\/about\//.test(where) || /^reader\//.test(where))) continue;
       re.lastIndex = 0;
       let m;
       while ((m = re.exec(text))) {
@@ -134,6 +140,109 @@
     'syria', 'pakistan', 'premier league', 'champions league', 'la liga', 'serie a', 'bundesliga', 'manchester united',
     'manchester city', 'liverpool', 'chelsea', 'arsenal', 'tottenham', 'real madrid', 'bayern munich', 'juventus', 'psg'];
 
+  // Every story, opened in the reader the way a reader opens it: its text against the
+  // same rules, at least three paragraphs, and source links that are real web addresses.
+  async function sweepReader() {
+    state.phase = 'reader';
+    const reader = document.getElementById('story-reader');
+    for (const [cc, list] of Object.entries(AI_BRIEFS || {})) {
+      for (const [rank, story] of (list || []).entries()) {
+        if (!story || !story.headline) continue;
+        openStoryReader(story, { countryCode: cc, country: COUNTRY_INFO[cc]?.name || '', published: story.published, rank }, document.body);
+        for (let i = 0; i < 20 && document.getElementById('story-reader-title')?.textContent !== story.headline; i++) await wait(25);
+        const where = 'reader/' + cc;
+        scanText(where, reader.innerText);
+        scanStructure(where, reader, null);
+        const links = Array.from(reader.querySelectorAll('#story-reader-sources a'));
+        if (!links.length) note('story with no source link', where, story.headline);
+        for (const a of links) if (!/^https?:\/\/[^/\s]+\.[^/\s]+/.test(a.getAttribute('href') || '')) note('source link is not a web address', where, a.getAttribute('href'));
+        if (reader.querySelectorAll('#story-reader-copy p').length < 3) note('story under three paragraphs', where, story.headline);
+        closeStoryReader();
+        state.views++;
+      }
+    }
+  }
+
+  // The Wire under every audience and topic: what it shows, and that an empty filter
+  // says why rather than showing a blank page.
+  async function sweepWireFilters() {
+    state.phase = 'wire filters';
+    location.hash = '#/wire';
+    await wait(1200);
+    const wire = document.getElementById('wire-view');
+    const topic = document.getElementById('wire-topic-select');
+    const lens = document.getElementById('wire-lens-select');
+    if (!wire || !topic || !lens) { note('wire controls missing', 'wire', ''); return; }
+    const set = async (el, value, ms) => { el.value = value; el.dispatchEvent(new Event('change', { bubbles: true })); await wait(ms); };
+    const lensValues = Array.from(lens.options).map(o => o.value);
+    for (const lv of lensValues) {
+      await set(lens, lv, 350);
+      for (const tv of Array.from(topic.options).map(o => o.value)) {
+        await set(topic, tv, 220);
+        const where = 'wire/' + lv + '/' + tv;
+        scanText(where, wire.innerText);
+        scanStructure(where, wire, null);
+        const shown = wire.querySelectorAll('.wire-item, .wire-hero').length;
+        if (!shown && !wire.querySelector('.wire-empty')) note('wire filter shows nothing and says nothing', where, '');
+        state.views++;
+      }
+    }
+    await set(topic, 'All', 200);
+    await set(lens, lensValues[0], 200);
+    location.hash = '';
+  }
+
+  // The crawlable pages (every URL in sitemap.xml), as a search engine or a shared link
+  // finds them: the text rules, a title, description, canonical link and share image,
+  // headlines in proper case, and every internal link and image resolving.
+  async function sweepStaticPages() {
+    state.phase = 'static pages';
+    const BASE = 'https://africanstreetjournal.com';
+    const local = u => (u && u.startsWith(BASE)) ? (u.slice(BASE.length) || '/') : (u && u.startsWith('/') ? u : null);
+    const known = new Map();
+    const exists = async path => {
+      const p = path.split('#')[0].split('?')[0] || '/';
+      if (known.has(p)) return known.get(p);
+      let ok = false;
+      try { ok = (await fetch(p, { cache: 'no-store' })).ok; } catch {}
+      known.set(p, ok);
+      return ok;
+    };
+    let sitemap = '';
+    try { sitemap = await (await fetch('sitemap.xml', { cache: 'no-store' })).text(); } catch {}
+    const paths = Array.from(sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)).map(m => local(m[1])).filter(Boolean);
+    if (!paths.length) { note('sitemap empty or missing', 'static', ''); return; }
+    for (const extra of ['/feed.xml', '/ke/feed.xml', '/news-sitemap.xml', '/robots.txt', '/404.html']) {
+      if (!(await exists(extra))) note('site file missing', 'static', extra);
+    }
+    for (const path of paths) {
+      const where = 'static' + path;
+      let res;
+      try { res = await fetch(path, { cache: 'no-store' }); } catch { res = null; }
+      if (!res || !res.ok) { note('sitemap page missing', where, res ? res.status : 'fetch failed'); continue; }
+      known.set(path.split('#')[0], true);
+      const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+      scanText(where, (doc.body?.textContent || '').replace(/\s+/g, ' '));
+      if (!doc.querySelector('title')?.textContent.trim()) note('page without a title', where, '');
+      if (!doc.querySelector('meta[name="description"]')?.getAttribute('content')) note('page without a description', where, '');
+      if (!doc.querySelector('link[rel="canonical"]')) note('page without a canonical link', where, '');
+      const og = local(doc.querySelector('meta[property="og:image"]')?.getAttribute('content') || '');
+      if (og && !(await exists(og))) note('share image missing', where, og);
+      doc.querySelectorAll('h1, h2').forEach(h => {
+        const t = (h.textContent || '').trim();
+        if (/^[a-z]/.test(t)) note('lower-case headline or dek', where, t);
+      });
+      for (const el of doc.querySelectorAll('a[href], img[src], link[rel="stylesheet"][href], script[src]')) {
+        const raw = el.getAttribute('href') || el.getAttribute('src') || '';
+        if (/^(mailto:|tel:|#|javascript:)/.test(raw)) continue;
+        const p = local(raw);
+        if (!p || p.startsWith('/#')) continue;
+        if (!(await exists(p))) note('broken internal link', where, raw);
+      }
+      state.views++;
+    }
+  }
+
   const VIEWS = ['news', 'farmers', 'investors', 'diaspora', 'atlas'];
   (async () => {
     try {
@@ -159,6 +268,11 @@
         // After the views: opening the country loads its city list (data/facts/<cc>.js).
         scanOffCountry(countryId);
       }
+      location.hash = '';
+      await wait(600);
+      await sweepReader();
+      await sweepWireFilters();
+      await sweepStaticPages();
       location.hash = '';
     } catch (err) {
       state.errors.push('sweep stopped: ' + String(err && err.message || err));
