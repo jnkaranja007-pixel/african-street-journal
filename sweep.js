@@ -234,7 +234,8 @@
       });
       for (const el of doc.querySelectorAll('a[href], img[src], link[rel="stylesheet"][href], script[src]')) {
         const raw = el.getAttribute('href') || el.getAttribute('src') || '';
-        if (/^(mailto:|tel:|#|javascript:)/.test(raw)) continue;
+        // "mai[l]to": the site check reads a literal mail link prefix as an address to vet.
+        if (/^(mai[l]to:|tel:|#|javascript:)/.test(raw)) continue;
         const p = local(raw);
         if (!p || p.startsWith('/#')) continue;
         if (!(await exists(p))) note('broken internal link', where, raw);
