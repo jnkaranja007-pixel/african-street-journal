@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-30T08:17:42+00:00",
+  "generated": "2026-10-30T22:00:42+00:00",
   "dates": {
     "dz": "2026-10-30T08:17:42+00:00",
     "ao": "2026-10-30T08:17:42+00:00",
@@ -19,13 +19,13 @@
     "za": "2026-10-30T08:17:42+00:00",
     "ng": "2026-10-30T08:17:42+00:00",
     "et": "2026-10-30T08:17:42+00:00",
-    "gh": "2026-10-30T08:17:42+00:00",
+    "gh": "2026-10-30T22:00:42+00:00",
     "cd": "2026-10-30T08:17:42+00:00",
     "tz": "2026-10-30T08:17:42+00:00",
     "ma": "2026-10-30T08:17:42+00:00",
     "ug": "2026-10-30T08:17:42+00:00",
     "zw": "2026-10-30T08:17:42+00:00",
-    "cv": "2026-10-30T08:17:42+00:00",
+    "cv": "2026-10-30T22:00:42+00:00",
     "td": "2026-10-30T08:17:42+00:00",
     "dj": "2026-10-30T08:17:42+00:00",
     "sz": "2026-10-30T08:17:42+00:00",
@@ -48,7 +48,7 @@
     "sn": "2026-10-30T08:17:42+00:00",
     "sc": "2026-10-30T08:17:42+00:00",
     "sl": "2026-10-30T08:17:42+00:00",
-    "so": "2026-10-30T08:17:42+00:00",
+    "so": "2026-10-30T22:00:42+00:00",
     "ss": "2026-10-30T08:17:42+00:00",
     "sd": "2026-10-30T08:17:42+00:00",
     "tg": "2026-10-30T08:17:42+00:00",
@@ -4325,16 +4325,16 @@
     ],
     "gh": [
       {
-        "articleId": "48b863b5366c962a2f67",
-        "headline": "Mahama visits kente exhibition in Moscow",
-        "dek": "Ghana's president commended Russia-Ghana Parliamentary Forum for cultural exchange at the Russia-Africa Summit.",
+        "articleId": "7d728df613f364cb72a8",
+        "headline": "Ghana ambassador condoles family of teen shot in New York",
+        "dek": "Javits Badu Nkansah Frimpong, 15, was shot dead in the Bronx after moving to the US for a better future.",
         "paragraphs": [
-          "President John Dramani Mahama visited a Kente Exhibition in Moscow on Thursday, organised by the Russia-Ghana Parliamentary Forum. The exhibition, part of the Third Russia-Africa Summit, showcases Ghana's traditional textiles and cultural heritage. The Ghana Export Promotion Authority and Ghana’s Ministry of Trade, Agribusiness and Industry collaborated on the event.",
-          "Mahama praised the Russian Parliamentary Group for their friendship, stating that people-to-people relationships are more enduring than government ties. He highlighted the importance of understanding each other's cultures to consolidate these relationships. The President noted that nearly 11,000 people had visited the exhibition, which included explanations translated into Russian.",
-          "The exhibition aims to promote Ghana's cultural heritage through kente, an internationally recognized textile. President Mahama expressed appreciation for bringing the exhibition to Moscow, emphasizing the value of cultural understanding between nations."
+          "Ghana’s Ambassador to the United States expressed condolences to the family of 15-year-old Javits Badu Nkansah Frimpong, who was shot dead in the Bronx, New York. The Ambassador conveyed the nation's solidarity with the bereaved family in a message on behalf of President John Dramani Mahama.",
+          "The message, addressed to the victim’s father, Thomas Frimpong, described Javits’s death as tragic and untimely, noting he had moved to the US less than a year prior for education. The Ambassador called for a thorough investigation by law enforcement to establish facts and ensure justice, stressing the need to protect children from bullying and racial discrimination.",
+          "The Government of Ghana assured Thomas Frimpong of its full support in the pursuit of justice for his son. The Ambassador prayed for strength and comfort for the family and for the soul of the deceased to rest in peace."
         ],
-        "body": "President John Dramani Mahama visited a Kente Exhibition in Moscow on Thursday, organised by the Russia-Ghana Parliamentary Forum. The exhibition, part of the Third Russia-Africa Summit, showcases Ghana's traditional textiles and cultural heritage. The Ghana Export Promotion Authority and Ghana’s Ministry of Trade, Agribusiness and Industry collaborated on the event.\n\nMahama praised the Russian Parliamentary Group for their friendship, stating that people-to-people relationships are more enduring than government ties. He highlighted the importance of understanding each other's cultures to consolidate these relationships. The President noted that nearly 11,000 people had visited the exhibition, which included explanations translated into Russian.\n\nThe exhibition aims to promote Ghana's cultural heritage through kente, an internationally recognized textile. President Mahama expressed appreciation for bringing the exhibition to Moscow, emphasizing the value of cultural understanding between nations.",
-        "why": "Ghanaian cultural heritage is being showcased to an international audience in Moscow.",
+        "body": "Ghana’s Ambassador to the United States expressed condolences to the family of 15-year-old Javits Badu Nkansah Frimpong, who was shot dead in the Bronx, New York. The Ambassador conveyed the nation's solidarity with the bereaved family in a message on behalf of President John Dramani Mahama.\n\nThe message, addressed to the victim’s father, Thomas Frimpong, described Javits’s death as tragic and untimely, noting he had moved to the US less than a year prior for education. The Ambassador called for a thorough investigation by law enforcement to establish facts and ensure justice, stressing the need to protect children from bullying and racial discrimination.\n\nThe Government of Ghana assured Thomas Frimpong of its full support in the pursuit of justice for his son. The Ambassador prayed for strength and comfort for the family and for the soul of the deceased to rest in peace.",
+        "why": "A 15-year-old Ghanaian teenager was shot and killed in New York, prompting a message of condolence and a call for justice from Ghana's ambassador.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
@@ -4342,19 +4342,19 @@
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
-            "score": 21,
-            "why": "The exhibition is organised by the Ghana Export Promotion Authority, suggesting a potential link to trade and investment in Ghanaian textiles."
+            "score": 0,
+            "why": "The report does not mention any companies, markets, or economic activities relevant to investors."
           },
           "diaspora": {
-            "score": 40,
-            "why": "This culture report may interest diaspora readers maintaining ties to national life from abroad."
+            "score": 20,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "Culture",
-        "published": "2026-10-30T05:02:00Z",
-        "sourceTitle": "Mahama visits Kente Exhibition by Russia-Ghana Parliamentary Forum in Moscow",
-        "editorialScore": 18.8,
-        "selectionScore": 18.8,
+        "topic": "News",
+        "published": "2026-10-30T21:03:43Z",
+        "sourceTitle": "Ghana’s Ambassador to US expresses condolences to family of teenager shot dead in New York",
+        "editorialScore": 24.05,
+        "selectionScore": 24.05,
         "confidence": "high",
         "corroboration": 2,
         "scoreBreakdown": {
@@ -4362,8 +4362,8 @@
           "corroboration": 4.0,
           "sourceQuality": 3.0,
           "freshness": 3.5,
-          "publicImpact": 3.05,
-          "evidence": 1.25,
+          "publicImpact": 7.05,
+          "evidence": 2.5,
           "materiality": 0.0,
           "penalties": 0.0
         },
@@ -4372,171 +4372,45 @@
           "2-source corroboration",
           "tier-1 source",
           "published within 18h",
-          "public-policy consequence"
+          "urgent public consequence",
+          "specific figure"
         ],
         "countryMatch": "title",
-        "wordCount": 132,
+        "wordCount": 143,
         "readMinutes": 1,
         "sources": [
           {
             "name": "MyJoyOnline",
-            "url": "https://www.myjoyonline.com/mahama-visits-kente-exhibition-by-russia-ghana-parliamentary-forum-in-moscow/",
-            "published": "2026-10-30T05:02:00Z"
+            "published": "2026-10-30T21:03:43Z",
+            "url": "https://www.myjoyonline.com/ghanas-ambassador-to-us-expresses-condolences-to-family-of-teenager-shot-dead-in-new-york/"
           },
           {
             "name": "3News",
-            "url": "https://3news.com/news/russian-foreign-minister-pledges-to-rally-all-founding-brics-members-to-ensure-consensus-support-for-ghana-ablakwa",
-            "published": "2026-10-30T06:22:47Z"
+            "published": "2026-10-30T18:00:54Z",
+            "url": "https://3news.com/news/ghana-urges-us-authorities-to-probe-death-of-ghanaian-teen-in-bronx-bring-perpetrators-to-justice"
           }
         ]
       },
       {
-        "articleId": "4f9fb8c2dac5b83a3025",
-        "headline": "Carrick keeps Fernandes as Manchester United captain",
-        "dek": "Michael Carrick confirmed Bruno Fernandes will continue as captain after clear-the-air talks following a recent dip in form.",
+        "articleId": "3bd85286dc0226a82cd6",
+        "headline": "Four arrested for leasing land to illegal miners",
+        "dek": "Unit committee members allegedly collected money from galamsey operators for land near a collapsed bridge.",
         "paragraphs": [
-          "Manchester United head coach Michael Carrick stated Bruno Fernandes will remain captain of the club. Carrick benched Fernandes for the recent 3-0 loss to Bournemouth after the midfielder questioned team tactics following a Champions League defeat. Carrick and Fernandes held talks on Tuesday to address the situation and move forward.",
-          "Carrick said the decision to bench Fernandes was for football reasons and that the player is fully committed to the club. He confirmed there was no decision to be made about Fernandes' captaincy, stating the 32-year-old cares deeply about the team. Carrick's own position has been under scrutiny after the club's worst start to a Premier League season.",
-          "Despite speculation, Carrick will continue to lead the team and does not require assurances about his long-term security. Manchester United has gone eight games without a win, their worst run since the 2015-16 season. The club's chief executive and director of football met this week to discuss next steps."
+          "Four people, including two Unit Committee members, were arrested in Ghana's Ashanti Region for their role in illegal mining that caused the Abesua bridge collapse. The suspects allegedly leased land to galamsey operators along the River Kukubu in the Atwima Mponua District. The bridge's collapse has cut off five communities, including Abesua No.1 and No.2, from main roads.",
+          "District Chief Executive Ibrahim Issahak confirmed the arrests, stating preliminary investigations link local leaders to the illegal miners. He said the unit committee members are accused of taking money to lease land near the bridge and river buffer zone. The four are in police custody and will appear in court on November 3, 2026, facing charges for illegal mining and damaging public infrastructure.",
+          "The collapse has halted economic activities, preventing farmers from reaching markets and disrupting health services. Schoolchildren struggle to attend Atwima Asamang Basic School, often missing classes due to the swollen river. Emergency repair works, including clearing the culvert and reinforcing the road, are underway while permanent reconstruction plans are considered."
         ],
-        "body": "Manchester United head coach Michael Carrick stated Bruno Fernandes will remain captain of the club. Carrick benched Fernandes for the recent 3-0 loss to Bournemouth after the midfielder questioned team tactics following a Champions League defeat. Carrick and Fernandes held talks on Tuesday to address the situation and move forward.\n\nCarrick said the decision to bench Fernandes was for football reasons and that the player is fully committed to the club. He confirmed there was no decision to be made about Fernandes' captaincy, stating the 32-year-old cares deeply about the team. Carrick's own position has been under scrutiny after the club's worst start to a Premier League season.\n\nDespite speculation, Carrick will continue to lead the team and does not require assurances about his long-term security. Manchester United has gone eight games without a win, their worst run since the 2015-16 season. The club's chief executive and director of football met this week to discuss next steps.",
-        "why": "Ghanaian football fans following Manchester United will be interested in the captaincy status of Bruno Fernandes.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 0,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
-          },
-          "investors": {
-            "score": 20,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
-          },
-          "diaspora": {
-            "score": 30,
-            "why": "This national sports report may interest diaspora readers following teams and players from abroad."
-          }
-        },
-        "topic": "Sport",
-        "published": "2026-10-30T07:09:47Z",
-        "sourceTitle": "Carrick to keep Fernandes as captain",
-        "editorialScore": 14.85,
-        "selectionScore": 14.85,
-        "confidence": "medium",
-        "corroboration": 2,
-        "scoreBreakdown": {
-          "relevance": 0.5,
-          "corroboration": 4.0,
-          "sourceQuality": 3.0,
-          "freshness": 3.5,
-          "publicImpact": 1.35,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "2-source corroboration",
-          "tier-1 source",
-          "published within 18h",
-          "public-policy consequence",
-          "specific figure"
-        ],
-        "countryMatch": "domestic",
-        "wordCount": 157,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "name": "Ghanaian Times",
-            "url": "https://ghanaiantimes.com.gh/carrick-to-keep-fernandes-as-captain/",
-            "published": "2026-10-30T07:09:47Z"
-          },
-          {
-            "name": "MyJoyOnline",
-            "url": "https://www.myjoyonline.com/fully-committed-fernandes-to-remain-man-utd-captain/",
-            "published": "2026-10-29T23:47:00Z"
-          }
-        ]
-      },
-      {
-        "articleId": "ff181907b924f73c1876",
-        "headline": "GAFET donates fertiliser for Farmers' Day",
-        "dek": "The Ghana Agricultural Fund for Education and Transformation provided 1,000 bags of organic fertiliser for the 42nd National Farmers’ Day.",
-        "paragraphs": [
-          "The Ghana Agricultural Fund for Education and Transformation (GAFET) donated 1,000 bags of 10-kilogramme organic fertiliser for the upcoming 42nd National Farmers’ Day celebration in December. The donation aims to support the recognition of farmers, especially young people, for their contributions to food production.",
-          "GAFET Lead Coordinator, Mr Steven Nhyira Odarteifio, presented the fertiliser to the Ministry of Food and Agriculture in Accra yesterday. He stated the gesture supports government efforts to reward farmers and was motivated by contributions from patriots towards the event. Mr Odarteifio, who is also the incoming National Youth Organiser for the NDC, highlighted the need for policies addressing youth aspirations in agriculture.",
-          "Mr Odarteifio encouraged more young people to embrace organic agriculture and sustainable farming practices. He noted that supporting farmers with inputs motivates them to sustain efforts towards improving food production. The Chairman of the National Farmers’ Day Celebration Committee, Mr John Dumelo, received the donation and expressed gratitude."
-        ],
-        "body": "The Ghana Agricultural Fund for Education and Transformation (GAFET) donated 1,000 bags of 10-kilogramme organic fertiliser for the upcoming 42nd National Farmers’ Day celebration in December. The donation aims to support the recognition of farmers, especially young people, for their contributions to food production.\n\nGAFET Lead Coordinator, Mr Steven Nhyira Odarteifio, presented the fertiliser to the Ministry of Food and Agriculture in Accra yesterday. He stated the gesture supports government efforts to reward farmers and was motivated by contributions from patriots towards the event. Mr Odarteifio, who is also the incoming National Youth Organiser for the NDC, highlighted the need for policies addressing youth aspirations in agriculture.\n\nMr Odarteifio encouraged more young people to embrace organic agriculture and sustainable farming practices. He noted that supporting farmers with inputs motivates them to sustain efforts towards improving food production. The Chairman of the National Farmers’ Day Celebration Committee, Mr John Dumelo, received the donation and expressed gratitude.",
-        "why": "Hardworking farmers, particularly young people, will be recognised and rewarded for their contributions to food production and national development.",
+        "body": "Four people, including two Unit Committee members, were arrested in Ghana's Ashanti Region for their role in illegal mining that caused the Abesua bridge collapse. The suspects allegedly leased land to galamsey operators along the River Kukubu in the Atwima Mponua District. The bridge's collapse has cut off five communities, including Abesua No.1 and No.2, from main roads.\n\nDistrict Chief Executive Ibrahim Issahak confirmed the arrests, stating preliminary investigations link local leaders to the illegal miners. He said the unit committee members are accused of taking money to lease land near the bridge and river buffer zone. The four are in police custody and will appear in court on November 3, 2026, facing charges for illegal mining and damaging public infrastructure.\n\nThe collapse has halted economic activities, preventing farmers from reaching markets and disrupting health services. Schoolchildren struggle to attend Atwima Asamang Basic School, often missing classes due to the swollen river. Emergency repair works, including clearing the culvert and reinforcing the road, are underway while permanent reconstruction plans are considered.",
+        "why": "Residents of five communities are cut off from markets, health facilities, and schools due to the collapse of the Abesua bridge, caused by illegal mining activities.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
             "score": 85,
-            "why": "Farmers will receive 1,000 bags of organic fertiliser to support the upcoming National Farmers' Day celebration."
-          },
-          "investors": {
-            "score": 20,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
-          },
-          "diaspora": {
-            "score": 20,
-            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
-          }
-        },
-        "topic": "Agriculture",
-        "published": "2026-10-30T07:35:05Z",
-        "sourceTitle": "GAFET supports Farmers’ Day with 1,000 bags of fertiliser",
-        "editorialScore": 14.55,
-        "selectionScore": 13.3,
-        "confidence": "medium",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 2.5,
-          "corroboration": 0.0,
-          "sourceQuality": 3.0,
-          "freshness": 3.5,
-          "publicImpact": 3.05,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in opening",
-          "tier-1 source",
-          "published within 18h",
-          "public-policy consequence",
-          "specific figure"
-        ],
-        "countryMatch": "lede",
-        "wordCount": 156,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "name": "Ghanaian Times",
-            "url": "https://ghanaiantimes.com.gh/gafet-supports-farmers-day-with-1000-bags-of-fertiliser/",
-            "published": "2026-10-30T07:35:05Z"
-          }
-        ]
-      },
-      {
-        "articleId": "9e1a6afcd832bc54be38",
-        "headline": "Four remanded over Worawora disturbances",
-        "dek": "Kwame Aboagye Ahenkora, Prince Asante, Daniel Wiafe, and Kwabena Nsimbo were detained following violence over festival rites.",
-        "paragraphs": [
-          "The Dambai Circuit Court has remanded four individuals into police custody for their alleged role in disturbances at Dwabrem-Worawora in the Oti Region. Kwame Aboagye Ahenkora, 55, Prince Asante, 27, Daniel Wiafe, 20, and Kwabena Nsimbo, 22, are accused of involvement in the events that occurred on October 24, 2026.",
-          "The disturbances reportedly involved the burning of vehicle tyres amid claims of a High Court injunction against the Akwantutenten Festival rites, according to Deputy Superintendent of Police John Nchor. Police personnel extinguished fires and restored order, and the Oti Regional Security Council has directed disputing parties to seek resolution through the courts and Houses of Chiefs.",
-          "The accused will reappear before the court on November 17, 2026, as the Regional Police Command appeals for calm and respect for lawful processes. The Regional Security Council stressed that the chieftaincy dispute must be resolved through legal means."
-        ],
-        "body": "The Dambai Circuit Court has remanded four individuals into police custody for their alleged role in disturbances at Dwabrem-Worawora in the Oti Region. Kwame Aboagye Ahenkora, 55, Prince Asante, 27, Daniel Wiafe, 20, and Kwabena Nsimbo, 22, are accused of involvement in the events that occurred on October 24, 2026.\n\nThe disturbances reportedly involved the burning of vehicle tyres amid claims of a High Court injunction against the Akwantutenten Festival rites, according to Deputy Superintendent of Police John Nchor. Police personnel extinguished fires and restored order, and the Oti Regional Security Council has directed disputing parties to seek resolution through the courts and Houses of Chiefs.\n\nThe accused will reappear before the court on November 17, 2026, as the Regional Police Command appeals for calm and respect for lawful processes. The Regional Security Council stressed that the chieftaincy dispute must be resolved through legal means.",
-        "why": "Four men face legal proceedings after disturbances erupted over festival rites in Worawora.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 0,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+            "why": "Farmers in five cut-off communities cannot transport their produce to market centres because the Abesua bridge has collapsed."
           },
           "investors": {
             "score": 0,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+            "why": "No companies, markets, or financial regulators are mentioned as directly affected by the bridge collapse or arrests."
           },
           "diaspora": {
             "score": 0,
@@ -4544,10 +4418,10 @@
           }
         },
         "topic": "News",
-        "published": "2026-10-29T22:43:00Z",
-        "sourceTitle": "Court remands four over Worawora disturbances",
-        "editorialScore": 16.2,
-        "selectionScore": 12.7,
+        "published": "2026-10-30T21:31:32Z",
+        "sourceTitle": "Two Unit Committee members among 4 arrested for leasing land to galamsey operators after Abesua bridge collapse",
+        "editorialScore": 21.4,
+        "selectionScore": 20.15,
         "confidence": "high",
         "corroboration": 2,
         "scoreBreakdown": {
@@ -4555,7 +4429,7 @@
           "corroboration": 4.0,
           "sourceQuality": 3.0,
           "freshness": 3.5,
-          "publicImpact": 2.7,
+          "publicImpact": 7.9,
           "evidence": 2.5,
           "materiality": 0.0,
           "penalties": 0.0
@@ -4564,36 +4438,174 @@
           "2-source corroboration",
           "tier-1 source",
           "published within 18h",
-          "public-policy consequence",
+          "urgent public consequence",
           "specific figure"
         ],
         "countryMatch": "domestic",
-        "wordCount": 145,
+        "wordCount": 173,
         "readMinutes": 1,
         "sources": [
           {
             "name": "MyJoyOnline",
-            "url": "https://www.myjoyonline.com/court-remands-four-over-worawora-disturbances/",
-            "published": "2026-10-29T22:43:00Z"
+            "published": "2026-10-30T21:31:32Z",
+            "url": "https://www.myjoyonline.com/two-unit-committee-members-among-4-arrested-for-leasing-land-to-galamsey-operators-after-abesua-bridge-collapse/"
           },
           {
             "name": "3News",
-            "url": "https://3news.com/news/four-remanded-over-worawora-riot-linked-to-akwantutenten-festival",
-            "published": "2026-10-29T14:44:44Z"
+            "published": "2026-10-30T17:43:35Z",
+            "url": "https://3news.com/news/ghanakoma-morning-show-gets-results-4-arrested-as-galamsey-damaged-bridge-at-abesua-undergoes-repairs"
           }
         ]
       },
       {
-        "articleId": "adf0bd0d2313835b0c18",
-        "headline": "Ghana Gas donates GH¢100,000 to hospital for breast cancer care",
-        "dek": "The donation will fund biopsies and provide personal protective equipment for healthcare workers.",
+        "articleId": "b079444d17a624997b5e",
+        "headline": "National Theatre hosts Funworld 2026 for breast cancer awareness",
+        "dek": "The event combines education, entertainment, and competition to raise awareness of mental well-being and breast cancer among schoolchildren.",
         "paragraphs": [
-          "Ghana Gas has donated GH¢100,000 to Effia Nkwanta Regional Hospital in Takoradi to support breast cancer diagnosis and treatment.",
-          "The funds will be split equally, with GH¢50,000 allocated for biopsy procedures for suspected cases and the remaining GH¢50,000 for personal protective equipment and patient treatment support. Judith Adjoba Blay, CEO of Ghana Gas, stated that the company will monitor the utilization of funds to measure the initiative's impact.",
-          "Dr. Amoabeng, Head of Surgery at the hospital, expressed gratitude, noting the donation addresses the critical barrier of biopsy costs, enabling more patients to receive diagnosis and subsequently enroll in the National Health Insurance Scheme for treatment."
+          "The National Theatre of Ghana will host Funworld 2026, an event using performing arts to promote mental health awareness and breast cancer education. This initiative aims to raise awareness among schoolchildren, teachers, parents, and the wider community through education, entertainment, and competition.",
+          "Funworld has been a family edutainment platform for over three decades, helping young people develop creative abilities and showcase talents, contributing to figures like Shatta Wale and Martha Ankomah. This year's event will feature traditional and contemporary dances, drama, poetry, and music, celebrating Ghanaian culture while nurturing confidence in pupils. Springfield School and Gloryhill International will participate in a debate competition.",
+          "The programme will also highlight mental health, emotional well-being, and the importance of supportive environments for children. Educational messages and artistic presentations will encourage pupils to understand breast cancer awareness and health consciousness. Promasidor Ghana, through its Twisco product, is sponsoring the event, while Kiddafest 2026 is scheduled for December 17 and 18."
         ],
-        "body": "Ghana Gas has donated GH¢100,000 to Effia Nkwanta Regional Hospital in Takoradi to support breast cancer diagnosis and treatment.\n\nThe funds will be split equally, with GH¢50,000 allocated for biopsy procedures for suspected cases and the remaining GH¢50,000 for personal protective equipment and patient treatment support. Judith Adjoba Blay, CEO of Ghana Gas, stated that the company will monitor the utilization of funds to measure the initiative's impact.\n\nDr. Amoabeng, Head of Surgery at the hospital, expressed gratitude, noting the donation addresses the critical barrier of biopsy costs, enabling more patients to receive diagnosis and subsequently enroll in the National Health Insurance Scheme for treatment.",
-        "why": "The donation directly supports breast cancer patients in Ghana by funding diagnostic tests and treatment, and provides essential protective gear for healthcare workers.",
+        "body": "The National Theatre of Ghana will host Funworld 2026, an event using performing arts to promote mental health awareness and breast cancer education. This initiative aims to raise awareness among schoolchildren, teachers, parents, and the wider community through education, entertainment, and competition.\n\nFunworld has been a family edutainment platform for over three decades, helping young people develop creative abilities and showcase talents, contributing to figures like Shatta Wale and Martha Ankomah. This year's event will feature traditional and contemporary dances, drama, poetry, and music, celebrating Ghanaian culture while nurturing confidence in pupils. Springfield School and Gloryhill International will participate in a debate competition.\n\nThe programme will also highlight mental health, emotional well-being, and the importance of supportive environments for children. Educational messages and artistic presentations will encourage pupils to understand breast cancer awareness and health consciousness. Promasidor Ghana, through its Twisco product, is sponsoring the event, while Kiddafest 2026 is scheduled for December 17 and 18.",
+        "why": "Over 300 residents of Asanko Gold Ghana Ltd's host communities benefited from breast cancer screening, indicating a direct health impact on the population.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 45,
+            "why": "Promasidor Ghana is a sponsor of the event, indicating a business investment in community programs."
+          },
+          "diaspora": {
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "Health",
+        "published": "2026-10-30T08:26:10Z",
+        "sourceTitle": "National Theatre to host Funworld 2026",
+        "editorialScore": 19.8,
+        "selectionScore": 19.8,
+        "confidence": "high",
+        "corroboration": 3,
+        "scoreBreakdown": {
+          "relevance": 2.5,
+          "corroboration": 6.0,
+          "sourceQuality": 3.0,
+          "freshness": 3.5,
+          "publicImpact": 3.5500000000000003,
+          "evidence": 1.25,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in opening",
+          "3-source corroboration",
+          "tier-1 source",
+          "published within 18h",
+          "public-policy consequence"
+        ],
+        "countryMatch": "lede",
+        "wordCount": 156,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Ghanaian Times",
+            "published": "2026-10-30T08:26:10Z",
+            "url": "https://ghanaiantimes.com.gh/national-theatre-to-host-funworld-2026/"
+          },
+          {
+            "name": "MyJoyOnline",
+            "published": "2026-10-30T16:35:12Z",
+            "url": "https://www.myjoyonline.com/breast-cancer-survivor-who-became-a-mother-at-45-urges-women-not-to-fear-treatment/"
+          },
+          {
+            "name": "3News",
+            "published": "2026-10-30T15:00:00Z",
+            "url": "https://3news.com/news/300-residents-of-asanko-gold-ghana-ltds-host-communities-benefit-from-breast-cancer-screening"
+          }
+        ]
+      },
+      {
+        "articleId": "684695d2769764ed0876",
+        "headline": "Police hunt suspect after two shot dead in Sakumono",
+        "dek": "George and Irene Atuguba were killed following an alleged GH¢500,000 debt dispute.",
+        "paragraphs": [
+          "The Ghana Police Service is searching for Samuel Christopher Osel Anto after he allegedly shot and killed George Atuguba, 57, and his niece Irene Atuguba, 47, at their Sakumono residence on Friday, October 30, 2026. Officers found the victims with fatal gunshot wounds after responding to a report of a financial dispute.",
+          "Preliminary investigations suggest the killings stemmed from a GH¢500,000 loan George Atuguba had allegedly failed to repay to the suspect. Anto, accompanied by Beatrice Mumuni, reportedly went to the home to demand the money, leading to a confrontation and the fatal shootings. The bodies were taken to the Police Hospital Mortuary.",
+          "The Accra Regional Police Command has appealed to the public for any information that could help apprehend Anto. The police are working to bring the suspect to justice."
+        ],
+        "body": "The Ghana Police Service is searching for Samuel Christopher Osel Anto after he allegedly shot and killed George Atuguba, 57, and his niece Irene Atuguba, 47, at their Sakumono residence on Friday, October 30, 2026. Officers found the victims with fatal gunshot wounds after responding to a report of a financial dispute.\n\nPreliminary investigations suggest the killings stemmed from a GH¢500,000 loan George Atuguba had allegedly failed to repay to the suspect. Anto, accompanied by Beatrice Mumuni, reportedly went to the home to demand the money, leading to a confrontation and the fatal shootings. The bodies were taken to the Police Hospital Mortuary.\n\nThe Accra Regional Police Command has appealed to the public for any information that could help apprehend Anto. The police are working to bring the suspect to justice.",
+        "why": "Two people were killed in Sakumono following a financial dispute.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 0,
+            "why": "The incident involves a financial dispute and a loan, but no companies or markets are directly affected."
+          },
+          "diaspora": {
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "News",
+        "published": "2026-10-30T20:44:38Z",
+        "sourceTitle": "Police hunt suspect after two people shot dead at Sakumono",
+        "editorialScore": 20.8,
+        "selectionScore": 17.3,
+        "confidence": "high",
+        "corroboration": 2,
+        "scoreBreakdown": {
+          "relevance": 2.5,
+          "corroboration": 4.0,
+          "sourceQuality": 3.0,
+          "freshness": 3.5,
+          "publicImpact": 5.3,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in opening",
+          "2-source corroboration",
+          "tier-1 source",
+          "published within 18h",
+          "urgent public consequence",
+          "specific figure"
+        ],
+        "countryMatch": "lede",
+        "wordCount": 133,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "MyJoyOnline",
+            "published": "2026-10-30T20:44:38Z",
+            "url": "https://www.myjoyonline.com/police-hunt-suspect-after-two-people-shot-dead-at-sakumono/"
+          },
+          {
+            "name": "3News",
+            "published": "2026-10-30T16:54:55Z",
+            "url": "https://3news.com/news/igp-special-operations-team-arrests-192-suspects-in-multiple-operations-suspected-drugs-seized"
+          }
+        ]
+      },
+      {
+        "articleId": "e24095ed70a609c6cc99",
+        "headline": "GRA named PR Organisation of the Year",
+        "dek": "The Ghana Revenue Authority received the award at the 2026 National PR Summit in Koforidua.",
+        "paragraphs": [
+          "The Ghana Revenue Authority (GRA) was named Public Relations (PR) Organisation of the Year 2025 in the Public Sector Category at the Institute of Public Relations, Ghana (IPR Ghana) Excellence Awards. The award was presented at the 2026 National PR Summit, held in Koforidua from October 22 to 24.",
+          "The award recognises the Authority’s commitment to professional public relations and strategic communication in its work. Deputy Commissioner of Communication and Public Affairs, Mrs Florence Asante, stated that public relations is a strategic management function that builds trust and strengthens stakeholder relationships.",
+          "The GRA sees professional communication as a tool for advancing its mandate and strengthening relationships with taxpayers, the media, stakeholders, and the general public. Several staff members from the Authority’s Communication and Public Affairs Department are active members of the professional body."
+        ],
+        "body": "The Ghana Revenue Authority (GRA) was named Public Relations (PR) Organisation of the Year 2025 in the Public Sector Category at the Institute of Public Relations, Ghana (IPR Ghana) Excellence Awards. The award was presented at the 2026 National PR Summit, held in Koforidua from October 22 to 24.\n\nThe award recognises the Authority’s commitment to professional public relations and strategic communication in its work. Deputy Commissioner of Communication and Public Affairs, Mrs Florence Asante, stated that public relations is a strategic management function that builds trust and strengthens stakeholder relationships.\n\nThe GRA sees professional communication as a tool for advancing its mandate and strengthening relationships with taxpayers, the media, stakeholders, and the general public. Several staff members from the Authority’s Communication and Public Affairs Department are active members of the professional body.",
+        "why": "The Ghana Revenue Authority's recognition for public relations work may enhance its credibility with taxpayers and stakeholders.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
@@ -4602,45 +4614,50 @@
           },
           "investors": {
             "score": 20,
-            "why": "Ghana Gas, a national company, made a donation, but this action does not directly impact investment, markets, or the economy."
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
           },
           "diaspora": {
             "score": 0,
             "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "Health",
-        "published": "2026-10-29T21:05:23Z",
-        "sourceTitle": "Ghana Gas supports Breast Cancer care and PPE supply at Effia Nkwanta Hospital with GHC100k",
-        "editorialScore": 11.95,
-        "selectionScore": 11.95,
-        "confidence": "medium",
-        "corroboration": 1,
+        "topic": "Business",
+        "published": "2026-10-30T08:35:45Z",
+        "sourceTitle": "GRA named PR Organisation of the Year",
+        "editorialScore": 17.3,
+        "selectionScore": 16.05,
+        "confidence": "high",
+        "corroboration": 2,
         "scoreBreakdown": {
-          "relevance": 4.0,
-          "corroboration": 0.0,
-          "sourceQuality": 1.75,
+          "relevance": 2.5,
+          "corroboration": 4.0,
+          "sourceQuality": 3.0,
           "freshness": 3.5,
-          "publicImpact": 2.2,
+          "publicImpact": 3.05,
           "evidence": 1.25,
           "materiality": 0.0,
-          "penalties": -0.75
+          "penalties": 0.0
         },
         "rankReasons": [
-          "country in headline",
+          "country in opening",
+          "2-source corroboration",
+          "tier-1 source",
           "published within 18h",
-          "public-policy consequence",
-          "specific figure",
-          "limited source evidence"
+          "public-policy consequence"
         ],
-        "countryMatch": "title",
-        "wordCount": 111,
+        "countryMatch": "lede",
+        "wordCount": 133,
         "readMinutes": 1,
         "sources": [
           {
-            "name": "3News",
-            "url": "https://3news.com/news/ghana-gas-supports-breast-cancer-care-and-ppe-supply-at-effia-nkwanta-hospital-with-ghc100k",
-            "published": "2026-10-29T21:05:23Z"
+            "name": "Ghanaian Times",
+            "published": "2026-10-30T08:35:45Z",
+            "url": "https://ghanaiantimes.com.gh/gra-named-pr-organisation-of-the-year/"
+          },
+          {
+            "name": "MyJoyOnline",
+            "published": "2026-10-30T13:52:20Z",
+            "url": "https://www.myjoyonline.com/vivo-energy-ghana-plc-leads-pack-with-quadruple-win-at-national-pr-and-communications-excellence-awards/"
           }
         ]
       }
@@ -6012,40 +6029,105 @@
     ],
     "cv": [
       {
-        "articleId": "fb3c2ab113fce13ee238",
-        "headline": "Cape verdeans bake bolo de milho",
-        "dek": "A recipe published on october 30, 2026, details how to make the traditional corn cake.",
+        "articleId": "d1ad8e7fc8047f854872",
+        "headline": "Cape Verde to install five mammography machines by 2027",
+        "dek": "The government plans to increase diagnostic capacity for stomach cancer and other diseases.",
         "paragraphs": [
-          "cape verdeans can bake bolo de milho using a recipe published on october 30, 2026. the recipe requires one can of milk and one can of sugar, both measured using the corn can.",
-          "to prepare the cake, drained corn is blended with milk, sugar, cornmeal, oil, and eggs until finely ground. two tablespoons of grated coconut can be added, followed by baking powder, pulsed three times.",
-          "the batter is poured into a greased and floured cake pan with a hole and baked in a medium oven for approximately 40 minutes until golden brown and a toothpick comes out clean."
+          "Cape Verde plans to significantly boost early cancer detection by 2027, aiming to install at least five mammography machines across the country. Currently, only one mammograph is functional at Hospital Agostinho Neto, hindering national screening efforts for breast cancer. Health Minister Lúcio Fernandes announced the initiative on October 30, 2026, during the inauguration of the Oncology Unit at Hospital Baptista de Sousa in São Vicente.",
+          "The new Oncology Unit at Hospital Baptista de Sousa will initially serve approximately three breast cancer patients. This facility aims to bring cancer treatments closer to patients in the Barlavento region, reducing the need for costly and emotionally taxing evacuations to Santiago. The government also intends to increase the number of CT scan machines from two to eight by next year and enhance stomach cancer diagnosis through more endoscopy and colonoscopy procedures.",
+          "To support these efforts, two Cuban gastroenterologists are expected to arrive soon to conduct diagnostic procedures on various islands. The Ministry of Health also plans to introduce a radiotherapy service within the current legislative term. 28 Cuban specialist doctors, including nephrologists, will join the workforce, alongside training for 50 Cape Verdean doctors in Brazil."
         ],
-        "body": "cape verdeans can bake bolo de milho using a recipe published on october 30, 2026. the recipe requires one can of milk and one can of sugar, both measured using the corn can.\n\nto prepare the cake, drained corn is blended with milk, sugar, cornmeal, oil, and eggs until finely ground. two tablespoons of grated coconut can be added, followed by baking powder, pulsed three times.\n\nthe batter is poured into a greased and floured cake pan with a hole and baked in a medium oven for approximately 40 minutes until golden brown and a toothpick comes out clean.",
-        "why": "cape verdeans can now prepare a traditional corn cake at home.",
+        "body": "Cape Verde plans to significantly boost early cancer detection by 2027, aiming to install at least five mammography machines across the country. Currently, only one mammograph is functional at Hospital Agostinho Neto, hindering national screening efforts for breast cancer. Health Minister Lúcio Fernandes announced the initiative on October 30, 2026, during the inauguration of the Oncology Unit at Hospital Baptista de Sousa in São Vicente.\n\nThe new Oncology Unit at Hospital Baptista de Sousa will initially serve approximately three breast cancer patients. This facility aims to bring cancer treatments closer to patients in the Barlavento region, reducing the need for costly and emotionally taxing evacuations to Santiago. The government also intends to increase the number of CT scan machines from two to eight by next year and enhance stomach cancer diagnosis through more endoscopy and colonoscopy procedures.\n\nTo support these efforts, two Cuban gastroenterologists are expected to arrive soon to conduct diagnostic procedures on various islands. The Ministry of Health also plans to introduce a radiotherapy service within the current legislative term. 28 Cuban specialist doctors, including nephrologists, will join the workforce, alongside training for 50 Cape Verdean doctors in Brazil.",
+        "why": "Cape Verdeans will benefit from earlier cancer diagnoses and more accessible treatment, reducing the need for travel for medical care.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
             "score": 20,
+            "why": "The report details government spending on healthcare infrastructure and equipment, but does not mention specific companies or financial markets."
+          },
+          "diaspora": {
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "Health",
+        "published": "2026-10-30T15:46:59Z",
+        "sourceTitle": "Governo prevê reforçar diagnóstico precoce do cancro a partir de 2027",
+        "editorialScore": 14.95,
+        "selectionScore": 14.95,
+        "confidence": "medium",
+        "corroboration": 2,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 4.0,
+          "sourceQuality": 3.0,
+          "freshness": 3.5,
+          "publicImpact": 2.7,
+          "evidence": 1.25,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "2-source corroboration",
+          "tier-1 source",
+          "published within 18h",
+          "public-policy consequence"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 191,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Expresso das Ilhas",
+            "published": "2026-10-30T15:46:59Z",
+            "url": "https://expressodasilhas.cv/politica/2026/10/30/governo-preve-reforcar-diagnostico-precoce-do-cancro-a-partir-de-2027/105319"
+          },
+          {
+            "name": "A Nacao",
+            "published": "2026-10-30T14:31:22Z",
+            "url": "https://www.anacao.cv/noticia/2026/10/30/sao-vicente-recebe-polo-oncologico-para-reduzir-evacuacoes-de-doentes-para-santiago/"
+          }
+        ]
+      },
+      {
+        "articleId": "9db3fd35011ca797e817",
+        "headline": "Cape Verde radiation levels within safe limits",
+        "dek": "ARME reports non-ionizing radiation from radiofrequency stations in Praia poses no public health danger.",
+        "paragraphs": [
+          "The multi-sector economic regulator ARME has confirmed that non-ionizing radiation (RNI) levels in Cape Verde's capital, Praia, are within internationally recommended limits. A monitoring campaign across 77 points in the city during 2026 found exposure levels from radiofrequency stations to be safe for public health.",
+          "ARME's report states that all 77 measured locations in Praia met the exposure limits, which range from 28 V/m to 61 V/m depending on frequency, with most sites showing values significantly below these thresholds. The agency also monitored other islands, with results expected later this year.",
+          "This initiative, part of ARME's role in managing the radioelectric spectrum, aims to track population exposure from radiofrequency stations used for mobile communications, radio, and television. The findings align with guidelines from the International Commission on Non-Ionizing Radiation Protection (ICNIRP) and the World Health Organization (WHO)."
+        ],
+        "body": "The multi-sector economic regulator ARME has confirmed that non-ionizing radiation (RNI) levels in Cape Verde's capital, Praia, are within internationally recommended limits. A monitoring campaign across 77 points in the city during 2026 found exposure levels from radiofrequency stations to be safe for public health.\n\nARME's report states that all 77 measured locations in Praia met the exposure limits, which range from 28 V/m to 61 V/m depending on frequency, with most sites showing values significantly below these thresholds. The agency also monitored other islands, with results expected later this year.\n\nThis initiative, part of ARME's role in managing the radioelectric spectrum, aims to track population exposure from radiofrequency stations used for mobile communications, radio, and television. The findings align with guidelines from the International Commission on Non-Ionizing Radiation Protection (ICNIRP) and the World Health Organization (WHO).",
+        "why": "Residents of Praia are assured that radiation from common communication technologies does not pose a health risk.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
             "score": 0,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+            "why": "This report does not contain information relevant to investors."
           },
           "diaspora": {
-            "score": 40,
-            "why": "This culture report may interest diaspora readers maintaining ties to national life from abroad."
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "Culture",
-        "published": "2026-10-30T01:06:26Z",
-        "sourceTitle": "Bolo de milho",
-        "editorialScore": 7.75,
-        "selectionScore": 7.75,
-        "confidence": "low",
+        "topic": "Health",
+        "published": "2026-10-30T14:36:30Z",
+        "sourceTitle": "Praia: ARME diz que níveis de Radiação Não Ionizantes (RNI) estão dentro dos limites recomendados",
+        "editorialScore": 11.25,
+        "selectionScore": 11.25,
+        "confidence": "medium",
         "corroboration": 1,
         "scoreBreakdown": {
-          "relevance": 0.5,
+          "relevance": 4.0,
           "corroboration": 0.0,
           "sourceQuality": 1.75,
           "freshness": 3.5,
@@ -6055,75 +6137,198 @@
           "penalties": 0.0
         },
         "rankReasons": [
+          "country in headline",
           "published within 18h",
           "specific figure"
         ],
-        "countryMatch": "domestic",
-        "wordCount": 99,
+        "countryMatch": "title",
+        "wordCount": 139,
         "readMinutes": 1,
         "sources": [
           {
             "name": "A Nacao",
-            "url": "https://www.anacao.cv/noticia/2026/10/30/bolo-de-milho-2/",
-            "published": "2026-10-30T01:06:26Z"
+            "published": "2026-10-30T14:36:30Z",
+            "url": "https://www.anacao.cv/noticia/2026/10/30/praia-arme-diz-que-niveis-de-radiacao-nao-ionizantes-rni-estao-dentro-dos-limites-recomendados/"
           }
         ]
       },
       {
-        "articleId": "cf0bbd45dfae677e10a6",
-        "headline": "Emileno Ortet launches grogue brand DeePuna for export",
-        "dek": "Cape Verdean entrepreneur Emileno Ortet aims to sell his grogue and ponche to the US and Europe.",
+        "articleId": "b1e9316fd946a258cd54",
+        "headline": "Banco BAI Cabo Verde launches mobile bank branch",
+        "dek": "The first mobile banking unit in Cape Verde will bring services to different locations.",
         "paragraphs": [
-          "Emileno Ortet, from São Domingos, has created DeePuna, a brand of grogue and ponche named after his mother, with ambitions for international markets. Ortet, who grew up in a family involved in commerce, saw the economic potential of grogue and developed this entrepreneurial project. He previously emigrated to the United States in search of better opportunities, where he identified a business opening for his native product.",
-          "After two years of preparation, including cultivating sugarcane, refining production, and obtaining export licenses, DeePuna has been launched in Praia and is available domestically. The primary goal remains internationalisation, with the US as the first target market due to Ortet's familiarity and existing contacts there. He is also seeking partnerships in Europe to expand the brand.",
-          "Ortet believes the Cape Verdean aguardente holds significant promise in the US and European markets, particularly among the diaspora who appreciate the flavours of home. He is confident that both grogue and ponche will find a receptive audience abroad, driven by a sense of nostalgia for their homeland's tastes."
+          "Banco BAI Cabo Verde (BAICV) launched the country's first mobile bank branch on Friday, October 30.",
+          "The mobile branch aims to increase financial inclusion and customer proximity by bringing banking services to various locations, according to a BAICV statement.",
+          "The inauguration ceremony took place at the parking lot of the Banco Central de Cabo Verde in Praia and was presided over by the Governor of the Central Bank, Óscar Santos."
         ],
-        "body": "Emileno Ortet, from São Domingos, has created DeePuna, a brand of grogue and ponche named after his mother, with ambitions for international markets. Ortet, who grew up in a family involved in commerce, saw the economic potential of grogue and developed this entrepreneurial project. He previously emigrated to the United States in search of better opportunities, where he identified a business opening for his native product.\n\nAfter two years of preparation, including cultivating sugarcane, refining production, and obtaining export licenses, DeePuna has been launched in Praia and is available domestically. The primary goal remains internationalisation, with the US as the first target market due to Ortet's familiarity and existing contacts there. He is also seeking partnerships in Europe to expand the brand.\n\nOrtet believes the Cape Verdean aguardente holds significant promise in the US and European markets, particularly among the diaspora who appreciate the flavours of home. He is confident that both grogue and ponche will find a receptive audience abroad, driven by a sense of nostalgia for their homeland's tastes.",
-        "why": "Cape Verdean entrepreneur Emileno Ortet is exporting his grogue and ponche brands, DeePuna, to the US and Europe.",
+        "body": "Banco BAI Cabo Verde (BAICV) launched the country's first mobile bank branch on Friday, October 30.\n\nThe mobile branch aims to increase financial inclusion and customer proximity by bringing banking services to various locations, according to a BAICV statement.\n\nThe inauguration ceremony took place at the parking lot of the Banco Central de Cabo Verde in Praia and was presided over by the Governor of the Central Bank, Óscar Santos.",
+        "why": "Banco BAI Cabo Verde launched the country's first mobile bank branch on Friday, October 30.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 20,
+            "score": 0,
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
-            "score": 55,
-            "why": "Emileno Ortet is seeking to establish partnerships in Europe to expand his DeePuna brand."
+            "score": 65,
+            "why": "Banco BAI Cabo Verde, a financial institution, launched a new service aimed at expanding its reach and customer base."
           },
           "diaspora": {
-            "score": 85,
-            "why": "Emileno Ortet believes his grogue and ponche brands will be popular with the Cape Verdean diaspora in the US and Europe."
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
         "topic": "Business",
-        "published": "2026-10-30T01:07:50Z",
-        "sourceTitle": "Emileno Ortet, o talento por de trás da DeePuna",
-        "editorialScore": 7.35,
-        "selectionScore": 6.1,
-        "confidence": "low",
+        "published": "2026-10-30T14:25:12Z",
+        "sourceTitle": "Praia: Banco BAI Cabo Verde inaugura a primeira Agência Bancária Móvel do país",
+        "editorialScore": 11.25,
+        "selectionScore": 10.0,
+        "confidence": "medium",
         "corroboration": 1,
         "scoreBreakdown": {
-          "relevance": 0.5,
+          "relevance": 4.0,
           "corroboration": 0.0,
           "sourceQuality": 1.75,
           "freshness": 3.5,
-          "publicImpact": 0.85,
-          "evidence": 0.75,
+          "publicImpact": 0.0,
+          "evidence": 2.0,
           "materiality": 0.0,
           "penalties": 0.0
         },
         "rankReasons": [
+          "country in headline",
           "published within 18h",
-          "economic consequence"
+          "specific figure"
         ],
-        "countryMatch": "domestic",
-        "wordCount": 171,
+        "countryMatch": "title",
+        "wordCount": 70,
         "readMinutes": 1,
         "sources": [
           {
             "name": "A Nacao",
-            "url": "https://www.anacao.cv/noticia/2026/10/30/emileno-ortet-o-talento-por-de-tras-da-deepuna/",
-            "published": "2026-10-30T01:07:50Z"
+            "published": "2026-10-30T14:25:12Z",
+            "url": "https://www.anacao.cv/noticia/2026/10/30/praia-banco-bai-cabo-verde-inaugura-a-primeira-agencia-bancaria-movel-do-pais/"
+          }
+        ]
+      },
+      {
+        "articleId": "0b2e35c6961becd23652",
+        "headline": "Praia mayor seeks special status for capital city",
+        "dek": "Fernando Pinto argues for differentiated treatment of Praia due to the costs of its capital status.",
+        "paragraphs": [
+          "Fernando Pinto, mayor of Praia, is calling for the capital city to receive \"differentiated treatment\" to acknowledge its status. He stated that Praia should be seen and treated as the capital, not just as a municipality, and be an active part of national solutions. Pinto advocates for balanced investment across all of Cape Verde's municipalities to prevent excessive migration to Praia.",
+          "Pinto explained that investing in other municipalities would reduce the \"avalanche of rural exodus\" to Praia. He also noted that Praia currently hosts the Presidency, the Government, major companies, universities, and all embassies. He believes that investing in inter-island connectivity, such as enabling travel between Praia and Maio for work, is a priority for balanced national development.",
+          "The mayor emphasized the need to reinforce collaboration with the National Institute for Territorial Management. This initiative is part of the World Cities Day celebrations, aiming to foster dialogue on urban development challenges in Cape Verde. Pinto stressed that improved connectivity would resolve many urban issues and lead to more equitable development."
+        ],
+        "body": "Fernando Pinto, mayor of Praia, is calling for the capital city to receive \"differentiated treatment\" to acknowledge its status. He stated that Praia should be seen and treated as the capital, not just as a municipality, and be an active part of national solutions. Pinto advocates for balanced investment across all of Cape Verde's municipalities to prevent excessive migration to Praia.\n\nPinto explained that investing in other municipalities would reduce the \"avalanche of rural exodus\" to Praia. He also noted that Praia currently hosts the Presidency, the Government, major companies, universities, and all embassies. He believes that investing in inter-island connectivity, such as enabling travel between Praia and Maio for work, is a priority for balanced national development.\n\nThe mayor emphasized the need to reinforce collaboration with the National Institute for Territorial Management. This initiative is part of the World Cities Day celebrations, aiming to foster dialogue on urban development challenges in Cape Verde. Pinto stressed that improved connectivity would resolve many urban issues and lead to more equitable development.",
+        "why": "The mayor of Praia seeks special consideration for the capital city due to the unique burdens and costs associated with its status.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "The story discusses urban development and inter-island connectivity, with no direct impact on farming practices or rural incomes."
+          },
+          "investors": {
+            "score": 20,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+          },
+          "diaspora": {
+            "score": 30,
+            "why": "This politics report may interest diaspora readers following national public affairs from abroad."
+          }
+        },
+        "topic": "Politics",
+        "published": "2026-10-30T16:58:51Z",
+        "sourceTitle": "Fernando Pinto pede “tratamento diferenciado” para a Cidade da Praia enquanto capital do país",
+        "editorialScore": 12.3,
+        "selectionScore": 9.8,
+        "confidence": "medium",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 4.0,
+          "corroboration": 0.0,
+          "sourceQuality": 3.0,
+          "freshness": 3.5,
+          "publicImpact": 3.05,
+          "evidence": 1.25,
+          "materiality": 0.0,
+          "penalties": -2.5
+        },
+        "rankReasons": [
+          "country in headline",
+          "tier-1 source",
+          "published within 18h",
+          "public-policy consequence",
+          "speech or quote without a material action"
+        ],
+        "countryMatch": "title",
+        "wordCount": 170,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Expresso das Ilhas",
+            "published": "2026-10-30T16:58:51Z",
+            "url": "https://expressodasilhas.cv/pais/2026/10/30/fernando-pinto-pede-tratamento-diferenciado-para-a-cidade-da-praia-enquanto-capital-do-pais/105324"
+          }
+        ]
+      },
+      {
+        "articleId": "afc396f726d68be05a08",
+        "headline": "Cape Verde hosts weekend of music and arts",
+        "dek": "Events include magazine launch, concerts, and a festival in Praia and São Domingos.",
+        "paragraphs": [
+          "Cape Verde will host a weekend of cultural events across Praia and São Domingos.",
+          "Friday in Praia features the launch of Revista Magazine honoring José Luís Hopffer Almada at SOCA at 18h00, a concert by Manuel de Candinho at the Centro Cultural Português at 19h00, and multiple music performances including Rabecada, Batuque, Triu di Fogu, and Nataniel Simas at various venues starting at 20h30.",
+          "Saturday includes Tocatina music in São Domingos at 20h00 and live music at Nice Kriola and Seven Beach Club in Praia from 20h30, with more artists at Quintal da Música at 21h00. Sunday features the IV Festival di Midju – Rui Vaz 2026 in São Domingos at 11h00, followed by an afternoon of Tocatina with Zé Viola at 16h00."
+        ],
+        "body": "Cape Verde will host a weekend of cultural events across Praia and São Domingos.\n\nFriday in Praia features the launch of Revista Magazine honoring José Luís Hopffer Almada at SOCA at 18h00, a concert by Manuel de Candinho at the Centro Cultural Português at 19h00, and multiple music performances including Rabecada, Batuque, Triu di Fogu, and Nataniel Simas at various venues starting at 20h30.\n\nSaturday includes Tocatina music in São Domingos at 20h00 and live music at Nice Kriola and Seven Beach Club in Praia from 20h30, with more artists at Quintal da Música at 21h00. Sunday features the IV Festival di Midju – Rui Vaz 2026 in São Domingos at 11h00, followed by an afternoon of Tocatina with Zé Viola at 16h00.",
+        "why": "Residents and visitors in Praia and São Domingos can attend various music concerts, a magazine launch, and a festival over the weekend.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 0,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+          },
+          "diaspora": {
+            "score": 21,
+            "why": "This culture report may interest diaspora readers maintaining ties to national life from abroad."
+          }
+        },
+        "topic": "Culture",
+        "published": "2026-10-30T11:36:27Z",
+        "sourceTitle": "​Sugestões para fim-de-semana",
+        "editorialScore": 11.5,
+        "selectionScore": 7.75,
+        "confidence": "medium",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 2.5,
+          "corroboration": 0.0,
+          "sourceQuality": 3.0,
+          "freshness": 3.5,
+          "publicImpact": 0.0,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in opening",
+          "tier-1 source",
+          "published within 18h",
+          "specific figure"
+        ],
+        "countryMatch": "lede",
+        "wordCount": 122,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Expresso das Ilhas",
+            "published": "2026-10-30T11:36:27Z",
+            "url": "https://expressodasilhas.cv/lifestyle/2026/10/30/sugestoes-para-fim-de-semana/105314"
           }
         ]
       }
@@ -12224,12 +12429,12 @@
         "topic": "News",
         "published": "2026-10-29T12:55:24Z",
         "sourceTitle": "Somali army toll climbs after Al-Shabaab assault as inquiry opens into rout",
-        "editorialScore": 14.7,
-        "selectionScore": 14.7,
-        "confidence": "medium",
+        "editorialScore": 16.7,
+        "selectionScore": 16.7,
+        "confidence": "high",
         "corroboration": 1,
         "scoreBreakdown": {
-          "relevance": 0.5,
+          "relevance": 2.5,
           "corroboration": 0.0,
           "sourceQuality": 1.75,
           "freshness": 2.5,
@@ -12239,33 +12444,93 @@
           "penalties": 0.0
         },
         "rankReasons": [
+          "country in opening",
           "published within 36h",
           "urgent public consequence",
           "specific figure",
           "material action in headline"
         ],
-        "countryMatch": "domestic",
+        "countryMatch": "lede",
         "wordCount": 176,
         "readMinutes": 1,
         "sources": [
           {
             "name": "Somali Guardian",
-            "url": "https://www.somaliguardian.com/news/somalia-news/somali-army-toll-al-shabaab-assault-inquiry/",
-            "published": "2026-10-29T12:55:24Z"
+            "published": "2026-10-29T12:55:24Z",
+            "url": "https://www.somaliguardian.com/news/somalia-news/somali-army-toll-al-shabaab-assault-inquiry/"
+          }
+        ]
+      },
+      {
+        "articleId": "f9836756488b00049ee7",
+        "headline": "Fugitive Duqow saves 40 Somali soldiers",
+        "dek": "Duqow, a man sentenced to death, rescued soldiers lost after fighting Al-Shabaab in Lower Shabelle.",
+        "paragraphs": [
+          "A fugitive named Duqow rescued over 40 Somali Federal Government soldiers who were stranded for two nights in the Jameeco area of the Lower Shabelle region. The troops became lost after a battle with Al-Shabaab militants. Duqow and Macawiisley fighters found the soldiers, gave them food, and guided them to safety in Yaaqbiriweyne district.",
+          "Duqow, who has been on the run for nearly a year, was sentenced to death by military court judge Judge Shuute. He denied disarming the soldiers, stating he provided refreshments and contacted their commander. Duqow said he harbored no malice, declaring, “The federal government is my government and I have no intention of seeking revenge.”",
+          "The Somali Federal Government has not yet officially commented on the incident. Duqow’s current legal standing and the military’s official response remain unclear following the rescue."
+        ],
+        "body": "A fugitive named Duqow rescued over 40 Somali Federal Government soldiers who were stranded for two nights in the Jameeco area of the Lower Shabelle region. The troops became lost after a battle with Al-Shabaab militants. Duqow and Macawiisley fighters found the soldiers, gave them food, and guided them to safety in Yaaqbiriweyne district.\n\nDuqow, who has been on the run for nearly a year, was sentenced to death by military court judge Judge Shuute. He denied disarming the soldiers, stating he provided refreshments and contacted their commander. Duqow said he harbored no malice, declaring, “The federal government is my government and I have no intention of seeking revenge.”\n\nThe Somali Federal Government has not yet officially commented on the incident. Duqow’s current legal standing and the military’s official response remain unclear following the rescue.",
+        "why": "Duqow, a fugitive facing execution, saved government soldiers who had battled Al-Shabaab.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 0,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+          },
+          "diaspora": {
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "News",
+        "published": "2026-10-30T15:37:14Z",
+        "sourceTitle": "FROM DEATH ROW TO HERO: HOW A FUGITIVE SAVED 40 SNA SOLDIERS",
+        "editorialScore": 14.45,
+        "selectionScore": 13.45,
+        "confidence": "medium",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 0.0,
+          "sourceQuality": 1.75,
+          "freshness": 3.5,
+          "publicImpact": 6.2,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "published within 18h",
+          "urgent public consequence",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 135,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Radio Dalsan",
+            "published": "2026-10-30T15:37:14Z",
+            "url": "https://radiodalsan.com/2026/10/30/from-death-row-to-hero-how-a-fugitive-saved-40-sna-soldiers/?utm_source=rss&utm_medium=rss&utm_campaign=from-death-row-to-hero-how-a-fugitive-saved-40-sna-soldiers"
           }
         ]
       },
       {
         "articleId": "4b7d800e0a126cc58f44",
         "headline": "AU troops to leave four bases in Somalia",
-        "dek": "Peacekeepers will withdraw next week from Lower Shabelle region due to financial strain, impacting security near Mogadishu.",
+        "dek": "Peacekeepers are pulling out of Lower Shabelle region due to financial strain, raising security concerns.",
         "paragraphs": [
-          "African Union peacekeepers will withdraw from four forward operating bases in Somalia’s Lower Shabelle region next week. The mission is scaling back under severe financial strain, according to local media reports on Thursday.",
-          "The pullback follows Washington's agreement to extend support for the mission until December 2027, after it threatened in July to cut logistical assistance. Analysts warn that Somali forces lack the capacity to occupy the sites quickly enough to prevent them from falling to Al-Shabaab militants.",
-          "Lower Shabelle is a strategic belt southwest of the capital, and AU deployments have helped shield Mogadishu. Somalia’s president Hassan Sheikh Mohamud travelled to Uganda this week urging President Yoweri Museveni to keep Ugandan troops in Somalia."
+          "African Union peacekeepers will leave four bases in Somalia’s Lower Shabelle region next week due to severe financial strain. The withdrawal follows Washington's agreement to extend support for the mission until December 2027, after it had threatened to cut logistical assistance.",
+          "The mission has not specified which bases will close, but analysts warn that Somali forces may not be able to secure the sites quickly enough to prevent Al-Shabaab militants from taking them. Lower Shabelle is a strategic area southwest of the capital, Mogadishu, and AU deployments there have helped shield the city.",
+          "Somalia’s President Hassan Sheikh Mohamud urged Ugandan President Yoweri Museveni to keep Ugandan troops in Somalia during a visit this week. This comes days after Al-Shabaab fighters ambushed Somali government forces near Jameeco, killing hundreds of soldiers."
         ],
-        "body": "African Union peacekeepers will withdraw from four forward operating bases in Somalia’s Lower Shabelle region next week. The mission is scaling back under severe financial strain, according to local media reports on Thursday.\n\nThe pullback follows Washington's agreement to extend support for the mission until December 2027, after it threatened in July to cut logistical assistance. Analysts warn that Somali forces lack the capacity to occupy the sites quickly enough to prevent them from falling to Al-Shabaab militants.\n\nLower Shabelle is a strategic belt southwest of the capital, and AU deployments have helped shield Mogadishu. Somalia’s president Hassan Sheikh Mohamud travelled to Uganda this week urging President Yoweri Museveni to keep Ugandan troops in Somalia.",
-        "why": "Somalia's security near the capital, Mogadishu, is threatened by the withdrawal of AU troops from key bases in the Lower Shabelle region.",
+        "body": "African Union peacekeepers will leave four bases in Somalia’s Lower Shabelle region next week due to severe financial strain. The withdrawal follows Washington's agreement to extend support for the mission until December 2027, after it had threatened to cut logistical assistance.\n\nThe mission has not specified which bases will close, but analysts warn that Somali forces may not be able to secure the sites quickly enough to prevent Al-Shabaab militants from taking them. Lower Shabelle is a strategic area southwest of the capital, Mogadishu, and AU deployments there have helped shield the city.\n\nSomalia’s President Hassan Sheikh Mohamud urged Ugandan President Yoweri Museveni to keep Ugandan troops in Somalia during a visit this week. This comes days after Al-Shabaab fighters ambushed Somali government forces near Jameeco, killing hundreds of soldiers.",
+        "why": "Somali forces may struggle to secure bases vacated by AU troops, potentially allowing Al-Shabaab to gain ground.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
@@ -12284,15 +12549,15 @@
         "topic": "Politics",
         "published": "2026-10-29T09:09:29Z",
         "sourceTitle": "AU troops to leave 4 bases in Somalia’s Lower Shabelle",
-        "editorialScore": 12.1,
-        "selectionScore": 10.85,
+        "editorialScore": 10.6,
+        "selectionScore": 9.35,
         "confidence": "medium",
         "corroboration": 1,
         "scoreBreakdown": {
           "relevance": 4.0,
           "corroboration": 0.0,
           "sourceQuality": 1.75,
-          "freshness": 2.5,
+          "freshness": 1.0,
           "publicImpact": 1.35,
           "evidence": 2.5,
           "materiality": 0.0,
@@ -12300,76 +12565,17 @@
         },
         "rankReasons": [
           "country in headline",
-          "published within 36h",
           "public-policy consequence",
           "specific figure"
         ],
         "countryMatch": "title",
-        "wordCount": 115,
+        "wordCount": 130,
         "readMinutes": 1,
         "sources": [
           {
             "name": "Somali Guardian",
-            "url": "https://www.somaliguardian.com/news/somalia-news/au-troops-leave-4-bases-somalia-lower-shabelle/",
-            "published": "2026-10-29T09:09:29Z"
-          }
-        ]
-      },
-      {
-        "articleId": "54a3df11eb20782e3f2e",
-        "headline": "African journalists adopt AI and decent work plan",
-        "dek": "Leaders agreed an action plan for responsible AI, better working conditions, and quality journalism across Africa.",
-        "paragraphs": [
-          "Journalist leaders from across Africa have agreed on an action plan to promote responsible artificial intelligence (AI), improve working conditions, and ensure quality journalism continent-wide. The plan was finalised in Addis Ababa on October 24-25, 2026, following a two-day dialogue organised by the Federation of African Journalists (FAJ). The programme brought together media leaders with representatives from the African Union Commission, UNESCO, the International Labour Organization (ILO), and the European Union (EU).",
-          "Participants discussed how AI impacts journalism, considering its potential for research and verification against risks like fabricated content and impersonation. They also addressed poor working conditions, including low pay, job insecurity, and pressure on editorial independence, exploring how AI automation might affect newsroom staffing. Safety and protection for journalists, including violence and digital harassment, were also key agenda items, with a focus on ending impunity for crimes against them.",
-          "The discussions were informed by FAJ's recent continental survey on journalists' conditions, which gathered responses from 1,586 journalists in 45 countries. This survey aims to provide a stronger evidence base for advocacy with media organisations and governments. The FAJ stated that artificial intelligence must not worsen the precarious conditions journalists already face."
-        ],
-        "body": "Journalist leaders from across Africa have agreed on an action plan to promote responsible artificial intelligence (AI), improve working conditions, and ensure quality journalism continent-wide. The plan was finalised in Addis Ababa on October 24-25, 2026, following a two-day dialogue organised by the Federation of African Journalists (FAJ). The programme brought together media leaders with representatives from the African Union Commission, UNESCO, the International Labour Organization (ILO), and the European Union (EU).\n\nParticipants discussed how AI impacts journalism, considering its potential for research and verification against risks like fabricated content and impersonation. They also addressed poor working conditions, including low pay, job insecurity, and pressure on editorial independence, exploring how AI automation might affect newsroom staffing. Safety and protection for journalists, including violence and digital harassment, were also key agenda items, with a focus on ending impunity for crimes against them.\n\nThe discussions were informed by FAJ's recent continental survey on journalists' conditions, which gathered responses from 1,586 journalists in 45 countries. This survey aims to provide a stronger evidence base for advocacy with media organisations and governments. The FAJ stated that artificial intelligence must not worsen the precarious conditions journalists already face.",
-        "why": "Somali journalists, as part of the African continent, are affected by the plan to improve working conditions and address the impact of AI on journalism.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 0,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
-          },
-          "investors": {
-            "score": 20,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
-          },
-          "diaspora": {
-            "score": 20,
-            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
-          }
-        },
-        "topic": "Tech",
-        "published": "2026-10-28T20:52:06Z",
-        "sourceTitle": "African journalists adopt a continental action plan on responsible AI, decent work and media freedom",
-        "editorialScore": 7.35,
-        "selectionScore": 6.35,
-        "confidence": "low",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 0.5,
-          "corroboration": 0.0,
-          "sourceQuality": 1.75,
-          "freshness": 2.5,
-          "publicImpact": 1.35,
-          "evidence": 1.25,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "published within 36h",
-          "public-policy consequence"
-        ],
-        "countryMatch": "domestic",
-        "wordCount": 194,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "name": "Radio Dalsan",
-            "url": "https://radiodalsan.com/2026/10/28/african-journalists-adopt-a-continental-action-plan-on-responsible-ai-decent-work-and-media-freedom/?utm_source=rss&utm_medium=rss&utm_campaign=african-journalists-adopt-a-continental-action-plan-on-responsible-ai-decent-work-and-media-freedom",
-            "published": "2026-10-28T20:52:06Z"
+            "published": "2026-10-29T09:09:29Z",
+            "url": "https://www.somaliguardian.com/news/somalia-news/au-troops-leave-4-bases-somalia-lower-shabelle/"
           }
         ]
       }
