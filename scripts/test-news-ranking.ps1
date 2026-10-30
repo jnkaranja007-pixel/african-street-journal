@@ -128,6 +128,21 @@ Assert-Desk 'and two outlets that never name Ghana do not carry it' `
   (-not (Test-NewsCountryLink $manUnitedOnGhanaDesk.Match 2 $false))
 $kudus = Get-CountryRelevance 'Ghana''s Kudus scores twice for West Ham' 'The Black Stars forward scored on Saturday' $ghanaTerms '' $false @()
 Assert-Desk 'a Ghanaian player at a European club stays Ghana news' ($kudus.Match -eq 'title' -and -not $kudus.HardReject)
+# Also 30 Oct: a meeting in Addis Ababa, reported by a Somali station, on the Somalia desk.
+$repoRoot = Split-Path $PSScriptRoot -Parent
+$soPlaces = @(Get-ForeignCapitalTerms $repoRoot 'so')
+$soTerms = @('Somalia', 'Mogadishu')
+Assert-Desk 'the capitals list covers the continent and leaves out the desk''s own' ($soPlaces.Count -ge 50 -and $soPlaces -contains 'Addis Ababa' -and $soPlaces -notcontains 'Mogadishu')
+$addis = Get-CountryRelevance 'African journalists adopt AI and decent work plan' `
+  'The plan was finalised in Addis Ababa on Saturday by the Federation of African Journalists.' $soTerms '' $false @() $soPlaces
+Assert-Desk 'a meeting set only in another African capital is external' ($addis.Match -eq 'external')
+$juba = Get-CountryRelevance 'Floods displace families along the Juba river' 'Hundreds of households moved to higher ground near Kismayo.' $soTerms '' $false @() $soPlaces
+Assert-Desk 'Juba on the Somalia desk is the river, not South Sudan''s capital' ($juba.Match -eq 'domestic')
+$mogadishu = Get-CountryRelevance 'Mogadishu delegation flies to Nairobi for talks' 'Officials will meet regional envoys on Monday.' $soTerms '' $false @() $soPlaces
+Assert-Desk 'naming the desk''s own capital keeps a story home whatever else it names' ($mogadishu.Match -eq 'title')
+$keTerms = @('Kenya', 'Kenyan', 'Nairobi')
+$lake = Get-CountryRelevance 'Lake Victoria fishermen count losses after storm' 'Boats were damaged at Dunga beach on Sunday.' $keTerms '' $false @() @(Get-ForeignCapitalTerms $repoRoot 'ke')
+Assert-Desk 'Lake Victoria does not make a Kenyan story foreign' ($lake.Match -eq 'domestic')
 
 Write-Host '[ranking-test] event identity' -ForegroundColor Cyan
 $ignore = @('Togo','Togolese','Lome')

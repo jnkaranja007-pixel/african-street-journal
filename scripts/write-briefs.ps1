@@ -341,12 +341,14 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $repeats = @(Get-RepeatedSentences $paragraphs)
   $speculativeWhy = Test-SpeculativeText ([string]$Brief.why)
   $restatedWhy = Test-WhyRestatesDek $Brief
+  $lowerProse = Test-LowerCaseProse $Brief
   $issues = New-Object System.Collections.Generic.List[string]
+  if ($lowerProse) { $issues.Add('prose in lower case') }
   if ($phrases.Count) { $issues.Add('stock phrasing: ' + (($phrases | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
   if ($repeats.Count) { $issues.Add('repeats a fact') }
   if ($speculativeWhy) { $issues.Add('why line speculates') }
   if ($restatedWhy) { $issues.Add('why line restates the dek') }
-  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy }
+  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse }
 }
 
 function Get-StyleRepairNote($Style, $Candidate) {
@@ -361,6 +363,9 @@ function Get-StyleRepairNote($Style, $Candidate) {
   }
   if ($Style.SpeculativeWhy) {
     [void]$lines.Add('- The "why" line speculates (may / might / could). Say who is affected and how, as the packet reports it.')
+  }
+  if ($Style.LowerProse) {
+    [void]$lines.Add('- The story is written in lower case. Return it with normal capitals: the start of every sentence, and every name, place, organisation and month.')
   }
   if ($Style.RestatedWhy) {
     [void]$lines.Add('- The "why" line says the headline and dek again. Say what the event changes and for whom - a consequence the packet reports, not the event again.')

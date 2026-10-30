@@ -474,6 +474,15 @@ foreach ($code in $codes) {
   $foreignTerms = @($registry.PSObject.Properties |
                     Where-Object { $_.Name -ne '_comment' -and $_.Name -ne $code } |
                     ForEach-Object { [string]$_.Value.name } | Where-Object { $_ })
+  # Other countries' capitals: a story set only in Addis Ababa is not Somali news. The
+  # desk's own capital counts as home, so "Mogadishu delegation flies to Nairobi" is
+  # not made foreign by naming Nairobi (Somalia's registry entry lists no terms but its
+  # name). Not Victoria or Praia: those would admit Lake Victoria and beach stories.
+  $foreignPlaces = @(Get-ForeignCapitalTerms $root $code)
+  $ownCapital = [string]$script:AFRICAN_CAPITALS[$code]
+  if ($ownCapital -and $script:CAPITAL_SKIP -notcontains $ownCapital.ToLowerInvariant() -and $matchTerms -notcontains $ownCapital) {
+    $matchTerms = @($matchTerms) + $ownCapital
+  }
 
   $pool = New-Object System.Collections.Generic.List[object]
   $liveSources = 0
@@ -491,7 +500,7 @@ foreach ($code in $codes) {
         # country in the headline or opening. Domestic outlets may use local shorthand,
         # but implicit relevance receives only a small score and cannot dominate.
         $requireMatch = ($s.scope -eq 'regional' -or [bool]$s.requireMatch)
-        $relevance = Get-CountryRelevance $it.title $it.summary $matchTerms ([string]$s.scope) $requireMatch $foreignTerms
+        $relevance = Get-CountryRelevance $it.title $it.summary $matchTerms ([string]$s.scope) $requireMatch $foreignTerms $foreignPlaces
         if ($relevance.HardReject) { continue }
         $kept++
         $pool.Add([pscustomobject]@{

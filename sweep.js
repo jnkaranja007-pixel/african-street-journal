@@ -92,7 +92,8 @@
     ci: ['ivory coast', 'ivorian'], cd: ['drc', 'dr congo', 'congolese'], cg: ['congo', 'brazzaville', 'congolese'],
     cv: ['cape verde', 'cabo verde', 'verdean'], st: ['sao tome', 'principe'], ma: ['maroc', 'moroccan'],
     gm: ['gambian'], gw: ['bissau'], cf: ['central african', 'car'], sz: ['swaziland', 'swazi'], eh: ['sahrawi', 'polisario'],
-    za: ['south african'], ss: ['south sudanese'], gq: ['equatoguinean'], km: ['comorian'], ls: ['basotho', 'mosotho'],
+    za: ['south african'], ss: ['south sudanese', 'splm', 'spla', 'abyei', 'machar'], sd: ['sudanese', 'abyei', 'darfur', 'kordofan'],
+    gq: ['equatoguinean'], km: ['comorian'], ls: ['basotho', 'mosotho', 'mafeteng', 'leribe', 'berea', 'mohale'],
     bw: ['batswana', 'motswana'], mg: ['malagasy'], mu: ['mauritian'], sc: ['seychellois']
   };
   const fold = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -103,15 +104,29 @@
       ...((typeof countryFacts === 'function' && countryFacts(countryId)?.cities) || []).map(c => c.name)]
       .filter(Boolean).map(fold);
     const stem = fold(info.name).slice(0, Math.max(4, String(info.name || '').length - 2));
+    // Somewhere else, named: another African country or capital, or a place or club the
+    // desk's own gate treats as abroad (news-ranking.ps1 NEWS_EXTERNAL_COUNTRIES). A story
+    // that names only a small home town (Worawora, Mafeteng, Kajiado) is not flagged.
+    const skip = new Set(['victoria', 'praia', ...(countryId === 'so' ? ['juba'] : []), ...(countryId === 'ma' ? ['laayoune'] : [])]);
+    const foreign = Object.entries(COUNTRY_INFO).filter(([cc]) => cc !== countryId)
+      .flatMap(([, i]) => [i.name, i.capital]).filter(Boolean).map(fold).filter(n => !skip.has(n))
+      .concat(FOREIGN_PLACES);
+    const wholeWord = (text, n) => new RegExp('(^|[^a-z])' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z]|$)').test(text);
     for (const story of (AI_BRIEFS[countryId] || [])) {
       if (!story || !story.headline) continue;
       const text = fold([story.headline, story.dek, ...(storyParagraphs(story) || []).slice(0, 2)].join(' '));
       if (stem && text.includes(stem)) continue;
       // Whole words for short names ("DRC", "CAR"), plain containment for the rest.
-      if (names.some(n => n.trim().length > 3 ? text.includes(n) : new RegExp('\\b' + n.trim() + '\\b').test(text))) continue;
-      note('story never names its country', countryId, story.headline);
+      if (names.some(n => n.trim().length > 3 ? text.includes(n) : wholeWord(text, n.trim()))) continue;
+      const elsewhere = foreign.find(n => wholeWord(text, n));
+      if (elsewhere) note('story set abroad', countryId, story.headline + '  [names ' + elsewhere + ']');
     }
   }
+  const FOREIGN_PLACES = ['france', 'spain', 'italy', 'germany', 'united kingdom', 'britain', 'united states', 'china',
+    'india', 'japan', 'russia', 'ukraine', 'iran', 'israel', 'turkey', 'saudi arabia', 'qatar', 'portugal', 'lisbon', 'paris',
+    'london', 'madrid', 'barcelona', 'brussels', 'washington', 'beijing', 'moscow', 'yemen', 'brazil', 'gaza', 'lebanon',
+    'syria', 'pakistan', 'premier league', 'champions league', 'la liga', 'serie a', 'bundesliga', 'manchester united',
+    'manchester city', 'liverpool', 'chelsea', 'arsenal', 'tottenham', 'real madrid', 'bayern munich', 'juventus', 'psg'];
 
   const VIEWS = ['news', 'farmers', 'investors', 'diaspora', 'atlas'];
   (async () => {

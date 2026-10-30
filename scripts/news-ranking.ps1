@@ -309,7 +309,7 @@ function Get-NewsLongestMatchLength([string]$NormalText, [string[]]$Phrases) {
   return $longest
 }
 
-function Get-CountryRelevance([string]$Title, [string]$Summary, [string[]]$Terms, [string]$Scope, [bool]$RequireMatch = $false, [string[]]$ForeignTerms = @()) {
+function Get-CountryRelevance([string]$Title, [string]$Summary, [string[]]$Terms, [string]$Scope, [bool]$RequireMatch = $false, [string[]]$ForeignTerms = @(), [string[]]$ForeignPlaces = @()) {
   $titleText = ConvertTo-NewsText $Title
   $lede = if ($Summary) { $Summary.Substring(0, [Math]::Min(140, $Summary.Length)) } else { '' }
   $ledeText = ConvertTo-NewsText $lede
@@ -319,8 +319,13 @@ function Get-CountryRelevance([string]$Title, [string]$Summary, [string[]]$Terms
   $ledeTargetLength = Get-NewsLongestMatchLength $ledeText $Terms
   $titleForeignLength = Get-NewsLongestMatchLength $titleText $ForeignTerms
   $ledeForeignLength = Get-NewsLongestMatchLength $ledeText $ForeignTerms
-  $titleExternalHits = Get-NewsMatchCount $titleText $script:NEWS_EXTERNAL_COUNTRIES 1
-  $ledeExternalHits = Get-NewsMatchCount $ledeText $script:NEWS_EXTERNAL_COUNTRIES 1
+  # Other African capitals count as abroad too ($ForeignPlaces, Get-ForeignCapitalTerms):
+  # on 30 Oct 2026 a Somali radio station's report of a journalists' meeting in Addis
+  # Ababa ran on the Somalia desk with no Somali angle. Like the list above, this only
+  # decides stories that name neither the desk's country nor its places.
+  $externalTerms = @($script:NEWS_EXTERNAL_COUNTRIES) + @($ForeignPlaces)
+  $titleExternalHits = Get-NewsMatchCount $titleText $externalTerms 1
+  $ledeExternalHits = Get-NewsMatchCount $ledeText $externalTerms 1
 
   if ($titleForeignLength -gt $titleTargetLength) {
     return [pscustomobject]@{ HardReject = $true; Score = -20.0; Match = 'foreign'; Reason = 'headline names another country' }
@@ -523,6 +528,35 @@ function Select-NewsCandidates([object[]]$Items, [int]$Limit, [int]$LiveSources)
 # lead was "Two trains collide in Spain", carried by two Cabo Verdean sites with no word
 # about Cabo Verde or its people in either. $NamesCountry is the caller's check of every
 # member's headline and full summary; it defaults to true so older callers keep working.
+# The capitals of every African country except $Code, from app.js COUNTRY_INFO, for
+# Get-CountryRelevance's -ForeignPlaces. Left out: names that are something else in
+# local news - Victoria (the lake), Praia (Portuguese for beach), Juba on the Somalia
+# desk (the Juba river and Jubaland), Laayoune on the Morocco desk.
+$script:CAPITAL_SKIP = @('victoria', 'praia')
+$script:CAPITAL_SKIP_FOR = @{ so = @('juba'); ma = @('laayoune') }
+function Get-ForeignCapitalTerms([string]$Root, [string]$Code) {
+  if (-not $script:AFRICAN_CAPITALS) {
+    $map = @{}
+    $appPath = Join-Path $Root 'app.js'
+    if (Test-Path $appPath) {
+      $app = [IO.File]::ReadAllText($appPath, [Text.Encoding]::UTF8)
+      foreach ($m in [regex]::Matches($app, "(\w\w): \{ name: (?:'[^']*'|""[^""]*""),\s*region: '[^']*',\s*capital: (?:'([^']+)'|""([^""]+)"")")) {
+        $map[$m.Groups[1].Value] = if ($m.Groups[2].Success) { $m.Groups[2].Value } else { $m.Groups[3].Value }
+      }
+    }
+    $script:AFRICAN_CAPITALS = $map
+  }
+  $skip = @($script:CAPITAL_SKIP) + @($script:CAPITAL_SKIP_FOR[$Code])
+  $out = New-Object System.Collections.Generic.List[string]
+  foreach ($cc in $script:AFRICAN_CAPITALS.get_Keys()) {
+    if ($cc -eq $Code) { continue }
+    $capital = [string]$script:AFRICAN_CAPITALS[$cc]
+    if (-not $capital -or $skip -contains $capital.ToLowerInvariant()) { continue }
+    $out.Add($capital)
+  }
+  return $out.ToArray()
+}
+
 function Test-NewsCountryLink([string]$CountryMatch, [int]$OutletCount, [bool]$NamesCountry = $true) {
   if ($CountryMatch -ne 'external') { return $true }
   return ($OutletCount -ge 2 -and $NamesCountry)

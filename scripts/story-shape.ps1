@@ -36,6 +36,23 @@ function Get-StoryWordCount([string]$Text) {
   return ([regex]::Matches($Text, $script:STORY_WORD_PATTERN)).Count
 }
 
+# Prose the model returned without its capitals. On 30 Oct 2026 Cabo Verde published
+# "cape verdeans can bake bolo de milho using a recipe published on october 30, 2026."
+# and every sentence after it in lower case; the headline repair only looks at the
+# first letter of the headline and dek. A draft is in lower case when three in ten of
+# its sentences start in lower case, or a month is written in lower case before a day.
+function Test-LowerCaseProse($Story) {
+  $text = (@($Story.paragraphs) | ForEach-Object { [string]$_ }) -join ' '
+  if (-not $text.Trim()) { return $false }
+  $starts = [regex]::Matches($text, '(?:^|[.!?]["'']?\s+)(\p{L})')
+  $lower = 0
+  foreach ($m in $starts) { if ([char]::IsLower($m.Groups[1].Value[0])) { $lower++ } }
+  if ($starts.Count -and ($lower / [double]$starts.Count) -ge 0.3) { return $true }
+  # Case-sensitive on purpose: "October 30" is fine, "october 30" is the tell. May is
+  # left out - "may 20" can be a verb and a number.
+  return [regex]::IsMatch($text, '\b(january|february|march|april|june|july|august|september|october|november|december) \d')
+}
+
 function Get-StoryShapeIssue($Story, [int]$MinWords, [int]$MaxWords, $SeenArticleIds) {
   # Returns a description of the first problem, or $null when the story is publishable.
   # Only full story packages are checked; anything without paragraphs is a different
@@ -52,6 +69,7 @@ function Get-StoryShapeIssue($Story, [int]$MinWords, [int]$MaxWords, $SeenArticl
   $wc = Get-StoryWordCount (Get-StoryBodyText $Story)
   if ($wc -lt $MinWords -or $wc -gt $MaxWords) { return "$wc words, need $MinWords-$MaxWords" }
 
+  if (Test-LowerCaseProse $Story) { return 'prose in lower case' }
   if (-not $Story.dek) { return 'missing dek' }
   if (([string]$Story.dek).Length -gt 200) { return 'dek over 200 chars' }
   if (-not $Story.why) { return 'missing why' }

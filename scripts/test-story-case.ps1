@@ -44,6 +44,16 @@ $n = Repair-StoryCase $story '' $root
 if ($n -eq 2 -and $story.headline -ceq 'Bangui floods destroy homes' -and $story.dek -ceq 'Heavy rain in Bangui destroyed 300 homes.') { $passed++; Write-Host '  PASS headline and dek both repaired' -ForegroundColor Green }
 else { $failed++; Write-Host "  FAIL story: $n | $($story.headline) | $($story.dek)" -ForegroundColor Red }
 
+Write-Host '[case-test] prose that lost its capitals' -ForegroundColor Cyan
+# 30 Oct 2026, Cabo Verde: the whole story came back in lower case.
+$recipe = [pscustomobject]@{ paragraphs = @('cape verdeans can bake bolo de milho using a recipe published on october 30, 2026. the recipe requires one can of milk and one can of sugar.', 'drained corn is blended with milk, sugar, cornmeal, oil, and eggs until finely ground. the batter is baked in a medium oven.', 'two tablespoons of grated coconut can be added.') }
+$normal = [pscustomobject]@{ paragraphs = @('Kenya has confirmed nine cases of Ebola since October 9. The government has trained nearly 5,000 health workers.', 'Officials said 98 people remain in quarantine. They are due for release next week.', 'The UN has provided funds to support the response. eBay was not involved.') }
+$monthOnly = [pscustomobject]@{ paragraphs = @('The hearing was moved to november 12 after a request from the defence.', 'The court agreed.', 'Lawyers said they would appeal.') }
+foreach ($case in @(@($recipe, $true, 'a story in lower case is caught'), @($normal, $false, 'normal prose, one brand that starts in lower case, passes'), @($monthOnly, $true, 'a month in lower case before a day is caught'))) {
+  if ((Test-LowerCaseProse $case[0]) -eq $case[1]) { $passed++; Write-Host "  PASS $($case[2])" -ForegroundColor Green }
+  else { $failed++; Write-Host "  FAIL $($case[2])" -ForegroundColor Red }
+}
+
 Write-Host ''
 Write-Host "[case-test] passed=$passed failed=$failed"
 if ($failed) { exit 1 }
