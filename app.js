@@ -4360,6 +4360,37 @@ function renderIndexLine(countryId) {
     '<span class="cv-index-asof">' + (stale ? 'Stale · ' : '') + 'as of ' + escapeHtml(formatMarketDate(r.date)) + ' · ' + escapeHtml(window.ASJ_INDICES.source || '') + '</span>' +
   '</div>';
 }
+// A ticker wider than its tile was cut to "STANDA..." or "NPFMCR..." (the Signals panel
+// sets tile text to 13px). Shrink each one that overflows, a pixel at a time down to 9px,
+// once the grid has a width - it can render while its panel is hidden - and again when
+// the grid is resized.
+const heatTickerObservers = new WeakMap();
+function fitHeatTickers(wrap) {
+  const grid = wrap?.querySelector('.cv-heat-grid');
+  if (!grid) return;
+  const fit = () => {
+    if (!grid.clientWidth) return;
+    grid.querySelectorAll('.cv-heat-tkr').forEach(el => {
+      el.style.removeProperty('font-size');
+      el.style.removeProperty('white-space');
+      el.style.removeProperty('word-break');
+      for (let size = 12; size >= 9 && el.scrollWidth > el.clientWidth + 1; size--) el.style.setProperty('font-size', size + 'px', 'important');
+      // Still too long at 9px (NPFMCRFBK in a 47px tile): two lines beat a cut-off name.
+      if (el.scrollWidth > el.clientWidth + 1) {
+        el.style.setProperty('font-size', '10px', 'important');
+        el.style.whiteSpace = 'normal';
+        el.style.wordBreak = 'break-all';
+      }
+    });
+  };
+  fit();
+  if (typeof ResizeObserver === 'undefined') return;
+  heatTickerObservers.get(wrap)?.disconnect();
+  const observer = new ResizeObserver(() => fit());
+  observer.observe(grid);
+  heatTickerObservers.set(wrap, observer);
+}
+
 function renderInvestorMarkets(countryId) {
   const wrap = document.getElementById('cv-heatmap');
   const meta = document.getElementById('cv-heat-meta');
@@ -4431,6 +4462,7 @@ function renderInvestorMarkets(countryId) {
     '</div>' +
     '<div class="cv-heat-detail" id="cv-heat-detail" hidden></div>' +
     '<div class="cv-heat-key"><span class="cv-heat-note">' + 'Biggest movers, share-price change · ' + escapeHtml(formatMarketDate(m.asOf)) + '</span></div>';
+  fitHeatTickers(wrap);
   wrap.onclick = (e) => {
     const tile = e.target.closest('.cv-heat-tile'); if (!tile) return;
     const detail = document.getElementById('cv-heat-detail'); if (!detail) return;
@@ -6056,6 +6088,13 @@ if (new URLSearchParams(location.search).has('selftest')) {
   const selftestScript = document.createElement('script');
   selftestScript.src = 'selftest.js?v=' + (window.ASJ_ASSET_VERSION || '1');
   document.head.appendChild(selftestScript);
+}
+// ?sweep=1 reads every country and view for content problems (sweep.js); a report for a
+// person, loaded only with the flag.
+if (new URLSearchParams(location.search).has('sweep')) {
+  const sweepScript = document.createElement('script');
+  sweepScript.src = 'sweep.js?v=' + (window.ASJ_ASSET_VERSION || '1');
+  document.head.appendChild(sweepScript);
 }/* -- Sign-up ---------------------------------------------------------------
    The journal has no way to bring a reader back. A bookmark is not a relationship,
    and a watchlist that lives in localStorage is lost the first time someone clears

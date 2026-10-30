@@ -105,7 +105,15 @@ $script:NEWS_EXTERNAL_COUNTRIES = @(
   'portugal','portuguese','lisbon','lisbonne','lisboa','paris','barcelona','madrid','london','londres',
   'berlin','brussels','bruxelles','belgium','belgian','belgique','netherlands','dutch','washington',
   'beijing','pekin','moscow','moscou','yemen','yemeni','brazil','brazilian','bresil','gaza','lebanon',
-  'liban','syria','syrie','pakistan','afghanistan','iraq','irak','mexico','argentina'
+  'liban','syria','syrie','pakistan','afghanistan','iraq','irak','mexico','argentina',
+  # Added 30 Oct 2026: European club football names no country, so a Ghanaian outlet's
+  # "Carrick keeps Fernandes as Manchester United captain" passed as Ghana news. A story
+  # that also names Ghana ("Ghana's Kudus scores for West Ham") matches on the country
+  # first and is unaffected.
+  'premier league','champions league','europa league','la liga','serie a','bundesliga','ligue 1',
+  'manchester united','manchester city','man united','man city','liverpool','chelsea','arsenal',
+  'tottenham','newcastle united','aston villa','west ham','real madrid','atletico madrid',
+  'bayern munich','borussia dortmund','juventus','inter milan','ac milan','paris saint-germain','psg'
 )
 
 function Get-NewsWordCount([string]$Text) {

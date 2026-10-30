@@ -117,6 +117,17 @@ $namibiaInLisbon = Get-CountryRelevance `
   'The agreement was signed on Monday' `
   @('Namibia','Namibian','Windhoek') '' $false @()
 Assert-Desk 'a Namibian story set in Lisbon stays Namibian' ($namibiaInLisbon.Match -eq 'title' -and -not $namibiaInLisbon.HardReject)
+# The 30 Oct 2026 edition: English club football on the Ghana desk, naming no country.
+$ghanaTerms = @('Ghana','Ghanaian','Accra','Kumasi')
+$manUnitedOnGhanaDesk = Get-CountryRelevance `
+  'Carrick keeps Fernandes as Manchester United captain' `
+  'The interim manager confirmed the Portuguese midfielder keeps the armband' `
+  $ghanaTerms '' $false @()
+Assert-Desk 'European club football that names no country is external' ($manUnitedOnGhanaDesk.Match -eq 'external')
+Assert-Desk 'and two outlets that never name Ghana do not carry it' `
+  (-not (Test-NewsCountryLink $manUnitedOnGhanaDesk.Match 2 $false))
+$kudus = Get-CountryRelevance 'Ghana''s Kudus scores twice for West Ham' 'The Black Stars forward scored on Saturday' $ghanaTerms '' $false @()
+Assert-Desk 'a Ghanaian player at a European club stays Ghana news' ($kudus.Match -eq 'title' -and -not $kudus.HardReject)
 
 Write-Host '[ranking-test] event identity' -ForegroundColor Cyan
 $ignore = @('Togo','Togolese','Lome')
