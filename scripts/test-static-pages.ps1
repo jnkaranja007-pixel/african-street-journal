@@ -87,6 +87,22 @@ if ($UnitOnly) {
     if ($open -ne $close) { $unbalanced.Add("$(Split-Path (Split-Path $p -Parent) -Leaf)=$open/$close") }
   }
   Check "all $($pages.Count) country pages open every article they close" ($unbalanced.Count -eq 0) (($unbalanced | Select-Object -First 5) -join ', ')
+
+  # Each country page advertises /<cc>/feed.xml. The feed must exist, parse as RSS, and
+  # carry only that country's stories (every item's link is under /<cc>/).
+  $badFeeds = New-Object System.Collections.Generic.List[string]
+  foreach ($p in $pages) {
+    $cc = Split-Path (Split-Path $p -Parent) -Leaf
+    $feedPath = Join-Path (Split-Path $p -Parent) 'feed.xml'
+    if (-not (Test-Path $feedPath)) { $badFeeds.Add("$cc=missing"); continue }
+    try {
+      $xml = [xml][IO.File]::ReadAllText($feedPath, [Text.Encoding]::UTF8)
+      $links = @($xml.rss.channel.item | ForEach-Object { [string]$_.link })
+      $foreign = @($links | Where-Object { $_ -notmatch "/$cc/[^/]+/$" })
+      if ($foreign.Count) { $badFeeds.Add("$cc=$($foreign.Count) foreign item(s)") }
+    } catch { $badFeeds.Add("$cc=not XML") }
+  }
+  Check "all $($pages.Count) country feeds parse and carry only their own stories" ($badFeeds.Count -eq 0) (($badFeeds | Select-Object -First 5) -join ', ')
 }
 
 if ($fail) { Write-Host "[static-pages] $fail check(s) failed" -ForegroundColor Red; exit 1 }

@@ -308,6 +308,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <link rel="canonical" href="$canonical">
 <link rel="alternate" hreflang="en" href="$canonical">
 <link rel="alternate" hreflang="x-default" href="$canonical">
+<link rel="alternate" type="application/rss+xml" title="$(Esc $name) - The African Street Journal" href="$BaseUrl/$code/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta name="theme-color" content="#131313">
 $analytics
@@ -336,6 +337,7 @@ $analytics
 <h1>$(Esc $name)</h1>
 <div class="meta">$($stories.Count) stories$(if($when){" &middot; updated $when"})</div>
 <a class="open" href="$BaseUrl/#/$code">Open the interactive $(Esc $name) dossier &rarr;</a>
+<p class="meta">Follow $(Esc $name) only in a news reader app: <a href="$BaseUrl/$code/feed.xml">$BaseUrl/$code/feed.xml</a></p>
 $($body.ToString())
 <nav class="morenav">
 <h2>Other countries</h2>
@@ -437,6 +439,7 @@ foreach ($sp in $storyPages) {
 <link rel="canonical" href="$storyCanonical">
 <link rel="alternate" hreflang="en" href="$storyCanonical">
 <link rel="alternate" hreflang="x-default" href="$storyCanonical">
+<link rel="alternate" type="application/rss+xml" title="$(Esc $sp.country) - The African Street Journal" href="$BaseUrl/$($sp.code)/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta name="theme-color" content="#131313">
 $analytics
@@ -501,7 +504,7 @@ $($srcHtml.ToString())
   [IO.File]::WriteAllText((Join-Path $storyDirPath 'index.html'), $storyHtml, (New-Object Text.UTF8Encoding($false)))
   $storyKept["$($sp.code)/$($sp.slug)"] = $true
   $urls.Add($storyCanonical)
-  $feedItems.Add([pscustomobject]@{ title = [string]$b.headline; link = $storyCanonical; dek = $dek; published = $published; country = [string]$sp.country })
+  $feedItems.Add([pscustomobject]@{ title = [string]$b.headline; link = $storyCanonical; dek = $dek; published = $published; country = [string]$sp.country; code = [string]$sp.code })
   $storyBuilt++
 }
 
@@ -540,7 +543,7 @@ $trustPages = [ordered]@{
 <p>Stories are summaries, not original reporting from the ground. The outlet that broke the story is always credited and linked; please read and support them.</p>
 <h2 id="low-data">Reading on a small data bundle</h2>
 <p>The <a href="$BaseUrl/countries/">text-only edition</a> lists the latest lead story from every country as plain text, with no maps or pictures. Story pages are mostly text too.</p>
-<p>If you use a news reader app such as Feedly, Inoreader or NetNewsWire, add <code>$BaseUrl/feed.xml</code> to it. The latest headlines then arrive in the app as they are published, using very little data. This kind of feed is called RSS.</p>
+<p>If you use a news reader app such as Feedly, Inoreader or NetNewsWire, add <code>$BaseUrl/feed.xml</code> to it. The latest headlines then arrive in the app as they are published, using very little data. This kind of feed is called RSS. To follow one country only, add its feed instead: Kenya's is <code>$BaseUrl/ke/feed.xml</code>, and every country page links its own.</p>
 <h2>Get in touch</h2>
 <p>Email <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a> with questions, tips or complaints; the <a href="$BaseUrl/contact/">contact page</a> says what helps us act quickly. To report a mistake in a story, see <a href="$BaseUrl/corrections/">corrections</a>.</p>
 "@ }
@@ -679,7 +682,7 @@ $analytics
 <p class="hub-intro">The latest lead story from each of the 55 African countries, as plain text with no maps or pictures, for slow connections and small data bundles. Tap a headline to read it, or a country for all of its stories.</p>
 <ul class="country-hub">
 $($hubList.ToString())</ul>
-<p class="hub-note">Use a news reader app? Add <code>$BaseUrl/feed.xml</code> to get the latest headlines as they are published. <a href="$BaseUrl/about/#low-data">How this works</a></p>
+<p class="hub-note">Use a news reader app? Add <code>$BaseUrl/feed.xml</code> to get the latest headlines as they are published, or one country's feed (Kenya: <code>$BaseUrl/ke/feed.xml</code>) for that country alone. <a href="$BaseUrl/about/#low-data">How this works</a></p>
 </main>
 <footer>The African Street Journal &middot; from the streets, for the streets$siteLinks</footer>
 </div>
@@ -694,37 +697,57 @@ $urls.Add("$BaseUrl/countries/")
 # --- RSS feed and Google News sitemap ------------------------------------------
 function XmlEsc([string]$t) { if ($null -eq $t) { return '' }; return [Security.SecurityElement]::Escape($t) }
 $sortedFeed = @($feedItems | Sort-Object { try { [datetime]::Parse([string]$_.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { [datetime]::MinValue } } -Descending)
-$rss = New-Object System.Text.StringBuilder
-[void]$rss.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
-# Feed readers ignore this; a browser that opens feed.xml shows a readable page
-# (feed.xsl) instead of one run-on block of titles, links and dates.
-[void]$rss.AppendLine('<?xml-stylesheet type="text/xsl" href="/feed.xsl"?>')
-[void]$rss.AppendLine('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>')
-[void]$rss.AppendLine("<title>The African Street Journal</title><link>$BaseUrl/</link><description>Daily news from all 55 African countries, every source cited.</description><language>en</language>")
-[void]$rss.AppendLine("<atom:link href=""$BaseUrl/feed.xml"" rel=""self"" type=""application/rss+xml""/>")
+# One RSS document, newest first, at most 100 items: the site feed, and one per country
+# (/ke/feed.xml) so a reader or an aggregator can follow just Kenya. Items are taken
+# untyped and enumerated through the pipeline (see Test-NewsClusterNamesCountry: a
+# Generic.List bound to [object[]] throws on PowerShell 7.4).
+function New-RssFeed([string]$Title, [string]$Link, [string]$Self, [string]$Description, $Items) {
+  $sb = New-Object System.Text.StringBuilder
+  [void]$sb.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
+  # Feed readers ignore this; a browser that opens the feed shows a readable page
+  # (feed.xsl) instead of one run-on block of titles, links and dates.
+  [void]$sb.AppendLine('<?xml-stylesheet type="text/xsl" href="/feed.xsl"?>')
+  [void]$sb.AppendLine('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>')
+  [void]$sb.AppendLine("<title>$(XmlEsc $Title)</title><link>$(XmlEsc $Link)</link><description>$(XmlEsc $Description)</description><language>en</language>")
+  [void]$sb.AppendLine("<atom:link href=""$(XmlEsc $Self)"" rel=""self"" type=""application/rss+xml""/>")
+  foreach ($fi in @($Items | ForEach-Object { $_ } | Select-Object -First 100)) {
+    $pd = $null
+    try { $pd = [datetime]::Parse([string]$fi.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { }
+    [void]$sb.Append("<item><title>$(XmlEsc $fi.title)</title><link>$(XmlEsc $fi.link)</link><guid isPermaLink=""true"">$(XmlEsc $fi.link)</guid><category>$(XmlEsc $fi.country)</category><description>$(XmlEsc $fi.dek)</description>")
+    if ($pd) { [void]$sb.Append("<pubDate>$($pd.ToString('r', [Globalization.CultureInfo]::InvariantCulture))</pubDate>") }
+    [void]$sb.AppendLine('</item>')
+  }
+  [void]$sb.AppendLine('</channel></rss>')
+  return $sb.ToString()
+}
 $news = New-Object System.Text.StringBuilder
 [void]$news.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
 [void]$news.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">')
 $newsCut = (Get-Date).ToUniversalTime().AddDays(-2)
 $newsCount = 0
 foreach ($fi in $sortedFeed) {
-  $inFeed = ($newsCount -lt 100); $newsCount++
+  $newsCount++
   $pd = $null
   try { $pd = [datetime]::Parse([string]$fi.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { }
-  if ($inFeed) {
-  [void]$rss.Append("<item><title>$(XmlEsc $fi.title)</title><link>$(XmlEsc $fi.link)</link><guid isPermaLink=""true"">$(XmlEsc $fi.link)</guid><category>$(XmlEsc $fi.country)</category><description>$(XmlEsc $fi.dek)</description>")
-  if ($pd) { [void]$rss.Append("<pubDate>$($pd.ToString('r', [Globalization.CultureInfo]::InvariantCulture))</pubDate>") }
-  [void]$rss.AppendLine('</item>')
-  }
   # Google News sitemaps list only articles from the last two days.
   if ($pd -and $pd -ge $newsCut -and $newsCount -le 1000) {
     [void]$news.AppendLine("  <url><loc>$(XmlEsc $fi.link)</loc><news:news><news:publication><news:name>The African Street Journal</news:name><news:language>en</news:language></news:publication><news:publication_date>$($pd.ToString('yyyy-MM-ddTHH:mm:ssZ'))</news:publication_date><news:title>$(XmlEsc $fi.title)</news:title></news:news></url>")
   }
 }
-[void]$rss.AppendLine('</channel></rss>')
 [void]$news.AppendLine('</urlset>')
-[IO.File]::WriteAllText((Join-Path $root 'feed.xml'), $rss.ToString(), (New-Object Text.UTF8Encoding($false)))
+$siteFeed = New-RssFeed 'The African Street Journal' "$BaseUrl/" "$BaseUrl/feed.xml" 'Daily news from all 55 African countries, every source cited.' $sortedFeed
+[IO.File]::WriteAllText((Join-Path $root 'feed.xml'), $siteFeed, (New-Object Text.UTF8Encoding($false)))
 [IO.File]::WriteAllText((Join-Path $root 'news-sitemap.xml'), $news.ToString(), (New-Object Text.UTF8Encoding($false)))
+# Every country with a page gets a feed, so the link its page advertises always resolves.
+$countryFeeds = 0
+foreach ($c in $pageCodes) {
+  $cName = [string]$info[$c].name
+  $cItems = @($sortedFeed | Where-Object { $_.code -eq $c })
+  $cFeed = New-RssFeed "$cName - The African Street Journal" "$BaseUrl/$c/" "$BaseUrl/$c/feed.xml" "Daily news from $cName, every source cited." $cItems
+  [IO.File]::WriteAllText((Join-Path (Join-Path $root $c) 'feed.xml'), $cFeed, (New-Object Text.UTF8Encoding($false)))
+  $countryFeeds++
+}
+Write-Host "[static] feed.xml and $countryFeeds country feeds"
 
 # --- sitemap ----------------------------------------------------------------
 $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
