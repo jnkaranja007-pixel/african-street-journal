@@ -617,7 +617,7 @@
         "home": "https://cameroonnewsagency.com/",
         "feed": "https://cameroonnewsagency.com/web-stories/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Farmers Review Africa",
@@ -1268,7 +1268,7 @@
         "home": "https://zoom-eco.net/",
         "feed": "https://zoom-eco.net/feed/",
         "tier": 3,
-        "state": "ok"
+        "state": "blocked"
       }
     ]
   },
@@ -1280,7 +1280,7 @@
         "home": "https://www.aip.ci/",
         "feed": "https://www.aip.ci/feed/",
         "tier": 1,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Fraternite Matin",
@@ -1514,7 +1514,7 @@
         "home": "https://www.hch24.com/",
         "feed": "https://www.hch24.com/feed/",
         "tier": 3,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Africanews",
@@ -1914,7 +1914,7 @@
         "home": "https://capitalethiopia.com/",
         "feed": "https://capitalethiopia.com/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Borkena",
@@ -2104,7 +2104,7 @@
         "home": "https://foroyaa.net/",
         "feed": "https://foroyaa.net/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The Standard Gambia",
@@ -2259,7 +2259,7 @@
         "home": "https://3news.com/",
         "feed": "https://3news.com/feed.xml",
         "tier": 2,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Ghanaian Times",
@@ -2611,7 +2611,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "error"
       }
     ]
   },
@@ -2630,7 +2630,7 @@
         "home": "https://www.liberianobserver.com/",
         "feed": "http://www.liberianobserver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The New Dawn Liberia",
@@ -2653,7 +2653,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "GNN Liberia",
@@ -2709,7 +2709,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "hijacked"
       }
     ]
   },
@@ -2735,7 +2735,7 @@
         "home": "https://midi-madagasikara.mg/",
         "feed": "https://midi-madagasikara.mg/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "NewsMada",
@@ -2758,7 +2758,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "hijacked"
       }
     ]
   },
@@ -2927,7 +2927,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "hijacked"
       }
     ],
     "match": [
@@ -2981,7 +2981,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "hijacked"
       }
     ]
   },
@@ -3037,7 +3037,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "ok"
+        "state": "hijacked"
       }
     ]
   },
@@ -3140,7 +3140,7 @@
         "home": "https://cartamz.com/",
         "feed": "https://cartamz.com/feed/",
         "tier": 2,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "Zitamar News",
@@ -3661,7 +3661,7 @@
         "home": "https://aps.sn/",
         "feed": "https://aps.sn/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "Seneweb",
@@ -4905,7 +4905,7 @@
         "home": "https://www.newsday.co.zw/",
         "feed": "https://www.newsday.co.zw/feed/",
         "tier": 1,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "The Chronicle",
@@ -5035,7 +5035,7 @@
         "home": "https://wsrw.org/en",
         "feed": "https://wsrw.org/feed/",
         "tier": 3,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Jeune Afrique",
