@@ -221,26 +221,54 @@ if ($Only.Count -and (Test-Path $indexPath)) {
   foreach ($p in $old.countries.PSObject.Properties) { $index[$p.Name] = $p.Value }
 }
 
-# Plan every country first, so all the downloads run in one parallel batch.
+# One image: its area, pixel size, and the tiles it needs. The coarsest zoom whose pixels
+# (at the equator, smaller elsewhere) are no larger than the image's, up to -MaxZoom.
+function New-ReliefPlan([string]$Cc, [double]$West, [double]$North, [double]$East, [double]$South, [int]$MaxZoom, [string]$File, [bool]$Focus) {
+  $deg = [Math]::Max($East - $West, $North - $South) / $MaxSide
+  $W = [int][Math]::Ceiling(($East - $West) / $deg); $H = [int][Math]::Ceiling(($North - $South) / $deg)
+  $East = $West + $W * $deg; $South = $North - $H * $deg
+  $z = 0; while ((360 / (256 * [Math]::Pow(2, $z))) -gt $deg -and $z -lt $MaxZoom) { $z++ }
+  $tx0 = Get-TileX $West $z; $tx1 = Get-TileX ($East - 1e-9) $z
+  $ty0 = Get-TileY $North $z; $ty1 = Get-TileY ($South + 1e-9) $z
+  return [pscustomobject]@{ cc = $Cc; file = $File; focus = $Focus; west = $West; north = $North; east = $East; south = $South; deg = $deg
+                            W = $W; H = $H; z = $z; tx0 = $tx0; ty0 = $ty0; nx = $tx1 - $tx0 + 1; ny = $ty1 - $ty0 + 1 }
+}
+
+# Plan every image first, so all the downloads run in one parallel batch.
 $plans = New-Object System.Collections.Generic.List[object]
 foreach ($cc in $CODES) {
   $chunk = [IO.File]::ReadAllText((Join-Path $root "data\countries\$cc.js"), [Text.Encoding]::UTF8)
   $m = [regex]::Match($chunk, '"bbox":\{"minX":([-\d.]+),"minY":([-\d.]+),"maxX":([-\d.]+),"maxY":([-\d.]+)')
   if (-not $m.Success) { Write-Host "  $cc no bbox in its chunk - skipped" -ForegroundColor Yellow; continue }
   # Atlas coordinates are [lon, -lat]: minY is the northern edge.
-  $west = [double]::Parse($m.Groups[1].Value, $inv) - $MarginDeg
-  $north = -[double]::Parse($m.Groups[2].Value, $inv) + $MarginDeg
-  $east = [double]::Parse($m.Groups[3].Value, $inv) + $MarginDeg
-  $south = -[double]::Parse($m.Groups[4].Value, $inv) - $MarginDeg
-  $deg = [Math]::Max($east - $west, $north - $south) / $MaxSide
-  $W = [int][Math]::Ceiling(($east - $west) / $deg); $H = [int][Math]::Ceiling(($north - $south) / $deg)
-  $east = $west + $W * $deg; $south = $north - $H * $deg
-  # The coarsest zoom whose pixels (at the equator, smaller elsewhere) are no larger than ours.
-  $z = 0; while ((360 / (256 * [Math]::Pow(2, $z))) -gt $deg -and $z -lt 12) { $z++ }
-  $tx0 = Get-TileX $west $z; $tx1 = Get-TileX ($east - 1e-9) $z
-  $ty0 = Get-TileY $north $z; $ty1 = Get-TileY ($south + 1e-9) $z
-  $plans.Add([pscustomobject]@{ cc = $cc; west = $west; north = $north; east = $east; south = $south; deg = $deg; W = $W; H = $H
-                                z = $z; tx0 = $tx0; ty0 = $ty0; nx = $tx1 - $tx0 + 1; ny = $ty1 - $ty0 + 1 })
+  $plans.Add((New-ReliefPlan $cc ([double]::Parse($m.Groups[1].Value, $inv) - $MarginDeg) (-[double]::Parse($m.Groups[2].Value, $inv) + $MarginDeg) `
+    ([double]::Parse($m.Groups[3].Value, $inv) + $MarginDeg) (-[double]::Parse($m.Groups[4].Value, $inv) - $MarginDeg) 12 "$cc.jpg" $false))
+}
+
+# The island crops the Atlas zooms to (app.js ISLAND_FULLSCREEN_BOUNDS) get an image of
+# their own. A whole-country image spends its pixels on ocean: the Seychelles' outer
+# islands make it 11 degrees wide, which left Mahe - the crop, 0.22 degrees - about 28
+# pixels across, stretched over a phone screen. Each crop, with a quarter of its size as
+# a margin for the view's padding, is drawn over the country image when zoomed - built
+# only where it is at least half as fine again as the country image (Cabo Verde's and
+# Sao Tome's crops are most of the country already).
+$appText = [IO.File]::ReadAllText((Join-Path $root 'app.js'), [Text.Encoding]::UTF8)
+$focusBlock = [regex]::Match($appText, '(?s)const ISLAND_FULLSCREEN_BOUNDS = \{(.*?)\};').Groups[1].Value
+foreach ($m in [regex]::Matches($focusBlock, '(\w\w): \{ minX: ([-\d.]+), maxX: ([-\d.]+), minY: ([-\d.]+), maxY: ([-\d.]+) \}')) {
+  $cc = $m.Groups[1].Value
+  if ($CODES -notcontains $cc) { continue }
+  $minX = [double]::Parse($m.Groups[2].Value, $inv); $maxX = [double]::Parse($m.Groups[3].Value, $inv)
+  $minY = [double]::Parse($m.Groups[4].Value, $inv); $maxY = [double]::Parse($m.Groups[5].Value, $inv)
+  $margin = 0.25 * [Math]::Max($maxX - $minX, $maxY - $minY)
+  $focusPlan = New-ReliefPlan $cc ($minX - $margin) (-$minY + $margin) ($maxX + $margin) (-$maxY - $margin) 14 "$cc-focus.jpg" $true
+  $basePlan = @($plans | Where-Object { $_.cc -eq $cc -and -not $_.focus })[0]
+  if ($basePlan -and $focusPlan.deg -gt $basePlan.deg / 1.5) {
+    Write-Host ("  {0} crop is not much finer than the country image ({1:N4} vs {2:N4} deg/px) - no focus image" -f $cc, $focusPlan.deg, $basePlan.deg)
+    $stale = Join-Path $outDir "$cc-focus.jpg"
+    if (Test-Path $stale) { Remove-Item $stale }
+    continue
+  }
+  $plans.Add($focusPlan)
 }
 
 $urls = New-Object System.Collections.Generic.List[string]
@@ -260,24 +288,36 @@ $failed = [AsjDem]::Fetch($urls.ToArray(), $paths.ToArray(), 12)
 if ($failed) { throw "$failed tile(s) failed to download; run again to retry" }
 
 $total = 0L
+$focusIndex = @{}
 foreach ($p in $plans) {
   # Metres a pixel at the country's middle latitude, and the exaggeration for it: about
   # 3.5x at Rwanda's 240 m, 7x at Kenya's 850 m, 10x at Congo-Kinshasa's 1.6 km.
   $midLat = ($p.north + $p.south) / 2
   $metres = $p.deg * 111320 * [Math]::Cos($midLat * [Math]::PI / 180)
   $ex = [Math]::Max(2.0, [Math]::Min(12.0, [Math]::Pow($metres / 25, 0.55)))
-  $out = Join-Path $outDir "$($p.cc).jpg"
+  $out = Join-Path $outDir $p.file
   $bytes = [AsjDem]::Build($CacheDir, $p.z, $p.tx0, $p.ty0, $p.nx, $p.ny, $p.west, $p.north, $p.deg, $p.W, $p.H, $ex, $out, $Quality, $ToneBase, $ToneTint, $ToneShadow, $ToneLight)
   $total += $bytes
-  $index[$p.cc] = [ordered]@{
+  $box = [ordered]@{
     w = [Math]::Round($p.west, 4); e = [Math]::Round($p.east, 4)
     n = [Math]::Round($p.north, 4); s = [Math]::Round($p.south, 4)
   }
-  Write-Host ("  {0}  {1}x{2} px  z{3}  {4:N0} m/px  x{5:N1}  {6} KB" -f $p.cc, $p.W, $p.H, $p.z, $metres, $ex, [Math]::Round($bytes / 1KB))
+  if ($p.focus) { $focusIndex[$p.cc] = $box } else { $index[$p.cc] = $box }
+  Write-Host ("  {0,-9} {1}x{2} px  z{3}  {4:N0} m/px  x{5:N1}  {6} KB" -f ($p.file -replace '\.jpg$', ''), $p.W, $p.H, $p.z, $metres, $ex, [Math]::Round($bytes / 1KB))
+}
+# Each country's box, with its island crop's box as "focus" where it has one.
+$countriesOut = [ordered]@{}
+foreach ($k in @($index.Keys)) {
+  $b = $index[$k]
+  $entry = [ordered]@{ w = $b.w; e = $b.e; n = $b.n; s = $b.s }
+  # An earlier focus box is kept only for a country this run did not rebuild.
+  $f = if ($focusIndex.ContainsKey($k)) { $focusIndex[$k] } elseif ($b.focus -and $CODES -notcontains $k) { $b.focus } else { $null }
+  if ($f) { $entry.focus = [ordered]@{ w = $f.w; e = $f.e; n = $f.n; s = $f.s } }
+  $countriesOut[$k] = $entry
 }
 $payload = [ordered]@{
   source = 'Elevation: Mapzen Terrain Tiles on AWS (SRTM, GMTED2010, ETOPO1; public domain), hill-shaded for the Atlas'
-  countries = $index
+  countries = $countriesOut
 }
 [IO.File]::WriteAllText($indexPath, ($payload | ConvertTo-Json -Depth 4 -Compress), (New-Object Text.UTF8Encoding($false)))
 Write-Host ("[relief] {0} images, {1} KB written" -f $plans.Count, [Math]::Round($total / 1KB))

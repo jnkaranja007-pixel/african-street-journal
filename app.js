@@ -4148,7 +4148,33 @@ function drawCountryRelief(countryId, project) {
   countryMapCtx.imageSmoothingEnabled = true;
   countryMapCtx.imageSmoothingQuality = 'high';
   countryMapCtx.drawImage(img, x0, y0, x1 - x0, y1 - y0);
+  drawReliefFocus(countryId, box, img, x1 - x0, project);
   return true;
+}
+
+// The island crop's own image (scripts/build-country-relief.ps1), over the country one,
+// once the view stretches the country image past its pixels. Seychelles' image spans
+// 11 degrees of ocean and outer islands, so zoomed to Mahe it was about 28 pixels drawn
+// across a phone screen; the crop's image has 33 m pixels. Not fetched for a view that
+// does not need it (the full-country desktop map).
+function drawReliefFocus(countryId, box, baseImg, baseDrawnWidth, project) {
+  const focus = box.focus;
+  if (!focus) return;
+  const stretch = baseDrawnWidth / baseImg.naturalWidth;
+  if (stretch < 1.5) return;
+  const key = countryId + '-focus';
+  let img = RELIEF.images.get(key);
+  if (!img) {
+    img = new Image();
+    img.decoding = 'async';
+    img.onload = () => repaintAtlasFor(countryId);
+    img.src = 'data/relief/' + key + '.jpg?v=' + (window.ASJ_ASSET_VERSION || '1');
+    RELIEF.images.set(key, img);
+  }
+  if (!img.complete || !img.naturalWidth) return;
+  const [fx0, fy0] = project(focus.w, focus.n);
+  const [fx1, fy1] = project(focus.e, focus.s);
+  countryMapCtx.drawImage(img, fx0, fy0, fx1 - fx0, fy1 - fy0);
 }
 
 function repaintAtlasFor(countryId) {
