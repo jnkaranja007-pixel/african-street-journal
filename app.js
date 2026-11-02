@@ -1773,6 +1773,7 @@ function openCountry(countryId, sourceElement = document.activeElement, options 
   const wasOpen = countryView.classList.contains('open');
   if (ROUTE_AUDIENCES.includes(options.audience) && audienceSelect) audienceSelect.value = options.audience;
   ensureCountryData(countryId);
+  prefetchRelief(countryId);
   lastFocus = sourceElement;
   document.getElementById('cv-region').textContent = info.region;
   document.getElementById('cv-name').textContent = info.name;
@@ -4127,6 +4128,44 @@ function loadReliefIndex() {
   return RELIEF.loading;
 }
 
+// One relief image, fetched once. Once it has loaded it is decoded before the redraw -
+// drawing a freshly loaded 1,400 px JPEG decodes it on the spot, a hitch on a phone - but
+// decode() can wait indefinitely in a tab that is not showing, so a load is enough after
+// 300 ms: a page opened in a background tab still gets its relief.
+function reliefImage(key, countryId) {
+  let img = RELIEF.images.get(key);
+  if (!img) {
+    img = new Image();
+    img.decoding = 'async';
+    const ready = () => { if (img.__ready) return; img.__ready = true; repaintAtlasFor(countryId); };
+    img.onload = () => {
+      if (img.decode) img.decode().then(ready, ready);
+      setTimeout(ready, 300);
+    };
+    img.src = 'data/relief/' + key + '.jpg?v=' + (window.ASJ_ASSET_VERSION || '1');
+    RELIEF.images.set(key, img);
+  }
+  return img;
+}
+const reliefReady = img => !!img && img.__ready && img.naturalWidth > 0;
+// The index is 3 KB: fetched once the page is idle, so the first country opened goes
+// straight to its image.
+if (!window.ASJ_SAVE_DATA) (window.requestIdleCallback || (fn => setTimeout(fn, 2500)))(() => loadReliefIndex());
+
+// Start the relief downloads when a country opens, not when the Atlas is first drawn.
+// The Atlas used to ask for the index, wait, ask for the image, wait, and redraw: the map
+// appeared flat and the relief arrived a beat later (and an island crop a beat after
+// that). Not in data-saver mode or on a slow connection, where relief is not drawn.
+function prefetchRelief(countryId) {
+  if (window.ASJ_SAVE_DATA) return;
+  loadReliefIndex()?.then(index => {
+    const box = index?.[countryId];
+    if (!box) return;
+    reliefImage(countryId, countryId);
+    if (box.focus) reliefImage(countryId + '-focus', countryId);
+  });
+}
+
 // Draws the country's relief image; false when it is not there (yet), and the caller
 // draws the flat texture. A first call starts the load and repaints when it lands.
 function drawCountryRelief(countryId, project) {
@@ -4134,15 +4173,8 @@ function drawCountryRelief(countryId, project) {
   if (!RELIEF.index) { loadReliefIndex()?.then(() => repaintAtlasFor(countryId)); return false; }
   const box = RELIEF.index[countryId];
   if (!box) return false;
-  let img = RELIEF.images.get(countryId);
-  if (!img) {
-    img = new Image();
-    img.decoding = 'async';
-    img.onload = () => repaintAtlasFor(countryId);
-    img.src = 'data/relief/' + countryId + '.jpg?v=' + (window.ASJ_ASSET_VERSION || '1');
-    RELIEF.images.set(countryId, img);
-  }
-  if (!img.complete || !img.naturalWidth) return false;
+  const img = reliefImage(countryId, countryId);
+  if (!reliefReady(img)) return false;
   const [x0, y0] = project(box.w, box.n);
   const [x1, y1] = project(box.e, box.s);
   countryMapCtx.imageSmoothingEnabled = true;
@@ -4162,16 +4194,8 @@ function drawReliefFocus(countryId, box, baseImg, baseDrawnWidth, project) {
   if (!focus) return;
   const stretch = baseDrawnWidth / baseImg.naturalWidth;
   if (stretch < 1.5) return;
-  const key = countryId + '-focus';
-  let img = RELIEF.images.get(key);
-  if (!img) {
-    img = new Image();
-    img.decoding = 'async';
-    img.onload = () => repaintAtlasFor(countryId);
-    img.src = 'data/relief/' + key + '.jpg?v=' + (window.ASJ_ASSET_VERSION || '1');
-    RELIEF.images.set(key, img);
-  }
-  if (!img.complete || !img.naturalWidth) return;
+  const img = reliefImage(countryId + '-focus', countryId);
+  if (!reliefReady(img)) return;
   const [fx0, fy0] = project(focus.w, focus.n);
   const [fx1, fy1] = project(focus.e, focus.s);
   countryMapCtx.drawImage(img, fx0, fy0, fx1 - fx0, fy1 - fy0);
