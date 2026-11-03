@@ -1,5 +1,5 @@
 // The African Street Journal - archived edition 2026-11-03 (auto-generated).
-window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33+00:00', byCountry: {
+window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T22:33:45+00:00', byCountry: {
 "dz": [{"articleId":"98116039a4b161cdfe6a","headline":"Moroccan parliament backs Sahara strategy","dek":"Joint session of both chambers of parliament convened on November 2 to endorse royal cabinet's new approach.","paragraphs":["Morocco's parliament held a joint session on November 2 to solidify institutional backing for the royal cabinet's new strategy concerning the Western Sahara. This meeting followed a UN Security Council veto on October 30 and the expiration of MINURSO's mandate. The parliamentary gathering aimed to secure endorsement for the cabinet's directives on the disputed territory.","The parliamentary session revealed differing views on relations with Algeria, with some parties calling for improved bilateral ties while others accused Algiers of regional obstruction. The new Moroccan strategy focuses on three main areas: strengthening parliamentary diplomacy for international support, preparing legislative adjustments, and reducing the Security Council's role in the conflict.","The Moroccan parliament's ambition to diminish the Security Council's influence over the Western Sahara dossier has been met with criticism. Observers note that national parliamentary actions cannot unilaterally alter the territory's international status or override the people's right to self-determination under international law."],"why":"Algeria is presented as responsible for political deadlock in the region by some Moroccan parliamentary factions.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-02T18:01:51Z","editorialScore":12.2,"selectionScore":12.2,"confidence":"medium","wordCount":150,"readMinutes":1,"sources":[{"published":"2026-11-02T18:01:51Z","name":"TSA Algerie","url":"https://www.tsa-algerie.com/maroc-le-parlement-mobilise-pour-imposer-la-nouvelle-orientation-sur-le-sahara-occidental/"}]},{"articleId":"f66315154b53c6677750","headline":"Algeria mobilizes 67 billion dinars for western water supply","dek":"Work begins on connecting desalination plants to supply Tlemcen and Sidi Bel Abbès with drinking water.","paragraphs":["Algeria's Minister of Water Resources and Hydraulic Security, Lounès Bouzegza, launched work on connecting new desalination plants in Tlemcen on Monday. The project involves laying 105 kilometers of pipes to supply drinking water to Tlemcen and Sidi Bel Abbès. The minister's visit to Tlemcen is the first stop in a tour across four wilayas to launch and inaugurate strategic projects.","The specific project in Tlemcen, at the Aïn Adjroud desalination site, has been allocated 67 billion Algerian dinars. The construction, divided into five lots awarded to national companies, is scheduled for completion within 16 months. This initiative aims to consolidate national hydraulic security and modernize water services.","New desalination plants are also under construction in Mostaganem and Chlef. The government aims to diversify water sources and expand the national hydraulic infrastructure network. These projects align with directives from President Abdelmadjid Tebboune to consolidate water security."],"why":"Algerians in Tlemcen and Sidi Bel Abbès will receive improved drinking water supply through new infrastructure.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":30,"why":"National companies are awarded contracts to lay 105 kilometers of pipes for the water supply project."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Climate","published":"2026-11-02T17:00:36Z","editorialScore":9.35,"selectionScore":8.35,"confidence":"low","wordCount":145,"readMinutes":1,"sources":[{"published":"2026-11-02T17:00:36Z","name":"Algerie360","url":"https://www.algerie360.com/raccordement-station-dessalement-tlemcen-67-milliards/"}]},{"articleId":"83ba68506ddc5b332159","headline":"Algerian parliament to review fuel price changes","dek":"A finance committee proposed that parliament must approve any fuel price adjustments for 2027.","paragraphs":["Algeria's National People's Assembly finance committee has proposed 26 amendments to the 2027 finance bill, including a rule requiring parliamentary approval for any changes to fuel prices. The committee also suggested customs and tax breaks for Algerians living abroad who wish to return home permanently, and extended building settlement deadlines to the end of 2027.","Committee rapporteur Bouchecha explained that the proposed amendments, which include linguistic corrections and new articles, aim to increase transparency and protect citizens' purchasing power. Article 218, as amended, would make fuel price reviews conditional on parliamentary consent within the finance law framework.","The committee also proposed a new article offering special facilities for Algerian expatriates residing abroad for at least three consecutive years who wish to return permanently. These individuals would be allowed to import equipment related to their economic or professional activities, exempt from foreign trade and exchange controls, as well as customs duties and fees."],"why":"Algerian citizens will have their parliament involved in decisions affecting fuel prices.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":85,"why":"Algerians living abroad who wish to return home permanently will benefit from customs and tax exemptions on imported professional equipment."}},"topic":"Politics","published":"2026-11-03T08:24:31Z","editorialScore":8.25,"selectionScore":8.25,"confidence":"low","wordCount":152,"readMinutes":1,"sources":[{"published":"2026-11-03T08:24:31Z","name":"Echorouk Online","url":"https://www.echoroukonline.com/%d9%84%d8%ac%d9%86%d8%a9-%d8%a7%d9%84%d9%85%d8%a7%d9%84%d9%8a%d8%a9-%d8%aa%d9%82%d8%aa%d8%b1%d8%ad-%d8%a5%d8%ae%d8%b6%d8%a7%d8%b9-%d9%85%d8%b1%d8%a7%d8%ac%d8%b9%d8%a9-%d8%a3%d8%b3%d8%b9%d8%a7%d8%b1"}]},{"articleId":"7f88f2f773fcb0872919","headline":"Algerian workers warned over job burnout signs","dek":"A study found links between workplace rudeness and employees wanting to leave their jobs.","paragraphs":["Algerian workers experiencing persistent fear of going to work, anxiety the night before, or physical symptoms like headaches and fatigue may be suffering from burnout. These signs indicate potential problems with the work environment or job tasks, according to a recent analysis.","A study analyzed 46 research papers and found a positive link between exposure to impolite behavior at work and a higher desire among employees to quit their jobs. The World Health Organization defines burnout as a professional phenomenon resulting from chronic workplace stress that is not managed successfully.","Burnout manifests in three ways: energy depletion, increased psychological distance from one's job, and a sense of negativity or reduced professional efficacy. These symptoms can affect life outside of work hours if they persist for weeks."],"why":"Algerian workers experiencing fear, anxiety, headaches, or fatigue due to persistent workplace stress may suffer from burnout.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"The report does not mention any companies, markets, or financial activities relevant to investors."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Health","published":"2026-11-03T08:01:48Z","editorialScore":7.75,"selectionScore":5.5,"confidence":"low","wordCount":126,"readMinutes":1,"sources":[{"published":"2026-11-03T08:01:48Z","name":"Echorouk Online","url":"https://www.echoroukonline.com/%d9%85%d8%aa%d9%89-%d9%8a%d9%86%d8%a8%d8%ba%d9%8a-%d8%b9%d9%84%d9%8a%d9%83-%d8%a7%d9%84%d8%aa%d9%81%d9%83%d9%8a%d8%b1-%d9%81%d9%8a-%d8%aa%d8%b1%d9%83-%d8%b9%d9%85%d9%84%d9%83%d8%9f"}]}],
 "ao": [{"articleId":"16ea3c26f24d6629c01c","headline":"Angola rural teen pregnancy rate hits 42.5%","dek":"UN committee urges Angola to fund national strategy for adolescent sexual education and reproductive health services.","paragraphs":["Teenage pregnancy in Angola's rural areas has reached 42.5%, according to a recent United Nations committee report on women's rights. The committee expressed concern over the high incidence, which affects 27.1% of women and girls aged 15 to 19 nationwide.","The UN committee urged Angola to adopt a national strategy with adequate resources to prevent adolescent pregnancy. Recommendations include offering age-appropriate sexual education and access to confidential, adolescent-friendly sexual and reproductive health services, along with voluntary contraception.","The report also calls for stricter measures against sexual violence and child marriage in Angola. It highlighted significant barriers women face in accessing economic resources and recommended expanding programs to promote female entrepreneurship and ease access to low-interest loans."],"why":"Adolescent girls in rural Angola are disproportionately affected by pregnancy, with 42.5% of them becoming pregnant.","lenses":{"farmers":{"score":45,"why":"The report notes significant barriers women face in accessing economic resources and recommends measures to promote female entrepreneurship and access to loans."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Health","published":"2026-11-02T16:40:25Z","editorialScore":15.75,"selectionScore":15.75,"confidence":"high","wordCount":118,"readMinutes":1,"sources":[{"published":"2026-11-02T16:40:25Z","name":"Noticias Lusofonas","url":"https://noticiaslusofonas.com/2026/11/02/gravidez-na-adolescencia-atinge-425-nas-areas-rurais-de-angola/"},{"published":"2026-11-02T16:36:04Z","name":"Folha 8","url":"https://jornalf8.net/2026/em-angola-gravidez-na-adolescencia-atinge-425/"}]},{"articleId":"f802a521d641f46dbf4c","headline":"Jonas Savimbi's legacy highlighted by UNITA founder's foundation","dek":"The foundation emphasized Savimbi's commitment to Angolan identity and his role in challenging Portuguese colonial rule.","paragraphs":["The Jonas Savimbi Foundation highlighted the founder's historical and political journey, emphasizing his commitment to Angolan identity and cultural origins. Isaías Samakuva, former UNITA leader, stated that understanding Savimbi's path means understanding the struggle against Portuguese colonial rule, as Savimbi believed freedom had to be won, not given.","Samakuva further noted that Savimbi's nationalism extended beyond military action, viewing war as a tool for peace, and pointed to Savimbi's diplomatic involvement in Angolan independence, citing the Alvor and Bicesse Accords as demonstrations of his negotiation skills. Manuel Savinhemba also spoke, highlighting Savimbi's role in valuing Angolans and including those historically marginalized.","The foundation stressed Savimbi's vision of independence as more than just a flag or government, but as a state built on social justice, inclusion, and economic autonomy for better living conditions for all citizens. Samakuva argued that true freedom requires addressing deep social and economic inequalities, ensuring national wealth benefits everyone, not just a few."],"why":"Angolans are reminded of the historical context of their independence struggle and the ideals of social justice and economic autonomy.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":30,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-02T09:27:32Z","editorialScore":7.25,"selectionScore":4.75,"confidence":"low","wordCount":156,"readMinutes":1,"sources":[{"published":"2026-11-02T09:27:32Z","name":"Folha 8","url":"https://jornalf8.net/2026/fundacao-jonas-savimbi-destaca-legado-do-fundador-da-unita/"}]},{"articleId":"572069a377ec0f14a726","headline":"African Union and FAJ condemn attacks on journalists","dek":"The African Union and the Federation of African Journalists highlighted evolving threats and persistent impunity for crimes against media professionals.","paragraphs":["The African Union's Commissioner for Political Affairs, Peace and Security, Bankole Adeoye, and the President of the Federation of African Journalists (FAJ), Omar Faruk Osman, issued a joint statement on the International Day to End Impunity for Crimes against Journalists. They expressed full solidarity with journalists and media professionals across Africa, honouring those killed, injured, detained, threatened, or forced into exile.","The officials stated that attacks on journalists are attacks on fundamental human rights, specifically the right to freedom of expression and access to information across Africa. They reaffirmed their commitment to a continent where journalists can work freely and safely, with crimes against them investigated and punished under the rule of law. The statement noted that women journalists face particular gender-based threats, harassment, and online violence.","This year's theme, \"Threats evolve. Impunity persists,\" draws attention to how new technologies and evolving weaponry alter risks for journalists, especially in conflict zones, while perpetrators often escape accountability. The AU and FAJ urged member states to protect journalists' rights, investigate attacks, prosecute offenders, and provide effective reparations to victims."],"why":"Journalists across Africa, including those in Angola, face evolving threats and persistent impunity for crimes committed against them, impacting their safety and the public's access to information.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"The report does not mention any specific companies, markets, or financial regulations affected by the attacks on journalists."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-02T19:04:31Z","editorialScore":7.0,"selectionScore":3.25,"confidence":"low","wordCount":177,"readMinutes":1,"sources":[{"published":"2026-11-02T19:04:31Z","name":"Folha 8","url":"https://jornalf8.net/2026/jornalistas-africanos-com-o-pescoco-no-cepo/"}]}],
 "bj": [{"articleId":"706b4cc45d6510847a5b","headline":"Ecobank posts $737 million profit before tax","dek":"The pan-African banking group's profit before tax rose 12% to $737 million in the first nine months of 2026.","paragraphs":["Ecobank Group reported a profit before tax of $737 million for the first nine months of 2026, a 12% increase compared to the same period in 2025. The pan-African banking group's net banking income reached $2 billion, also up 12% year-on-year. These results were published on October 27, 2026, in Lomé.","Customer deposits grew by 14% to $27.5 billion, strengthening the group's ability to manage margin pressures from falling interest rates. The operational cost-to-income ratio stood at 47.8%, below the target range of 48-50% for 2026. Ecobank's return on tangible equity was 24.9%, with non-performing loans stable at 7.5%.","Group CEO Jeremy Awori stated that the results reflect the effectiveness of the implemented strategy and the strength of the pan-African business model. Ecobank also opened new representative offices in Beijing and signed a memorandum of understanding with China's cross-border interbank payment system (CIPS) to facilitate trade between China and Africa."],"why":"Ecobank's financial performance and strategic international expansion directly impact investors and the broader African business environment.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":85,"why":"Ecobank's profit before tax, net banking income, customer deposits, and international expansion initiatives are directly relevant to investors."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-03T05:30:28Z","editorialScore":13.2,"selectionScore":13.2,"confidence":"medium","wordCount":154,"readMinutes":1,"sources":[{"published":"2026-11-03T05:30:28Z","name":"Matin Libre","url":"https://matinlibre.com/2026/11/03/marche-financier-a-fin-septembre-2026-ecobank-enregistre-un-benefice-avant-impot-de-737-millions-de-dollars/"},{"published":"2026-11-02T21:13:00Z","name":"Benin Web TV","url":"https://beninwebtv.com/ecobank-annonce-737-millions-de-dollars-de-benefice-avant-impot-sur-neuf-mois/"}]},{"articleId":"2790a7031616f297fd45","headline":"Benin student wins international writing prize","dek":"Chekpo Marie-Ange S. D., 15, received a special mention at the 55th Universal Postal Union competition.","paragraphs":["Chekpo Marie-Ange S. D., a 15-year-old student from Benin, won the national first prize and the fourth global prize in the 55th International Letter Writing Competition. The Universal Postal Union (UPU) organized the 2026 competition for 1,480,000 candidates from 65 countries.","Marie-Ange, a student at CS Le Bon Berger in Godomey, wrote about the importance of human connection and empathy in the digital age. Her work earned her a special mention from the international jury, placing Benin among the top seven countries, including China, Portugal, and Iran.","Benin was the only African nation to be ranked in the 2026 competition. The UPU competition aims to promote young writing talents worldwide."],"why":"Benin's young writers are recognized internationally for their creative work.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"The competition and its participants do not involve any direct financial or business implications for investors."},"diaspora":{"score":30,"why":"This culture report may interest diaspora readers maintaining ties to national life from abroad."}},"topic":"Culture","published":"2026-11-03T05:27:37Z","editorialScore":12.7,"selectionScore":11.45,"confidence":"medium","wordCount":112,"readMinutes":1,"sources":[{"published":"2026-11-03T05:27:37Z","name":"Matin Libre","url":"https://matinlibre.com/2026/11/03/55e-concours-international-de-composition-epistolaire-chekpo-marie-ange-gagnante-du-1er-prix-national-au-benin/"}]},{"articleId":"31ce98ca2f1dbe456b9b","headline":"Dogo-bis programme recruits eight for Benin unit","dek":"The Benin Republic's Presidency seeks staff for a $150 million World Bank-funded project.","paragraphs":["The Dogo-bis programme is hiring eight people for its management unit, which reports to the Benin Republic's Presidency. Applications are due by noon on November 18, 2026, in Cotonou.","The roles include administrative and financial management, monitoring and evaluation, executive secretarial duties, and accounting. Three specialist positions cover environmental and social safeguards, social development and gender, and procurement. Most positions will be based in Cotonou or nearby towns like Abomey-Calavi, with frequent travel to other locations.","Successful candidates will receive two-year renewable contracts, starting January 1, 2027. The Dogo-bis programme, funded by a $150 million World Bank loan for its first phase, aims to build a multifunctional dam and related infrastructure in the Ouémé River basin by 2033."],"why":"Benin residents can apply for eight jobs in a new $150 million World Bank-funded infrastructure project.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":70,"why":"The Dogo-bis programme's first phase is funded by a $150 million loan from the World Bank."},"diaspora":{"score":30,"why":"Benin residents living abroad can apply for eight jobs in a new infrastructure project."}},"topic":"Business","published":"2026-11-03T06:09:31Z","editorialScore":9.0,"selectionScore":9.0,"confidence":"low","wordCount":118,"readMinutes":1,"sources":[{"published":"2026-11-03T06:09:31Z","name":"Benin Web TV","url":"https://beninwebtv.com/benin-dogo-bis-recrute-huit-profils-les-candidatures-ouvertes-jusquau-18-novembre/"}]},{"articleId":"dee836bb20e9645f2533","headline":"Benin ranks 12th in Africa governance index","dek":"The country scores 60.1 points, exceeding continental and West African averages despite political participation decline.","paragraphs":["Benin placed 12th out of 54 African nations in the 2026 Ibrahim Index of African Governance, achieving 60.1 points out of 100. The Mo Ibrahim Foundation's assessment, covering 2016-2025, noted a 2.6-point overall increase since 2016.","The nation's score surpasses the African average of 50.1 points and West Africa's average of 52.9 points. While economic opportunities, business environment, infrastructure, and public administration showed significant improvements between 2016 and 2025, political participation indicators declined.","Specifically, the participation sub-category dropped 18.6 points, with democratic elections falling 36.3 points and anti-corruption measures decreasing by 27.7 points. These declines occurred despite improvements in measured corruption levels."],"why":"Benin's citizens are affected by a decline in democratic participation and anti-corruption measures, despite overall governance improvements.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-03T05:10:24Z","editorialScore":9.75,"selectionScore":7.5,"confidence":"low","wordCount":109,"readMinutes":1,"sources":[{"published":"2026-11-03T05:10:24Z","name":"Benin Web TV","url":"https://beninwebtv.com/indice-ibrahim-2026-le-benin-12e-en-afrique-la-participation-democratique-recule/"}]},{"articleId":"16ab8c27faa9d21a98d6","headline":"Man killed with machete in Ouénou","dek":"A man in his fifties died after a machete attack by his neighbor on November 1, 2026.","paragraphs":["A man in his fifties died after a violent machete attack in Ouénou, Nikki commune, Borgou department, on Sunday, November 1, 2026. The victim was returning from his soybean field when his neighbor, identified as a cattle herder, allegedly attacked him. The suspect fled the scene after the incident.","The victim reportedly tried to resist his attacker but was knocked down. The assailant then inflicted a fatal blow to the man's throat before escaping. The Republic Police from the Tchikandou station visited the scene and have opened an investigation to find the suspect and determine the exact circumstances of the fatal assault.","This man leaves behind a wife and one child. The exact reasons for the attack remain unclear as the investigation continues, leaving the community seeking answers."],"why":"A farmer was killed by his neighbor while returning from his soybean harvest, leaving his family bereaved.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"The report does not mention any companies, markets, or financial regulations being affected."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-03T05:25:04Z","editorialScore":11.35,"selectionScore":5.6,"confidence":"medium","wordCount":128,"readMinutes":1,"sources":[{"published":"2026-11-03T05:25:04Z","name":"Matin Libre","url":"https://matinlibre.com/2026/11/03/nikki-un-quinquagenaire-mortellement-agresse-a-coups-de-coupe-coupe-a-ouenou/"}]}],
@@ -14,7 +14,7 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
 "eg": [{"articleId":"f87c5ee2dea02213340d","headline":"Egypt secures $1 billion World Bank loan for economic reforms","dek":"The financing supports economic resilience, private sector growth, and a green economy transition.","paragraphs":["Egypt signed a USD 1 billion financing agreement with the World Bank on Sunday, November 1, 2026, for the second phase of its Development Policy Financing (DPF) programme. Prime Minister Mostafa Madbouly witnessed the signing ceremony at the Ministry of Foreign Affairs in the New Administrative Capital.","Foreign Minister Badr Abdelatty and World Bank Regional Director Alwaleed Alataban signed the deal, titled “Building Resilience, Creating Opportunities and Enhancing Wealth for Egypt’s Prosperity and Stability.” The programme aims to improve the business environment, attract private investment, and boost economic competitiveness.","The reforms include improving state-owned enterprise governance, removing investment barriers, and promoting fair competition. The second phase also incorporates social protection and environmental measures, such as expanding the Takaful and Karama programmes and developing carbon credit markets."],"why":"Egypt's economy will receive a USD 1 billion loan to support reforms aimed at strengthening resilience and encouraging private sector investment.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":85,"why":"The USD 1 billion loan aims to improve Egypt's business environment, attract private investment, and enhance economic competitiveness."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-02T13:16:53Z","editorialScore":18.95,"selectionScore":18.95,"confidence":"high","wordCount":126,"readMinutes":1,"sources":[{"published":"2026-11-02T13:16:53Z","name":"Egyptian Streets","url":"https://egyptianstreets.com/2026/11/02/egypt-signs-usd-1-billion-world-bank-financing-deal-to-support-economic-reforms-egypt-signs-usd-1-billion-world-bank-financing-deal-to-support-economic-reforms/"},{"published":"2026-11-02T10:30:45Z","name":"Egypt Independent","url":"https://www.egyptindependent.com/fm-signs-1-billion-financing-agreement-with-world-bank/"}]},{"articleId":"ffdf2edac2a735319f44","headline":"Egypt parliament approves fund for martyrs' families","dek":"Amendments to the law governing the Fund for Honoring Martyrs aim to remove obstacles for beneficiaries.","paragraphs":["Egypt’s House of Representatives has given final approval to amendments for the Fund for Honoring Martyrs and Victims of Military and Security Operations. The vote took place during a plenary session on Monday. These changes aim to ensure better support and care for families of those killed or injured in the line of duty.","MP Randa Mostafa, Chair of the Committee on Social Solidarity, stated that the amendments are needed to remove obstacles preventing eligible individuals from receiving entitlements. The changes will refine regulations for disability compensation and other provisions, simplifying access to support and compensation for beneficiaries. The fund recognizes the sacrifices of martyred soldiers.","The legislative intervention addresses financial burdens associated with certain medical services and documentation. It also aims to provide greater organization and clarity in procedures for claiming disability compensation. The Fund's operations will be governed by these adjusted provisions."],"why":"Families of military and security personnel killed or injured in the line of duty will receive improved support and compensation.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-03T08:17:00Z","editorialScore":16.2,"selectionScore":16.2,"confidence":"high","wordCount":144,"readMinutes":1,"sources":[{"published":"2026-11-03T08:17:00Z","name":"Egypt Independent","url":"https://www.egyptindependent.com/egypts-parliament-grants-final-approval-to-amendments-on-fund-for-honoring-martyrs/"}]},{"articleId":"5edb51e097bc2a93ae02","headline":"Egypt and Sudan reject Ethiopian dam management","dek":"Cairo and Khartoum reaffirm 1959 Nile water rights and warn of threats to their water security.","paragraphs":["Egypt and Sudan on Monday rejected unilateral actions in the Eastern Nile Basin, stating Ethiopia's management of its Blue Nile dam without a legal framework threatens their water security. The joint statement followed a \"2+2\" meeting in Cairo between the foreign and irrigation ministers of both nations.","Egyptian Foreign Minister Badr Abdelatty and Water Resources Minister Hani Sewilam met with their Sudanese counterparts Mohi El-Din Salem and Ismat Qurashi. The two countries declared their water security indivisible and reaffirmed their rights under the 1959 Nile Waters Agreement, calling for Ethiopia to cooperate under international law.","They also rejected involving other Nile Basin countries in the dispute, which they stated concerns only Egypt, Sudan, and Ethiopia. Both nations agreed to support their Permanent Joint Technical Commission for Nile Waters and discussed development projects in the southern Nile Basin, provided they meet technical standards and are agreed upon."],"why":"Egypt and Sudan's water security is threatened by Ethiopia's dam management without a binding legal agreement.","lenses":{"farmers":{"score":85,"why":"Egypt and Sudan's water security, vital for agriculture, is threatened by Ethiopia's dam management without a legal framework."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":25,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-02T19:17:52Z","editorialScore":16.15,"selectionScore":16.15,"confidence":"high","wordCount":147,"readMinutes":1,"sources":[{"published":"2026-11-02T19:17:52Z","name":"Daily News Egypt","url":"https://dailynewsegypt.com/2026/11/02/egypt-sudan-reject-unilateral-ethiopian-dam-management-reaffirm-1959-nile-water-rights/"}]},{"articleId":"7a7e54dc9ee0d919f24b","headline":"Egypt plans spending cuts, reserve boosts amid regional tensions","dek":"Prime Minister Mostafa Madbouly announced measures to rationalise government spending and increase strategic commodity stockpiles.","paragraphs":["Egypt is preparing to cut government spending and increase its strategic commodity reserves to counter potential economic fallout from escalating regional geopolitical tensions. Prime Minister Mostafa Madbouly announced these measures on Monday evening during a meeting of the Central Crisis Management Committee in the New Administrative Capital. The government aims to ease the impact of the crisis on local and global markets by boosting goods and product inventories and reducing state consumption of fuel and energy.","Finance Minister Ahmed Kouchouk and Planning and Economic Development Minister Ahmed Rostom are finalising a strategy to rationalise public expenditure and maximise state resource efficiency. Minister of Supply and Internal Trade Sherif Farouk stated that Egypt’s strategic reserves of various commodities are sufficient for an average of six months, with new contracts signed to further boost inventories. An initiative to reduce prices of basic goods currently offers 30 commodities at 15% to 25% discounts.","The crisis management meeting included Central Bank Governor Hassan Abdalla, ministers of electricity, agriculture, petroleum, information, and industry, alongside deputy ministers and military officials. The proposed plan guarantees the continuation of economic and productive activities and the availability of financial allocations for basic commodities and petroleum materials."],"why":"Egyptians will be affected by government spending cuts and potential price changes on basic goods.","lenses":{"farmers":{"score":55,"why":"The government is boosting inventories of goods and products and ensuring financial allocations for basic commodities and petroleum materials."},"investors":{"score":60,"why":"The government is drafting a plan to rationalise public expenditure and maximise the efficiency of state resources in response to rapid regional and global developments."},"diaspora":{"score":25,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-02T19:07:02Z","editorialScore":16.15,"selectionScore":13.9,"confidence":"high","wordCount":197,"readMinutes":1,"sources":[{"published":"2026-11-02T19:07:02Z","name":"Daily News Egypt","url":"https://dailynewsegypt.com/2026/11/02/egypt-to-cut-government-spending-boost-strategic-reserves-amid-regional-tensions/"}]},{"articleId":"c866f1670751a7c2734d","headline":"Egypt plans new rules for social media creators","dek":"Government met with 70 influencers to discuss a framework for digital content and professional standards.","paragraphs":["Egypt's Minister of State for Information Diaa Rashwan met with about 70 content creators and influencers on Sunday, November 1, to discuss regulating the digital content sector. The meeting explored establishing a framework, defining professional standards, and improving access to official information.","This discussion follows recent Cabinet recommendations for new measures against harmful social media practices, including increased fines for false news and a digital safety law. Creators proposed forming an Egyptian umbrella organization to set ethical standards and define professional creators.","Rashwan stated the government will not create a syndicate for influencers but supports their formation of an association. The ministry is exploring ways to support content creators, aiming to distinguish professionals from general users."],"why":"Egyptian social media content creators and influencers will be subject to new regulations and professional standards impacting their work.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-02T13:32:53Z","editorialScore":14.7,"selectionScore":13.45,"confidence":"medium","wordCount":116,"readMinutes":1,"sources":[{"published":"2026-11-02T13:32:53Z","name":"Egyptian Streets","url":"https://egyptianstreets.com/2026/11/02/egypt-moves-to-regulate-social-media-content-creators/"}]}],
 "gq": [{"articleId":"ba5456c4bd71e79624a3","headline":"Police arrest man for attempted cathedral fire","dek":"Severo Oburu Ekong Afang, 54, is accused of trying to set fire to Malabo Cathedral after his warnings were ignored.","paragraphs":["National Police in Malabo have arrested Severo Oburu Ekong Afang, 54, for an attempted fire at the city's cathedral on October 1. The arrest followed a month-long search involving public assistance.","Afang allegedly warned three officials from the Bishopric of Malabo about a situation he described as \"maximum alert\" but felt his concerns were not addressed. Investigations suggest this is not his first incident at the cathedral; he allegedly broke windows there in May 2024 for similar reasons.","The police consider these events to be of particular seriousness. The recent incident did not cause major damage due to the timely intervention of bystanders."],"why":"Severo Oburu Ekong Afang faces charges for an attempted arson at a religious site in Malabo.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"The incident involves a crime and a subsequent arrest, with no direct impact on businesses, markets, or the economy of Equatorial Guinea."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-02T20:30:06Z","editorialScore":17.85,"selectionScore":17.85,"confidence":"high","wordCount":103,"readMinutes":1,"sources":[{"published":"2026-11-02T20:30:06Z","name":"Ahora EG","url":"https://ahoraeg.com/sociedad/2026/11/02/detenido-el-ciudadano-que-intento-incendiar-la-catedral-de-malabo/"},{"published":"2026-11-02T20:46:57Z","name":"Real Equatorial Guinea","url":"https://realequatorialguinea.com/sociedad/la-policia-nacional-detiene-al-presunto-autor-del-intento-de-incendio-de-la-catedral-de-malabo/"}]},{"articleId":"fd2bf5858644c98ce1f1","headline":"Fire destroys eight homes in Malabo","dek":"Over 10 families lost all belongings after a short circuit sparked a blaze in the Héroe Luba neighbourhood.","paragraphs":["A fire destroyed more than eight houses in Malabo's Héroe Luba neighbourhood on Sunday, November 1, leaving over 10 families homeless. The blaze, believed to be caused by a short circuit, spread rapidly through the semi-permanent structures.","Residents rescued an elderly man with reduced mobility and worked to extinguish the flames, but reported delays from protection services allowed the fire to spread further. Affected families are now appealing for aid, with some stating they are unemployed and unsure how to rebuild.","The community is seeking solidarity from the public and relevant authorities to help those who lost their homes and belongings in the incident."],"why":"Over 10 families in Malabo have lost their homes and all their belongings due to a fire.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-02T11:02:53Z","editorialScore":7.5,"selectionScore":7.5,"confidence":"low","wordCount":104,"readMinutes":1,"sources":[{"published":"2026-11-02T11:02:53Z","name":"Real Equatorial Guinea","url":"https://realequatorialguinea.com/sociedad/mas-de-ocho-casas-quedan-calcinadas-en-el-barrio-heroe-luba-de-malabo/"}]},{"articleId":"a3224f8082db634492ac","headline":"Equatorial Guinean goalkeeper injures opponent","dek":"Jesús Lázaro Owono's collision with Jesús de Miguel during a Spanish Segunda División match caused immediate concern.","paragraphs":["Equatorial Guinean footballer Jesús Lázaro Owono was involved in a serious incident on Monday, November 2, during a match between CD Tenerife and FC Andorra. The game, part of LaLiga Hypermotion's twelfth round, was tied 2-2 in its final minutes when the FC Andorra goalkeeper Owono left his area. He attempted to intercept a long ball and collided with his knee against Tenerife's forward, Jesús de Miguel.","Jesús de Miguel fell to the ground after the impact, prompting an immediate reaction from players on both teams who requested medical attention. The severity of the collision caused significant concern on the pitch. Owono is the goalkeeper for FC Andorra, and de Miguel plays for CD Tenerife in Spain's Second Division.","The match was played in the final minutes with the score at 2-2. The incident occurred during the twelfth round of LaLiga Hypermotion. No further details on the condition of either player were immediately available from the match report."],"why":"Jesús de Miguel suffered an injury during a football match involving Equatorial Guinean player Jesús Lázaro Owono.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This national sports report may interest diaspora readers following teams and players from abroad."}},"topic":"Sport","published":"2026-11-03T06:50:14Z","editorialScore":9.5,"selectionScore":4.75,"confidence":"low","wordCount":158,"readMinutes":1,"sources":[{"published":"2026-11-03T06:50:14Z","name":"Ahora EG","url":"https://ahoraeg.com/futbol/2026/11/03/jesus-lazaro-owono-en-el-centro-de-un-episodio-que-conmociona-al-futbol-espanol/"}]}],
 "er": [{"articleId":"4c31a858ec1adb7bc97f","headline":"US lifts sanctions on Eritrea","dek":"Sanctions removed on September 19, 2026, targeted the ruling party's financial and military apparatus.","paragraphs":["The United States removed sanctions on Eritrea on September 19, 2026. These sanctions were imposed in 2021 due to Eritrea’s involvement in the Tigray War. The US government had outlined plans to lift the sanctions four months prior, according to a Reuters report.","Human rights groups criticized the decision, citing Eritrea's record of forced labor and torture under the ruling People’s Front for Democracy and Justice (PFDJ). Eritrea's government called the sanctions 'illicit and immoral' and claimed they caused 'incalculable damage' and constrained development.","The removed sanctions targeted the PFDJ’s financial and military bodies and two officials, Abraha Kassa and Hagos Gebrehiwet. The Eritrean Defence Force’s chief of staff, Filipos Woldeyohannes, remains under separate sanctions. The PFDJ has previously benefited from the removal of UN sanctions in 2018, remaining self-sufficient."],"why":"Eritrea's ruling party and officials benefit from the removal of US sanctions, not the impoverished population.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-10-15T10:00:44Z","editorialScore":9.55,"selectionScore":9.55,"confidence":"low","wordCount":130,"readMinutes":1,"sources":[{"url":"https://africanarguments.org/2026/10/eritreas-coming-crisis-how-the-lifting-of-us-sanctions-might-spell-trouble-for-africas-most-opaque-state/?utm_source=rss&utm_medium=rss&utm_campaign=eritreas-coming-crisis-how-the-lifting-of-us-sanctions-might-spell-trouble-for-africas-most-opaque-state","name":"African Arguments","published":"2026-10-15T10:00:44Z"}]}],
-"ke": [{"articleId":"495e574d8816d5ba3f9f","headline":"Former Attorney General Paul Kihara dies aged 72","dek":"The Judiciary has paid tribute to the distinguished jurist for his enduring contribution to Kenya’s legal institutions.","paragraphs":["Former Attorney General Paul Kihara Kariuki died on November 3, 2026, at the age of 72. The Judiciary has paid tribute to the retired Court of Appeal President, describing him as a distinguished jurist.","Chief Justice Martha Koome stated that Kihara's career was marked by dedicated public service and judicial leadership. He served as President of the Court of Appeal from 2013 to 2018, championing reforms to improve efficiency and accessibility. Koome also recognised his role as the founding Director of the Judiciary Training Institute.","Kihara served as Attorney General from 2018 to 2022, acting as the Government’s principal legal adviser. Chief Justice Koome said his legacy would live on through the institutions he helped build and the reforms he championed."],"why":"The death of former Attorney General Paul Kihara affects the Kenyan legal fraternity and the government he served.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-03T06:15:26Z","editorialScore":20.7,"selectionScore":20.7,"confidence":"high","wordCount":121,"readMinutes":1,"sources":[{"published":"2026-11-03T06:15:26Z","name":"Capital FM","url":"https://capitalfm.africa/former-attorney-general-paul-kihara-dies-as-judiciary-pays-tribute/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"},{"published":"2026-11-01T11:51:43Z","name":"The Standard","url":"https://www.standardmedia.co.ke/article/2001561301/gachagua-dismisses-uhuru-reconciliation-calls-says-we-are-one-team"},{"published":"2026-11-03T05:51:26Z","name":"Kenyans.co.ke","url":"https://www.kenyans.co.ke/news/129080-former-attorney-general-paul-kihara-kariuki-dies-72"}]},{"articleId":"6f1e53cdc7723a5f380a","headline":"ADM opens Nairobi office to boost East African trade","dek":"The global nutrition and agricultural company aims to connect local demand with its worldwide supply chain network.","paragraphs":["ADM, a global leader in nutrition and agricultural supply chain solutions, has opened a new destination marketing office in Nairobi, Kenya. This move strengthens the company's ability to link customers across East Africa to its global supply chain network. Kenya is a leading trade hub for food and feed ingredients and serves as a gateway to the wider East African region.","The Nairobi office will offer customers access to a wide range of food ingredients, feedstuffs, and animal nutrition products. It will focus on market insights, local merchandising, and storage and distribution. Patrick Heijbroek, Vice President of Global Trade, stated that East Africa's population of over 500 million people represents a high-growth market with increasing demand for quality ingredients and supply chain solutions.","This expansion builds on ADM's decade-long presence in Kenya and complements its existing investments in Africa, including human nutrition labs in Nairobi, a distribution hub in Lagos, Nigeria, and flavor creation capabilities in Johannesburg, South Africa. In 2025, ADM's destination marketing operations handled nearly 31 million metric tons."],"why":"Farmers and businesses in East Africa will gain better access to ADM's global supply chain for food and feed ingredients.","lenses":{"farmers":{"score":75,"why":"Farmers and the agricultural sector in East Africa will benefit from improved access to ADM's global supply chain for feed ingredients and animal nutrition products."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-03T07:13:43Z","editorialScore":18.8,"selectionScore":18.8,"confidence":"high","wordCount":171,"readMinutes":1,"sources":[{"published":"2026-11-03T07:13:43Z","name":"Food Business Africa","url":"https://www.foodbusinessmea.com/adm-opens-new-destination-marketing-office-in-kenya/"},{"published":"2026-11-02T17:25:57Z","name":"Farmers Review Africa","url":"https://farmersreviewafrica.com/adm-expands-east-africa-presence-with-new-destination-marketing-office-in-nairobi/"}]},{"articleId":"e1b590df9ddb24d4d7b7","headline":"Kenya restricts Diwali fireworks to four hours","dek":"Mining CS Joho mandates permits and limits shell size for celebrations from November 6 to 8.","paragraphs":["Mining Cabinet Secretary Hassan Joho has limited fireworks displays during Diwali celebrations to a four-hour window, from 7pm to 11pm, between November 6 and 8. Organisers must obtain permits and adhere to safety regulations, with fireworks shells capped at four inches in urban areas unless an exemption is granted. These directives aim to regulate displays and minimise public disruption during the Hindu festival.","Joho stated that only qualified, experienced, and sober individuals can handle aerial fireworks, and dealers must sell products only to permit holders. Applications for display authorisations can be made at Madini House or county mining offices. Displays are restricted to approved locations, including hotels, clubs, temples, sports grounds, and school compounds cleared by an Inspector of Explosives.","The new rules follow President William Ruto's pledge in October 2024 to consider Diwali as a national holiday, a proposal that requires parliamentary approval. Contravention of Joho's directives risks a fine not exceeding Ksh10,000 or imprisonment for up to two months, or both."],"why":"Kenyans celebrating Diwali face restrictions on fireworks displays and potential fines for non-compliance.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-03T05:58:33Z","editorialScore":18.65,"selectionScore":17.4,"confidence":"high","wordCount":164,"readMinutes":1,"sources":[{"published":"2026-11-03T05:58:33Z","name":"Capital FM","url":"https://capitalfm.africa/mining-cs-joho-issues-fireworks-guidelines-ahead-of-diwali-celebrations/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"},{"published":"2026-11-03T04:15:21Z","name":"Kenyans.co.ke","url":"https://www.kenyans.co.ke/news/129076-cs-joho-restricts-diwali-fireworks-7pm-11pm-sets-safety-rules"}]},{"articleId":"45b3e44d08371fa29a43","headline":"Kenya sugar farmers to elect board representatives November 24","dek":"The Ministry of Agriculture and Livestock Development confirmed the election date and published the final voters' register and candidate list.","paragraphs":["Sugarcane farmers in Kenya will elect five representatives to the Kenya Sugar Board on November 24, 2026. The Ministry of Agriculture and Livestock Development confirmed the date and published the final voters’ register and candidate list on October 30. The election will fill five grower representative positions as provided for under Section 6 of the Sugar Act No. 11 of 2024.","Elections Committee Chairperson Harun Khator signed a notice stating the election would follow the applicable legal framework and court orders. The final voters’ register is available on the Board’s website and displayed at designated facilities. Preparations for the election began on May 12, 2026, with an invitation for applications from members of the public.","The High Court had suspended the elections in September pending a constitutional petition challenging disputed sugarcane catchment boundaries. The November 24 vote will determine who represents sugarcane farmers in Board deliberations on industry issues. Growers should consult official committee communications and the published register to confirm their eligibility."],"why":"The November 24 vote will determine who represents sugarcane farmers in Board deliberations on industry issues.","lenses":{"farmers":{"score":95,"why":"Sugarcane farmers will elect five representatives to the Kenya Sugar Board on November 24, 2026, to deliberate on industry issues."},"investors":{"score":60,"why":"The election of grower representatives to the Kenya Sugar Board will influence deliberations on issues affecting the sugar industry."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Agriculture","published":"2026-11-02T13:01:21Z","editorialScore":15.15,"selectionScore":13.9,"confidence":"high","wordCount":163,"readMinutes":1,"sources":[{"published":"2026-11-02T13:01:21Z","name":"Food Business Africa","url":"https://www.foodbusinessmea.com/kenya-sugar-board-elections-set-for-november-24/"}]}],
+"ke": [{"articleId":"da5bba985f9af8c74f15","headline":"ADM opens new Nairobi office for East Africa trade","dek":"The global nutrition company aims to connect regional demand with its international agricultural supply chain network.","paragraphs":["ADM has opened a new destination marketing office in Nairobi, Kenya, to connect East African customers with its global agricultural supply chain. The office will provide access to ADM’s food ingredients, feedstuffs, and animal nutrition products for customers across the region. Nairobi was chosen as a base due to Kenya's role as a regional trade hub.","The new operation will focus on destination marketing, including market insights, local merchandising, and storage and distribution. Patrick Heijbroek, vice president for Global Trade, stated that East Africa is a high-growth market with increasing demand for quality food and feed ingredients. ADM’s destination marketing activities reached approximately 31 million metric tonnes in 2025.","This Nairobi office builds on ADM’s decade-long presence in Kenya and expands its African footprint. It complements existing investments in human nutrition innovation laboratories in Nairobi and a distribution hub in Nigeria. Erdal Kurban, president for Africa & Middle East, said the office will bring ADM closer to customers to better understand local market dynamics."],"why":"East African customers will have better access to ADM's global food ingredients, feedstuffs, and animal nutrition products.","lenses":{"farmers":{"score":70,"why":"Farmers in East Africa will have improved access to ADM's feedstuffs and animal nutrition products through the new Nairobi office."},"investors":{"score":85,"why":"ADM raised its 2026 profit outlook to between US$5.15 and US$5.60 per share, supported by stronger crop processing margins and favourable US biofuels policies."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-03T10:28:28Z","editorialScore":18.8,"selectionScore":18.8,"confidence":"high","wordCount":163,"readMinutes":1,"sources":[{"published":"2026-11-03T10:28:28Z","name":"Food Business Africa","url":"https://www.foodbusinessmea.com/adm-opens-new-nairobi-office/"},{"published":"2026-11-02T17:25:57Z","name":"Farmers Review Africa","url":"https://farmersreviewafrica.com/adm-expands-east-africa-presence-with-new-destination-marketing-office-in-nairobi/"}]},{"articleId":"f959a06d88c641b65eb3","headline":"Kenyan judge Okowa re-elected to International Court of Justice","dek":"Prof. Phoebe Okowa will serve a second nine-year term on the ICJ from 2027 to 2036 after winning a UN Security Council vote.","paragraphs":["Kenya’s Prof. Phoebe Okowa has won re-election to the International Court of Justice (ICJ) for a full nine-year term from 2027 to 2036. She secured her victory after a third round of voting at the United Nations, defeating Peru’s Luz del Carmen Ibáñez Carranza with 13 votes in the 15-member Security Council. Okowa’s current mandate, which began in November 2025 to fill a vacancy, was set to expire on February 5, 2027.","The contest concluded after three other candidates withdrew, leaving Okowa to face her Peruvian rival. Sierra Leone’s UN envoy urged support for Okowa, stating that Africa risked losing its representation on the court if votes remained divided. The envoy highlighted Okowa’s qualifications, including her previous service on the court and her distinction as the first African woman elected to the UN International Law Commission.","Okowa’s re-election ensures Kenya maintains a seat on the 15-member court, with her new term commencing on February 6, 2027. To be elected, candidates require an absolute majority in both the 193-member General Assembly and the 15-member Security Council. The ICJ is the principal judicial organ of the United Nations, based in The Hague, Netherlands."],"why":"Kenyan judge Phoebe Okowa has secured re-election to the International Court of Justice, ensuring Kenya's continued representation on the global judicial body.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":40,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-03T19:13:50Z","editorialScore":18.2,"selectionScore":18.2,"confidence":"high","wordCount":191,"readMinutes":1,"sources":[{"published":"2026-11-03T19:13:50Z","name":"Capital FM","url":"https://capitalfm.africa/okowa-wins-re-election-to-icj-after-third-round-vote/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"},{"published":"2026-11-03T19:19:08Z","name":"The Standard","url":"https://www.standardmedia.co.ke/article/2001561465/kenya-s-phoebe-okowa-elected-icj-judge-for-nine-year-term"}]},{"articleId":"3bca74871f74e596b6d6","headline":"Law Society of Kenya seeks missing lawyer","dek":"Nairobi advocate Abshir Ahmedsadak Abdi reportedly abducted November 2, 2026, amid criminal case involvement.","paragraphs":["The Law Society of Kenya (LSK) is demanding urgent investigations into the disappearance of Nairobi lawyer Abshir Ahmedsadak Abdi, who was reportedly abducted on November 2, 2026. Abdi, of Abshir & Njagi Advocates, was allegedly pursued by armed individuals in two vehicles along Muchai Road, with some occupants appearing to be in police uniforms.","LSK President Charles Kanjama stated that the lawyer's disappearance is a concern due to his role as a key witness in Criminal Case No. MCCR/E2910/2025 at the Makadara Law Courts. The Society has received prior reports of threats linked to these proceedings and has filed a habeas corpus application, scheduled for directions on November 9, 2026.","The LSK has called on Inspector General of Police Douglas Kanja and the Directorate of Criminal Investigations (DCI) to find Abdi and investigate the incident. The Independent Policing Oversight Authority (IPOA) is also urged to look into the involvement of individuals posing as police officers."],"why":"The abduction of lawyer Abshir Ahmedsadak Abdi is linked to his role as a witness in a criminal case, which the LSK states is an affront to the administration of justice.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report does not contain information relevant to investors."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-03T15:39:21Z","editorialScore":15.3,"selectionScore":14.05,"confidence":"high","wordCount":156,"readMinutes":1,"sources":[{"published":"2026-11-03T15:39:21Z","name":"Capital FM","url":"https://capitalfm.africa/lsk-links-missing-nairobi-lawyer-to-criminal-case-demands-urgent-investigations/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"}]},{"articleId":"0dc803d6abaae5c143e8","headline":"Kenya and Australia discuss farm tech partnership","dek":"The two nations are exploring cooperation in research, livestock technology, and youth skills development.","paragraphs":["Kenya and Australia are discussing a new partnership to improve agricultural productivity and innovation. The collaboration aims to boost research, livestock technology, and youth skills development in Kenya's farming sector.","Agriculture Cabinet Secretary Sen. Mutahi Kagwe met with Australia's Acting High Commissioner Andrew Barnes to discuss strengthening crop and livestock research. They explored technology transfer, vaccine development, and sexed semen technology, building on existing vaccine exports to 13 countries, including 11 million doses to Uganda.","The partnership also seeks to use Agricultural Training Centres to equip young people with practical farming skills. This initiative is expected to support the modernisation of Kenya's agriculture and increase youth involvement in the sector."],"why":"Kenyan farmers and young people stand to benefit from enhanced agricultural research, technology adoption, and skills development.","lenses":{"farmers":{"score":85,"why":"Kenyan farmers may gain access to new research, livestock technologies like sexed semen, and improved vaccine production, potentially increasing productivity."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Agriculture","published":"2026-11-03T12:19:23Z","editorialScore":10.85,"selectionScore":9.85,"confidence":"medium","wordCount":110,"readMinutes":1,"sources":[{"published":"2026-11-03T12:19:23Z","name":"Farmers Review Africa","url":"https://farmersreviewafrica.com/kenya-australia-explore-partnership-to-boost-agricultural-research-and-technology/"}]},{"articleId":"1b66b500e3d04e1e37e6","headline":"Ethiopians flee clashes, await registration in Kenya","dek":"Thousands of displaced people are waiting at Al-huda primary school in Moyale for processing by UNHCR.","paragraphs":["Thousands of displaced Ethiopians were expected to be registered in the Kenyan border city of Moyale on Monday, after fleeing clashes between Oromia and Somali region leaders in Ethiopia.","The United Nations refugee agency, UNHCR, has provided temporary international protection status to these individuals, who are currently awaiting processing at Al-huda primary school.","As of October 29, the UN reported that approximately 50,000 people had fled fighting in southern Ethiopia into Kenya, a figure that had jumped from 36,000 just two days prior, according to UNHCR representative for Kenya, Fatima Mohammed-Cole."],"why":"Displaced Ethiopians fleeing conflict in Ethiopia are awaiting registration and aid in Kenya.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-03T05:57:22Z","editorialScore":8.5,"selectionScore":7.5,"confidence":"low","wordCount":93,"readMinutes":1,"sources":[{"published":"2026-11-03T05:57:22Z","name":"Africanews","url":"http://www.africanews.com/2026/11/03/displaced-ethiopians-await-registration-in-kenya-after-fleeing-clashes/"}]}],
 "za": [{"articleId":"c140af97fdf6a6e3cd9d","headline":"SAHRC flags R777m tanker bill amid Gauteng water crisis","dek":"The South African Human Rights Commission found infrastructure failure, not water shortage, causes outages.","paragraphs":["The South African Human Rights Commission (SAHRC) has raised concerns over millions spent on water tankers in Gauteng while residents face prolonged outages. The commission's findings, released on Monday, November 2, followed an inquiry into water and sanitation services.","SAHRC commissioner Dr. Henk Boshoff questioned why municipalities spent hundreds of millions on emergency water instead of repairing infrastructure, calling water tankering a form of corruption and financial mismanagement. The City of Tshwane spent R777 million on water tankers in the 2024/25 financial year, an increase from R47 million in 2021/22.","The SAHRC inquiry, conducted from May 19-21, identified ageing infrastructure, poor maintenance, water losses, inadequate storage, and electricity interruptions as key contributors to Gauteng's water problems. The commission made eight recommendations, including repairing wastewater plants and improving maintenance, and will monitor their implementation."],"why":"Gauteng residents are affected by prolonged water outages due to failing infrastructure and mismanagement of funds meant for repairs.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":30,"why":"Municipalities in Gauteng are spending hundreds of millions on water tankers instead of infrastructure, indicating potential financial mismanagement affecting public funds."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-03T07:43:16Z","editorialScore":21.55,"selectionScore":21.55,"confidence":"high","wordCount":135,"readMinutes":1,"sources":[{"published":"2026-11-03T07:43:16Z","name":"The South African","url":"https://www.thesouthafrican.com/news/sahrc-flags-r777m-tanker-bill-amid-gauteng-water-crisis/"},{"published":"2026-11-02T15:50:46Z","name":"Mail & Guardian","url":"https://mg.co.za/the-green-guardian/2026-11-02-sahrc-warns-gauteng-water-crisis-is-about-failing-infrastructure-not-a-lack-of-water/"},{"published":"2026-11-02T17:46:04Z","name":"GroundUp","url":"https://groundup.org.za/article/why-gauteng-residents-go-without-water-sahrc-report/"}]},{"articleId":"b57bfa3f99323ae609f0","headline":"US to suspend South Africa's duty-free trade access","dek":"Washington cites trade barriers and other practices inconsistent with the AGOA agreement.","paragraphs":["The United States intends to suspend South Africa's duty-free access to the US market under the African Growth and Opportunity Act (AGOA). US Trade Representative Jamieson Greer announced on Monday that Washington found South Africa engaging in practices inconsistent with AGOA's eligibility criteria.","Greer stated that these practices include barriers undermining American trade and investment, and actions threatening US national security and foreign policy interests in the region. South Africa has benefited from AGOA for years.","The US administration has previously expressed concerns about trade barriers, rule of law, and human rights in South Africa. The South African government disputes claims of persecution of white people, calling them falsehoods spread by fringe groups."],"why":"South Africa's duty-free access to the US market under AGOA is at risk.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-02T17:16:12Z","editorialScore":20.9,"selectionScore":19.65,"confidence":"high","wordCount":113,"readMinutes":1,"sources":[{"published":"2026-11-02T17:16:12Z","name":"The South African","url":"https://www.thesouthafrican.com/business/breaking-donald-trump-deals-sa-a-devastating-trade-blow/"},{"published":"2026-11-03T04:40:56Z","name":"Daily Maverick","url":"https://www.dailymaverick.co.za/article/2026-11-03-trump-approval-near-career-low-ahead-of-elections-reutersipsos-poll-finds/"},{"published":"2026-11-03T03:00:36Z","name":"BBC Africa","url":"https://www.bbc.co.uk/news/articles/c9j346xg0mkvo?at_medium=RSS&at_campaign=rss"}]},{"articleId":"847f6b6d6880f6c4db7e","headline":"Two arrested for election offences in Limpopo","dek":"Suspects detained for tearing down posters and assault ahead of local government elections.","paragraphs":["South African Police Service officers in Limpopo arrested two men on November 3, 2026, for election-related offences during the special voting period. One suspect was detained in Mankweng for allegedly tearing down official election posters, an act captured on video. The other arrest occurred in Sekhukhune District following a confrontation where a T-shirt was forcibly removed and burned.","The Mankweng suspect faces charges under Section 92 of the Electoral Act 73 of 1998, with his case remanded to November 30, 2026. In Sekhukhune, police registered a case of assault and intimidation after a rival party's supporters allegedly confronted and attacked a complainant. Limpopo Provincial Police Commissioner Lieutenant General Jan Petrus Scheepers stated that SAPS will act swiftly against intimidation and the destruction of election material.","Scheepers urged all parties to exercise restraint and resolve differences peacefully. The 2026 Local Government Elections are scheduled for November 4, 2026, with voting stations open from 07:00 to 21:00. Police advise voters to remain vigilant and follow safety tips, such as avoiding valuables and not lingering at voting stations."],"why":"Two men were arrested for election-related offences, including tearing down posters and assault, impacting the special voting period for the 2026 Local Government Elections.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-03T08:23:23Z","editorialScore":19.8,"selectionScore":18.8,"confidence":"high","wordCount":177,"readMinutes":1,"sources":[{"published":"2026-11-03T08:23:23Z","name":"The Citizen SA","url":"https://www.citizen.co.za/news/south-africa/elections/posters-torn-t-shirts-torched-arrests-mar-first-day-of-voting/"},{"published":"2026-11-03T08:57:03Z","name":"Daily Maverick","url":"https://www.dailymaverick.co.za/article/2026-11-03-poll-dancing-watch-politically-awehs-elections-comedy-special-before-you-vote/"},{"published":"2026-11-03T06:00:00Z","name":"The South African","url":"https://www.thesouthafrican.com/news/elections/elections-2026-essential-safety-tips-you-need-to-know/"}]},{"articleId":"66057d6ba07c70a88e55","headline":"South Africa's power outlook relies on uncertain assumptions","dek":"A new 10-year electricity plan faces doubts after a failed gas tender and ambitious Eskom targets.","paragraphs":["South Africa's electricity supply may remain stable for the next decade, according to the National Transmission Company South Africa's (NTCSA) Medium-Term System Adequacy Outlook 2027-2036. This forecast depends on Eskom improving its plant performance, new generation capacity arriving on schedule, and the transmission grid expanding as planned.","However, the report's optimistic scenario, published on October 30, 2026, is already challenged by the recent failure of the government's first gas-to-power procurement round. The NTCSA's reference case assumes significant new renewable energy, storage, transmission upgrades, and new gas generation from 2032, alongside Eskom's energy availability factor rising from 66% to 70%.","Even with these assumptions, the outlook projects 13.42 GWh and 377 hours of unserved energy by 2036, indicating potential demand shortfalls. The report's modelling represents a significant advance, but its outcomes are conditional and not certain."],"why":"South African businesses and households face continued uncertainty regarding electricity supply due to the conditional nature of the new 10-year outlook.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":70,"why":"Investors in South Africa's energy sector face uncertainty due to the reliance on ambitious Eskom performance targets and the failure of gas procurement rounds."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-02T16:35:14Z","editorialScore":15.4,"selectionScore":14.4,"confidence":"high","wordCount":136,"readMinutes":1,"sources":[{"published":"2026-11-02T16:35:14Z","name":"Daily Maverick","url":"https://www.dailymaverick.co.za/article/2026-11-02-the-fragile-assumptions-behind-south-africas-optimistic-electricity-outlook/"}]},{"articleId":"d7768902ac73b73f0569","headline":"South Africa launches new insecticide for potato moths","dek":"Syngenta’s SILVALIS®, powered by PLINAZOLIN® technology, offers a new mode of action for crop protection.","paragraphs":["Syngenta South Africa has launched SILVALIS®, the nation's first registered IRAC Group 30 insecticide, to combat the destructive potato tuber moth. This new product, powered by PLINAZOLIN® technology, introduces a novel mode of action to South African agriculture, providing potato growers with a new tool against a challenging pest.","The insecticide is registered for controlling the potato tuber moth (Phthorimaea operculella), which can cause up to 100% crop loss by damaging leaves, stems, and tubers in fields and storage. Sarike le Roux, Syngenta’s Head of Marketing, stated the product reflects the company's aim to turn science into practical breakthroughs for farmers.","SILVALIS® contains the active ingredient isocycloseram and was developed over the past 10 years. Chris Steyn, Syngenta’s Portfolio Manager Insect Control, noted that grower feedback has exceeded predictions and trials, offering new chemistry for integrated pest management programmes."],"why":"South African potato farmers gain a new tool to protect their crops from severe losses caused by the potato tuber moth.","lenses":{"farmers":{"score":95,"why":"South African potato farmers have a new registered insecticide, SILVALIS®, to combat the potato tuber moth and prevent up to 100% crop loss."},"investors":{"score":60,"why":"Syngenta South Africa launched a new product, SILVALIS®, representing innovation in crop protection technology and a new active ingredient for the agricultural market."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Agriculture","published":"2026-11-02T07:13:07Z","editorialScore":12.35,"selectionScore":12.35,"confidence":"medium","wordCount":139,"readMinutes":1,"sources":[{"published":"2026-11-02T07:13:07Z","name":"Farmers Review Africa","url":"https://farmersreviewafrica.com/south-africa-launches-new-insecticide-to-combat-destructive-potato-tuber-moth/"}]}],
 "ng": [{"articleId":"51c9de6108f8f9acfb95","headline":"Nigerian Breweries profit rises 33% to N114.1 billion","dek":"Revenue grew 5% to N1.10 trillion in nine months ended September 30, 2026, as finance costs fell.","paragraphs":["Nigerian Breweries Plc reported a 33% increase in profit after tax to N114.1 billion for the nine months ending September 30, 2026. This growth was driven by a 15% rise in gross profit to N477.9 billion and a significant 78% reduction in finance expenses. The company's revenue also saw a 5% increase, reaching N1.10 trillion during the same period.","Managing Director Thibaut Boidin stated that the nine-month performance demonstrated business resilience and disciplined execution, despite ongoing consumer spending pressures. The brewer achieved a net profit of N21 billion in the third quarter, marking its first profitable third quarter since 2022. Boidin called this return to quarterly profitability an important milestone.","Nigerian Breweries experienced declines in volumes and net revenue in the third quarter, though premium brands like Heineken contributed to market share gains. The company reported stronger cash generation and improved working capital management. Boidin confirmed a continued focus on brand investment, cost control, and cash management for the remainder of 2026."],"why":"Nigerian Breweries Plc's financial results show increased profitability and revenue, alongside a return to quarterly profit, indicating business recovery.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":85,"why":"Nigerian Breweries Plc reported a 33% increase in profit after tax to N114.1 billion and a 5% rise in revenue to N1.10 trillion for the nine months ended September 30, 2026."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-02T12:58:26Z","editorialScore":19.8,"selectionScore":19.8,"confidence":"high","wordCount":165,"readMinutes":1,"sources":[{"published":"2026-11-02T12:58:26Z","name":"Food Business Africa","url":"https://www.foodbusinessmea.com/nigerian-breweries-nine-month-profit-rises-33-as-finance-costs-fall/"},{"published":"2026-11-03T01:31:40Z","name":"The Punch","url":"https://punchng.com/eterna-revenue-hits-n365bn-as-earnings-rise/?utm_source=rss.punchng.com&utm_medium=web"},{"published":"2026-11-02T16:56:22Z","name":"Nairametrics","url":"https://nairametrics.com/2026/11/02/beta-glass-delivers-double-digit-revenue-and-operating-profit-growth-in-q3-2026-unaudited-results/"}]},{"articleId":"e5a290985732e79fb6c6","headline":"IAR wins N1.2bn for climate-smart agriculture","dek":"Four grants will fund research into drought-tolerant crops, irrigation, and livestock feed for Nigerian farmers.","paragraphs":["The Institute for Agricultural Research (IAR) at Ahmadu Bello University (ABU), Zaria, has secured four grants worth N1.213 billion for climate adaptation research. The funding from the Action Research for Climate Adaptation in Agriculture (ARCAA) programme will support practical solutions for farmers facing climate challenges.","The grants, awarded by RTI International and RUFORUM with Gates Foundation support, will fund research into locally sourced livestock feed, solar-powered irrigation, drought-tolerant maize, and resilient groundnut varieties. IAR secured four of the eight successful Nigerian proposals, making it the only institution in the country to win multiple grants.","These initiatives aim to help farmers improve production, adapt to changing climatic conditions, and adopt sustainable practices, particularly in Northern Nigeria. IAR Executive Director Prof. Ado A. Yusuf stated the grants reflect the institute’s research strength and commitment to addressing farmers' challenges and contributing to national food security."],"why":"Nigerian farmers will benefit from research into drought-tolerant crops, improved irrigation, and better livestock feed.","lenses":{"farmers":{"score":95,"why":"Nigerian farmers will benefit from research into drought-tolerant crops, improved irrigation, and better livestock feed."},"investors":{"score":10,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":10,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Agriculture","published":"2026-11-02T16:51:13Z","editorialScore":18.3,"selectionScore":18.3,"confidence":"high","wordCount":143,"readMinutes":1,"sources":[{"published":"2026-11-02T16:51:13Z","name":"AgroNigeria","url":"https://agronigeria.ng/iar-wins-4-grants-worth-n1-2bn-to-advance-climate-smart-agriculture-in-nigeria/?utm_source=rss&utm_medium=rss&utm_campaign=iar-wins-4-grants-worth-n1-2bn-to-advance-climate-smart-agriculture-in-nigeria"}]},{"articleId":"875490593b9ddc77c5df","headline":"ADC says Atiku won't pick Senate President, Speaker","dek":"Dino Melaye stated the African Democratic Congress will allow lawmakers to elect their own leaders for independence.","paragraphs":["The African Democratic Congress (ADC) Presidential Campaign Council's Deputy Director-General, Dino Melaye, stated that a presidency under Atiku Abubakar would not dictate the selection of the Senate President or the Speaker of the House of Representatives. Melaye announced on Arise Television that the ADC party is committed to democratic principles and will permit lawmakers to choose their leaders independently. This approach, he explained, aims to foster legislative independence and enhance the National Assembly's oversight capabilities over the executive branch.","Melaye specified that the ADC would empower relevant National Assembly committees, including those for Establishment, Finance, and Budget and Planning, to scrutinize government spending. These committees will be tasked with questioning government officials and monitoring expenditure, particularly concerning State House operations. The ADC official emphasized that this independent selection of leaders would strengthen the National Assembly's oversight functions.","Separately, Tijjani Kaura was declared the winner of the All Progressives Congress (APC) rerun senatorial primary election for Zamfara North. This primary followed violence at voting centers, and Senator Sahabi Ya’u Kaura was announced as the victor ahead of the 2027 elections."],"why":"Nigerian lawmakers will have the freedom to elect their leaders without presidential interference, according to Dino Melaye of the ADC.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report does not contain information relevant to investors."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-03T08:06:33Z","editorialScore":17.8,"selectionScore":17.8,"confidence":"high","wordCount":179,"readMinutes":1,"sources":[{"published":"2026-11-03T08:06:33Z","name":"Vanguard","url":"https://www.vanguardngr.com/2026/11/20027-atikus-presidency-wont-determine-senate-president-reps-speaker-melaye/"},{"published":"2026-11-03T07:00:24Z","name":"Premium Times","url":"https://www.premiumtimesng.com/news/more-news/922290-kaura-wins-zamfara-apc-senatorial-ticket-amid-violence.html"},{"published":"2026-11-03T08:33:44Z","name":"The Punch","url":"https://punchng.com/apc-declares-winner-of-fresh-zamfara-north-senatorial-primary/?utm_source=rss.punchng.com&utm_medium=web"}]},{"articleId":"5c407561e19a369be272","headline":"Police rescue 11 kidnapped victims","dek":"19 suspects arrested and 91 livestock recovered in security operations across several states.","paragraphs":["Nigeria Police Force rescued 11 kidnapped victims and arrested 19 suspects in operations over the past 48 hours. The security forces also recovered 91 rustled livestock, including 48 cows and 43 sheep, along with firearms and stolen valuables. These actions are part of sustained efforts to combat kidnapping and other criminal activities.","In Zamfara State, five elderly women were rescued from armed bandits in Dansadau after a gun battle, though a 35-year-old farmer was killed during the attack. In Niger State, six farmers abducted in Rafi Local Government Area were freed by a joint security team. Police in Kano arrested five suspects connected to the abduction of an APC Chairman, recovering 48 cows and 43 sheep.","Security forces in Kebbi State repelled an attack on Ribah town on October 30, following an earlier incident where nine people were killed and property destroyed in Dan-Indo village. Coordinated search-and-rescue operations are underway in Zamfara for nine persons abducted near Kaura Namoda. Tactical teams in Katsina foiled an attempted bandit attack on Karofi village."],"why":"11 kidnapped victims were rescued and 19 suspects arrested by the Nigeria Police Force.","lenses":{"farmers":{"score":65,"why":"A 35-year-old farmer was killed during a rescue operation in Zamfara State, and six farmers were rescued in Niger State."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-03T08:09:04Z","editorialScore":15.95,"selectionScore":14.7,"confidence":"high","wordCount":171,"readMinutes":1,"sources":[{"published":"2026-11-03T08:09:04Z","name":"Vanguard","url":"https://www.vanguardngr.com/2026/11/police-rescue-11-kidnapped-victims-arrest-19-suspects/"}]},{"articleId":"051395449ae5ba8a6f30","headline":"Jigawa commits N4.5bn to cattle ranches","dek":"The state plans three ranches with modern facilities to boost livestock and reduce farmer-herder conflicts.","paragraphs":["The Jigawa State Government has committed N4.5 billion to establish three cattle ranches across the state. The Commissioner for Livestock Development, Salim Abdulrahman, announced the funding, which is part of the N17.2 billion allocated to livestock development in the 2026 fiscal year. The ranches will be located in Sankara Grazing Reserve (Ringim), Kashamai Grazing Reserve (Kafin Hausa), and Kukar Mekiya (Kiyawa).","Each 510-hectare ranch will accommodate 3,000 households and feature modern facilities including pasture, water points, schools, healthcare, veterinary clinics, markets, electricity, and water supply. Abdulrahman stated the initiative aims to combat frequent clashes between farmers and herders in Jigawa. The government also plans veterinary clinics in all 27 local government areas and mobile clinics across the state.","The state has earmarked N350 million for livestock vaccination and is upgrading three livestock breeding centres. MACBAN National Deputy Treasurer Abdullahi Abubakar supported the transition to modern ranching, suggesting it could reduce land and resource competition that triggers disputes."],"why":"Jigawa State's N4.5 billion investment in cattle ranches will directly affect livestock farmers by providing improved facilities and reducing conflicts.","lenses":{"farmers":{"score":85,"why":"Jigawa State is investing N4.5 billion in three cattle ranches with modern facilities, including pasture and water, to improve livestock production and reduce farmer-herder conflicts."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Agriculture","published":"2026-11-02T17:04:31Z","editorialScore":15.8,"selectionScore":14.55,"confidence":"high","wordCount":160,"readMinutes":1,"sources":[{"published":"2026-11-02T17:04:31Z","name":"AgroNigeria","url":"https://agronigeria.ng/jigawa-commits-n4-5bn-to-establish-cattle-ranches/?utm_source=rss&utm_medium=rss&utm_campaign=jigawa-commits-n4-5bn-to-establish-cattle-ranches"},{"published":"2026-11-03T04:44:58Z","name":"The Punch","url":"https://punchng.com/2027-makindes-commissioner-two-aides-resign/?utm_source=rss.punchng.com&utm_medium=web"}]}],
 "et": [{"articleId":"e41a92ee45914e26cf9f","headline":"FAO urges Ethiopia to shift from aid to early action","dek":"The UN agency wants Ethiopia to invest in forecasts and warnings to protect livelihoods before climate disasters strike.","paragraphs":["The Food and Agriculture Organization of the United Nations (FAO) is urging Ethiopia to move away from emergency aid towards anticipatory action for recurring climate disasters. FAO Assistant Director-General Abebe Haile-Gabriel stated that Ethiopia needs to invest in early warning systems and scientific forecasting to protect communities before crises escalate. He noted that repeated responses after livestock and crops are lost offer no sustainable solution to the country's climate vulnerability.","Instead of reacting to disasters, the FAO advocates for a system where authorities anticipate climate threats and act on scientific forecasts. This approach involves identifying high-risk communities and deploying targeted support, such as pre-positioning livestock feed, strengthening veterinary services, and distributing drought-resistant seeds. The goal is to protect productive assets before households suffer losses.","This call comes as Ethiopia faces climate concerns linked to El Niño and the Indian Ocean Dipole, which affect rainfall patterns. While drought is a priority, excessive rainfall and floods are also a concern for the October-December season. Ethiopia has already activated anticipatory action in four districts across the Somali and Oromia regions, with approximately 9.3 million people residing in districts identified for early intervention."],"why":"Ethiopian farmers and pastoralists face repeated losses of livestock and crops due to climate shocks, and the FAO proposes a shift to anticipatory action to protect their livelihoods.","lenses":{"farmers":{"score":95,"why":"Ethiopian farmers and pastoralists face repeated losses of livestock and crops due to climate shocks, and the FAO proposes a shift to anticipatory action to protect their livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Climate","published":"2026-11-02T17:18:04Z","editorialScore":14.55,"selectionScore":14.55,"confidence":"medium","wordCount":190,"readMinutes":1,"sources":[{"published":"2026-11-02T17:18:04Z","name":"Capital Ethiopia","url":"https://capitalethiopia.com/2026/11/02/fao-urges-ethiopia-to-shift-from-emergency-aid-to-anticipatory-action-against-recurring-climate-disasters/"}]},{"articleId":"36783acc6df54d4b6ebe","headline":"Jinhua trade with Africa reaches 161.41 billion yuan","dek":"Chinese city's exports to Africa, led by new energy products, grew 29.6% in nine months.","paragraphs":["Jinhua, a city in China's Zhejiang Province, saw its trade with Africa reach 161.41 billion yuan from January to September, a 35.3% increase from the previous year. Exports to the continent totaled 144.51 billion yuan, marking a 29.6% rise and representing 10.3% of China's total exports to Africa. The city is seeing strong sales of lithium batteries, photovoltaic products, and electric passenger vehicles in African markets.","Lin Wancheng, director of international sales and marketing at Zhejiang Jujiang New Energy Technology Co., Ltd., stated that their energy storage products are well-received in Africa due to limited grid coverage and high diesel costs. The Jinyi Comprehensive Bonded Zone imported 2.81 billion yuan worth of goods from Africa between January and September, a 253.4% year-over-year increase, benefiting from zero-tariff treatment extended to 53 African nations.","Jiang Zhenlei, president of the China Council for the Promotion of International Trade Jinhua Sub-Council, noted that cooperation is expanding beyond goods trade into green industries, the digital economy, agricultural technology, and industrial park development. Mao Keqiang, president of the Machinery and Equipment Chamber of Commerce at China Commodity City, highlighted Africa's demand for agricultural machinery and Jinhua's role in developing agricultural technology parks and smart agriculture joint laboratories."],"why":"Ethiopian businesses and consumers may benefit from increased availability and potentially lower costs of Chinese manufactured goods, particularly in green energy and agricultural technology.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":70,"why":"Jinhua's trade with Africa, especially in \"new trio\" export categories like lithium batteries and electric vehicles, shows significant growth, indicating expanding markets for Chinese manufacturers and potential investment opportunities."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-03T03:26:36Z","editorialScore":11.4,"selectionScore":10.15,"confidence":"medium","wordCount":208,"readMinutes":1,"sources":[{"published":"2026-11-03T03:26:36Z","name":"Capital Ethiopia","url":"https://capitalethiopia.com/2026/11/03/across-continents-toward-a-shared-future/"}]},{"articleId":"c0f63af44bcb36bd62d2","headline":"Renewed conflict threatens ethiopia's economic growth","dek":"The IMF forecasts 9.2% growth for 2025-26, but fighting could deter investment and raise living costs.","paragraphs":["Renewed fighting in northern Ethiopia threatens the country's strong economic growth, which the IMF forecasts at 9.2% for the 2025-26 fiscal year. The conflict could deter investment, strain public finances, and increase the cost of living.","Financial analyst Abdulmenan Mohammed warned that a major conflict would make current economic growth unsustainable. The 2020-2022 war caused extensive damage, with a World Bank assessment putting damage between November 2020 and December 2021 at over $22.6 billion.","A reconstruction plan from 2023 to 2028 faces funding uncertainty, and the economy is still recovering from the previous war's impact, including lost output and foreign currency shortages. Ethiopia also lost duty-free access to the US market under the AGOA in 2022."],"why":"Renewed conflict in Ethiopia could deter investment, strain public finances, and push up the cost of living, impacting the country's economic recovery.","lenses":{"farmers":{"score":20,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-02T11:19:00Z","editorialScore":8.35,"selectionScore":8.35,"confidence":"low","wordCount":118,"readMinutes":1,"sources":[{"published":"2026-11-02T11:19:00Z","name":"DW Africa","url":"https://www.dw.com/en/will-renewed-conflict-derail-ethiopia-s-economic-growth/a-79807060?maca=en-rss-en-africa-8291-rdf"}]},{"articleId":"4d99bd3a40365d50c06b","headline":"TPLF loses support after Tigray offensive falters","dek":"The Tigray People's Liberation Front has retreated to hills after its latest offensive against federal forces was repelled.","paragraphs":["The Tigray People's Liberation Front (TPLF) is facing backlash from former supporters in northern Ethiopia following its recent offensive. The TPLF's attempt to overthrow federal leaders in late September was quickly repelled by pro-government forces using drones. The party has since retreated to the hills of the Tigray region, occasionally attacking federal troops.","Tsegay Girmay, a 32-year-old former TPLF supporter from Adigrat, expressed satisfaction that the movement is \"on the verge of disappearing.\" Girmay joined the TPLF in 2020, angered by atrocities during the Tigray war. Federal authorities took formal control of Tigray in October, establishing a six-month interim administration and promising elections.","Girmay stated that the TPLF has \"not the slightest chance of returning to power,\" citing the current situation on the ground. Eritrea, which had previously fought alongside Ethiopia against the TPLF, has since fallen out with its neighbour. The TPLF is now confined to occasional attacks from the Tigrayan hills."],"why":"Tigrayan residents like Tsegay Girmay are losing faith in the TPLF's ability to regain power after their recent military setbacks.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-02T09:42:04Z","editorialScore":6.75,"selectionScore":6.75,"confidence":"low","wordCount":153,"readMinutes":1,"sources":[{"published":"2026-11-02T09:42:04Z","name":"Africanews","url":"http://www.africanews.com/2026/11/02/tplf-loses-popular-support-after-fresh-fighting-in-ethiopias-tigray/"}]}],
@@ -57,73 +57,73 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
 "ls": [{"articleId":"37d8dbe147f34a6e0c9f","headline":"WASCO begins Mafeteng drought relief plan","dek":"The water utility will dredge Rasebale Dam and drill boreholes to secure district water supplies.","paragraphs":["The Water and Sewage Company (WASCO) has started a drought response plan in Mafeteng, including water tanks, boreholes, and dredging Rasebale Dam. This multi-layered approach aims to prevent water shortages like those in 2015 and 2024.","WASCO Project manager Lehlohonolo Ncheke stated the plan has three phases, beginning with 29 water tanks for immediate relief. The second phase will drill boreholes as an alternative water source, while the third involves dredging Rasebale Dam to increase its storage capacity, a first for the utility.","WASCO CEO Lebohang Peke Makara called the dredging a defining moment for the company's engineering capabilities, noting Rasebale Dam has had water collection problems since 2012. Natural Resources Minister Mohlomi Moleko confirmed the project fulfills a 2024 commitment by Prime Minister Sam Matekane, but traditional leaders warned erosion control is needed in the catchment area."],"why":"Mafeteng communities will receive emergency water supplies and improved long-term water security.","lenses":{"farmers":{"score":65,"why":"The dredging of Rasebale Dam and provision of boreholes aims to improve water security for Mafeteng communities."},"investors":{"score":21,"why":"WASCO's dredging project is a first for the utility and a defining moment for its engineering capacity."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Climate","published":"2026-11-01T19:07:35Z","editorialScore":10.2,"selectionScore":10.2,"confidence":"medium","wordCount":138,"readMinutes":1,"sources":[{"published":"2026-11-01T19:07:35Z","name":"Sunday Express Lesotho","url":"https://sundayexpress.co.ls/?p=36917"}]},{"articleId":"3b53ab2a21456f068bb5","headline":"Lesotho Correctional Service promotions challenged in court","dek":"Assistant Superintendent Moji Zakea questions the January promotion of five officers to Senior Superintendent.","paragraphs":["Assistant Superintendent Moji Zakea has filed a court application challenging the January promotion of five officers to Senior Superintendent within the Lesotho Correctional Service (LCS). The application names acting Chief of Corrections Matingoe Phamotse and Minister of Law and Justice Richard Ramoeletsi as respondents.","Zakea argues the promotions violated the LCS Promotion Guidelines of 2024, citing a lack of preliminary interviews and the shortlisting process being handled by Phamotse’s office instead of Human Resources. He specifically questions if Senior Superintendent Samson Rasehloho met the degree and disciplinary case experience requirements.","Zakea, who has acted as Superintendent since May 2021, applied for promotion after an internal notice on January 9 advertised vacant positions. His application was unsuccessful, prompting this legal challenge to the process he claims lacked transparency and fairness."],"why":"Assistant Superintendent Moji Zakea and other applicants for promotion within the Lesotho Correctional Service are directly affected by a process that may not have followed its own guidelines.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":21,"why":"This politics report may interest diaspora readers following national public affairs from abroad."}},"topic":"Politics","published":"2026-11-01T19:10:16Z","editorialScore":10.05,"selectionScore":8.8,"confidence":"medium","wordCount":129,"readMinutes":1,"sources":[{"published":"2026-11-01T19:10:16Z","name":"Sunday Express Lesotho","url":"https://sundayexpress.co.ls/?p=36925"}]},{"articleId":"08bd1e7d52cd25c03153","headline":"Lesotho police risk allowance dispute continues","dek":"Officers are seeking an increase from M100 to M1500 monthly, a proposal facing bureaucratic delays.","paragraphs":["A long-running dispute over a proposed M1500 monthly risk allowance for Lesotho Mounted Police Service (LMPS) members highlights officers' difficult work. The proposed increase, which would replace the M100 allowance in place since 1994, has been caught in bureaucratic delays and union pressure.","Police officers routinely confront dangerous situations, including armed criminals and volatile public gatherings, putting their lives at risk. The LMPS members' demand for a higher allowance is seen as a recognition of these occupational hazards, which many public servants do not face.","While acknowledging shortcomings like corruption and incompetence in some cases, the report suggests that improvements in crime reduction, such as fewer vehicle hijackings and drunk driving accidents, deserve police recognition. The government is urged to address the risk allowance issue despite ongoing security challenges like stock theft and drug trafficking."],"why":"Police officers in Lesotho are affected by the protracted administrative process delaying a proposed increase in their monthly risk allowance.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":0,"why":"The report does not mention any specific companies, markets, or financial regulations that would directly affect investors."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"News","published":"2026-11-01T19:09:52Z","editorialScore":9.95,"selectionScore":7.45,"confidence":"low","wordCount":135,"readMinutes":1,"sources":[{"published":"2026-11-01T19:09:52Z","name":"Sunday Express Lesotho","url":"https://sundayexpress.co.ls/?p=36921"}]},{"articleId":"528afc4e9ce6369bdf8d","headline":"Standard Bank plants 2000 trees in Mafeteng","dek":"The bank partnered with the Ministry of Environment and Forestry to boost conservation and biodiversity in Ha-Khojane.","paragraphs":["Standard Bank (SLB) and the Ministry of Environment and Forestry planted 2000 trees in Ha-Khojane, Mafeteng District on Thursday. This initiative is part of SLB's commitment of M750,000 over three years to Lesotho's reforestation efforts, which began in 2024.","Makeke Bereng from the Ministry of Environment stated that trees play a vital role in maintaining environmental balance, regulating climatic conditions, and improving air quality. Keketso Makara of SLB added that the planting is part of the bank's Blue Roots programme, aiming to plant one million trees across Africa, building on previous plantings of 54,000 trees in Mohale’s Hoek.","Ha-Khojane headwoman ’Makhojane Khojane believes the trees will help restore the area’s environment, create a habitat for biodiversity, and bring back traditional medicinal plants for future generations."],"why":"The tree planting aims to improve the local environment, potentially reintroducing medicinal plants and attracting wildlife.","lenses":{"farmers":{"score":65,"why":"The reforestation effort aims to prevent soil erosion and improve the microclimate, which can benefit local agriculture."},"investors":{"score":55,"why":"Standard Bank committed M750,000 over three years to reforestation efforts in Lesotho as part of its Blue Roots programme."},"diaspora":{"score":20,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Climate","published":"2026-11-01T19:09:47Z","editorialScore":8.2,"selectionScore":3.45,"confidence":"low","wordCount":127,"readMinutes":1,"sources":[{"published":"2026-11-01T19:09:47Z","name":"Sunday Express Lesotho","url":"https://sundayexpress.co.ls/?p=36920"}]},{"articleId":"e01041825f8c5f87e682","headline":"Heirs fight over M450,000 Leribe property","dek":"Deceased businessman's family claims ownership of commercial plots sold in 2000.","paragraphs":["Heirs of businessman Aslam Abubaker are suing Tau Mokhofu in the Leribe Magistrate’s Court over commercial property in Maputsoe allegedly purchased for M450,000 in 2000. The dispute involves two plots, with the heirs seeking transfer of portions they say their father bought. Mr Mokhofu allegedly sold portions of the plots but later transferred one to his son.","Mr Mokhofu, 88, testified that he sold Aslam Abubaker half of Plot No. 147 and half of Plot No. 153, receiving M450,000. However, he only secured a lease for Plot No. 153 in 2015, 15 years later, and transferred it to his son, Morapeli Mokhofu, in May 2016. Regarding Plot No. 147, Mr Mokhofu claimed his signature on a deed of transfer presented by Abubaker was forged.","The case adds to ongoing land disputes involving the Abubaker family, some dating back decades. The heirs are represented by Advocate Motiea Teele KC, while Resident Magistrate Bokang Makhaketso is presiding. Mr Mokhofu had previously sought a High Court order in 2010 to declare a transfer invalid."],"why":"The heirs of a deceased businessman are in court seeking ownership of commercial property, impacting rental businesses and a butchery.","lenses":{"farmers":{"score":0,"why":"This report establishes no direct effect on farming, food markets or rural livelihoods."},"investors":{"score":20,"why":"This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."},"diaspora":{"score":0,"why":"This report establishes no direct effect on diaspora travel, families or cross-border money."}},"topic":"Business","published":"2026-11-01T19:09:57Z","editorialScore":8.05,"selectionScore":2.05,"confidence":"low","wordCount":173,"readMinutes":1,"sources":[{"published":"2026-11-01T19:09:57Z","name":"Sunday Express Lesotho","url":"https://sundayexpress.co.ls/?p=36922"}]}]
 }, markets: {
   "bj": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 12690,
-        "t": "SDCC",
-        "name": "Sode Côte d’Ivoire",
+        "cap": 15695,
+        "t": "SMBC",
+        "name": "SMB Côte d’Ivoire",
         "change": 7.5
       },
       {
-        "cap": 2220,
-        "t": "SCRC",
-        "name": "Sucrivoire Côte d’Ivoire",
-        "change": -7.5
+        "cap": 2705,
+        "t": "CABC",
+        "name": "Sicable Côte d’Ivoire",
+        "change": -7.36
       },
       {
-        "cap": 5250,
-        "t": "CIEC",
-        "name": "CIE Côte d’Ivoire",
-        "change": 7.47
+        "cap": 7700,
+        "t": "SPHC",
+        "name": "Saph Côte d’Ivoire",
+        "change": -7.23
       },
       {
-        "cap": 2810,
-        "t": "SDSC",
-        "name": "Bollore Transport & Logistics",
+        "cap": 1300,
+        "t": "CFAC",
+        "name": "CFAO Motors Côte d’Ivoire",
+        "change": -7.14
+      },
+      {
+        "cap": 2145,
+        "t": "NEIC",
+        "name": "NEI-CEDA Côte d’Ivoire",
         "change": -6.33
       },
       {
-        "cap": 4425,
+        "cap": 20175,
+        "t": "STBC",
+        "name": "Sitab Côte d’Ivoire",
+        "change": -6.16
+      },
+      {
+        "cap": 4150,
         "t": "SNTS",
         "name": "Sonatel Senegal",
-        "change": -5.85
+        "change": -4.6
       },
       {
-        "cap": 8100,
-        "t": "BOABF",
-        "name": "Bank of Africa - Burkina Faso",
-        "change": 5.74
+        "cap": 12300,
+        "t": "SDCC",
+        "name": "Sode Côte d’Ivoire",
+        "change": -4.28
       },
       {
-        "cap": 1795,
-        "t": "STAC",
-        "name": "Setao Côte d’Ivoire",
-        "change": -5.03
-      },
-      {
-        "cap": 1415,
-        "t": "CFAC",
-        "name": "CFAO Motors Côte d’Ivoire",
-        "change": 4.81
-      },
-      {
-        "cap": 7900,
-        "t": "SOGC",
-        "name": "Sogb Côte d’Ivoire",
-        "change": 3.95
-      },
-      {
-        "cap": 1725,
+        "cap": 1720,
         "t": "FTSC",
         "name": "Filtisac Côte d’Ivoire",
-        "change": -3.9
+        "change": -4.18
       },
       {
-        "cap": 21000,
-        "t": "ORAC",
-        "name": "Orange Côte d’Ivoire",
-        "change": 3.6
+        "cap": 5295,
+        "t": "CIEC",
+        "name": "CIE Côte d’Ivoire",
+        "change": -3.73
+      },
+      {
+        "cap": 17995,
+        "t": "NSBC",
+        "name": "Nsia Banque Côte d’Ivoire",
+        "change": -3.51
       },
       {
         "cap": 61,
@@ -137,14 +137,8 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Bourse Regionale des Valeurs Mobilieres"
   },
   "bw": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
-      {
-        "cap": 18.72,
-        "t": "CHOB",
-        "name": "Chobe Holdings Limited",
-        "change": 0.11
-      },
       {
         "cap": 0.28,
         "t": "OCCL",
@@ -200,13 +194,19 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
         "change": 0
       },
       {
-        "cap": 507.71,
+        "cap": 568.1,
         "t": "NEWG",
         "name": "NewGold ETF",
         "change": 0
       },
       {
-        "cap": 73.59,
+        "cap": 105.11,
+        "t": "STXWDM",
+        "name": "Satrix MSCI World Feeder ETF",
+        "change": 0
+      },
+      {
+        "cap": 66.7,
         "t": "STXEMG",
         "name": "Satrix Emerging Markets ETF",
         "change": 0
@@ -217,73 +217,73 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Botswana Stock Exchange"
   },
   "bf": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 12690,
-        "t": "SDCC",
-        "name": "Sode Côte d’Ivoire",
+        "cap": 15695,
+        "t": "SMBC",
+        "name": "SMB Côte d’Ivoire",
         "change": 7.5
       },
       {
-        "cap": 2220,
-        "t": "SCRC",
-        "name": "Sucrivoire Côte d’Ivoire",
-        "change": -7.5
+        "cap": 2705,
+        "t": "CABC",
+        "name": "Sicable Côte d’Ivoire",
+        "change": -7.36
       },
       {
-        "cap": 5250,
-        "t": "CIEC",
-        "name": "CIE Côte d’Ivoire",
-        "change": 7.47
+        "cap": 7700,
+        "t": "SPHC",
+        "name": "Saph Côte d’Ivoire",
+        "change": -7.23
       },
       {
-        "cap": 2810,
-        "t": "SDSC",
-        "name": "Bollore Transport & Logistics",
+        "cap": 1300,
+        "t": "CFAC",
+        "name": "CFAO Motors Côte d’Ivoire",
+        "change": -7.14
+      },
+      {
+        "cap": 2145,
+        "t": "NEIC",
+        "name": "NEI-CEDA Côte d’Ivoire",
         "change": -6.33
       },
       {
-        "cap": 4425,
+        "cap": 20175,
+        "t": "STBC",
+        "name": "Sitab Côte d’Ivoire",
+        "change": -6.16
+      },
+      {
+        "cap": 4150,
         "t": "SNTS",
         "name": "Sonatel Senegal",
-        "change": -5.85
+        "change": -4.6
       },
       {
-        "cap": 8100,
-        "t": "BOABF",
-        "name": "Bank of Africa - Burkina Faso",
-        "change": 5.74
+        "cap": 12300,
+        "t": "SDCC",
+        "name": "Sode Côte d’Ivoire",
+        "change": -4.28
       },
       {
-        "cap": 1795,
-        "t": "STAC",
-        "name": "Setao Côte d’Ivoire",
-        "change": -5.03
-      },
-      {
-        "cap": 1415,
-        "t": "CFAC",
-        "name": "CFAO Motors Côte d’Ivoire",
-        "change": 4.81
-      },
-      {
-        "cap": 7900,
-        "t": "SOGC",
-        "name": "Sogb Côte d’Ivoire",
-        "change": 3.95
-      },
-      {
-        "cap": 1725,
+        "cap": 1720,
         "t": "FTSC",
         "name": "Filtisac Côte d’Ivoire",
-        "change": -3.9
+        "change": -4.18
       },
       {
-        "cap": 21000,
-        "t": "ORAC",
-        "name": "Orange Côte d’Ivoire",
-        "change": 3.6
+        "cap": 5295,
+        "t": "CIEC",
+        "name": "CIE Côte d’Ivoire",
+        "change": -3.73
+      },
+      {
+        "cap": 17995,
+        "t": "NSBC",
+        "name": "Nsia Banque Côte d’Ivoire",
+        "change": -3.51
       },
       {
         "cap": 61,
@@ -297,73 +297,73 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Bourse Regionale des Valeurs Mobilieres"
   },
   "ci": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 12690,
-        "t": "SDCC",
-        "name": "Sode Côte d’Ivoire",
+        "cap": 15695,
+        "t": "SMBC",
+        "name": "SMB Côte d’Ivoire",
         "change": 7.5
       },
       {
-        "cap": 2220,
-        "t": "SCRC",
-        "name": "Sucrivoire Côte d’Ivoire",
-        "change": -7.5
+        "cap": 2705,
+        "t": "CABC",
+        "name": "Sicable Côte d’Ivoire",
+        "change": -7.36
       },
       {
-        "cap": 5250,
-        "t": "CIEC",
-        "name": "CIE Côte d’Ivoire",
-        "change": 7.47
+        "cap": 7700,
+        "t": "SPHC",
+        "name": "Saph Côte d’Ivoire",
+        "change": -7.23
       },
       {
-        "cap": 2810,
-        "t": "SDSC",
-        "name": "Bollore Transport & Logistics",
+        "cap": 1300,
+        "t": "CFAC",
+        "name": "CFAO Motors Côte d’Ivoire",
+        "change": -7.14
+      },
+      {
+        "cap": 2145,
+        "t": "NEIC",
+        "name": "NEI-CEDA Côte d’Ivoire",
         "change": -6.33
       },
       {
-        "cap": 4425,
+        "cap": 20175,
+        "t": "STBC",
+        "name": "Sitab Côte d’Ivoire",
+        "change": -6.16
+      },
+      {
+        "cap": 4150,
         "t": "SNTS",
         "name": "Sonatel Senegal",
-        "change": -5.85
+        "change": -4.6
       },
       {
-        "cap": 8100,
-        "t": "BOABF",
-        "name": "Bank of Africa - Burkina Faso",
-        "change": 5.74
+        "cap": 12300,
+        "t": "SDCC",
+        "name": "Sode Côte d’Ivoire",
+        "change": -4.28
       },
       {
-        "cap": 1795,
-        "t": "STAC",
-        "name": "Setao Côte d’Ivoire",
-        "change": -5.03
-      },
-      {
-        "cap": 1415,
-        "t": "CFAC",
-        "name": "CFAO Motors Côte d’Ivoire",
-        "change": 4.81
-      },
-      {
-        "cap": 7900,
-        "t": "SOGC",
-        "name": "Sogb Côte d’Ivoire",
-        "change": 3.95
-      },
-      {
-        "cap": 1725,
+        "cap": 1720,
         "t": "FTSC",
         "name": "Filtisac Côte d’Ivoire",
-        "change": -3.9
+        "change": -4.18
       },
       {
-        "cap": 21000,
-        "t": "ORAC",
-        "name": "Orange Côte d’Ivoire",
-        "change": 3.6
+        "cap": 5295,
+        "t": "CIEC",
+        "name": "CIE Côte d’Ivoire",
+        "change": -3.73
+      },
+      {
+        "cap": 17995,
+        "t": "NSBC",
+        "name": "Nsia Banque Côte d’Ivoire",
+        "change": -3.51
       },
       {
         "cap": 61,
@@ -377,79 +377,79 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Bourse Regionale des Valeurs Mobilieres"
   },
   "ke": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 21.55,
-        "t": "OCH",
-        "name": "Olympia Capital Holdings Ltd",
-        "change": 188.87
-      },
-      {
-        "cap": 13.8,
+        "cap": 12.15,
         "t": "KPC",
         "name": "Kenya Pipeline Company",
-        "change": 9.96
+        "change": -10
       },
       {
-        "cap": 5.58,
-        "t": "SGL",
-        "name": "Standard Group Ltd",
-        "change": -7.92
+        "cap": 2.56,
+        "t": "LKL",
+        "name": "Longhorn Publishers Ltd",
+        "change": -7.58
       },
       {
-        "cap": 0.91,
-        "t": "EVRD",
-        "name": "Eveready East Africa Ltd",
-        "change": 4.6
-      },
-      {
-        "cap": 1.27,
-        "t": "UCHM",
-        "name": "Uchumi Supermarket Ltd",
-        "change": -4.51
-      },
-      {
-        "cap": 16.85,
-        "t": "TPSE",
-        "name": "TPS Eastern Africa Serena Ltd",
-        "change": -4.26
-      },
-      {
-        "cap": 9.44,
-        "t": "SLAM",
-        "name": "Sanlam Allianz Holdings",
-        "change": -3.87
-      },
-      {
-        "cap": 1.83,
-        "t": "SCAN",
-        "name": "ScanGroup Ltd",
-        "change": -3.68
-      },
-      {
-        "cap": 35,
+        "cap": 36.95,
         "t": "UNGA",
         "name": "Unga Group Ltd",
-        "change": -3.45
+        "change": 6.95
       },
       {
-        "cap": 14.05,
-        "t": "NMG",
-        "name": "Nation Media Group",
-        "change": -3.1
+        "cap": 261.5,
+        "t": "CGEN",
+        "name": "Car and General Kenya Ltd",
+        "change": 6.19
       },
       {
-        "cap": 17.55,
-        "t": "CTUM",
-        "name": "Centum Investment Company",
-        "change": 2.63
+        "cap": 552,
+        "t": "LIMT",
+        "name": "Limuru Tea Company Ltd",
+        "change": 6.15
       },
       {
-        "cap": 44.55,
-        "t": "TOTL",
-        "name": "Total Kenya Ltd",
-        "change": -2.2
+        "cap": 316,
+        "t": "AMAC",
+        "name": "Africa Mega Agricorp",
+        "change": 5.95
+      },
+      {
+        "cap": 408.25,
+        "t": "KUKZ",
+        "name": "Kakuzi Ltd",
+        "change": -5.11
+      },
+      {
+        "cap": 18.4,
+        "t": "OCH",
+        "name": "Olympia Capital Holdings Ltd",
+        "change": -4.91
+      },
+      {
+        "cap": 91.75,
+        "t": "NCBA",
+        "name": "NCBA Group Plc",
+        "change": 4.26
+      },
+      {
+        "cap": 15.45,
+        "t": "SMER",
+        "name": "Sameer Africa Plc",
+        "change": 4.04
+      },
+      {
+        "cap": 6,
+        "t": "SGL",
+        "name": "Standard Group Ltd",
+        "change": -3.23
+      },
+      {
+        "cap": 1.37,
+        "t": "NBV",
+        "name": "Nairobi Business Ventures Ltd",
+        "change": 3.01
       }
     ],
     "sourceUrl": "https://afx.kwayisi.org/nse/",
@@ -457,79 +457,79 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Nairobi Securities Exchange"
   },
   "za": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 1.56,
-        "t": "AXX",
-        "name": "Araxi Ltd",
-        "change": 17.29
-      },
-      {
-        "cap": 52.99,
-        "t": "CNP",
-        "name": "Canal+ SA",
-        "change": 10.4
-      },
-      {
-        "cap": 39.19,
-        "t": "CML",
-        "name": "Coronation Fund Mngrs Ld",
-        "change": -4.55
+        "cap": 0.99,
+        "t": "C4A",
+        "name": "Cables 4 Africa Holdings",
+        "change": 30.26
       },
       {
         "cap": 0.85,
         "t": "CHP",
         "name": "Choppies Enterprises Limited",
-        "change": -4.49
+        "change": 13.33
       },
       {
-        "cap": 215,
-        "t": "CLS",
-        "name": "Clicks Group Ltd",
-        "change": -4.44
+        "cap": 0.7,
+        "t": "ACT",
+        "name": "AfroCentric Inv Corp Ltd",
+        "change": 11.11
       },
       {
-        "cap": 7.7,
-        "t": "AFH",
-        "name": "Alexander Forbes Grp Hldgs",
-        "change": 3.91
+        "cap": 135,
+        "t": "CPIP",
+        "name": "Capitec Bank Preference Shares",
+        "change": 8
       },
       {
-        "cap": 202.84,
-        "t": "ARL",
-        "name": "Astral Foods Ltd",
-        "change": -3.41
+        "cap": 6.5,
+        "t": "ADR",
+        "name": "Adcorp Holdings Limited",
+        "change": 3.83
+      },
+      {
+        "cap": 1.26,
+        "t": "ACL",
+        "name": "ArcelorMittal SA Limited",
+        "change": -3.82
+      },
+      {
+        "cap": 12.03,
+        "t": "CAT",
+        "name": "Caxton & CTP Publishers Limited",
+        "change": 3.71
       },
       {
         "cap": 0.67,
         "t": "4SI",
         "name": "4Sight Holdings Limited",
-        "change": 3.08
+        "change": -2.9
       },
       {
-        "cap": 28.44,
-        "t": "AEL",
-        "name": "Altron: Allied Electronics Corporation",
-        "change": 2.78
+        "cap": 221.19,
+        "t": "CLS",
+        "name": "Clicks Group Ltd",
+        "change": 2.36
       },
       {
-        "cap": 34.5,
+        "cap": 85.9,
+        "t": "BOX",
+        "name": "Boxer Retail Ltd",
+        "change": -2.29
+      },
+      {
+        "cap": 36,
         "t": "AFT",
         "name": "Afrimat Limited",
-        "change": -2.43
+        "change": -2.04
       },
       {
-        "cap": 42.2,
-        "t": "ART",
-        "name": "Argent Industrial Ltd",
-        "change": -2.38
-      },
-      {
-        "cap": 37.5,
-        "t": "CMH",
-        "name": "Combined Motor Hldgs Ltd",
-        "change": -2.34
+        "cap": 0.49,
+        "t": "APF",
+        "name": "Accelerate Property Fund Limited",
+        "change": -2
       }
     ],
     "sourceUrl": "https://afx.kwayisi.org/jse/",
@@ -537,79 +537,79 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Johannesburg Stock Exchange"
   },
   "ng": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 139.5,
-        "t": "FIRSTHOLDCO",
-        "name": "First HoldCo Plc",
+        "cap": 1.53,
+        "t": "FTGINSURE",
+        "name": "Fortis Global Insurance",
         "change": -10
       },
       {
-        "cap": 2.61,
-        "t": "AUSTINLAZ",
-        "name": "Austin Laz & Company",
-        "change": 9.21
+        "cap": 5.75,
+        "t": "ABBEYBANK",
+        "name": "Abbey Bank",
+        "change": -8.73
       },
       {
-        "cap": 3.33,
-        "t": "CMFC",
-        "name": "Critical Minerals Financing Corp",
-        "change": 5.71
+        "cap": 3.05,
+        "t": "CAVERTON",
+        "name": "Caverton Offshore Support Group",
+        "change": -7.58
       },
       {
-        "cap": 16,
-        "t": "ETRANZACT",
-        "name": "E-Tranzact International",
-        "change": -4.76
-      },
-      {
-        "cap": 1.6,
-        "t": "FTGINSURE",
-        "name": "Fortis Global Insurance",
-        "change": -4.76
-      },
-      {
-        "cap": 13.4,
+        "cap": 13.65,
         "t": "LIVESTOCK",
         "name": "Livestock Feeds",
-        "change": -4.63
+        "change": -6.51
       },
       {
-        "cap": 9.4,
-        "t": "CHAMPION",
-        "name": "Champion Breweries",
-        "change": 4.44
+        "cap": 9.05,
+        "t": "INTBREW",
+        "name": "International Breweries",
+        "change": 6.47
       },
       {
-        "cap": 2.35,
-        "t": "CUTIX",
-        "name": "Cutix Plc",
-        "change": 4.44
+        "cap": 1.65,
+        "t": "INTENEGINS",
+        "name": "International Energy Insurance",
+        "change": -6.25
       },
       {
-        "cap": 87.15,
-        "t": "FIDSON",
-        "name": "Fidson Healthcare",
-        "change": 4.37
+        "cap": 6.2,
+        "t": "ABCTRANS",
+        "name": "Associated Bus Company",
+        "change": -6.06
       },
       {
-        "cap": 10.4,
+        "cap": 16.5,
+        "t": "CWG",
+        "name": "Computer Warehouse Group",
+        "change": -5.71
+      },
+      {
+        "cap": 10,
         "t": "AFRIPRUD",
         "name": "Africa Prudential Plc",
-        "change": -3.7
+        "change": -5.66
       },
       {
-        "cap": 1.78,
-        "t": "LASACO",
-        "name": "Lasaco Assurance",
-        "change": 3.49
+        "cap": 6.76,
+        "t": "CONHALLPLC",
+        "name": "Consolidated Hallmark Holdings",
+        "change": -5.45
       },
       {
-        "cap": 4.15,
-        "t": "NPFMCRFBK",
-        "name": "NPF Microfinance Bank",
-        "change": -3.49
+        "cap": 0.8,
+        "t": "GUINEAINS",
+        "name": "Guinea Insurance",
+        "change": 5.26
+      },
+      {
+        "cap": 3.61,
+        "t": "AIICO",
+        "name": "Aiico Insurance Plc",
+        "change": -5
       }
     ],
     "sourceUrl": "https://afx.kwayisi.org/ngx/",
@@ -617,78 +617,78 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Nigerian Exchange Group"
   },
   "gh": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 0.56,
-        "t": "IIL",
-        "name": "Intravenous Infusions Limited",
-        "change": 9.8
+        "cap": 43,
+        "t": "UNIL",
+        "name": "Unilever Ghana Limited",
+        "change": 8.86
       },
       {
-        "cap": 4.61,
-        "t": "SOGEGH",
-        "name": "Societe Generale Ghana Limited",
-        "change": -3.76
+        "cap": 0.15,
+        "t": "MMH",
+        "name": "Meridian-Marshall Holdings",
+        "change": 7.14
       },
       {
-        "cap": 41.7,
-        "t": "GCB",
-        "name": "GCB Bank Limited",
-        "change": 3.68
+        "cap": 37.48,
+        "t": "TOTAL",
+        "name": "TotalEnergies Marketing Ghana",
+        "change": -6.28
       },
       {
-        "cap": 1.83,
-        "t": "KASA",
-        "name": "Kasapreko Plc",
-        "change": 1.1
+        "cap": 0.37,
+        "t": "DIGICUT",
+        "name": "Digicut Production & Advertising",
+        "change": -5.13
       },
       {
-        "cap": 6.5,
-        "t": "MTNGH",
-        "name": "MTN Ghana",
-        "change": -0.46
-      },
-      {
-        "cap": 4.6,
+        "cap": 4.86,
         "t": "SIC",
         "name": "SIC Insurance Company Limited",
-        "change": -0.22
+        "change": -2.8
       },
       {
-        "cap": 10.69,
-        "t": "GGBL",
-        "name": "Guinness Ghana Breweries Limited",
-        "change": -0.09
+        "cap": 6.62,
+        "t": "MTNGH",
+        "name": "MTN Ghana",
+        "change": -1.93
       },
       {
-        "cap": 13.99,
+        "cap": 0.55,
+        "t": "IIL",
+        "name": "Intravenous Infusions Limited",
+        "change": 1.85
+      },
+      {
+        "cap": 8.5,
+        "t": "EGL",
+        "name": "Enterprise Group Limited",
+        "change": 1.19
+      },
+      {
+        "cap": 1.81,
+        "t": "KASA",
+        "name": "Kasapreko Plc",
+        "change": 0.56
+      },
+      {
+        "cap": 42.01,
+        "t": "GCB",
+        "name": "GCB Bank Limited",
+        "change": -0.17
+      },
+      {
+        "cap": 13.98,
         "t": "FML",
         "name": "Fan Milk Plc",
         "change": -0.07
       },
       {
-        "cap": 9.01,
-        "t": "ZEN",
-        "name": "ZEN Petroleum Holdings",
-        "change": 0
-      },
-      {
-        "cap": 39.5,
-        "t": "UNIL",
-        "name": "Unilever Ghana Limited",
-        "change": 0
-      },
-      {
-        "cap": 0.75,
-        "t": "HORDS",
-        "name": "Hords Limited",
-        "change": 0
-      },
-      {
-        "cap": 5.5,
-        "t": "GOIL",
-        "name": "Ghana Oil Company Limited",
+        "cap": 5.2,
+        "t": "MAC",
+        "name": "Mega African Capital Limited",
         "change": 0
       }
     ],
@@ -697,28 +697,28 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Ghana Stock Exchange"
   },
   "ug": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 24.56,
+        "cap": 25.25,
         "t": "NIC",
         "name": "National Insurance Corporation",
         "change": 0
       },
       {
-        "cap": 496.29,
+        "cap": 475.24,
         "t": "NMG",
         "name": "Nation Media Group",
         "change": 0
       },
       {
-        "cap": 2948.37,
+        "cap": 2818.65,
         "t": "KCB",
         "name": "KCB Group",
         "change": 0
       },
       {
-        "cap": 455,
+        "cap": 455.18,
         "t": "MTNU",
         "name": "MTN Uganda",
         "change": 0
@@ -736,37 +736,37 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
         "change": 0
       },
       {
-        "cap": 64,
+        "cap": 75,
         "t": "UMEM",
         "name": "Umeme Limited",
         "change": 0
       },
       {
-        "cap": 167,
+        "cap": 170,
         "t": "QCIL",
         "name": "Quality Chemical Industries Ltd",
         "change": 0
       },
       {
-        "cap": 101.04,
+        "cap": 96.22,
         "t": "SBU",
         "name": "Stanbic Bank Uganda",
         "change": 0
       },
       {
-        "cap": 110,
+        "cap": 104.12,
         "t": "BOBU",
         "name": "Bank of Baroda Uganda",
         "change": 0
       },
       {
-        "cap": 619.07,
+        "cap": 555.54,
         "t": "CENT",
         "name": "Centum Investment",
         "change": 0
       },
       {
-        "cap": 196,
+        "cap": 193,
         "t": "AIRTEL",
         "name": "Airtel Uganda",
         "change": 0
@@ -777,79 +777,79 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Uganda Securities Exchange"
   },
   "zw": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 0.12,
-        "t": "TURN",
-        "name": "Turnall Holdings Limited",
-        "change": -14.59
-      },
-      {
-        "cap": 30,
-        "t": "CBZ",
-        "name": "CBZ Holdings Limited",
-        "change": -6.25
-      },
-      {
-        "cap": 2.549428,
-        "t": "MEIK",
-        "name": "Meikles Limited",
-        "change": 2.49
-      },
-      {
-        "cap": 10.0055,
-        "t": "HIPO",
-        "name": "Hippo Valley Estates Limited",
-        "change": -2.13
-      },
-      {
-        "cap": 0.051,
-        "t": "WILD",
-        "name": "Willdale Zimbabwe Limited",
-        "change": 1.94
-      },
-      {
-        "cap": 3.755,
-        "t": "SEED",
-        "name": "Seed Co Limited",
-        "change": 1.88
-      },
-      {
-        "cap": 0.745833,
-        "t": "ZIMR",
-        "name": "Zimre Holdings Limited",
-        "change": 1.77
-      },
-      {
-        "cap": 0.84814,
+        "cap": 0.848968,
         "t": "TNCI",
         "name": "TN CyberTech Investments Holdings",
-        "change": 1.37
+        "change": 11.19
       },
       {
-        "cap": 1.05055,
+        "cap": 11.503077,
+        "t": "HIPO",
+        "name": "Hippo Valley Estates Limited",
+        "change": -7.96
+      },
+      {
+        "cap": 0.054675,
+        "t": "WILD",
+        "name": "Willdale Zimbabwe Limited",
+        "change": 7.21
+      },
+      {
+        "cap": 3.95,
+        "t": "FML",
+        "name": "First Mutual Holdings Limited",
+        "change": -6.02
+      },
+      {
+        "cap": 0.7625,
+        "t": "ZIMR",
+        "name": "Zimre Holdings Limited",
+        "change": 5.54
+      },
+      {
+        "cap": 29.135429,
+        "t": "CBZ",
+        "name": "CBZ Holdings Limited",
+        "change": 4.44
+      },
+      {
+        "cap": 1.082543,
         "t": "TIG",
         "name": "Tigere Property Fund REIT",
-        "change": 1.27
+        "change": 3.55
       },
       {
-        "cap": 0.138236,
-        "t": "ARIS",
-        "name": "Ariston Holdings Limited",
-        "change": 0.93
+        "cap": 5,
+        "t": "DZL",
+        "name": "Dairibord Holdings Limited",
+        "change": -1.96
       },
       {
-        "cap": 7.5,
+        "cap": 4.125745,
+        "t": "SEED",
+        "name": "Seed Co Limited",
+        "change": -1.77
+      },
+      {
+        "cap": 3.45,
+        "t": "TANG",
+        "name": "Tanganda Tea Company",
+        "change": -1.43
+      },
+      {
+        "cap": 7.6,
         "t": "ZBFH",
         "name": "ZB Financial Holdings Limited",
-        "change": 0.4
+        "change": 1.33
       },
       {
-        "cap": 11.8,
-        "t": "FBC",
-        "name": "FBC Holdings Limited",
-        "change": 0.26
+        "cap": 0.12,
+        "t": "MIZ",
+        "name": "Morgan & Co Made in Zimbabwe ETF",
+        "change": -1.25
       }
     ],
     "sourceUrl": "https://afx.kwayisi.org/zse/",
@@ -857,73 +857,73 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Zimbabwe Stock Exchange"
   },
   "ml": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 12690,
-        "t": "SDCC",
-        "name": "Sode Côte d’Ivoire",
+        "cap": 15695,
+        "t": "SMBC",
+        "name": "SMB Côte d’Ivoire",
         "change": 7.5
       },
       {
-        "cap": 2220,
-        "t": "SCRC",
-        "name": "Sucrivoire Côte d’Ivoire",
-        "change": -7.5
+        "cap": 2705,
+        "t": "CABC",
+        "name": "Sicable Côte d’Ivoire",
+        "change": -7.36
       },
       {
-        "cap": 5250,
-        "t": "CIEC",
-        "name": "CIE Côte d’Ivoire",
-        "change": 7.47
+        "cap": 7700,
+        "t": "SPHC",
+        "name": "Saph Côte d’Ivoire",
+        "change": -7.23
       },
       {
-        "cap": 2810,
-        "t": "SDSC",
-        "name": "Bollore Transport & Logistics",
+        "cap": 1300,
+        "t": "CFAC",
+        "name": "CFAO Motors Côte d’Ivoire",
+        "change": -7.14
+      },
+      {
+        "cap": 2145,
+        "t": "NEIC",
+        "name": "NEI-CEDA Côte d’Ivoire",
         "change": -6.33
       },
       {
-        "cap": 4425,
+        "cap": 20175,
+        "t": "STBC",
+        "name": "Sitab Côte d’Ivoire",
+        "change": -6.16
+      },
+      {
+        "cap": 4150,
         "t": "SNTS",
         "name": "Sonatel Senegal",
-        "change": -5.85
+        "change": -4.6
       },
       {
-        "cap": 8100,
-        "t": "BOABF",
-        "name": "Bank of Africa - Burkina Faso",
-        "change": 5.74
+        "cap": 12300,
+        "t": "SDCC",
+        "name": "Sode Côte d’Ivoire",
+        "change": -4.28
       },
       {
-        "cap": 1795,
-        "t": "STAC",
-        "name": "Setao Côte d’Ivoire",
-        "change": -5.03
-      },
-      {
-        "cap": 1415,
-        "t": "CFAC",
-        "name": "CFAO Motors Côte d’Ivoire",
-        "change": 4.81
-      },
-      {
-        "cap": 7900,
-        "t": "SOGC",
-        "name": "Sogb Côte d’Ivoire",
-        "change": 3.95
-      },
-      {
-        "cap": 1725,
+        "cap": 1720,
         "t": "FTSC",
         "name": "Filtisac Côte d’Ivoire",
-        "change": -3.9
+        "change": -4.18
       },
       {
-        "cap": 21000,
-        "t": "ORAC",
-        "name": "Orange Côte d’Ivoire",
-        "change": 3.6
+        "cap": 5295,
+        "t": "CIEC",
+        "name": "CIE Côte d’Ivoire",
+        "change": -3.73
+      },
+      {
+        "cap": 17995,
+        "t": "NSBC",
+        "name": "Nsia Banque Côte d’Ivoire",
+        "change": -3.51
       },
       {
         "cap": 61,
@@ -937,73 +937,73 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Bourse Regionale des Valeurs Mobilieres"
   },
   "ne": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 12690,
-        "t": "SDCC",
-        "name": "Sode Côte d’Ivoire",
+        "cap": 15695,
+        "t": "SMBC",
+        "name": "SMB Côte d’Ivoire",
         "change": 7.5
       },
       {
-        "cap": 2220,
-        "t": "SCRC",
-        "name": "Sucrivoire Côte d’Ivoire",
-        "change": -7.5
+        "cap": 2705,
+        "t": "CABC",
+        "name": "Sicable Côte d’Ivoire",
+        "change": -7.36
       },
       {
-        "cap": 5250,
-        "t": "CIEC",
-        "name": "CIE Côte d’Ivoire",
-        "change": 7.47
+        "cap": 7700,
+        "t": "SPHC",
+        "name": "Saph Côte d’Ivoire",
+        "change": -7.23
       },
       {
-        "cap": 2810,
-        "t": "SDSC",
-        "name": "Bollore Transport & Logistics",
+        "cap": 1300,
+        "t": "CFAC",
+        "name": "CFAO Motors Côte d’Ivoire",
+        "change": -7.14
+      },
+      {
+        "cap": 2145,
+        "t": "NEIC",
+        "name": "NEI-CEDA Côte d’Ivoire",
         "change": -6.33
       },
       {
-        "cap": 4425,
+        "cap": 20175,
+        "t": "STBC",
+        "name": "Sitab Côte d’Ivoire",
+        "change": -6.16
+      },
+      {
+        "cap": 4150,
         "t": "SNTS",
         "name": "Sonatel Senegal",
-        "change": -5.85
+        "change": -4.6
       },
       {
-        "cap": 8100,
-        "t": "BOABF",
-        "name": "Bank of Africa - Burkina Faso",
-        "change": 5.74
+        "cap": 12300,
+        "t": "SDCC",
+        "name": "Sode Côte d’Ivoire",
+        "change": -4.28
       },
       {
-        "cap": 1795,
-        "t": "STAC",
-        "name": "Setao Côte d’Ivoire",
-        "change": -5.03
-      },
-      {
-        "cap": 1415,
-        "t": "CFAC",
-        "name": "CFAO Motors Côte d’Ivoire",
-        "change": 4.81
-      },
-      {
-        "cap": 7900,
-        "t": "SOGC",
-        "name": "Sogb Côte d’Ivoire",
-        "change": 3.95
-      },
-      {
-        "cap": 1725,
+        "cap": 1720,
         "t": "FTSC",
         "name": "Filtisac Côte d’Ivoire",
-        "change": -3.9
+        "change": -4.18
       },
       {
-        "cap": 21000,
-        "t": "ORAC",
-        "name": "Orange Côte d’Ivoire",
-        "change": 3.6
+        "cap": 5295,
+        "t": "CIEC",
+        "name": "CIE Côte d’Ivoire",
+        "change": -3.73
+      },
+      {
+        "cap": 17995,
+        "t": "NSBC",
+        "name": "Nsia Banque Côte d’Ivoire",
+        "change": -3.51
       },
       {
         "cap": 61,
@@ -1017,73 +1017,73 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Bourse Regionale des Valeurs Mobilieres"
   },
   "sn": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 12690,
-        "t": "SDCC",
-        "name": "Sode Côte d’Ivoire",
+        "cap": 15695,
+        "t": "SMBC",
+        "name": "SMB Côte d’Ivoire",
         "change": 7.5
       },
       {
-        "cap": 2220,
-        "t": "SCRC",
-        "name": "Sucrivoire Côte d’Ivoire",
-        "change": -7.5
+        "cap": 2705,
+        "t": "CABC",
+        "name": "Sicable Côte d’Ivoire",
+        "change": -7.36
       },
       {
-        "cap": 5250,
-        "t": "CIEC",
-        "name": "CIE Côte d’Ivoire",
-        "change": 7.47
+        "cap": 7700,
+        "t": "SPHC",
+        "name": "Saph Côte d’Ivoire",
+        "change": -7.23
       },
       {
-        "cap": 2810,
-        "t": "SDSC",
-        "name": "Bollore Transport & Logistics",
+        "cap": 1300,
+        "t": "CFAC",
+        "name": "CFAO Motors Côte d’Ivoire",
+        "change": -7.14
+      },
+      {
+        "cap": 2145,
+        "t": "NEIC",
+        "name": "NEI-CEDA Côte d’Ivoire",
         "change": -6.33
       },
       {
-        "cap": 4425,
+        "cap": 20175,
+        "t": "STBC",
+        "name": "Sitab Côte d’Ivoire",
+        "change": -6.16
+      },
+      {
+        "cap": 4150,
         "t": "SNTS",
         "name": "Sonatel Senegal",
-        "change": -5.85
+        "change": -4.6
       },
       {
-        "cap": 8100,
-        "t": "BOABF",
-        "name": "Bank of Africa - Burkina Faso",
-        "change": 5.74
+        "cap": 12300,
+        "t": "SDCC",
+        "name": "Sode Côte d’Ivoire",
+        "change": -4.28
       },
       {
-        "cap": 1795,
-        "t": "STAC",
-        "name": "Setao Côte d’Ivoire",
-        "change": -5.03
-      },
-      {
-        "cap": 1415,
-        "t": "CFAC",
-        "name": "CFAO Motors Côte d’Ivoire",
-        "change": 4.81
-      },
-      {
-        "cap": 7900,
-        "t": "SOGC",
-        "name": "Sogb Côte d’Ivoire",
-        "change": 3.95
-      },
-      {
-        "cap": 1725,
+        "cap": 1720,
         "t": "FTSC",
         "name": "Filtisac Côte d’Ivoire",
-        "change": -3.9
+        "change": -4.18
       },
       {
-        "cap": 21000,
-        "t": "ORAC",
-        "name": "Orange Côte d’Ivoire",
-        "change": 3.6
+        "cap": 5295,
+        "t": "CIEC",
+        "name": "CIE Côte d’Ivoire",
+        "change": -3.73
+      },
+      {
+        "cap": 17995,
+        "t": "NSBC",
+        "name": "Nsia Banque Côte d’Ivoire",
+        "change": -3.51
       },
       {
         "cap": 61,
@@ -1097,73 +1097,73 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Bourse Regionale des Valeurs Mobilieres"
   },
   "tg": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 12690,
-        "t": "SDCC",
-        "name": "Sode Côte d’Ivoire",
+        "cap": 15695,
+        "t": "SMBC",
+        "name": "SMB Côte d’Ivoire",
         "change": 7.5
       },
       {
-        "cap": 2220,
-        "t": "SCRC",
-        "name": "Sucrivoire Côte d’Ivoire",
-        "change": -7.5
+        "cap": 2705,
+        "t": "CABC",
+        "name": "Sicable Côte d’Ivoire",
+        "change": -7.36
       },
       {
-        "cap": 5250,
-        "t": "CIEC",
-        "name": "CIE Côte d’Ivoire",
-        "change": 7.47
+        "cap": 7700,
+        "t": "SPHC",
+        "name": "Saph Côte d’Ivoire",
+        "change": -7.23
       },
       {
-        "cap": 2810,
-        "t": "SDSC",
-        "name": "Bollore Transport & Logistics",
+        "cap": 1300,
+        "t": "CFAC",
+        "name": "CFAO Motors Côte d’Ivoire",
+        "change": -7.14
+      },
+      {
+        "cap": 2145,
+        "t": "NEIC",
+        "name": "NEI-CEDA Côte d’Ivoire",
         "change": -6.33
       },
       {
-        "cap": 4425,
+        "cap": 20175,
+        "t": "STBC",
+        "name": "Sitab Côte d’Ivoire",
+        "change": -6.16
+      },
+      {
+        "cap": 4150,
         "t": "SNTS",
         "name": "Sonatel Senegal",
-        "change": -5.85
+        "change": -4.6
       },
       {
-        "cap": 8100,
-        "t": "BOABF",
-        "name": "Bank of Africa - Burkina Faso",
-        "change": 5.74
+        "cap": 12300,
+        "t": "SDCC",
+        "name": "Sode Côte d’Ivoire",
+        "change": -4.28
       },
       {
-        "cap": 1795,
-        "t": "STAC",
-        "name": "Setao Côte d’Ivoire",
-        "change": -5.03
-      },
-      {
-        "cap": 1415,
-        "t": "CFAC",
-        "name": "CFAO Motors Côte d’Ivoire",
-        "change": 4.81
-      },
-      {
-        "cap": 7900,
-        "t": "SOGC",
-        "name": "Sogb Côte d’Ivoire",
-        "change": 3.95
-      },
-      {
-        "cap": 1725,
+        "cap": 1720,
         "t": "FTSC",
         "name": "Filtisac Côte d’Ivoire",
-        "change": -3.9
+        "change": -4.18
       },
       {
-        "cap": 21000,
-        "t": "ORAC",
-        "name": "Orange Côte d’Ivoire",
-        "change": 3.6
+        "cap": 5295,
+        "t": "CIEC",
+        "name": "CIE Côte d’Ivoire",
+        "change": -3.73
+      },
+      {
+        "cap": 17995,
+        "t": "NSBC",
+        "name": "Nsia Banque Côte d’Ivoire",
+        "change": -3.51
       },
       {
         "cap": 61,
@@ -1177,73 +1177,73 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Bourse Regionale des Valeurs Mobilieres"
   },
   "gw": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 12690,
-        "t": "SDCC",
-        "name": "Sode Côte d’Ivoire",
+        "cap": 15695,
+        "t": "SMBC",
+        "name": "SMB Côte d’Ivoire",
         "change": 7.5
       },
       {
-        "cap": 2220,
-        "t": "SCRC",
-        "name": "Sucrivoire Côte d’Ivoire",
-        "change": -7.5
+        "cap": 2705,
+        "t": "CABC",
+        "name": "Sicable Côte d’Ivoire",
+        "change": -7.36
       },
       {
-        "cap": 5250,
-        "t": "CIEC",
-        "name": "CIE Côte d’Ivoire",
-        "change": 7.47
+        "cap": 7700,
+        "t": "SPHC",
+        "name": "Saph Côte d’Ivoire",
+        "change": -7.23
       },
       {
-        "cap": 2810,
-        "t": "SDSC",
-        "name": "Bollore Transport & Logistics",
+        "cap": 1300,
+        "t": "CFAC",
+        "name": "CFAO Motors Côte d’Ivoire",
+        "change": -7.14
+      },
+      {
+        "cap": 2145,
+        "t": "NEIC",
+        "name": "NEI-CEDA Côte d’Ivoire",
         "change": -6.33
       },
       {
-        "cap": 4425,
+        "cap": 20175,
+        "t": "STBC",
+        "name": "Sitab Côte d’Ivoire",
+        "change": -6.16
+      },
+      {
+        "cap": 4150,
         "t": "SNTS",
         "name": "Sonatel Senegal",
-        "change": -5.85
+        "change": -4.6
       },
       {
-        "cap": 8100,
-        "t": "BOABF",
-        "name": "Bank of Africa - Burkina Faso",
-        "change": 5.74
+        "cap": 12300,
+        "t": "SDCC",
+        "name": "Sode Côte d’Ivoire",
+        "change": -4.28
       },
       {
-        "cap": 1795,
-        "t": "STAC",
-        "name": "Setao Côte d’Ivoire",
-        "change": -5.03
-      },
-      {
-        "cap": 1415,
-        "t": "CFAC",
-        "name": "CFAO Motors Côte d’Ivoire",
-        "change": 4.81
-      },
-      {
-        "cap": 7900,
-        "t": "SOGC",
-        "name": "Sogb Côte d’Ivoire",
-        "change": 3.95
-      },
-      {
-        "cap": 1725,
+        "cap": 1720,
         "t": "FTSC",
         "name": "Filtisac Côte d’Ivoire",
-        "change": -3.9
+        "change": -4.18
       },
       {
-        "cap": 21000,
-        "t": "ORAC",
-        "name": "Orange Côte d’Ivoire",
-        "change": 3.6
+        "cap": 5295,
+        "t": "CIEC",
+        "name": "CIE Côte d’Ivoire",
+        "change": -3.73
+      },
+      {
+        "cap": 17995,
+        "t": "NSBC",
+        "name": "Nsia Banque Côte d’Ivoire",
+        "change": -3.51
       },
       {
         "cap": 61,
@@ -1257,66 +1257,60 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Bourse Regionale des Valeurs Mobilieres"
   },
   "zm": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 1,
+        "cap": 8.1,
+        "t": "ZNCO",
+        "name": "Zambia National Commercial Bank",
+        "change": -9.5
+      },
+      {
+        "cap": 0.11,
+        "t": "REIZ",
+        "name": "Real Estate Investments Zambia",
+        "change": -8.33
+      },
+      {
+        "cap": 0.99,
         "t": "SCBL",
         "name": "Standard Chartered Bank",
-        "change": -9.09
+        "change": 2.06
       },
       {
-        "cap": 27.49,
-        "t": "DCZM",
-        "name": "Dot Com Zambia",
-        "change": 1.81
+        "cap": 0.67,
+        "t": "CCAF",
+        "name": "CEC Africa (CECA) Investments Ltd",
+        "change": 1.52
       },
       {
-        "cap": 224,
-        "t": "ATEL",
-        "name": "Airtel Networks",
-        "change": 0.43
+        "cap": 3.02,
+        "t": "ZFCO",
+        "name": "Zambia Forestry & Forest Industries Corp",
+        "change": -0.66
       },
       {
-        "cap": 67.97,
-        "t": "ZSUG",
-        "name": "Zambia Sugar",
-        "change": -0.01
-      },
-      {
-        "cap": 6.7,
-        "t": "ZABR",
-        "name": "Zambian Breweries",
-        "change": 0
-      },
-      {
-        "cap": 148,
-        "t": "ZCCM",
-        "name": "ZCCM-Investment Holdings",
-        "change": 0
+        "cap": 57.63,
+        "t": "CHIL",
+        "name": "Chilanga Cement",
+        "change": -0.62
       },
       {
         "cap": 1.72,
         "t": "ZMBF",
         "name": "Zambeef Products",
-        "change": 0
+        "change": 0.58
+      },
+      {
+        "cap": 14.97,
+        "t": "CECZ",
+        "name": "Copperbelt Energy Corporation",
+        "change": 0.07
       },
       {
         "cap": 350,
         "t": "SHOP",
         "name": "Shoprite Holdings",
-        "change": 0
-      },
-      {
-        "cap": 3.34,
-        "t": "ZFCO",
-        "name": "Zambia Forestry & Forest Industries Corp",
-        "change": 0
-      },
-      {
-        "cap": 33.5,
-        "t": "ZMFA",
-        "name": "Zambia Metal Fabricators",
         "change": 0
       },
       {
@@ -1326,9 +1320,15 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
         "change": 0
       },
       {
-        "cap": 115,
-        "t": "AECI",
-        "name": "AECI Mining Explosives",
+        "cap": 67.97,
+        "t": "ZSUG",
+        "name": "Zambia Sugar",
+        "change": 0
+      },
+      {
+        "cap": 33.5,
+        "t": "ZMFA",
+        "name": "Zambia Metal Fabricators",
         "change": 0
       }
     ],
@@ -1337,78 +1337,78 @@ window.__ASJ_ARCHIVE_DAY = { date: '2026-11-03', generated: '2026-11-03T19:09:33
     "name": "Lusaka Securities Exchange"
   },
   "mw": {
-    "asOf": "2026-10-28",
+    "asOf": "2026-11-03",
     "companies": [
       {
-        "cap": 20.95,
-        "t": "TNM",
-        "name": "Telekom Networks Malawi Limited",
-        "change": 13.24
-      },
-      {
-        "cap": 204.83,
+        "cap": 204.36,
         "t": "CHL",
         "name": "Continental Holdings Plc",
-        "change": -0.02
+        "change": 1.29
       },
       {
-        "cap": 459.21,
+        "cap": 449.99,
         "t": "FDHB",
         "name": "FDH Bank Plc",
-        "change": -0.02
+        "change": -0.97
       },
       {
-        "cap": 101.22,
-        "t": "AIRTEL",
-        "name": "Airtel Malawi Plc",
-        "change": -0.01
+        "cap": 20.78,
+        "t": "TNM",
+        "name": "Telekom Networks Malawi Limited",
+        "change": -0.53
       },
       {
-        "cap": 1786.11,
-        "t": "FMBCH",
-        "name": "FMB Capital Holdings Plc",
-        "change": -0.01
-      },
-      {
-        "cap": 311.86,
+        "cap": 311.08,
         "t": "PCL",
         "name": "Press Corporation Limited",
-        "change": 0
+        "change": -0.21
       },
       {
-        "cap": 3329.99,
-        "t": "OMU",
-        "name": "Old Mutual Limited",
-        "change": 0
+        "cap": 1328.96,
+        "t": "NICO",
+        "name": "National Insurance Company Holdings",
+        "change": -0.04
       },
       {
-        "cap": 3268.78,
+        "cap": 619.15,
+        "t": "NBS",
+        "name": "NBS Bank Limited",
+        "change": -0.01
+      },
+      {
+        "cap": 3268.74,
         "t": "NITL",
         "name": "National Investment Trust Limited",
         "change": 0
       },
       {
-        "cap": 8869.96,
-        "t": "NBM",
-        "name": "National Bank of Malawi",
-        "change": 0
-      },
-      {
-        "cap": 3399.94,
-        "t": "SUNBIRD",
-        "name": "Sunbird Tourism Limited",
-        "change": 0
-      },
-      {
-        "cap": 3889.77,
+        "cap": 3889.61,
         "t": "STANDARD",
         "name": "Standard Bank Malawi Limited",
         "change": 0
       },
       {
-        "cap": 19.62,
-        "t": "MPICO",
-        "name": "Malawi Property Investment Company",
+        "cap": 3399.93,
+        "t": "SUNBIRD",
+        "name": "Sunbird Tourism Limited",
+        "change": 0
+      },
+      {
+        "cap": 101.11,
+        "t": "AIRTEL",
+        "name": "Airtel Malawi Plc",
+        "change": 0
+      },
+      {
+        "cap": 3300,
+        "t": "OMU",
+        "name": "Old Mutual Limited",
+        "change": 0
+      },
+      {
+        "cap": 16.99,
+        "t": "ICON",
+        "name": "Icon Properties Plc",
         "change": 0
       }
     ],

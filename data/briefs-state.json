@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-03T19:09:33+00:00",
+  "generated": "2026-11-03T22:33:45+00:00",
   "dates": {
     "dz": "2026-11-03T09:17:44+00:00",
     "ao": "2026-11-03T09:17:44+00:00",
@@ -15,7 +15,7 @@
     "eg": "2026-11-03T09:17:44+00:00",
     "gq": "2026-11-03T09:17:44+00:00",
     "er": "2026-10-23T07:36:40+00:00",
-    "ke": "2026-11-03T09:17:44+00:00",
+    "ke": "2026-11-03T22:33:45+00:00",
     "za": "2026-11-03T09:17:44+00:00",
     "ng": "2026-11-03T09:17:44+00:00",
     "et": "2026-11-03T09:17:44+00:00",
@@ -3343,96 +3343,25 @@
     ],
     "ke": [
       {
-        "articleId": "495e574d8816d5ba3f9f",
-        "headline": "Former Attorney General Paul Kihara dies aged 72",
-        "dek": "The Judiciary has paid tribute to the distinguished jurist for his enduring contribution to Kenya’s legal institutions.",
+        "articleId": "da5bba985f9af8c74f15",
+        "headline": "ADM opens new Nairobi office for East Africa trade",
+        "dek": "The global nutrition company aims to connect regional demand with its international agricultural supply chain network.",
         "paragraphs": [
-          "Former Attorney General Paul Kihara Kariuki died on November 3, 2026, at the age of 72. The Judiciary has paid tribute to the retired Court of Appeal President, describing him as a distinguished jurist.",
-          "Chief Justice Martha Koome stated that Kihara's career was marked by dedicated public service and judicial leadership. He served as President of the Court of Appeal from 2013 to 2018, championing reforms to improve efficiency and accessibility. Koome also recognised his role as the founding Director of the Judiciary Training Institute.",
-          "Kihara served as Attorney General from 2018 to 2022, acting as the Government’s principal legal adviser. Chief Justice Koome said his legacy would live on through the institutions he helped build and the reforms he championed."
+          "ADM has opened a new destination marketing office in Nairobi, Kenya, to connect East African customers with its global agricultural supply chain. The office will provide access to ADM’s food ingredients, feedstuffs, and animal nutrition products for customers across the region. Nairobi was chosen as a base due to Kenya's role as a regional trade hub.",
+          "The new operation will focus on destination marketing, including market insights, local merchandising, and storage and distribution. Patrick Heijbroek, vice president for Global Trade, stated that East Africa is a high-growth market with increasing demand for quality food and feed ingredients. ADM’s destination marketing activities reached approximately 31 million metric tonnes in 2025.",
+          "This Nairobi office builds on ADM’s decade-long presence in Kenya and expands its African footprint. It complements existing investments in human nutrition innovation laboratories in Nairobi and a distribution hub in Nigeria. Erdal Kurban, president for Africa & Middle East, said the office will bring ADM closer to customers to better understand local market dynamics."
         ],
-        "body": "Former Attorney General Paul Kihara Kariuki died on November 3, 2026, at the age of 72. The Judiciary has paid tribute to the retired Court of Appeal President, describing him as a distinguished jurist.\n\nChief Justice Martha Koome stated that Kihara's career was marked by dedicated public service and judicial leadership. He served as President of the Court of Appeal from 2013 to 2018, championing reforms to improve efficiency and accessibility. Koome also recognised his role as the founding Director of the Judiciary Training Institute.\n\nKihara served as Attorney General from 2018 to 2022, acting as the Government’s principal legal adviser. Chief Justice Koome said his legacy would live on through the institutions he helped build and the reforms he championed.",
-        "why": "The death of former Attorney General Paul Kihara affects the Kenyan legal fraternity and the government he served.",
+        "body": "ADM has opened a new destination marketing office in Nairobi, Kenya, to connect East African customers with its global agricultural supply chain. The office will provide access to ADM’s food ingredients, feedstuffs, and animal nutrition products for customers across the region. Nairobi was chosen as a base due to Kenya's role as a regional trade hub.\n\nThe new operation will focus on destination marketing, including market insights, local merchandising, and storage and distribution. Patrick Heijbroek, vice president for Global Trade, stated that East Africa is a high-growth market with increasing demand for quality food and feed ingredients. ADM’s destination marketing activities reached approximately 31 million metric tonnes in 2025.\n\nThis Nairobi office builds on ADM’s decade-long presence in Kenya and expands its African footprint. It complements existing investments in human nutrition innovation laboratories in Nairobi and a distribution hub in Nigeria. Erdal Kurban, president for Africa & Middle East, said the office will bring ADM closer to customers to better understand local market dynamics.",
+        "why": "East African customers will have better access to ADM's global food ingredients, feedstuffs, and animal nutrition products.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 0,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+            "score": 70,
+            "why": "Farmers in East Africa will have improved access to ADM's feedstuffs and animal nutrition products through the new Nairobi office."
           },
           "investors": {
-            "score": 0,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
-          },
-          "diaspora": {
-            "score": 21,
-            "why": "This politics report may interest diaspora readers following national public affairs from abroad."
-          }
-        },
-        "topic": "Politics",
-        "published": "2026-11-03T06:15:26Z",
-        "sourceTitle": "Former Attorney General Paul Kihara Dies as Judiciary Pays Tribute",
-        "editorialScore": 20.7,
-        "selectionScore": 20.7,
-        "confidence": "high",
-        "corroboration": 3,
-        "scoreBreakdown": {
-          "relevance": 2.5,
-          "corroboration": 6.0,
-          "sourceQuality": 1.75,
-          "freshness": 3.5,
-          "publicImpact": 4.45,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in opening",
-          "3-source corroboration",
-          "published within 18h",
-          "urgent public consequence",
-          "specific figure"
-        ],
-        "countryMatch": "lede",
-        "wordCount": 121,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "published": "2026-11-03T06:15:26Z",
-            "name": "Capital FM",
-            "url": "https://capitalfm.africa/former-attorney-general-paul-kihara-dies-as-judiciary-pays-tribute/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"
-          },
-          {
-            "published": "2026-11-01T11:51:43Z",
-            "name": "The Standard",
-            "url": "https://www.standardmedia.co.ke/article/2001561301/gachagua-dismisses-uhuru-reconciliation-calls-says-we-are-one-team"
-          },
-          {
-            "published": "2026-11-03T05:51:26Z",
-            "name": "Kenyans.co.ke",
-            "url": "https://www.kenyans.co.ke/news/129080-former-attorney-general-paul-kihara-kariuki-dies-72"
-          }
-        ]
-      },
-      {
-        "articleId": "6f1e53cdc7723a5f380a",
-        "headline": "ADM opens Nairobi office to boost East African trade",
-        "dek": "The global nutrition and agricultural company aims to connect local demand with its worldwide supply chain network.",
-        "paragraphs": [
-          "ADM, a global leader in nutrition and agricultural supply chain solutions, has opened a new destination marketing office in Nairobi, Kenya. This move strengthens the company's ability to link customers across East Africa to its global supply chain network. Kenya is a leading trade hub for food and feed ingredients and serves as a gateway to the wider East African region.",
-          "The Nairobi office will offer customers access to a wide range of food ingredients, feedstuffs, and animal nutrition products. It will focus on market insights, local merchandising, and storage and distribution. Patrick Heijbroek, Vice President of Global Trade, stated that East Africa's population of over 500 million people represents a high-growth market with increasing demand for quality ingredients and supply chain solutions.",
-          "This expansion builds on ADM's decade-long presence in Kenya and complements its existing investments in Africa, including human nutrition labs in Nairobi, a distribution hub in Lagos, Nigeria, and flavor creation capabilities in Johannesburg, South Africa. In 2025, ADM's destination marketing operations handled nearly 31 million metric tons."
-        ],
-        "body": "ADM, a global leader in nutrition and agricultural supply chain solutions, has opened a new destination marketing office in Nairobi, Kenya. This move strengthens the company's ability to link customers across East Africa to its global supply chain network. Kenya is a leading trade hub for food and feed ingredients and serves as a gateway to the wider East African region.\n\nThe Nairobi office will offer customers access to a wide range of food ingredients, feedstuffs, and animal nutrition products. It will focus on market insights, local merchandising, and storage and distribution. Patrick Heijbroek, Vice President of Global Trade, stated that East Africa's population of over 500 million people represents a high-growth market with increasing demand for quality ingredients and supply chain solutions.\n\nThis expansion builds on ADM's decade-long presence in Kenya and complements its existing investments in Africa, including human nutrition labs in Nairobi, a distribution hub in Lagos, Nigeria, and flavor creation capabilities in Johannesburg, South Africa. In 2025, ADM's destination marketing operations handled nearly 31 million metric tons.",
-        "why": "Farmers and businesses in East Africa will gain better access to ADM's global supply chain for food and feed ingredients.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 75,
-            "why": "Farmers and the agricultural sector in East Africa will benefit from improved access to ADM's global supply chain for feed ingredients and animal nutrition products."
-          },
-          "investors": {
-            "score": 20,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+            "score": 85,
+            "why": "ADM raised its 2026 profit outlook to between US$5.15 and US$5.60 per share, supported by stronger crop processing margins and favourable US biofuels policies."
           },
           "diaspora": {
             "score": 20,
@@ -3440,8 +3369,8 @@
           }
         },
         "topic": "Business",
-        "published": "2026-11-03T07:13:43Z",
-        "sourceTitle": "ADM opens new destination marketing office in Kenya",
+        "published": "2026-11-03T10:28:28Z",
+        "sourceTitle": "ADM opens new Nairobi office",
         "editorialScore": 18.8,
         "selectionScore": 18.8,
         "confidence": "high",
@@ -3464,13 +3393,13 @@
           "material action in headline"
         ],
         "countryMatch": "title",
-        "wordCount": 171,
+        "wordCount": 163,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-03T07:13:43Z",
+            "published": "2026-11-03T10:28:28Z",
             "name": "Food Business Africa",
-            "url": "https://www.foodbusinessmea.com/adm-opens-new-destination-marketing-office-in-kenya/"
+            "url": "https://www.foodbusinessmea.com/adm-opens-new-nairobi-office/"
           },
           {
             "published": "2026-11-02T17:25:57Z",
@@ -3480,21 +3409,148 @@
         ]
       },
       {
-        "articleId": "e1b590df9ddb24d4d7b7",
-        "headline": "Kenya restricts Diwali fireworks to four hours",
-        "dek": "Mining CS Joho mandates permits and limits shell size for celebrations from November 6 to 8.",
+        "articleId": "f959a06d88c641b65eb3",
+        "headline": "Kenyan judge Okowa re-elected to International Court of Justice",
+        "dek": "Prof. Phoebe Okowa will serve a second nine-year term on the ICJ from 2027 to 2036 after winning a UN Security Council vote.",
         "paragraphs": [
-          "Mining Cabinet Secretary Hassan Joho has limited fireworks displays during Diwali celebrations to a four-hour window, from 7pm to 11pm, between November 6 and 8. Organisers must obtain permits and adhere to safety regulations, with fireworks shells capped at four inches in urban areas unless an exemption is granted. These directives aim to regulate displays and minimise public disruption during the Hindu festival.",
-          "Joho stated that only qualified, experienced, and sober individuals can handle aerial fireworks, and dealers must sell products only to permit holders. Applications for display authorisations can be made at Madini House or county mining offices. Displays are restricted to approved locations, including hotels, clubs, temples, sports grounds, and school compounds cleared by an Inspector of Explosives.",
-          "The new rules follow President William Ruto's pledge in October 2024 to consider Diwali as a national holiday, a proposal that requires parliamentary approval. Contravention of Joho's directives risks a fine not exceeding Ksh10,000 or imprisonment for up to two months, or both."
+          "Kenya’s Prof. Phoebe Okowa has won re-election to the International Court of Justice (ICJ) for a full nine-year term from 2027 to 2036. She secured her victory after a third round of voting at the United Nations, defeating Peru’s Luz del Carmen Ibáñez Carranza with 13 votes in the 15-member Security Council. Okowa’s current mandate, which began in November 2025 to fill a vacancy, was set to expire on February 5, 2027.",
+          "The contest concluded after three other candidates withdrew, leaving Okowa to face her Peruvian rival. Sierra Leone’s UN envoy urged support for Okowa, stating that Africa risked losing its representation on the court if votes remained divided. The envoy highlighted Okowa’s qualifications, including her previous service on the court and her distinction as the first African woman elected to the UN International Law Commission.",
+          "Okowa’s re-election ensures Kenya maintains a seat on the 15-member court, with her new term commencing on February 6, 2027. To be elected, candidates require an absolute majority in both the 193-member General Assembly and the 15-member Security Council. The ICJ is the principal judicial organ of the United Nations, based in The Hague, Netherlands."
         ],
-        "body": "Mining Cabinet Secretary Hassan Joho has limited fireworks displays during Diwali celebrations to a four-hour window, from 7pm to 11pm, between November 6 and 8. Organisers must obtain permits and adhere to safety regulations, with fireworks shells capped at four inches in urban areas unless an exemption is granted. These directives aim to regulate displays and minimise public disruption during the Hindu festival.\n\nJoho stated that only qualified, experienced, and sober individuals can handle aerial fireworks, and dealers must sell products only to permit holders. Applications for display authorisations can be made at Madini House or county mining offices. Displays are restricted to approved locations, including hotels, clubs, temples, sports grounds, and school compounds cleared by an Inspector of Explosives.\n\nThe new rules follow President William Ruto's pledge in October 2024 to consider Diwali as a national holiday, a proposal that requires parliamentary approval. Contravention of Joho's directives risks a fine not exceeding Ksh10,000 or imprisonment for up to two months, or both.",
-        "why": "Kenyans celebrating Diwali face restrictions on fireworks displays and potential fines for non-compliance.",
+        "body": "Kenya’s Prof. Phoebe Okowa has won re-election to the International Court of Justice (ICJ) for a full nine-year term from 2027 to 2036. She secured her victory after a third round of voting at the United Nations, defeating Peru’s Luz del Carmen Ibáñez Carranza with 13 votes in the 15-member Security Council. Okowa’s current mandate, which began in November 2025 to fill a vacancy, was set to expire on February 5, 2027.\n\nThe contest concluded after three other candidates withdrew, leaving Okowa to face her Peruvian rival. Sierra Leone’s UN envoy urged support for Okowa, stating that Africa risked losing its representation on the court if votes remained divided. The envoy highlighted Okowa’s qualifications, including her previous service on the court and her distinction as the first African woman elected to the UN International Law Commission.\n\nOkowa’s re-election ensures Kenya maintains a seat on the 15-member court, with her new term commencing on February 6, 2027. To be elected, candidates require an absolute majority in both the 193-member General Assembly and the 15-member Security Council. The ICJ is the principal judicial organ of the United Nations, based in The Hague, Netherlands.",
+        "why": "Kenyan judge Phoebe Okowa has secured re-election to the International Court of Justice, ensuring Kenya's continued representation on the global judicial body.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
             "score": 0,
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 0,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+          },
+          "diaspora": {
+            "score": 40,
+            "why": "This politics report may interest diaspora readers following national public affairs from abroad."
+          }
+        },
+        "topic": "Politics",
+        "published": "2026-11-03T19:13:50Z",
+        "sourceTitle": "Okowa wins re-election to ICJ after third-round vote",
+        "editorialScore": 18.2,
+        "selectionScore": 18.2,
+        "confidence": "high",
+        "corroboration": 2,
+        "scoreBreakdown": {
+          "relevance": 2.5,
+          "corroboration": 4.0,
+          "sourceQuality": 1.75,
+          "freshness": 3.5,
+          "publicImpact": 2.7,
+          "evidence": 2.5,
+          "materiality": 1.25,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in opening",
+          "2-source corroboration",
+          "published within 18h",
+          "public-policy consequence",
+          "specific figure",
+          "material action in headline"
+        ],
+        "countryMatch": "lede",
+        "wordCount": 191,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "published": "2026-11-03T19:13:50Z",
+            "name": "Capital FM",
+            "url": "https://capitalfm.africa/okowa-wins-re-election-to-icj-after-third-round-vote/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"
+          },
+          {
+            "published": "2026-11-03T19:19:08Z",
+            "name": "The Standard",
+            "url": "https://www.standardmedia.co.ke/article/2001561465/kenya-s-phoebe-okowa-elected-icj-judge-for-nine-year-term"
+          }
+        ]
+      },
+      {
+        "articleId": "3bca74871f74e596b6d6",
+        "headline": "Law Society of Kenya seeks missing lawyer",
+        "dek": "Nairobi advocate Abshir Ahmedsadak Abdi reportedly abducted November 2, 2026, amid criminal case involvement.",
+        "paragraphs": [
+          "The Law Society of Kenya (LSK) is demanding urgent investigations into the disappearance of Nairobi lawyer Abshir Ahmedsadak Abdi, who was reportedly abducted on November 2, 2026. Abdi, of Abshir & Njagi Advocates, was allegedly pursued by armed individuals in two vehicles along Muchai Road, with some occupants appearing to be in police uniforms.",
+          "LSK President Charles Kanjama stated that the lawyer's disappearance is a concern due to his role as a key witness in Criminal Case No. MCCR/E2910/2025 at the Makadara Law Courts. The Society has received prior reports of threats linked to these proceedings and has filed a habeas corpus application, scheduled for directions on November 9, 2026.",
+          "The LSK has called on Inspector General of Police Douglas Kanja and the Directorate of Criminal Investigations (DCI) to find Abdi and investigate the incident. The Independent Policing Oversight Authority (IPOA) is also urged to look into the involvement of individuals posing as police officers."
+        ],
+        "body": "The Law Society of Kenya (LSK) is demanding urgent investigations into the disappearance of Nairobi lawyer Abshir Ahmedsadak Abdi, who was reportedly abducted on November 2, 2026. Abdi, of Abshir & Njagi Advocates, was allegedly pursued by armed individuals in two vehicles along Muchai Road, with some occupants appearing to be in police uniforms.\n\nLSK President Charles Kanjama stated that the lawyer's disappearance is a concern due to his role as a key witness in Criminal Case No. MCCR/E2910/2025 at the Makadara Law Courts. The Society has received prior reports of threats linked to these proceedings and has filed a habeas corpus application, scheduled for directions on November 9, 2026.\n\nThe LSK has called on Inspector General of Police Douglas Kanja and the Directorate of Criminal Investigations (DCI) to find Abdi and investigate the incident. The Independent Policing Oversight Authority (IPOA) is also urged to look into the involvement of individuals posing as police officers.",
+        "why": "The abduction of lawyer Abshir Ahmedsadak Abdi is linked to his role as a witness in a criminal case, which the LSK states is an affront to the administration of justice.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 0,
+            "why": "This report does not contain information relevant to investors."
+          },
+          "diaspora": {
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "News",
+        "published": "2026-11-03T15:39:21Z",
+        "sourceTitle": "LSK links missing Nairobi lawyer to criminal case, demands urgent investigations",
+        "editorialScore": 15.3,
+        "selectionScore": 14.05,
+        "confidence": "high",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 4.0,
+          "corroboration": 0.0,
+          "sourceQuality": 1.75,
+          "freshness": 3.5,
+          "publicImpact": 3.5500000000000003,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in headline",
+          "published within 18h",
+          "public-policy consequence",
+          "specific figure"
+        ],
+        "countryMatch": "title",
+        "wordCount": 156,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "published": "2026-11-03T15:39:21Z",
+            "name": "Capital FM",
+            "url": "https://capitalfm.africa/lsk-links-missing-nairobi-lawyer-to-criminal-case-demands-urgent-investigations/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"
+          }
+        ]
+      },
+      {
+        "articleId": "0dc803d6abaae5c143e8",
+        "headline": "Kenya and Australia discuss farm tech partnership",
+        "dek": "The two nations are exploring cooperation in research, livestock technology, and youth skills development.",
+        "paragraphs": [
+          "Kenya and Australia are discussing a new partnership to improve agricultural productivity and innovation. The collaboration aims to boost research, livestock technology, and youth skills development in Kenya's farming sector.",
+          "Agriculture Cabinet Secretary Sen. Mutahi Kagwe met with Australia's Acting High Commissioner Andrew Barnes to discuss strengthening crop and livestock research. They explored technology transfer, vaccine development, and sexed semen technology, building on existing vaccine exports to 13 countries, including 11 million doses to Uganda.",
+          "The partnership also seeks to use Agricultural Training Centres to equip young people with practical farming skills. This initiative is expected to support the modernisation of Kenya's agriculture and increase youth involvement in the sector."
+        ],
+        "body": "Kenya and Australia are discussing a new partnership to improve agricultural productivity and innovation. The collaboration aims to boost research, livestock technology, and youth skills development in Kenya's farming sector.\n\nAgriculture Cabinet Secretary Sen. Mutahi Kagwe met with Australia's Acting High Commissioner Andrew Barnes to discuss strengthening crop and livestock research. They explored technology transfer, vaccine development, and sexed semen technology, building on existing vaccine exports to 13 countries, including 11 million doses to Uganda.\n\nThe partnership also seeks to use Agricultural Training Centres to equip young people with practical farming skills. This initiative is expected to support the modernisation of Kenya's agriculture and increase youth involvement in the sector.",
+        "why": "Kenyan farmers and young people stand to benefit from enhanced agricultural research, technology adoption, and skills development.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 85,
+            "why": "Kenyan farmers may gain access to new research, livestock technologies like sexed semen, and improved vaccine production, potentially increasing productivity."
           },
           "investors": {
             "score": 20,
@@ -3505,103 +3561,95 @@
             "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "News",
-        "published": "2026-11-03T05:58:33Z",
-        "sourceTitle": "Mining CS Joho issues fireworks guidelines ahead of Diwali celebrations",
-        "editorialScore": 18.65,
-        "selectionScore": 17.4,
-        "confidence": "high",
-        "corroboration": 2,
+        "topic": "Agriculture",
+        "published": "2026-11-03T12:19:23Z",
+        "sourceTitle": "Kenya, Australia explore partnership to boost agricultural research and technology",
+        "editorialScore": 10.85,
+        "selectionScore": 9.85,
+        "confidence": "medium",
+        "corroboration": 1,
         "scoreBreakdown": {
-          "relevance": 2.5,
-          "corroboration": 4.0,
+          "relevance": 4.0,
+          "corroboration": 0.0,
           "sourceQuality": 1.75,
           "freshness": 3.5,
-          "publicImpact": 4.4,
-          "evidence": 2.5,
+          "publicImpact": 0.85,
+          "evidence": 0.75,
           "materiality": 0.0,
           "penalties": 0.0
         },
         "rankReasons": [
-          "country in opening",
-          "2-source corroboration",
+          "country in headline",
           "published within 18h",
-          "public-policy consequence",
-          "specific figure"
+          "economic consequence"
         ],
-        "countryMatch": "lede",
-        "wordCount": 164,
+        "countryMatch": "title",
+        "wordCount": 110,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-03T05:58:33Z",
-            "name": "Capital FM",
-            "url": "https://capitalfm.africa/mining-cs-joho-issues-fireworks-guidelines-ahead-of-diwali-celebrations/?utm_source=rss&utm_medium=feed&utm_campaign=feed-news"
-          },
-          {
-            "published": "2026-11-03T04:15:21Z",
-            "name": "Kenyans.co.ke",
-            "url": "https://www.kenyans.co.ke/news/129076-cs-joho-restricts-diwali-fireworks-7pm-11pm-sets-safety-rules"
+            "published": "2026-11-03T12:19:23Z",
+            "name": "Farmers Review Africa",
+            "url": "https://farmersreviewafrica.com/kenya-australia-explore-partnership-to-boost-agricultural-research-and-technology/"
           }
         ]
       },
       {
-        "articleId": "45b3e44d08371fa29a43",
-        "headline": "Kenya sugar farmers to elect board representatives November 24",
-        "dek": "The Ministry of Agriculture and Livestock Development confirmed the election date and published the final voters' register and candidate list.",
+        "articleId": "1b66b500e3d04e1e37e6",
+        "headline": "Ethiopians flee clashes, await registration in Kenya",
+        "dek": "Thousands of displaced people are waiting at Al-huda primary school in Moyale for processing by UNHCR.",
         "paragraphs": [
-          "Sugarcane farmers in Kenya will elect five representatives to the Kenya Sugar Board on November 24, 2026. The Ministry of Agriculture and Livestock Development confirmed the date and published the final voters’ register and candidate list on October 30. The election will fill five grower representative positions as provided for under Section 6 of the Sugar Act No. 11 of 2024.",
-          "Elections Committee Chairperson Harun Khator signed a notice stating the election would follow the applicable legal framework and court orders. The final voters’ register is available on the Board’s website and displayed at designated facilities. Preparations for the election began on May 12, 2026, with an invitation for applications from members of the public.",
-          "The High Court had suspended the elections in September pending a constitutional petition challenging disputed sugarcane catchment boundaries. The November 24 vote will determine who represents sugarcane farmers in Board deliberations on industry issues. Growers should consult official committee communications and the published register to confirm their eligibility."
+          "Thousands of displaced Ethiopians were expected to be registered in the Kenyan border city of Moyale on Monday, after fleeing clashes between Oromia and Somali region leaders in Ethiopia.",
+          "The United Nations refugee agency, UNHCR, has provided temporary international protection status to these individuals, who are currently awaiting processing at Al-huda primary school.",
+          "As of October 29, the UN reported that approximately 50,000 people had fled fighting in southern Ethiopia into Kenya, a figure that had jumped from 36,000 just two days prior, according to UNHCR representative for Kenya, Fatima Mohammed-Cole."
         ],
-        "body": "Sugarcane farmers in Kenya will elect five representatives to the Kenya Sugar Board on November 24, 2026. The Ministry of Agriculture and Livestock Development confirmed the date and published the final voters’ register and candidate list on October 30. The election will fill five grower representative positions as provided for under Section 6 of the Sugar Act No. 11 of 2024.\n\nElections Committee Chairperson Harun Khator signed a notice stating the election would follow the applicable legal framework and court orders. The final voters’ register is available on the Board’s website and displayed at designated facilities. Preparations for the election began on May 12, 2026, with an invitation for applications from members of the public.\n\nThe High Court had suspended the elections in September pending a constitutional petition challenging disputed sugarcane catchment boundaries. The November 24 vote will determine who represents sugarcane farmers in Board deliberations on industry issues. Growers should consult official committee communications and the published register to confirm their eligibility.",
-        "why": "The November 24 vote will determine who represents sugarcane farmers in Board deliberations on industry issues.",
+        "body": "Thousands of displaced Ethiopians were expected to be registered in the Kenyan border city of Moyale on Monday, after fleeing clashes between Oromia and Somali region leaders in Ethiopia.\n\nThe United Nations refugee agency, UNHCR, has provided temporary international protection status to these individuals, who are currently awaiting processing at Al-huda primary school.\n\nAs of October 29, the UN reported that approximately 50,000 people had fled fighting in southern Ethiopia into Kenya, a figure that had jumped from 36,000 just two days prior, according to UNHCR representative for Kenya, Fatima Mohammed-Cole.",
+        "why": "Displaced Ethiopians fleeing conflict in Ethiopia are awaiting registration and aid in Kenya.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 95,
-            "why": "Sugarcane farmers will elect five representatives to the Kenya Sugar Board on November 24, 2026, to deliberate on industry issues."
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
-            "score": 60,
-            "why": "The election of grower representatives to the Kenya Sugar Board will influence deliberations on issues affecting the sugar industry."
+            "score": 0,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
           },
           "diaspora": {
             "score": 20,
             "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "Agriculture",
-        "published": "2026-11-02T13:01:21Z",
-        "sourceTitle": "Kenya Sugar Board elections set for November 24",
-        "editorialScore": 15.15,
-        "selectionScore": 13.9,
-        "confidence": "high",
+        "topic": "News",
+        "published": "2026-11-03T05:57:22Z",
+        "sourceTitle": "Displaced Ethiopians await registration in Kenya after fleeing clashes",
+        "editorialScore": 8.5,
+        "selectionScore": 7.5,
+        "confidence": "low",
         "corroboration": 1,
         "scoreBreakdown": {
           "relevance": 4.0,
           "corroboration": 0.0,
           "sourceQuality": 1.75,
-          "freshness": 2.5,
-          "publicImpact": 4.4,
-          "evidence": 2.5,
+          "freshness": 3.5,
+          "publicImpact": 0.0,
+          "evidence": 0.0,
           "materiality": 0.0,
-          "penalties": 0.0
+          "penalties": -0.75
         },
         "rankReasons": [
           "country in headline",
-          "published within 36h",
-          "public-policy consequence",
-          "specific figure"
+          "published within 18h",
+          "limited source evidence"
         ],
         "countryMatch": "title",
-        "wordCount": 163,
+        "wordCount": 93,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-02T13:01:21Z",
-            "name": "Food Business Africa",
-            "url": "https://www.foodbusinessmea.com/kenya-sugar-board-elections-set-for-november-24/"
+            "published": "2026-11-03T05:57:22Z",
+            "name": "Africanews",
+            "url": "http://www.africanews.com/2026/11/03/displaced-ethiopians-await-registration-in-kenya-after-fleeing-clashes/"
           }
         ]
       }
@@ -14276,73 +14324,73 @@
   },
   "markets": {
     "bj": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 12690,
-          "t": "SDCC",
-          "name": "Sode Côte d’Ivoire",
+          "cap": 15695,
+          "t": "SMBC",
+          "name": "SMB Côte d’Ivoire",
           "change": 7.5
         },
         {
-          "cap": 2220,
-          "t": "SCRC",
-          "name": "Sucrivoire Côte d’Ivoire",
-          "change": -7.5
+          "cap": 2705,
+          "t": "CABC",
+          "name": "Sicable Côte d’Ivoire",
+          "change": -7.36
         },
         {
-          "cap": 5250,
-          "t": "CIEC",
-          "name": "CIE Côte d’Ivoire",
-          "change": 7.47
+          "cap": 7700,
+          "t": "SPHC",
+          "name": "Saph Côte d’Ivoire",
+          "change": -7.23
         },
         {
-          "cap": 2810,
-          "t": "SDSC",
-          "name": "Bollore Transport & Logistics",
+          "cap": 1300,
+          "t": "CFAC",
+          "name": "CFAO Motors Côte d’Ivoire",
+          "change": -7.14
+        },
+        {
+          "cap": 2145,
+          "t": "NEIC",
+          "name": "NEI-CEDA Côte d’Ivoire",
           "change": -6.33
         },
         {
-          "cap": 4425,
+          "cap": 20175,
+          "t": "STBC",
+          "name": "Sitab Côte d’Ivoire",
+          "change": -6.16
+        },
+        {
+          "cap": 4150,
           "t": "SNTS",
           "name": "Sonatel Senegal",
-          "change": -5.85
+          "change": -4.6
         },
         {
-          "cap": 8100,
-          "t": "BOABF",
-          "name": "Bank of Africa - Burkina Faso",
-          "change": 5.74
+          "cap": 12300,
+          "t": "SDCC",
+          "name": "Sode Côte d’Ivoire",
+          "change": -4.28
         },
         {
-          "cap": 1795,
-          "t": "STAC",
-          "name": "Setao Côte d’Ivoire",
-          "change": -5.03
-        },
-        {
-          "cap": 1415,
-          "t": "CFAC",
-          "name": "CFAO Motors Côte d’Ivoire",
-          "change": 4.81
-        },
-        {
-          "cap": 7900,
-          "t": "SOGC",
-          "name": "Sogb Côte d’Ivoire",
-          "change": 3.95
-        },
-        {
-          "cap": 1725,
+          "cap": 1720,
           "t": "FTSC",
           "name": "Filtisac Côte d’Ivoire",
-          "change": -3.9
+          "change": -4.18
         },
         {
-          "cap": 21000,
-          "t": "ORAC",
-          "name": "Orange Côte d’Ivoire",
-          "change": 3.6
+          "cap": 5295,
+          "t": "CIEC",
+          "name": "CIE Côte d’Ivoire",
+          "change": -3.73
+        },
+        {
+          "cap": 17995,
+          "t": "NSBC",
+          "name": "Nsia Banque Côte d’Ivoire",
+          "change": -3.51
         },
         {
           "cap": 61,
@@ -14356,14 +14404,8 @@
       "name": "Bourse Regionale des Valeurs Mobilieres"
     },
     "bw": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
-        {
-          "cap": 18.72,
-          "t": "CHOB",
-          "name": "Chobe Holdings Limited",
-          "change": 0.11
-        },
         {
           "cap": 0.28,
           "t": "OCCL",
@@ -14419,13 +14461,19 @@
           "change": 0
         },
         {
-          "cap": 507.71,
+          "cap": 568.1,
           "t": "NEWG",
           "name": "NewGold ETF",
           "change": 0
         },
         {
-          "cap": 73.59,
+          "cap": 105.11,
+          "t": "STXWDM",
+          "name": "Satrix MSCI World Feeder ETF",
+          "change": 0
+        },
+        {
+          "cap": 66.7,
           "t": "STXEMG",
           "name": "Satrix Emerging Markets ETF",
           "change": 0
@@ -14436,73 +14484,73 @@
       "name": "Botswana Stock Exchange"
     },
     "bf": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 12690,
-          "t": "SDCC",
-          "name": "Sode Côte d’Ivoire",
+          "cap": 15695,
+          "t": "SMBC",
+          "name": "SMB Côte d’Ivoire",
           "change": 7.5
         },
         {
-          "cap": 2220,
-          "t": "SCRC",
-          "name": "Sucrivoire Côte d’Ivoire",
-          "change": -7.5
+          "cap": 2705,
+          "t": "CABC",
+          "name": "Sicable Côte d’Ivoire",
+          "change": -7.36
         },
         {
-          "cap": 5250,
-          "t": "CIEC",
-          "name": "CIE Côte d’Ivoire",
-          "change": 7.47
+          "cap": 7700,
+          "t": "SPHC",
+          "name": "Saph Côte d’Ivoire",
+          "change": -7.23
         },
         {
-          "cap": 2810,
-          "t": "SDSC",
-          "name": "Bollore Transport & Logistics",
+          "cap": 1300,
+          "t": "CFAC",
+          "name": "CFAO Motors Côte d’Ivoire",
+          "change": -7.14
+        },
+        {
+          "cap": 2145,
+          "t": "NEIC",
+          "name": "NEI-CEDA Côte d’Ivoire",
           "change": -6.33
         },
         {
-          "cap": 4425,
+          "cap": 20175,
+          "t": "STBC",
+          "name": "Sitab Côte d’Ivoire",
+          "change": -6.16
+        },
+        {
+          "cap": 4150,
           "t": "SNTS",
           "name": "Sonatel Senegal",
-          "change": -5.85
+          "change": -4.6
         },
         {
-          "cap": 8100,
-          "t": "BOABF",
-          "name": "Bank of Africa - Burkina Faso",
-          "change": 5.74
+          "cap": 12300,
+          "t": "SDCC",
+          "name": "Sode Côte d’Ivoire",
+          "change": -4.28
         },
         {
-          "cap": 1795,
-          "t": "STAC",
-          "name": "Setao Côte d’Ivoire",
-          "change": -5.03
-        },
-        {
-          "cap": 1415,
-          "t": "CFAC",
-          "name": "CFAO Motors Côte d’Ivoire",
-          "change": 4.81
-        },
-        {
-          "cap": 7900,
-          "t": "SOGC",
-          "name": "Sogb Côte d’Ivoire",
-          "change": 3.95
-        },
-        {
-          "cap": 1725,
+          "cap": 1720,
           "t": "FTSC",
           "name": "Filtisac Côte d’Ivoire",
-          "change": -3.9
+          "change": -4.18
         },
         {
-          "cap": 21000,
-          "t": "ORAC",
-          "name": "Orange Côte d’Ivoire",
-          "change": 3.6
+          "cap": 5295,
+          "t": "CIEC",
+          "name": "CIE Côte d’Ivoire",
+          "change": -3.73
+        },
+        {
+          "cap": 17995,
+          "t": "NSBC",
+          "name": "Nsia Banque Côte d’Ivoire",
+          "change": -3.51
         },
         {
           "cap": 61,
@@ -14516,73 +14564,73 @@
       "name": "Bourse Regionale des Valeurs Mobilieres"
     },
     "ci": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 12690,
-          "t": "SDCC",
-          "name": "Sode Côte d’Ivoire",
+          "cap": 15695,
+          "t": "SMBC",
+          "name": "SMB Côte d’Ivoire",
           "change": 7.5
         },
         {
-          "cap": 2220,
-          "t": "SCRC",
-          "name": "Sucrivoire Côte d’Ivoire",
-          "change": -7.5
+          "cap": 2705,
+          "t": "CABC",
+          "name": "Sicable Côte d’Ivoire",
+          "change": -7.36
         },
         {
-          "cap": 5250,
-          "t": "CIEC",
-          "name": "CIE Côte d’Ivoire",
-          "change": 7.47
+          "cap": 7700,
+          "t": "SPHC",
+          "name": "Saph Côte d’Ivoire",
+          "change": -7.23
         },
         {
-          "cap": 2810,
-          "t": "SDSC",
-          "name": "Bollore Transport & Logistics",
+          "cap": 1300,
+          "t": "CFAC",
+          "name": "CFAO Motors Côte d’Ivoire",
+          "change": -7.14
+        },
+        {
+          "cap": 2145,
+          "t": "NEIC",
+          "name": "NEI-CEDA Côte d’Ivoire",
           "change": -6.33
         },
         {
-          "cap": 4425,
+          "cap": 20175,
+          "t": "STBC",
+          "name": "Sitab Côte d’Ivoire",
+          "change": -6.16
+        },
+        {
+          "cap": 4150,
           "t": "SNTS",
           "name": "Sonatel Senegal",
-          "change": -5.85
+          "change": -4.6
         },
         {
-          "cap": 8100,
-          "t": "BOABF",
-          "name": "Bank of Africa - Burkina Faso",
-          "change": 5.74
+          "cap": 12300,
+          "t": "SDCC",
+          "name": "Sode Côte d’Ivoire",
+          "change": -4.28
         },
         {
-          "cap": 1795,
-          "t": "STAC",
-          "name": "Setao Côte d’Ivoire",
-          "change": -5.03
-        },
-        {
-          "cap": 1415,
-          "t": "CFAC",
-          "name": "CFAO Motors Côte d’Ivoire",
-          "change": 4.81
-        },
-        {
-          "cap": 7900,
-          "t": "SOGC",
-          "name": "Sogb Côte d’Ivoire",
-          "change": 3.95
-        },
-        {
-          "cap": 1725,
+          "cap": 1720,
           "t": "FTSC",
           "name": "Filtisac Côte d’Ivoire",
-          "change": -3.9
+          "change": -4.18
         },
         {
-          "cap": 21000,
-          "t": "ORAC",
-          "name": "Orange Côte d’Ivoire",
-          "change": 3.6
+          "cap": 5295,
+          "t": "CIEC",
+          "name": "CIE Côte d’Ivoire",
+          "change": -3.73
+        },
+        {
+          "cap": 17995,
+          "t": "NSBC",
+          "name": "Nsia Banque Côte d’Ivoire",
+          "change": -3.51
         },
         {
           "cap": 61,
@@ -14596,79 +14644,79 @@
       "name": "Bourse Regionale des Valeurs Mobilieres"
     },
     "ke": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 21.55,
-          "t": "OCH",
-          "name": "Olympia Capital Holdings Ltd",
-          "change": 188.87
-        },
-        {
-          "cap": 13.8,
+          "cap": 12.15,
           "t": "KPC",
           "name": "Kenya Pipeline Company",
-          "change": 9.96
+          "change": -10
         },
         {
-          "cap": 5.58,
-          "t": "SGL",
-          "name": "Standard Group Ltd",
-          "change": -7.92
+          "cap": 2.56,
+          "t": "LKL",
+          "name": "Longhorn Publishers Ltd",
+          "change": -7.58
         },
         {
-          "cap": 0.91,
-          "t": "EVRD",
-          "name": "Eveready East Africa Ltd",
-          "change": 4.6
-        },
-        {
-          "cap": 1.27,
-          "t": "UCHM",
-          "name": "Uchumi Supermarket Ltd",
-          "change": -4.51
-        },
-        {
-          "cap": 16.85,
-          "t": "TPSE",
-          "name": "TPS Eastern Africa Serena Ltd",
-          "change": -4.26
-        },
-        {
-          "cap": 9.44,
-          "t": "SLAM",
-          "name": "Sanlam Allianz Holdings",
-          "change": -3.87
-        },
-        {
-          "cap": 1.83,
-          "t": "SCAN",
-          "name": "ScanGroup Ltd",
-          "change": -3.68
-        },
-        {
-          "cap": 35,
+          "cap": 36.95,
           "t": "UNGA",
           "name": "Unga Group Ltd",
-          "change": -3.45
+          "change": 6.95
         },
         {
-          "cap": 14.05,
-          "t": "NMG",
-          "name": "Nation Media Group",
-          "change": -3.1
+          "cap": 261.5,
+          "t": "CGEN",
+          "name": "Car and General Kenya Ltd",
+          "change": 6.19
         },
         {
-          "cap": 17.55,
-          "t": "CTUM",
-          "name": "Centum Investment Company",
-          "change": 2.63
+          "cap": 552,
+          "t": "LIMT",
+          "name": "Limuru Tea Company Ltd",
+          "change": 6.15
         },
         {
-          "cap": 44.55,
-          "t": "TOTL",
-          "name": "Total Kenya Ltd",
-          "change": -2.2
+          "cap": 316,
+          "t": "AMAC",
+          "name": "Africa Mega Agricorp",
+          "change": 5.95
+        },
+        {
+          "cap": 408.25,
+          "t": "KUKZ",
+          "name": "Kakuzi Ltd",
+          "change": -5.11
+        },
+        {
+          "cap": 18.4,
+          "t": "OCH",
+          "name": "Olympia Capital Holdings Ltd",
+          "change": -4.91
+        },
+        {
+          "cap": 91.75,
+          "t": "NCBA",
+          "name": "NCBA Group Plc",
+          "change": 4.26
+        },
+        {
+          "cap": 15.45,
+          "t": "SMER",
+          "name": "Sameer Africa Plc",
+          "change": 4.04
+        },
+        {
+          "cap": 6,
+          "t": "SGL",
+          "name": "Standard Group Ltd",
+          "change": -3.23
+        },
+        {
+          "cap": 1.37,
+          "t": "NBV",
+          "name": "Nairobi Business Ventures Ltd",
+          "change": 3.01
         }
       ],
       "sourceUrl": "https://afx.kwayisi.org/nse/",
@@ -14676,79 +14724,79 @@
       "name": "Nairobi Securities Exchange"
     },
     "za": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 1.56,
-          "t": "AXX",
-          "name": "Araxi Ltd",
-          "change": 17.29
-        },
-        {
-          "cap": 52.99,
-          "t": "CNP",
-          "name": "Canal+ SA",
-          "change": 10.4
-        },
-        {
-          "cap": 39.19,
-          "t": "CML",
-          "name": "Coronation Fund Mngrs Ld",
-          "change": -4.55
+          "cap": 0.99,
+          "t": "C4A",
+          "name": "Cables 4 Africa Holdings",
+          "change": 30.26
         },
         {
           "cap": 0.85,
           "t": "CHP",
           "name": "Choppies Enterprises Limited",
-          "change": -4.49
+          "change": 13.33
         },
         {
-          "cap": 215,
-          "t": "CLS",
-          "name": "Clicks Group Ltd",
-          "change": -4.44
+          "cap": 0.7,
+          "t": "ACT",
+          "name": "AfroCentric Inv Corp Ltd",
+          "change": 11.11
         },
         {
-          "cap": 7.7,
-          "t": "AFH",
-          "name": "Alexander Forbes Grp Hldgs",
-          "change": 3.91
+          "cap": 135,
+          "t": "CPIP",
+          "name": "Capitec Bank Preference Shares",
+          "change": 8
         },
         {
-          "cap": 202.84,
-          "t": "ARL",
-          "name": "Astral Foods Ltd",
-          "change": -3.41
+          "cap": 6.5,
+          "t": "ADR",
+          "name": "Adcorp Holdings Limited",
+          "change": 3.83
+        },
+        {
+          "cap": 1.26,
+          "t": "ACL",
+          "name": "ArcelorMittal SA Limited",
+          "change": -3.82
+        },
+        {
+          "cap": 12.03,
+          "t": "CAT",
+          "name": "Caxton & CTP Publishers Limited",
+          "change": 3.71
         },
         {
           "cap": 0.67,
           "t": "4SI",
           "name": "4Sight Holdings Limited",
-          "change": 3.08
+          "change": -2.9
         },
         {
-          "cap": 28.44,
-          "t": "AEL",
-          "name": "Altron: Allied Electronics Corporation",
-          "change": 2.78
+          "cap": 221.19,
+          "t": "CLS",
+          "name": "Clicks Group Ltd",
+          "change": 2.36
         },
         {
-          "cap": 34.5,
+          "cap": 85.9,
+          "t": "BOX",
+          "name": "Boxer Retail Ltd",
+          "change": -2.29
+        },
+        {
+          "cap": 36,
           "t": "AFT",
           "name": "Afrimat Limited",
-          "change": -2.43
+          "change": -2.04
         },
         {
-          "cap": 42.2,
-          "t": "ART",
-          "name": "Argent Industrial Ltd",
-          "change": -2.38
-        },
-        {
-          "cap": 37.5,
-          "t": "CMH",
-          "name": "Combined Motor Hldgs Ltd",
-          "change": -2.34
+          "cap": 0.49,
+          "t": "APF",
+          "name": "Accelerate Property Fund Limited",
+          "change": -2
         }
       ],
       "sourceUrl": "https://afx.kwayisi.org/jse/",
@@ -14756,79 +14804,79 @@
       "name": "Johannesburg Stock Exchange"
     },
     "ng": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 139.5,
-          "t": "FIRSTHOLDCO",
-          "name": "First HoldCo Plc",
+          "cap": 1.53,
+          "t": "FTGINSURE",
+          "name": "Fortis Global Insurance",
           "change": -10
         },
         {
-          "cap": 2.61,
-          "t": "AUSTINLAZ",
-          "name": "Austin Laz & Company",
-          "change": 9.21
+          "cap": 5.75,
+          "t": "ABBEYBANK",
+          "name": "Abbey Bank",
+          "change": -8.73
         },
         {
-          "cap": 3.33,
-          "t": "CMFC",
-          "name": "Critical Minerals Financing Corp",
-          "change": 5.71
+          "cap": 3.05,
+          "t": "CAVERTON",
+          "name": "Caverton Offshore Support Group",
+          "change": -7.58
         },
         {
-          "cap": 16,
-          "t": "ETRANZACT",
-          "name": "E-Tranzact International",
-          "change": -4.76
-        },
-        {
-          "cap": 1.6,
-          "t": "FTGINSURE",
-          "name": "Fortis Global Insurance",
-          "change": -4.76
-        },
-        {
-          "cap": 13.4,
+          "cap": 13.65,
           "t": "LIVESTOCK",
           "name": "Livestock Feeds",
-          "change": -4.63
+          "change": -6.51
         },
         {
-          "cap": 9.4,
-          "t": "CHAMPION",
-          "name": "Champion Breweries",
-          "change": 4.44
+          "cap": 9.05,
+          "t": "INTBREW",
+          "name": "International Breweries",
+          "change": 6.47
         },
         {
-          "cap": 2.35,
-          "t": "CUTIX",
-          "name": "Cutix Plc",
-          "change": 4.44
+          "cap": 1.65,
+          "t": "INTENEGINS",
+          "name": "International Energy Insurance",
+          "change": -6.25
         },
         {
-          "cap": 87.15,
-          "t": "FIDSON",
-          "name": "Fidson Healthcare",
-          "change": 4.37
+          "cap": 6.2,
+          "t": "ABCTRANS",
+          "name": "Associated Bus Company",
+          "change": -6.06
         },
         {
-          "cap": 10.4,
+          "cap": 16.5,
+          "t": "CWG",
+          "name": "Computer Warehouse Group",
+          "change": -5.71
+        },
+        {
+          "cap": 10,
           "t": "AFRIPRUD",
           "name": "Africa Prudential Plc",
-          "change": -3.7
+          "change": -5.66
         },
         {
-          "cap": 1.78,
-          "t": "LASACO",
-          "name": "Lasaco Assurance",
-          "change": 3.49
+          "cap": 6.76,
+          "t": "CONHALLPLC",
+          "name": "Consolidated Hallmark Holdings",
+          "change": -5.45
         },
         {
-          "cap": 4.15,
-          "t": "NPFMCRFBK",
-          "name": "NPF Microfinance Bank",
-          "change": -3.49
+          "cap": 0.8,
+          "t": "GUINEAINS",
+          "name": "Guinea Insurance",
+          "change": 5.26
+        },
+        {
+          "cap": 3.61,
+          "t": "AIICO",
+          "name": "Aiico Insurance Plc",
+          "change": -5
         }
       ],
       "sourceUrl": "https://afx.kwayisi.org/ngx/",
@@ -14836,78 +14884,78 @@
       "name": "Nigerian Exchange Group"
     },
     "gh": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 0.56,
-          "t": "IIL",
-          "name": "Intravenous Infusions Limited",
-          "change": 9.8
+          "cap": 43,
+          "t": "UNIL",
+          "name": "Unilever Ghana Limited",
+          "change": 8.86
         },
         {
-          "cap": 4.61,
-          "t": "SOGEGH",
-          "name": "Societe Generale Ghana Limited",
-          "change": -3.76
+          "cap": 0.15,
+          "t": "MMH",
+          "name": "Meridian-Marshall Holdings",
+          "change": 7.14
         },
         {
-          "cap": 41.7,
-          "t": "GCB",
-          "name": "GCB Bank Limited",
-          "change": 3.68
+          "cap": 37.48,
+          "t": "TOTAL",
+          "name": "TotalEnergies Marketing Ghana",
+          "change": -6.28
         },
         {
-          "cap": 1.83,
-          "t": "KASA",
-          "name": "Kasapreko Plc",
-          "change": 1.1
+          "cap": 0.37,
+          "t": "DIGICUT",
+          "name": "Digicut Production & Advertising",
+          "change": -5.13
         },
         {
-          "cap": 6.5,
-          "t": "MTNGH",
-          "name": "MTN Ghana",
-          "change": -0.46
-        },
-        {
-          "cap": 4.6,
+          "cap": 4.86,
           "t": "SIC",
           "name": "SIC Insurance Company Limited",
-          "change": -0.22
+          "change": -2.8
         },
         {
-          "cap": 10.69,
-          "t": "GGBL",
-          "name": "Guinness Ghana Breweries Limited",
-          "change": -0.09
+          "cap": 6.62,
+          "t": "MTNGH",
+          "name": "MTN Ghana",
+          "change": -1.93
         },
         {
-          "cap": 13.99,
+          "cap": 0.55,
+          "t": "IIL",
+          "name": "Intravenous Infusions Limited",
+          "change": 1.85
+        },
+        {
+          "cap": 8.5,
+          "t": "EGL",
+          "name": "Enterprise Group Limited",
+          "change": 1.19
+        },
+        {
+          "cap": 1.81,
+          "t": "KASA",
+          "name": "Kasapreko Plc",
+          "change": 0.56
+        },
+        {
+          "cap": 42.01,
+          "t": "GCB",
+          "name": "GCB Bank Limited",
+          "change": -0.17
+        },
+        {
+          "cap": 13.98,
           "t": "FML",
           "name": "Fan Milk Plc",
           "change": -0.07
         },
         {
-          "cap": 9.01,
-          "t": "ZEN",
-          "name": "ZEN Petroleum Holdings",
-          "change": 0
-        },
-        {
-          "cap": 39.5,
-          "t": "UNIL",
-          "name": "Unilever Ghana Limited",
-          "change": 0
-        },
-        {
-          "cap": 0.75,
-          "t": "HORDS",
-          "name": "Hords Limited",
-          "change": 0
-        },
-        {
-          "cap": 5.5,
-          "t": "GOIL",
-          "name": "Ghana Oil Company Limited",
+          "cap": 5.2,
+          "t": "MAC",
+          "name": "Mega African Capital Limited",
           "change": 0
         }
       ],
@@ -14916,28 +14964,28 @@
       "name": "Ghana Stock Exchange"
     },
     "ug": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 24.56,
+          "cap": 25.25,
           "t": "NIC",
           "name": "National Insurance Corporation",
           "change": 0
         },
         {
-          "cap": 496.29,
+          "cap": 475.24,
           "t": "NMG",
           "name": "Nation Media Group",
           "change": 0
         },
         {
-          "cap": 2948.37,
+          "cap": 2818.65,
           "t": "KCB",
           "name": "KCB Group",
           "change": 0
         },
         {
-          "cap": 455,
+          "cap": 455.18,
           "t": "MTNU",
           "name": "MTN Uganda",
           "change": 0
@@ -14955,37 +15003,37 @@
           "change": 0
         },
         {
-          "cap": 64,
+          "cap": 75,
           "t": "UMEM",
           "name": "Umeme Limited",
           "change": 0
         },
         {
-          "cap": 167,
+          "cap": 170,
           "t": "QCIL",
           "name": "Quality Chemical Industries Ltd",
           "change": 0
         },
         {
-          "cap": 101.04,
+          "cap": 96.22,
           "t": "SBU",
           "name": "Stanbic Bank Uganda",
           "change": 0
         },
         {
-          "cap": 110,
+          "cap": 104.12,
           "t": "BOBU",
           "name": "Bank of Baroda Uganda",
           "change": 0
         },
         {
-          "cap": 619.07,
+          "cap": 555.54,
           "t": "CENT",
           "name": "Centum Investment",
           "change": 0
         },
         {
-          "cap": 196,
+          "cap": 193,
           "t": "AIRTEL",
           "name": "Airtel Uganda",
           "change": 0
@@ -14996,79 +15044,79 @@
       "name": "Uganda Securities Exchange"
     },
     "zw": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 0.12,
-          "t": "TURN",
-          "name": "Turnall Holdings Limited",
-          "change": -14.59
-        },
-        {
-          "cap": 30,
-          "t": "CBZ",
-          "name": "CBZ Holdings Limited",
-          "change": -6.25
-        },
-        {
-          "cap": 2.549428,
-          "t": "MEIK",
-          "name": "Meikles Limited",
-          "change": 2.49
-        },
-        {
-          "cap": 10.0055,
-          "t": "HIPO",
-          "name": "Hippo Valley Estates Limited",
-          "change": -2.13
-        },
-        {
-          "cap": 0.051,
-          "t": "WILD",
-          "name": "Willdale Zimbabwe Limited",
-          "change": 1.94
-        },
-        {
-          "cap": 3.755,
-          "t": "SEED",
-          "name": "Seed Co Limited",
-          "change": 1.88
-        },
-        {
-          "cap": 0.745833,
-          "t": "ZIMR",
-          "name": "Zimre Holdings Limited",
-          "change": 1.77
-        },
-        {
-          "cap": 0.84814,
+          "cap": 0.848968,
           "t": "TNCI",
           "name": "TN CyberTech Investments Holdings",
-          "change": 1.37
+          "change": 11.19
         },
         {
-          "cap": 1.05055,
+          "cap": 11.503077,
+          "t": "HIPO",
+          "name": "Hippo Valley Estates Limited",
+          "change": -7.96
+        },
+        {
+          "cap": 0.054675,
+          "t": "WILD",
+          "name": "Willdale Zimbabwe Limited",
+          "change": 7.21
+        },
+        {
+          "cap": 3.95,
+          "t": "FML",
+          "name": "First Mutual Holdings Limited",
+          "change": -6.02
+        },
+        {
+          "cap": 0.7625,
+          "t": "ZIMR",
+          "name": "Zimre Holdings Limited",
+          "change": 5.54
+        },
+        {
+          "cap": 29.135429,
+          "t": "CBZ",
+          "name": "CBZ Holdings Limited",
+          "change": 4.44
+        },
+        {
+          "cap": 1.082543,
           "t": "TIG",
           "name": "Tigere Property Fund REIT",
-          "change": 1.27
+          "change": 3.55
         },
         {
-          "cap": 0.138236,
-          "t": "ARIS",
-          "name": "Ariston Holdings Limited",
-          "change": 0.93
+          "cap": 5,
+          "t": "DZL",
+          "name": "Dairibord Holdings Limited",
+          "change": -1.96
         },
         {
-          "cap": 7.5,
+          "cap": 4.125745,
+          "t": "SEED",
+          "name": "Seed Co Limited",
+          "change": -1.77
+        },
+        {
+          "cap": 3.45,
+          "t": "TANG",
+          "name": "Tanganda Tea Company",
+          "change": -1.43
+        },
+        {
+          "cap": 7.6,
           "t": "ZBFH",
           "name": "ZB Financial Holdings Limited",
-          "change": 0.4
+          "change": 1.33
         },
         {
-          "cap": 11.8,
-          "t": "FBC",
-          "name": "FBC Holdings Limited",
-          "change": 0.26
+          "cap": 0.12,
+          "t": "MIZ",
+          "name": "Morgan & Co Made in Zimbabwe ETF",
+          "change": -1.25
         }
       ],
       "sourceUrl": "https://afx.kwayisi.org/zse/",
@@ -15076,73 +15124,73 @@
       "name": "Zimbabwe Stock Exchange"
     },
     "ml": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 12690,
-          "t": "SDCC",
-          "name": "Sode Côte d’Ivoire",
+          "cap": 15695,
+          "t": "SMBC",
+          "name": "SMB Côte d’Ivoire",
           "change": 7.5
         },
         {
-          "cap": 2220,
-          "t": "SCRC",
-          "name": "Sucrivoire Côte d’Ivoire",
-          "change": -7.5
+          "cap": 2705,
+          "t": "CABC",
+          "name": "Sicable Côte d’Ivoire",
+          "change": -7.36
         },
         {
-          "cap": 5250,
-          "t": "CIEC",
-          "name": "CIE Côte d’Ivoire",
-          "change": 7.47
+          "cap": 7700,
+          "t": "SPHC",
+          "name": "Saph Côte d’Ivoire",
+          "change": -7.23
         },
         {
-          "cap": 2810,
-          "t": "SDSC",
-          "name": "Bollore Transport & Logistics",
+          "cap": 1300,
+          "t": "CFAC",
+          "name": "CFAO Motors Côte d’Ivoire",
+          "change": -7.14
+        },
+        {
+          "cap": 2145,
+          "t": "NEIC",
+          "name": "NEI-CEDA Côte d’Ivoire",
           "change": -6.33
         },
         {
-          "cap": 4425,
+          "cap": 20175,
+          "t": "STBC",
+          "name": "Sitab Côte d’Ivoire",
+          "change": -6.16
+        },
+        {
+          "cap": 4150,
           "t": "SNTS",
           "name": "Sonatel Senegal",
-          "change": -5.85
+          "change": -4.6
         },
         {
-          "cap": 8100,
-          "t": "BOABF",
-          "name": "Bank of Africa - Burkina Faso",
-          "change": 5.74
+          "cap": 12300,
+          "t": "SDCC",
+          "name": "Sode Côte d’Ivoire",
+          "change": -4.28
         },
         {
-          "cap": 1795,
-          "t": "STAC",
-          "name": "Setao Côte d’Ivoire",
-          "change": -5.03
-        },
-        {
-          "cap": 1415,
-          "t": "CFAC",
-          "name": "CFAO Motors Côte d’Ivoire",
-          "change": 4.81
-        },
-        {
-          "cap": 7900,
-          "t": "SOGC",
-          "name": "Sogb Côte d’Ivoire",
-          "change": 3.95
-        },
-        {
-          "cap": 1725,
+          "cap": 1720,
           "t": "FTSC",
           "name": "Filtisac Côte d’Ivoire",
-          "change": -3.9
+          "change": -4.18
         },
         {
-          "cap": 21000,
-          "t": "ORAC",
-          "name": "Orange Côte d’Ivoire",
-          "change": 3.6
+          "cap": 5295,
+          "t": "CIEC",
+          "name": "CIE Côte d’Ivoire",
+          "change": -3.73
+        },
+        {
+          "cap": 17995,
+          "t": "NSBC",
+          "name": "Nsia Banque Côte d’Ivoire",
+          "change": -3.51
         },
         {
           "cap": 61,
@@ -15156,73 +15204,73 @@
       "name": "Bourse Regionale des Valeurs Mobilieres"
     },
     "ne": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 12690,
-          "t": "SDCC",
-          "name": "Sode Côte d’Ivoire",
+          "cap": 15695,
+          "t": "SMBC",
+          "name": "SMB Côte d’Ivoire",
           "change": 7.5
         },
         {
-          "cap": 2220,
-          "t": "SCRC",
-          "name": "Sucrivoire Côte d’Ivoire",
-          "change": -7.5
+          "cap": 2705,
+          "t": "CABC",
+          "name": "Sicable Côte d’Ivoire",
+          "change": -7.36
         },
         {
-          "cap": 5250,
-          "t": "CIEC",
-          "name": "CIE Côte d’Ivoire",
-          "change": 7.47
+          "cap": 7700,
+          "t": "SPHC",
+          "name": "Saph Côte d’Ivoire",
+          "change": -7.23
         },
         {
-          "cap": 2810,
-          "t": "SDSC",
-          "name": "Bollore Transport & Logistics",
+          "cap": 1300,
+          "t": "CFAC",
+          "name": "CFAO Motors Côte d’Ivoire",
+          "change": -7.14
+        },
+        {
+          "cap": 2145,
+          "t": "NEIC",
+          "name": "NEI-CEDA Côte d’Ivoire",
           "change": -6.33
         },
         {
-          "cap": 4425,
+          "cap": 20175,
+          "t": "STBC",
+          "name": "Sitab Côte d’Ivoire",
+          "change": -6.16
+        },
+        {
+          "cap": 4150,
           "t": "SNTS",
           "name": "Sonatel Senegal",
-          "change": -5.85
+          "change": -4.6
         },
         {
-          "cap": 8100,
-          "t": "BOABF",
-          "name": "Bank of Africa - Burkina Faso",
-          "change": 5.74
+          "cap": 12300,
+          "t": "SDCC",
+          "name": "Sode Côte d’Ivoire",
+          "change": -4.28
         },
         {
-          "cap": 1795,
-          "t": "STAC",
-          "name": "Setao Côte d’Ivoire",
-          "change": -5.03
-        },
-        {
-          "cap": 1415,
-          "t": "CFAC",
-          "name": "CFAO Motors Côte d’Ivoire",
-          "change": 4.81
-        },
-        {
-          "cap": 7900,
-          "t": "SOGC",
-          "name": "Sogb Côte d’Ivoire",
-          "change": 3.95
-        },
-        {
-          "cap": 1725,
+          "cap": 1720,
           "t": "FTSC",
           "name": "Filtisac Côte d’Ivoire",
-          "change": -3.9
+          "change": -4.18
         },
         {
-          "cap": 21000,
-          "t": "ORAC",
-          "name": "Orange Côte d’Ivoire",
-          "change": 3.6
+          "cap": 5295,
+          "t": "CIEC",
+          "name": "CIE Côte d’Ivoire",
+          "change": -3.73
+        },
+        {
+          "cap": 17995,
+          "t": "NSBC",
+          "name": "Nsia Banque Côte d’Ivoire",
+          "change": -3.51
         },
         {
           "cap": 61,
@@ -15236,73 +15284,73 @@
       "name": "Bourse Regionale des Valeurs Mobilieres"
     },
     "sn": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 12690,
-          "t": "SDCC",
-          "name": "Sode Côte d’Ivoire",
+          "cap": 15695,
+          "t": "SMBC",
+          "name": "SMB Côte d’Ivoire",
           "change": 7.5
         },
         {
-          "cap": 2220,
-          "t": "SCRC",
-          "name": "Sucrivoire Côte d’Ivoire",
-          "change": -7.5
+          "cap": 2705,
+          "t": "CABC",
+          "name": "Sicable Côte d’Ivoire",
+          "change": -7.36
         },
         {
-          "cap": 5250,
-          "t": "CIEC",
-          "name": "CIE Côte d’Ivoire",
-          "change": 7.47
+          "cap": 7700,
+          "t": "SPHC",
+          "name": "Saph Côte d’Ivoire",
+          "change": -7.23
         },
         {
-          "cap": 2810,
-          "t": "SDSC",
-          "name": "Bollore Transport & Logistics",
+          "cap": 1300,
+          "t": "CFAC",
+          "name": "CFAO Motors Côte d’Ivoire",
+          "change": -7.14
+        },
+        {
+          "cap": 2145,
+          "t": "NEIC",
+          "name": "NEI-CEDA Côte d’Ivoire",
           "change": -6.33
         },
         {
-          "cap": 4425,
+          "cap": 20175,
+          "t": "STBC",
+          "name": "Sitab Côte d’Ivoire",
+          "change": -6.16
+        },
+        {
+          "cap": 4150,
           "t": "SNTS",
           "name": "Sonatel Senegal",
-          "change": -5.85
+          "change": -4.6
         },
         {
-          "cap": 8100,
-          "t": "BOABF",
-          "name": "Bank of Africa - Burkina Faso",
-          "change": 5.74
+          "cap": 12300,
+          "t": "SDCC",
+          "name": "Sode Côte d’Ivoire",
+          "change": -4.28
         },
         {
-          "cap": 1795,
-          "t": "STAC",
-          "name": "Setao Côte d’Ivoire",
-          "change": -5.03
-        },
-        {
-          "cap": 1415,
-          "t": "CFAC",
-          "name": "CFAO Motors Côte d’Ivoire",
-          "change": 4.81
-        },
-        {
-          "cap": 7900,
-          "t": "SOGC",
-          "name": "Sogb Côte d’Ivoire",
-          "change": 3.95
-        },
-        {
-          "cap": 1725,
+          "cap": 1720,
           "t": "FTSC",
           "name": "Filtisac Côte d’Ivoire",
-          "change": -3.9
+          "change": -4.18
         },
         {
-          "cap": 21000,
-          "t": "ORAC",
-          "name": "Orange Côte d’Ivoire",
-          "change": 3.6
+          "cap": 5295,
+          "t": "CIEC",
+          "name": "CIE Côte d’Ivoire",
+          "change": -3.73
+        },
+        {
+          "cap": 17995,
+          "t": "NSBC",
+          "name": "Nsia Banque Côte d’Ivoire",
+          "change": -3.51
         },
         {
           "cap": 61,
@@ -15316,73 +15364,73 @@
       "name": "Bourse Regionale des Valeurs Mobilieres"
     },
     "tg": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 12690,
-          "t": "SDCC",
-          "name": "Sode Côte d’Ivoire",
+          "cap": 15695,
+          "t": "SMBC",
+          "name": "SMB Côte d’Ivoire",
           "change": 7.5
         },
         {
-          "cap": 2220,
-          "t": "SCRC",
-          "name": "Sucrivoire Côte d’Ivoire",
-          "change": -7.5
+          "cap": 2705,
+          "t": "CABC",
+          "name": "Sicable Côte d’Ivoire",
+          "change": -7.36
         },
         {
-          "cap": 5250,
-          "t": "CIEC",
-          "name": "CIE Côte d’Ivoire",
-          "change": 7.47
+          "cap": 7700,
+          "t": "SPHC",
+          "name": "Saph Côte d’Ivoire",
+          "change": -7.23
         },
         {
-          "cap": 2810,
-          "t": "SDSC",
-          "name": "Bollore Transport & Logistics",
+          "cap": 1300,
+          "t": "CFAC",
+          "name": "CFAO Motors Côte d’Ivoire",
+          "change": -7.14
+        },
+        {
+          "cap": 2145,
+          "t": "NEIC",
+          "name": "NEI-CEDA Côte d’Ivoire",
           "change": -6.33
         },
         {
-          "cap": 4425,
+          "cap": 20175,
+          "t": "STBC",
+          "name": "Sitab Côte d’Ivoire",
+          "change": -6.16
+        },
+        {
+          "cap": 4150,
           "t": "SNTS",
           "name": "Sonatel Senegal",
-          "change": -5.85
+          "change": -4.6
         },
         {
-          "cap": 8100,
-          "t": "BOABF",
-          "name": "Bank of Africa - Burkina Faso",
-          "change": 5.74
+          "cap": 12300,
+          "t": "SDCC",
+          "name": "Sode Côte d’Ivoire",
+          "change": -4.28
         },
         {
-          "cap": 1795,
-          "t": "STAC",
-          "name": "Setao Côte d’Ivoire",
-          "change": -5.03
-        },
-        {
-          "cap": 1415,
-          "t": "CFAC",
-          "name": "CFAO Motors Côte d’Ivoire",
-          "change": 4.81
-        },
-        {
-          "cap": 7900,
-          "t": "SOGC",
-          "name": "Sogb Côte d’Ivoire",
-          "change": 3.95
-        },
-        {
-          "cap": 1725,
+          "cap": 1720,
           "t": "FTSC",
           "name": "Filtisac Côte d’Ivoire",
-          "change": -3.9
+          "change": -4.18
         },
         {
-          "cap": 21000,
-          "t": "ORAC",
-          "name": "Orange Côte d’Ivoire",
-          "change": 3.6
+          "cap": 5295,
+          "t": "CIEC",
+          "name": "CIE Côte d’Ivoire",
+          "change": -3.73
+        },
+        {
+          "cap": 17995,
+          "t": "NSBC",
+          "name": "Nsia Banque Côte d’Ivoire",
+          "change": -3.51
         },
         {
           "cap": 61,
@@ -15396,73 +15444,73 @@
       "name": "Bourse Regionale des Valeurs Mobilieres"
     },
     "gw": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 12690,
-          "t": "SDCC",
-          "name": "Sode Côte d’Ivoire",
+          "cap": 15695,
+          "t": "SMBC",
+          "name": "SMB Côte d’Ivoire",
           "change": 7.5
         },
         {
-          "cap": 2220,
-          "t": "SCRC",
-          "name": "Sucrivoire Côte d’Ivoire",
-          "change": -7.5
+          "cap": 2705,
+          "t": "CABC",
+          "name": "Sicable Côte d’Ivoire",
+          "change": -7.36
         },
         {
-          "cap": 5250,
-          "t": "CIEC",
-          "name": "CIE Côte d’Ivoire",
-          "change": 7.47
+          "cap": 7700,
+          "t": "SPHC",
+          "name": "Saph Côte d’Ivoire",
+          "change": -7.23
         },
         {
-          "cap": 2810,
-          "t": "SDSC",
-          "name": "Bollore Transport & Logistics",
+          "cap": 1300,
+          "t": "CFAC",
+          "name": "CFAO Motors Côte d’Ivoire",
+          "change": -7.14
+        },
+        {
+          "cap": 2145,
+          "t": "NEIC",
+          "name": "NEI-CEDA Côte d’Ivoire",
           "change": -6.33
         },
         {
-          "cap": 4425,
+          "cap": 20175,
+          "t": "STBC",
+          "name": "Sitab Côte d’Ivoire",
+          "change": -6.16
+        },
+        {
+          "cap": 4150,
           "t": "SNTS",
           "name": "Sonatel Senegal",
-          "change": -5.85
+          "change": -4.6
         },
         {
-          "cap": 8100,
-          "t": "BOABF",
-          "name": "Bank of Africa - Burkina Faso",
-          "change": 5.74
+          "cap": 12300,
+          "t": "SDCC",
+          "name": "Sode Côte d’Ivoire",
+          "change": -4.28
         },
         {
-          "cap": 1795,
-          "t": "STAC",
-          "name": "Setao Côte d’Ivoire",
-          "change": -5.03
-        },
-        {
-          "cap": 1415,
-          "t": "CFAC",
-          "name": "CFAO Motors Côte d’Ivoire",
-          "change": 4.81
-        },
-        {
-          "cap": 7900,
-          "t": "SOGC",
-          "name": "Sogb Côte d’Ivoire",
-          "change": 3.95
-        },
-        {
-          "cap": 1725,
+          "cap": 1720,
           "t": "FTSC",
           "name": "Filtisac Côte d’Ivoire",
-          "change": -3.9
+          "change": -4.18
         },
         {
-          "cap": 21000,
-          "t": "ORAC",
-          "name": "Orange Côte d’Ivoire",
-          "change": 3.6
+          "cap": 5295,
+          "t": "CIEC",
+          "name": "CIE Côte d’Ivoire",
+          "change": -3.73
+        },
+        {
+          "cap": 17995,
+          "t": "NSBC",
+          "name": "Nsia Banque Côte d’Ivoire",
+          "change": -3.51
         },
         {
           "cap": 61,
@@ -15476,66 +15524,60 @@
       "name": "Bourse Regionale des Valeurs Mobilieres"
     },
     "zm": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 1,
+          "cap": 8.1,
+          "t": "ZNCO",
+          "name": "Zambia National Commercial Bank",
+          "change": -9.5
+        },
+        {
+          "cap": 0.11,
+          "t": "REIZ",
+          "name": "Real Estate Investments Zambia",
+          "change": -8.33
+        },
+        {
+          "cap": 0.99,
           "t": "SCBL",
           "name": "Standard Chartered Bank",
-          "change": -9.09
+          "change": 2.06
         },
         {
-          "cap": 27.49,
-          "t": "DCZM",
-          "name": "Dot Com Zambia",
-          "change": 1.81
+          "cap": 0.67,
+          "t": "CCAF",
+          "name": "CEC Africa (CECA) Investments Ltd",
+          "change": 1.52
         },
         {
-          "cap": 224,
-          "t": "ATEL",
-          "name": "Airtel Networks",
-          "change": 0.43
+          "cap": 3.02,
+          "t": "ZFCO",
+          "name": "Zambia Forestry & Forest Industries Corp",
+          "change": -0.66
         },
         {
-          "cap": 67.97,
-          "t": "ZSUG",
-          "name": "Zambia Sugar",
-          "change": -0.01
-        },
-        {
-          "cap": 6.7,
-          "t": "ZABR",
-          "name": "Zambian Breweries",
-          "change": 0
-        },
-        {
-          "cap": 148,
-          "t": "ZCCM",
-          "name": "ZCCM-Investment Holdings",
-          "change": 0
+          "cap": 57.63,
+          "t": "CHIL",
+          "name": "Chilanga Cement",
+          "change": -0.62
         },
         {
           "cap": 1.72,
           "t": "ZMBF",
           "name": "Zambeef Products",
-          "change": 0
+          "change": 0.58
+        },
+        {
+          "cap": 14.97,
+          "t": "CECZ",
+          "name": "Copperbelt Energy Corporation",
+          "change": 0.07
         },
         {
           "cap": 350,
           "t": "SHOP",
           "name": "Shoprite Holdings",
-          "change": 0
-        },
-        {
-          "cap": 3.34,
-          "t": "ZFCO",
-          "name": "Zambia Forestry & Forest Industries Corp",
-          "change": 0
-        },
-        {
-          "cap": 33.5,
-          "t": "ZMFA",
-          "name": "Zambia Metal Fabricators",
           "change": 0
         },
         {
@@ -15545,9 +15587,15 @@
           "change": 0
         },
         {
-          "cap": 115,
-          "t": "AECI",
-          "name": "AECI Mining Explosives",
+          "cap": 67.97,
+          "t": "ZSUG",
+          "name": "Zambia Sugar",
+          "change": 0
+        },
+        {
+          "cap": 33.5,
+          "t": "ZMFA",
+          "name": "Zambia Metal Fabricators",
           "change": 0
         }
       ],
@@ -15556,78 +15604,78 @@
       "name": "Lusaka Securities Exchange"
     },
     "mw": {
-      "asOf": "2026-10-28",
+      "asOf": "2026-11-03",
       "companies": [
         {
-          "cap": 20.95,
-          "t": "TNM",
-          "name": "Telekom Networks Malawi Limited",
-          "change": 13.24
-        },
-        {
-          "cap": 204.83,
+          "cap": 204.36,
           "t": "CHL",
           "name": "Continental Holdings Plc",
-          "change": -0.02
+          "change": 1.29
         },
         {
-          "cap": 459.21,
+          "cap": 449.99,
           "t": "FDHB",
           "name": "FDH Bank Plc",
-          "change": -0.02
+          "change": -0.97
         },
         {
-          "cap": 101.22,
-          "t": "AIRTEL",
-          "name": "Airtel Malawi Plc",
-          "change": -0.01
+          "cap": 20.78,
+          "t": "TNM",
+          "name": "Telekom Networks Malawi Limited",
+          "change": -0.53
         },
         {
-          "cap": 1786.11,
-          "t": "FMBCH",
-          "name": "FMB Capital Holdings Plc",
-          "change": -0.01
-        },
-        {
-          "cap": 311.86,
+          "cap": 311.08,
           "t": "PCL",
           "name": "Press Corporation Limited",
-          "change": 0
+          "change": -0.21
         },
         {
-          "cap": 3329.99,
-          "t": "OMU",
-          "name": "Old Mutual Limited",
-          "change": 0
+          "cap": 1328.96,
+          "t": "NICO",
+          "name": "National Insurance Company Holdings",
+          "change": -0.04
         },
         {
-          "cap": 3268.78,
+          "cap": 619.15,
+          "t": "NBS",
+          "name": "NBS Bank Limited",
+          "change": -0.01
+        },
+        {
+          "cap": 3268.74,
           "t": "NITL",
           "name": "National Investment Trust Limited",
           "change": 0
         },
         {
-          "cap": 8869.96,
-          "t": "NBM",
-          "name": "National Bank of Malawi",
-          "change": 0
-        },
-        {
-          "cap": 3399.94,
-          "t": "SUNBIRD",
-          "name": "Sunbird Tourism Limited",
-          "change": 0
-        },
-        {
-          "cap": 3889.77,
+          "cap": 3889.61,
           "t": "STANDARD",
           "name": "Standard Bank Malawi Limited",
           "change": 0
         },
         {
-          "cap": 19.62,
-          "t": "MPICO",
-          "name": "Malawi Property Investment Company",
+          "cap": 3399.93,
+          "t": "SUNBIRD",
+          "name": "Sunbird Tourism Limited",
+          "change": 0
+        },
+        {
+          "cap": 101.11,
+          "t": "AIRTEL",
+          "name": "Airtel Malawi Plc",
+          "change": 0
+        },
+        {
+          "cap": 3300,
+          "t": "OMU",
+          "name": "Old Mutual Limited",
+          "change": 0
+        },
+        {
+          "cap": 16.99,
+          "t": "ICON",
+          "name": "Icon Properties Plc",
           "change": 0
         }
       ],

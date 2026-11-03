@@ -16,16 +16,16 @@
 <meta property="og:image" content="https://africanstreetjournal.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://africanstreetjournal.com/static-pages.css?v=70">
-<script src="/data/analytics-config.js" onerror="window.ASJ_ANALYTICS=null"></script>
 <script>
-(function(){var c=window.ASJ_ANALYTICS;if(!c)return;
+function asjAnalytics(){var c=window.ASJ_ANALYTICS;if(!c)return;
 if(navigator.doNotTrack==='1'||window.doNotTrack==='1')return;var s;
 try{var q=location.search;if(/[?&]notrack=1(&|$)/.test(q))localStorage.setItem('asj-notrack','1');else if(/[?&]notrack=0(&|$)/.test(q))localStorage.removeItem('asj-notrack');if(localStorage.getItem('asj-notrack')==='1')return;}catch(e){}
 if(c.goatcounter){s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';
 s.setAttribute('data-goatcounter','https://'+c.goatcounter+'.goatcounter.com/count');document.head.appendChild(s);}
 if(c.cloudflare){s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';
-s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.head.appendChild(s);}}());
+s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.head.appendChild(s);}}
 </script>
+<script src="/data/analytics-config.js" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 </head>
 <body>
 <div class="wrap page">
@@ -58,7 +58,7 @@ s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.h
 <li><a class="hub-country" href="https://africanstreetjournal.com/gh/">Ghana</a><a class="hub-story" href="https://africanstreetjournal.com/gh/ghana-s-urban-population-reaches-19-8-million-b98240/">Ghana's urban population reaches 19.8 million</a></li>
 <li><a class="hub-country" href="https://africanstreetjournal.com/gn/">Guinea</a><a class="hub-story" href="https://africanstreetjournal.com/gn/guinea-u20-team-returns-to-conakry-after-ufoa-a-e4def5/">Guinea U20 team returns to Conakry after UFOA-A championship win</a></li>
 <li><a class="hub-country" href="https://africanstreetjournal.com/gw/">Guinea-Bissau</a><a class="hub-story" href="https://africanstreetjournal.com/gw/guinea-bissau-falls-to-45th-in-african-governance-index-548ab1/">Guinea-Bissau falls to 45th in African governance index</a></li>
-<li><a class="hub-country" href="https://africanstreetjournal.com/ke/">Kenya</a><a class="hub-story" href="https://africanstreetjournal.com/ke/former-attorney-general-paul-kihara-dies-aged-72-495e57/">Former Attorney General Paul Kihara dies aged 72</a></li>
+<li><a class="hub-country" href="https://africanstreetjournal.com/ke/">Kenya</a><a class="hub-story" href="https://africanstreetjournal.com/ke/adm-opens-new-nairobi-office-for-east-africa-trade-da5bba/">ADM opens new Nairobi office for East Africa trade</a></li>
 <li><a class="hub-country" href="https://africanstreetjournal.com/ls/">Lesotho</a><a class="hub-story" href="https://africanstreetjournal.com/ls/wasco-begins-mafeteng-drought-relief-plan-37d8db/">WASCO begins Mafeteng drought relief plan</a></li>
 <li><a class="hub-country" href="https://africanstreetjournal.com/lr/">Liberia</a><a class="hub-story" href="https://africanstreetjournal.com/lr/liberia-police-suspend-four-officers-for-misconduct-25a95c/">Liberia police suspend four officers for misconduct</a></li>
 <li><a class="hub-country" href="https://africanstreetjournal.com/ly/">Libya</a><a class="hub-story" href="https://africanstreetjournal.com/ly/libya-parliament-to-debate-unified-public-sector-pay-scale-6665be/">Libya parliament to debate unified public sector pay scale</a></li>

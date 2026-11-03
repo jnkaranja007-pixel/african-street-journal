@@ -9,16 +9,16 @@
 <link rel="canonical" href="https://africanstreetjournal.com/privacy/">
 <meta name="theme-color" content="#131313">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="https://africanstreetjournal.com/feed.xml">
-<script src="/data/analytics-config.js" onerror="window.ASJ_ANALYTICS=null"></script>
 <script>
-(function(){var c=window.ASJ_ANALYTICS;if(!c)return;
+function asjAnalytics(){var c=window.ASJ_ANALYTICS;if(!c)return;
 if(navigator.doNotTrack==='1'||window.doNotTrack==='1')return;var s;
 try{var q=location.search;if(/[?&]notrack=1(&|$)/.test(q))localStorage.setItem('asj-notrack','1');else if(/[?&]notrack=0(&|$)/.test(q))localStorage.removeItem('asj-notrack');if(localStorage.getItem('asj-notrack')==='1')return;}catch(e){}
 if(c.goatcounter){s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';
 s.setAttribute('data-goatcounter','https://'+c.goatcounter+'.goatcounter.com/count');document.head.appendChild(s);}
 if(c.cloudflare){s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';
-s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.head.appendChild(s);}}());
+s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.head.appendChild(s);}}
 </script>
+<script src="/data/analytics-config.js" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 <link rel="stylesheet" href="https://africanstreetjournal.com/static-pages.css?v=70">
 </head>
 <body>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="/feed.xsl"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel>
 <title>Sao Tome and Principe - The African Street Journal</title><link>https://africanstreetjournal.com/st/</link><description>Daily news from Sao Tome and Principe, every source cited.</description><language>en</language>
 <atom:link href="https://africanstreetjournal.com/st/feed.xml" rel="self" type="application/rss+xml"/>
-<item><title>Sao Tome and Principe U-15s lose 20-0</title><link>https://africanstreetjournal.com/st/sao-tome-and-principe-u-15s-lose-20-0-55a5ae/</link><guid isPermaLink="true">https://africanstreetjournal.com/st/sao-tome-and-principe-u-15s-lose-20-0-55a5ae/</guid><category>Sao Tome and Principe</category><description>The national U-15 football team conceded 45 goals in five international matches.</description><pubDate>Mon, 02 Nov 2026 07:08:11 GMT</pubDate></item>
+<item><title>Sao Tome and Principe U-15s lose 20-0</title><link>https://africanstreetjournal.com/st/sao-tome-and-principe-u-15s-lose-20-0-55a5ae/</link><guid isPermaLink="true">https://africanstreetjournal.com/st/sao-tome-and-principe-u-15s-lose-20-0-55a5ae/</guid><category>Sao Tome and Principe</category><description>The national U-15 football team conceded 45 goals in five international matches.</description><pubDate>Mon, 02 Nov 2026 07:08:11 GMT</pubDate><enclosure url="https://africanstreetjournal.com/st/sao-tome-and-principe-u-15s-lose-20-0-55a5ae/share.jpg" length="34943" type="image/jpeg"/><media:content url="https://africanstreetjournal.com/st/sao-tome-and-principe-u-15s-lose-20-0-55a5ae/share.jpg" medium="image" type="image/jpeg" width="1200" height="630"/></item>
 </channel></rss>
