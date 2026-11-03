@@ -300,6 +300,40 @@ jobs:
           # from the last 48 hours. Logs the HTTP code; never fails the run.
           ./scripts/submit-indexnow.ps1
 
+      # Which stories have gone out already. In the Actions cache, not the repository:
+      # it changes after the edition is pushed, and a second commit per run for a list
+      # of ids is not worth the noise. Losing it costs at most a day of repeats, because
+      # post-social.ps1 only considers stories from the last 24 hours.
+      - name: Restore the social post log
+        if: steps.guard.outputs.stale == 'true'
+        uses: actions/cache/restore@v5
+        with:
+          path: data/social-posted.json
+          key: asj-social-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: asj-social-v1-
+
+      - name: Post new stories to Telegram and Bluesky
+        if: steps.guard.outputs.stale == 'true'
+        continue-on-error: true
+        shell: pwsh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+        run: |
+          # Each service switches on when its secrets are set (Settings > Secrets and
+          # variables > Actions); with none set this logs one line and sends nothing.
+          # Never fails the run.
+          ./scripts/post-social.ps1
+
+      - name: Save the social post log
+        if: steps.guard.outputs.stale == 'true' && hashFiles('data/social-posted.json') != ''
+        uses: actions/cache/save@v5
+        with:
+          path: data/social-posted.json
+          key: asj-social-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
       - name: Raise the alarm if the desk failed
         if: failure()
         shell: pwsh

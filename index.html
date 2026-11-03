@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="max-image-preview:large">
 <title>The African Street Journal</title>
 <meta name="description" content="Original, source-cited reporting plus market, farm and diaspora signals for all 55 African countries.">
 <meta name="theme-color" content="#131313">
@@ -33,7 +34,7 @@
      GoatCounter site code nor a Cloudflare beacon token is a secret.
      Both supported providers are cookieless and neither profiles readers across sites,
      which is the only reason this page can measure traffic without a consent banner. -->
-<script src="data/analytics-config.js?v=94" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=95" onerror="window.ASJ_ANALYTICS=null"></script>
 <script>
 (function () {
   var cfg = window.ASJ_ANALYTICS;
@@ -41,6 +42,15 @@
   // Respect an explicit opt-out. Do Not Track is advisory and widely ignored; honouring
   // it costs a few readers in the numbers and is the behaviour a paper should have.
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+  // The owner's own visits: open any page once with ?notrack=1 and this browser is left
+  // out of the numbers from then on (?notrack=0 undoes it). Without it the paper's own
+  // checks were most of the "readers" in the dashboard.
+  try {
+    var q = location.search;
+    if (/[?&]notrack=1(&|$)/.test(q)) localStorage.setItem('asj-notrack', '1');
+    else if (/[?&]notrack=0(&|$)/.test(q)) localStorage.removeItem('asj-notrack');
+    if (localStorage.getItem('asj-notrack') === '1') return;
+  } catch (e) {}
   var s;
   if (cfg.goatcounter) {
     s = document.createElement('script');
@@ -88,10 +98,10 @@
      immediately and reflow to Playfair when it arrives. The noscript copy keeps the
      original behaviour for a reader with JavaScript off. -->
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=94" as="script">
-<link rel="preload" href="data/app-core.js?v=94" as="script">
-<link rel="preload" href="data/briefs.js?v=94" as="script">
-<link rel="stylesheet" href="styles.css?v=94">
+<link rel="preload" href="app.js?v=95" as="script">
+<link rel="preload" href="data/app-core.js?v=95" as="script">
+<link rel="preload" href="data/briefs.js?v=95" as="script">
+<link rel="stylesheet" href="styles.css?v=95">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
@@ -455,19 +465,19 @@
   </div>
 </article>
 
-<script src="data/app-core.js?v=94"></script>
+<script src="data/app-core.js?v=95"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
-<script>window.ASJ_ASSET_VERSION='94';</script>
-<script src="data/country-facts.js?v=94" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
-<script src="data/indices.js?v=94" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=94" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=94" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=94" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=94" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script>window.ASJ_ASSET_VERSION='95';</script>
+<script src="data/country-facts.js?v=95" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
+<script src="data/indices.js?v=95" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=95" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=95" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=95" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=95" onerror="window.ASJ_NEWSLETTER=null"></script>
 
-<script src="app.js?v=94"></script>
-<script src="country-sidebar.js?v=94" defer></script>
-<script src="/info-panel.js?v=94" defer></script>
+<script src="app.js?v=95"></script>
+<script src="country-sidebar.js?v=95" defer></script>
+<script src="/info-panel.js?v=95" defer></script>
 </body>
 </html>

@@ -36,6 +36,7 @@ $root = Split-Path $PSScriptRoot -Parent
 # Get-IsoDay lives here so the page builder, the merge and the publication gate all
 # read a date stamp the same way. See the note in story-shape.ps1.
 . (Join-Path $PSScriptRoot 'story-shape.ps1')   # Get-IsoDay, Get-StorySlug, Import-PublishedEdition
+. (Join-Path $PSScriptRoot 'share-image.ps1')   # New-StoryShareImage
 $BaseUrl = $BaseUrl.TrimEnd('/')
 
 # --- country metadata out of app.js -----------------------------------------
@@ -164,6 +165,8 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
    monospace capitals. */
 .meta,.open,.src,.read,footer,.morenav h2{font-family:system-ui,-apple-system,'Segoe UI',sans-serif!important;letter-spacing:0!important;text-transform:none!important}
 .meta{font-size:14px!important;font-weight:400!important;color:#a8a39d}
+.meta a{color:inherit;text-decoration:none;border-bottom:1px solid #3a3733}
+.meta a:hover{color:#f3efe8;border-bottom-color:#f3efe8}
 .open{font-size:15px!important;font-weight:600!important;margin:18px 0 10px!important}
 .src{font-size:14px!important;font-weight:500!important;line-height:1.8!important}
 .read{font-size:15px!important;font-weight:600!important}
@@ -187,7 +190,7 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=67" defer></script>'
 # Five entries: "Email us" repeated Contact (whose first line is the address), and RSS
 # opened a raw XML file - it is explained on About and the text-only edition instead.
-$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">Text-only edition</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/privacy/">Privacy</a></div></details>'
+$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">Text-only edition</a><a href="'+$BaseUrl+'/topics/">Topics</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/privacy/">Privacy</a></div></details>'
 
 
 # Same analytics loader as index.html. These pages are where search traffic lands, so
@@ -198,6 +201,7 @@ $analytics = @'
 <script>
 (function(){var c=window.ASJ_ANALYTICS;if(!c)return;
 if(navigator.doNotTrack==='1'||window.doNotTrack==='1')return;var s;
+try{var q=location.search;if(/[?&]notrack=1(&|$)/.test(q))localStorage.setItem('asj-notrack','1');else if(/[?&]notrack=0(&|$)/.test(q))localStorage.removeItem('asj-notrack');if(localStorage.getItem('asj-notrack')==='1')return;}catch(e){}
 if(c.goatcounter){s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';
 s.setAttribute('data-goatcounter','https://'+c.goatcounter+'.goatcounter.com/count');document.head.appendChild(s);}
 if(c.cloudflare){s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';
@@ -248,11 +252,25 @@ function Read-StoryPageHead([string]$Path) {
   $h = [regex]::Match($text, '<h1>([^<]*)</h1>')
   $mv = [regex]::Match($text, '<meta http-equiv="refresh" content="0; url=([^"]+)"')
   $id = [regex]::Match($text, '<meta name="asj-story" content="([0-9a-f]+)"')
+  # The line above the headline: the story's topic, or its country when the topic is
+  # plain "News". A link to the topic page since Nov 2026.
+  $k = [regex]::Match($text, '<div class="meta">(?:<a [^>]*>)?([^<]*)(?:</a>)?</div>\s*<h1>')
   $when = $null
   if ($d.Success) { $when = ConvertTo-UtcStamp ($d.Groups[1].Value + $d.Groups[2].Value) }
   return [pscustomobject]@{ When = $when; Headline = [Net.WebUtility]::HtmlDecode($h.Groups[1].Value)
                             MovedTo = $(if ($mv.Success) { $mv.Groups[1].Value } else { '' })
-                            StoryId = $(if ($id.Success) { $id.Groups[1].Value } else { '' }) }
+                            StoryId = $(if ($id.Success) { $id.Groups[1].Value } else { '' })
+                            Kicker = [Net.WebUtility]::HtmlDecode($k.Groups[1].Value) }
+}
+function Get-TopicSlug([string]$Topic) { return ([regex]::Replace($Topic.ToLowerInvariant(), '[^a-z0-9]+', '-')).Trim('-') }
+# The topic in that line, or nothing when it names a country. Pages from September carry
+# "Business &middot; 2026-09-06" and show the catch-all "News" that later pages hide.
+$countryNames = @{}
+foreach ($v in $info.Values) { $countryNames[[string]$v.name] = $true }
+function Get-PageTopic([string]$Kicker) {
+  $t = $Kicker.Split([char]0x00B7)[0].Trim()
+  if (-not $t -or $countryNames.ContainsKey($t)) { return '' }
+  return [string](Get-ShownTopic $t)
 }
 # One story, one page. The desk rewrites a headline between editions, and the address
 # is made from the headline, so each rewrite used to leave another full page behind:
@@ -289,6 +307,8 @@ function Write-MovedStoryPage($Page, [string]$Target) {
 </html>
 "@
   [IO.File]::WriteAllText((Join-Path $Page.dir 'index.html'), $html, (New-Object Text.UTF8Encoding($false)))
+  $share = Join-Path $Page.dir 'share.jpg'
+  if (Test-Path $share) { Remove-Item -LiteralPath $share -Force }
 }
 # Newest first, at most $Max, leaving out a story told again under a near-identical
 # headline (the same event in two editions: "Taita Taveta targets US$4.3M potato
@@ -327,7 +347,8 @@ foreach ($c in $pageCodes) {
     # swept on a guess.
     $pagesOnDisk.Add([pscustomobject]@{ code = $c; slug = $sub.Name; dir = $sub.FullName; headline = $head.Headline
                                         when = $head.When; dated = [bool]$head.When; movedTo = $head.MovedTo
-                                        storyId = $head.StoryId; key = ''; home = ''; superseded = $false })
+                                        storyId = $head.StoryId; key = ''; home = ''; superseded = $false
+                                        topic = (Get-PageTopic $head.Kicker) })
   }
 }
 
@@ -465,6 +486,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="max-image-preview:large">
 <title>$(Esc $titleText)</title>
 <meta name="description" content="$(Esc $desc)">
 <link rel="canonical" href="$canonical">
@@ -490,7 +512,7 @@ $analytics
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=69">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
 </head>
 <body>
 <div class="wrap">
@@ -533,6 +555,27 @@ $storyKept = @{}
 $storyBuilt = 0
 # Lead story of each country, newest first, for the "Latest across Africa" rail.
 $leadPages = @($storyPages | Group-Object code | ForEach-Object { $_.Group[0] } | Sort-Object { [string](Get-IsoInstant $_.brief.published) } -Descending)
+# Each country's lead story gets a share image of its own (share-image.ps1), drawn once
+# and kept with the page. Only the leads: they are what the desk posts and what readers
+# share, and at ~40 KB an image for all ~230 stories an edition would add 3 GB a year to
+# the repository. The rest keep the country's card.
+$leadKeys = @{}
+foreach ($lp in $leadPages) { $leadKeys["$($lp.code)/$($lp.slug)"] = $true }
+$diskHeadline = @{}
+foreach ($p in $pagesOnDisk) { $diskHeadline["$($p.code)/$($p.slug)"] = $p.headline }
+$shareDrawn = 0
+
+# Topics with a page of their own (/topics/<topic>/, built after the trust pages):
+# any with three or more stories between today's edition and the kept pages. A story's
+# topic line links there.
+$topicSeen = @{}
+foreach ($sp in $storyPages) { $t = Get-ShownTopic $sp.brief.topic; if ($t) { $topicSeen["$(Get-TopicSlug $t)|$($sp.code)/$($sp.slug)"] = $t } }
+foreach ($p in $pagesOnDisk) { if ($p.topic -and -not $p.superseded -and (-not $p.dated -or $p.when -ge $storyCutoff)) { $topicSeen["$(Get-TopicSlug $p.topic)|$($p.code)/$($p.slug)"] = $p.topic } }
+$topicCount = @{}
+$topicName = @{}
+foreach ($k in $topicSeen.Keys) { $ts = $k.Split('|')[0]; $topicCount[$ts] = 1 + [int]$topicCount[$ts]; if (-not $topicName.ContainsKey($ts)) { $topicName[$ts] = $topicSeen[$k] } }
+$topicPages = @{}
+foreach ($ts in $topicCount.Keys) { if ($ts -and $topicCount[$ts] -ge 3) { $topicPages[$ts] = $topicName[$ts] } }
 $feedItems = New-Object System.Collections.Generic.List[object]
 foreach ($sp in $storyPages) {
   $b = $sp.brief
@@ -544,6 +587,19 @@ foreach ($sp in $storyPages) {
   $storyCanonical = "$BaseUrl/$($sp.code)/$($sp.slug)/"
   $published = Get-IsoInstant $b.published
   if (-not $published) { $published = $sp.when }
+  $storyDirPath = Join-Path (Join-Path $root $sp.code) $sp.slug
+  $shareFile = Join-Path $storyDirPath 'share.jpg'
+  $pageKey = "$($sp.code)/$($sp.slug)"
+  if ($leadKeys.ContainsKey($pageKey) -and (-not (Test-Path $shareFile) -or $diskHeadline[$pageKey] -ne [string]$b.headline)) {
+    if (-not (Test-Path $storyDirPath)) { New-Item -ItemType Directory -Path $storyDirPath -Force | Out-Null }
+    $kicker = [string]$sp.country
+    $shareTopic = Get-ShownTopic $b.topic
+    if ($shareTopic -and ("$kicker - $shareTopic").Length -le 33) { $kicker = "$kicker $([char]0x00B7) $shareTopic" }
+    if (New-StoryShareImage (Join-Path $root "og\$($sp.code).jpg") $shareFile $sp.code $kicker ([string]$b.headline)) { $shareDrawn++ }
+  }
+  $hasShare = Test-Path $shareFile
+  $ogImage = if ($hasShare) { "${storyCanonical}share.jpg" } else { "$BaseUrl/og/$($sp.code).jpg" }
+  $ogAlt = if ($hasShare) { [string]$b.headline } else { "$($sp.country) - The African Street Journal" }
   $appUrl = "$BaseUrl/?story=$([Uri]::EscapeDataString($sp.key))"
 
   $srcs = @($b.sources | Where-Object { $_ -and $_.url -and $_.url -match '^https?://' })
@@ -569,7 +625,7 @@ foreach ($sp in $storyPages) {
   # Organization as author: the desk is the byline; no personal name is ever published.
   [void]$ld.Append(",""publisher"":{""@type"":""NewsMediaOrganization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/"",""logo"":{""@type"":""ImageObject"",""url"":""$BaseUrl/icon-512.png""}}")
   [void]$ld.Append(",""author"":{""@type"":""Organization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/about/""}")
-  [void]$ld.Append(",""image"":[""$BaseUrl/og/$($sp.code).jpg""],""mainEntityOfPage"":""$storyCanonical""")
+  [void]$ld.Append(",""image"":[""$ogImage""],""mainEntityOfPage"":""$storyCanonical""")
   [void]$ld.Append(",""contentLocation"":{""@type"":""Country"",""name"":""$(JsonEsc $sp.country)""}")
   if ($srcs.Count) {
     [void]$ld.Append(',"citation":[')
@@ -597,6 +653,7 @@ foreach ($sp in $storyPages) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="max-image-preview:large">
 <title>$(Esc $storyTitle)</title>
 <meta name="description" content="$(Esc $dek)">
 <link rel="canonical" href="$storyCanonical">
@@ -616,16 +673,16 @@ $analytics
 <meta property="og:title" content="$(Esc $b.headline)">
 <meta property="og:description" content="$(Esc $dek)">
 <meta property="og:url" content="$storyCanonical">
-<meta property="og:image" content="$BaseUrl/og/$($sp.code).jpg">
+<meta property="og:image" content="$ogImage">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="$(Esc $sp.country) - The African Street Journal">
+<meta property="og:image:alt" content="$(Esc $ogAlt)">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="$(Esc $b.headline)">
 <meta name="twitter:description" content="$(Esc $dek)">
-<meta name="twitter:image" content="$BaseUrl/og/$($sp.code).jpg">
+<meta name="twitter:image" content="$ogImage">
 <script type="application/ld+json">$($ld.ToString())</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=69">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
@@ -634,7 +691,7 @@ $analytics
   <main id="main">
   <article class="story">
   <header class="story-head">
-  <div class="meta">$(Esc $(if (Get-ShownTopic $b.topic) { $b.topic } else { $sp.country }))</div>
+  <div class="meta">$(if ((Get-ShownTopic $b.topic) -and $topicPages.ContainsKey((Get-TopicSlug $b.topic))) { "<a href=""$BaseUrl/topics/$(Get-TopicSlug $b.topic)/"">$(Esc $b.topic)</a>" } else { Esc $(if (Get-ShownTopic $b.topic) { $b.topic } else { $sp.country }) })</div>
   <h1>$(Esc $b.headline)</h1>
   <p class="dek">$(Esc $dek)</p>
   <p class="byline">$(if($srcs.Count){"Source: <a href=""$(Esc $srcs[0].url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $srcs[0].name)</a> &middot; "})$(if($published){"<time datetime=""$published"">$(Esc $sp.when)</time> &middot; "})$readMin min read</p>
@@ -663,7 +720,6 @@ $($srcHtml.ToString())
 </body>
 </html>
 "@
-  $storyDirPath = Join-Path (Join-Path $root $sp.code) $sp.slug
   if (-not (Test-Path $storyDirPath)) { New-Item -ItemType Directory -Path $storyDirPath -Force | Out-Null }
   [IO.File]::WriteAllText((Join-Path $storyDirPath 'index.html'), $storyHtml, (New-Object Text.UTF8Encoding($false)))
   $storyKept["$($sp.code)/$($sp.slug)"] = $true
@@ -694,7 +750,7 @@ foreach ($p in $pagesOnDisk) {
   $lastmod = if ($p.dated) { $p.when.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture) } else { '' }
   $earlierUrls.Add([pscustomobject]@{ url = "$BaseUrl/$($p.code)/$($p.slug)/"; lastmod = $lastmod })
 }
-Write-Host "[static] $storyBuilt story pages, $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected" -ForegroundColor DarkGray
+Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected" -ForegroundColor DarkGray
 
 # The same earlier stories for the app's country view (data/earlier/<cc>.json, a few KB,
 # loaded when a country opens): headline, page and day of the 30 newest that are not in
@@ -792,13 +848,14 @@ foreach ($slug in $trustPages.Keys) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="max-image-preview:large">
 <title>$($tp.title) | The African Street Journal</title>
 <meta name="description" content="$(Esc $tp.desc)">
 <link rel="canonical" href="$tpUrl">
 <meta name="theme-color" content="#131313">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=69">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
 </head>
 <body>
 <div class="wrap page">
@@ -815,6 +872,111 @@ $($tp.body)
   [IO.File]::WriteAllText((Join-Path $tpDir 'index.html'), $tpHtml, (New-Object Text.UTF8Encoding($false)))
   $urls.Add($tpUrl)
 }
+
+# --- topic pages ----------------------------------------------------------------
+# /topics/<topic>/: the newest 60 stories on one subject across every country, from
+# today's edition and the kept pages. Readers search by subject as often as by country
+# ("africa agriculture news"), and a country page cannot answer that.
+$topicEntries = New-Object System.Collections.Generic.List[object]
+foreach ($sp in $storyPages) {
+  $t = Get-ShownTopic $sp.brief.topic
+  if (-not $t -or -not $storyKept.ContainsKey("$($sp.code)/$($sp.slug)")) { continue }
+  $topicEntries.Add([pscustomobject]@{ ts = (Get-TopicSlug $t); code = $sp.code; slug = $sp.slug; headline = [string]$sp.brief.headline
+                                       when = (ConvertTo-UtcStamp (Get-IsoInstant $sp.brief.published)); country = $sp.country })
+}
+foreach ($p in $pagesOnDisk) {
+  if (-not $p.topic -or -not $p.headline -or $p.superseded -or $storyKept.ContainsKey("$($p.code)/$($p.slug)")) { continue }
+  if ($p.dated -and $p.when -lt $storyCutoff) { continue }
+  $topicEntries.Add([pscustomobject]@{ ts = (Get-TopicSlug $p.topic); code = $p.code; slug = $p.slug; headline = $p.headline; when = $p.when; country = $info[$p.code].name })
+}
+$topicsRoot = Join-Path $root 'topics'
+New-Item -ItemType Directory -Force -Path $topicsRoot | Out-Null
+foreach ($old in Get-ChildItem -Path $topicsRoot -Directory) { if (-not $topicPages.ContainsKey($old.Name)) { [IO.Directory]::Delete($old.FullName, $true) } }
+$topicOrder = @($topicPages.Keys | Sort-Object { $topicPages[$_] })
+$topicIndex = New-Object System.Text.StringBuilder
+foreach ($ts in $topicOrder) {
+  $tName = $topicPages[$ts]
+  $tUrl = "$BaseUrl/topics/$ts/"
+  $tList = @(Select-DistinctStories @($topicEntries | Where-Object { $_.ts -eq $ts } |
+    Sort-Object -Property @{ Expression = { if ($_.when) { $_.when } else { [datetime]::MinValue } }; Descending = $true }) 60)
+  if (-not $tList.Count) { continue }
+  $tItems = ($tList | ForEach-Object {
+    $day = if ($_.when) { $_.when.ToString('d MMM yyyy', [Globalization.CultureInfo]::InvariantCulture) } else { '' }
+    "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""rel-topic"">$(Esc $_.country)$(if ($day) { ' &middot; ' + $day })</span>$(Esc $_.headline)</a></li>"
+  }) -join ''
+  $tOthers = ($topicOrder | Where-Object { $_ -ne $ts } | ForEach-Object { "<li><a href=""$BaseUrl/topics/$_/"">$(Esc $topicPages[$_])</a></li>" }) -join ''
+  $tDesc = "The latest $tName stories from across Africa, every one written from named, linked sources. Updated with each edition of The African Street Journal."
+  $tLd = "{""@context"":""https://schema.org"",""@type"":""CollectionPage"",""name"":""$(JsonEsc $tName) - The African Street Journal"",""url"":""$tUrl"",""description"":""$(JsonEsc $tDesc)""}"
+  $tHtml = @"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="max-image-preview:large">
+<title>$(Esc $tName) news from across Africa | The African Street Journal</title>
+<meta name="description" content="$(Esc $tDesc)">
+<link rel="canonical" href="$tUrl">
+<meta name="theme-color" content="#131313">
+<link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
+<meta property="og:site_name" content="The African Street Journal">
+<meta property="og:type" content="website">
+<meta property="og:title" content="$(Esc $tName) news from across Africa">
+<meta property="og:description" content="$(Esc $tDesc)">
+<meta property="og:url" content="$tUrl">
+<meta property="og:image" content="$BaseUrl/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">$tLd</script>
+$analytics
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+</head>
+<body>
+<div class="wrap page">
+<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a> <span aria-hidden="true">/</span> <a href="$BaseUrl/topics/">Topics</a>$infoMenu</div>
+<h1>$(Esc $tName)</h1>
+<p class="meta">The newest $($tList.Count) $(Esc $tName) stories across Africa, newest first.</p>
+<nav class="related" aria-label="$(Esc $tName) stories"><ul>$tItems</ul></nav>
+<nav class="related" aria-label="Other topics"><h2 class="section-label">Other topics</h2><ul>$tOthers</ul></nav>
+<footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
+</div>
+</body>
+</html>
+"@
+  $tDir = Join-Path $topicsRoot $ts
+  New-Item -ItemType Directory -Force -Path $tDir | Out-Null
+  [IO.File]::WriteAllText((Join-Path $tDir 'index.html'), $tHtml, (New-Object Text.UTF8Encoding($false)))
+  $urls.Add($tUrl)
+  [void]$topicIndex.Append("<li><a href=""$tUrl""><span class=""rel-topic"">$($tList.Count) stories</span>$(Esc $tName)</a></li>")
+}
+$tiUrl = "$BaseUrl/topics/"
+$tiHtml = @"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="max-image-preview:large">
+<title>Topics | The African Street Journal</title>
+<meta name="description" content="African news by subject: politics, business, health, agriculture, climate and more, from 55 countries.">
+<link rel="canonical" href="$tiUrl">
+<meta name="theme-color" content="#131313">
+$analytics
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+</head>
+<body>
+<div class="wrap page">
+<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
+<h1>Topics</h1>
+<p class="meta">Every story the desk has published in the last $StoryDays days, by subject.</p>
+<nav class="related" aria-label="Topics"><ul>$($topicIndex.ToString())</ul></nav>
+<footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
+</div>
+</body>
+</html>
+"@
+[IO.File]::WriteAllText((Join-Path $topicsRoot 'index.html'), $tiHtml, (New-Object Text.UTF8Encoding($false)))
+$urls.Add($tiUrl)
+Write-Host "[static] $($topicOrder.Count) topic pages" -ForegroundColor DarkGray
 
 # --- countries hub: the text-only edition ------------------------------------------
 # The homepage is a canvas map: crawlers find no country links there, and on a small
@@ -841,6 +1003,7 @@ $hubHtml = @"
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="max-image-preview:large">
 <title>News from all 55 African countries | The African Street Journal</title>
 <meta name="description" content="Today's source-cited news from every African country, from Algeria to Zimbabwe. One page per country, updated daily.">
 <link rel="canonical" href="$BaseUrl/countries/">
@@ -852,7 +1015,7 @@ $hubHtml = @"
 <meta property="og:url" content="$BaseUrl/countries/">
 <meta property="og:image" content="$BaseUrl/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=69">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
 $analytics
 </head>
 <body>

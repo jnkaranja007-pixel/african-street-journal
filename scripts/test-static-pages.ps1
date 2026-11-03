@@ -176,6 +176,31 @@ if ($UnitOnly) {
     } catch { $badLists.Add("$cc=not JSON") }
   }
   Check "all $($pages.Count) earlier-story lists parse and link to pages that exist" ($badLists.Count -eq 0) (($badLists | Select-Object -First 5) -join ', ')
+
+  # A story page that names its own share image (each country's lead) must have it: a
+  # missing og:image is a link preview with no picture at all.
+  $noShare = New-Object System.Collections.Generic.List[string]
+  $shared = 0
+  foreach ($sd in $storyDirs) {
+    $f = Join-Path $root (($sd -replace '/', '\') + '\index.html')
+    $fs = [IO.File]::OpenRead($f)
+    try { $buf = New-Object byte[] 8192; $n = $fs.Read($buf, 0, $buf.Length) } finally { $fs.Dispose() }
+    if ([Text.Encoding]::UTF8.GetString($buf, 0, $n) -match '<meta property="og:image" content="https?://[^/"]+/[a-z]{2}/[^/"]+/share\.jpg"') {
+      $shared++
+      if (-not (Test-Path (Join-Path $root (($sd -replace '/', '\') + '\share.jpg')))) { $noShare.Add($sd) }
+    }
+  }
+  Check "all $shared share images that story pages name exist" ($noShare.Count -eq 0) (($noShare | Select-Object -First 5) -join ', ')
+
+  # Topic pages: built, and every story they list is a page that exists.
+  $topicFiles = @(Get-ChildItem -Path (Join-Path $root 'topics') -Directory -ErrorAction SilentlyContinue | ForEach-Object { Join-Path $_.FullName 'index.html' } | Where-Object { Test-Path $_ })
+  $deadTopic = New-Object System.Collections.Generic.List[string]
+  foreach ($tf in $topicFiles) {
+    foreach ($m in [regex]::Matches([IO.File]::ReadAllText($tf, [Text.Encoding]::UTF8), 'href="https?://[^/"]+/([a-z]{2})/([^/"]+)/"')) {
+      if (-not (Test-Path (Join-Path (Join-Path $root $m.Groups[1].Value) (Join-Path $m.Groups[2].Value 'index.html')))) { $deadTopic.Add($m.Groups[1].Value + '/' + $m.Groups[2].Value) }
+    }
+  }
+  Check "$($topicFiles.Count) topic pages built and every story they list exists" ($topicFiles.Count -gt 0 -and $deadTopic.Count -eq 0) "$($topicFiles.Count) pages; dead: $(($deadTopic | Select-Object -First 5) -join ', ')"
 }
 
 if ($fail) { Write-Host "[static-pages] $fail check(s) failed" -ForegroundColor Red; exit 1 }
