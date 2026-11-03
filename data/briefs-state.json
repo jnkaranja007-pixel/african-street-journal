@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-03T18:25:35+00:00",
+  "generated": "2026-11-03T19:09:33+00:00",
   "dates": {
     "dz": "2026-11-03T09:17:44+00:00",
     "ao": "2026-11-03T09:17:44+00:00",
@@ -41,7 +41,7 @@
     "mr": "2026-11-03T09:17:44+00:00",
     "mu": "2026-11-03T09:17:44+00:00",
     "mz": "2026-11-03T09:17:44+00:00",
-    "na": "2026-11-03T18:25:35+00:00",
+    "na": "2026-11-03T19:09:33+00:00",
     "ne": "2026-11-03T09:17:44+00:00",
     "rw": "2026-11-03T09:17:44+00:00",
     "st": "2026-11-03T09:17:44+00:00",
@@ -10467,34 +10467,34 @@
     ],
     "na": [
       {
-        "articleId": "d89934337eced883011f",
-        "headline": "Namibian credit grows by N$5.84 billion in nine months",
-        "dek": "Businesses and households borrowed more as rising prices increased the nominal value of loans, but real growth remained flat.",
+        "articleId": "0a7ef2debb35feed5003",
+        "headline": "FMD costs Namibia N$150 million weekly",
+        "dek": "Foot-and-mouth disease outbreak disrupts trade across SADC, threatening farmers' incomes and export markets.",
         "paragraphs": [
-          "Namibia's private sector credit increased by N$5.84 billion over the first nine months of 2026, a 39% rise from the same period last year. This growth brought the total credit book to N$128.2 billion by September, with N$1.06 billion added in that month alone. Businesses borrowed N$656.8 million, or 62% of the September increase, while households added N$403.5 million.",
-          "Almandro Jansen, an economist at Simonis Storm, noted that while nominal credit growth reached 5.6% annually in September, inflation at 5.4% meant real growth was only 0.2%. This suggests that much of the borrowing increase reflects higher prices rather than a significant expansion of real economic activity. Corporate credit growth accelerated to 6.7% in September, driven by demand for other loans and advances and commercial mortgage lending.",
-          "Household credit growth remained at 4.9% in September, but after adjusting for inflation, it contracted by approximately 0.5%. Jansen cautioned that sustained growth in business lending over several more months would be needed to confirm a recovery in business investment, especially with drought risk and fuel costs impacting agriculture and transport sectors."
+          "Namibia's livestock industry is losing an estimated N$150 million weekly due to foot-and-mouth disease (FMD), with combined regional losses reaching N$30 billion. The outbreak has led to movement and marketing restrictions across the Southern African Development Community (SADC), impacting farmers' incomes, employment, and access to export markets.",
+          "Namibia's weekly losses include N$118 million from cattle, N$26 million from sheep, and N$6 million from goats, totaling approximately N$655 million monthly. Farmers continue to incur operational expenses like salaries and fodder, amounting to N$230 million weekly, while livestock marketing remains disrupted. The Namibian government has allocated N$180 million to combat FMD.",
+          "Approximately 265,000 jobs are at risk as restrictions affect livestock production and marketing. Namibia's beef exports, 94% of which go to markets like the European Union and Norway requiring FMD-free status without vaccination, are particularly vulnerable. The Ministry of Agriculture is in talks with new markets including Tunisia, Morocco, and Nigeria."
         ],
-        "body": "Namibia's private sector credit increased by N$5.84 billion over the first nine months of 2026, a 39% rise from the same period last year. This growth brought the total credit book to N$128.2 billion by September, with N$1.06 billion added in that month alone. Businesses borrowed N$656.8 million, or 62% of the September increase, while households added N$403.5 million.\n\nAlmandro Jansen, an economist at Simonis Storm, noted that while nominal credit growth reached 5.6% annually in September, inflation at 5.4% meant real growth was only 0.2%. This suggests that much of the borrowing increase reflects higher prices rather than a significant expansion of real economic activity. Corporate credit growth accelerated to 6.7% in September, driven by demand for other loans and advances and commercial mortgage lending.\n\nHousehold credit growth remained at 4.9% in September, but after adjusting for inflation, it contracted by approximately 0.5%. Jansen cautioned that sustained growth in business lending over several more months would be needed to confirm a recovery in business investment, especially with drought risk and fuel costs impacting agriculture and transport sectors.",
-        "why": "Businesses and households are borrowing more money to cover the same volumes of goods and services due to rising prices.",
+        "body": "Namibia's livestock industry is losing an estimated N$150 million weekly due to foot-and-mouth disease (FMD), with combined regional losses reaching N$30 billion. The outbreak has led to movement and marketing restrictions across the Southern African Development Community (SADC), impacting farmers' incomes, employment, and access to export markets.\n\nNamibia's weekly losses include N$118 million from cattle, N$26 million from sheep, and N$6 million from goats, totaling approximately N$655 million monthly. Farmers continue to incur operational expenses like salaries and fodder, amounting to N$230 million weekly, while livestock marketing remains disrupted. The Namibian government has allocated N$180 million to combat FMD.\n\nApproximately 265,000 jobs are at risk as restrictions affect livestock production and marketing. Namibia's beef exports, 94% of which go to markets like the European Union and Norway requiring FMD-free status without vaccination, are particularly vulnerable. The Ministry of Agriculture is in talks with new markets including Tunisia, Morocco, and Nigeria.",
+        "why": "Namibian farmers and agricultural workers face significant financial losses and job insecurity due to FMD-related trade restrictions.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 20,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+            "score": 95,
+            "why": "Namibian farmers are losing N$150 million weekly in foregone business and continue to incur operational costs despite disrupted livestock marketing."
           },
           "investors": {
-            "score": 20,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+            "score": 70,
+            "why": "Namibia's beef export markets, including the EU and Norway, have suspended access due to FMD, impacting the country's ability to earn higher prices and undermining investments in livestock production."
           },
           "diaspora": {
             "score": 20,
             "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "Business",
-        "published": "2026-11-03T08:27:49Z",
-        "sourceTitle": "Namibia’s private sector credit increases by N$5.84 billion in nine months",
+        "topic": "Agriculture",
+        "published": "2026-11-03T09:08:19Z",
+        "sourceTitle": "FMD costs Namibia’s livestock industry N$150 million weekly",
         "editorialScore": 20.65,
         "selectionScore": 20.65,
         "confidence": "high",
@@ -10517,50 +10517,50 @@
           "specific figure"
         ],
         "countryMatch": "title",
-        "wordCount": 194,
+        "wordCount": 159,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-03T08:27:49Z",
-            "url": "https://thebrief.com.na/2026/11/namibias-private-sector-credit-increases-by-n5-84-billion-in-nine-months/?utm_source=rss&utm_medium=rss&utm_campaign=namibias-private-sector-credit-increases-by-n5-84-billion-in-nine-months",
-            "name": "The Brief"
+            "name": "The Brief",
+            "url": "https://thebrief.com.na/2026/11/fmd-costs-namibias-livestock-industry-n150-million-weekly/?utm_source=rss&utm_medium=rss&utm_campaign=fmd-costs-namibias-livestock-industry-n150-million-weekly",
+            "published": "2026-11-03T09:08:19Z"
           },
           {
-            "published": "2026-11-03T13:00:00Z",
-            "url": "https://www.namibian.com.na/rising-prices-push-for-more-credit-finance/",
-            "name": "The Namibian"
+            "name": "The Windhoek Observer",
+            "url": "https://observer24.com.na/livestock-sales-worth-n151m-at-risk-every-week/",
+            "published": "2026-11-03T03:50:57Z"
           }
         ]
       },
       {
-        "articleId": "0a7ef2debb35feed5003",
-        "headline": "FMD costs Namibia N$150 million weekly",
-        "dek": "Namibia's livestock industry faces severe disruption as foot-and-mouth disease halts trade and threatens jobs.",
+        "articleId": "d89934337eced883011f",
+        "headline": "Namibia private sector credit grows N$5.84 billion",
+        "dek": "Businesses and households borrowed more in nine months, but inflation erodes real gains.",
         "paragraphs": [
-          "Namibia's livestock industry is losing an estimated N$150 million weekly due to foot-and-mouth disease (FMD), according to Namibia Agricultural Union (NAU) President Thinus Pretorius. These losses stem from disrupted trade and marketing restrictions across the Southern African Development Community (SADC). The weekly figure includes N$118 million from cattle, N$26 million from sheep, and N$6 million from goats.",
-          "The outbreak is disrupting farmers' incomes and employment, with industry operations requiring N$230 million weekly for salaries, fodder, and fuel despite marketing halts. Approximately 265,000 jobs are at risk as production, processing, and marketing activities are affected. The government has allocated N$180 million to combat FMD, an amount Pretorius contrasted with the industry's estimated monthly losses of N$655 million.",
-          "Restoring export market access, particularly to the European Union and Norway which require FMD-free status without vaccination, could impact economic growth by 5% to 6%. These markets previously received about 10,000 tonnes of Namibian beef annually. The Ministry of Agriculture, Fisheries, Water and Land Reform is in talks with new markets including Tunisia, Morocco, and Nigeria."
+          "Namibia's private sector credit increased by N$5.84 billion in the first nine months of 2026, a 39% rise from the same period last year. This growth brought the total credit book to N$128.2 billion by September, with N$1.06 billion added in that month alone.",
+          "Businesses borrowed N$656.8 million, 62% of September's increase, while households added N$403.5 million. Despite this nominal growth, inflation at 5.4% meant real private sector credit growth was only 0.2% in September, down from 0.3% in August.",
+          "Almandro Jansen, an economist at Simonis Storm, noted that much of the borrowing increase reflects higher prices rather than real expansion. Corporate credit growth accelerated to 6.7% in September, but Jansen cautioned that sustained growth is needed to confirm a business investment recovery, especially with drought and fuel costs impacting agriculture."
         ],
-        "body": "Namibia's livestock industry is losing an estimated N$150 million weekly due to foot-and-mouth disease (FMD), according to Namibia Agricultural Union (NAU) President Thinus Pretorius. These losses stem from disrupted trade and marketing restrictions across the Southern African Development Community (SADC). The weekly figure includes N$118 million from cattle, N$26 million from sheep, and N$6 million from goats.\n\nThe outbreak is disrupting farmers' incomes and employment, with industry operations requiring N$230 million weekly for salaries, fodder, and fuel despite marketing halts. Approximately 265,000 jobs are at risk as production, processing, and marketing activities are affected. The government has allocated N$180 million to combat FMD, an amount Pretorius contrasted with the industry's estimated monthly losses of N$655 million.\n\nRestoring export market access, particularly to the European Union and Norway which require FMD-free status without vaccination, could impact economic growth by 5% to 6%. These markets previously received about 10,000 tonnes of Namibian beef annually. The Ministry of Agriculture, Fisheries, Water and Land Reform is in talks with new markets including Tunisia, Morocco, and Nigeria.",
-        "why": "Namibian farmers and agricultural workers face significant income loss and job insecurity due to FMD-related trade restrictions.",
+        "body": "Namibia's private sector credit increased by N$5.84 billion in the first nine months of 2026, a 39% rise from the same period last year. This growth brought the total credit book to N$128.2 billion by September, with N$1.06 billion added in that month alone.\n\nBusinesses borrowed N$656.8 million, 62% of September's increase, while households added N$403.5 million. Despite this nominal growth, inflation at 5.4% meant real private sector credit growth was only 0.2% in September, down from 0.3% in August.\n\nAlmandro Jansen, an economist at Simonis Storm, noted that much of the borrowing increase reflects higher prices rather than real expansion. Corporate credit growth accelerated to 6.7% in September, but Jansen cautioned that sustained growth is needed to confirm a business investment recovery, especially with drought and fuel costs impacting agriculture.",
+        "why": "Businesses and households in Namibia are borrowing more money, but inflation means they are not actually getting more purchasing power.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 95,
-            "why": "Namibia's livestock farmers are losing N$150 million weekly due to FMD, impacting their income and ability to cover operational costs like fodder and salaries."
+            "score": 20,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
             "score": 70,
-            "why": "Namibia's beef export markets, including the EU and Norway, have suspended access due to FMD, threatening the country's ability to earn higher prices and impacting investments in livestock production."
+            "why": "Private sector credit growth is accelerating in nominal terms, but real growth is minimal due to inflation, and future growth is expected to slow due to interest rate hikes."
           },
           "diaspora": {
-            "score": 20,
+            "score": 0,
             "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "Agriculture",
-        "published": "2026-11-03T09:08:19Z",
-        "sourceTitle": "FMD costs Namibia’s livestock industry N$150 million weekly",
+        "topic": "Business",
+        "published": "2026-11-03T08:27:49Z",
+        "sourceTitle": "Namibia’s private sector credit increases by N$5.84 billion in nine months",
         "editorialScore": 20.65,
         "selectionScore": 19.4,
         "confidence": "high",
@@ -10583,18 +10583,18 @@
           "specific figure"
         ],
         "countryMatch": "title",
-        "wordCount": 181,
+        "wordCount": 145,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-03T09:08:19Z",
-            "url": "https://thebrief.com.na/2026/11/fmd-costs-namibias-livestock-industry-n150-million-weekly/?utm_source=rss&utm_medium=rss&utm_campaign=fmd-costs-namibias-livestock-industry-n150-million-weekly",
-            "name": "The Brief"
+            "name": "The Brief",
+            "url": "https://thebrief.com.na/2026/11/namibias-private-sector-credit-increases-by-n5-84-billion-in-nine-months/?utm_source=rss&utm_medium=rss&utm_campaign=namibias-private-sector-credit-increases-by-n5-84-billion-in-nine-months",
+            "published": "2026-11-03T08:27:49Z"
           },
           {
-            "published": "2026-11-03T03:50:57Z",
-            "url": "https://observer24.com.na/livestock-sales-worth-n151m-at-risk-every-week/",
-            "name": "The Windhoek Observer"
+            "name": "The Windhoek Observer",
+            "url": "https://observer24.com.na/credit-growth-expected-to-slow-as-bon-rate-hikes-take-effect/",
+            "published": "2026-11-03T03:48:27Z"
           }
         ]
       },
@@ -10654,23 +10654,93 @@
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-03T15:00:00Z",
+            "name": "The Namibian",
             "url": "https://www.namibian.com.na/murder-robbery-accused-claims-charges-are-false/",
-            "name": "The Namibian"
+            "published": "2026-11-03T15:00:00Z"
+          }
+        ]
+      },
+      {
+        "articleId": "dc8d18d3eb88ed21914c",
+        "headline": "Namibia minister announces fuel price hike",
+        "dek": "Petrol prices will increase by N$2 per litre and diesel by N$3 per litre starting in November.",
+        "paragraphs": [
+          "Namibian Minister of Mines and Energy Modestus Amutse announced a fuel price increase for November due to international market pressures. Petrol 95 will rise by N$2 per litre, while diesel 50ppm and Diesel 10ppm will increase by N$3 per litre.",
+          "The price hikes will affect basic living costs for Namibians, with stagnant salaries unlikely to offset the rise. Minister Amutse confirmed the increases in a statement.",
+          "Separately, Minister Amutse has referred allegations of corruption and bribery involving the Namibia Diamond Trading Company (NDTC) CEO and other officials to the Anti-Corruption Commission (ACC) for investigation."
+        ],
+        "body": "Namibian Minister of Mines and Energy Modestus Amutse announced a fuel price increase for November due to international market pressures. Petrol 95 will rise by N$2 per litre, while diesel 50ppm and Diesel 10ppm will increase by N$3 per litre.\n\nThe price hikes will affect basic living costs for Namibians, with stagnant salaries unlikely to offset the rise. Minister Amutse confirmed the increases in a statement.\n\nSeparately, Minister Amutse has referred allegations of corruption and bribery involving the Namibia Diamond Trading Company (NDTC) CEO and other officials to the Anti-Corruption Commission (ACC) for investigation.",
+        "why": "Namibians will face higher costs for transportation and goods due to increased fuel prices.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 20,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 20,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+          },
+          "diaspora": {
+            "score": 21,
+            "why": "This politics report may interest diaspora readers following national public affairs from abroad."
+          }
+        },
+        "topic": "Politics",
+        "published": "2026-11-03T11:27:08Z",
+        "sourceTitle": "Local fuel prices surge amid global volatility",
+        "editorialScore": 16.8,
+        "selectionScore": 16.8,
+        "confidence": "high",
+        "corroboration": 3,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 6.0,
+          "sourceQuality": 1.75,
+          "freshness": 3.5,
+          "publicImpact": 3.05,
+          "evidence": 2.0,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "3-source corroboration",
+          "published within 18h",
+          "public-policy consequence",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 96,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "name": "Namibia Economist",
+            "url": "https://economist.com.na/local-fuel-prices-surge-amid-global-volatility/",
+            "published": "2026-11-03T11:27:08Z"
+          },
+          {
+            "name": "The Namibian",
+            "url": "https://www.namibian.com.na/up-up-up-goes-the-cost-of-living/",
+            "published": "2026-11-03T17:00:00Z"
+          },
+          {
+            "name": "The Windhoek Observer",
+            "url": "https://observer24.com.na/amutse-refers-diamond-bribery-allegations-to-acc/",
+            "published": "2026-11-03T05:02:55Z"
           }
         ]
       },
       {
         "articleId": "a7f875f34fe3b466ecd4",
-        "headline": "Windhoek to host world autism congress",
-        "dek": "The sixth World Autism Organisation Congress will gather international experts and advocates in Namibia's capital from November 3-5.",
+        "headline": "Namibia hosts world autism congress",
+        "dek": "Windhoek will gather international experts and advocates from November 3-5 to discuss autism support.",
         "paragraphs": [
-          "Namibia will host the sixth World Autism Organisation Congress in Windhoek from November 3 to 5, 2026. The event will bring together international speakers, researchers, and autism advocates to discuss support for people with autism. Organisers state the congress comes at a time when Namibia’s autistic community remains underserved.",
-          "Autism Association of Namibia founder Petra Dillmann said the congress offers a platform for the autistic community to advocate for themselves and share their needs directly. The gathering aims to unite parents, educators, health professionals, academics, employers, government representatives, and people with autism to improve support services.",
-          "Discussions at the congress will cover daily life support, early intervention, education, employment, rights, advocacy, ageing, and sensory processing. Professional development opportunities will also be available for psychologists, therapists, medical practitioners, teachers, and researchers to engage with international research and practices."
+          "Namibia will host the sixth World Autism Organisation Congress in Windhoek from November 3 to 5, 2026. The event will bring together international speakers, researchers, and autism advocates to discuss better support for people with autism. Organisers state the congress occurs as Namibia's autistic community remains underserved.",
+          "Autism Association of Namibia founder Petra Dillmann stated the congress offers a platform for the autistic community to advocate for themselves. She explained that the event will allow participants to learn directly from autistic individuals about their needs and experiences. The congress aims to unite parents, educators, health professionals, academics, employers, government representatives, and people with autism.",
+          "Discussions will cover daily life support, early intervention, education, employment, rights, advocacy, ageing, and sensory processing. Professional development opportunities will be available for psychologists, therapists, medical practitioners, teachers, and researchers. Registration for in-person and virtual attendance is open via the congress website."
         ],
-        "body": "Namibia will host the sixth World Autism Organisation Congress in Windhoek from November 3 to 5, 2026. The event will bring together international speakers, researchers, and autism advocates to discuss support for people with autism. Organisers state the congress comes at a time when Namibia’s autistic community remains underserved.\n\nAutism Association of Namibia founder Petra Dillmann said the congress offers a platform for the autistic community to advocate for themselves and share their needs directly. The gathering aims to unite parents, educators, health professionals, academics, employers, government representatives, and people with autism to improve support services.\n\nDiscussions at the congress will cover daily life support, early intervention, education, employment, rights, advocacy, ageing, and sensory processing. Professional development opportunities will also be available for psychologists, therapists, medical practitioners, teachers, and researchers to engage with international research and practices.",
-        "why": "The congress aims to improve support for Namibia's underserved autistic community by bringing together professionals and advocates to discuss needs and practices.",
+        "body": "Namibia will host the sixth World Autism Organisation Congress in Windhoek from November 3 to 5, 2026. The event will bring together international speakers, researchers, and autism advocates to discuss better support for people with autism. Organisers state the congress occurs as Namibia's autistic community remains underserved.\n\nAutism Association of Namibia founder Petra Dillmann stated the congress offers a platform for the autistic community to advocate for themselves. She explained that the event will allow participants to learn directly from autistic individuals about their needs and experiences. The congress aims to unite parents, educators, health professionals, academics, employers, government representatives, and people with autism.\n\nDiscussions will cover daily life support, early intervention, education, employment, rights, advocacy, ageing, and sensory processing. Professional development opportunities will be available for psychologists, therapists, medical practitioners, teachers, and researchers. Registration for in-person and virtual attendance is open via the congress website.",
+        "why": "The congress in Windhoek aims to improve support for Namibia's underserved autistic community by bringing together various stakeholders and international expertise.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
@@ -10679,7 +10749,7 @@
           },
           "investors": {
             "score": 0,
-            "why": "The event focuses on health and social support services, with no direct mention of investment opportunities or economic impact on businesses."
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
           },
           "diaspora": {
             "score": 0,
@@ -10712,78 +10782,18 @@
           "specific figure"
         ],
         "countryMatch": "title",
-        "wordCount": 137,
+        "wordCount": 146,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-03T14:26:06Z",
+            "name": "The Namibian",
             "url": "https://www.namibian.com.na/namibia-to-host-world-autism-organisation-congress/",
-            "name": "The Namibian"
+            "published": "2026-11-03T14:26:06Z"
           },
           {
-            "published": "2026-11-03T05:15:16Z",
+            "name": "The Windhoek Observer",
             "url": "https://observer24.com.na/namibia-to-host-international-autism-congress/",
-            "name": "The Windhoek Observer"
-          }
-        ]
-      },
-      {
-        "articleId": "328a461cf7502a52f8fa",
-        "headline": "Andrada Mining's Namibia contribution rises to N$775m",
-        "dek": "The company's economic impact grew 6% in the 2026 financial year, driven by wages, royalties, and local procurement.",
-        "paragraphs": [
-          "Andrada Mining's direct economic contribution to Namibia increased by 6% to N$775.2 million in the 2026 financial year. This growth was fueled by wages, royalties, and local procurement as the company expanded its operations at Uis Mine. The company's total economic impact exceeded £33.17 million, up from £31.39 million in the previous financial year.",
-          "Remuneration paid locally at Uis reached approximately N$103.3 million, an increase from N$100.38 million in FY2025. Andrada recruited 126 employees and appointed 11 local graduates to a 12-month internship program, with two interns later employed permanently. The company worked with 241 active suppliers, of which 78% were Namibian businesses.",
-          "Andrada estimated its activities generated an additional N$330.2 million in indirect economic benefits across Namibia, using the World Bank's mining-sector economic multiplier. Chief executive Anthony Viljoen stated that the Uis expansion creates greater opportunities for employment, local procurement, and skills development. The company is also exploring desalination for long-term water supply solutions."
-        ],
-        "body": "Andrada Mining's direct economic contribution to Namibia increased by 6% to N$775.2 million in the 2026 financial year. This growth was fueled by wages, royalties, and local procurement as the company expanded its operations at Uis Mine. The company's total economic impact exceeded £33.17 million, up from £31.39 million in the previous financial year.\n\nRemuneration paid locally at Uis reached approximately N$103.3 million, an increase from N$100.38 million in FY2025. Andrada recruited 126 employees and appointed 11 local graduates to a 12-month internship program, with two interns later employed permanently. The company worked with 241 active suppliers, of which 78% were Namibian businesses.\n\nAndrada estimated its activities generated an additional N$330.2 million in indirect economic benefits across Namibia, using the World Bank's mining-sector economic multiplier. Chief executive Anthony Viljoen stated that the Uis expansion creates greater opportunities for employment, local procurement, and skills development. The company is also exploring desalination for long-term water supply solutions.",
-        "why": "Namibian businesses and workers benefit from increased wages, local procurement, and job opportunities created by Andrada Mining's expanded operations.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 45,
-            "why": "Andrada Mining's water usage increased due to higher processing activity, impacting local water resources."
-          },
-          "investors": {
-            "score": 70,
-            "why": "Andrada Mining's direct economic contribution to Namibia rose by 6% to N$775.2 million in FY2026, indicating business growth."
-          },
-          "diaspora": {
-            "score": 20,
-            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
-          }
-        },
-        "topic": "Business",
-        "published": "2026-11-03T03:59:57Z",
-        "sourceTitle": "Andrada’s Namibia contribution rises to N$775m",
-        "editorialScore": 14.8,
-        "selectionScore": 12.55,
-        "confidence": "medium",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 4.0,
-          "corroboration": 0.0,
-          "sourceQuality": 1.75,
-          "freshness": 3.5,
-          "publicImpact": 3.05,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in headline",
-          "published within 18h",
-          "public-policy consequence",
-          "specific figure"
-        ],
-        "countryMatch": "title",
-        "wordCount": 165,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "published": "2026-11-03T03:59:57Z",
-            "url": "https://observer24.com.na/andradas-namibia-contribution-rises-to-n775m/",
-            "name": "The Windhoek Observer"
+            "published": "2026-11-03T05:15:16Z"
           }
         ]
       }

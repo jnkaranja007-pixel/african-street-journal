@@ -77,6 +77,8 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
    monospace capitals. */
 .meta,.open,.src,.read,footer,.morenav h2{font-family:system-ui,-apple-system,'Segoe UI',sans-serif!important;letter-spacing:0!important;text-transform:none!important}
 .meta{font-size:14px!important;font-weight:400!important;color:#a8a39d}
+.meta a{color:inherit;text-decoration:none;border-bottom:1px solid #3a3733}
+.meta a:hover{color:#f3efe8;border-bottom-color:#f3efe8}
 .open{font-size:15px!important;font-weight:600!important;margin:18px 0 10px!important}
 .src{font-size:14px!important;font-weight:500!important;line-height:1.8!important}
 .read{font-size:15px!important;font-weight:600!important}
