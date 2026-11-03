@@ -1,0 +1,58 @@
+name: Site health
+
+# Weekly: fetch the live site the way readers and search engines meet it (core files,
+# every country and topic page, a sample of stories and their share images, feeds,
+# the 404 page, http and www redirects). Every other check runs on a checkout, before
+# Pages serves anything; this one is the only look at what is actually live. A problem
+# opens - or comments on - one GitHub issue titled "Site health", which GitHub emails
+# to the owner; a clean run closes it.
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'     # Mondays 07:00 UTC, after the morning edition
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check the live site
+        id: check
+        shell: pwsh
+        run: |
+          ./scripts/check-live-site.ps1 -Report "$env:RUNNER_TEMP/site-health.md"
+          "failed=$([int]($LASTEXITCODE -ne 0))" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          exit 0
+
+      - name: Open or update the issue
+        if: steps.check.outputs.failed == '1'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $report = "$env:RUNNER_TEMP/site-health.md"
+          $open = gh issue list --state open --search 'Site health in:title' --json number --jq '.[0].number'
+          if ($open) {
+            gh issue comment $open --body-file $report
+          } else {
+            gh issue create --title 'Site health: the live site needs attention' --body-file $report
+          }
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+
+      - name: Close the issue when the check is clean
+        if: steps.check.outputs.failed == '0'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $open = gh issue list --state open --search 'Site health in:title' --json number --jq '.[0].number'
+          if ($open) { gh issue close $open --comment 'The weekly live-site check passes.' }
+          exit 0

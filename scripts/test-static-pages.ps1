@@ -201,6 +201,17 @@ if ($UnitOnly) {
     }
   }
   Check "$($topicFiles.Count) topic pages built and every story they list exists" ($topicFiles.Count -gt 0 -and $deadTopic.Count -eq 0) "$($topicFiles.Count) pages; dead: $(($deadTopic | Select-Object -First 5) -join ', ')"
+
+  # Digest: the posts the owner pastes into WhatsApp and Facebook. Kept out of search,
+  # and every story link in them is a page that exists.
+  $digestFile = Join-Path $root 'digest/index.html'
+  $digest = if (Test-Path $digestFile) { [IO.File]::ReadAllText($digestFile, [Text.Encoding]::UTF8) } else { '' }
+  $deadDigest = New-Object System.Collections.Generic.List[string]
+  foreach ($m in [regex]::Matches($digest, 'https?://[^/\s"&<]+/([a-z]{2})/([a-z0-9-]+)/')) {
+    $key = $m.Groups[1].Value + '/' + $m.Groups[2].Value
+    if (-not $deadDigest.Contains($key) -and -not (Test-Path (Join-Path (Join-Path $root $m.Groups[1].Value) (Join-Path $m.Groups[2].Value 'index.html')))) { $deadDigest.Add($key) }
+  }
+  Check 'digest page is built, noindex, and every story it posts exists' ($digest -match '<meta name="robots" content="noindex">' -and $digest -match '<textarea' -and $deadDigest.Count -eq 0) "dead: $(($deadDigest | Select-Object -First 5) -join ', ')"
 }
 
 if ($fail) { Write-Host "[static-pages] $fail check(s) failed" -ForegroundColor Red; exit 1 }

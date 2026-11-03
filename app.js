@@ -2174,6 +2174,7 @@ function renderCountryDesk(countryId, countryPath) {
   }
   renderNewsPanel(countryId, stories);
   renderEarlierStories(countryId);
+  renderFollowNudge(countryId);
   renderCropCalendar(countryId);
   renderAtlasAltText(countryId);
   if (activePanelIndex === 2 || mapPortal?.classList.contains('active')) {
@@ -5926,12 +5927,124 @@ document.getElementById('cv-star')?.addEventListener('click', () => {
   const id = activeCountryMap.countryId;
   const list = getWatchlist();
   const at = list.indexOf(id);
-  if (at >= 0) list.splice(at, 1); else { list.push(id); markCountrySeen(id); }
+  // An unfollow is a deliberate no: the follow nudge does not ask again straight away.
+  if (at >= 0) { list.splice(at, 1); dismissPrompt('follow-' + id); } else { list.push(id); markCountrySeen(id); }
   if (at < 0 && list.length >= 2 && !getDeskSignup().email) yourDeskExpanded = true;
   saveWatchlist(list);
   updateStarButton(id);
   renderYourDesk();
+  renderFollowNudge(id);
 });
+
+/* ── Return-reader prompts: follow a country; add the app to the home screen ── */
+// A reader who comes back is the cheapest reader to keep, and until Nov 2026 nothing
+// asked them to stay: the star sat unlabelled in the header, and the app could be
+// installed only by someone who already knew the browser menu. Both prompts wait for
+// a second visit, say "Not now" once and stay away for weeks, and never show to a
+// test runner.
+const VISIT_DAYS_KEY = 'asj:visit-days:v1';
+const COUNTRY_DAYS_KEY = 'asj:country-days:v1';
+const PROMPT_DISMISS_KEY = 'asj:prompt-dismissed:v1';
+const TODAY_ISO = new Date().toISOString().slice(0, 10);
+const PROMPTS_OFF = navigator.webdriver === true || /[?&](selftest|sweep|perf)=/.test(location.search);
+function readStore(key, fallback) {
+  try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return v && typeof v === 'object' ? v : fallback; } catch { return fallback; }
+}
+function writeStore(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+const VISIT_DAYS = (() => {
+  const stored = readStore(VISIT_DAYS_KEY, []);
+  const days = (Array.isArray(stored) ? stored : []).filter(d => typeof d === 'string');
+  if (!days.includes(TODAY_ISO)) { days.push(TODAY_ISO); writeStore(VISIT_DAYS_KEY, days.slice(-30)); }
+  return days;
+})();
+function promptDismissedRecently(name, days) {
+  const at = Number(readStore(PROMPT_DISMISS_KEY, {})[name] || 0);
+  return at > 0 && Date.now() - at < days * 86400000;
+}
+function dismissPrompt(name) {
+  const all = readStore(PROMPT_DISMISS_KEY, {});
+  all[name] = Date.now();
+  writeStore(PROMPT_DISMISS_KEY, all);
+}
+// Days on which each country was opened: the second distinct day is "back for it".
+function countCountryDay(countryId) {
+  const all = readStore(COUNTRY_DAYS_KEY, {});
+  const rec = all[countryId] && typeof all[countryId] === 'object' ? all[countryId] : { n: 0, d: '' };
+  if (rec.d !== TODAY_ISO) { rec.n = (Number(rec.n) || 0) + 1; rec.d = TODAY_ISO; all[countryId] = rec; writeStore(COUNTRY_DAYS_KEY, all); }
+  return rec.n;
+}
+function renderFollowNudge(countryId) {
+  const el = document.getElementById('cv-follow');
+  if (!el) return;
+  const name = COUNTRY_INFO[countryId]?.name || '';
+  const days = countCountryDay(countryId);
+  if (PROMPTS_OFF || !name || days < 2 || getWatchlist().includes(countryId) || promptDismissedRecently('follow-' + countryId, 45)) {
+    el.hidden = true;
+    el.innerHTML = '';
+    return;
+  }
+  const tg = String(window.ASJ_SOCIAL?.telegram || '');
+  el.innerHTML = '<p class="cv-follow-copy"><b>Back for ' + escapeHtml(name) + '?</b> Follow it, and its new stories wait for you at the top of the front page on this device.</p>' +
+    '<div class="cv-follow-actions"><button type="button" class="cv-follow-go" data-follow>Follow ' + escapeHtml(name) + '</button>' +
+    (/^[A-Za-z0-9_]{5,32}$/.test(tg) ? '<a href="https://t.me/' + tg + '" target="_blank" rel="noopener">Get the paper on Telegram</a>' : '') +
+    '<button type="button" class="cv-follow-later" data-later>Not now</button></div>';
+  el.hidden = false;
+  el.onclick = e => {
+    if (e.target.closest('[data-follow]')) {
+      if (!getWatchlist().includes(countryId)) document.getElementById('cv-star')?.click();
+      el.innerHTML = '<p class="cv-follow-copy"><b>Following ' + escapeHtml(name) + '.</b> Its new stories are at the top of the front page now.</p>';
+      el.hidden = false;
+      setTimeout(() => { if (activeCountryMap?.countryId === countryId) el.hidden = true; }, 4000);
+    } else if (e.target.closest('[data-later]')) {
+      dismissPrompt('follow-' + countryId);
+      el.hidden = true;
+    }
+  };
+}
+
+let deferredInstallPrompt = null;
+let installPromptShown = false;
+function isStandaloneApp() {
+  return window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+function isIosSafari() {
+  const ua = navigator.userAgent || '';
+  return /iPhone|iPad|iPod/.test(ua) && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
+}
+function maybeShowInstallPrompt() {
+  if (installPromptShown || PROMPTS_OFF || isStandaloneApp() || VISIT_DAYS.length < 2 || promptDismissedRecently('install', 30)) return;
+  if (!deferredInstallPrompt && !isIosSafari()) return;
+  const el = document.getElementById('asj-install');
+  if (!el) return;
+  installPromptShown = true;
+  el.innerHTML = '<p><b>Keep the paper on your home screen.</b> ' +
+    (deferredInstallPrompt ? 'One tap opens it like an app, and it works on a weak signal.' : 'On iPhone: tap the Share button, then <b>Add to Home Screen</b>.') + '</p>' +
+    '<div class="asj-install-actions">' + (deferredInstallPrompt ? '<button type="button" data-install>Add it</button>' : '') +
+    '<button type="button" data-later>' + (deferredInstallPrompt ? 'Not now' : 'OK') + '</button></div>';
+  el.hidden = false;
+  el.onclick = async e => {
+    if (e.target.closest('[data-install]') && deferredInstallPrompt) {
+      const ask = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+      el.hidden = true;
+      try { await ask.prompt(); const choice = await ask.userChoice; if (choice?.outcome !== 'accepted') dismissPrompt('install'); } catch {}
+    } else if (e.target.closest('[data-later]')) {
+      dismissPrompt('install');
+      el.hidden = true;
+    }
+  };
+}
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  setTimeout(maybeShowInstallPrompt, 6000);
+});
+window.addEventListener('appinstalled', () => {
+  dismissPrompt('install');
+  const el = document.getElementById('asj-install');
+  if (el) el.hidden = true;
+});
+if (isIosSafari()) setTimeout(maybeShowInstallPrompt, 8000);
 document.getElementById('your-desk')?.addEventListener('click', e => {
   const toggle = e.target.closest('button[data-desk-toggle]');
   if (toggle) {

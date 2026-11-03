@@ -188,6 +188,23 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=67" defer></script>'
+# The paper's social accounts (data/social-config.js): a Follow line in every footer
+# once a handle is set, and sameAs on the publisher so search engines tie them to it.
+$socialTelegram = ''; $socialBluesky = ''
+$socialPath = Join-Path $root 'data\social-config.js'
+if (Test-Path $socialPath) {
+  $socialJs = [IO.File]::ReadAllText($socialPath)
+  $mt = [regex]::Match($socialJs, "telegram:\s*'([A-Za-z0-9_]{5,32})'")
+  $mb = [regex]::Match($socialJs, "bluesky:\s*'([A-Za-z0-9.-]{3,253})'")
+  if ($mt.Success) { $socialTelegram = "https://t.me/$($mt.Groups[1].Value)" }
+  if ($mb.Success) { $socialBluesky = "https://bsky.app/profile/$($mb.Groups[1].Value)" }
+}
+$followParts = @()
+if ($socialTelegram) { $followParts += "<a href=""$socialTelegram"" rel=""me noopener"">Telegram</a>" }
+if ($socialBluesky) { $followParts += "<a href=""$socialBluesky"" rel=""me noopener"">Bluesky</a>" }
+if ($followParts.Count) { $siteLinks = "<span class=""follow""> &middot; Follow on $($followParts -join ' &middot; ')</span>" + $siteLinks }
+$sameAs = @(@($socialTelegram, $socialBluesky) | Where-Object { $_ } | ForEach-Object { '"' + $_ + '"' }) -join ','
+$sameAsLd = if ($sameAs) { ',"sameAs":[' + $sameAs + ']' } else { '' }
 # Five entries: "Email us" repeated Contact (whose first line is the address), and RSS
 # opened a raw XML file - it is explained on About and the text-only edition instead.
 $infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">Text-only edition</a><a href="'+$BaseUrl+'/topics/">Topics</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/privacy/">Privacy</a></div></details>'
@@ -196,17 +213,20 @@ $infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><
 # Same analytics loader as index.html. These pages are where search traffic lands, so
 # leaving them unmeasured would report the site as quieter than it is and hide which
 # countries people actually arrive for. Literal here-string: nothing in it is expanded.
+# The config file loads async and the loader runs when it arrives: as a plain script in
+# <head> it held the first paint of every page for one round trip (~170 ms on Nov 2026
+# measurements) to fetch a few bytes that nothing on the page needs to draw.
 $analytics = @'
-<script src="/data/analytics-config.js" onerror="window.ASJ_ANALYTICS=null"></script>
 <script>
-(function(){var c=window.ASJ_ANALYTICS;if(!c)return;
+function asjAnalytics(){var c=window.ASJ_ANALYTICS;if(!c)return;
 if(navigator.doNotTrack==='1'||window.doNotTrack==='1')return;var s;
 try{var q=location.search;if(/[?&]notrack=1(&|$)/.test(q))localStorage.setItem('asj-notrack','1');else if(/[?&]notrack=0(&|$)/.test(q))localStorage.removeItem('asj-notrack');if(localStorage.getItem('asj-notrack')==='1')return;}catch(e){}
 if(c.goatcounter){s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';
 s.setAttribute('data-goatcounter','https://'+c.goatcounter+'.goatcounter.com/count');document.head.appendChild(s);}
 if(c.cloudflare){s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';
-s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.head.appendChild(s);}}());
+s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.head.appendChild(s);}}
 </script>
+<script src="/data/analytics-config.js" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 '@
 
 $built = 0
@@ -243,10 +263,11 @@ function ConvertTo-UtcStamp([string]$Value) {
   try { return [DateTimeOffset]::Parse($Value, [Globalization.CultureInfo]::InvariantCulture).UtcDateTime } catch { return $null }
 }
 function Read-StoryPageHead([string]$Path) {
-  # The first 8 KB hold the JSON-LD (datePublished, about 4 KB in) and the <h1> (6 KB).
+  # The first 16 KB hold the JSON-LD (datePublished, about 4 KB in) and the <h1> (6-7 KB;
+  # a long citation list pushes it further).
   # A moved page (see Write-MovedStoryPage) carries its date in a meta tag instead.
   $fs = [IO.File]::OpenRead($Path)
-  try { $buf = New-Object byte[] 8192; $n = $fs.Read($buf, 0, $buf.Length) } finally { $fs.Dispose() }
+  try { $buf = New-Object byte[] 16384; $n = $fs.Read($buf, 0, $buf.Length) } finally { $fs.Dispose() }
   $text = [Text.Encoding]::UTF8.GetString($buf, 0, $n)
   $d = [regex]::Match($text, '"datePublished":"([^"]+)"|<meta name="asj-published" content="([^"]+)"')
   $h = [regex]::Match($text, '<h1>([^<]*)</h1>')
@@ -512,6 +533,7 @@ $analytics
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"$(JsonEsc $name)","item":"$canonical"}]}</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
 </head>
 <body>
@@ -623,7 +645,7 @@ foreach ($sp in $storyPages) {
   if ($published) { [void]$ld.Append(",""datePublished"":""$published"",""dateModified"":""$published""") }
   [void]$ld.Append(",""inLanguage"":""en"",""isAccessibleForFree"":true")
   # Organization as author: the desk is the byline; no personal name is ever published.
-  [void]$ld.Append(",""publisher"":{""@type"":""NewsMediaOrganization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/"",""logo"":{""@type"":""ImageObject"",""url"":""$BaseUrl/icon-512.png""}}")
+  [void]$ld.Append(",""publisher"":{""@type"":""NewsMediaOrganization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/"",""logo"":{""@type"":""ImageObject"",""url"":""$BaseUrl/icon-512.png""}$sameAsLd}")
   [void]$ld.Append(",""author"":{""@type"":""Organization"",""name"":""The African Street Journal"",""url"":""$BaseUrl/about/""}")
   [void]$ld.Append(",""image"":[""$ogImage""],""mainEntityOfPage"":""$storyCanonical""")
   [void]$ld.Append(",""contentLocation"":{""@type"":""Country"",""name"":""$(JsonEsc $sp.country)""}")
@@ -646,7 +668,15 @@ foreach ($sp in $storyPages) {
     "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/"">$(if (Get-ShownTopic $_.brief.topic) { '<span class="rel-topic">' + (Esc $_.brief.topic) + '</span>' })$(Esc $_.brief.headline)</a></li>" }) -join '')
   $latestHtml = (@($leadPages | Where-Object { $_.code -ne $sp.code } | Select-Object -First 4 | ForEach-Object {
     "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""rel-topic"">$(Esc $_.country)</span>$(Esc $_.brief.headline)</a></li>" }) -join '')
-  $storyTitle = "$([string]$b.headline) | The African Street Journal"
+  # The country in the title when the headline does not name it: people search "kenya"
+  # plus a name, and the title is what the result shows.
+  $storyTitle = if (([string]$b.headline) -match [regex]::Escape([string]$sp.country)) { "$([string]$b.headline) | The African Street Journal" }
+                else { "$([string]$b.headline) | $($sp.country) | The African Street Journal" }
+  # Home > Country > story, shown in search results in place of the bare address.
+  $crumbs = "{""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[" +
+    "{""@type"":""ListItem"",""position"":1,""name"":""The African Street Journal"",""item"":""$BaseUrl/""}," +
+    "{""@type"":""ListItem"",""position"":2,""name"":""$(JsonEsc $sp.country)"",""item"":""$BaseUrl/$($sp.code)/""}," +
+    "{""@type"":""ListItem"",""position"":3,""name"":""$(JsonEsc $b.headline)"",""item"":""$storyCanonical""}]}"
   $storyHtml = @"
 <!doctype html>
 <html lang="en">
@@ -682,6 +712,7 @@ $analytics
 <meta name="twitter:description" content="$(Esc $dek)">
 <meta name="twitter:image" content="$ogImage">
 <script type="application/ld+json">$($ld.ToString())</script>
+<script type="application/ld+json">$crumbs</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
 </head>
 <body>
@@ -724,7 +755,10 @@ $($srcHtml.ToString())
   [IO.File]::WriteAllText((Join-Path $storyDirPath 'index.html'), $storyHtml, (New-Object Text.UTF8Encoding($false)))
   $storyKept["$($sp.code)/$($sp.slug)"] = $true
   $urls.Add($storyCanonical)
-  $feedItems.Add([pscustomobject]@{ title = [string]$b.headline; link = $storyCanonical; dek = $dek; published = $published; country = [string]$sp.country; code = [string]$sp.code })
+  $imgFile = if ($hasShare) { $shareFile } else { Join-Path $root "og\$($sp.code).jpg" }
+  $imgBytes = if (Test-Path $imgFile) { (Get-Item -LiteralPath $imgFile).Length } else { 0 }
+  $feedItems.Add([pscustomobject]@{ title = [string]$b.headline; link = $storyCanonical; dek = $dek; published = $published; country = [string]$sp.country; code = [string]$sp.code
+                                    image = $ogImage; imageBytes = $imgBytes; shareImage = $(if ($hasShare) { $ogImage } else { '' }) })
   $storyBuilt++
 }
 
@@ -748,7 +782,8 @@ foreach ($p in $pagesOnDisk) {
     continue
   }
   $lastmod = if ($p.dated) { $p.when.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture) } else { '' }
-  $earlierUrls.Add([pscustomobject]@{ url = "$BaseUrl/$($p.code)/$($p.slug)/"; lastmod = $lastmod })
+  $earlierUrls.Add([pscustomobject]@{ url = "$BaseUrl/$($p.code)/$($p.slug)/"; lastmod = $lastmod
+                                      image = $(if (Test-Path (Join-Path $p.dir 'share.jpg')) { "$BaseUrl/$($p.code)/$($p.slug)/share.jpg" } else { '' }) })
 }
 Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected" -ForegroundColor DarkGray
 
@@ -927,6 +962,7 @@ foreach ($ts in $topicOrder) {
 <meta property="og:image" content="$BaseUrl/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">$tLd</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"Topics","item":"$BaseUrl/topics/"},{"@type":"ListItem","position":3,"name":"$(JsonEsc $tName)","item":"$tUrl"}]}</script>
 $analytics
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
 </head>
@@ -977,6 +1013,97 @@ $analytics
 [IO.File]::WriteAllText((Join-Path $topicsRoot 'index.html'), $tiHtml, (New-Object Text.UTF8Encoding($false)))
 $urls.Add($tiUrl)
 Write-Host "[static] $($topicOrder.Count) topic pages" -ForegroundColor DarkGray
+
+# --- digest: the edition as posts to paste -----------------------------------------
+# /digest/ (noindex, not in the sitemap). WhatsApp and Facebook are where most readers
+# in Africa are, and neither lets a site post for itself, so the desk writes the posts
+# and the owner pastes them: the day's five best stories (one per country, by the
+# desk's selection score) for WhatsApp, Facebook and X, then each country's top three
+# for its own groups. "Send" opens WhatsApp or Telegram with the text filled in.
+$digestPicks = New-Object System.Collections.Generic.List[object]
+foreach ($sp in $storyPages) {
+  if (-not $storyKept.ContainsKey("$($sp.code)/$($sp.slug)")) { continue }
+  $score = 0.0
+  if ($null -ne $sp.brief.selectionScore) { [void][double]::TryParse([string]$sp.brief.selectionScore, [Globalization.NumberStyles]::Float, [Globalization.CultureInfo]::InvariantCulture, [ref]$score) }
+  $digestPicks.Add([pscustomobject]@{ code = $sp.code; country = [string]$sp.country; headline = [string]$sp.brief.headline
+                                      url = "$BaseUrl/$($sp.code)/$($sp.slug)/"; score = $score
+                                      when = (ConvertTo-UtcStamp (Get-IsoInstant $sp.brief.published)) })
+}
+$digestDay = (Get-Date).ToUniversalTime().ToString('d MMM yyyy', [Globalization.CultureInfo]::InvariantCulture)
+$fresh = (Get-Date).ToUniversalTime().AddHours(-30)
+$top = New-Object System.Collections.Generic.List[object]
+$topSeen = @{}
+foreach ($d in ($digestPicks | Where-Object { $_.when -and $_.when -ge $fresh } | Sort-Object -Property @{ Expression = { $_.score }; Descending = $true }, @{ Expression = { $_.url } })) {
+  if ($topSeen.ContainsKey($d.code)) { continue }
+  $topSeen[$d.code] = $true
+  $top.Add($d)
+  if ($top.Count -ge 5) { break }
+}
+function New-DigestBlock([string]$Id, [string]$Label, [string]$Text, [string]$FirstUrl) {
+  $wa = 'https://wa.me/?text=' + [Uri]::EscapeDataString($Text)
+  $tg = 'https://t.me/share/url?url=' + [Uri]::EscapeDataString($FirstUrl) + '&text=' + [Uri]::EscapeDataString($Text)
+  return "<section class=""dg""><h2 class=""section-label"">$(Esc $Label)</h2><textarea id=""$Id"" readonly rows=""9"">$(Esc $Text)</textarea>" +
+    "<p class=""dg-actions""><button type=""button"" data-copy=""$Id"">Copy</button><a href=""$(Esc $wa)"" target=""_blank"" rel=""noopener"">Send to WhatsApp</a><a href=""$(Esc $tg)"" target=""_blank"" rel=""noopener"">Send to Telegram</a></p></section>"
+}
+$digestBody = New-Object System.Text.StringBuilder
+if ($top.Count) {
+  $waLines = @("*The African Street Journal* - $digestDay", '')
+  foreach ($d in $top) { $waLines += "*$($d.country)*: $($d.headline)"; $waLines += $d.url; $waLines += '' }
+  $waLines += "All 55 countries, every story sourced: $BaseUrl/"
+  [void]$digestBody.Append((New-DigestBlock 'dg-wa' 'WhatsApp - groups, Status, Channel' ($waLines -join "`n") $top[0].url))
+  $fbLines = @("Today on The African Street Journal ($digestDay):", '')
+  foreach ($d in $top) { $fbLines += "$($d.country) - $($d.headline)"; $fbLines += $d.url; $fbLines += '' }
+  $fbLines += "Every country, every source: $BaseUrl/"
+  [void]$digestBody.Append((New-DigestBlock 'dg-fb' 'Facebook page or group' ($fbLines -join "`n") $top[0].url))
+  $xText = "$($top[0].country): $($top[0].headline) $($top[0].url)"
+  [void]$digestBody.Append("<section class=""dg""><h2 class=""section-label"">X - the lead story</h2><textarea id=""dg-x"" readonly rows=""3"">$(Esc $xText)</textarea><p class=""dg-actions""><button type=""button"" data-copy=""dg-x"">Copy</button><a href=""https://x.com/intent/post?text=$([Uri]::EscapeDataString($xText))"" target=""_blank"" rel=""noopener"">Post on X</a></p></section>")
+}
+[void]$digestBody.Append('<h2 class="section-label">By country - for country groups</h2>')
+foreach ($c in ($pageCodes | Sort-Object { $info[$_].name })) {
+  $cTop = @($digestPicks | Where-Object { $_.code -eq $c } | Select-Object -First 3)
+  if (-not $cTop.Count) { continue }
+  $cLines = @("*$($info[$c].name) - The African Street Journal*", '')
+  foreach ($d in $cTop) { $cLines += $d.headline; $cLines += $d.url; $cLines += '' }
+  $cLines += "More $($info[$c].name) news: $BaseUrl/$c/"
+  [void]$digestBody.Append("<details><summary>$(Esc $info[$c].name)</summary>$(New-DigestBlock "dg-$c" "$($info[$c].name) - top $($cTop.Count)" ($cLines -join "`n") $cTop[0].url)</details>")
+}
+$digestHtml = @"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Today's posts | The African Street Journal</title>
+<meta name="theme-color" content="#131313">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+<style>.dg{margin:0 0 26px}.dg textarea{width:100%;box-sizing:border-box;background:#1b1b1b;color:#ece8e1;border:1px solid #333;border-radius:6px;padding:12px;font:15px/1.5 system-ui,sans-serif;resize:vertical}
+.dg-actions{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0}.dg-actions a,.dg-actions button{font:600 15px system-ui,sans-serif;padding:9px 14px;border-radius:6px;border:1px solid #3a3a3a;background:#222;color:#f3efe8;text-decoration:none;cursor:pointer}
+.dg-actions a:hover,.dg-actions button:hover{border-color:#5fbf6a}details{border-top:1px solid #262626;padding:10px 0}summary{cursor:pointer;font:600 16px system-ui,sans-serif}</style>
+</head>
+<body>
+<div class="wrap page">
+<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a></div>
+<h1>Today's posts</h1>
+<p class="meta">Written by the desk with this edition ($digestDay). Copy one, or send it straight to WhatsApp or Telegram and pick the group, Status or channel. Not listed in search.</p>
+$($digestBody.ToString())
+</div>
+<script>
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('button[data-copy]'); if (!b) return;
+  var t = document.getElementById(b.getAttribute('data-copy')); if (!t) return;
+  var done = function () { var o = b.textContent; b.textContent = 'Copied'; setTimeout(function () { b.textContent = o; }, 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t.value).then(done, function () { t.select(); document.execCommand('copy'); done(); }); }
+  else { t.select(); document.execCommand('copy'); done(); }
+});
+</script>
+</body>
+</html>
+"@
+$digestDir = Join-Path $root 'digest'
+New-Item -ItemType Directory -Force -Path $digestDir | Out-Null
+[IO.File]::WriteAllText((Join-Path $digestDir 'index.html'), $digestHtml, (New-Object Text.UTF8Encoding($false)))
+Write-Host "[static] digest: $($top.Count) lead stories, posts for $(@($digestPicks | Select-Object -ExpandProperty code -Unique).Count) countries" -ForegroundColor DarkGray
 
 # --- countries hub: the text-only edition ------------------------------------------
 # The homepage is a canvas map: crawlers find no country links there, and on a small
@@ -1051,7 +1178,9 @@ function New-RssFeed([string]$Title, [string]$Link, [string]$Self, [string]$Desc
   # Feed readers ignore this; a browser that opens the feed shows a readable page
   # (feed.xsl) instead of one run-on block of titles, links and dates.
   [void]$sb.AppendLine('<?xml-stylesheet type="text/xsl" href="/feed.xsl"?>')
-  [void]$sb.AppendLine('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>')
+  # media:content and enclosure carry each story's image, so readers and aggregators
+  # (Feedly, Inoreader, Flipboard, Telegram RSS bots) show a picture, not a bare line.
+  [void]$sb.AppendLine('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel>')
   [void]$sb.AppendLine("<title>$(XmlEsc $Title)</title><link>$(XmlEsc $Link)</link><description>$(XmlEsc $Description)</description><language>en</language>")
   [void]$sb.AppendLine("<atom:link href=""$(XmlEsc $Self)"" rel=""self"" type=""application/rss+xml""/>")
   foreach ($fi in @($Items | ForEach-Object { $_ } | Select-Object -First 100)) {
@@ -1059,6 +1188,9 @@ function New-RssFeed([string]$Title, [string]$Link, [string]$Self, [string]$Desc
     try { $pd = [datetime]::Parse([string]$fi.published, [Globalization.CultureInfo]::InvariantCulture).ToUniversalTime() } catch { }
     [void]$sb.Append("<item><title>$(XmlEsc $fi.title)</title><link>$(XmlEsc $fi.link)</link><guid isPermaLink=""true"">$(XmlEsc $fi.link)</guid><category>$(XmlEsc $fi.country)</category><description>$(XmlEsc $fi.dek)</description>")
     if ($pd) { [void]$sb.Append("<pubDate>$($pd.ToString('r', [Globalization.CultureInfo]::InvariantCulture))</pubDate>") }
+    if ($fi.image) {
+      [void]$sb.Append("<enclosure url=""$(XmlEsc $fi.image)"" length=""$([long]$fi.imageBytes)"" type=""image/jpeg""/><media:content url=""$(XmlEsc $fi.image)"" medium=""image"" type=""image/jpeg"" width=""1200"" height=""630""/>")
+    }
     [void]$sb.AppendLine('</item>')
   }
   [void]$sb.AppendLine('</channel></rss>')
@@ -1097,14 +1229,20 @@ Write-Host "[static] feed.xml and $countryFeeds country feeds"
 $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
 $sm = New-Object System.Text.StringBuilder
 [void]$sm.AppendLine('<?xml version="1.0" encoding="UTF-8"?>')
-[void]$sm.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+[void]$sm.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">')
+# A story's own share image is listed with its page, so Google Images and Discover can
+# find it. The country cards are shared by every story and are left out.
+$pageImage = @{}
+foreach ($fi in $feedItems) { if ($fi.shareImage) { $pageImage[$fi.link] = $fi.shareImage } }
 foreach ($u in $urls) {
-  [void]$sm.AppendLine("  <url><loc>$u</loc><lastmod>$today</lastmod><changefreq>daily</changefreq></url>")
+  $im = if ($pageImage.ContainsKey($u)) { "<image:image><image:loc>$($pageImage[$u])</image:loc></image:image>" } else { '' }
+  [void]$sm.AppendLine("  <url><loc>$u</loc><lastmod>$today</lastmod><changefreq>daily</changefreq>$im</url>")
 }
 # Earlier story pages (kept for -StoryDays): they do not change once published.
 foreach ($e in $earlierUrls) {
   $lm = if ($e.lastmod) { "<lastmod>$($e.lastmod)</lastmod>" } else { '' }
-  [void]$sm.AppendLine("  <url><loc>$($e.url)</loc>$lm</url>")
+  $im = if ($e.image) { "<image:image><image:loc>$($e.image)</image:loc></image:image>" } else { '' }
+  [void]$sm.AppendLine("  <url><loc>$($e.url)</loc>$lm$im</url>")
 }
 [void]$sm.AppendLine('</urlset>')
 [IO.File]::WriteAllText((Join-Path $root 'sitemap.xml'), $sm.ToString(), (New-Object Text.UTF8Encoding($false)))

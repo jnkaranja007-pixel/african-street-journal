@@ -2081,3 +2081,16 @@ main{position:relative}
 .cv-earlier li a span{display:block;font:500 11px/1.4 var(--mono);color:#8a847b;margin-bottom:3px;font-weight:500}
 .cv-earlier li a:hover,.cv-earlier li a:focus-visible{color:var(--green-bright)}
 .cv-earlier-all{display:inline-block;margin-top:12px;color:var(--green-bright);font-size:13px;text-decoration:none}
+/* Return-reader prompts (app.js renderFollowNudge, maybeShowInstallPrompt). */
+.cv-follow{margin-top:22px;padding:14px 16px;border:1px solid var(--green-dim);background:rgba(76,175,80,0.06)}
+.cv-follow-copy{margin:0;font:400 15px/1.45 var(--sans);color:var(--text)}
+.cv-follow-copy b{color:var(--green-bright);font-weight:650}
+.cv-follow-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:12px}
+.cv-follow-actions a{color:var(--green-bright);font:600 14px var(--sans);text-decoration:none}
+.cv-follow-go,.asj-install-actions button[data-install]{font:650 14px var(--sans);color:#0f0f0f;background:var(--green-bright);border:0;padding:9px 14px;cursor:pointer}
+.cv-follow-later,.asj-install-actions button[data-later]{font:500 14px var(--sans);color:var(--text-muted);background:none;border:0;padding:9px 4px;cursor:pointer}
+.cv-follow-go:focus-visible,.cv-follow-later:focus-visible,.asj-install-actions button:focus-visible{outline:2px solid var(--green-bright);outline-offset:2px}
+.asj-install{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:900;max-width:520px;margin:0 auto;padding:14px 16px;background:var(--surface-raised);border:1px solid var(--green-dim);box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.asj-install p{margin:0;font:400 15px/1.45 var(--sans);color:var(--text)}
+.asj-install p b{color:var(--text);font-weight:650}
+.asj-install-actions{display:flex;gap:12px;margin-top:10px}
