@@ -35,7 +35,9 @@ param(
   # Tuned so the mean, median and 95th percentile match the Natural Earth images within
   # a few levels (Kenya 108/101/166 against 110/105/166) at nine times the detail.
   [double]$ToneBase = 0.25, [double]$ToneTint = 0.52, [double]$ToneShadow = 2.7, [double]$ToneLight = 3.6,
-  [string[]]$Only = @()
+  [string[]]$Only = @(),
+  # Only (re)write the small previews (<cc>-s.jpg) from the images already in data/relief.
+  [switch]$PreviewsOnly
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
@@ -207,12 +209,43 @@ function Get-TileY([double]$Lat, [int]$Z) {
   [int][Math]::Floor((1 - [Math]::Log([Math]::Tan($r) + 1 / [Math]::Cos($r)) / [Math]::PI) / 2 * [Math]::Pow(2, $Z))
 }
 
+# A small copy of each country image (<cc>-s.jpg, 320 px, about 15 KB), which the Atlas
+# draws first: the full image is 100-560 KB, several seconds on a phone connection, and the
+# map used to appear flat and then change under the reader when the relief arrived.
+function Write-ReliefPreview([string]$Source, [string]$Target, [int]$MaxPixels = 320) {
+  $src = [System.Drawing.Image]::FromFile($Source)
+  try {
+    $s = [Math]::Min(1.0, $MaxPixels / [double][Math]::Max($src.Width, $src.Height))
+    $w = [Math]::Max(1, [int][Math]::Round($src.Width * $s)); $h = [Math]::Max(1, [int][Math]::Round($src.Height * $s))
+    $bmp = New-Object System.Drawing.Bitmap $w, $h
+    $g = [System.Drawing.Graphics]::FromImage($bmp)
+    $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+    $g.DrawImage($src, 0, 0, $w, $h)
+    $g.Dispose()
+    $codec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
+    $ps = New-Object System.Drawing.Imaging.EncoderParameters 1
+    $ps.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality), ([long]72)
+    $bmp.Save($Target, $codec, $ps)
+    $bmp.Dispose()
+  } finally { $src.Dispose() }
+  return (Get-Item $Target).Length
+}
+
 $CODES = @('dz','ao','bj','bw','bf','bi','cm','cv','cf','td','km','cg','cd','ci','dj','eg','gq','er','sz','et',
            'ga','gm','gh','gn','gw','ke','ls','lr','ly','mg','mw','ml','mr','mu','ma','mz','na','ne','ng','rw',
            'st','sn','sc','sl','so','za','ss','sd','tz','tg','tn','ug','zm','zw','eh')
 # -File passes "-Only rw,ke" as one string.
 $Only = @($Only | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 if ($Only.Count) { $CODES = @($CODES | Where-Object { $Only -contains $_ }) }
+if ($PreviewsOnly) {
+  $bytes = 0L
+  foreach ($cc in $CODES) {
+    $full = Join-Path $outDir "$cc.jpg"
+    if (Test-Path $full) { $bytes += Write-ReliefPreview $full (Join-Path $outDir "$cc-s.jpg") }
+  }
+  Write-Host ("[relief] {0} previews, {1} KB" -f $CODES.Count, [Math]::Round($bytes / 1KB))
+  return
+}
 $inv = [Globalization.CultureInfo]::InvariantCulture
 $indexPath = Join-Path $outDir 'index.json'
 $index = [ordered]@{}
@@ -302,7 +335,10 @@ foreach ($p in $plans) {
     w = [Math]::Round($p.west, 4); e = [Math]::Round($p.east, 4)
     n = [Math]::Round($p.north, 4); s = [Math]::Round($p.south, 4)
   }
-  if ($p.focus) { $focusIndex[$p.cc] = $box } else { $index[$p.cc] = $box }
+  if ($p.focus) { $focusIndex[$p.cc] = $box } else {
+    $index[$p.cc] = $box
+    $total += Write-ReliefPreview $out (Join-Path $outDir "$($p.cc)-s.jpg")
+  }
   Write-Host ("  {0,-9} {1}x{2} px  z{3}  {4:N0} m/px  x{5:N1}  {6} KB" -f ($p.file -replace '\.jpg$', ''), $p.W, $p.H, $p.z, $metres, $ex, [Math]::Round($bytes / 1KB))
 }
 # Each country's box, with its island crop's box as "focus" where it has one.

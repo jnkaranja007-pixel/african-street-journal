@@ -519,7 +519,9 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-layer-pill::before{content:"";width:9px;height:9px;border-radius:50%;border:1px solid currentColor;opacity:0.58;box-shadow:inset 0 0 0 2px rgba(0,0,0,0.55)}
 .cv-layer-pill[aria-pressed="true"]::before{background:currentColor;opacity:1;box-shadow:inset 0 0 0 2px rgba(0,0,0,0.72),0 0 6px currentColor}
 .cv-map-stage{position:relative;flex:1;min-height:0;display:flex}
-.cv-country-map{position:relative;width:100%;aspect-ratio:var(--map-aspect,4/3);min-height:var(--map-minh,320px);display:block;background:linear-gradient(145deg,#141714,#101210)}
+.cv-country-map{position:relative;width:100%;aspect-ratio:var(--map-aspect,4/3);min-height:var(--map-minh,320px);display:block;background:linear-gradient(145deg,#141714,#101210);transition:opacity .22s ease}
+/* Held back until its relief can be drawn (holdAtlasForRelief), then faded in, so the map and its relief arrive together. */
+.cv-country-map.cv-map-waiting{opacity:0}
 .cv-map-portal{display:none}
 .cv-map-portal.active{display:flex;position:absolute;inset:0;z-index:100;background:#131313}
 .cv-map-portal.active .cv-map-wrap{flex:1;min-height:0;border:0;border-radius:0;background:transparent}

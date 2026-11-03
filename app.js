@@ -3752,6 +3752,7 @@ function drawCountryMap(countryId, countryPath) {
     ? { shape: new Path2D(detail.d), bbox: detail.bbox }
     : countryPath;
   if (!mapPath) return;
+  if (holdAtlasForRelief(countryId)) return;
   syncMobileAtlasStage(countryId, mapPath, isFs);
   const rect = countryMapCanvas.getBoundingClientRect();
   const baseDpr = Math.min(2, window.devicePixelRatio || 1);
@@ -4117,7 +4118,7 @@ function reliefNoise(x, y, seed) {
    longitude/latitude projection, so the image is placed by its corners. This replaced a
    "Stylized relief" that was sine waves seeded by the country code, with contour lines
    drawn on them: hills and ridges where there are none. Not drawn in data-saver mode. */
-const RELIEF = { index: null, loading: null, images: new Map() };
+const RELIEF = { index: null, loading: null, images: new Map(), waitStart: new Map(), holdTimer: 0 };
 
 function loadReliefIndex() {
   if (RELIEF.index || RELIEF.loading) return RELIEF.loading;
@@ -4158,29 +4159,62 @@ if (!window.ASJ_SAVE_DATA) (window.requestIdleCallback || (fn => setTimeout(fn, 
 // that). Not in data-saver mode or on a slow connection, where relief is not drawn.
 function prefetchRelief(countryId) {
   if (window.ASJ_SAVE_DATA) return;
+  RELIEF.waitStart.set(countryId, performance.now());
+  startReliefLoad(countryId);
+}
+function startReliefLoad(countryId) {
   loadReliefIndex()?.then(index => {
     const box = index?.[countryId];
     if (!box) return;
+    // The ~15 KB preview first, so the Atlas has relief to show within moments.
+    reliefImage(countryId + '-s', countryId);
     reliefImage(countryId, countryId);
     if (box.focus) reliefImage(countryId + '-focus', countryId);
   });
 }
 
-// Draws the country's relief image; false when it is not there (yet), and the caller
-// draws the flat texture. A first call starts the load and repaints when it lands.
+// Map and relief appear together. For up to RELIEF_WAIT_MS after a country opens, the
+// Atlas stays faded out until it can draw relief (the preview at least). It used to draw
+// at once with a flat texture and the relief arrived seconds later on a phone - Rwanda's
+// image is 560 KB - changing the map under the reader. Past the wait it draws anyway.
+const RELIEF_WAIT_MS = 2500;
+function reliefDrawable(countryId) {
+  if (!RELIEF.index) return false;
+  if (!RELIEF.index[countryId]) return true;
+  return reliefReady(RELIEF.images.get(countryId)) || reliefReady(RELIEF.images.get(countryId + '-s'));
+}
+function holdAtlasForRelief(countryId) {
+  const waiting = mapLayers.terrain && !window.ASJ_SAVE_DATA && !reliefDrawable(countryId);
+  if (!RELIEF.waitStart.has(countryId)) RELIEF.waitStart.set(countryId, performance.now());
+  const left = RELIEF_WAIT_MS - (performance.now() - RELIEF.waitStart.get(countryId));
+  if (waiting && left > 0) {
+    countryMapCanvas.classList.add('cv-map-waiting');
+    if (!RELIEF.images.has(countryId + '-s')) startReliefLoad(countryId);
+    clearTimeout(RELIEF.holdTimer);
+    RELIEF.holdTimer = setTimeout(() => repaintAtlasFor(countryId), left + 20);
+    return true;
+  }
+  countryMapCanvas.classList.remove('cv-map-waiting');
+  clearTimeout(RELIEF.holdTimer);
+  return false;
+}
+
+// Draws the country's relief image - the full one once it has arrived, the preview until
+// then; false when neither is there (yet), and the caller draws the flat texture.
 function drawCountryRelief(countryId, project) {
   if (window.ASJ_SAVE_DATA) return false;
   if (!RELIEF.index) { loadReliefIndex()?.then(() => repaintAtlasFor(countryId)); return false; }
   const box = RELIEF.index[countryId];
   if (!box) return false;
-  const img = reliefImage(countryId, countryId);
+  const full = reliefImage(countryId, countryId);
+  const img = reliefReady(full) ? full : RELIEF.images.get(countryId + '-s');
   if (!reliefReady(img)) return false;
   const [x0, y0] = project(box.w, box.n);
   const [x1, y1] = project(box.e, box.s);
   countryMapCtx.imageSmoothingEnabled = true;
   countryMapCtx.imageSmoothingQuality = 'high';
   countryMapCtx.drawImage(img, x0, y0, x1 - x0, y1 - y0);
-  drawReliefFocus(countryId, box, img, x1 - x0, project);
+  if (img === full) drawReliefFocus(countryId, box, img, x1 - x0, project);
   return true;
 }
 
