@@ -1771,10 +1771,18 @@ function openCountry(countryId, sourceElement = document.activeElement, options 
   const countryPath = pathById[countryId];
   if (!info) return;
   const wasOpen = countryView.classList.contains('open');
+  // Paging to the next country keeps the reader's place, on phone and desktop alike: a
+  // reader down in a tab lands at the top of the same tab for the new country (not at a
+  // pixel offset - the header above and the list below differ per country); a reader
+  // still at the header stays there. A re-render of the same country (its data arriving)
+  // moves nobody.
+  const keepPanelStart = wasOpen && activeCountryMap?.countryId !== countryId &&
+    countryView.scrollTop >= panelStartScrollTop() - 8;
   if (ROUTE_AUDIENCES.includes(options.audience) && audienceSelect) audienceSelect.value = options.audience;
   ensureCountryData(countryId);
   prefetchRelief(countryId);
-  lastFocus = sourceElement;
+  // The element to return focus to on close: what opened the view, not the Next button.
+  if (!wasOpen) lastFocus = sourceElement;
   document.getElementById('cv-region').textContent = info.region;
   document.getElementById('cv-name').textContent = info.name;
   document.getElementById('cv-capital').textContent = info.capital;
@@ -1827,7 +1835,12 @@ function openCountry(countryId, sourceElement = document.activeElement, options 
   updateAudienceMeta();
   updateMapToolbarTitle();
   updateMapPortalChrome();
-  backBtn.focus();
+  if (keepPanelStart) countryView.scrollTop = panelStartScrollTop();
+  // A fresh open moves focus to Back. Paging leaves it on the control that paged, so Next
+  // can be pressed again; Back sits in the sticky header, and focusing a sticky element
+  // scrolls the view to the top - which is what threw readers out of the Atlas.
+  if (!wasOpen) backBtn.focus();
+  else if (!countryView.contains(document.activeElement)) backBtn.focus({ preventScroll: true });
 }
 
 // Header meta line: growth (with vintage), live USD reference rate, and market code.
@@ -2024,20 +2037,23 @@ function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
   nav.hidden = sections.length < 3;
 }
 
-function showMobilePanelStart() {
-  if (!mobileDossierMedia.matches || !countryView.classList.contains('open')) return;
+// The scroll position that puts the top of the panels just under the sticky header and
+// tab row (both sticky on phone and desktop).
+function panelStartScrollTop() {
   const body = document.querySelector('.cv-body');
   const carousel = document.querySelector('.cv-carousel');
   const headerHeight = document.querySelector('.cv-header')?.offsetHeight || 0;
   const navHeight = document.getElementById('cv-dots')?.offsetHeight || 0;
-  requestAnimationFrame(() => {
-    const top = Math.max(0, (body?.offsetTop || 0) + (carousel?.offsetTop || 0) - headerHeight - navHeight);
-    countryView.scrollTo({ top, behavior: 'auto' });
-  });
+  return Math.max(0, (body?.offsetTop || 0) + (carousel?.offsetTop || 0) - headerHeight - navHeight);
 }
 
-function showMobileSignalStart() {
-  showMobilePanelStart();
+// A tab opens at its top, as the next country does. Phones always bring the panels up
+// under the tab row (they start below the fold); desktop only when the reader is already
+// down in a panel, so a reader looking at the header is not moved.
+function showPanelStart() {
+  if (!countryView.classList.contains('open')) return;
+  if (!mobileDossierMedia.matches && countryView.scrollTop < panelStartScrollTop() - 8) return;
+  requestAnimationFrame(() => countryView.scrollTo({ top: panelStartScrollTop(), behavior: 'auto' }));
 }
 
 backBtn.addEventListener('click', closeCountry);
@@ -2048,7 +2064,7 @@ document.getElementById('cv-map-next')?.addEventListener('click', () => openCoun
 dots.forEach(dot => dot.addEventListener('click', () => {
   setPanel(Number(dot.dataset.panel));
   syncRoute();
-  showMobilePanelStart();
+  showPanelStart();
 }));
 document.getElementById('cv-dots')?.addEventListener('keydown', event => {
   if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
@@ -2057,8 +2073,9 @@ document.getElementById('cv-dots')?.addEventListener('keydown', event => {
     : event.key === 'End' ? dots.length - 1
     : (activePanelIndex + (event.key === 'ArrowLeft' ? -1 : 1) + dots.length) % dots.length;
   setPanel(next);
-  dots[next]?.focus();
+  dots[next]?.focus({ preventScroll: true });
   syncRoute();
+  showPanelStart();
 });
 document.querySelectorAll('.cv-carousel-arrow[data-carousel="cv-info-grid"]').forEach(button => {
   button.addEventListener('click', () => scrollActiveInfoGrid(button.dataset.direction || 'next'));
@@ -2086,7 +2103,7 @@ audienceTabs.forEach(tab => tab.addEventListener('click', () => {
   audienceSelect.value = mode;
   if (mobileDossierMedia.matches) infoGridIndexByMode[mode] = 0;
   audienceSelect.dispatchEvent(new Event('change'));
-  showMobileSignalStart();
+  showPanelStart();
 }));
 document.addEventListener('fx-ready', () => {
   if (!activeCountryMap) return;
