@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-03T09:17:44+00:00",
+  "generated": "2026-11-03T18:06:50+00:00",
   "dates": {
     "dz": "2026-11-03T09:17:44+00:00",
     "ao": "2026-11-03T09:17:44+00:00",
@@ -37,11 +37,11 @@
     "ly": "2026-11-03T09:17:44+00:00",
     "mg": "2026-11-03T09:17:44+00:00",
     "mw": "2026-11-03T09:17:44+00:00",
-    "ml": "2026-11-03T09:17:44+00:00",
+    "ml": "2026-11-03T18:06:50+00:00",
     "mr": "2026-11-03T09:17:44+00:00",
     "mu": "2026-11-03T09:17:44+00:00",
     "mz": "2026-11-03T09:17:44+00:00",
-    "na": "2026-11-03T09:17:44+00:00",
+    "na": "2026-11-03T18:06:50+00:00",
     "ne": "2026-11-03T09:17:44+00:00",
     "rw": "2026-11-03T09:17:44+00:00",
     "st": "2026-11-03T09:17:44+00:00",
@@ -9411,165 +9411,25 @@
     ],
     "ml": [
       {
-        "articleId": "8ad91942c49ff2510953",
-        "headline": "Mali journalists' murder case sees partial declassification",
-        "dek": "A French court seeks to declassify a note from April 2024 related to the 2013 killings.",
-        "paragraphs": [
-          "13 years after the murder of journalists Ghislaine Dupont and Claude Verlon in Kidal, Mali, the judicial investigation in France continues. The case involves kidnapping, sequestration, and assassination linked to terrorism. On April 15, 2026, the French Commission for National Defence Secrecy partially approved declassifying a note from the French Ministry of Armed Forces dated April 24, 2024, following a request from investigating judge Valéry Muller.",
-          "This decision marks the fourth declassification procedure in the case, with previous ones in 2016, 2017, and 2023. No trial has yet established full responsibility for the deaths. Seidane Ag Hitta is named in the investigation as a suspected instigator, identified by Malian authorities as a leader in the Group to Support Islam and Muslims in the Kidal region. A reward of 500 million FCFA was offered in 2026 for information leading to his arrest.",
-          "Civil parties in the case are seeking international arrest warrants for Seidane Ag Hitta and Hamadi Ag Mohamed, also cited as a suspected member of the commando unit. The ongoing investigations aim to determine the individual roles of those implicated in the kidnapping and assassination of the two journalists."
-        ],
-        "body": "13 years after the murder of journalists Ghislaine Dupont and Claude Verlon in Kidal, Mali, the judicial investigation in France continues. The case involves kidnapping, sequestration, and assassination linked to terrorism. On April 15, 2026, the French Commission for National Defence Secrecy partially approved declassifying a note from the French Ministry of Armed Forces dated April 24, 2024, following a request from investigating judge Valéry Muller.\n\nThis decision marks the fourth declassification procedure in the case, with previous ones in 2016, 2017, and 2023. No trial has yet established full responsibility for the deaths. Seidane Ag Hitta is named in the investigation as a suspected instigator, identified by Malian authorities as a leader in the Group to Support Islam and Muslims in the Kidal region. A reward of 500 million FCFA was offered in 2026 for information leading to his arrest.\n\nCivil parties in the case are seeking international arrest warrants for Seidane Ag Hitta and Hamadi Ag Mohamed, also cited as a suspected member of the commando unit. The ongoing investigations aim to determine the individual roles of those implicated in the kidnapping and assassination of the two journalists.",
-        "why": "The investigation into the 2013 murders of two journalists in Mali is progressing with partial declassification of documents, potentially leading to accountability.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 0,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
-          },
-          "investors": {
-            "score": 0,
-            "why": "The story concerns a legal investigation into a past event and does not directly impact current business or investment activities."
-          },
-          "diaspora": {
-            "score": 0,
-            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
-          }
-        },
-        "topic": "News",
-        "published": "2026-11-02T10:10:16Z",
-        "sourceTitle": "Journalistes : le 2 novembre entre mémoire et attente de justice",
-        "editorialScore": 20.05,
-        "selectionScore": 20.05,
-        "confidence": "high",
-        "corroboration": 5,
-        "scoreBreakdown": {
-          "relevance": 0.5,
-          "corroboration": 7.5,
-          "sourceQuality": 1.75,
-          "freshness": 2.5,
-          "publicImpact": 5.3,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "5-source corroboration",
-          "published within 36h",
-          "urgent public consequence",
-          "specific figure"
-        ],
-        "countryMatch": "domestic",
-        "wordCount": 190,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "published": "2026-11-02T10:10:16Z",
-            "name": "Journal du Mali",
-            "url": "https://journaldumali.com/journalistes-le-2-novembre-entre-memoire-et-attente-de-justice/"
-          },
-          {
-            "published": "2026-11-02T15:28:57Z",
-            "name": "Studio Tamani",
-            "url": "https://www.studiotamani.org/209785-siao-2026-les-artisans-africains-a-la-conquete-de-nouveaux-marches"
-          },
-          {
-            "published": "2026-11-03T06:26:16Z",
-            "name": "Mali Actu",
-            "url": "https://maliactu.net/cameroun-le-proces-martinez-zogo-a-lepreuve-de-limpunite/"
-          }
-        ]
-      },
-      {
-        "articleId": "0186eeb768270b01d3d0",
-        "headline": "Malian women's group collects over 58 million FCFA",
-        "dek": "The Femmes solidaires et autonomes du Mali announced their 2026 financial contributions at their annual general assembly.",
-        "paragraphs": [
-          "The Femmes solidaires et autonomes du Mali (FSAM) announced over 58 million FCFA in contributions for 2026 at their ninth annual general assembly on October 31, 2026, in Bamako.",
-          "FSAM international president Aïché Baba Keïta reported the figures at the gathering, which was attended by thousands of women from across Mali. The organization, founded in 2017, supports women's economic initiatives and financial autonomy through trade, agriculture, and local product transformation.",
-          "Past achievements highlighted included the establishment of soap manufacturing units, sachet water production, and peanut paste processing, alongside financing for income-generating activities. The FSAM aims to empower women economically and increase their participation in societal decisions."
-        ],
-        "body": "The Femmes solidaires et autonomes du Mali (FSAM) announced over 58 million FCFA in contributions for 2026 at their ninth annual general assembly on October 31, 2026, in Bamako.\n\nFSAM international president Aïché Baba Keïta reported the figures at the gathering, which was attended by thousands of women from across Mali. The organization, founded in 2017, supports women's economic initiatives and financial autonomy through trade, agriculture, and local product transformation.\n\nPast achievements highlighted included the establishment of soap manufacturing units, sachet water production, and peanut paste processing, alongside financing for income-generating activities. The FSAM aims to empower women economically and increase their participation in societal decisions.",
-        "why": "Thousands of Malian women are directly affected by the FSAM's focus on economic empowerment and financial autonomy.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 65,
-            "why": "The FSAM supports initiatives in agriculture and the transformation of local products, directly impacting rural women."
-          },
-          "investors": {
-            "score": 20,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
-          },
-          "diaspora": {
-            "score": 20,
-            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
-          }
-        },
-        "topic": "Business",
-        "published": "2026-11-03T07:41:02Z",
-        "sourceTitle": "Bamako : les Femmes solidaires et autonomes du Mali annoncent plus de 58 millions de FCFA de cotisations",
-        "editorialScore": 17.75,
-        "selectionScore": 17.75,
-        "confidence": "high",
-        "corroboration": 3,
-        "scoreBreakdown": {
-          "relevance": 4.0,
-          "corroboration": 6.0,
-          "sourceQuality": 1.75,
-          "freshness": 3.5,
-          "publicImpact": 0.0,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in headline",
-          "3-source corroboration",
-          "published within 18h",
-          "specific figure"
-        ],
-        "countryMatch": "title",
-        "wordCount": 106,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "published": "2026-11-03T07:41:02Z",
-            "name": "Mali Actu",
-            "url": "https://maliactu.net/bamako-fsam-cotisations-58-millions-fcfa-2026/"
-          },
-          {
-            "published": "2026-11-02T11:44:07Z",
-            "name": "Studio Tamani",
-            "url": "https://www.studiotamani.org/209757-le-cscom-de-macina-dote-dequipements-solaires"
-          },
-          {
-            "published": "2026-11-02T22:53:00Z",
-            "name": "Bamada.net",
-            "url": "https://bamada.net/le-cscom-de-macina-dote-dequipements-solaires"
-          }
-        ]
-      },
-      {
         "articleId": "485111241cf3b5898aed",
-        "headline": "Mali state security holds lawyer for six months",
-        "dek": "Mountaga Tall, a former minister and democracy advocate, was abducted from his home by state security agents.",
+        "headline": "Mali: state security holds lawyer for six months",
+        "dek": "Mountaga Tall, a former minister, was abducted from his home by state security agents.",
         "paragraphs": [
-          "Malian state security agents abducted lawyer and former minister Mountaga Tall from his home six months ago, on November 2, 2026. Tall, an advocate for democracy, was taken by hooded individuals identified as belonging to state security. Other pro-democracy activists seized by state security in May have recently reappeared, raising concerns about their health.",
-          "The abduction of Mountaga Tall occurred at his residence, according to reports. The involvement of state security in his disappearance and the reappearance of other activists raise serious questions about their current well-being. The health of these recently reappeared activists is a significant concern for their supporters and human rights organizations.",
-          "The case highlights ongoing concerns regarding the actions of state security forces in Mali. The reappearance of other detained activists, whose health is now a worry, suggests a pattern of detentions. Further information on the condition of Tall and the other activists is awaited."
+          "Malian state security agents abducted former minister Mountaga Tall from his home six months ago, on November 2, 2026. The lawyer, known for his pro-democracy advocacy, was taken by hooded individuals. Other pro-democracy activists seized by state security in May have recently reappeared, raising concerns about their health.",
+          "Amnesty International is urging the transitional authorities to investigate the disappearance of Mountaga Tall. His abduction occurred six months to the day after he was taken from his residence. The organization is concerned about the well-being of the detained activists.",
+          "The current season is harvest time in Mali. While some areas have completed their crop collection, others are still engaged in agricultural activities. The disappearance of Mountaga Tall is a matter of ongoing concern for human rights organizations."
         ],
-        "body": "Malian state security agents abducted lawyer and former minister Mountaga Tall from his home six months ago, on November 2, 2026. Tall, an advocate for democracy, was taken by hooded individuals identified as belonging to state security. Other pro-democracy activists seized by state security in May have recently reappeared, raising concerns about their health.\n\nThe abduction of Mountaga Tall occurred at his residence, according to reports. The involvement of state security in his disappearance and the reappearance of other activists raise serious questions about their current well-being. The health of these recently reappeared activists is a significant concern for their supporters and human rights organizations.\n\nThe case highlights ongoing concerns regarding the actions of state security forces in Mali. The reappearance of other detained activists, whose health is now a worry, suggests a pattern of detentions. Further information on the condition of Tall and the other activists is awaited.",
-        "why": "Mountaga Tall, a former minister and democracy advocate, has been held by state security for six months, raising concerns for his well-being and that of other detained activists.",
+        "body": "Malian state security agents abducted former minister Mountaga Tall from his home six months ago, on November 2, 2026. The lawyer, known for his pro-democracy advocacy, was taken by hooded individuals. Other pro-democracy activists seized by state security in May have recently reappeared, raising concerns about their health.\n\nAmnesty International is urging the transitional authorities to investigate the disappearance of Mountaga Tall. His abduction occurred six months to the day after he was taken from his residence. The organization is concerned about the well-being of the detained activists.\n\nThe current season is harvest time in Mali. While some areas have completed their crop collection, others are still engaged in agricultural activities. The disappearance of Mountaga Tall is a matter of ongoing concern for human rights organizations.",
+        "why": "Former minister Mountaga Tall has been held by state security for six months, affecting his family and pro-democracy advocates.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 0,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+            "score": 20,
+            "why": "The story mentions the harvest season in Mali, but does not link it to any specific impact on farmers."
           },
           "investors": {
-            "score": 0,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+            "score": 20,
+            "why": "The report does not mention any companies, markets, or economic activities that would affect investors."
           },
           "diaspora": {
             "score": 21,
@@ -9579,13 +9439,13 @@
         "topic": "Politics",
         "published": "2026-11-03T05:48:30Z",
         "sourceTitle": "Mali: Mountaga Tall enlevé par la Sécurité d'État depuis six mois, des ONG interpellent les autorités de Transition",
-        "editorialScore": 13.95,
-        "selectionScore": 12.95,
-        "confidence": "medium",
-        "corroboration": 1,
+        "editorialScore": 17.95,
+        "selectionScore": 17.95,
+        "confidence": "high",
+        "corroboration": 2,
         "scoreBreakdown": {
           "relevance": 4.0,
-          "corroboration": 0.0,
+          "corroboration": 4.0,
           "sourceQuality": 1.75,
           "freshness": 3.5,
           "publicImpact": 2.7,
@@ -9595,97 +9455,104 @@
         },
         "rankReasons": [
           "country in headline",
+          "2-source corroboration",
           "published within 18h",
           "public-policy consequence",
           "specific figure"
         ],
         "countryMatch": "title",
-        "wordCount": 149,
+        "wordCount": 126,
         "readMinutes": 1,
         "sources": [
           {
             "published": "2026-11-03T05:48:30Z",
-            "name": "RFI Afrique",
-            "url": "https://www.rfi.fr/fr/afrique/20261103-mali-mountaga-tall-enlev%C3%A9-par-la-s%C3%A9curit%C3%A9-d-%C3%A9tat-depuis-six-mois-des-ong-interpellent-les-autorit%C3%A9s-de-transition"
+            "url": "https://www.rfi.fr/fr/afrique/20261103-mali-mountaga-tall-enlev%C3%A9-par-la-s%C3%A9curit%C3%A9-d-%C3%A9tat-depuis-six-mois-des-ong-interpellent-les-autorit%C3%A9s-de-transition",
+            "name": "RFI Afrique"
+          },
+          {
+            "published": "2026-11-03T15:45:28Z",
+            "url": "https://www.studiotamani.org/209838-les-titres-du-3-novembre-2026",
+            "name": "Studio Tamani"
           }
         ]
       },
       {
-        "articleId": "8140c591414453386a54",
-        "headline": "Mali distributes aid to vulnerable populations",
-        "dek": "Rice, oil, and school kits were given to people with disabilities in Kadiolo, Bafoulabé, and Mahina.",
+        "articleId": "9b4334b7d07b977296f6",
+        "headline": "Mali farmers face varied harvest yields",
+        "dek": "Rainfall interruptions and high input costs impact crops across different regions of Mali.",
         "paragraphs": [
-          "During the Month of Solidarity and Fight Against Exclusion, aid was distributed in several Malian locations. In Kadiolo, the FELAPH provided 23 sacks of 50kg rice, 23 five-litre oil containers, six tricycles, a wheelchair, and school kits to individuals with disabilities. People with disabilities in Bafoulabé and Mahina received aid kits containing rice, oil, sugar, mosquito nets, and a symbolic cash envelope.",
-          "In Gao, 50 households of internally displaced and vulnerable people received food donations. These actions aim to support those facing hardship and exclusion within these communities.",
-          "The distribution is part of a national solidarity initiative. Further details on the total number of beneficiaries or the duration of the solidarity month were not provided in the report."
+          "Mali's 2026 agricultural harvest is yielding mixed results across the country. In Bankass, farmers are still in the fields harvesting mil, sorghum, fonio, and peanuts, but report lower yields than last year. This is attributed to a nearly three-week break in rainfall during a critical growth period, affecting crop development.",
+          "In contrast, the mil and sorghum harvest is complete in Douentza, with farmers finishing in October 2026. The Sikasso region reports significant progress, with 90% of maize and 80% of rice harvested, and 70% of cotton collected. Producers there are now focused on bagging and storing maize and rice.",
+          "Further north, producers in Tombouctou's Amadia plain are awaiting their harvest this month, facing challenges with water supply due to expensive diesel for irrigation and degraded infrastructure. High fertilizer costs also impacted their campaign, though rice crops are now showing promise."
         ],
-        "body": "During the Month of Solidarity and Fight Against Exclusion, aid was distributed in several Malian locations. In Kadiolo, the FELAPH provided 23 sacks of 50kg rice, 23 five-litre oil containers, six tricycles, a wheelchair, and school kits to individuals with disabilities. People with disabilities in Bafoulabé and Mahina received aid kits containing rice, oil, sugar, mosquito nets, and a symbolic cash envelope.\n\nIn Gao, 50 households of internally displaced and vulnerable people received food donations. These actions aim to support those facing hardship and exclusion within these communities.\n\nThe distribution is part of a national solidarity initiative. Further details on the total number of beneficiaries or the duration of the solidarity month were not provided in the report.",
-        "why": "Vulnerable people in Kadiolo, Bafoulabé, Mahina, and Gao received essential food items and mobility aids.",
+        "body": "Mali's 2026 agricultural harvest is yielding mixed results across the country. In Bankass, farmers are still in the fields harvesting mil, sorghum, fonio, and peanuts, but report lower yields than last year. This is attributed to a nearly three-week break in rainfall during a critical growth period, affecting crop development.\n\nIn contrast, the mil and sorghum harvest is complete in Douentza, with farmers finishing in October 2026. The Sikasso region reports significant progress, with 90% of maize and 80% of rice harvested, and 70% of cotton collected. Producers there are now focused on bagging and storing maize and rice.\n\nFurther north, producers in Tombouctou's Amadia plain are awaiting their harvest this month, facing challenges with water supply due to expensive diesel for irrigation and degraded infrastructure. High fertilizer costs also impacted their campaign, though rice crops are now showing promise.",
+        "why": "Farmers across Mali are experiencing varied harvest outcomes due to rainfall patterns and the cost of agricultural inputs like fuel and fertilizer.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 20,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+            "score": 95,
+            "why": "Farmers in Bankass report lower yields due to a rainfall interruption, while those in Tombouctou face issues with water supply and fertilizer costs."
           },
           "investors": {
-            "score": 0,
-            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+            "score": 30,
+            "why": "The report details agricultural production and input costs, which are relevant to agribusiness investors."
           },
           "diaspora": {
-            "score": 0,
+            "score": 10,
             "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "News",
-        "published": "2026-11-02T11:32:45Z",
-        "sourceTitle": "Assistance aux personnes vulnérables à Bafoulabé, Gao et Kadiolo",
-        "editorialScore": 12.5,
-        "selectionScore": 12.5,
-        "confidence": "medium",
+        "topic": "Agriculture",
+        "published": "2026-11-03T15:18:25Z",
+        "sourceTitle": "Campagne agricole 2026 au Mali, des récoltes à des rythmes différents selon les régions",
+        "editorialScore": 17.45,
+        "selectionScore": 17.45,
+        "confidence": "high",
         "corroboration": 2,
         "scoreBreakdown": {
-          "relevance": 0.5,
+          "relevance": 4.0,
           "corroboration": 4.0,
           "sourceQuality": 3.0,
-          "freshness": 2.5,
-          "publicImpact": 0.0,
-          "evidence": 2.5,
+          "freshness": 3.5,
+          "publicImpact": 1.7,
+          "evidence": 1.25,
           "materiality": 0.0,
           "penalties": 0.0
         },
         "rankReasons": [
+          "country in headline",
           "2-source corroboration",
           "tier-1 source",
-          "published within 36h",
-          "specific figure"
+          "published within 18h",
+          "economic consequence"
         ],
-        "countryMatch": "domestic",
-        "wordCount": 118,
+        "countryMatch": "title",
+        "wordCount": 140,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-02T11:32:45Z",
-            "name": "Studio Tamani",
-            "url": "https://www.studiotamani.org/209738-assistance-aux-personnes-vulnerables-a-bafoulabe-gao-et-kadiolo"
+            "published": "2026-11-03T15:18:25Z",
+            "url": "https://www.studiotamani.org/209826-campagne-agricole-2026-au-mali-des-recoltes-a-des-rythmes-differents-selon-les-regions",
+            "name": "Studio Tamani"
           },
           {
-            "published": "2026-11-02T21:57:05Z",
-            "name": "Bamada.net",
-            "url": "https://bamada.net/assistance-aux-personnes-vulnerables-a-bafoulabe-gao-et-kadiolo"
+            "published": "2026-11-03T16:30:11Z",
+            "url": "https://bamada.net/campagne-agricole-2026-au-mali-des-recoltes-a-des-rythmes-differents-selon-les-regions",
+            "name": "Bamada.net"
           }
         ]
       },
       {
-        "articleId": "694d03f83d603090ed5d",
-        "headline": "Kayes associations fight drug proliferation",
-        "dek": "Community groups in Kayes held a debate on October 31, 2026, to raise awareness about drug dangers.",
+        "articleId": "594014d779d082c1061c",
+        "headline": "Koulikoro hospital construction reaches 30% completion",
+        "dek": "Mali's Health Minister Assa Badiallo Touré inspected the new regional hospital site on November 2, 2026.",
         "paragraphs": [
-          "Associations in Kayes organised a debate on October 31, 2026, to address the rise of narcotics in the city. The event aimed to inform attendees about the risks associated with drug use and trafficking.",
-          "The initiative, led by the Collectif des Associations, seeks to boost the involvement of community groups and citizens in preventing and combating drug-related issues. Participants were made aware of the dangers of consuming and circulating illegal substances.",
-          "The Collectif des Associations plans to continue its efforts to engage the community in the fight against drug proliferation. The debate focused on the immediate dangers and the need for collective action."
+          "Construction of the new Koulikoro regional hospital is 30% complete. Minister of Health and Social Development, Colonel-major Assa Badiallo Touré, visited the site on Monday, November 2, 2026, to assess progress. The minister expressed satisfaction with the construction pace of the facility, which is being built on a 15-hectare site.",
+          "The new hospital aims to improve medical care for populations in Koulikoro and surrounding areas. Its modern architecture is designed to optimize patient reception and treatment. Upon completion, the hospital will enhance the region's technical capabilities and reduce the strain on medical facilities in Bamako. The governor of the region also attended the inspection.",
+          "The inspection took place during the second regional meeting of the Malian Society of Gynecology and Obstetrics (SOMAGO)."
         ],
-        "body": "Associations in Kayes organised a debate on October 31, 2026, to address the rise of narcotics in the city. The event aimed to inform attendees about the risks associated with drug use and trafficking.\n\nThe initiative, led by the Collectif des Associations, seeks to boost the involvement of community groups and citizens in preventing and combating drug-related issues. Participants were made aware of the dangers of consuming and circulating illegal substances.\n\nThe Collectif des Associations plans to continue its efforts to engage the community in the fight against drug proliferation. The debate focused on the immediate dangers and the need for collective action.",
-        "why": "Residents of Kayes are directly affected by the proliferation of dangerous drugs in their city.",
+        "body": "Construction of the new Koulikoro regional hospital is 30% complete. Minister of Health and Social Development, Colonel-major Assa Badiallo Touré, visited the site on Monday, November 2, 2026, to assess progress. The minister expressed satisfaction with the construction pace of the facility, which is being built on a 15-hectare site.\n\nThe new hospital aims to improve medical care for populations in Koulikoro and surrounding areas. Its modern architecture is designed to optimize patient reception and treatment. Upon completion, the hospital will enhance the region's technical capabilities and reduce the strain on medical facilities in Bamako. The governor of the region also attended the inspection.\n\nThe inspection took place during the second regional meeting of the Malian Society of Gynecology and Obstetrics (SOMAGO).",
+        "why": "The new regional hospital in Koulikoro will improve healthcare access and capacity for local populations.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
@@ -9702,40 +9569,167 @@
           }
         },
         "topic": "Health",
-        "published": "2026-11-02T12:00:28Z",
-        "sourceTitle": "A Kayes, les associations se mobilisent contre la prolifération des stupéfiants",
-        "editorialScore": 10.75,
-        "selectionScore": 8.5,
+        "published": "2026-11-03T09:52:05Z",
+        "sourceTitle": "Koulikoro : Le futur hôpital régional sort de terre, un taux d’avancement prometteur de 30 %",
+        "editorialScore": 16.95,
+        "selectionScore": 16.95,
+        "confidence": "high",
+        "corroboration": 2,
+        "scoreBreakdown": {
+          "relevance": 2.5,
+          "corroboration": 4.0,
+          "sourceQuality": 1.75,
+          "freshness": 3.5,
+          "publicImpact": 2.7,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in opening",
+          "2-source corroboration",
+          "published within 18h",
+          "public-policy consequence",
+          "specific figure"
+        ],
+        "countryMatch": "lede",
+        "wordCount": 122,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "published": "2026-11-03T09:52:05Z",
+            "url": "https://maliactu.net/koulikoro-le-futur-hopital-regional-sort-de-terre-un-taux-davancement-prometteur-de-30/",
+            "name": "Mali Actu"
+          },
+          {
+            "published": "2026-11-03T15:10:36Z",
+            "url": "https://bamada.net/operation-dougoukoloko-fama-niono-tessalit-gourma-rharous",
+            "name": "Bamada.net"
+          }
+        ]
+      },
+      {
+        "articleId": "aed3d62571986fe7bb82",
+        "headline": "Mali minister inspects new Kayes university campus",
+        "dek": "Minister Bouréma Kanssaye visited provisional sites for classes starting January 2027.",
+        "paragraphs": [
+          "Mali's Minister of Higher Education, Professor Bouréma Kanssaye, visited the future university campus in Kayes on Sunday, November 1, 2026. Accompanied by the governor of Kayes, the minister inspected provisional facilities intended to host the first courses.",
+          "These temporary locations include the ANPE jobs workshop, the Massa Makan Diabaté performance hall, and the former district council building. The inspection aimed to assess the readiness for the start of academic activities.",
+          "The first classes are scheduled to begin in January 2027 at these provisional sites while the main campus construction progresses."
+        ],
+        "body": "Mali's Minister of Higher Education, Professor Bouréma Kanssaye, visited the future university campus in Kayes on Sunday, November 1, 2026. Accompanied by the governor of Kayes, the minister inspected provisional facilities intended to host the first courses.\n\nThese temporary locations include the ANPE jobs workshop, the Massa Makan Diabaté performance hall, and the former district council building. The inspection aimed to assess the readiness for the start of academic activities.\n\nThe first classes are scheduled to begin in January 2027 at these provisional sites while the main campus construction progresses.",
+        "why": "Students in Kayes will soon have access to university courses starting in January 2027.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 0,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
+          },
+          "diaspora": {
+            "score": 21,
+            "why": "This education report may interest diaspora readers following institutions and opportunities from abroad."
+          }
+        },
+        "topic": "Education",
+        "published": "2026-11-03T09:00:21Z",
+        "sourceTitle": "Visite d’inspection du site de l’université de Kayes",
+        "editorialScore": 14.35,
+        "selectionScore": 13.1,
         "confidence": "medium",
         "corroboration": 2,
         "scoreBreakdown": {
           "relevance": 0.5,
           "corroboration": 4.0,
           "sourceQuality": 3.0,
-          "freshness": 2.5,
-          "publicImpact": 0.0,
-          "evidence": 0.75,
+          "freshness": 3.5,
+          "publicImpact": 1.35,
+          "evidence": 2.0,
           "materiality": 0.0,
           "penalties": 0.0
         },
         "rankReasons": [
           "2-source corroboration",
           "tier-1 source",
-          "published within 36h"
+          "published within 18h",
+          "public-policy consequence",
+          "specific figure"
         ],
         "countryMatch": "domestic",
-        "wordCount": 103,
+        "wordCount": 90,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-02T12:00:28Z",
-            "name": "Studio Tamani",
-            "url": "https://www.studiotamani.org/209765-a-kayes-les-associations-se-mobilisent-contre-la-proliferation-des-stupefiants"
+            "published": "2026-11-03T09:00:21Z",
+            "url": "https://www.studiotamani.org/209807-visite-dinspection-du-site-de-luniversite-de-kayes",
+            "name": "Studio Tamani"
           },
           {
-            "published": "2026-11-02T23:50:36Z",
-            "name": "Bamada.net",
-            "url": "https://bamada.net/a-kayes-les-associations-se-mobilisent-contre-la-proliferation-des-stupefiants"
+            "published": "2026-11-03T16:39:18Z",
+            "url": "https://bamada.net/visite-dinspection-du-site-de-luniversite-de-kayes",
+            "name": "Bamada.net"
+          }
+        ]
+      },
+      {
+        "articleId": "8ad91942c49ff2510953",
+        "headline": "Mali journalists' murder case sees partial declassification",
+        "dek": "French judge receives partial access to classified French army note regarding the 2013 killings.",
+        "paragraphs": [
+          "13 years after the 2013 Kidal assassinations of RFI journalists Ghislaine Dupont and Claude Verlon, the judicial investigation in France continues. A French defense commission approved partial declassification of a note from the French Ministry of Armed Forces, dated April 24, 2024. Judge Valéry Muller, leading the investigation into kidnapping, sequestration, and assassination linked to terrorism, requested the note.",
+          "The decision allows some elements of the note to be added to the case file for examination by the magistrate and civil parties. This marks the fourth declassification procedure in the ongoing investigation. No trial has yet established full responsibility for the deaths of the two reporters, whose bodies were found near Kidal after an interview.",
+          "Seidane Ag Hitta is named in the case file as a suspected instigator, a qualification pending the investigation's outcome. Malian authorities seek Ag Hitta as a leader for the Group to Support Islam and Muslims in the Kidal region, offering a 500 million FCFA reward for information leading to his arrest in 2026. Civil parties also seek an international arrest warrant for Hamadi Ag Mohamed, cited as a suspected commando member."
+        ],
+        "body": "13 years after the 2013 Kidal assassinations of RFI journalists Ghislaine Dupont and Claude Verlon, the judicial investigation in France continues. A French defense commission approved partial declassification of a note from the French Ministry of Armed Forces, dated April 24, 2024. Judge Valéry Muller, leading the investigation into kidnapping, sequestration, and assassination linked to terrorism, requested the note.\n\nThe decision allows some elements of the note to be added to the case file for examination by the magistrate and civil parties. This marks the fourth declassification procedure in the ongoing investigation. No trial has yet established full responsibility for the deaths of the two reporters, whose bodies were found near Kidal after an interview.\n\nSeidane Ag Hitta is named in the case file as a suspected instigator, a qualification pending the investigation's outcome. Malian authorities seek Ag Hitta as a leader for the Group to Support Islam and Muslims in the Kidal region, offering a 500 million FCFA reward for information leading to his arrest in 2026. Civil parties also seek an international arrest warrant for Hamadi Ag Mohamed, cited as a suspected commando member.",
+        "why": "Journalists and their families in Mali and abroad are affected by the ongoing pursuit of justice for the 2013 murders.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 0,
+            "why": "The report does not contain information relevant to investors."
+          },
+          "diaspora": {
+            "score": 20,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "News",
+        "published": "2026-11-02T10:10:16Z",
+        "sourceTitle": "Journalistes : le 2 novembre entre mémoire et attente de justice",
+        "editorialScore": 12.55,
+        "selectionScore": 11.55,
+        "confidence": "medium",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 0.5,
+          "corroboration": 0.0,
+          "sourceQuality": 1.75,
+          "freshness": 2.5,
+          "publicImpact": 5.3,
+          "evidence": 2.5,
+          "materiality": 0.0,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "published within 36h",
+          "urgent public consequence",
+          "specific figure"
+        ],
+        "countryMatch": "domestic",
+        "wordCount": 186,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "published": "2026-11-02T10:10:16Z",
+            "url": "https://journaldumali.com/journalistes-le-2-novembre-entre-memoire-et-attente-de-justice/",
+            "name": "Journal du Mali"
           }
         ]
       }
@@ -10474,15 +10468,15 @@
     "na": [
       {
         "articleId": "d89934337eced883011f",
-        "headline": "Namibia private sector credit grows N$5.84 billion in nine months",
-        "dek": "Nominal borrowing increased by 39% year-on-year, but inflation is eroding real gains, Simonis Storm reports.",
+        "headline": "Namibian credit grows by N$5.84 billion in nine months",
+        "dek": "Businesses and households borrowed more as rising prices increased the nominal value of loans, but real growth remained flat.",
         "paragraphs": [
-          "Namibia's private sector credit increased by N$5.84 billion in the first nine months of 2026, a 39% rise from the N$4.20 billion recorded during the same period last year. This growth brought the total credit book to N$128.2 billion by September, with N$1.06 billion added in that month alone. Businesses borrowed N$656.8 million, accounting for 62% of the monthly increase, while households added N$403.5 million.",
-          "Almandro Jansen, an economist at Simonis Storm, stated that annual private sector credit growth reached 5.6% in September, the fastest in a year. However, he cautioned that with inflation at 5.4%, real private sector credit growth stood at only 0.2%, down from 0.3% in August. This indicates that much of the nominal increase reflects higher prices rather than a significant expansion in real credit activity.",
-          "Simonis Storm forecasts credit growth to slow in the fourth quarter of 2026, with monthly flows expected to decline from an average of N$890 million to between N$450 million and N$500 million. This slowdown is anticipated as higher interest rates, including the Bank of Namibia's repo rate increase to 7% on October 28, begin to dampen borrowing demand over the next two to three quarters."
+          "Namibia's private sector credit increased by N$5.84 billion over the first nine months of 2026, a 39% rise from the same period last year. This growth brought the total credit book to N$128.2 billion by September, with N$1.06 billion added in that month alone. Businesses borrowed N$656.8 million, or 62% of the September increase, while households added N$403.5 million.",
+          "Almandro Jansen, an economist at Simonis Storm, noted that while nominal credit growth reached 5.6% annually in September, inflation at 5.4% meant real growth was only 0.2%. This suggests that much of the borrowing increase reflects higher prices rather than a significant expansion of real economic activity. Corporate credit growth accelerated to 6.7% in September, driven by demand for other loans and advances and commercial mortgage lending.",
+          "Household credit growth remained at 4.9% in September, but after adjusting for inflation, it contracted by approximately 0.5%. Jansen cautioned that sustained growth in business lending over several more months would be needed to confirm a recovery in business investment, especially with drought risk and fuel costs impacting agriculture and transport sectors."
         ],
-        "body": "Namibia's private sector credit increased by N$5.84 billion in the first nine months of 2026, a 39% rise from the N$4.20 billion recorded during the same period last year. This growth brought the total credit book to N$128.2 billion by September, with N$1.06 billion added in that month alone. Businesses borrowed N$656.8 million, accounting for 62% of the monthly increase, while households added N$403.5 million.\n\nAlmandro Jansen, an economist at Simonis Storm, stated that annual private sector credit growth reached 5.6% in September, the fastest in a year. However, he cautioned that with inflation at 5.4%, real private sector credit growth stood at only 0.2%, down from 0.3% in August. This indicates that much of the nominal increase reflects higher prices rather than a significant expansion in real credit activity.\n\nSimonis Storm forecasts credit growth to slow in the fourth quarter of 2026, with monthly flows expected to decline from an average of N$890 million to between N$450 million and N$500 million. This slowdown is anticipated as higher interest rates, including the Bank of Namibia's repo rate increase to 7% on October 28, begin to dampen borrowing demand over the next two to three quarters.",
-        "why": "Businesses and households are borrowing more in nominal terms, but inflation is reducing the actual value of this credit, impacting real economic activity.",
+        "body": "Namibia's private sector credit increased by N$5.84 billion over the first nine months of 2026, a 39% rise from the same period last year. This growth brought the total credit book to N$128.2 billion by September, with N$1.06 billion added in that month alone. Businesses borrowed N$656.8 million, or 62% of the September increase, while households added N$403.5 million.\n\nAlmandro Jansen, an economist at Simonis Storm, noted that while nominal credit growth reached 5.6% annually in September, inflation at 5.4% meant real growth was only 0.2%. This suggests that much of the borrowing increase reflects higher prices rather than a significant expansion of real economic activity. Corporate credit growth accelerated to 6.7% in September, driven by demand for other loans and advances and commercial mortgage lending.\n\nHousehold credit growth remained at 4.9% in September, but after adjusting for inflation, it contracted by approximately 0.5%. Jansen cautioned that sustained growth in business lending over several more months would be needed to confirm a recovery in business investment, especially with drought risk and fuel costs impacting agriculture and transport sectors.",
+        "why": "Businesses and households are borrowing more money to cover the same volumes of goods and services due to rising prices.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
@@ -10490,8 +10484,8 @@
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
-            "score": 70,
-            "why": "Nominal private sector credit growth is accelerating, but real growth is stagnant due to inflation, suggesting caution for investors regarding genuine business expansion."
+            "score": 20,
+            "why": "This report establishes no direct effect on firms, markets, regulation, infrastructure or capital."
           },
           "diaspora": {
             "score": 20,
@@ -10523,103 +10517,102 @@
           "specific figure"
         ],
         "countryMatch": "title",
-        "wordCount": 214,
+        "wordCount": 194,
         "readMinutes": 1,
         "sources": [
           {
             "published": "2026-11-03T08:27:49Z",
-            "name": "The Brief",
-            "url": "https://thebrief.com.na/2026/11/namibias-private-sector-credit-increases-by-n5-84-billion-in-nine-months/?utm_source=rss&utm_medium=rss&utm_campaign=namibias-private-sector-credit-increases-by-n5-84-billion-in-nine-months"
+            "url": "https://thebrief.com.na/2026/11/namibias-private-sector-credit-increases-by-n5-84-billion-in-nine-months/?utm_source=rss&utm_medium=rss&utm_campaign=namibias-private-sector-credit-increases-by-n5-84-billion-in-nine-months",
+            "name": "The Brief"
           },
           {
-            "published": "2026-11-03T03:48:27Z",
-            "name": "The Windhoek Observer",
-            "url": "https://observer24.com.na/credit-growth-expected-to-slow-as-bon-rate-hikes-take-effect/"
+            "published": "2026-11-03T13:00:00Z",
+            "url": "https://www.namibian.com.na/rising-prices-push-for-more-credit-finance/",
+            "name": "The Namibian"
           }
         ]
       },
       {
-        "articleId": "0da65eb1ca026b5bf255",
-        "headline": "Windhoek builds N$4.7 million market for 46 traders",
-        "dek": "The City of Windhoek is constructing a new market opposite Shoprite, with Debmarine Namibia contributing N$3.2 million towards the project.",
+        "articleId": "0a7ef2debb35feed5003",
+        "headline": "FMD costs Namibia N$150 million weekly",
+        "dek": "Namibia's livestock industry faces severe disruption as foot-and-mouth disease halts trade and threatens jobs.",
         "paragraphs": [
-          "Informal traders in Windhoek's city centre will soon have a new N$4.7 million market opposite Shoprite, a project the City of Windhoek is building to accommodate 46 vendors. Debmarine Namibia is contributing N$3.2 million to the development, which is expected to be completed by December 2026. The site has been handed over to the contractor for construction to begin.",
-          "Traders who have operated at the site for years, like Ester Andreas, welcome the permanent trading space, hoping it will preserve their businesses and ease their dealings. However, some vendors, including Martha Mukuve, who sells vegetables, are concerned about the allocation of stalls and whether the City will meet the December 2026 completion deadline. They have been informed that traders with proper paperwork will receive priority.",
-          "This Shoprite market is one of four informal trading projects the City of Windhoek plans, including a N$8.8 million market and taxi rank near Central Hospital for 50 traders, and a N$15 million market at Truckport. A market for 350 traders at Havana 4-Way is stalled due to the relocation of 53 households. City CEO Moses Matyayi cited rapid urban migration as a strain on service delivery and called for central government support."
+          "Namibia's livestock industry is losing an estimated N$150 million weekly due to foot-and-mouth disease (FMD), according to Namibia Agricultural Union (NAU) President Thinus Pretorius. These losses stem from disrupted trade and marketing restrictions across the Southern African Development Community (SADC). The weekly figure includes N$118 million from cattle, N$26 million from sheep, and N$6 million from goats.",
+          "The outbreak is disrupting farmers' incomes and employment, with industry operations requiring N$230 million weekly for salaries, fodder, and fuel despite marketing halts. Approximately 265,000 jobs are at risk as production, processing, and marketing activities are affected. The government has allocated N$180 million to combat FMD, an amount Pretorius contrasted with the industry's estimated monthly losses of N$655 million.",
+          "Restoring export market access, particularly to the European Union and Norway which require FMD-free status without vaccination, could impact economic growth by 5% to 6%. These markets previously received about 10,000 tonnes of Namibian beef annually. The Ministry of Agriculture, Fisheries, Water and Land Reform is in talks with new markets including Tunisia, Morocco, and Nigeria."
         ],
-        "body": "Informal traders in Windhoek's city centre will soon have a new N$4.7 million market opposite Shoprite, a project the City of Windhoek is building to accommodate 46 vendors. Debmarine Namibia is contributing N$3.2 million to the development, which is expected to be completed by December 2026. The site has been handed over to the contractor for construction to begin.\n\nTraders who have operated at the site for years, like Ester Andreas, welcome the permanent trading space, hoping it will preserve their businesses and ease their dealings. However, some vendors, including Martha Mukuve, who sells vegetables, are concerned about the allocation of stalls and whether the City will meet the December 2026 completion deadline. They have been informed that traders with proper paperwork will receive priority.\n\nThis Shoprite market is one of four informal trading projects the City of Windhoek plans, including a N$8.8 million market and taxi rank near Central Hospital for 50 traders, and a N$15 million market at Truckport. A market for 350 traders at Havana 4-Way is stalled due to the relocation of 53 households. City CEO Moses Matyayi cited rapid urban migration as a strain on service delivery and called for central government support.",
-        "why": "Informal traders in Windhoek will gain permanent trading spaces, improving their livelihoods and dignity.",
+        "body": "Namibia's livestock industry is losing an estimated N$150 million weekly due to foot-and-mouth disease (FMD), according to Namibia Agricultural Union (NAU) President Thinus Pretorius. These losses stem from disrupted trade and marketing restrictions across the Southern African Development Community (SADC). The weekly figure includes N$118 million from cattle, N$26 million from sheep, and N$6 million from goats.\n\nThe outbreak is disrupting farmers' incomes and employment, with industry operations requiring N$230 million weekly for salaries, fodder, and fuel despite marketing halts. Approximately 265,000 jobs are at risk as production, processing, and marketing activities are affected. The government has allocated N$180 million to combat FMD, an amount Pretorius contrasted with the industry's estimated monthly losses of N$655 million.\n\nRestoring export market access, particularly to the European Union and Norway which require FMD-free status without vaccination, could impact economic growth by 5% to 6%. These markets previously received about 10,000 tonnes of Namibian beef annually. The Ministry of Agriculture, Fisheries, Water and Land Reform is in talks with new markets including Tunisia, Morocco, and Nigeria.",
+        "why": "Namibian farmers and agricultural workers face significant income loss and job insecurity due to FMD-related trade restrictions.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 20,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+            "score": 95,
+            "why": "Namibia's livestock farmers are losing N$150 million weekly due to FMD, impacting their income and ability to cover operational costs like fodder and salaries."
           },
           "investors": {
-            "score": 65,
-            "why": "Debmarine Namibia is contributing N$3.2 million to a N$4.7 million market project in Windhoek."
+            "score": 70,
+            "why": "Namibia's beef export markets, including the EU and Norway, have suspended access due to FMD, threatening the country's ability to earn higher prices and impacting investments in livestock production."
           },
           "diaspora": {
             "score": 20,
-            "why": "This story about local market development in Windhoek does not directly affect the diaspora."
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "Business",
-        "published": "2026-11-03T08:14:56Z",
-        "sourceTitle": "Shoprite vendors welcome N$4.7m market",
-        "editorialScore": 19.9,
-        "selectionScore": 19.9,
+        "topic": "Agriculture",
+        "published": "2026-11-03T09:08:19Z",
+        "sourceTitle": "FMD costs Namibia’s livestock industry N$150 million weekly",
+        "editorialScore": 20.65,
+        "selectionScore": 19.4,
         "confidence": "high",
         "corroboration": 2,
         "scoreBreakdown": {
-          "relevance": 2.5,
+          "relevance": 4.0,
           "corroboration": 4.0,
-          "sourceQuality": 3.0,
+          "sourceQuality": 0.5,
           "freshness": 3.5,
-          "publicImpact": 4.4,
+          "publicImpact": 6.15,
           "evidence": 2.5,
           "materiality": 0.0,
           "penalties": 0.0
         },
         "rankReasons": [
-          "country in opening",
+          "country in headline",
           "2-source corroboration",
-          "tier-1 source",
           "published within 18h",
-          "public-policy consequence",
+          "urgent public consequence",
           "specific figure"
         ],
-        "countryMatch": "lede",
-        "wordCount": 205,
+        "countryMatch": "title",
+        "wordCount": 181,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-03T08:14:56Z",
-            "name": "New Era Live",
-            "url": "https://neweralive.na/shoprite-vendors-welcome-n4-7m-market/"
+            "published": "2026-11-03T09:08:19Z",
+            "url": "https://thebrief.com.na/2026/11/fmd-costs-namibias-livestock-industry-n150-million-weekly/?utm_source=rss&utm_medium=rss&utm_campaign=fmd-costs-namibias-livestock-industry-n150-million-weekly",
+            "name": "The Brief"
           },
           {
-            "published": "2026-11-02T10:07:04Z",
-            "name": "Namibia Economist",
-            "url": "https://economist.com.na/windhoek-invests-n1-8-million-to-prepare-china-town-market-site-for-local-traders/"
+            "published": "2026-11-03T03:50:57Z",
+            "url": "https://observer24.com.na/livestock-sales-worth-n151m-at-risk-every-week/",
+            "name": "The Windhoek Observer"
           }
         ]
       },
       {
-        "articleId": "bcd48dadf376b9eb6099",
-        "headline": "Namibia diesel price passes N$30 per litre",
-        "dek": "Petrol also rises as higher shipping costs and a weaker currency increase fuel import expenses.",
+        "articleId": "6865d56dd67a2b840e02",
+        "headline": "Namibian man claims murder charges are false",
+        "dek": "Teodor Shipanga, 49, told the Windhoek High Court he has no knowledge of killing a colleague and stealing N$2.5 million.",
         "paragraphs": [
-          "Motorists in Namibia will pay over N$30 per litre for diesel starting tomorrow, November 4, 2026, following a N$3 per litre increase. Petrol 95 will also rise by N$2 per litre to N$28.58. These changes come as Namibian households and businesses face mounting financial pressure from rising fuel, interest rates, and food prices.",
-          "Industries, Mines and Energy Minister Modestus Amutse announced that 50ppm diesel will cost N$30.86 and 10ppm diesel N$30.96 per litre in Walvis Bay. The increases are attributed to higher international shipping costs, a weaker Namibian dollar, and global oil market uncertainty. Combined shipping and demurrage costs rose significantly, impacting fuel import expenses.",
-          "The National Energy Fund (NEF) faces depletion, with an expected N$384 million in under-recoveries for October. The government aims to protect the fund, which has been under pressure since April and May. Despite these increases, the minister assured the nation of adequate fuel stocks and a stable supply system."
+          "Teodor Shipanga, 49, told the Windhoek High Court yesterday that charges of murder and robbery against him are false. Shipanga claims he has no knowledge of the alleged crimes, stating that no police docket was opened and that a judge had cancelled his charges. He is accused of murdering security colleague Shain van Wyk, 22, on November 11, 2011, and stealing N$2.5 million and a cash-in-transit vehicle.",
+          "The state alleges Van Wyk was shot in the head while transporting cash from northern Namibia to Windhoek with Shipanga. Van Wyk's body was found in a culvert near Okahandja, and the abandoned, partly burnt vehicle was found in Windhoek. A former vault manager, Mina van Wyk, testified that she had set the route for the two men and that Shipanga was issued a shotgun before their trip. She also stated that Shipanga's security uniform and ID were found near the burnt vehicle.",
+          "Shipanga pleaded not guilty to all charges in June, protesting the trial's constitutionality. He specifically asked the prosecutor, Anna Amukugo, to be removed from the case. The trial continues."
         ],
-        "body": "Motorists in Namibia will pay over N$30 per litre for diesel starting tomorrow, November 4, 2026, following a N$3 per litre increase. Petrol 95 will also rise by N$2 per litre to N$28.58. These changes come as Namibian households and businesses face mounting financial pressure from rising fuel, interest rates, and food prices.\n\nIndustries, Mines and Energy Minister Modestus Amutse announced that 50ppm diesel will cost N$30.86 and 10ppm diesel N$30.96 per litre in Walvis Bay. The increases are attributed to higher international shipping costs, a weaker Namibian dollar, and global oil market uncertainty. Combined shipping and demurrage costs rose significantly, impacting fuel import expenses.\n\nThe National Energy Fund (NEF) faces depletion, with an expected N$384 million in under-recoveries for October. The government aims to protect the fund, which has been under pressure since April and May. Despite these increases, the minister assured the nation of adequate fuel stocks and a stable supply system.",
-        "why": "Namibians will face higher costs for transport and goods as fuel prices increase, impacting household budgets and business operations.",
+        "body": "Teodor Shipanga, 49, told the Windhoek High Court yesterday that charges of murder and robbery against him are false. Shipanga claims he has no knowledge of the alleged crimes, stating that no police docket was opened and that a judge had cancelled his charges. He is accused of murdering security colleague Shain van Wyk, 22, on November 11, 2011, and stealing N$2.5 million and a cash-in-transit vehicle.\n\nThe state alleges Van Wyk was shot in the head while transporting cash from northern Namibia to Windhoek with Shipanga. Van Wyk's body was found in a culvert near Okahandja, and the abandoned, partly burnt vehicle was found in Windhoek. A former vault manager, Mina van Wyk, testified that she had set the route for the two men and that Shipanga was issued a shotgun before their trip. She also stated that Shipanga's security uniform and ID were found near the burnt vehicle.\n\nShipanga pleaded not guilty to all charges in June, protesting the trial's constitutionality. He specifically asked the prosecutor, Anna Amukugo, to be removed from the case. The trial continues.",
+        "why": "Teodor Shipanga, 49, faces charges of murder and robbery, with a trial ongoing in the Windhoek High Court.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
-            "score": 20,
+            "score": 0,
             "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
           },
           "investors": {
@@ -10631,66 +10624,129 @@
             "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
           }
         },
-        "topic": "Business",
-        "published": "2026-11-03T08:22:48Z",
-        "sourceTitle": "Cost of living beyond breaking point…As diesel surges over N$30p/l",
-        "editorialScore": 17.9,
-        "selectionScore": 16.65,
+        "topic": "News",
+        "published": "2026-11-03T15:00:00Z",
+        "sourceTitle": "Murder, robbery accused claims charges are ‘false’",
+        "editorialScore": 18.05,
+        "selectionScore": 18.05,
+        "confidence": "high",
+        "corroboration": 1,
+        "scoreBreakdown": {
+          "relevance": 2.5,
+          "corroboration": 0.0,
+          "sourceQuality": 3.0,
+          "freshness": 3.5,
+          "publicImpact": 5.3,
+          "evidence": 2.5,
+          "materiality": 1.25,
+          "penalties": 0.0
+        },
+        "rankReasons": [
+          "country in opening",
+          "tier-1 source",
+          "published within 18h",
+          "urgent public consequence",
+          "specific figure",
+          "material action in headline"
+        ],
+        "countryMatch": "lede",
+        "wordCount": 181,
+        "readMinutes": 1,
+        "sources": [
+          {
+            "published": "2026-11-03T15:00:00Z",
+            "url": "https://www.namibian.com.na/murder-robbery-accused-claims-charges-are-false/",
+            "name": "The Namibian"
+          }
+        ]
+      },
+      {
+        "articleId": "a7f875f34fe3b466ecd4",
+        "headline": "Windhoek to host world autism congress",
+        "dek": "The sixth World Autism Organisation Congress will gather international experts and advocates in Namibia's capital from November 3-5.",
+        "paragraphs": [
+          "Namibia will host the sixth World Autism Organisation Congress in Windhoek from November 3 to 5, 2026. The event will bring together international speakers, researchers, and autism advocates to discuss support for people with autism. Organisers state the congress comes at a time when Namibia’s autistic community remains underserved.",
+          "Autism Association of Namibia founder Petra Dillmann said the congress offers a platform for the autistic community to advocate for themselves and share their needs directly. The gathering aims to unite parents, educators, health professionals, academics, employers, government representatives, and people with autism to improve support services.",
+          "Discussions at the congress will cover daily life support, early intervention, education, employment, rights, advocacy, ageing, and sensory processing. Professional development opportunities will also be available for psychologists, therapists, medical practitioners, teachers, and researchers to engage with international research and practices."
+        ],
+        "body": "Namibia will host the sixth World Autism Organisation Congress in Windhoek from November 3 to 5, 2026. The event will bring together international speakers, researchers, and autism advocates to discuss support for people with autism. Organisers state the congress comes at a time when Namibia’s autistic community remains underserved.\n\nAutism Association of Namibia founder Petra Dillmann said the congress offers a platform for the autistic community to advocate for themselves and share their needs directly. The gathering aims to unite parents, educators, health professionals, academics, employers, government representatives, and people with autism to improve support services.\n\nDiscussions at the congress will cover daily life support, early intervention, education, employment, rights, advocacy, ageing, and sensory processing. Professional development opportunities will also be available for psychologists, therapists, medical practitioners, teachers, and researchers to engage with international research and practices.",
+        "why": "The congress aims to improve support for Namibia's underserved autistic community by bringing together professionals and advocates to discuss needs and practices.",
+        "lensVersion": 1,
+        "lenses": {
+          "farmers": {
+            "score": 0,
+            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
+          },
+          "investors": {
+            "score": 0,
+            "why": "The event focuses on health and social support services, with no direct mention of investment opportunities or economic impact on businesses."
+          },
+          "diaspora": {
+            "score": 0,
+            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
+          }
+        },
+        "topic": "Health",
+        "published": "2026-11-03T14:26:06Z",
+        "sourceTitle": "Namibia to host World Autism Organisation congress",
+        "editorialScore": 18.35,
+        "selectionScore": 16.1,
         "confidence": "high",
         "corroboration": 2,
         "scoreBreakdown": {
-          "relevance": 0.5,
+          "relevance": 4.0,
           "corroboration": 4.0,
           "sourceQuality": 3.0,
           "freshness": 3.5,
-          "publicImpact": 4.4,
+          "publicImpact": 1.35,
           "evidence": 2.5,
           "materiality": 0.0,
           "penalties": 0.0
         },
         "rankReasons": [
+          "country in headline",
           "2-source corroboration",
           "tier-1 source",
           "published within 18h",
           "public-policy consequence",
           "specific figure"
         ],
-        "countryMatch": "domestic",
-        "wordCount": 164,
+        "countryMatch": "title",
+        "wordCount": 137,
         "readMinutes": 1,
         "sources": [
           {
-            "published": "2026-11-03T08:22:48Z",
-            "name": "New Era Live",
-            "url": "https://neweralive.na/cost-of-living-beyond-breaking-point-as-diesel-surges-over-n30p-l/"
+            "published": "2026-11-03T14:26:06Z",
+            "url": "https://www.namibian.com.na/namibia-to-host-world-autism-organisation-congress/",
+            "name": "The Namibian"
           },
           {
-            "published": "2026-11-02T13:20:23Z",
-            "name": "The Brief",
-            "url": "https://thebrief.com.na/2026/11/govt-increases-petrol-price-by-n2-diesel-by-n3/?utm_source=rss&utm_medium=rss&utm_campaign=govt-increases-petrol-price-by-n2-diesel-by-n3"
+            "published": "2026-11-03T05:15:16Z",
+            "url": "https://observer24.com.na/namibia-to-host-international-autism-congress/",
+            "name": "The Windhoek Observer"
           }
         ]
       },
       {
         "articleId": "328a461cf7502a52f8fa",
-        "headline": "Andrada mining contribution rises to N$775.2 million",
-        "dek": "The company's direct economic impact grew 6% in the 2026 financial year, driven by wages and local procurement.",
+        "headline": "Andrada Mining's Namibia contribution rises to N$775m",
+        "dek": "The company's economic impact grew 6% in the 2026 financial year, driven by wages, royalties, and local procurement.",
         "paragraphs": [
-          "Andrada Mining's direct economic contribution to Namibia reached N$775.2 million in the 2026 financial year, a 6% increase from the previous year. This growth was fueled by wages, royalties, and procurement as the company expanded its Uis Mine operations. The total contribution exceeded £33.17 million, up from £31.39 million in FY2025.",
-          "Local remuneration at Uis Mine totalled N$103.3 million in FY2026, an increase from N$100.38 million in FY2025. Andrada hired 126 new employees and offered internships to 11 graduates from local communities, with two later securing permanent positions. The company engaged 241 suppliers, with 189, or 78%, being Namibian businesses.",
-          "Andrada estimated its activities generated an additional N$330.2 million in indirect economic benefits using a World Bank multiplier. Chief executive Anthony Viljoen stated that Uis expansion creates more employment, local procurement, and skills development opportunities. The company is also exploring desalination for long-term water supply solutions with the ministry of agriculture, water and land reform."
+          "Andrada Mining's direct economic contribution to Namibia increased by 6% to N$775.2 million in the 2026 financial year. This growth was fueled by wages, royalties, and local procurement as the company expanded its operations at Uis Mine. The company's total economic impact exceeded £33.17 million, up from £31.39 million in the previous financial year.",
+          "Remuneration paid locally at Uis reached approximately N$103.3 million, an increase from N$100.38 million in FY2025. Andrada recruited 126 employees and appointed 11 local graduates to a 12-month internship program, with two interns later employed permanently. The company worked with 241 active suppliers, of which 78% were Namibian businesses.",
+          "Andrada estimated its activities generated an additional N$330.2 million in indirect economic benefits across Namibia, using the World Bank's mining-sector economic multiplier. Chief executive Anthony Viljoen stated that the Uis expansion creates greater opportunities for employment, local procurement, and skills development. The company is also exploring desalination for long-term water supply solutions."
         ],
-        "body": "Andrada Mining's direct economic contribution to Namibia reached N$775.2 million in the 2026 financial year, a 6% increase from the previous year. This growth was fueled by wages, royalties, and procurement as the company expanded its Uis Mine operations. The total contribution exceeded £33.17 million, up from £31.39 million in FY2025.\n\nLocal remuneration at Uis Mine totalled N$103.3 million in FY2026, an increase from N$100.38 million in FY2025. Andrada hired 126 new employees and offered internships to 11 graduates from local communities, with two later securing permanent positions. The company engaged 241 suppliers, with 189, or 78%, being Namibian businesses.\n\nAndrada estimated its activities generated an additional N$330.2 million in indirect economic benefits using a World Bank multiplier. Chief executive Anthony Viljoen stated that Uis expansion creates more employment, local procurement, and skills development opportunities. The company is also exploring desalination for long-term water supply solutions with the ministry of agriculture, water and land reform.",
-        "why": "Namibian workers and businesses benefited from increased wages, procurement, and employment opportunities due to Andrada Mining's expanded operations.",
+        "body": "Andrada Mining's direct economic contribution to Namibia increased by 6% to N$775.2 million in the 2026 financial year. This growth was fueled by wages, royalties, and local procurement as the company expanded its operations at Uis Mine. The company's total economic impact exceeded £33.17 million, up from £31.39 million in the previous financial year.\n\nRemuneration paid locally at Uis reached approximately N$103.3 million, an increase from N$100.38 million in FY2025. Andrada recruited 126 employees and appointed 11 local graduates to a 12-month internship program, with two interns later employed permanently. The company worked with 241 active suppliers, of which 78% were Namibian businesses.\n\nAndrada estimated its activities generated an additional N$330.2 million in indirect economic benefits across Namibia, using the World Bank's mining-sector economic multiplier. Chief executive Anthony Viljoen stated that the Uis expansion creates greater opportunities for employment, local procurement, and skills development. The company is also exploring desalination for long-term water supply solutions.",
+        "why": "Namibian businesses and workers benefit from increased wages, local procurement, and job opportunities created by Andrada Mining's expanded operations.",
         "lensVersion": 1,
         "lenses": {
           "farmers": {
             "score": 45,
-            "why": "Andrada Mining is engaging the ministry of agriculture, water and land reform on long-term water supply solutions, including desalination."
+            "why": "Andrada Mining's water usage increased due to higher processing activity, impacting local water resources."
           },
           "investors": {
-            "score": 81,
-            "why": "Andrada Mining's direct economic contribution to Namibia increased by 6% to N$775.2 million in the 2026 financial year."
+            "score": 70,
+            "why": "Andrada Mining's direct economic contribution to Namibia rose by 6% to N$775.2 million in FY2026, indicating business growth."
           },
           "diaspora": {
             "score": 20,
@@ -10701,7 +10757,7 @@
         "published": "2026-11-03T03:59:57Z",
         "sourceTitle": "Andrada’s Namibia contribution rises to N$775m",
         "editorialScore": 14.8,
-        "selectionScore": 14.8,
+        "selectionScore": 12.55,
         "confidence": "medium",
         "corroboration": 1,
         "scoreBreakdown": {
@@ -10726,67 +10782,8 @@
         "sources": [
           {
             "published": "2026-11-03T03:59:57Z",
-            "name": "The Windhoek Observer",
-            "url": "https://observer24.com.na/andradas-namibia-contribution-rises-to-n775m/"
-          }
-        ]
-      },
-      {
-        "articleId": "151d51ab4ef8b67fb10c",
-        "headline": "Namibia financial sector faces rising cyber and climate risks",
-        "dek": "Cyber vulnerabilities rose 39% and El Niño threatens drought, impacting loan repayments.",
-        "paragraphs": [
-          "Namibia’s financial sector faces growing threats from cyberattacks, climate change, and government debt, according to a report by the Bank of Namibia and NAMFISA. Despite these emerging risks, the country’s financial institutions remained stable in the first half of 2026.",
-          "Cyber vulnerabilities increased by 39% to 513,921 in the second quarter of 2026, with reported cyber events up 56% to 109,593. The anticipated strengthening of El Niño raises concerns about drought, which could reduce agricultural production and affect borrowers’ ability to repay loans.",
-          "Banks’ holdings of government securities rose to 16.1% of total assets by June 2026, exposing the sector to government finance shocks. Retirement funds’ exposure to government debt also reached 14.8% of total assets."
-        ],
-        "body": "Namibia’s financial sector faces growing threats from cyberattacks, climate change, and government debt, according to a report by the Bank of Namibia and NAMFISA. Despite these emerging risks, the country’s financial institutions remained stable in the first half of 2026.\n\nCyber vulnerabilities increased by 39% to 513,921 in the second quarter of 2026, with reported cyber events up 56% to 109,593. The anticipated strengthening of El Niño raises concerns about drought, which could reduce agricultural production and affect borrowers’ ability to repay loans.\n\nBanks’ holdings of government securities rose to 16.1% of total assets by June 2026, exposing the sector to government finance shocks. Retirement funds’ exposure to government debt also reached 14.8% of total assets.",
-        "why": "Namibia's financial sector faces increased pressure from cyber threats, climate-induced drought impacting agriculture, and growing exposure to government debt.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 20,
-            "why": "This report establishes no direct effect on farming, food markets or rural livelihoods."
-          },
-          "investors": {
-            "score": 61,
-            "why": "Commercial banks' holdings of government securities increased to 16.1% of total assets, exposing the sector to potential shocks from government finances."
-          },
-          "diaspora": {
-            "score": 0,
-            "why": "This report establishes no direct effect on diaspora travel, families or cross-border money."
-          }
-        },
-        "topic": "Business",
-        "published": "2026-11-02T15:24:46Z",
-        "sourceTitle": "Namibia’s financial sector faces rising cyber, climate and government debt risks",
-        "editorialScore": 15.4,
-        "selectionScore": 14.15,
-        "confidence": "high",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 4.0,
-          "corroboration": 0.0,
-          "sourceQuality": 0.5,
-          "freshness": 3.5,
-          "publicImpact": 6.15,
-          "evidence": 1.25,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in headline",
-          "published within 18h",
-          "urgent public consequence"
-        ],
-        "countryMatch": "title",
-        "wordCount": 120,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "published": "2026-11-02T15:24:46Z",
-            "name": "The Brief",
-            "url": "https://thebrief.com.na/2026/11/namibias-financial-sector-faces-rising-cyber-climate-and-government-debt-risks/?utm_source=rss&utm_medium=rss&utm_campaign=namibias-financial-sector-faces-rising-cyber-climate-and-government-debt-risks"
+            "url": "https://observer24.com.na/andradas-namibia-contribution-rises-to-n775m/",
+            "name": "The Windhoek Observer"
           }
         ]
       }
