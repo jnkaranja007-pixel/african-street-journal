@@ -2173,6 +2173,7 @@ function renderCountryDesk(countryId, countryPath) {
     countryMapCanvas.style.removeProperty('--map-minh');
   }
   renderNewsPanel(countryId, stories);
+  renderEarlierStories(countryId);
   renderCropCalendar(countryId);
   renderAtlasAltText(countryId);
   if (activePanelIndex === 2 || mapPortal?.classList.contains('active')) {
@@ -2788,6 +2789,37 @@ function updatedStampHtml(countryId, briefs) {
   if (!d) return '';
   const full = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }).format(d);
   return '<span class="cv-updated"> · <time datetime="' + d.toISOString() + '" title="Updated ' + escapeHtml(full) + '">Updated ' + escapeHtml(relativeUpdated(d)) + '</time></span>';
+}
+
+// Earlier stories under today's: the country's 30 newest from past editions
+// (data/earlier/<cc>.json, written with the story pages by build-static-pages.ps1, which
+// keeps each page 90 days). Each links to its own page. Until Nov 2026 a story could not
+// be found again once it left the edition.
+const EARLIER_STORIES = new Map();
+function renderEarlierStories(countryId) {
+  const el = document.getElementById('cv-earlier');
+  if (!el) return;
+  el.hidden = true;
+  el.innerHTML = '';
+  const show = list => {
+    if (activeCountryMap?.countryId !== countryId || !Array.isArray(list) || !list.length) return;
+    const name = COUNTRY_INFO[countryId]?.name || '';
+    // Only our own story paths (/ke/some-slug/) are linked.
+    const items = list.filter(s => s && s.h && /^\/[a-z]{2}\/[a-z0-9-]+\/$/.test(String(s.u || '')));
+    if (!items.length) return;
+    el.innerHTML = '<h3 class="cv-earlier-head">Earlier stories</h3><ul>' +
+      items.slice(0, 12).map(s =>
+        '<li><a href="' + escapeHtml(s.u) + '">' +
+          (s.d ? '<span>' + escapeHtml(formatShortDate(s.d + 'T12:00:00Z')) + '</span>' : '') + escapeHtml(s.h) + '</a></li>').join('') +
+      '</ul>' +
+      (items.length > 12 ? '<a class="cv-earlier-all" href="/' + countryId + '/">More earlier ' + escapeHtml(name) + ' stories &rarr;</a>' : '');
+    el.hidden = false;
+  };
+  if (EARLIER_STORIES.has(countryId)) { show(EARLIER_STORIES.get(countryId)); return; }
+  fetch('data/earlier/' + countryId + '.json?v=' + encodeURIComponent(String(AI_BRIEFS_AT || '')))
+    .then(r => (r.ok ? r.json() : []))
+    .catch(() => [])
+    .then(list => { EARLIER_STORIES.set(countryId, list); show(list); });
 }
 
 function renderBriefDesk(countryId) {

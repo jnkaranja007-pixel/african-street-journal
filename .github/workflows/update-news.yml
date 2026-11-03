@@ -225,6 +225,14 @@ jobs:
           if (-not $ids.Count) { Write-Host 'Audit failed with nothing droppable.'; exit 1 }
           Write-Host "Dropping $($ids.Count) story(ies) with critical findings and re-merging: $($ids -join ', ')"
           git checkout -- data/briefs.js data/briefs-full.js data/briefs-state.json data/archive
+          # The dead link can be in a story an earlier run published: on 3 Nov 2026 a run
+          # limited to Namibia failed because three Mali stories from the morning cited
+          # bamada.net pages taken down since. Dropping them from today's drafts left them
+          # in the committed state, and the second audit failed on the same links. Drop
+          # them from the state as well; add-briefs then writes the payload without them.
+          $state = Get-Content data/briefs-state.json -Raw -Encoding utf8 | ConvertFrom-Json
+          foreach ($p in $state.byCountry.PSObject.Properties) { $p.Value = @($p.Value | Where-Object { $ids -notcontains [string]$_.articleId }) }
+          [IO.File]::WriteAllText("$PWD/data/briefs-state.json", ($state | ConvertTo-Json -Depth 12), (New-Object Text.UTF8Encoding($false)))
           $auto = Get-Content data/auto-briefs.json -Raw -Encoding utf8 | ConvertFrom-Json
           foreach ($p in $auto.PSObject.Properties) { $p.Value = @($p.Value | Where-Object { $ids -notcontains [string]$_.articleId }) }
           [IO.File]::WriteAllText("$PWD/data/auto-briefs.json", ($auto | ConvertTo-Json -Depth 12), (New-Object Text.UTF8Encoding($false)))

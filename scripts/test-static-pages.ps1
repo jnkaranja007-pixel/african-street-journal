@@ -124,6 +124,21 @@ if ($UnitOnly) {
     }
   }
   Check 'every "Earlier stories" link resolves' ($deadEarlier.Count -eq 0) (($deadEarlier | Select-Object -First 5) -join ', ')
+
+  # The app's lists (data/earlier/<cc>.json): one per country page, valid JSON, every
+  # link a story page that exists.
+  $badLists = New-Object System.Collections.Generic.List[string]
+  foreach ($p in $pages) {
+    $cc = Split-Path (Split-Path $p -Parent) -Leaf
+    $listPath = Join-Path $root "data\earlier\$cc.json"
+    if (-not (Test-Path $listPath)) { $badLists.Add("$cc=missing"); continue }
+    try {
+      foreach ($e in @([IO.File]::ReadAllText($listPath, [Text.Encoding]::UTF8) | ConvertFrom-Json | ForEach-Object { $_ })) {
+        if ([string]$e.u -notmatch '^/([a-z]{2})/([a-z0-9-]+)/$' -or -not (Test-Path (Join-Path $root ($matches[1] + '\' + $matches[2] + '\index.html')))) { $badLists.Add("$cc=$($e.u)") }
+      }
+    } catch { $badLists.Add("$cc=not JSON") }
+  }
+  Check "all $($pages.Count) earlier-story lists parse and link to pages that exist" ($badLists.Count -eq 0) (($badLists | Select-Object -First 5) -join ', ')
 }
 
 if ($fail) { Write-Host "[static-pages] $fail check(s) failed" -ForegroundColor Red; exit 1 }

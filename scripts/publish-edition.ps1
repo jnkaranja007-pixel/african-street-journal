@@ -47,7 +47,7 @@ Set-Location $root
 # Everything the desk publishes, in one place. Country directories are staged with
 # --all so new story pages AND the seven-day sweep's deletions are both recorded.
 $script:EDITION_PATHS = @(
-  'data/briefs.js','data/briefs-full.js','data/briefs-state.json','data/archive',
+  'data/briefs.js','data/briefs-full.js','data/briefs-state.json','data/archive','data/earlier',
   'sitemap.xml','news-sitemap.xml','feed.xml','robots.txt','static-pages.css','404.html',
   'about','privacy','contact','corrections','methods','countries'
 )

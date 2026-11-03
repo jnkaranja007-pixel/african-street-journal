@@ -245,6 +245,31 @@ function Read-StoryPageHead([string]$Path) {
   if ($d.Success) { try { $when = [DateTimeOffset]::Parse($d.Groups[1].Value, [Globalization.CultureInfo]::InvariantCulture).UtcDateTime } catch { $when = $null } }
   return [pscustomobject]@{ When = $when; Headline = [Net.WebUtility]::HtmlDecode($h.Groups[1].Value) }
 }
+# Newest first, at most $Max, leaving out a story told again under a near-identical
+# headline (the same event in two editions: "Taita Taveta targets US$4.3M potato
+# industry growth" and "... US$4.3 million ..."). Near-identical: three in four of the
+# headline's words (three letters or more) shared.
+function Select-DistinctStories($Items, [int]$Max) {
+  $kept = New-Object System.Collections.Generic.List[object]
+  $seen = New-Object System.Collections.Generic.List[object]
+  foreach ($it in ($Items | ForEach-Object { $_ })) {
+    $words = @{}
+    foreach ($w in [regex]::Matches(([string]$it.headline).ToLowerInvariant(), '[\p{L}]{3,}')) { $words[$w.Value] = $true }
+    $dup = $false
+    foreach ($s in $seen) {
+      $shared = 0
+      foreach ($k in $words.get_Keys()) { if ($s.ContainsKey($k)) { $shared++ } }
+      $union = $words.get_Count() + $s.get_Count() - $shared
+      if ($union -gt 0 -and ($shared / [double]$union) -ge 0.75) { $dup = $true; break }
+    }
+    if ($dup) { continue }
+    $seen.Add($words)
+    $kept.Add($it)
+    if ($kept.Count -ge $Max) { break }
+  }
+  return $kept.ToArray()
+}
+
 $pagesOnDisk = New-Object System.Collections.Generic.List[object]
 foreach ($c in $pageCodes) {
   $cDir = Join-Path $root $c
@@ -337,8 +362,8 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   # each so neither a reader nor a crawler has to know its address.
   $currentSlugs = @{}
   foreach ($b in $stories) { $currentSlugs[(Get-StorySlug $b.headline $b.articleId)] = $true }
-  $earlierPages = @($pagesOnDisk | Where-Object { $_.code -eq $code -and $_.headline -and -not $currentSlugs.ContainsKey($_.slug) -and (-not $_.dated -or $_.when -ge $storyCutoff) } |
-    Sort-Object -Property @{ Expression = { if ($_.when) { $_.when } else { [datetime]::MinValue } }; Descending = $true } | Select-Object -First 20)
+  $earlierPages = @(Select-DistinctStories @($pagesOnDisk | Where-Object { $_.code -eq $code -and $_.headline -and -not $currentSlugs.ContainsKey($_.slug) -and (-not $_.dated -or $_.when -ge $storyCutoff) } |
+    Sort-Object -Property @{ Expression = { if ($_.when) { $_.when } else { [datetime]::MinValue } }; Descending = $true }) 20)
   $earlierHtml = ''
   if ($earlierPages.Count) {
     $items = ($earlierPages | ForEach-Object {
@@ -576,6 +601,20 @@ foreach ($p in $pagesOnDisk) {
   $earlierUrls.Add([pscustomobject]@{ url = "$BaseUrl/$($p.code)/$($p.slug)/"; lastmod = $lastmod })
 }
 Write-Host "[static] $storyBuilt story pages, $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days" -ForegroundColor DarkGray
+
+# The same earlier stories for the app's country view (data/earlier/<cc>.json, a few KB,
+# loaded when a country opens): headline, page and day of the 30 newest that are not in
+# today's edition. The archive files hold full editions at ~600 KB each - too much to
+# fetch for a list of headlines.
+$earlierDir = Join-Path $root 'data\earlier'
+New-Item -ItemType Directory -Force -Path $earlierDir | Out-Null
+foreach ($c in $pageCodes) {
+  $list = @(Select-DistinctStories @($pagesOnDisk | Where-Object { $_.code -eq $c -and $_.headline -and -not $storyKept.ContainsKey("$($_.code)/$($_.slug)") -and (-not $_.dated -or $_.when -ge $storyCutoff) } |
+    Sort-Object -Property @{ Expression = { if ($_.when) { $_.when } else { [datetime]::MinValue } }; Descending = $true }) 30 |
+    ForEach-Object { [ordered]@{ h = $_.headline; u = "/$($_.code)/$($_.slug)/"; d = $(if ($_.when) { $_.when.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture) } else { '' }) } })
+  $json = ConvertTo-Json -InputObject @($list) -Depth 3 -Compress
+  [IO.File]::WriteAllText((Join-Path $earlierDir "$c.json"), $json, (New-Object Text.UTF8Encoding($false)))
+}
 
 
 # --- trust pages ---------------------------------------------------------------
