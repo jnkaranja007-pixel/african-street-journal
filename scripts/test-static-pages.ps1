@@ -111,10 +111,47 @@ if ($UnitOnly) {
   if (Test-Path $sitemapPath) {
     foreach ($m in [regex]::Matches([IO.File]::ReadAllText($sitemapPath, [Text.Encoding]::UTF8), '<loc>https?://[^/<]+/([a-z]{2})/([^/<]+)/</loc>')) { $inSitemap[$m.Groups[1].Value + '/' + $m.Groups[2].Value] = $true }
   }
-  $storyDirs = @(Get-ChildItem -Path $root -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object {
-    $cc = $_.Name; Get-ChildItem -Path $_.FullName -Directory | Where-Object { Test-Path (Join-Path $_.FullName 'index.html') } | ForEach-Object { "$cc/$($_.Name)" } })
+  # One full page per story: an older address of a story (its headline was rewritten in
+  # a later edition) is a redirect to the story's page, and is not in the sitemap.
+  $storyDirs = New-Object System.Collections.Generic.List[string]
+  $byTail = @{}
+  $twice = New-Object System.Collections.Generic.List[string]
+  $badMoves = New-Object System.Collections.Generic.List[string]
+  foreach ($cd in Get-ChildItem -Path $root -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' }) {
+    foreach ($sd in Get-ChildItem -Path $cd.FullName -Directory) {
+      $f = Join-Path $sd.FullName 'index.html'
+      if (-not (Test-Path $f)) { continue }
+      $fs = [IO.File]::OpenRead($f)
+      try { $buf = New-Object byte[] 8192; $n = $fs.Read($buf, 0, $buf.Length) } finally { $fs.Dispose() }
+      $text = [Text.Encoding]::UTF8.GetString($buf, 0, $n)
+      $mv = [regex]::Match($text, '<meta http-equiv="refresh" content="0; url=https?://[^/"]+/([a-z]{2})/([^/"]+)/"')
+      if ($mv.Success) {
+        if (-not (Test-Path (Join-Path (Join-Path $root $mv.Groups[1].Value) (Join-Path $mv.Groups[2].Value 'index.html')))) { $badMoves.Add("$($cd.Name)/$($sd.Name)") }
+        continue
+      }
+      $storyDirs.Add("$($cd.Name)/$($sd.Name)")
+      if ($sd.Name -match '-([0-9a-f]{6})$') {
+        $t = "$($cd.Name)/$($matches[1])"
+        if (-not $byTail.ContainsKey($t)) { $byTail[$t] = New-Object System.Collections.Generic.List[string] }
+        $byTail[$t].Add($f)
+      }
+    }
+  }
+  # Pages sharing an address tail are read in full for the article id ("Read in ASJ").
+  foreach ($t in @($byTail.Keys)) {
+    if ($byTail[$t].Count -lt 2) { continue }
+    $ids = @{}
+    foreach ($f in $byTail[$t]) {
+      $m = [regex]::Match([IO.File]::ReadAllText($f, [Text.Encoding]::UTF8), 'story=id%3A([0-9a-f]+)')
+      if (-not $m.Success) { continue }
+      $page = "$t/" + (Split-Path (Split-Path $f -Parent) -Leaf)
+      if ($ids.ContainsKey($m.Groups[1].Value)) { $twice.Add("$page = $($ids[$m.Groups[1].Value])") } else { $ids[$m.Groups[1].Value] = $page }
+    }
+  }
   $missing = @($storyDirs | Where-Object { -not $inSitemap.ContainsKey($_) })
   Check "all $($storyDirs.Count) story pages on disk are in the sitemap" ($missing.Count -eq 0) (($missing | Select-Object -First 5) -join ', ')
+  Check 'no story has two full pages' ($twice.Count -eq 0) "$($twice.Count): $(($twice | Select-Object -First 3) -join '; ')"
+  Check 'every moved story address lands on a page' ($badMoves.Count -eq 0) (($badMoves | Select-Object -First 5) -join ', ')
   $deadEarlier = New-Object System.Collections.Generic.List[string]
   foreach ($p in $pages) {
     $html = [IO.File]::ReadAllText($p, [Text.Encoding]::UTF8)

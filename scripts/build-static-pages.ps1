@@ -234,16 +234,61 @@ foreach ($c in ($pageCodes | Sort-Object { $info[$_].name })) {
 # dropping out of Google's index. Each kept page now goes in sitemap.xml and on its
 # country page's "Earlier stories" list.
 $storyCutoff = (Get-Date).ToUniversalTime().AddDays(-$StoryDays)
+function ConvertTo-UtcStamp([string]$Value) {
+  if (-not $Value) { return $null }
+  try { return [DateTimeOffset]::Parse($Value, [Globalization.CultureInfo]::InvariantCulture).UtcDateTime } catch { return $null }
+}
 function Read-StoryPageHead([string]$Path) {
   # The first 8 KB hold the JSON-LD (datePublished, about 4 KB in) and the <h1> (6 KB).
+  # A moved page (see Write-MovedStoryPage) carries its date in a meta tag instead.
   $fs = [IO.File]::OpenRead($Path)
   try { $buf = New-Object byte[] 8192; $n = $fs.Read($buf, 0, $buf.Length) } finally { $fs.Dispose() }
   $text = [Text.Encoding]::UTF8.GetString($buf, 0, $n)
-  $d = [regex]::Match($text, '"datePublished":"([^"]+)"')
+  $d = [regex]::Match($text, '"datePublished":"([^"]+)"|<meta name="asj-published" content="([^"]+)"')
   $h = [regex]::Match($text, '<h1>([^<]*)</h1>')
+  $mv = [regex]::Match($text, '<meta http-equiv="refresh" content="0; url=([^"]+)"')
+  $id = [regex]::Match($text, '<meta name="asj-story" content="([0-9a-f]+)"')
   $when = $null
-  if ($d.Success) { try { $when = [DateTimeOffset]::Parse($d.Groups[1].Value, [Globalization.CultureInfo]::InvariantCulture).UtcDateTime } catch { $when = $null } }
-  return [pscustomobject]@{ When = $when; Headline = [Net.WebUtility]::HtmlDecode($h.Groups[1].Value) }
+  if ($d.Success) { $when = ConvertTo-UtcStamp ($d.Groups[1].Value + $d.Groups[2].Value) }
+  return [pscustomobject]@{ When = $when; Headline = [Net.WebUtility]::HtmlDecode($h.Groups[1].Value)
+                            MovedTo = $(if ($mv.Success) { $mv.Groups[1].Value } else { '' })
+                            StoryId = $(if ($id.Success) { $id.Groups[1].Value } else { '' }) }
+}
+# One story, one page. The desk rewrites a headline between editions, and the address
+# is made from the headline, so each rewrite used to leave another full page behind:
+# 190 stories had two to six pages on 3 Nov 2026, all in the sitemap and in the
+# "Earlier stories" lists ("Burundi farmers face fertilizer shortage" and "...
+# shortages"). The article id identifies the story - not the publish stamp, which 14
+# of those stories changed between rewrites. Pages carry it in <meta name="asj-story">;
+# pages built before that carry it only in their "Read in ASJ" link, further down.
+function Get-StoryIdFromPage([string]$Path) {
+  $m = [regex]::Match([IO.File]::ReadAllText($Path, [Text.Encoding]::UTF8), 'story=id%3A([0-9a-f]+)')
+  if ($m.Success) { return $m.Groups[1].Value }
+  return ''
+}
+# The page left at an old address: a redirect to the story's current page, so links
+# and search results that point at it still arrive, and no second copy is indexed.
+function Write-MovedStoryPage($Page, [string]$Target) {
+  $stamp = $Page.when.ToString('yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture)
+  $title = if ($Page.headline) { Esc $Page.headline } else { 'Story moved' }
+  $html = @"
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>$title - The African Street Journal</title>
+<link rel="canonical" href="$Target">
+<meta http-equiv="refresh" content="0; url=$Target">
+<meta name="asj-story" content="$($Page.storyId)">
+<meta name="asj-published" content="$stamp">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<p>This story is now at <a href="$Target">$Target</a>.</p>
+</body>
+</html>
+"@
+  [IO.File]::WriteAllText((Join-Path $Page.dir 'index.html'), $html, (New-Object Text.UTF8Encoding($false)))
 }
 # Newest first, at most $Max, leaving out a story told again under a near-identical
 # headline (the same event in two editions: "Taita Taveta targets US$4.3M potato
@@ -281,8 +326,49 @@ foreach ($c in $pageCodes) {
     # A page with no readable date is kept (and listed with its file date) rather than
     # swept on a guess.
     $pagesOnDisk.Add([pscustomobject]@{ code = $c; slug = $sub.Name; dir = $sub.FullName; headline = $head.Headline
-                                        when = $head.When; dated = [bool]$head.When })
+                                        when = $head.When; dated = [bool]$head.When; movedTo = $head.MovedTo
+                                        storyId = $head.StoryId; key = ''; home = ''; superseded = $false })
   }
+}
+
+# Each story's page: today's edition decides for the stories in it (the address the
+# payload's Share link already points at); for the rest, the one full page left, or
+# the first by address while older duplicates are being folded. Ordinal, so PowerShell
+# 5.1 and 7 pick the same page.
+$storyHome = @{}
+$homeFixed = @{}
+# The address ends in the first six characters of the id, so only a page that shares
+# that tail with another page or a story in today's edition can be a second copy, and
+# only those few need reading in full for an id.
+$tailCount = @{}
+foreach ($prop in $byCountry.PSObject.Properties) {
+  if (-not $pageCodes.Contains($prop.Name)) { continue }
+  foreach ($b in @($prop.Value | Where-Object { Test-StoryIsRenderable $_ })) {
+    $id = [string]$b.articleId
+    if (-not $id) { continue }
+    $k = "$($prop.Name)/$id"
+    $storyHome[$k] = Get-StorySlug $b.headline $id
+    $homeFixed[$k] = $true
+    $t = "$($prop.Name)/" + $id.Substring(0, [Math]::Min(6, $id.Length))
+    $tailCount[$t] = 1 + [int]$tailCount[$t]
+  }
+}
+foreach ($p in $pagesOnDisk) {
+  if ($p.slug -match '-([0-9a-f]{6})$') { $t = "$($p.code)/$($matches[1])"; $tailCount[$t] = 1 + [int]$tailCount[$t] }
+}
+foreach ($p in $pagesOnDisk) {
+  if ($p.slug -notmatch '-([0-9a-f]{6})$') { continue }
+  if ([int]$tailCount["$($p.code)/$($matches[1])"] -lt 2) { continue }
+  if (-not $p.storyId -and -not $p.movedTo) { $p.storyId = Get-StoryIdFromPage (Join-Path $p.dir 'index.html') }
+  if ($p.storyId) { $p.key = "$($p.code)/$($p.storyId)" }
+}
+foreach ($p in $pagesOnDisk) {
+  if (-not $p.key -or $p.movedTo -or $homeFixed.ContainsKey($p.key)) { continue }
+  if (-not $storyHome.ContainsKey($p.key) -or [string]::CompareOrdinal($p.slug, $storyHome[$p.key]) -lt 0) { $storyHome[$p.key] = $p.slug }
+}
+foreach ($p in $pagesOnDisk) {
+  if ($p.key -and $storyHome.ContainsKey($p.key)) { $p.home = $storyHome[$p.key] }
+  $p.superseded = [bool]($p.movedTo -or ($p.home -and $p.home -ne $p.slug))
 }
 
 foreach ($prop in $byCountry.PSObject.Properties) {
@@ -362,7 +448,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   # each so neither a reader nor a crawler has to know its address.
   $currentSlugs = @{}
   foreach ($b in $stories) { $currentSlugs[(Get-StorySlug $b.headline $b.articleId)] = $true }
-  $earlierPages = @(Select-DistinctStories @($pagesOnDisk | Where-Object { $_.code -eq $code -and $_.headline -and -not $currentSlugs.ContainsKey($_.slug) -and (-not $_.dated -or $_.when -ge $storyCutoff) } |
+  $earlierPages = @(Select-DistinctStories @($pagesOnDisk | Where-Object { $_.code -eq $code -and $_.headline -and -not $_.superseded -and -not $currentSlugs.ContainsKey($_.slug) -and (-not $_.dated -or $_.when -ge $storyCutoff) } |
     Sort-Object -Property @{ Expression = { if ($_.when) { $_.when } else { [datetime]::MinValue } }; Descending = $true }) 20)
   $earlierHtml = ''
   if ($earlierPages.Count) {
@@ -514,6 +600,7 @@ foreach ($sp in $storyPages) {
 <title>$(Esc $storyTitle)</title>
 <meta name="description" content="$(Esc $dek)">
 <link rel="canonical" href="$storyCanonical">
+$(if ($b.articleId) { '<meta name="asj-story" content="' + (Esc ([string]$b.articleId)) + '">' })
 <link rel="alternate" hreflang="en" href="$storyCanonical">
 <link rel="alternate" hreflang="x-default" href="$storyCanonical">
 <link rel="alternate" type="application/rss+xml" title="$(Esc $sp.country) - The African Street Journal" href="$BaseUrl/$($sp.code)/feed.xml">
@@ -590,6 +677,7 @@ $($srcHtml.ToString())
 # By the date each page carries (Read-StoryPageHead), not the file's timestamp. What stays
 # goes in the sitemap, dated by when it was published.
 $swept = 0
+$moved = 0
 $earlierUrls = New-Object System.Collections.Generic.List[object]
 foreach ($p in $pagesOnDisk) {
   if ($storyKept.ContainsKey("$($p.code)/$($p.slug)")) { continue }
@@ -597,10 +685,16 @@ foreach ($p in $pagesOnDisk) {
     if (Test-Path $p.dir) { [IO.Directory]::Delete($p.dir, $true); $swept++ }
     continue
   }
+  # An older address of a story whose page is elsewhere: a redirect, not in the sitemap.
+  if ($p.superseded) {
+    $target = "$BaseUrl/$($p.code)/$($p.home)/"
+    if ($p.home -and $p.movedTo -ne $target) { Write-MovedStoryPage $p $target; $moved++ }
+    continue
+  }
   $lastmod = if ($p.dated) { $p.when.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture) } else { '' }
   $earlierUrls.Add([pscustomobject]@{ url = "$BaseUrl/$($p.code)/$($p.slug)/"; lastmod = $lastmod })
 }
-Write-Host "[static] $storyBuilt story pages, $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days" -ForegroundColor DarkGray
+Write-Host "[static] $storyBuilt story pages, $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected" -ForegroundColor DarkGray
 
 # The same earlier stories for the app's country view (data/earlier/<cc>.json, a few KB,
 # loaded when a country opens): headline, page and day of the 30 newest that are not in
@@ -609,7 +703,7 @@ Write-Host "[static] $storyBuilt story pages, $($earlierUrls.Count) earlier page
 $earlierDir = Join-Path $root 'data\earlier'
 New-Item -ItemType Directory -Force -Path $earlierDir | Out-Null
 foreach ($c in $pageCodes) {
-  $list = @(Select-DistinctStories @($pagesOnDisk | Where-Object { $_.code -eq $c -and $_.headline -and -not $storyKept.ContainsKey("$($_.code)/$($_.slug)") -and (-not $_.dated -or $_.when -ge $storyCutoff) } |
+  $list = @(Select-DistinctStories @($pagesOnDisk | Where-Object { $_.code -eq $c -and $_.headline -and -not $_.superseded -and -not $storyKept.ContainsKey("$($_.code)/$($_.slug)") -and (-not $_.dated -or $_.when -ge $storyCutoff) } |
     Sort-Object -Property @{ Expression = { if ($_.when) { $_.when } else { [datetime]::MinValue } }; Descending = $true }) 30 |
     ForEach-Object { [ordered]@{ h = $_.headline; u = "/$($_.code)/$($_.slug)/"; d = $(if ($_.when) { $_.when.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture) } else { '' }) } })
   $json = ConvertTo-Json -InputObject @($list) -Depth 3 -Compress
