@@ -23,6 +23,11 @@
 
   Best-effort, like the IndexNow ping: it never throws and always exits 0, because a
   social post must never fail the desk.
+
+  Links are posted bare, without utm_ tags: Cloudflare Web Analytics does not record
+  query strings, so the tags would measure nothing, and every reader who forwards a
+  tagged link spreads it. Telegram's own post views, Bluesky's engagement counts and
+  the Referer column in Cloudflare (bsky.app, t.me) are the measures that exist.
 .PARAMETER DryRun
   Print what would be sent; send nothing and record nothing.
 #>
