@@ -23,9 +23,11 @@ param(
   # The live origin, no trailing slash. Every canonical, og:url and sitemap entry is
   # built from this, so it is the one value to change if the domain ever moves again.
   [string]$BaseUrl = 'https://africanstreetjournal.com',
-  # How long a shared story keeps a page of its own. Past this it is swept and
-  # 404.html lands the reader on the country rather than a dead end.
-  [int]$StoryDays = 7
+  # How long a story keeps a page of its own, from the date the page was published.
+  # Past this it is swept and 404.html lands the reader on the country rather than a
+  # dead end. 90 days, not 7: Google sends readers searching the names in a story for
+  # weeks after it ran ("simon akpo", "gabon platform" in Search Console, Nov 2026).
+  [int]$StoryDays = 90
 )
 
 $ErrorActionPreference = 'Stop'
@@ -224,6 +226,40 @@ foreach ($c in ($pageCodes | Sort-Object { $info[$_].name })) {
   [void]$navLinks.Append("<a href=""$BaseUrl/$c/"">$(Esc $info[$c].name)</a>")
 }
 
+# --- story pages already on disk ----------------------------------------------
+# A story page is kept for -StoryDays after the date the page itself carries
+# (datePublished in its JSON-LD). The sweep used to go by the file's timestamp, and every
+# desk run starts from a fresh checkout, so every file looked new and no page was ever
+# swept - while the kept pages were orphaned: in no sitemap, linked from nowhere, and
+# dropping out of Google's index. Each kept page now goes in sitemap.xml and on its
+# country page's "Earlier stories" list.
+$storyCutoff = (Get-Date).ToUniversalTime().AddDays(-$StoryDays)
+function Read-StoryPageHead([string]$Path) {
+  # The first 8 KB hold the JSON-LD (datePublished, about 4 KB in) and the <h1> (6 KB).
+  $fs = [IO.File]::OpenRead($Path)
+  try { $buf = New-Object byte[] 8192; $n = $fs.Read($buf, 0, $buf.Length) } finally { $fs.Dispose() }
+  $text = [Text.Encoding]::UTF8.GetString($buf, 0, $n)
+  $d = [regex]::Match($text, '"datePublished":"([^"]+)"')
+  $h = [regex]::Match($text, '<h1>([^<]*)</h1>')
+  $when = $null
+  if ($d.Success) { try { $when = [DateTimeOffset]::Parse($d.Groups[1].Value, [Globalization.CultureInfo]::InvariantCulture).UtcDateTime } catch { $when = $null } }
+  return [pscustomobject]@{ When = $when; Headline = [Net.WebUtility]::HtmlDecode($h.Groups[1].Value) }
+}
+$pagesOnDisk = New-Object System.Collections.Generic.List[object]
+foreach ($c in $pageCodes) {
+  $cDir = Join-Path $root $c
+  if (-not (Test-Path $cDir)) { continue }
+  foreach ($sub in Get-ChildItem -Path $cDir -Directory -ErrorAction SilentlyContinue) {
+    $page = Join-Path $sub.FullName 'index.html'
+    if (-not (Test-Path $page)) { continue }
+    $head = Read-StoryPageHead $page
+    # A page with no readable date is kept (and listed with its file date) rather than
+    # swept on a guess.
+    $pagesOnDisk.Add([pscustomobject]@{ code = $c; slug = $sub.Name; dir = $sub.FullName; headline = $head.Headline
+                                        when = $head.When; dated = [bool]$head.When })
+  }
+}
+
 foreach ($prop in $byCountry.PSObject.Properties) {
   $code = $prop.Name
   $stories = @($prop.Value | Where-Object { Test-StoryIsRenderable $_ })
@@ -297,6 +333,21 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   }
   [void]$ld.Append(']}}')
 
+  # The country's earlier story pages still within -StoryDays, newest first: a link to
+  # each so neither a reader nor a crawler has to know its address.
+  $currentSlugs = @{}
+  foreach ($b in $stories) { $currentSlugs[(Get-StorySlug $b.headline $b.articleId)] = $true }
+  $earlierPages = @($pagesOnDisk | Where-Object { $_.code -eq $code -and $_.headline -and -not $currentSlugs.ContainsKey($_.slug) -and (-not $_.dated -or $_.when -ge $storyCutoff) } |
+    Sort-Object -Property @{ Expression = { if ($_.when) { $_.when } else { [datetime]::MinValue } }; Descending = $true } | Select-Object -First 20)
+  $earlierHtml = ''
+  if ($earlierPages.Count) {
+    $items = ($earlierPages | ForEach-Object {
+      $day = if ($_.when) { $_.when.ToString('d MMM yyyy', [Globalization.CultureInfo]::InvariantCulture) } else { '' }
+      "<li><a href=""$BaseUrl/$code/$($_.slug)/"">$(if ($day) { '<span class="rel-topic">' + $day + '</span>' })$(Esc $_.headline)</a></li>"
+    }) -join ''
+    $earlierHtml = "<nav class=""related"" aria-label=""Earlier stories""><h2 class=""section-label"">Earlier stories</h2><ul>$items</ul></nav>"
+  }
+
   $html = @"
 <!doctype html>
 <html lang="en">
@@ -339,6 +390,7 @@ $analytics
 <a class="open" href="$BaseUrl/#/$code">Open the interactive $(Esc $name) dossier &rarr;</a>
 <p class="meta">Follow $(Esc $name) only in a news reader app: <a href="$BaseUrl/$code/feed.xml">$BaseUrl/$code/feed.xml</a></p>
 $($body.ToString())
+$earlierHtml
 <nav class="morenav">
 <h2>Other countries</h2>
 $($navLinks.ToString())
@@ -510,24 +562,20 @@ $($srcHtml.ToString())
 
 # Sweep story pages past the retention window. Anything in this edition was just
 # rewritten above and is in $storyKept, so only genuinely expired pages go.
+# By the date each page carries (Read-StoryPageHead), not the file's timestamp. What stays
+# goes in the sitemap, dated by when it was published.
 $swept = 0
-if ($StoryDays -gt 0) {
-  $cutoff = (Get-Date).ToUniversalTime().AddDays(-$StoryDays)
-  foreach ($cc in $pageCodes) {
-    $ccDir = Join-Path $root $cc
-    if (-not (Test-Path $ccDir)) { continue }
-    foreach ($sub in Get-ChildItem -Path $ccDir -Directory -ErrorAction SilentlyContinue) {
-      if ($storyKept.ContainsKey("$cc/$($sub.Name)")) { continue }
-      $page = Join-Path $sub.FullName 'index.html'
-      if (-not (Test-Path $page)) { continue }
-      if ((Get-Item $page).LastWriteTimeUtc -lt $cutoff) {
-        [IO.Directory]::Delete($sub.FullName, $true)
-        $swept++
-      }
-    }
+$earlierUrls = New-Object System.Collections.Generic.List[object]
+foreach ($p in $pagesOnDisk) {
+  if ($storyKept.ContainsKey("$($p.code)/$($p.slug)")) { continue }
+  if ($StoryDays -gt 0 -and $p.dated -and $p.when -lt $storyCutoff) {
+    if (Test-Path $p.dir) { [IO.Directory]::Delete($p.dir, $true); $swept++ }
+    continue
   }
+  $lastmod = if ($p.dated) { $p.when.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture) } else { '' }
+  $earlierUrls.Add([pscustomobject]@{ url = "$BaseUrl/$($p.code)/$($p.slug)/"; lastmod = $lastmod })
 }
-Write-Host "[static] $storyBuilt story pages, $swept swept past $StoryDays days" -ForegroundColor DarkGray
+Write-Host "[static] $storyBuilt story pages, $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days" -ForegroundColor DarkGray
 
 
 # --- trust pages ---------------------------------------------------------------
@@ -757,6 +805,11 @@ $sm = New-Object System.Text.StringBuilder
 foreach ($u in $urls) {
   [void]$sm.AppendLine("  <url><loc>$u</loc><lastmod>$today</lastmod><changefreq>daily</changefreq></url>")
 }
+# Earlier story pages (kept for -StoryDays): they do not change once published.
+foreach ($e in $earlierUrls) {
+  $lm = if ($e.lastmod) { "<lastmod>$($e.lastmod)</lastmod>" } else { '' }
+  [void]$sm.AppendLine("  <url><loc>$($e.url)</loc>$lm</url>")
+}
 [void]$sm.AppendLine('</urlset>')
 [IO.File]::WriteAllText((Join-Path $root 'sitemap.xml'), $sm.ToString(), (New-Object Text.UTF8Encoding($false)))
 
@@ -770,5 +823,5 @@ foreach ($u in $urls) {
 $robots = "User-agent: *`nAllow: /`n`nSitemap: $BaseUrl/sitemap.xml`nSitemap: $BaseUrl/news-sitemap.xml`n"
 [IO.File]::WriteAllText((Join-Path $root 'robots.txt'), $robots, (New-Object Text.UTF8Encoding($false)))
 
-Write-Host "[static] built $built country pages, sitemap with $($urls.Count) URLs, robots.txt" -ForegroundColor Green
+Write-Host "[static] built $built country pages, sitemap with $($urls.Count + $earlierUrls.Count) URLs, robots.txt" -ForegroundColor Green
 Write-Host "[static] base URL: $BaseUrl" -ForegroundColor DarkGray

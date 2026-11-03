@@ -210,8 +210,14 @@
     };
     let sitemap = '';
     try { sitemap = await (await fetch('sitemap.xml', { cache: 'no-store' })).text(); } catch {}
-    const paths = Array.from(sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)).map(m => local(m[1])).filter(Boolean);
-    if (!paths.length) { note('sitemap empty or missing', 'static', ''); return; }
+    const all = Array.from(sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)).map(m => local(m[1])).filter(Boolean);
+    if (!all.length) { note('sitemap empty or missing', 'static', ''); return; }
+    // The sitemap lists today's pages first, then 90 days of earlier story pages (up to
+    // ~20,000). Every page in today's set is read; of the earlier ones, a spread sample.
+    const todayCount = (sitemap.match(/<changefreq>daily<\/changefreq>/g) || []).length;
+    const earlier = all.slice(todayCount);
+    const stride = Math.max(1, Math.ceil(earlier.length / 200));
+    const paths = all.slice(0, todayCount).concat(earlier.filter((_, i) => i % stride === 0));
     for (const extra of ['/feed.xml', '/ke/feed.xml', '/news-sitemap.xml', '/robots.txt', '/404.html']) {
       if (!(await exists(extra))) note('site file missing', 'static', extra);
     }

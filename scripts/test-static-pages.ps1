@@ -103,6 +103,27 @@ if ($UnitOnly) {
     } catch { $badFeeds.Add("$cc=not XML") }
   }
   Check "all $($pages.Count) country feeds parse and carry only their own stories" ($badFeeds.Count -eq 0) (($badFeeds | Select-Object -First 5) -join ', ')
+
+  # Every story page kept on disk is in sitemap.xml (kept pages were orphaned until
+  # Nov 2026), and every "Earlier stories" link on a country page resolves.
+  $sitemapPath = Join-Path $root 'sitemap.xml'
+  $inSitemap = @{}
+  if (Test-Path $sitemapPath) {
+    foreach ($m in [regex]::Matches([IO.File]::ReadAllText($sitemapPath, [Text.Encoding]::UTF8), '<loc>https?://[^/<]+/([a-z]{2})/([^/<]+)/</loc>')) { $inSitemap[$m.Groups[1].Value + '/' + $m.Groups[2].Value] = $true }
+  }
+  $storyDirs = @(Get-ChildItem -Path $root -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } | ForEach-Object {
+    $cc = $_.Name; Get-ChildItem -Path $_.FullName -Directory | Where-Object { Test-Path (Join-Path $_.FullName 'index.html') } | ForEach-Object { "$cc/$($_.Name)" } })
+  $missing = @($storyDirs | Where-Object { -not $inSitemap.ContainsKey($_) })
+  Check "all $($storyDirs.Count) story pages on disk are in the sitemap" ($missing.Count -eq 0) (($missing | Select-Object -First 5) -join ', ')
+  $deadEarlier = New-Object System.Collections.Generic.List[string]
+  foreach ($p in $pages) {
+    $html = [IO.File]::ReadAllText($p, [Text.Encoding]::UTF8)
+    $block = [regex]::Match($html, '(?s)aria-label="Earlier stories">(.*?)</nav>').Groups[1].Value
+    foreach ($m in [regex]::Matches($block, 'href="https?://[^/"]+/([a-z]{2})/([^/"]+)/"')) {
+      if (-not (Test-Path (Join-Path (Join-Path $root $m.Groups[1].Value) (Join-Path $m.Groups[2].Value 'index.html')))) { $deadEarlier.Add($m.Groups[1].Value + '/' + $m.Groups[2].Value) }
+    }
+  }
+  Check 'every "Earlier stories" link resolves' ($deadEarlier.Count -eq 0) (($deadEarlier | Select-Object -First 5) -join ', ')
 }
 
 if ($fail) { Write-Host "[static-pages] $fail check(s) failed" -ForegroundColor Red; exit 1 }
