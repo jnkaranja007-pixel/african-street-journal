@@ -445,12 +445,18 @@ const INVESTOR_INFO = {
   }
 };
 
+// The Atlas frame for countries whose remote islands would shrink the inhabited land to a
+// speck: Seychelles' outer islands put Mahe at 3% of the frame's width, Annobon left
+// Equatorial Guinea at a third. Used by every view (embedded, phone, fullscreen); what the
+// crop leaves out is shown in a locator inset (drawAtlasLocator). The name is kept:
+// scripts/build-country-relief.ps1 reads this block to cut the -focus relief images.
 const ISLAND_FULLSCREEN_BOUNDS = {
   mu: { minX: 57.28, maxX: 57.88, minY: 19.92, maxY: 20.58 },
   sc: { minX: 55.34, maxX: 55.56, minY: 4.54, maxY: 4.82 },
   cv: { minX: -25.42, maxX: -22.52, minY: -17.45, maxY: -14.72 },
   km: { minX: 43.12, maxX: 44.58, minY: 11.18, maxY: 12.45 },
-  st: { minX: 6.40, maxX: 7.58, minY: -1.78, maxY: 0.12 }
+  st: { minX: 6.40, maxX: 7.58, minY: -1.78, maxY: 0.12 },
+  gq: { minX: 8.30, maxX: 11.45, minY: -3.85, maxY: -0.70 }
 };
 
 const COUNTRY_INFO = {
@@ -1823,6 +1829,8 @@ function openCountry(countryId, sourceElement = document.activeElement, options 
   if (Number.isInteger(options.panel)) setPanel(options.panel);
   else if (!wasOpen && window.__resetPanel) window.__resetPanel();
   renderCountryDesk(countryId, countryPath);
+  // Paging through the Atlas: the neighbours' map data and relief load while this one is read.
+  if (activePanelIndex === 2 || mapPortal?.classList.contains('active')) preloadAdjacentCountryData(countryId);
   updateStarButton(countryId);
   if (getWatchlist().includes(countryId)) {
     markCountrySeen(countryId);
@@ -3778,8 +3786,7 @@ function syncMobileAtlasStage(countryId, mapPath, isFullscreen) {
     stage.style.removeProperty('--atlas-mobile-height');
     return;
   }
-  const useIslandFocus = Object.prototype.hasOwnProperty.call(ISLAND_FULLSCREEN_BOUNDS, countryId);
-  const bounds = mapViewBounds(countryId, mapPath.bbox, useIslandFocus);
+  const bounds = mapViewBounds(countryId, mapPath.bbox, atlasUsesIslandFocus(countryId, mapPath.bbox, false));
   const width = stage.getBoundingClientRect().width || countryMapCanvas.getBoundingClientRect().width || window.innerWidth - 48;
   const aspect = bounds.width / Math.max(0.001, bounds.height);
   const framedAspect = Math.max(0.74, Math.min(1.08, aspect));
@@ -3815,15 +3822,25 @@ function drawCountryMap(countryId, countryPath) {
   // mapDpr already supplies the extra pixels needed for crisp embedded-map rendering.
   const width = Math.max(1, Math.min(2600, Math.round(rect.width || 720)));
   const height = Math.max(1, Math.min(1600, Math.round(rect.height || 560)));
+  // One Next drew the map five times - the open, two layout-settle passes, the relief
+  // preview, the full relief - about 70 ms each at 3x on a phone. A draw whose inputs are
+  // all unchanged is skipped (before the canvas is resized, which would clear it).
+  const signature = [countryId, !!detail, isFs, width, height, mapDpr, mobileDossierMedia.matches,
+    JSON.stringify(mapLayers), !!window.ASJ_SAVE_DATA, !!RELIEF.index,
+    reliefReady(RELIEF.images.get(countryId)), reliefReady(RELIEF.images.get(countryId + '-s')),
+    reliefReady(RELIEF.images.get(countryId + '-focus')), !!COUNTRY_GIS[countryId],
+    !!countryFacts(countryId), document.fonts?.status || ''].join('|');
+  if (signature === lastAtlasSignature && countryMapCanvas.width === width * mapDpr) return;
+  lastAtlasSignature = '';
   countryMapCanvas.width = width * mapDpr;
   countryMapCanvas.height = height * mapDpr;
   countryMapCtx.setTransform(mapDpr, 0, 0, mapDpr, 0, 0);
   countryMapCtx.clearRect(0, 0, width, height);
 
-  // Archipelagos include remote specks that can make the inhabited island disappear in a narrow
-  // embedded map. Reuse each established focus crop on mobile; desktop keeps the full extent.
-  const useIslandFocus = isFs || (mobileDossierMedia.matches &&
-    Object.prototype.hasOwnProperty.call(ISLAND_FULLSCREEN_BOUNDS, countryId));
+  // Archipelagos include remote specks that make the inhabited island disappear: the
+  // desktop map used to keep the full extent, and Seychelles drew as a dot in a corner.
+  // Every view now uses the island crop; the locator inset shows what it leaves out.
+  const useIslandFocus = atlasUsesIslandFocus(countryId, mapPath.bbox, isFs);
   const bounds = mapViewBounds(countryId, mapPath.bbox, useIslandFocus);
   // Padding scales with the canvas so small embedded maps don't spend ~18% of their width on
   // margin: ~5.5% of the short side, clamped to 28-72px (island focus crops keep extra room).
@@ -3851,7 +3868,94 @@ function drawCountryMap(countryId, countryPath) {
   countryMapCtx.restore();
 
   drawCountryOutline(mapPath, offsetX, offsetY, scale);
+  // Reserved before the labels are placed, so none lands under it; drawn over them.
+  const locator = useIslandFocus ? atlasLocatorBox(mapPath, bounds, width, height, offsetX, offsetY, scale) : null;
+  if (locator) placedLabels.push({ left: locator.x - 4, top: locator.y - 4, right: locator.x + locator.w + 4, bottom: locator.y + locator.h + 4 });
   drawGisLayers(countryId, project, placedLabels, width, height, mapPath, offsetX, offsetY, scale, mapDpr);
+  if (locator) drawAtlasLocator(countryId, mapPath, bounds, locator);
+  // Set only once the draw has completed: one that threw part-way is not taken as done.
+  lastAtlasSignature = signature;
+}
+let lastAtlasSignature = '';
+
+// Locator inset for an island crop that leaves part of the country out (Seychelles'
+// outer islands, Mauritius' Rodrigues and Agalega, Equatorial Guinea's Annobon): the whole
+// country small, each island at least a dot, the area on screen boxed. A bottom corner -
+// the fullscreen button sits in a top one - whichever covers less land.
+function atlasLocatorBox(mapPath, view, width, height, offsetX, offsetY, scale) {
+  const b = mapPath.bbox;
+  const outside = b.minX < view.minX - 0.02 || b.maxX > view.maxX + 0.02 || b.minY < view.minY - 0.02 || b.maxY > view.maxY + 0.02;
+  if (!outside || width < 260 || height < 220) return null;
+  const side = Math.round(Math.max(88, Math.min(150, Math.min(width, height) * 0.24)));
+  const aspect = b.width / Math.max(0.001, b.height);
+  const w = Math.round(aspect >= 1 ? side : Math.max(72, side * aspect));
+  const h = Math.round((aspect >= 1 ? Math.max(56, side / aspect) : side) + 16);
+  const margin = 12;
+  const landIn = (x, y) => {
+    let hits = 0;
+    countryMapCtx.save();
+    countryMapCtx.setTransform(1, 0, 0, 1, 0, 0);
+    for (let i = 0; i <= 4; i++) for (let j = 0; j <= 4; j++) {
+      const px = (x + w * i / 4 - offsetX) / scale, py = (y + h * j / 4 - offsetY) / scale;
+      if (countryMapCtx.isPointInPath(mapPath.shape, px, py)) hits++;
+    }
+    countryMapCtx.restore();
+    return hits;
+  };
+  const left = { x: margin, y: height - margin - h };
+  const right = { x: width - margin - w, y: height - margin - h };
+  const pick = landIn(right.x, right.y) < landIn(left.x, left.y) ? right : left;
+  return { ...pick, w, h };
+}
+
+const ATLAS_ISLAND_STARTS = new Map();
+function atlasIslandStarts(countryId, d) {
+  if (!ATLAS_ISLAND_STARTS.has(countryId)) {
+    ATLAS_ISLAND_STARTS.set(countryId, Array.from(String(d || '').matchAll(/M\s*(-?[\d.]+)[ ,](-?[\d.]+)/g), m => [Number(m[1]), Number(m[2])]));
+  }
+  return ATLAS_ISLAND_STARTS.get(countryId);
+}
+
+function drawAtlasLocator(countryId, mapPath, view, box) {
+  const ctx = countryMapCtx;
+  const b = mapPath.bbox;
+  const cap = 16, pad = 8;
+  const s = Math.min((box.w - pad * 2) / Math.max(0.001, b.width), (box.h - cap - pad * 2) / Math.max(0.001, b.height));
+  const ox = box.x + (box.w - b.width * s) / 2 - b.minX * s;
+  const oy = box.y + cap + (box.h - cap - b.height * s) / 2 - b.minY * s;
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(box.x, box.y, box.w, box.h, 6) : ctx.rect(box.x, box.y, box.w, box.h);
+  ctx.fillStyle = 'rgba(10,14,11,0.9)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(230,248,231,0.18)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.font = '600 10px system-ui, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(230,248,231,0.72)';
+  ctx.fillText('Whole country', box.x + pad, box.y + cap / 2 + 3);
+  ctx.save();
+  ctx.translate(ox, oy);
+  ctx.scale(s, s);
+  ctx.fillStyle = FRONT_GREEN;
+  ctx.fill(mapPath.shape);
+  ctx.restore();
+  // Islands smaller than a pixel at this scale still get a dot.
+  const detail = COUNTRY_DETAIL[countryId];
+  ctx.fillStyle = FRONT_GREEN;
+  for (const [x, y] of atlasIslandStarts(countryId, detail?.d)) {
+    ctx.beginPath();
+    ctx.arc(ox + x * s, oy + y * s, 1.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  const rw = Math.max(8, (view.maxX - view.minX) * s), rh = Math.max(8, (view.maxY - view.minY) * s);
+  const rx = ox + (view.minX + view.maxX) / 2 * s - rw / 2, ry = oy + (view.minY + view.maxY) / 2 * s - rh / 2;
+  ctx.strokeStyle = 'rgba(244,250,244,0.92)';
+  ctx.lineWidth = 1.25;
+  ctx.strokeRect(rx, ry, rw, rh);
+  ctx.restore();
 }
 
 function islandMapZoom(countryId, isFullscreen) {
@@ -3861,6 +3965,18 @@ function islandMapZoom(countryId, isFullscreen) {
   if (!ISLAND_FULLSCREEN_BOUNDS[countryId]) return 1;
   if (isFullscreen) return ({ cv: 1.15, km: 1.15, st: 1.15 })[countryId] || 1;
   return 1;
+}
+
+// Fullscreen takes every island frame. The embedded and phone maps take only those that
+// crop something away (Seychelles, Mauritius, Equatorial Guinea): the Cabo Verde, Sao Tome
+// and Comoros frames are a little wider than the islands themselves, room for fullscreen's
+// zoom, and drew the small map smaller than its own outline did (Comoros 7.6% land to 4.7%).
+function atlasUsesIslandFocus(countryId, bbox, isFullscreen) {
+  const focus = ISLAND_FULLSCREEN_BOUNDS[countryId];
+  if (!focus) return false;
+  if (isFullscreen || !bbox) return true;
+  return bbox.minX < focus.minX - 0.02 || bbox.maxX > focus.maxX + 0.02 ||
+    bbox.minY < focus.minY - 0.02 || bbox.maxY > focus.maxY + 0.02;
 }
 
 function mapViewBounds(countryId, bounds, useIslandFocus) {
@@ -4211,6 +4327,10 @@ function prefetchRelief(countryId) {
   if (window.ASJ_SAVE_DATA) return;
   RELIEF.waitStart.set(countryId, performance.now());
   startReliefLoad(countryId);
+}
+function prefetchReliefPreview(countryId) {
+  if (window.ASJ_SAVE_DATA) return;
+  loadReliefIndex()?.then(index => { if (index?.[countryId]) reliefImage(countryId + '-s', countryId); });
 }
 function startReliefLoad(countryId) {
   loadReliefIndex()?.then(index => {
@@ -5658,6 +5778,10 @@ function preloadAdjacentCountryData(countryId) {
   const next = sortedCountryIds[(index + 1) % sortedCountryIds.length];
   loadCountryData(previous);
   loadCountryData(next);
+  // And their relief previews (15-30 KB): the Atlas holds its map until relief can draw,
+  // and on the live site that preview was a 0.3-0.4 s round trip on every Next.
+  prefetchReliefPreview(previous);
+  prefetchReliefPreview(next);
 }
 
 /* ── Watchlist: follow countries, "Your desk" strip on the landing ────── */
