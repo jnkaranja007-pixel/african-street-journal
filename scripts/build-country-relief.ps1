@@ -231,6 +231,42 @@ function Write-ReliefPreview([string]$Source, [string]$Target, [int]$MaxPixels =
   return (Get-Item $Target).Length
 }
 
+# A focus image's pixels off the country are never shown - the Atlas clips relief to the
+# outline - but they cost bytes: Equatorial Guinea's crop is mostly Cameroon and Gabon, and
+# came out 570 KB. They are painted one flat colour, which JPEG stores for almost nothing;
+# the outline is widened a few pixels first, so the clip's anti-aliased edge keeps real
+# relief under it. The outline is the chunk's "d" (M/L/Z only, in [lon, -lat]).
+function Set-ReliefMask([string]$Path, [string]$D, $Plan, [int]$JpegQuality) {
+  $culture = [Globalization.CultureInfo]::InvariantCulture
+  $shape = New-Object System.Drawing.Drawing2D.GraphicsPath
+  foreach ($sub in ($D -split '(?=M)')) {
+    $nums = @([regex]::Matches($sub, '-?\d+(\.\d+)?') | ForEach-Object { [double]::Parse($_.Value, $culture) })
+    if ($nums.Count -lt 6) { continue }
+    $pts = New-Object 'System.Collections.Generic.List[System.Drawing.PointF]'
+    for ($i = 0; $i + 1 -lt $nums.Count; $i += 2) {
+      $pts.Add((New-Object System.Drawing.PointF ([float](($nums[$i] - $Plan.west) / $Plan.deg)), ([float](($Plan.north + $nums[$i + 1]) / $Plan.deg))))
+    }
+    $shape.AddPolygon($pts.ToArray())
+  }
+  $keep = New-Object System.Drawing.Region $shape
+  $edge = $shape.Clone()
+  $edge.Widen((New-Object System.Drawing.Pen ([System.Drawing.Color]::Black), 8))
+  $keep.Union($edge)
+  $src = [System.Drawing.Image]::FromFile($Path)
+  $bmp = New-Object System.Drawing.Bitmap $src
+  $src.Dispose()
+  $g = [System.Drawing.Graphics]::FromImage($bmp)
+  $g.ExcludeClip($keep)
+  $g.FillRectangle((New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(34, 86, 44))), 0, 0, $bmp.Width, $bmp.Height)
+  $g.Dispose()
+  $codec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
+  $ps = New-Object System.Drawing.Imaging.EncoderParameters 1
+  $ps.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality), ([long]$JpegQuality)
+  $bmp.Save($Path, $codec, $ps)
+  $bmp.Dispose()
+  return (Get-Item $Path).Length
+}
+
 $CODES = @('dz','ao','bj','bw','bf','bi','cm','cv','cf','td','km','cg','cd','ci','dj','eg','gq','er','sz','et',
            'ga','gm','gh','gn','gw','ke','ls','lr','ly','mg','mw','ml','mr','mu','ma','mz','na','ne','ng','rw',
            'st','sn','sc','sl','so','za','ss','sd','tz','tg','tn','ug','zm','zw','eh')
@@ -256,8 +292,11 @@ if ($Only.Count -and (Test-Path $indexPath)) {
 
 # One image: its area, pixel size, and the tiles it needs. The coarsest zoom whose pixels
 # (at the equator, smaller elsewhere) are no larger than the image's, up to -MaxZoom.
-function New-ReliefPlan([string]$Cc, [double]$West, [double]$North, [double]$East, [double]$South, [int]$MaxZoom, [string]$File, [bool]$Focus) {
+# -PixelDeg sets the pixel size instead. (Not -Deg: PowerShell names ignore case, so a
+# parameter $Deg would be the $deg below, overwritten before it was read.)
+function New-ReliefPlan([string]$Cc, [double]$West, [double]$North, [double]$East, [double]$South, [int]$MaxZoom, [string]$File, [bool]$Focus, [double]$PixelDeg = 0) {
   $deg = [Math]::Max($East - $West, $North - $South) / $MaxSide
+  if ($PixelDeg -gt 0) { $deg = $PixelDeg }
   $W = [int][Math]::Ceiling(($East - $West) / $deg); $H = [int][Math]::Ceiling(($North - $South) / $deg)
   $East = $West + $W * $deg; $South = $North - $H * $deg
   $z = 0; while ((360 / (256 * [Math]::Pow(2, $z))) -gt $deg -and $z -lt $MaxZoom) { $z++ }
@@ -283,8 +322,10 @@ foreach ($cc in $CODES) {
 # islands make it 11 degrees wide, which left Mahe - the crop, 0.22 degrees - about 28
 # pixels across, stretched over a phone screen. Each crop, with a quarter of its size as
 # a margin for the view's padding, is drawn over the country image when zoomed - built
-# only where it is at least half as fine again as the country image (Cabo Verde's and
-# Sao Tome's crops are most of the country already).
+# only where the crop is under three quarters of the country's extent (Cabo Verde's, Sao
+# Tome's and the Comoros' crops are the whole country already), and at least twice as fine
+# as the country image: Equatorial Guinea's crop is two thirds of it, and at MaxSide it
+# came out only 1.4 times as fine, below the old cut-off, so Bioko had no image of its own.
 $appText = [IO.File]::ReadAllText((Join-Path $root 'app.js'), [Text.Encoding]::UTF8)
 $focusBlock = [regex]::Match($appText, '(?s)const ISLAND_FULLSCREEN_BOUNDS = \{(.*?)\};').Groups[1].Value
 foreach ($m in [regex]::Matches($focusBlock, '(\w\w): \{ minX: ([-\d.]+), maxX: ([-\d.]+), minY: ([-\d.]+), maxY: ([-\d.]+) \}')) {
@@ -295,11 +336,18 @@ foreach ($m in [regex]::Matches($focusBlock, '(\w\w): \{ minX: ([-\d.]+), maxX: 
   $margin = 0.25 * [Math]::Max($maxX - $minX, $maxY - $minY)
   $focusPlan = New-ReliefPlan $cc ($minX - $margin) (-$minY + $margin) ($maxX + $margin) (-$maxY - $margin) 14 "$cc-focus.jpg" $true
   $basePlan = @($plans | Where-Object { $_.cc -eq $cc -and -not $_.focus })[0]
-  if ($basePlan -and $focusPlan.deg -gt $basePlan.deg / 1.5) {
-    Write-Host ("  {0} crop is not much finer than the country image ({1:N4} vs {2:N4} deg/px) - no focus image" -f $cc, $focusPlan.deg, $basePlan.deg)
-    $stale = Join-Path $outDir "$cc-focus.jpg"
-    if (Test-Path $stale) { Remove-Item $stale }
-    continue
+  if ($basePlan) {
+    $focusExtent = [Math]::Max($focusPlan.east - $focusPlan.west, $focusPlan.north - $focusPlan.south)
+    $baseExtent = [Math]::Max($basePlan.east - $basePlan.west, $basePlan.north - $basePlan.south)
+    if ($focusExtent -gt 0.75 * $baseExtent) {
+      Write-Host ("  {0} crop is most of the country ({1:N2} of {2:N2} deg) - no focus image" -f $cc, $focusExtent, $baseExtent)
+      $stale = Join-Path $outDir "$cc-focus.jpg"
+      if (Test-Path $stale) { Remove-Item $stale }
+      continue
+    }
+    if ($focusPlan.deg -gt $basePlan.deg / 2) {
+      $focusPlan = New-ReliefPlan $cc ($minX - $margin) (-$minY + $margin) ($maxX + $margin) (-$maxY - $margin) 14 "$cc-focus.jpg" $true ($basePlan.deg / 2)
+    }
   }
   $plans.Add($focusPlan)
 }
@@ -330,6 +378,11 @@ foreach ($p in $plans) {
   $ex = [Math]::Max(2.0, [Math]::Min(12.0, [Math]::Pow($metres / 25, 0.55)))
   $out = Join-Path $outDir $p.file
   $bytes = [AsjDem]::Build($CacheDir, $p.z, $p.tx0, $p.ty0, $p.nx, $p.ny, $p.west, $p.north, $p.deg, $p.W, $p.H, $ex, $out, $Quality, $ToneBase, $ToneTint, $ToneShadow, $ToneLight)
+  if ($p.focus) {
+    $chunk = [IO.File]::ReadAllText((Join-Path $root "data\countries\$($p.cc).js"), [Text.Encoding]::UTF8)
+    $outline = [regex]::Match($chunk, '"d":"([^"]*)"').Groups[1].Value
+    if ($outline) { $bytes = Set-ReliefMask $out $outline $p $Quality }
+  }
   $total += $bytes
   $box = [ordered]@{
     w = [Math]::Round($p.west, 4); e = [Math]::Round($p.east, 4)

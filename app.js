@@ -3822,11 +3822,12 @@ function drawCountryMap(countryId, countryPath) {
   // mapDpr already supplies the extra pixels needed for crisp embedded-map rendering.
   const width = Math.max(1, Math.min(2600, Math.round(rect.width || 720)));
   const height = Math.max(1, Math.min(1600, Math.round(rect.height || 560)));
+  const view = atlasViewFor(countryId);
   // One Next drew the map five times - the open, two layout-settle passes, the relief
   // preview, the full relief - about 70 ms each at 3x on a phone. A draw whose inputs are
   // all unchanged is skipped (before the canvas is resized, which would clear it).
   const signature = [countryId, !!detail, isFs, width, height, mapDpr, mobileDossierMedia.matches,
-    JSON.stringify(mapLayers), !!window.ASJ_SAVE_DATA, !!RELIEF.index,
+    view.k, view.ux, view.uy, JSON.stringify(mapLayers), !!window.ASJ_SAVE_DATA, !!RELIEF.index,
     reliefReady(RELIEF.images.get(countryId)), reliefReady(RELIEF.images.get(countryId + '-s')),
     reliefReady(RELIEF.images.get(countryId + '-focus')), !!COUNTRY_GIS[countryId],
     !!countryFacts(countryId), document.fonts?.status || ''].join('|');
@@ -3848,9 +3849,11 @@ function drawCountryMap(countryId, countryPath) {
     ? 92
     : Math.max(28, Math.min(72, Math.round(Math.min(width, height) * 0.055)));
   const baseScale = Math.min((width - pad * 2) / bounds.width, (height - pad * 2) / bounds.height);
-  const scale = baseScale * islandMapZoom(countryId, isFs);
-  const offsetX = (width - bounds.width * scale) / 2 - bounds.minX * scale;
-  const offsetY = (height - bounds.height * scale) / 2 - bounds.minY * scale;
+  const fitScale = baseScale * islandMapZoom(countryId, isFs);
+  // The reader's zoom and pan (atlasView) on top of the fitted view.
+  const scale = fitScale * view.k;
+  const offsetX = ((width - bounds.width * fitScale) / 2 - bounds.minX * fitScale) * view.k + view.ux * width;
+  const offsetY = ((height - bounds.height * fitScale) / 2 - bounds.minY * fitScale) * view.k + view.uy * height;
   const project = (lon, lat) => {
     const [x, y] = detailPoint(lon, lat);
     return [offsetX + x * scale, offsetY + y * scale];
@@ -3868,15 +3871,207 @@ function drawCountryMap(countryId, countryPath) {
   countryMapCtx.restore();
 
   drawCountryOutline(mapPath, offsetX, offsetY, scale);
-  // Reserved before the labels are placed, so none lands under it; drawn over them.
-  const locator = useIslandFocus ? atlasLocatorBox(mapPath, bounds, width, height, offsetX, offsetY, scale) : null;
+  // The part of the country on screen, in map units. Wherever some of the country is off
+  // it - an island crop, or the reader zoomed in - a locator inset shows the whole. Reserved
+  // before the labels are placed, so none lands under it; drawn over them.
+  const visible = { minX: -offsetX / scale, maxX: (width - offsetX) / scale, minY: -offsetY / scale, maxY: (height - offsetY) / scale };
+  const locator = atlasLocatorBox(mapPath, visible, width, height, offsetX, offsetY, scale);
   if (locator) placedLabels.push({ left: locator.x - 4, top: locator.y - 4, right: locator.x + locator.w + 4, bottom: locator.y + locator.h + 4 });
+  // So are the buttons over the map (fullscreen, zoom): a label under one could not be read.
+  for (const button of countryMapCanvas.parentElement?.querySelectorAll('button') || []) {
+    const b = button.getBoundingClientRect();
+    if (b.width) placedLabels.push({ left: b.left - rect.left - 4, top: b.top - rect.top - 4, right: b.right - rect.left + 4, bottom: b.bottom - rect.top + 4 });
+  }
   drawGisLayers(countryId, project, placedLabels, width, height, mapPath, offsetX, offsetY, scale, mapDpr);
-  if (locator) drawAtlasLocator(countryId, mapPath, bounds, locator);
+  if (locator) drawAtlasLocator(countryId, mapPath, visible, locator);
+  ATLAS_FRAME.width = width; ATLAS_FRAME.height = height; ATLAS_FRAME.dpr = mapDpr;
   // Set only once the draw has completed: one that threw part-way is not taken as done.
   lastAtlasSignature = signature;
 }
 let lastAtlasSignature = '';
+// The last full draw's size, for the gesture preview.
+const ATLAS_FRAME = { width: 0, height: 0, dpr: 1 };
+
+/* Zoom and pan. k magnifies the fitted view; ux and uy pan it, as fractions of the canvas,
+   so a point the fitted view draws at X is drawn at X * k + ux * width - and the view keeps
+   its place through a resize or the fullscreen toggle. Every country opens unzoomed.
+   Pinch, ctrl + scroll (a trackpad pinch arrives as one), plain scroll in fullscreen,
+   double-click or double-tap, and the + / - buttons; drag pans once zoomed. At 1x a finger
+   on the map still scrolls the page (touch-action pan-x pan-y); zoomed, it moves the map. */
+const ATLAS_MAX_ZOOM = 5;
+let atlasView = { countryId: '', k: 1, ux: 0, uy: 0 };
+function atlasViewFor(countryId) {
+  if (atlasView.countryId !== countryId) {
+    atlasView = { countryId, k: 1, ux: 0, uy: 0 };
+    syncAtlasZoomControls();
+  }
+  return atlasView;
+}
+// Zoom by f about the canvas point (px, py), in CSS pixels: the point under it stays put.
+// The pan is held so the zoomed view never leaves the fitted frame.
+function zoomAtlasAt(f, px, py, width, height) {
+  const v = atlasView;
+  const k = Math.max(1, Math.min(ATLAS_MAX_ZOOM, v.k * f));
+  const r = k / v.k;
+  v.ux = (px - (px - v.ux * width) * r) / width;
+  v.uy = (py - (py - v.uy * height) * r) / height;
+  v.k = k;
+  clampAtlasView();
+}
+function panAtlasBy(dx, dy, width, height) {
+  atlasView.ux += dx / width;
+  atlasView.uy += dy / height;
+  clampAtlasView();
+}
+function clampAtlasView() {
+  const v = atlasView;
+  if (v.k < 1.001) { v.k = 1; v.ux = 0; v.uy = 0; return; }
+  v.ux = Math.max(1 - v.k, Math.min(0, v.ux));
+  v.uy = Math.max(1 - v.k, Math.min(0, v.uy));
+}
+
+const atlasZoomIn = document.getElementById('cv-map-zoom-in');
+const atlasZoomOut = document.getElementById('cv-map-zoom-out');
+const atlasZoomReset = document.getElementById('cv-map-zoom-reset');
+function syncAtlasZoomControls() {
+  const k = atlasView.k;
+  if (atlasZoomIn) atlasZoomIn.disabled = k >= ATLAS_MAX_ZOOM - 0.001;
+  if (atlasZoomOut) atlasZoomOut.disabled = k <= 1;
+  if (atlasZoomReset) atlasZoomReset.hidden = k <= 1;
+  countryMapCanvas.classList.toggle('cv-map-zoomed', k > 1);
+}
+
+// While a gesture runs, each frame redraws the last full draw moved and scaled - one image
+// copy, where a full draw is 6-75 ms on a laptop and more on a phone - and the full draw
+// follows when the gesture ends.
+const atlasGesture = { snapshot: null, from: null, frame: 0, settle: 0 };
+function beginAtlasGesture() {
+  if (atlasGesture.from || !countryMapCanvas.width) return;
+  const snap = atlasGesture.snapshot || (atlasGesture.snapshot = document.createElement('canvas'));
+  snap.width = countryMapCanvas.width;
+  snap.height = countryMapCanvas.height;
+  snap.getContext('2d').drawImage(countryMapCanvas, 0, 0);
+  atlasGesture.from = { ...atlasView };
+}
+function previewAtlasGesture() {
+  if (atlasGesture.frame || !atlasGesture.from) return;
+  atlasGesture.frame = requestAnimationFrame(() => {
+    atlasGesture.frame = 0;
+    const from = atlasGesture.from;
+    if (!from || from.countryId !== atlasView.countryId) return;
+    const { width: w, height: h, dpr } = ATLAS_FRAME;
+    const r = atlasView.k / from.k;
+    countryMapCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    fillMapBackdrop(w, h);
+    countryMapCtx.setTransform(dpr * r, 0, 0, dpr * r, dpr * (atlasView.ux - from.ux * r) * w, dpr * (atlasView.uy - from.uy * r) * h);
+    countryMapCtx.drawImage(atlasGesture.snapshot, 0, 0, w, h);
+    countryMapCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    lastAtlasSignature = '';
+  });
+}
+function endAtlasGesture() {
+  clearTimeout(atlasGesture.settle);
+  cancelAnimationFrame(atlasGesture.frame);
+  atlasGesture.frame = 0;
+  atlasGesture.from = null;
+  redrawAtlasView();
+}
+function redrawAtlasView() {
+  syncAtlasZoomControls();
+  if (activeCountryMap) drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath);
+}
+function atlasPoint(e) {
+  const r = countryMapCanvas.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top, w: r.width || 1, h: r.height || 1 };
+}
+function zoomAtlasStep(f) {
+  if (!activeCountryMap) return;
+  const r = countryMapCanvas.getBoundingClientRect();
+  zoomAtlasAt(f, r.width / 2, r.height / 2, r.width || 1, r.height || 1);
+  redrawAtlasView();
+}
+// A button that disables itself (- at 1x, + at the limit) hands focus to its partner.
+atlasZoomIn?.addEventListener('click', () => { zoomAtlasStep(2); if (atlasZoomIn.disabled) atlasZoomOut?.focus({ preventScroll: true }); });
+atlasZoomOut?.addEventListener('click', () => { zoomAtlasStep(0.5); if (atlasZoomOut.disabled) atlasZoomIn?.focus({ preventScroll: true }); });
+atlasZoomReset?.addEventListener('click', () => { zoomAtlasStep(1 / ATLAS_MAX_ZOOM); atlasZoomIn?.focus({ preventScroll: true }); });
+
+countryMapCanvas.addEventListener('wheel', e => {
+  if (!activeCountryMap) return;
+  if (!mapPortal.classList.contains('active') && !e.ctrlKey && !e.metaKey) return;
+  e.preventDefault();
+  const p = atlasPoint(e);
+  const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+  beginAtlasGesture();
+  zoomAtlasAt(Math.max(0.5, Math.min(2, Math.pow(2, -e.deltaY * unit / 200))), p.x, p.y, p.w, p.h);
+  previewAtlasGesture();
+  clearTimeout(atlasGesture.settle);
+  atlasGesture.settle = setTimeout(endAtlasGesture, 160);
+}, { passive: false });
+
+const atlasPointers = new Map();
+let atlasLastTap = null;
+let atlasTouchZoomAt = 0;
+countryMapCanvas.addEventListener('pointerdown', e => {
+  if (!activeCountryMap || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  const p = atlasPoint(e);
+  atlasPointers.set(e.pointerId, { x: p.x, y: p.y, x0: p.x, y0: p.y });
+  // At 1x a single finger or mouse has nothing to pan: the page keeps the gesture.
+  if (atlasPointers.size < 2 && atlasView.k <= 1) return;
+  // Throws for a pointer already gone (lifted between the event and this line).
+  try { countryMapCanvas.setPointerCapture(e.pointerId); } catch {}
+  if (e.pointerType === 'mouse') countryMapCanvas.classList.add('cv-map-panning');
+  clearTimeout(atlasGesture.settle);
+  beginAtlasGesture();
+});
+countryMapCanvas.addEventListener('pointermove', e => {
+  const prev = atlasPointers.get(e.pointerId);
+  if (!prev || !atlasGesture.from) return;
+  const p = atlasPoint(e);
+  if (atlasPointers.size >= 2) {
+    const [a, b] = [...atlasPointers.values()];
+    const other = a === prev ? b : a;
+    const d0 = Math.hypot(prev.x - other.x, prev.y - other.y);
+    const d1 = Math.hypot(p.x - other.x, p.y - other.y);
+    // Half the finger's move pans (the midpoint's move); the spread zooms about the midpoint.
+    panAtlasBy((p.x - prev.x) / 2, (p.y - prev.y) / 2, p.w, p.h);
+    if (d0 > 8) zoomAtlasAt(d1 / d0, (p.x + other.x) / 2, (p.y + other.y) / 2, p.w, p.h);
+  } else {
+    panAtlasBy(p.x - prev.x, p.y - prev.y, p.w, p.h);
+  }
+  prev.x = p.x; prev.y = p.y;
+  previewAtlasGesture();
+});
+function releaseAtlasPointer(e) {
+  const prev = atlasPointers.get(e.pointerId);
+  if (!prev) return;
+  atlasPointers.delete(e.pointerId);
+  countryMapCanvas.classList.remove('cv-map-panning');
+  // Double-tap zooms in where it lands. (Phones' own double-click events are not relied
+  // on: some send none to an element that handles touches.)
+  if (e.type === 'pointerup' && e.pointerType === 'touch' && !atlasPointers.size && Math.hypot(prev.x - prev.x0, prev.y - prev.y0) < 10) {
+    const now = performance.now();
+    if (atlasLastTap && now - atlasLastTap.t < 320 && Math.hypot(prev.x - atlasLastTap.x, prev.y - atlasLastTap.y) < 32) {
+      atlasLastTap = null;
+      atlasTouchZoomAt = now;
+      const p = atlasPoint(e);
+      atlasGesture.from = null;
+      zoomAtlasAt(2, prev.x, prev.y, p.w, p.h);
+      redrawAtlasView();
+      return;
+    }
+    atlasLastTap = { t: now, x: prev.x, y: prev.y };
+  }
+  if (!atlasPointers.size && atlasGesture.from) endAtlasGesture();
+}
+countryMapCanvas.addEventListener('pointerup', releaseAtlasPointer);
+countryMapCanvas.addEventListener('pointercancel', releaseAtlasPointer);
+countryMapCanvas.addEventListener('dblclick', e => {
+  if (!activeCountryMap || performance.now() - atlasTouchZoomAt < 600) return;
+  e.preventDefault();
+  const p = atlasPoint(e);
+  zoomAtlasAt(e.shiftKey ? 0.5 : 2, p.x, p.y, p.w, p.h);
+  redrawAtlasView();
+});
 
 // Locator inset for an island crop that leaves part of the country out (Seychelles'
 // outer islands, Mauritius' Rodrigues and Agalega, Equatorial Guinea's Annobon): the whole
@@ -3950,11 +4145,14 @@ function drawAtlasLocator(countryId, mapPath, view, box) {
     ctx.arc(ox + x * s, oy + y * s, 1.6, 0, Math.PI * 2);
     ctx.fill();
   }
+  // The area on screen, kept inside the inset: it is often wider than the country itself.
   const rw = Math.max(8, (view.maxX - view.minX) * s), rh = Math.max(8, (view.maxY - view.minY) * s);
-  const rx = ox + (view.minX + view.maxX) / 2 * s - rw / 2, ry = oy + (view.minY + view.maxY) / 2 * s - rh / 2;
+  const cx = ox + (view.minX + view.maxX) / 2 * s, cy = oy + (view.minY + view.maxY) / 2 * s;
+  const left = Math.max(box.x + 3, cx - rw / 2), right = Math.min(box.x + box.w - 3, cx + rw / 2);
+  const top = Math.max(box.y + cap, cy - rh / 2), bottom = Math.min(box.y + box.h - 3, cy + rh / 2);
   ctx.strokeStyle = 'rgba(244,250,244,0.92)';
   ctx.lineWidth = 1.25;
-  ctx.strokeRect(rx, ry, rw, rh);
+  if (right > left && bottom > top) ctx.strokeRect(left, top, right - left, bottom - top);
   ctx.restore();
 }
 
@@ -4130,8 +4328,10 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
   placedLabels.push(...markerBoxes);
   const labelledPlaces = new Set();
   const capitalPlace = places.find(p => p.capital);
-  if (capitalPlace && mapLayers.labels) {
-    const [x, y] = project(capitalPlace.lon, capitalPlace.lat);
+  const capitalXY = capitalPlace && project(capitalPlace.lon, capitalPlace.lat);
+  // Zoomed in, the capital can be off the map: its forced label would be pinned to an edge.
+  if (capitalPlace && mapLayers.labels && capitalXY[0] >= 0 && capitalXY[0] <= width && capitalXY[1] >= 0 && capitalXY[1] <= height) {
+    const [x, y] = capitalXY;
     countryMapCtx.font = '700 13px system-ui, -apple-system, "Segoe UI", sans-serif';
     drawSmartLabel(capitalPlace.name, x, y, '#f1f7ef', placedLabels, width, height, 'right', true);
     labelledPlaces.add(capitalPlace);
@@ -4301,18 +4501,43 @@ function loadReliefIndex() {
 // 300 ms: a page opened in a background tab still gets its relief.
 function reliefImage(key, countryId) {
   let img = RELIEF.images.get(key);
-  if (!img) {
-    img = new Image();
-    img.decoding = 'async';
-    const ready = () => { if (img.__ready) return; img.__ready = true; repaintAtlasFor(countryId); };
-    img.onload = () => {
-      if (img.decode) img.decode().then(ready, ready);
-      setTimeout(ready, 300);
-    };
-    img.src = 'data/relief/' + key + '.jpg?v=' + (window.ASJ_ASSET_VERSION || '1');
+  if (img) {
+    // Most recently used last, for trimReliefImages.
+    RELIEF.images.delete(key);
     RELIEF.images.set(key, img);
+    return img;
   }
+  img = new Image();
+  img.decoding = 'async';
+  const ready = () => { if (img.__ready) return; img.__ready = true; repaintAtlasFor(countryId); };
+  img.onload = () => {
+    if (img.decode) img.decode().then(ready, ready);
+    setTimeout(ready, 300);
+  };
+  img.src = 'data/relief/' + key + '.jpg?v=' + (window.ASJ_ASSET_VERSION || '1');
+  RELIEF.images.set(key, img);
+  trimReliefImages();
   return img;
+}
+// Decoded, a 1,400 px relief image holds about 8 MB; paging through every country kept all
+// of them and their previews - several hundred MB, enough for a cheap phone to kill the tab.
+// The most recently used are kept; an older one dropped comes back from the HTTP or service-
+// worker cache in milliseconds if its country is opened again. Never the map on screen, or
+// an image still loading.
+const RELIEF_KEEP = 6, RELIEF_KEEP_PREVIEWS = 24;
+function trimReliefImages() {
+  const onScreen = activeCountryMap?.countryId;
+  let full = 0, previews = 0;
+  for (const key of RELIEF.images.keys()) key.endsWith('-s') ? previews++ : full++;
+  for (const [key, img] of RELIEF.images) {
+    const preview = key.endsWith('-s');
+    if (preview ? previews <= RELIEF_KEEP_PREVIEWS : full <= RELIEF_KEEP) continue;
+    if (!img.__ready || key.slice(0, 2) === onScreen) continue;
+    RELIEF.images.delete(key);
+    img.onload = null;
+    img.removeAttribute('src');
+    if (preview) previews--; else full--;
+  }
 }
 const reliefReady = img => !!img && img.__ready && img.naturalWidth > 0;
 // The index is 3 KB: fetched once the page is idle, so the first country opened goes
@@ -4396,7 +4621,9 @@ function drawCountryRelief(countryId, project) {
 function drawReliefFocus(countryId, box, baseImg, baseDrawnWidth, project) {
   const focus = box.focus;
   if (!focus) return;
-  const stretch = baseDrawnWidth / baseImg.naturalWidth;
+  // In device pixels: the embedded map draws at 2-3x, so a country image that looks
+  // unstretched in CSS pixels is still blown up two or three times on the screen.
+  const stretch = baseDrawnWidth * (countryMapCtx.getTransform?.().a || 1) / baseImg.naturalWidth;
   if (stretch < 1.5) return;
   const img = reliefImage(countryId + '-focus', countryId);
   if (!reliefReady(img)) return;

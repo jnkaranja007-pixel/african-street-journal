@@ -536,6 +536,21 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-map-fs{position:absolute;top:8px;right:8px;width:32px;height:32px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;transition:all 150ms;font-size:14px;line-height:1;padding:0}
 .cv-map-fs:hover{background:rgba(76,175,80,0.25);border-color:var(--green);color:var(--green-bright)}
 .cv-map-portal.active .cv-map-fs{width:36px;height:36px;font-size:16px}
+/* Zoom: under the fullscreen button, on its side. At 1x a finger on the map scrolls the page
+   and a pinch zooms the map; zoomed, a drag moves the map (app.js, atlasView). */
+.cv-country-map{touch-action:pan-x pan-y}
+.cv-country-map.cv-map-zoomed{touch-action:none;cursor:grab}
+.cv-country-map.cv-map-panning{cursor:grabbing}
+.cv-map-zoom{position:absolute;top:46px;right:8px;z-index:5;display:flex;flex-direction:column;gap:4px}
+.cv-map-zoom button{width:32px;height:32px;padding:0;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font:600 18px/1 system-ui,sans-serif;transition:all 150ms}
+.cv-map-zoom button:hover:not(:disabled){background:rgba(76,175,80,0.25);border-color:var(--green);color:var(--green-bright)}
+.cv-map-zoom button:disabled{opacity:.38;cursor:default}
+.cv-map-zoom button[hidden]{display:none}
+.cv-map-portal.active .cv-map-zoom{top:52px}
+.cv-map-portal.active .cv-map-zoom button{width:36px;height:36px}
+/* A touch screen pinches and double-taps; + and - would stack four 44px buttons down a
+   phone map. Reset stays, shown once zoomed. */
+@media (hover:none) and (pointer:coarse){#cv-map-zoom-in,#cv-map-zoom-out{display:none}}
 .cv-map-legend{display:flex;gap:18px;padding:8px 14px;border-top:1px solid var(--rule);font:10px/1 var(--mono);letter-spacing:0.16em;color:var(--text-dim);text-transform:uppercase;flex-wrap:wrap;background:rgba(0,0,0,0.3);flex-shrink:0}
 .cv-map-legend span{display:inline-flex;align-items:center;gap:7px}
 .cv-map-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--green);flex-shrink:0}
@@ -1175,6 +1190,7 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   #cv-panel-atlas .cv-map-stage{height:var(--atlas-mobile-height,clamp(320px,52svh,460px));min-height:0;flex:0 0 auto}
   #cv-panel-atlas .cv-country-map{width:100%;height:100%;min-height:0;aspect-ratio:auto;flex:1}
   #cv-panel-atlas .cv-map-fs{left:8px;right:auto}
+  #cv-panel-atlas .cv-map-zoom{left:8px;right:auto}
   #cv-panel-atlas .cv-map-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;padding:10px 12px;font-size:8px;letter-spacing:.1em}
 }
 
@@ -1186,6 +1202,8 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
   .cv-carousel-arrow{width:44px;height:44px;min-height:44px}
   .cv-audience-tab{min-height:44px}
   .cv-map-fs{min-width:44px;min-height:44px}
+  .cv-map-zoom,.cv-map-portal.active .cv-map-zoom{top:58px}
+  .cv-map-zoom button,.cv-map-portal.active .cv-map-zoom button{width:44px;height:44px}
   .cv-dot{min-width:44px;min-height:44px}
 }
 

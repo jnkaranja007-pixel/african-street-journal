@@ -69,7 +69,7 @@ function asjAnalytics() {
   }
 }
 </script>
-<script src="data/analytics-config.js?v=98" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=99" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 <!-- Data saver: with Save-Data on, or on 3G and slower, the decorative headline font
      (~60-90 KB on a first visit) is not fetched at all; headlines use Georgia. The same
      test sets window.ASJ_SAVE_DATA in app.js. -->
@@ -100,10 +100,10 @@ function asjAnalytics() {
      immediately and reflow to Playfair when it arrives. The noscript copy keeps the
      original behaviour for a reader with JavaScript off. -->
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=98" as="script">
-<link rel="preload" href="data/app-core.js?v=98" as="script">
-<link rel="preload" href="data/briefs.js?v=98" as="script">
-<link rel="stylesheet" href="styles.css?v=98">
+<link rel="preload" href="app.js?v=99" as="script">
+<link rel="preload" href="data/app-core.js?v=99" as="script">
+<link rel="preload" href="data/briefs.js?v=99" as="script">
+<link rel="stylesheet" href="styles.css?v=99">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
@@ -361,6 +361,11 @@ function asjAnalytics() {
                 <canvas class="cv-country-map" id="cv-country-map" role="img" aria-label="Country atlas map" aria-describedby="cv-atlas-alt"></canvas>
                 <p class="sr-only" id="cv-atlas-alt"></p>
                 <button class="cv-map-fs" id="cv-map-fs" type="button" title="Toggle fullscreen" aria-label="Toggle fullscreen map">⛶</button>
+                <div class="cv-map-zoom" role="group" aria-label="Map zoom">
+                  <button type="button" id="cv-map-zoom-in" title="Zoom in (or pinch, double-tap, Ctrl + scroll)" aria-label="Zoom in">+</button>
+                  <button type="button" id="cv-map-zoom-out" title="Zoom out" aria-label="Zoom out" disabled>&minus;</button>
+                  <button type="button" id="cv-map-zoom-reset" title="Show the whole map" aria-label="Show the whole map" hidden><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+                </div>
               </div>
               <div class="cv-map-legend">
                 <span class="city" data-legend-layer="places"><i></i>Capital</span>
@@ -470,20 +475,20 @@ function asjAnalytics() {
 
 <div class="asj-install" id="asj-install" role="region" aria-label="Add to home screen" hidden></div>
 
-<script src="data/app-core.js?v=98"></script>
+<script src="data/app-core.js?v=99"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
-<script>window.ASJ_ASSET_VERSION='98';</script>
-<script src="data/country-facts.js?v=98" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
-<script src="data/indices.js?v=98" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=98" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=98" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=98" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=98" onerror="window.ASJ_NEWSLETTER=null"></script>
-<script src="data/social-config.js?v=98" onerror="window.ASJ_SOCIAL=null"></script>
+<script>window.ASJ_ASSET_VERSION='99';</script>
+<script src="data/country-facts.js?v=99" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
+<script src="data/indices.js?v=99" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=99" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=99" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=99" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=99" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script src="data/social-config.js?v=99" onerror="window.ASJ_SOCIAL=null"></script>
 
-<script src="app.js?v=98"></script>
-<script src="country-sidebar.js?v=98" defer></script>
-<script src="/info-panel.js?v=98" defer></script>
+<script src="app.js?v=99"></script>
+<script src="country-sidebar.js?v=99" defer></script>
+<script src="/info-panel.js?v=99" defer></script>
 </body>
 </html>
