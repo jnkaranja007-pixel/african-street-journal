@@ -798,7 +798,9 @@ $($srcHtml.ToString())
 # goes in the sitemap, dated by when it was published.
 $swept = 0
 $moved = 0
+$orphaned = 0
 $earlierUrls = New-Object System.Collections.Generic.List[object]
+$superseded = New-Object System.Collections.Generic.List[object]
 foreach ($p in $pagesOnDisk) {
   if ($storyKept.ContainsKey("$($p.code)/$($p.slug)")) { continue }
   if ($StoryDays -gt 0 -and $p.dated -and $p.when -lt $storyCutoff) {
@@ -806,16 +808,26 @@ foreach ($p in $pagesOnDisk) {
     continue
   }
   # An older address of a story whose page is elsewhere: a redirect, not in the sitemap.
-  if ($p.superseded) {
-    $target = "$BaseUrl/$($p.code)/$($p.home)/"
-    if ($p.home -and $p.movedTo -ne $target) { Write-MovedStoryPage $p $target; $moved++ }
-    continue
-  }
+  # Settled below, once every page that is going this run has gone.
+  if ($p.superseded) { $superseded.Add($p); continue }
   $lastmod = if ($p.dated) { $p.when.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture) } else { '' }
   $earlierUrls.Add([pscustomobject]@{ url = "$BaseUrl/$($p.code)/$($p.slug)/"; lastmod = $lastmod
                                       image = $(if (Test-Path (Join-Path $p.dir 'share.jpg')) { "$BaseUrl/$($p.code)/$($p.slug)/share.jpg" } else { '' }) })
 }
-Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected, $withdrawn withdrawn as off-country" -ForegroundColor DarkGray
+foreach ($p in $superseded) {
+  $target = if ($p.home) { "$BaseUrl/$($p.code)/$($p.home)/" } else { $p.movedTo }
+  # A redirect whose story page is gone goes too. On 5 Nov 2026 the off-country pages
+  # withdrawn above left five old addresses (Sierra Leone's youth-protest story under
+  # three headlines) redirecting to nothing.
+  $tm = [regex]::Match($target, '/([a-z]{2})/([^/]+)/$')
+  if ($tm.Success -and -not (Test-Path (Join-Path (Join-Path $root $tm.Groups[1].Value) (Join-Path $tm.Groups[2].Value 'index.html')))) {
+    [IO.Directory]::Delete($p.dir, $true)
+    $orphaned++
+    continue
+  }
+  if ($p.home -and $p.movedTo -ne $target) { Write-MovedStoryPage $p $target; $moved++ }
+}
+Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected, $withdrawn withdrawn as off-country, $orphaned redirects to removed pages dropped" -ForegroundColor DarkGray
 
 # The same earlier stories for the app's country view (data/earlier/<cc>.json, a few KB,
 # loaded when a country opens): headline, page and day of the 30 newest that are not in
