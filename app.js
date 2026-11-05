@@ -5251,6 +5251,7 @@ function renderInvestorPanel(countryId, info) {
       '<div class="cv-econ-cell"><div class="cv-econ-key">Source</div><div class="cv-econ-val">' + escapeHtml(inv.source || '—') + '</div><div class="cv-econ-sub">' + (inv.source ? 'Annual figures' : 'No published series') + '</div></div>' +
     '</div>' +
     renderGdpChart(inv, summary);
+  bindGdpChart(econWrap);
 
   // Published indicators, not "Key Sectors" (each sector word mapped to the same three
   // stock phrases for every country) or an "Investor Checklist" of generic advice.
@@ -5280,14 +5281,15 @@ function renderGdpChart(inv, summary = economySeriesSummary(inv)) {
 
   const observedMax = Math.max(...series.map(point => point.value));
   const observedMin = Math.min(...series.map(point => point.value));
-  const rawRange = Math.max(0.1, observedMax - observedMin);
-  const pad = rawRange * 0.14;
-  const min = Math.max(0, observedMin - pad);
-  const max = observedMax + pad;
-  const range = max - min;
+  // Gridlines on round figures ($40B, $80B, $120B), not the padded range's min, middle and
+  // max ($34B, $91B, $148B).
+  const yTicks = gdpTicks(observedMin, observedMax);
+  const min = yTicks[0];
+  const max = yTicks[yTicks.length - 1];
+  const range = Math.max(1e-9, max - min);
+  const tickStep = yTicks.length > 1 ? yTicks[1] - yTicks[0] : 1;
   const x0 = 76, x1 = 974, yTop = 20, yBottom = 214;
   const yearRange = Math.max(1, latest.year - first.year);
-  const yTicks = [min, min + range / 2, max];
   const xTickPoints = series.length <= 6
     ? series
     : [series[0], series[Math.round((series.length - 1) / 3)], series[Math.round((series.length - 1) * 2 / 3)], series[series.length - 1]]
@@ -5299,20 +5301,22 @@ function renderGdpChart(inv, summary = economySeriesSummary(inv)) {
   });
   const line = points.map(point => point.x.toFixed(1) + ',' + point.y.toFixed(1)).join(' ');
   const area = x0 + ',' + yBottom + ' ' + line + ' ' + x1 + ',' + yBottom;
-  // Axis labels live in HTML over the chart: the SVG stretches (preserveAspectRatio none),
-  // which squashed its own text to ~7px and distorted it.
+  // Axis labels, dots and the hover readout live in HTML over the chart: the SVG stretches
+  // (preserveAspectRatio none), which squashed its own text to ~7px and its dots to ovals.
   const axisLabels =
     yTicks.map(value => {
       const y = yBottom - ((value - min) / range) * (yBottom - yTop);
-      return '<span class="cv-gdp-ylab" aria-hidden="true" style="top:' + (y / 250 * 100).toFixed(2) + '%">' + formatBillions(value) + '</span>';
+      return '<span class="cv-gdp-ylab" aria-hidden="true" style="top:' + (y / 250 * 100).toFixed(2) + '%">' + formatGdpTick(value, tickStep) + '</span>';
     }).join('') +
     xTickPoints.map(tick => {
       const point = points.find(item => item.year === tick.year);
       return '<span class="cv-gdp-xlab" aria-hidden="true" style="left:' + (point.x / 10).toFixed(2) + '%">' + point.year + '</span>';
     }).join('');
+  const pointData = JSON.stringify(points.map(point => [point.year, point.value, +point.x.toFixed(1), +point.y.toFixed(1)]));
   return '<div class="cv-gdp-chart" aria-label="GDP history">' + head +
-    '<div class="cv-gdp-plot">' + axisLabels +
+    '<div class="cv-gdp-plot" tabindex="0" data-points="' + pointData + '" aria-label="GDP by year. Hover, drag, or use the arrow keys to read each year.">' + axisLabels +
     '<svg viewBox="0 0 1000 250" preserveAspectRatio="none" role="img" aria-label="GDP trend from ' + first.year + ' to ' + latest.year + '">' +
+      '<defs><linearGradient id="cv-gdp-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#66bb6a" stop-opacity=".30"></stop><stop offset="1" stop-color="#66bb6a" stop-opacity="0"></stop></linearGradient></defs>' +
       yTicks.map(value => {
         const y = yBottom - ((value - min) / range) * (yBottom - yTop);
         return '' +
@@ -5326,20 +5330,105 @@ function renderGdpChart(inv, summary = economySeriesSummary(inv)) {
       '<line class="cv-gdp-axis" x1="' + x0 + '" y1="' + yBottom + '" x2="' + x1 + '" y2="' + yBottom + '"></line>' +
       '<polygon class="cv-gdp-area" points="' + area + '"></polygon>' +
       '<polyline class="cv-gdp-line" points="' + line + '"></polyline>' +
-      points.map(point => {
-        const tipX = Math.min(888, Math.max(78, point.x - 46));
-        const tipY = Math.max(8, point.y - 42);
-        return '<g class="cv-gdp-point" tabindex="0" aria-label="' + point.year + ' GDP ' + formatBillions(point.value) + '">' +
-          '<circle class="cv-gdp-hit" cx="' + point.x.toFixed(1) + '" cy="' + point.y.toFixed(1) + '" r="15"></circle>' +
-          '<circle class="cv-gdp-dot' + (point === points[points.length - 1] ? ' latest' : '') + '" cx="' + point.x.toFixed(1) + '" cy="' + point.y.toFixed(1) + '" r="' + (point === points[points.length - 1] ? '4.2' : '3.4') + '"></circle>' +
-          '<g class="cv-gdp-tip" transform="translate(' + tipX.toFixed(1) + ' ' + tipY.toFixed(1) + ')">' +
-            '<rect width="96" height="26"></rect>' +
-            '<text x="9" y="16">' + point.year + ' · ' + formatBillions(point.value) + '</text>' +
-          '</g>' +
-        '</g>';
-      }).join('') +
-    '</svg></div>' +
+    '</svg>' +
+    points.map((point, i) =>
+      '<span class="cv-gdp-pt' + (i === points.length - 1 ? ' latest' : '') + '" aria-hidden="true" style="left:' + (point.x / 10).toFixed(2) + '%;top:' + (point.y / 250 * 100).toFixed(2) + '%"></span>'
+    ).join('') +
+    '<span class="cv-gdp-guide" aria-hidden="true" hidden style="top:' + (yTop / 2.5).toFixed(2) + '%;height:' + ((yBottom - yTop) / 2.5).toFixed(2) + '%"></span>' +
+    '<span class="cv-gdp-mark" aria-hidden="true" hidden></span>' +
+    '<div class="cv-gdp-read" aria-live="polite" hidden></div>' +
+    '</div>' +
   '</div>';
+}
+
+// Round gridline values spanning lo..hi: the step of 1, 2, 2.5 or 5 x 10^n that covers
+// the data in 3-5 intervals with the least empty band (Nigeria's $252-668B is
+// $200-700B, not $200-800B).
+function gdpTicks(lo, hi) {
+  if (!(hi > lo)) hi = lo + Math.max(0.1, Math.abs(lo) * 0.1);
+  const mag = Math.pow(10, Math.floor(Math.log10(hi - lo)));
+  let best = null;
+  for (const m of [0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5]) {
+    const step = m * mag;
+    const start = Math.floor(lo / step + 1e-9), end = Math.ceil(hi / step - 1e-9);
+    const n = end - start;
+    if (n < 3 || n > 5) continue;
+    const waste = n * step - (hi - lo);
+    if (!best || waste < best.waste - 1e-9) best = { step, start, n, waste };
+  }
+  if (!best) { const step = (hi - lo) / 4; return [0, 1, 2, 3, 4].map(i => lo + i * step); }
+  return Array.from({ length: best.n + 1 }, (_, i) => +((best.start + i) * best.step).toPrecision(12));
+}
+
+// A tick label with as many decimals as its step needs: $0.45B, not two "$0.5B" lines.
+function formatGdpTick(value, step) {
+  const trillions = value >= 1000;
+  const v = trillions ? value / 1000 : value;
+  const s = trillions ? step / 1000 : step;
+  const decimals = Math.min(2, (String(+s.toPrecision(6)).split('.')[1] || '').length);
+  return '$' + v.toFixed(decimals) + (trillions ? 'T' : 'B');
+}
+
+// The hover readout: one more significant figure than the axis ($82.4B).
+function formatGdpReadout(value) {
+  if (value >= 1000) return '$' + (value / 1000).toFixed(2) + 'T';
+  if (value >= 100) return '$' + Math.round(value) + 'B';
+  return '$' + value.toFixed(value >= 1 ? 1 : 2) + 'B';
+}
+
+// Hover, drag or arrow keys anywhere on the plot pick the nearest year: a guide line, a
+// marker and a readout with the year, the figure and the change on the year before.
+function bindGdpChart(root) {
+  const plot = root && root.querySelector('.cv-gdp-plot');
+  if (!plot) return;
+  let points;
+  try { points = JSON.parse(plot.dataset.points || '[]'); } catch { points = []; }
+  if (!points.length) return;
+  const guide = plot.querySelector('.cv-gdp-guide');
+  const mark = plot.querySelector('.cv-gdp-mark');
+  const read = plot.querySelector('.cv-gdp-read');
+  let active = -1;
+  let touchHeld = false;
+  const show = index => {
+    active = Math.max(0, Math.min(points.length - 1, index));
+    const [year, value, x, y] = points[active];
+    const prev = points[active - 1];
+    const change = prev && prev[1] ? (value - prev[1]) / prev[1] * 100 : NaN;
+    read.innerHTML = '<span>' + year + '</span><b>' + formatGdpReadout(value) + '</b>' +
+      (prev ? '<span class="' + (change >= 0 ? 'up' : 'down') + '">' + formatPct(change) + ' on ' + prev[0] + '</span>' : '<span>First year shown</span>');
+    guide.style.left = mark.style.left = (x / 10) + '%';
+    mark.style.top = (y / 2.5) + '%';
+    guide.hidden = mark.hidden = read.hidden = false;
+    const w = plot.clientWidth, h = plot.clientHeight;
+    const px = x / 1000 * w, py = y / 250 * h;
+    // Beside the guide, not over the point: right of it in the left half, left of it in
+    // the right half; level with the point, reaching up from a low one, down from a high one.
+    const cw = read.offsetWidth, ch = read.offsetHeight;
+    const left = px > w * 0.55 ? px - cw - 16 : px + 16;
+    read.style.left = Math.max(0, Math.min(w - cw, left)) + 'px';
+    read.style.top = Math.max(0, Math.min(h - ch, py >= h / 2 ? py - ch + 8 : py - 8)) + 'px';
+  };
+  const hide = () => { active = -1; guide.hidden = mark.hidden = read.hidden = true; };
+  const nearest = clientX => {
+    const rect = plot.getBoundingClientRect();
+    const ux = (clientX - rect.left) / Math.max(1, rect.width) * 1000;
+    let best = 0;
+    points.forEach((p, i) => { if (Math.abs(p[2] - ux) < Math.abs(points[best][2] - ux)) best = i; });
+    return best;
+  };
+  plot.addEventListener('pointerdown', event => { touchHeld = event.pointerType !== 'mouse'; show(nearest(event.clientX)); });
+  plot.addEventListener('pointermove', event => show(nearest(event.clientX)));
+  // A finger lifting "leaves" the plot; on touch the readout stays until a tap elsewhere.
+  plot.addEventListener('pointerleave', () => { if (!touchHeld) hide(); });
+  document.addEventListener('pointerdown', event => { if (touchHeld && !plot.contains(event.target)) { touchHeld = false; hide(); } });
+  plot.addEventListener('focus', () => show(active >= 0 ? active : points.length - 1));
+  plot.addEventListener('blur', hide);
+  plot.addEventListener('keydown', event => {
+    const step = { ArrowLeft: -1, ArrowRight: 1 }[event.key];
+    if (step) { event.preventDefault(); show((active >= 0 ? active : points.length - 1) + step); }
+    else if (event.key === 'Home' || event.key === 'End') { event.preventDefault(); show(event.key === 'Home' ? 0 : points.length - 1); }
+    else if (event.key === 'Escape') hide();
+  });
 }
 
 function formatBillions(value) {
