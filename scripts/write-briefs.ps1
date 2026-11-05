@@ -337,6 +337,63 @@ function Get-RepeatedSentences([string[]]$Paragraphs) {
   return @($repeats)
 }
 
+# Days counted from the day of writing. A story stays on the site for 90 days, and a
+# source's "yesterday" counts from its own publication, so the desk's "yesterday" is
+# wrong on the morning the edition goes out and every day after. The 14 editions to
+# 5 Nov 2026 carried about 13 such stories a day. Quoted speech keeps its words, and a
+# capitalised "Today" in mid-sentence is a name ("USA Today").
+function Get-RelativeTimeWords([string]$Text) {
+  if (-not $Text) { return @() }
+  $plain = [regex]::Replace($Text, '[\u201C"][^\u201D"]*[\u201D"]', ' ')
+  $hits = New-Object System.Collections.Generic.List[string]
+  foreach ($m in [regex]::Matches($plain, '\b(?:today|yesterday|tomorrow|tonight|this (?:morning|afternoon|evening|week|weekend)|last (?:night|week|weekend)|next week|(?:earlier|later) this week)\b', 'IgnoreCase')) {
+    if ([char]::IsUpper($m.Value[0]) -and $plain.Substring(0, $m.Index).TrimEnd() -notmatch '(?:^|[.!?:])$') { continue }
+    $hits.Add($m.Value)
+  }
+  return @($hits | Select-Object -Unique)
+}
+
+# Twelve words or more in a row exactly as the source has them, outside quotation marks.
+# The prompt says paraphrase; on 5 Nov 2026 one story in five written from an English
+# report still carried such a run, which is the outlet's copy under the desk's name.
+# Accents and case are ignored; a quotation breaks a run.
+function Get-CopiedRuns([string[]]$Paragraphs, [string]$EvidenceText, [int]$Words = 12) {
+  $runs = New-Object System.Collections.Generic.List[string]
+  if (-not $EvidenceText) { return @() }
+  $fold = { param($t) ($t.Normalize([Text.NormalizationForm]::FormD) -replace '\p{Mn}', '').ToLowerInvariant() }
+  $sourceWords = New-Object System.Collections.Generic.List[string]
+  foreach ($m in [regex]::Matches((& $fold $EvidenceText), '[\p{L}\p{N}]+')) { $sourceWords.Add($m.Value) }
+  if ($sourceWords.Count -lt $Words) { return @() }
+  $source = $sourceWords.ToArray()
+  $grams = New-Object 'System.Collections.Generic.HashSet[string]'
+  for ($i = 0; $i -le $source.Length - $Words; $i++) { [void]$grams.Add([string]::Join(' ', $source, $i, $Words)) }
+  foreach ($paragraph in @($Paragraphs)) {
+    $text = [string]$paragraph
+    $quotes = @([regex]::Matches($text, '[\u201C"][^\u201D"]*[\u201D"]'))
+    # Parallel lists and String.Join over a range, not an object per word and a pipeline
+    # per window: the desk runs this on every draft.
+    $folded = New-Object System.Collections.Generic.List[string]
+    $starts = New-Object System.Collections.Generic.List[int]
+    $ends = New-Object System.Collections.Generic.List[int]
+    $inQuote = New-Object System.Collections.Generic.List[bool]
+    foreach ($t in [regex]::Matches($text, '[\p{L}\p{N}]+')) {
+      $quoted = $false
+      foreach ($q in $quotes) { if ($t.Index -ge $q.Index -and $t.Index -lt $q.Index + $q.Length) { $quoted = $true; break } }
+      $folded.Add(([regex]::Replace($t.Value.Normalize([Text.NormalizationForm]::FormD), '\p{Mn}', '')).ToLowerInvariant()); $starts.Add($t.Index); $ends.Add($t.Index + $t.Length); $inQuote.Add($quoted)
+    }
+    $keys = $folded.ToArray()
+    $i = 0
+    while ($i -le $keys.Length - $Words) {
+      if ($inQuote.IndexOf($true, $i, $Words) -ge 0 -or -not $grams.Contains([string]::Join(' ', $keys, $i, $Words))) { $i++; continue }
+      $j = $i + $Words
+      while ($j -lt $keys.Length -and -not $inQuote[$j] -and $grams.Contains([string]::Join(' ', $keys, $j - $Words + 1, $Words))) { $j++ }
+      $runs.Add($text.Substring($starts[$i], $ends[$j - 1] - $starts[$i]))
+      $i = $j
+    }
+  }
+  return @($runs)
+}
+
 function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $paragraphs = @($Brief.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
   $prose = (@([string]$Brief.headline, [string]$Brief.dek) + $paragraphs + @([string]$Brief.why)) -join "`n"
@@ -345,13 +402,17 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $speculativeWhy = Test-SpeculativeText ([string]$Brief.why)
   $restatedWhy = Test-WhyRestatesDek $Brief
   $lowerProse = Test-LowerCaseProse $Brief
+  $relativeTime = @(Get-RelativeTimeWords $prose)
+  $copied = @(Get-CopiedRuns $paragraphs $EvidenceText)
   $issues = New-Object System.Collections.Generic.List[string]
   if ($lowerProse) { $issues.Add('prose in lower case') }
   if ($phrases.Count) { $issues.Add('stock phrasing: ' + (($phrases | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
   if ($repeats.Count) { $issues.Add('repeats a fact') }
   if ($speculativeWhy) { $issues.Add('why line speculates') }
   if ($restatedWhy) { $issues.Add('why line restates the dek') }
-  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse }
+  if ($relativeTime.Count) { $issues.Add('relative time: ' + (($relativeTime | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
+  if ($copied.Count) { $issues.Add('copies the source word for word') }
+  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied }
 }
 
 function Get-StyleRepairNote($Style, $Candidate) {
@@ -372,6 +433,12 @@ function Get-StyleRepairNote($Style, $Candidate) {
   }
   if ($Style.RestatedWhy) {
     [void]$lines.Add('- The "why" line says the headline and dek again. Say what the event changes and for whom - a consequence the packet reports, not the event again.')
+  }
+  if (@($Style.RelativeTime).Count) {
+    [void]$lines.Add('- It counts days from today: ' + ((@($Style.RelativeTime) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '. The story is read for weeks, so give the weekday or date the packet itself states, or leave the time out. Do not work out a date the packet does not give.')
+  }
+  foreach ($c in @($Style.Copied | Select-Object -First 2)) {
+    [void]$lines.Add('- This passage is the source''s own wording: "' + $c + '" Say it in your own words, keeping every name, figure and date exactly.')
   }
   [void]$lines.Add('Return the corrected story as the same JSON object. Keep the item number and every name, figure and date exactly as in the previous draft, and add nothing that is not in the packet. A shorter story is fine.')
   [void]$lines.Add('')
@@ -473,7 +540,12 @@ NUMBERS
   Never convert a written number into digits that do not appear in the evidence.
 
 VOICE AND SOURCES
-- Paraphrase. Do not copy a source sentence or use a quotation longer than 12 words.
+- Paraphrase. Do not copy a source sentence, or any run of 12 words from it, and do
+  not use a quotation longer than 12 words.
+- The story is read for weeks. Never write "today", "yesterday", "tomorrow", "this
+  week", "last week" or "next week" in the desk's own voice: give the weekday or date
+  the packet states, or leave the time out. Never work out a date the packet does not
+  give.
 - Neutral. Report what happened and attribute claims. No opinion, no loaded
   adjectives, no speculation, no calls to action.
 - Do not pad thin evidence, repeat a fact to fake length or invent context. Use the
@@ -609,9 +681,38 @@ function Convert-NumberScanText([string]$Text) {
       [void]$normalized.Append($char)
     }
   }
-  # Arabic conjunctions and articles are commonly joined directly to a numeral.
-  # Insert a scan-only boundary without changing the source or published copy.
-  return [regex]::Replace($normalized.ToString(), '(?<=[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF])(?=\d)', ' ')
+  # A letter joined to a numeral gets a scan-only boundary, without changing the source
+  # or the published copy: Arabic conjunctions and articles ("and12"), and the currency
+  # letters African papers write against the figure (K640 billion, N4.5bn, P101.7mn,
+  # KSh50). Without it the figure was never read at all, on either side: on 5 Nov 2026
+  # one story in 16 carried such a figure, 77 of them in the headline, and a draft
+  # saying K640 billion against a source saying K64 billion passed.
+  return [regex]::Replace($normalized.ToString(), '(?<=\p{L})(?=\d)', ' ')
+}
+
+# One figure as the check compares it: digits with the magnitude word after them, which
+# is spelled one way whatever the source wrote ("4,5 milliards" and "4.5bn" are both
+# 45billion; "12 %" and "12 percent" are both 12percent).
+function ConvertTo-NumberKey([string]$Figure) {
+  $key = ($Figure.ToLowerInvariant() -replace '[^a-z0-9%]', '')
+  return ($key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent' -replace '%$', 'percent' -replace 'bn$', 'billion' -replace 'mn$', 'million')
+}
+
+# What a numeral can mean. English groups thousands with commas and marks decimals with a
+# point; French, Portuguese and Spanish the other way round. A grouping that does not fit
+# a convention ("2,5" is not English) is not read that way. The draft is English, so its
+# own numerals are read with -English.
+function Get-NumberReadings([string]$Numeral, [switch]$English) {
+  $readings = New-Object System.Collections.Generic.List[double]
+  $n = $Numeral.TrimEnd('.', ',')
+  $culture = [Globalization.CultureInfo]::InvariantCulture
+  if ($n -match '^\d{1,3}(?:,\d{3})+(?:\.\d+)?$' -or $n -match '^\d+(?:\.\d+)?$') {
+    $readings.Add([double]::Parse(($n -replace ',', ''), $culture))
+  }
+  if (-not $English -and ($n -match '^\d{1,3}(?:\.\d{3})+(?:,\d+)?$' -or $n -match '^\d+(?:,\d+)?$')) {
+    $readings.Add([double]::Parse((($n -replace '\.', '') -replace ',', '.'), $culture))
+  }
+  return ,$readings
 }
 
 function Get-NumberKeys([string]$Text) {
@@ -623,10 +724,13 @@ function Get-NumberKeys([string]$Text) {
     $minute = [int]$time.Groups[2].Value
     if ($hour -le 23 -and $minute -le 59) { $keys[("time{0:D2}{1:D2}" -f $hour, $minute)] = $true }
   }
+  # Each figure's key holds every value its numerals can have, for the decimal check in
+  # Get-UngroundedNumbers.
   foreach ($match in [regex]::Matches($scanText, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
-    $key = ($match.Value.ToLowerInvariant() -replace '[^a-z0-9%]', '')
-    $key = $key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent'
-    if ($key) { $keys[$key] = $true }
+    $key = ConvertTo-NumberKey $match.Value
+    if (-not $key) { continue }
+    if (-not ($keys[$key] -is [System.Collections.Generic.List[double]])) { $keys[$key] = New-Object System.Collections.Generic.List[double] }
+    $keys[$key].AddRange((Get-NumberReadings ([regex]::Match($match.Value, '\d[\d.,]*').Value)))
   }
   return $keys
 }
@@ -646,9 +750,19 @@ function Get-UngroundedNumbers([string]$StoryText, [string]$EvidenceText) {
   # are not mistaken for a separate unsupported figure.
   $numberText = [regex]::Replace($storyScanText, $timePattern, ' TIME ', 'IgnoreCase')
   foreach ($match in [regex]::Matches($numberText, '(?<![\p{L}\p{N}])\$?\d[\d.,]*(?:\s*(?:%|percent|pour cent|million|millions|billion|billions|milliard|milliards|trillion|trillions|thousand|bn|mn|mw|mwc|gw|km|kg|tonnes?))?', 'IgnoreCase')) {
-    $key = ($match.Value.ToLowerInvariant() -replace '[^a-z0-9%]', '')
-    $key = $key -replace 'milliards?$', 'billion' -replace 'millions$', 'million' -replace 'billions$', 'billion' -replace 'trillions$', 'trillion' -replace 'pourcent$', 'percent'
-    if ($key -and -not $evidence.ContainsKey($key)) { $missing.Add($match.Value) }
+    $key = ConvertTo-NumberKey $match.Value
+    if (-not $key) { continue }
+    if (-not $evidence.ContainsKey($key)) { $missing.Add($match.Value); continue }
+    # Same digits, different value: "25%" from "2,5 %", "1.5 million" from "15
+    # million". Digits alone passed both. A numeral that is not English is left to the
+    # digit check.
+    $values = $evidence[$key]
+    $readings = Get-NumberReadings ([regex]::Match($match.Value, '\d[\d.,]*').Value) -English
+    if ($values -is [System.Collections.Generic.List[double]] -and $values.Count -and $readings.Count) {
+      $agrees = $false
+      foreach ($reading in $readings) { if ($values.Contains($reading)) { $agrees = $true } }
+      if (-not $agrees) { $missing.Add($match.Value) }
+    }
   }
   return @($missing | Select-Object -Unique)
 }
@@ -778,6 +892,35 @@ if (-not $NoCache -and (Test-Path $cachePath)) {
     $storyCache = @{}
   }
 }
+
+# The id each report was published under in the last few editions, by country and source
+# address. An item's id hashes its headline and opening, so when an outlet edits either,
+# the same report came back under a new id and was written up again: nine times in the
+# 14 editions to 5 Nov 2026 ("Potraz shifts to enabling digital innovation" on 31 Oct
+# and again on 1 Nov), each a second page. The story keeps its first id instead, and the
+# new draft replaces it.
+function Get-RecentLeadIds([string]$Root, [int]$Editions = 4) {
+  $ids = @{}
+  $files = @(Get-ChildItem (Join-Path $Root 'data\archive') -Filter '20*.js' -ErrorAction SilentlyContinue | Sort-Object Name | Select-Object -Last $Editions)
+  foreach ($file in $files) {
+    try {
+      $raw = [IO.File]::ReadAllText($file.FullName, [Text.Encoding]::UTF8)
+      $m = [regex]::Match($raw, 'byCountry:\s*(\{[\s\S]*\}),\s*markets:')
+      if (-not $m.Success) { continue }
+      $byCountry = $m.Groups[1].Value | ConvertFrom-Json
+      foreach ($p in $byCountry.PSObject.Properties) {
+        foreach ($story in @($p.Value)) {
+          $lead = [string](@($story.sources)[0].url)
+          if ($lead -and $story.articleId) { $ids["$($p.Name) $lead"] = [string]$story.articleId }
+        }
+      }
+    } catch {
+      Write-Host "[write] earlier ids: could not read $($file.Name): $($_.Exception.Message)" -ForegroundColor DarkYellow
+    }
+  }
+  return $ids
+}
+$recentLeadIds = Get-RecentLeadIds $root
 
 function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$ExpectedItem, [string]$Provider, [string]$Model, [string]$ApiUrl, [string]$apiKey) {
   if (-not $apiKey) {
@@ -1102,6 +1245,9 @@ $styleAccepted = 0
 $offCountryDropped = 0
 $lensCapped = 0
 $caseRepaired = 0
+$leadIdsReused = 0
+$relativeTimeFlagged = 0
+$copyFlagged = 0
 
 foreach ($code in $codes) {
   $entry = $feed.byCountry.$code
@@ -1140,6 +1286,12 @@ foreach ($code in $codes) {
   for ($i = 0; $i -lt $n; $i++) {
     if ($briefList.Count -ge $MaxBriefs) { break }
     $it = $items[$i]
+    $earlierId = $recentLeadIds["$code $($it.url)"]
+    if ($earlierId -and $earlierId -ne [string]$it.itemId) {
+      Write-Host ("      {0}#{1}: same report as story {2}; keeping that id" -f $code, $i, $earlierId) -ForegroundColor DarkGray
+      $it.itemId = $earlierId
+      $leadIdsReused++
+    }
     $itemKey = Get-TextHash (([string]$it.itemId) + "`n" + ([string]$it.url) + "`n" + (Get-ItemEvidenceText $it))
     $storyCacheKey = Get-TextHash (($PromptVersion, $Model, (Get-TextHash $STYLE), $code, $i, `
                                     $MinStoryWords, $MaxStoryWords, $itemKey) -join "`n")
@@ -1148,11 +1300,15 @@ foreach ($code in $codes) {
     if (-not $NoCache -and $storyCache.ContainsKey($storyCacheKey)) {
       $cachedStories = @($storyCache[$storyCacheKey].stories)
       # The cache outlives a change to this script (the workflow restores the newest
-      # cache by prefix), so a story cached before the month check is checked here and,
-      # if it names a month its source does not give, written again.
-      if ($cachedStories.Count -and @(Get-ItemUngroundedMonths (Get-DraftFactText $cachedStories[0]) $it).Count) {
-        Write-Host ("      {0}#{1}: cached story names an unsupported month; writing it again" -f $code, $i) -ForegroundColor DarkYellow
-        $cachedStories = @()
+      # cache by prefix), so a cached story is fact-checked again: one written before the
+      # month check, or before figures behind a currency letter were read, that fails
+      # now is written again rather than dropped in final validation.
+      if ($cachedStories.Count) {
+        $cachedFacts = Get-DraftFactText $cachedStories[0]
+        if (@(Get-ItemUngroundedMonths $cachedFacts $it).Count -or @(Get-UngroundedNumbers $cachedFacts (Get-ItemEvidenceText $it)).Count) {
+          Write-Host ("      {0}#{1}: cached story fails a fact check now; writing it again" -f $code, $i) -ForegroundColor DarkYellow
+          $cachedStories = @()
+        }
       }
       if ($cachedStories.Count) {
         $oneBrief = $cachedStories[0]
@@ -1306,6 +1462,8 @@ weekday, write that instead of a month. Do not add facts while repairing.
         # source packet. No model call: the story under it is already cased correctly.
         if (Repair-StoryCase $candidate (Get-ItemEvidenceText $it) $root) { $caseRepaired++ }
         $draftStyle = Get-DraftStyleIssues $candidate (Get-ItemEvidenceText $it)
+        if (@($draftStyle.RelativeTime).Count) { $relativeTimeFlagged++ }
+        if (@($draftStyle.Copied).Count) { $copyFlagged++ }
         $styleCount = @($draftStyle.Issues).Count
         if ($styleCount) {
           if ($null -eq $styleBest -or $styleCount -le $styleBestCount) { $styleBest = $candidate; $styleBestCount = $styleCount }
@@ -1590,6 +1748,9 @@ $metrics = [ordered]@{
   offCountryDropped = $offCountryDropped
   lensScoresCappedAsSpeculative = $lensCapped
   headlinesRecased = $caseRepaired
+  draftsWithRelativeTime = $relativeTimeFlagged
+  draftsCopyingSource = $copyFlagged
+  earlierIdsKept = $leadIdsReused
   countriesWritten = $result.Count
   storiesWritten = $stories
   apiCalls = $apiCalls

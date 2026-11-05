@@ -275,6 +275,55 @@ function Test-SameNewsEvent($LeftTitle, $LeftEvent, $RightTitle, $RightEvent) {
   return $false
 }
 
+# Figures that identify a report: two digits or more, and not a year. "3 630 000",
+# "5.103" and "1,500" are one figure each; a currency letter in front ("K640", "N4.5bn")
+# does not hide one.
+function Get-NewsFigureKeys([string]$Text) {
+  $keys = @{}
+  foreach ($m in [regex]::Matches($Text, '(?<![\p{N}.,])\d{1,3}(?:[ .,\u00A0\u202F]\d{3})+(?!\p{N})|(?<![\p{N}.,])\d+(?:[.,]\d+)?')) {
+    $digits = $m.Value -replace '[^0-9]', ''
+    if ($digits.Length -lt 2) { continue }
+    if ($digits.Length -eq 4 -and [int]$digits -ge 1990 -and [int]$digits -le 2040) { continue }
+    $keys[$digits] = $true
+  }
+  return $keys
+}
+
+# Whether a report in the lead's cluster covers the lead's event, and so may be cited
+# and quoted beside it. Clusters grow by single links (fetch-news.ps1): a report joins
+# when it resembles any member, so one generic report chains two events together. On
+# 5 Nov 2026 about a third of the outlets cited as "additional" sources reported
+# something else - Guinea's heatwave story carried Cristiano Ronaldo's retirement, a
+# Kenyan lawsuit over political violence carried a Tanzanian abduction - and their text
+# went into the writer's packet as evidence. Joining took four or five shared words
+# anywhere in the opening; this asks for two title words (a year does not count), or one
+# and a figure, or two figures, or an opening that is mostly the lead's (30% of the
+# smaller one's words, with a title word or seven words in common). Tuned on the 93
+# additional sources of 5 Nov: it keeps 38 and drops 55. Read by hand, about five of the
+# 38 are still another event (one president at two engagements) and four of the 55 were
+# the same one in another language; cross-language pairs such as "MAD 400 million in
+# transport subsidies" / "400 MDH aux professionnels du transport" stay together.
+function Test-NewsCorroboration($Lead, $Member) {
+  $titleShared = 0
+  foreach ($key in @($Lead._titleSig.get_Keys())) {
+    if ($key -notmatch '^(?:19|20)\d\d$' -and $Member._titleSig.ContainsKey($key)) { $titleShared++ }
+  }
+  if ($titleShared -ge 2) { return $true }
+  # Read once per report and kept on it: a chained cluster compares the same reports
+  # again after every split.
+  foreach ($report in @($Lead, $Member)) {
+    if (-not $report.PSObject.Properties['_figureKeys']) {
+      $text = [string]$report.title + ' ' + ([string]$report.summary).Substring(0, [Math]::Min(420, ([string]$report.summary).Length))
+      $report | Add-Member -NotePropertyName _figureKeys -NotePropertyValue (Get-NewsFigureKeys $text) -Force
+    }
+  }
+  $figures = 0
+  foreach ($key in @($Member._figureKeys.get_Keys())) { if ($Lead._figureKeys.ContainsKey($key)) { $figures++ } }
+  if ($titleShared + $figures -ge 2) { return $true }
+  $opening = Get-NewsSimilarity $Lead._eventSig $Member._eventSig
+  return ($opening.Containment -ge 0.30 -and ($titleShared -ge 1 -or $opening.Shared -ge 7))
+}
+
 function Test-NewsPhrase([string]$NormalText, [string]$Phrase) {
   $needle = ConvertTo-NewsText $Phrase
   if (-not $needle) { return $false }

@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote')) {
+foreach ($functionName in @('Convert-NumberScanText','ConvertTo-NumberKey','Get-NumberReadings','Get-RelativeTimeWords','Get-CopiedRuns','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -148,6 +148,22 @@ try {
   if ((Get-ItemEvidenceText $ebola -NoStamps) -match '2026 18:36' -or (Get-ItemEvidenceText $ebola) -notmatch '2026 18:36') { throw '-NoStamps should drop the stamp and only -NoStamps' }
   Write-Host 'PASS a month the source never gives is caught though its numbers pass (Ebola, 4 Nov 2026)'
 
+  # 5 Nov 2026: figures written against a currency letter were never read, and a decimal
+  # point that moved kept the same digits.
+  $missing = @(Get-UngroundedNumbers 'Zambia plans to borrow K640 billion next year.' 'The budget plans borrowing of K64 billion next year.')
+  if ($missing.Count -ne 1 -or $missing[0] -notmatch '640') { throw "K640 billion against K64 billion passed: $($missing -join ', ')" }
+  if (@(Get-UngroundedNumbers 'Zambia plans to borrow K64 billion.' 'The budget plans borrowing of K64 billion.').Count) { throw 'a currency-glued figure the source gives was rejected' }
+  $missing = @(Get-UngroundedNumbers 'The state raised N45bn.' 'The state raised N4.5bn from the bond.')
+  if ($missing.Count -ne 1) { throw "N45bn against N4.5bn passed: $($missing -join ', ')" }
+  $missing = @(Get-UngroundedNumbers 'Inflation rose 25% in October.' 'L''inflation a progresse de 2,5 % en octobre.')
+  if ($missing.Count -ne 1) { throw "25% against 2,5 % passed: $($missing -join ', ')" }
+  if (@(Get-UngroundedNumbers 'Inflation rose 2.5% in October.' 'L''inflation a progresse de 2,5 % en octobre.').Count) { throw '2.5% from 2,5 % was rejected' }
+  $missing = @(Get-UngroundedNumbers 'The fund reaches 1.5 million farmers.' 'The fund reaches 15 million farmers.')
+  if ($missing.Count -ne 1) { throw "1.5 million against 15 million passed: $($missing -join ', ')" }
+  if (@(Get-UngroundedNumbers 'Prices rose 12 percent.' 'Prices rose 12% in a year.').Count) { throw '12 percent from 12% was rejected' }
+  if (@(Get-UngroundedNumbers 'About 4.5 billion dinars were spent.' 'Pres de 4,5 milliards de dinars ont ete depenses.').Count) { throw '4.5 billion from 4,5 milliards was rejected' }
+  Write-Host 'PASS currency-glued figures and moved decimal points are caught; faithful conversions pass'
+
   $missing = @(Get-UngroundedMonths 'The bulletin came out on Monday, November 3.' 'O boletim saiu a 3 de Novembro de 2026.' $null)
   if ($missing.Count) { throw "a month the source names in Portuguese was rejected: $($missing -join ', ')" }
   $missing = @(Get-ItemUngroundedMonths 'The institute gave the figures as of November 3, 2026.' $ebola)
@@ -246,6 +262,21 @@ try {
   $echo.why = 'Northern communes hit by flooding and attacks get money set aside to rebuild roads and markets.'
   if ((Get-DraftStyleIssues $echo 'Benin launched FADeC VI for 77 communes.').RestatedWhy) { throw 'a why line that adds a consequence was flagged' }
   Write-Host 'PASS a why line that restates the dek is sent back; one that adds a consequence is not'
+
+  $times = @(Get-RelativeTimeWords 'The ministry said on Tuesday that talks resume next week. Yesterday the union walked out.')
+  if (($times -join '|') -ne 'next week|Yesterday') { throw "relative time words missed: $($times -join '|')" }
+  if (@(Get-RelativeTimeWords 'The minister told USA Today that "the vote is today" in Lagos.').Count) { throw 'a name or a quotation was read as relative time' }
+  $timed = [pscustomobject]@{ item = 0; headline = 'Ghana opens Tema berth'; dek = 'The port authority opened the berth to container ships.'; paragraphs = @('The Ghana Ports and Harbours Authority opened the berth today.', 'It handles 400 ships a year.', 'Officials will review traffic in March.'); why = 'Importers in Tema get shorter queues for container ships.' }
+  $style = Get-DraftStyleIssues $timed 'The authority opened the berth on Tuesday. It handles 400 ships a year.'
+  if (@($style.RelativeTime).Count -ne 1 -or (Get-StyleRepairNote $style $timed) -notmatch 'weekday or date the packet itself states') { throw 'a story counting from today was not sent back' }
+  Write-Host 'PASS days counted from today are sent back; names and quotations are not'
+
+  $source = 'The Central Bank of Kenya held its benchmark lending rate at 9.5 percent on Tuesday, citing easing inflation and a stable shilling against the dollar.'
+  $runs = @(Get-CopiedRuns @('The Central Bank of Kenya held its benchmark lending rate at 9.5 percent on Tuesday, the bank said.') $source)
+  if ($runs.Count -ne 1 -or $runs[0] -notmatch '^The Central Bank of Kenya held its benchmark lending rate at 9\.5 percent on Tuesday$') { throw "a copied run was not found whole: $($runs -join ' | ')" }
+  if (@(Get-CopiedRuns @('Kenya''s central bank kept its main rate at 9.5 percent on Tuesday as inflation eased.') $source).Count) { throw 'a paraphrase was reported as copied' }
+  if (@(Get-CopiedRuns @('The governor said "the Central Bank of Kenya held its benchmark lending rate at 9.5 percent" on Tuesday.') $source).Count) { throw 'a quotation was reported as copied' }
+  Write-Host 'PASS a copied run of twelve words is found whole; paraphrase and quotation are not'
 
 
   $longDek = ('The transport authority changed the passenger reporting window after publishing a detailed operational notice for every ticket holder. ' * 2).Trim()

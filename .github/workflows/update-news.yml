@@ -274,6 +274,21 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
+      # What each story was written from. Neither file is committed, so without this a
+      # story questioned the next day could not be checked against its own evidence
+      # packet, only against whatever the outlet's page says by then.
+      - name: Save desk evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: desk-evidence
+          path: |
+            data/feed-items.json
+            data/auto-briefs.json
+            desk-write.log
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Commit refreshed stories
         if: steps.guard.outputs.stale == 'true'
         shell: pwsh

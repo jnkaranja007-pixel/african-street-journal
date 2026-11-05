@@ -316,6 +316,36 @@ foreach ($case in $opinionCases) {
   Assert-Desk "opinion path handled: $label" (([bool]$reason) -eq $case.reject)
 }
 
+# A cluster's extra outlets are cited under the story and read by the writer, so each
+# must report the lead's event. Pairs from the 5 Nov 2026 feed.
+Write-Host 'Corroborating sources'
+function New-ClusterItem([string]$Title, [string]$Summary, [string[]]$Terms) {
+  return [pscustomobject]@{ title = $Title; summary = $Summary
+                            _titleSig = (Get-NewsSignature $Title $Terms)
+                            _eventSig = (Get-NewsSignature ($Title + ' ' + $Summary) $Terms) }
+}
+$gn = @('Guinea', 'Guinee', 'Conakry')
+$heat = New-ClusterItem 'Canicule persistante en Guinee: l''ANM annonce quinze jours de forte chaleur' 'L''Agence nationale de la meteorologie annonce une vague de chaleur sur l''ensemble du pays pendant quinze jours, avec des temperatures au-dessus des normales saisonnieres.' $gn
+$ronaldo = New-ClusterItem 'Football : Cristiano Ronaldo annonce sa retraite internationale apres 23 ans avec le Portugal' 'Le capitaine portugais annonce la fin de sa carriere internationale. Il a dispute 226 matchs avec la selection nationale.' $gn
+Assert-Desk 'a heatwave report does not cite a footballer''s retirement' (-not (Test-NewsCorroboration $heat $ronaldo))
+$ma = @('Morocco', 'Maroc', 'Moroccan', 'Rabat')
+$subsidy = New-ClusterItem 'Government announces MAD 400 million in transport subsidies, outlines purchasing power measures' 'The government will pay MAD 400 million to transport professionals to offset fuel costs, the spokesman said after the weekly council.' $ma
+$subsidyFr = New-ClusterItem 'Soutien exceptionnel de 400 MDH aux professionnels du secteur de transport' 'Le gouvernement accorde un soutien de 400 MDH aux professionnels du transport face a la hausse des prix du carburant.' $ma
+Assert-Desk 'the same subsidy in French corroborates (one title word and the figure)' (Test-NewsCorroboration $subsidy $subsidyFr)
+$tax = New-ClusterItem 'Morocco''s income tax cuts: how much more will employees earn' 'The finance bill raises the income tax exemption threshold, and salaried workers will keep more of their pay from January.' $ma
+$stadium = New-ClusterItem 'Le Raja et le Wydad devraient jouer au Grand Stade Hassan II avant le Mondial 2030' 'Les deux clubs casablancais pourraient disputer leurs matchs dans la nouvelle enceinte des son ouverture.' $ma
+Assert-Desk 'an income tax story does not cite a stadium story' (-not (Test-NewsCorroboration $tax $stadium))
+$cm = @('Cameroon', 'Cameroun', 'Yaounde')
+$chevron = New-ClusterItem 'Energie : Yaounde et Malabo preparent la phase decisive avant les discussions avec Chevron' 'Le Cameroun et la Guinee equatoriale harmonisent leurs positions sur le developpement conjoint des champs gaziers Yoyo et Yolanda avant les negociations avec Chevron, operateur du projet transfrontalier.' $cm
+$chevron2 = New-ClusterItem 'Yoyo-Yolanda : le Cameroun et la Guinee equatoriale s''accordent avant les negociations avec Chevron' 'Les deux pays ont harmonise leurs positions sur le developpement conjoint des champs gaziers Yoyo et Yolanda, avant les negociations avec Chevron, operateur du projet.' $cm
+Assert-Desk 'the same gas talks under another headline corroborate (shared opening)' (Test-NewsCorroboration $chevron $chevron2)
+$td = @('Chad', 'Tchad', 'NDjamena')
+$budget = New-ClusterItem 'Le Conseil des ministres examine le projet de loi de finances 2027' 'Le gouvernement a adopte le budget de l''Etat pour l''exercice a venir.' $td
+$festival = New-ClusterItem 'La 8e edition du festival Dary prevue du 19 decembre 2026 au 3 janvier 2027' 'Le festival des arts et de la culture reviendra dans la capitale.' $td
+Assert-Desk 'a year in both titles is not a shared event' (-not (Test-NewsCorroboration $budget $festival))
+$figures = Get-NewsFigureKeys 'Malawi lost K640 billion; pilgrims pay 3 630 000 FCFA; 5.103 deaths in 2026.'
+Assert-Desk 'figures behind a currency letter and in grouped digits are read, years are not' ($figures.ContainsKey('640') -and $figures.ContainsKey('3630000') -and $figures.ContainsKey('5103') -and -not $figures.ContainsKey('2026'))
+
 Write-Host ''
 if ($failed) {
   Write-Host "[ranking-test] FAIL - $failed failed, $passed passed" -ForegroundColor Red

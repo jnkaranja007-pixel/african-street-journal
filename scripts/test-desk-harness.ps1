@@ -79,15 +79,15 @@ $responder = {
       $headline = 'Port Nova opens berth for 400,000 containers a year'
       $dek = 'Shipping lines start using the new berth next month, after a project the authority says cost 120 million dollars.'
       $paragraphs = @(
-        'The Fixtureland Ports Authority opened a new container berth at Port Nova on Monday, adding room for 400,000 containers a year, the authority said.',
-        'The project cost 120 million dollars and was financed by a state bank. Shipping lines will begin using the berth next month, according to the authority.',
+        'The Fixtureland Ports Authority said on Monday it had opened a container berth at Port Nova, adding room for 400,000 containers a year.',
+        'A state bank financed the 120 million dollar project, and shipping lines will begin using the berth next month, according to the authority.',
         'Truck drivers waiting at the port gate said queues had already become shorter since the berth opened. The authority did not say whether further expansion is planned at the site.')
       $why = 'Shipping lines and truck drivers at Port Nova gain berth space and shorter queues at the gate.'
     }
     'Ministry signs fertiliser deal' {
       $headline = 'Ministry buys 50,000 tonnes of fertiliser at lower price'
       $dek = 'Deliveries start in March through district cooperatives, and the ministry will publish prices every week.'
-      $p3 = 'Farmers will buy the fertiliser through cooperatives in every district, and the ministry will publish prices weekly so buyers can compare them.'
+      $p3 = 'Cooperatives in every district will sell the fertiliser to farmers, and the ministry will publish prices weekly so buyers can compare them.'
       $why = 'Farmers buying through district cooperatives will pay 30 percent less for fertiliser arriving in March.'
       if (-not $styleRepair) {
         $p3 = 'This move underscores a broader strategy and is crucial for food security across the country, as farmers prepare for the planting season ahead.'
@@ -95,7 +95,7 @@ $responder = {
       }
       $paragraphs = @(
         'The agriculture ministry of Fixtureland signed a contract on Tuesday with a supplier for 50,000 tonnes of fertiliser, with deliveries due to start in March.',
-        'The ministry said the price is 30 percent lower than last season, a saving it attributed to the size of the order placed with the supplier.',
+        'The price is 30 percent below last season''s, the ministry said, a saving it attributed to the size of the order placed with the supplier.',
         $p3)
     }
     'Police clear Lisbon housing camp' {
@@ -112,16 +112,16 @@ $responder = {
       $headline = 'Port Nova council adopts 80 million dollar budget'
       $dek = 'Roads get 25 million dollars and water 15 million, and the mayor says road works start in January.'
       $paragraphs = @(
-        'The Port Nova city council adopted its budget for next year on Thursday after a four-hour session, approving spending of 80 million dollars.',
-        'The budget sets aside 25 million for roads and 15 million for water. The opposition voted against it, the council said after the session ended.',
-        'Councillors called the vote a pivotal moment for the city. The mayor said road works will start in January and that tenders open next week.')
+        'After a four-hour session on Thursday, the Port Nova city council approved its budget for next year, with total spending of 80 million dollars.',
+        'Roads get 25 million dollars of that and water 15 million. Opposition councillors voted against the budget, the council said after the session ended.',
+        'Councillors called the vote a pivotal moment for the city. The mayor said road works paid for by the budget will start in January.')
       $why = 'Port Nova residents will see road works from January funded by the new 80 million dollar budget.'
     }
     'Telecom company expands network' {
       $headline = 'Fixtel switches on 300 rural masts, reaching 2 million people'
       $dek = 'The regulator says it will inspect the new coverage in December, while the company has not disclosed the cost.'
       $paragraphs = @(
-        'Fixtel, the largest telecom company in Fixtureland, switched on 300 new mobile masts in rural districts on Friday, the company said.',
+        'Fixtel switched on 300 new mobile masts across rural districts of Fixtureland on Friday, the company said. It is the largest telecom company in the country.',
         'The company said 2 million people now have a mobile signal for the first time. Fixtel did not say how much the new masts cost to build.',
         'The telecoms regulator said it would inspect the coverage in December to check that the rural districts named by the company are served.')
       $why = 'About 2 million people in rural districts have a mobile signal for the first time.'
@@ -134,7 +134,7 @@ $responder = {
       if ($anyRepair) { $p1 = 'The Port Nova general hospital received 12 ambulances from the health ministry on Saturday, which will serve 9,999 patients, the director said.' }
       $paragraphs = @(
         $p1,
-        'The director said the vehicles will serve 6 rural clinics. Two of the ambulances carry intensive care equipment, according to the ministry.',
+        'The vehicles will serve 6 rural clinics, the director said, and the ministry said two of them carry intensive care equipment.',
         'The ministry said the drivers have been trained and that the vehicles will enter service on Monday at the rural clinics they are assigned to, which until now have shared a single vehicle between them.')
       $why = 'Patients at 6 rural clinics get ambulance cover, two with intensive care equipment.'
     }
@@ -259,6 +259,9 @@ try {
   Assert-Harness 'the date repair names the unsupported date' ($datePrompt -and $datePrompt -match 'March 11, 2026')
   Assert-Harness 'call budget: one per story plus one rewrite or repair each' ($metrics.apiCalls -eq 12) "apiCalls $($metrics.apiCalls)"
   Assert-Harness 'metrics count the paths' ($metrics.styleRewrites -eq 3 -and $metrics.styleFixedByRewrite -eq 1 -and $metrics.styleKeptWithNotes -eq 2 -and $metrics.lensScoresCappedAsSpeculative -ge 1) ("rewrites {0} fixed {1} kept {2} capped {3}" -f $metrics.styleRewrites, $metrics.styleFixedByRewrite, $metrics.styleKeptWithNotes, $metrics.lensScoresCappedAsSpeculative)
+  # The scripted drafts paraphrase and date their facts, so a check that misfired on them
+  # would cost every story on the desk a rewrite.
+  Assert-Harness 'paraphrased, dated drafts are not sent back for copying or relative time' ($metrics.draftsCopyingSource -eq 0 -and $metrics.draftsWithRelativeTime -eq 0) ("copying {0} relative {1}" -f $metrics.draftsCopyingSource, $metrics.draftsWithRelativeTime)
   Write-Host "[harness] OK - $passed checks"
 } finally {
   Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue

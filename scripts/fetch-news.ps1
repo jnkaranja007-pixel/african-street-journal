@@ -444,6 +444,7 @@ $evidenceReadyTotal = 0
 $articleHostFailures = @{}
 $editorialRejectedTotal = 0
 $countryLinkRejectedTotal = 0
+$splitFromClusters = 0
 
 foreach ($code in $codes) {
   $entry = $registry.$code
@@ -568,17 +569,42 @@ foreach ($code in $codes) {
 
   # --- score with a visible editorial meter ---------------------------------
   $scored = New-Object System.Collections.Generic.List[object]
-  foreach ($cluster in $clusters) {
+  # A for loop, not foreach: reports split off a cluster below are appended as clusters
+  # of their own and scored in turn.
+  for ($ci = 0; $ci -lt $clusters.Count; $ci++) {
+    $cluster = $clusters[$ci]
     $outlets = @($cluster.members | ForEach-Object { $_.source } | Sort-Object -Unique)
-    $choices = foreach ($member in $cluster.members) {
-      [pscustomobject]@{ Item = $member; Meter = Get-EditorialScore $member $outlets.Count $now }
+    # Each report is scored once, in the cluster it was first gathered into. A cluster
+    # split below is scored again from these, not from scratch: a long chain splits many
+    # times, and the meter costs about half a second a call under Windows PowerShell.
+    foreach ($member in $cluster.members) {
+      if (-not $member.PSObject.Properties['_meter']) {
+        $member | Add-Member -NotePropertyName _meter -NotePropertyValue (Get-EditorialScore $member $outlets.Count $now) -Force
+        $member | Add-Member -NotePropertyName _meterOutlets -NotePropertyValue $outlets.Count -Force
+      }
     }
     # The representative is the member with the strongest complete evidence, not
-    # automatically the longest lede or the first feed fetched.
-    $choice = @($choices | Sort-Object -Property @{ Expression = { $_.Meter.Score }; Descending = $true },
-                                                    @{ Expression = { $_.Item.published }; Descending = $true })[0]
-    $best = $choice.Item
-    $meter = $choice.Meter
+    # automatically the longest lede or the first feed fetched. Corroboration is left out
+    # of the comparison: it is the same for every member of a cluster.
+    $best = @($cluster.members | Sort-Object -Property @{ Expression = { $_._meter.Score - $_._meter.Breakdown.corroboration }; Descending = $true },
+                                                         @{ Expression = { $_.published }; Descending = $true })[0]
+    # Only reports of the lead's own event stay with it (Test-NewsCorroboration). The
+    # rest were chained in through a third report; they leave as a new cluster, so they
+    # are neither cited under this story nor lost as candidates of their own.
+    $sameEvent = New-Object System.Collections.Generic.List[object]
+    $otherEvents = New-Object System.Collections.Generic.List[object]
+    foreach ($member in $cluster.members) {
+      if ([object]::ReferenceEquals($member, $best) -or (Test-NewsCorroboration $best $member)) { $sameEvent.Add($member) } else { $otherEvents.Add($member) }
+    }
+    if ($otherEvents.Count) {
+      foreach ($member in $otherEvents) {
+        if (-not $member.PSObject.Properties['_splitOff']) { $member | Add-Member -NotePropertyName _splitOff -NotePropertyValue $true -Force; $splitFromClusters++ }
+      }
+      $clusters.Add([pscustomobject]@{ members = $otherEvents })
+      $cluster = [pscustomobject]@{ members = $sameEvent }
+      $outlets = @($sameEvent | ForEach-Object { $_.source } | Sort-Object -Unique)
+    }
+    $meter = if ($best._meterOutlets -eq $outlets.Count) { $best._meter } else { Get-EditorialScore $best $outlets.Count $now }
     $namesCountry = if ([string]$best.countryMatch -eq 'external') { Test-NewsClusterNamesCountry $cluster.members $matchTerms } else { $true }
     if (-not (Test-NewsCountryLink ([string]$best.countryMatch) $outlets.Count $namesCountry)) {
       $countryLinkRejectedTotal++
@@ -740,6 +766,7 @@ $payload = [ordered]@{
     durationSeconds = [Math]::Round($runTimer.Elapsed.TotalSeconds, 1)
     editorialRejected = $editorialRejectedTotal
     countryLinkRejected = $countryLinkRejectedTotal
+    splitFromClusters = $splitFromClusters
     articlePagesAttempted = $articlePagesAttempted
     articlePagesEnriched = $articlePagesEnriched
     articlePagesFailed = $articlePagesFailed
@@ -759,6 +786,9 @@ if (-not $SkipArticleEnrichment) {
 Write-Host "[fetch] editorial gate rejected $editorialRejectedTotal low-value item(s); runtime $([Math]::Round($runTimer.Elapsed.TotalSeconds, 1))s" -ForegroundColor DarkGray
 if ($countryLinkRejectedTotal) {
   Write-Host "[fetch] country-link gate rejected $countryLinkRejectedTotal single-source foreign item(s)" -ForegroundColor DarkGray
+}
+if ($splitFromClusters) {
+  Write-Host "[fetch] $splitFromClusters report(s) split off a cluster whose lead covers another event" -ForegroundColor DarkGray
 }
 if ($deadFeeds.Count) {
   Write-Host "[fetch] $($deadFeeds.Count) feed(s) failed this run: $(($deadFeeds | Select-Object -First 10) -join ', ')" -ForegroundColor DarkYellow
