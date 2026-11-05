@@ -4440,6 +4440,26 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
   const reservedBoxes = placedLabels.filter(box => box.reserved).length;
   const labelCount = () => placedLabels.length - markerBoxes.length - reservedBoxes;
   const minorBudget = atlasView.k > 1 ? 22 : 14;
+  const placeDots = [];
+  const drawPlaceDot = (x, y, capital, ringed = false) => {
+    countryMapCtx.beginPath();
+    if (!capital) {
+      countryMapCtx.arc(x, y, 2.2, 0, Math.PI * 2);
+      countryMapCtx.fillStyle = 'rgba(232,240,228,0.85)';
+      countryMapCtx.fill();
+      if (!ringed) return;
+      countryMapCtx.strokeStyle = 'rgba(9,28,14,0.88)';
+      countryMapCtx.lineWidth = 1;
+      countryMapCtx.stroke();
+      return;
+    }
+    countryMapCtx.arc(x, y, 4.4, 0, Math.PI * 2);
+    countryMapCtx.fillStyle = '#b9f2bc';
+    countryMapCtx.fill();
+    countryMapCtx.strokeStyle = 'rgba(9,28,14,0.88)';
+    countryMapCtx.lineWidth = 1.2;
+    countryMapCtx.stroke();
+  };
   const drawPlace = (place, town = false) => {
     const [x, y] = project(place.lon, place.lat);
     let labelDrawn = labelledPlaces.has(place);
@@ -4448,23 +4468,11 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
       countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
       labelDrawn = drawSmartLabel(place.name, x, y, '#e0ecdf', placedLabels, width, height, 'top');
     }
-    if (!place.capital) {
-      // A small dot under every labelled town, so a label nudged aside by a
-      // neighbour still shows which point it names.
-      if (!mapLayers.labels || !labelDrawn) return;
-      countryMapCtx.beginPath();
-      countryMapCtx.arc(x, y, 2.2, 0, Math.PI * 2);
-      countryMapCtx.fillStyle = 'rgba(232,240,228,0.85)';
-      countryMapCtx.fill();
-      return;
-    }
-    countryMapCtx.beginPath();
-    countryMapCtx.arc(x, y, 4.4, 0, Math.PI * 2);
-    countryMapCtx.fillStyle = '#b9f2bc';
-    countryMapCtx.fill();
-    countryMapCtx.strokeStyle = 'rgba(9,28,14,0.88)';
-    countryMapCtx.lineWidth = 1.2;
-    countryMapCtx.stroke();
+    // A small dot under every labelled town, so a label nudged aside by a
+    // neighbour still shows which point it names.
+    if (!place.capital && (!mapLayers.labels || !labelDrawn)) return;
+    drawPlaceDot(x, y, !!place.capital);
+    placeDots.push({ x, y, capital: !!place.capital });
   };
   if (mapLayers.places) places.filter(p => !p.capital && p.pop >= 1000000).forEach(p => drawPlace(p));
   const labelledInfra = new Set();
@@ -4510,15 +4518,20 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
     }
     places.filter(p => p.capital).forEach(p => drawPlace(p));
     places.filter(p => !p.capital && p.pop > 180000 && p.pop < 1000000).forEach(p => drawPlace(p));
-    places.filter(p => !p.capital && !(p.pop > 180000)).forEach(p => drawPlace(p));
-    // Zoomed in, the towns (atlasTowns) after every place, largest first, as far as the
-    // label budget goes; a town with no room gets no dot either.
-    if (atlasView.k > 1) {
-      for (const town of atlasTowns(countryId)) {
-        if (!mapLayers.labels || labelCount() >= minorBudget) break;
-        drawPlace(town, true);
-      }
+    // Natural Earth gives some hamlets a population of 10 or 100. They go after the
+    // towns, and only zoomed in: Western Sahara was labelled Lemsid (100) and Dawra (10)
+    // and not Boujdour (42,651), which is only in the towns.
+    const hamlet = p => !p.capital && (p.pop || 0) < 200;
+    places.filter(p => !p.capital && !(p.pop > 180000) && !hamlet(p)).forEach(p => drawPlace(p));
+    // Then the towns (atlasTowns), largest first, as far as the label budget goes; a
+    // town with no room gets no dot either. Most countries' places fill the budget, so
+    // unzoomed this reaches only the sparse ones: Gambia's Serekunda (340,000), Benin's
+    // Abomey-Calavi, Togo's Kara.
+    for (const town of atlasTowns(countryId)) {
+      if (!mapLayers.labels || labelCount() >= minorBudget) break;
+      drawPlace(town, true);
     }
+    if (atlasView.k > 1) places.filter(hamlet).forEach(p => drawPlace(p));
   }
 
   if (mapLayers.infra) {
@@ -4543,6 +4556,11 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
       countryMapCtx.fillRect(-4, -4, 8, 8);
       countryMapCtx.strokeRect(-4, -4, 8, 8);
       countryMapCtx.restore();
+    }
+    // A city's dot under a diamond goes back on top, ringed: Hargeisa's sat under its
+    // airport's, so its label pointed at "HGA".
+    for (const dot of placeDots) {
+      if (markerBoxes.some(box => dot.x > box.left && dot.x < box.right && dot.y > box.top && dot.y < box.bottom)) drawPlaceDot(dot.x, dot.y, dot.capital, true);
     }
   }
 }
@@ -6710,7 +6728,7 @@ function renderAtlasAltText(countryId) {
       pts.some(([lon, lat], i) => i % 8 === 0 && insideCountry(countryId, lon, lat, 15));
   };
   const waterNames = list => uniq((list || []).filter(w => named(w.name) && touches(w.lines || w.rings)).map(w => w.name.replace(/ Res\.$/, ' Reservoir')));
-  const places = uniq(atlasPlaces(countryId).map(p => p.name)).slice(0, 12);
+  const places = uniq(atlasPlaces(countryId).filter(p => p.capital || (p.pop || 0) >= 200).map(p => p.name)).slice(0, 12);
   if (places.length) parts.push('Cities: ' + places.join(', '));
   const rivers = waterNames(gis.rivers);
   if (rivers.length) parts.push('Rivers: ' + rivers.join(', '));
