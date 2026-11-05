@@ -2028,12 +2028,7 @@ function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
     body.insertBefore(nav, body.firstChild);
     nav.addEventListener('click', event => {
       const button = event.target.closest('[data-jump]');
-      const section = button && document.getElementById(button.dataset.jump);
-      if (!section) return;
-      // Land the section just under the row once it has stuck. An instant jump:
-      // animating ~3,000px is janky on the low-end phones this is for.
-      const offset = (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight + 16;
-      countryView.scrollBy({ top: section.getBoundingClientRect().top - offset, behavior: 'auto' });
+      scrollSignalsTo(button && document.getElementById(button.dataset.jump));
     });
   }
   const sections = Array.from(grid.children).filter(el => el.querySelector('.cv-section-head h4'));
@@ -2043,6 +2038,15 @@ function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
     return '<button class="cv-jump-btn" type="button" data-jump="' + section.id + '">' + escapeHtml(label) + '</button>';
   }).join('');
   nav.hidden = sections.length < 3;
+}
+
+// Land a Signals section just under the section row once it has stuck. An instant jump:
+// animating ~3,000px is janky on the low-end phones this is for.
+function scrollSignalsTo(section) {
+  if (!section) return;
+  const nav = document.querySelector('#cv-panel-signals .cv-panel-body > .cv-jump');
+  const offset = nav && !nav.hidden ? (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight + 16 : 16;
+  countryView.scrollBy({ top: section.getBoundingClientRect().top - offset, behavior: 'auto' });
 }
 
 // The scroll position that puts the top of the panels just under the sticky header and
@@ -3022,6 +3026,88 @@ function renderAlmanacFromGis(countryId, info) {
       'None listed in OurAirports.') +
     railSummaryHtml(countryId) +
     '<div class="cv-fact-source">NGA World Port Index · OurAirports · OpenStreetMap</div>';
+
+  renderGlance(countryId);
+}
+
+// A food's price against a year earlier, in percent, or null.
+function foodPriceChange(item) {
+  const change = Number.isFinite(item.yearAgo) && item.yearAgo > 0 ? ((item.price - item.yearAgo) / item.yearAgo) * 100 : null;
+  // A fivefold jump (Nigeria's sugar, Oct 2026: NGN 968 to 4,800 for the same 500 g)
+  // is far likelier a recording error than a price. Show no change rather than a
+  // number nobody should act on.
+  return change !== null && (change > 300 || change < -75) ? null : change;
+}
+
+// WFP's market names, spelled as the places spell themselves ("IFO (Daadab)" is Ifo,
+// one of the Dadaab camps).
+function foodMarketName(food) {
+  return String(food?.market || '').replace(/\bDaadab\b/g, 'Dadaab').replace(/^IFO\b/, 'Ifo');
+}
+
+/* At a glance, phones only. There Signals stacks into some 3,000px, and the figures most
+   visits come for - growth, inflation, the main export, port and airport, food prices -
+   sat one to four screens down, two of them under another audience's tab. Each cell
+   opens its section. */
+function renderGlance(countryId) {
+  const el = document.getElementById('cv-glance');
+  if (!el) return;
+  if (!el.dataset.wired) {
+    el.dataset.wired = '1';
+    el.addEventListener('click', event => {
+      const button = event.target.closest('[data-glance-target]');
+      if (!button) return;
+      if (audienceSelect && audienceSelect.value !== button.dataset.glanceMode) {
+        audienceSelect.value = button.dataset.glanceMode;
+        audienceSelect.dispatchEvent(new Event('change'));
+      }
+      // The audience switch above shows its sections synchronously, so this measures them.
+      const target = document.getElementById(button.dataset.glanceTarget);
+      scrollSignalsTo(target?.closest('.cv-info-grid > div') || target);
+    });
+  }
+  const cell = (item, mode, target, cls = '') =>
+    '<button type="button" class="cv-glance-cell' + cls + (item.value === '—' ? ' is-missing' : '') + '" data-glance-mode="' + mode + '" data-glance-target="' + target + '">' +
+      '<span class="cv-glance-key">' + escapeHtml(item.key) + '</span>' +
+      '<span class="cv-glance-val">' + escapeHtml(item.value) + '</span>' +
+      '<span class="cv-glance-sub">' + escapeHtml(item.sub) + '</span>' +
+    '</button>';
+  const farm = countryFacts(countryId)?.farm;
+  const topExport = (farm?.items || [])[0];
+  const port = countryPorts(countryId)[0];
+  const portCount = countryPorts(countryId).length;
+  const airport = countryAirports(countryId)[0];
+  const food = countryFacts(countryId)?.food;
+  const changes = (food?.items || []).map(foodPriceChange).filter(c => c !== null).sort((a, b) => a - b);
+  const median = changes.length ? changes[Math.floor((changes.length - 1) / 2)] / 2 + changes[Math.ceil((changes.length - 1) / 2)] / 2 : null;
+  // Without a year-earlier price (23 countries in Nov 2026), the first food's price.
+  const firstFood = (food?.items || [])[0];
+  const where = ' at ' + foodMarketName(food) + (food?.camp ? ', a refugee camp' : '');
+  const foodItem = median !== null
+    ? { key: 'Food prices', value: (median > 0 ? '+' : '') + Math.round(median) + '% on a year',
+        sub: (changes.length > 1 ? 'Median of ' + changes.length + ' foods' : '1 food') + where }
+    : firstFood
+      ? { key: 'Food prices', value: firstFood.commodity,
+          sub: (firstFood.currency === 'SLL' ? 'SLE ' + Math.round(firstFood.price / 1000) : firstFood.currency + ' ' + Math.round(firstFood.price).toLocaleString('en-US')) +
+               ' a ' + String(firstFood.unit || '').toLowerCase() + where }
+      : { key: 'Food prices', value: '—', sub: 'No current WFP prices' };
+  el.innerHTML =
+    '<header class="cv-section-head"><h4>At a glance</h4><span class="meta">Tap a figure for the detail</span></header>' +
+    '<div class="cv-glance-grid">' +
+      cell(kpiFact(countryId, 'growth'), 'investors', 'cv-econ-wrap') +
+      cell(kpiFact(countryId, 'inflation'), 'investors', 'cv-econ-wrap') +
+      cell({ key: 'Top farm export', value: topExport ? topExport.label : '—', sub: topExport ? formatFactValue('usd', topExport.usd) + ' a year' : 'Not published' }, 'farmers', 'cv-ag') +
+      cell(foodItem, 'farmers', 'cv-food', median === null ? '' : median > 0 ? ' up' : ' down') +
+      // The World Port Index's own spelling, or the English name it gives in brackets
+      // ("Mina Tarabulus (Tripoli)"). The airport by name: OurAirports' city is often the
+      // airport's own town (Lumbadzi for Lilongwe, Plaine Magnien for Mauritius).
+      cell(port
+        ? { key: 'Main seaport', value: (/\(([^)]+)\)/.exec(port.name) || [])[1] || port.name, sub: (port.size ? port.size.toLowerCase() + ' harbour' : 'Seaport') + (portCount > 1 ? ' · ' + portCount + ' in all' : '') }
+        : { key: 'Main seaport', value: LANDLOCKED.has(countryId) ? 'Landlocked' : '—', sub: LANDLOCKED.has(countryId) ? 'No coast' : 'None listed' }, 'farmers', 'cv-infra') +
+      cell(airport
+        ? { key: 'Main airport', value: airport.name.replace(/\s+Airport$/i, ''), sub: (airport.city || '') + (airport.iata ? ' (' + airport.iata + ')' : '') }
+        : { key: 'Main airport', value: '—', sub: 'No scheduled flights listed' }, 'farmers', 'cv-infra') +
+    '</div>';
 }
 
 // WFP retail prices for the four foods it tracks most at one market. Where WFP has no
@@ -3043,19 +3129,13 @@ function foodPricesHtml(countryId) {
     const item = raw.currency === 'SLL'
       ? { ...raw, currency: 'SLE', price: raw.price / 1000, yearAgo: Number.isFinite(raw.yearAgo) ? raw.yearAgo / 1000 : raw.yearAgo }
       : raw;
-    let change = Number.isFinite(item.yearAgo) && item.yearAgo > 0 ? ((item.price - item.yearAgo) / item.yearAgo) * 100 : null;
-    // A fivefold jump (Nigeria's sugar, Oct 2026: NGN 968 to 4,800 for the same 500 g)
-    // is far likelier a recording error than a price. Show no change rather than a
-    // number nobody should act on.
-    if (change !== null && (change > 300 || change < -75)) change = null;
+    const change = foodPriceChange(item);
     const cls = change === null ? '' : change > 0 ? ' up' : ' down';
     return '<li><span>' + escapeHtml(item.commodity) + ' <small>per ' + escapeHtml(item.unit) + '</small></span>' +
       '<b>' + escapeHtml(item.currency) + ' ' + num(item.price) + '</b>' +
       '<em class="cv-food-change' + cls + '">' + (change === null ? '—' : (change > 0 ? '+' : '') + Math.round(change) + '% on a year') + '</em></li>';
   }).join('');
-  // WFP's market names, spelled as the places spell themselves ("IFO (Daadab)" is Ifo,
-  // one of the Dadaab camps).
-  const market = String(food.market || '').replace(/\bDaadab\b/g, 'Dadaab').replace(/^IFO\b/, 'Ifo');
+  const market = foodMarketName(food);
   // In Kenya and Uganda WFP's only current retail monitoring is in refugee camps and
   // settlements. Those prices are real, but they are not the country's, so say so
   // before the list rather than in the source line under it.
