@@ -653,6 +653,76 @@ function Get-UngroundedNumbers([string]$StoryText, [string]$EvidenceText) {
   return @($missing | Select-Object -Unique)
 }
 
+# Months, checked the way figures are. A date is a month word between numbers, and only
+# the numbers were checked: on 4 Nov 2026 "Ebola kills 5,103 in DR Congo" said "as of
+# March 11, 2026" from a Folha 8 report that said only "ate a data" (to date). 11 and
+# 2026 were grounded by the report's own publication stamp, 2026-11-03, and nothing
+# looked at "March". A month the draft names must now be in the evidence: by name in
+# English, French, Portuguese or Spanish (accents stripped), in a numeric date, or as
+# the month a source was published. Weekdays and relative words (today, last week) are
+# not checked. $Published is untyped: a stamp from JSON is a [datetime] under pwsh and a
+# string under 5.1, and Get-IsoDay takes either. Pass evidence without the stamps
+# (Get-ItemEvidenceText -NoStamps): the pwsh form, 11/03/2026, reads as March here.
+function Get-UngroundedMonths([string]$StoryText, [string]$EvidenceText, $Published) {
+  $missing = New-Object System.Collections.Generic.List[string]
+  if (-not $StoryText) { return @() }
+  # English "May" counts in the evidence only with its capital, so the verb "may" does
+  # not ground it. Short forms count only beside a number ("3 nov.", "Nov 3"), so that
+  # "ago" and "out" at the end of an English sentence do not ground August or October.
+  $names = @('january|janvier|janeiro|enero', 'february|fevrier|fevereiro|febrero',
+             'march|mars|marco|marzo', 'april|avril|abril', '(?-i:May)|mai|maio|mayo',
+             'june|juin|junho|junio', 'july|juillet|julho|julio', 'august|aout|agosto',
+             'september|septembre|setembro|septiembre|setiembre', 'october|octobre|outubro|octubre',
+             'november|novembre|novembro|noviembre', 'december|decembre|dezembro|diciembre')
+  $short = @('jan|ene', 'feb|fev', 'mar', 'apr|avr|abr', '', 'jun', 'jul|juil', 'aug|ago',
+             'sept?|set', 'oct|out', 'nov', 'dec|dez|dic')
+  $plain = (Convert-NumberScanText $EvidenceText).Normalize([Text.NormalizationForm]::FormD) -replace '\p{Mn}', ''
+  $have = @{}
+  for ($m = 0; $m -lt 12; $m++) {
+    $pattern = '(?<!\p{L})(?:' + $names[$m] + ')(?!\p{L})'
+    if ($short[$m]) {
+      $pattern += '|(?<!\p{L})(?:' + $short[$m] + ')\.?\s?(?=\d)|(?<=\d\.?\s?(?:de\s)?)(?:' + $short[$m] + ')(?!\p{L})'
+    }
+    if ([regex]::IsMatch($plain, $pattern, 'IgnoreCase')) { $have[$m + 1] = $true }
+  }
+  # Numeric dates: 2026-11-03, and 03/11/2026 read both ways round, since a source may
+  # write day-month or month-day and leniency here only lets a draft through.
+  foreach ($d in [regex]::Matches($plain, '(?<!\d)\d{4}([-/.])(\d{1,2})\1\d{1,2}(?!\d)')) {
+    $have[[int]$d.Groups[2].Value] = $true
+  }
+  foreach ($d in [regex]::Matches($plain, '(?<![\d.,])(\d{1,2})([-/.])(\d{1,2})\2(?:\d{4}|\d{2})(?![\d.,]?\d)')) {
+    $have[[int]$d.Groups[1].Value] = $true
+    $have[[int]$d.Groups[3].Value] = $true
+  }
+  foreach ($stamp in $Published) {
+    $day = Get-IsoDay $stamp
+    if ($day) { $have[[int]$day.Substring(5, 2)] = $true }
+  }
+  # The draft is English. March, April, May, June and August are also words and names
+  # ("the Women's March", "April Mwangi"), so they count only with a day, a year or a
+  # word like "in", "since" or "of" before them; short forms count only with a day.
+  $draftPattern = '(?<pre>\b(?i:in|on|since|until|till|by|from|during|last|next|early|late|before|after|through|to|between|this|of)\s+|\b(?i:mid)-?\s*)?' +
+                  '(?<before>\b\d{1,2}(?:st|nd|rd|th)?\s+(?:of\s+)?)?' +
+                  '\b(?<month>January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec)(?!\p{L})(?<dot>(?<=\b(?:Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec))\.)?' +
+                  '(?<after>\s+\d{1,2}(?:st|nd|rd|th)?(?![\d\p{L}]))?(?<year>,?\s+\d{4}(?!\d))?'
+  $abbr = @('jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec')
+  foreach ($match in [regex]::Matches((Convert-NumberScanText $StoryText), $draftPattern)) {
+    $token = $match.Groups['month'].Value
+    $hasDay = $match.Groups['before'].Success -or $match.Groups['after'].Success
+    $isShort = ($token.Length -le 4 -and @('May','June','July') -notcontains $token)
+    if ($isShort) {
+      if (-not $hasDay) { continue }
+    } elseif (@('March','April','May','June','August') -contains $token) {
+      if (-not ($hasDay -or $match.Groups['year'].Success -or $match.Groups['pre'].Success)) { continue }
+    }
+    $month = [Array]::IndexOf($abbr, $token.Substring(0, 3).ToLowerInvariant()) + 1
+    if ($have.ContainsKey($month)) { continue }
+    $missing.Add(($match.Groups['before'].Value + $token + $match.Groups['dot'].Value +
+                  $match.Groups['after'].Value + $match.Groups['year'].Value).Trim())
+  }
+  return @($missing | Select-Object -Unique)
+}
+
 # House style: numerals for 10 and above. The writer is told to turn a number the source
 # wrote in words into English words, because the grounding check matches digits against
 # the evidence and a model asked to convert words to digits can convert them wrongly.
@@ -927,17 +997,26 @@ function Get-EvidencePacket($Item, [int]$Index) {
   return $lines.ToString()
 }
 
-function Get-ItemEvidenceText($Item) {
+# -NoStamps leaves out the publication stamps, for the month check. Without it the text
+# is unchanged, and so is every story cache key built from it.
+function Get-ItemEvidenceText($Item, [switch]$NoStamps) {
   $parts = New-Object System.Collections.Generic.List[string]
-  foreach ($value in @($Item.source, $Item.title, $Item.summary, $Item.articleEvidence, $Item.published)) {
+  foreach ($value in @($Item.source, $Item.title, $Item.summary, $Item.articleEvidence)) {
     if ($value) { $parts.Add([string]$value) }
   }
+  if ($Item.published -and -not $NoStamps) { $parts.Add([string]$Item.published) }
   foreach ($other in @($Item.alsoSources)) {
-    foreach ($value in @($other.name, $other.title, $other.summary, $other.published)) {
+    foreach ($value in @($other.name, $other.title, $other.summary)) {
       if ($value) { $parts.Add([string]$value) }
     }
+    if ($other.published -and -not $NoStamps) { $parts.Add([string]$other.published) }
   }
   return $parts.ToArray() -join "`n"
+}
+
+function Get-ItemUngroundedMonths([string]$StoryText, $Item) {
+  $stamps = @($Item.published) + @($Item.alsoSources | ForEach-Object { $_.published })
+  return @(Get-UngroundedMonths $StoryText (Get-ItemEvidenceText $Item -NoStamps) $stamps)
 }
 
 function Get-AssignmentEvidenceWordCount($Item) {
@@ -1068,6 +1147,13 @@ foreach ($code in $codes) {
     $oneBrief = $null
     if (-not $NoCache -and $storyCache.ContainsKey($storyCacheKey)) {
       $cachedStories = @($storyCache[$storyCacheKey].stories)
+      # The cache outlives a change to this script (the workflow restores the newest
+      # cache by prefix), so a story cached before the month check is checked here and,
+      # if it names a month its source does not give, written again.
+      if ($cachedStories.Count -and @(Get-ItemUngroundedMonths (Get-DraftFactText $cachedStories[0]) $it).Count) {
+        Write-Host ("      {0}#{1}: cached story names an unsupported month; writing it again" -f $code, $i) -ForegroundColor DarkYellow
+        $cachedStories = @()
+      }
       if ($cachedStories.Count) {
         $oneBrief = $cachedStories[0]
         $cacheHits++
@@ -1181,6 +1267,19 @@ Rewrite from the same packet. Copy every number, magnitude word, date, time and 
 exactly as it appears. Do not convert 1000 billion to 1 trillion or change numeric
 formatting. When the source gives a number in words, translate it into English words
 rather than digits. If a figure is not needed, omit it. Do not add facts while repairing.
+"@
+          continue
+        }
+        $undated = @(Get-ItemUngroundedMonths (Get-DraftFactText $candidate) $it)
+        if ($undated.Count) {
+          $badDates = (($undated | Select-Object -Unique -First 4) -join ', ')
+          $lastErr = "item $i unsupported date: $badDates"
+          $repairNote = @"
+
+REPAIR: The previous draft named dates the packet does not give: $badDates.
+Rewrite from the same packet. Name a month or a date only as the packet states it or
+as its publication date. If the source says "to date", "this week" or gives only a
+weekday, write that instead of a month. Do not add facts while repairing.
 "@
           continue
         }
@@ -1377,6 +1476,11 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
     $ungrounded = @(Get-UngroundedNumbers ($headline + "`n" + $dek + "`n" + $body + "`n" + $why + "`n" + $lensWhyText) $evidence)
     if ($ungrounded.Count) {
       $rejectReasons.Add("item $idx unsupported number: " + (($ungrounded | Select-Object -First 2) -join ', '))
+      continue
+    }
+    $undated = @(Get-ItemUngroundedMonths ($headline + "`n" + $dek + "`n" + $body + "`n" + $why + "`n" + $lensWhyText) $src)
+    if ($undated.Count) {
+      $rejectReasons.Add("item $idx unsupported date: " + (($undated | Select-Object -First 2) -join ', '))
       continue
     }
 

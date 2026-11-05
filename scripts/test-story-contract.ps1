@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote')) {
+foreach ($functionName in @('Convert-NumberScanText','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -131,6 +131,42 @@ try {
   $missing = @(Get-UngroundedNumbers 'The league moved the start to September 12.' ("The league moved to $arabicAnd$arabicTwelve September."))
   if ($missing.Count) { throw 'Arabic-Indic figure was rejected' }
   Write-Host 'PASS Arabic-Indic figure is grounded'
+
+  # 4 Nov 2026: "as of March 11, 2026" from a Portuguese report that gave no date. 11 and
+  # 2026 came from the report's own publication stamp, so the number check passed it.
+  # The stamp is a real [datetime], as pwsh reads it out of feed-items.json.
+  $ebola = [pscustomobject]@{
+    source = 'Folha 8'; title = 'Mais de 5.100 mortos e 10.500 infectados com Ebola na RDCongo'
+    articleEvidence = 'O Instituto Nacional de Saude Publica confirmou ate a data 5.103 mortos e 10.467 infectados com Ebola na RDCongo. Nas ultimas 24 horas morreram 45 pessoas. O surto da Africa Ocidental de 2014-2016 fez 28.616 casos e 11.325 mortos.'
+    published = New-Object DateTime(2026, 11, 3, 18, 36, 30, [DateTimeKind]::Utc)
+  }
+  $ebolaDraft = 'The institute confirmed 5,103 deaths and 10,467 infections from Ebola as of March 11, 2026.'
+  $missing = @(Get-UngroundedNumbers $ebolaDraft (Get-ItemEvidenceText $ebola))
+  if ($missing.Count) { throw "the Ebola draft's figures should pass the number check, as on the desk: $($missing -join ', ')" }
+  $missing = @(Get-ItemUngroundedMonths $ebolaDraft $ebola)
+  if ($missing.Count -ne 1 -or $missing[0] -ne 'March 11, 2026') { throw "a month the source never gives was not caught: $($missing -join ', ')" }
+  if ((Get-ItemEvidenceText $ebola -NoStamps) -match '2026 18:36' -or (Get-ItemEvidenceText $ebola) -notmatch '2026 18:36') { throw '-NoStamps should drop the stamp and only -NoStamps' }
+  Write-Host 'PASS a month the source never gives is caught though its numbers pass (Ebola, 4 Nov 2026)'
+
+  $missing = @(Get-UngroundedMonths 'The bulletin came out on Monday, November 3.' 'O boletim saiu a 3 de Novembro de 2026.' $null)
+  if ($missing.Count) { throw "a month the source names in Portuguese was rejected: $($missing -join ', ')" }
+  $missing = @(Get-ItemUngroundedMonths 'The institute gave the figures as of November 3, 2026.' $ebola)
+  if ($missing.Count) { throw "the publication month was rejected: $($missing -join ', ')" }
+  $missing = @(Get-UngroundedMonths 'The vote is due in March and the count by December.' ("Le scrutin aura lieu en mars et le d" + [char]0x00E9 + 'pouillement avant d' + [char]0x00E9 + 'cembre.') $null)
+  if ($missing.Count) { throw "French month names (accented) were rejected: $($missing -join ', ')" }
+  $missing = @(Get-UngroundedMonths 'Work started in August and ends on November 3.' 'Las obras empezaron en agosto. Fin previsto: 03/11/2026.' $null)
+  if ($missing.Count) { throw "a Spanish month or a numeric date was rejected: $($missing -join ', ')" }
+  Write-Host 'PASS a month named in the evidence (any of four languages), in a numeric date or as the publication month is grounded'
+
+  $missing = @(Get-UngroundedMonths 'Prices have risen since May.' 'Prices may rise again, traders said.' $null)
+  if ($missing.Count -ne 1 -or $missing[0] -ne 'May') { throw 'the verb "may" grounded the month May' }
+  $missing = @(Get-UngroundedMonths 'The plant reopened in August.' 'The plant closed two years ago.' $null)
+  if ($missing.Count -ne 1) { throw 'the word "ago" grounded August' }
+  $missing = @(Get-UngroundedMonths 'The count closed on Nov. 3.' 'The count closed on Tuesday.' $null)
+  if ($missing.Count -ne 1 -or $missing[0] -ne 'Nov. 3') { throw "an abbreviated month was not checked: $($missing -join ', ')" }
+  $missing = @(Get-UngroundedMonths 'Thousands joined the Women''s March, and May Ndlovu spoke. Prices may fall.' 'Milhares juntaram-se ao protesto.' $null)
+  if ($missing.Count) { throw "a word or a name was read as a month: $($missing -join ', ')" }
+  Write-Host 'PASS "may", "ago" and names are not months; an abbreviated month is checked'
 
   $lensFixture = [pscustomobject]@{ lenses = [pscustomobject]@{
     farmers = [pscustomobject]@{ score = 12; why = 'The report establishes no direct effect on farmers or agricultural markets.' }
@@ -310,5 +346,5 @@ foreach ($case in @(
   if ($got -ne $case[1]) { throw "numeral style: '$($case[0])' became '$got', expected '$($case[1])'" }
 }
 Write-Host 'PASS numbers from ten up are set as numerals; ordinals, years and small numbers are not'
-Write-Host '[story-contract] OK - 31 checks'
+Write-Host '[story-contract] OK - 35 checks'
 exit 0

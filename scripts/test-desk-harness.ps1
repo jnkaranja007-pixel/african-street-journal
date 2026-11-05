@@ -4,7 +4,7 @@
   End-to-end test of the writer's repair loop against a local stand-in model.
 .DESCRIPTION
   write-briefs.ps1 is run for real, as a child process, with ASJ_OPENROUTER_URL pointed
-  at an HttpListener in this process that answers with scripted drafts. Six assignments,
+  at an HttpListener in this process that answers with scripted drafts. Seven assignments,
   one per path through the loop:
     0  clean draft                         -> published as written, one call
     1  stock phrases + hedged why          -> one style rewrite fixes it
@@ -12,6 +12,8 @@
     3  stock phrase the model keeps        -> one rewrite, then kept with notes
     4  hedged investor reason, score 70    -> published, investor score capped to 20
     5  style rewrite invents a figure      -> the first, fact-checked draft is published
+    6  draft invents a month (Portuguese   -> date repair; the rewrite gives the source's
+       source, 4 Nov 2026 Ebola case)         own date and is published
   No network, no key: everything stays on 127.0.0.1.
 .USAGE
   pwsh -File scripts/test-desk-harness.ps1
@@ -46,8 +48,11 @@ $items = @(
   (New-Item5 'lisbon' 'Police clear Lisbon housing camp' 'Portuguese police cleared a protest camp in Lisbon on Wednesday and arrested 55 people. Protesters had camped in Rossio square for a week against rising rents. Police said the gathering was no longer legal. Organisers said they would return. The protests began in Porto earlier this month and spread to the capital.'),
   (New-Item5 'budget' 'Council adopts city budget' 'The Port Nova city council adopted its budget for next year on Thursday after a four-hour session. The budget totals 80 million dollars, with 25 million for roads and 15 million for water. The opposition voted against it. The mayor said road works start in January and that tenders open next week.'),
   (New-Item5 'tele' 'Telecom company expands network' 'Fixtel, the largest telecom company in Fixtureland, switched on 300 new mobile masts in rural districts on Friday. The company said 2 million people now have a signal for the first time. Fixtel did not say what the masts cost. The regulator said it would inspect coverage in December.'),
-  (New-Item5 'amb' 'Hospital receives ambulances' 'The Port Nova general hospital received 12 new ambulances from the health ministry on Saturday. The hospital director said the vehicles will serve 6 rural clinics. Two of the ambulances carry intensive care equipment. The ministry said drivers have been trained and the vehicles enter service on Monday.')
+  (New-Item5 'amb' 'Hospital receives ambulances' 'The Port Nova general hospital received 12 new ambulances from the health ministry on Saturday. The hospital director said the vehicles will serve 6 rural clinics. Two of the ambulances carry intensive care equipment. The ministry said drivers have been trained and the vehicles enter service on Monday.'),
+  (New-Item5 'cholera' 'Colera ja matou 5.103 pessoas na Fixtureland' 'O Instituto Nacional de Saude Publica da Fixtureland confirmou ate a data 5.103 mortos e 10.467 infectados com colera, segundo o boletim de terca-feira, 3 de Novembro de 2026. Nas ultimas 24 horas morreram 45 pessoas e houve 53 novos casos. Estao internados 980 doentes em oito provincias. O surto ja ultrapassa o de 2014, que fez 11.325 mortos.')
 )
+# Published on 3 Nov, like the Folha 8 report: the stamp grounds the 11 in "March 11".
+$items[6].published = '2026-11-03T18:36:30Z'
 $feed = [ordered]@{ fetched = '2026-10-22T06:30:00Z'; byCountry = [ordered]@{ xx = [ordered]@{ country = 'Fixtureland'; items = $items } } }
 $feedPath = Join-Path $tmp 'feed.json'
 [IO.File]::WriteAllText($feedPath, ($feed | ConvertTo-Json -Depth 10), $utf8)
@@ -133,6 +138,18 @@ $responder = {
         'The ministry said the drivers have been trained and that the vehicles will enter service on Monday at the rural clinics they are assigned to, which until now have shared a single vehicle between them.')
       $why = 'Patients at 6 rural clinics get ambulance cover, two with intensive care equipment.'
     }
+    'Colera ja matou 5.103 pessoas na Fixtureland' {
+      $headline = 'Cholera has killed 5,103 people in Fixtureland, institute says'
+      $dek = 'Another 45 people died and 53 new cases were recorded in a day, with 980 patients in hospital across eight provinces.'
+      # The month passes the number check: 11 and 2026 are in the publication stamp.
+      $p1 = 'The National Institute of Public Health has confirmed 5,103 deaths and 10,467 infections from cholera in Fixtureland as of March 11, 2026.'
+      if ($anyRepair) { $p1 = 'The National Institute of Public Health has confirmed 5,103 deaths and 10,467 infections from cholera in Fixtureland, according to its bulletin of Tuesday, November 3.' }
+      $paragraphs = @(
+        $p1,
+        'In the last 24 hours, 45 people died and 53 new cases were recorded. The institute said 980 patients are in hospital in eight provinces.',
+        'The outbreak has already passed the one in 2014, which killed 11,325 people. The institute did not say when it expects the number of new cases to fall.')
+      $why = 'Families in eight provinces face an outbreak that has now killed more people than the one in 2014.'
+    }
   }
   $words = ([regex]::Matches(($paragraphs -join ' '), '[\p{L}\p{N}]+')).Count
   $story = [ordered]@{ item = $item; countryLink = $link; topic = 'Business'; headline = $headline; dek = $dek; paragraphs = $paragraphs; wordCount = $words; why = $why; lenses = $lens }
@@ -199,8 +216,9 @@ try {
   $env:ASJ_FALLBACK_MODELS = 'stand-in/fallback'
   # The same engine as this test: pwsh in CI and on the desk.
   $exe = (Get-Process -Id $PID).Path
+  # Six slots, so the seventh assignment is the reserve the desk reaches for.
   & $exe -NoProfile -ExecutionPolicy Bypass -File $writer -Only xx -InFile $feedPath -OutFile $outPath `
-    -MetricsFile $metricsPath -NoCache -JsonMode -DelayMs 0 *> $logPath
+    -MetricsFile $metricsPath -NoCache -JsonMode -DelayMs 0 -MaxBriefs 6 *> $logPath
   $writerExit = $LASTEXITCODE
 } finally {
   foreach ($k in $saved.Keys) { [Environment]::SetEnvironmentVariable($k, $saved[$k]) }
@@ -222,7 +240,7 @@ try {
   foreach ($s in $stories) { $byId[[string]$s.articleId] = $s }
   $text = { param($s) ((@([string]$s.headline, [string]$s.dek) + @($s.paragraphs) + @([string]$s.why)) -join ' ') }
 
-  Assert-Harness 'five stories published from six assignments' ($stories.Count -eq 5) "got $($stories.Count)"
+  Assert-Harness 'six stories published from seven assignments' ($stories.Count -eq 6) "got $($stories.Count)"
   Assert-Harness 'the off-country story is dropped' (-not $byId.ContainsKey('lisbon') -and $metrics.offCountryDropped -eq 1)
   Assert-Harness 'a clean draft costs one call and is published as written' ($byId.ContainsKey('port') -and (& $text $byId['port']) -match '400,000 containers')
   $fert = $byId['fert']
@@ -235,7 +253,11 @@ try {
   Assert-Harness 'a direct investor reason keeps its score' ([int]$byId['port'].lenses.investors.score -eq 70)
   $amb = $byId['amb']
   Assert-Harness 'when the rewrite invents a figure, the fact-checked draft is published' ($amb -and (& $text $amb) -notmatch '9,999' -and (& $text $amb) -match '12 much-needed ambulances')
-  Assert-Harness 'call budget: one per story plus one rewrite or repair each' ($metrics.apiCalls -eq 10) "apiCalls $($metrics.apiCalls)"
+  $cholera = $byId['cholera']
+  Assert-Harness 'a month the source never gives is sent back, and the repaired story is published' ($cholera -and (& $text $cholera) -notmatch 'March' -and (& $text $cholera) -match 'November 3')
+  $datePrompt = @($log.prompts | Where-Object { $_ -match 'REPAIR: The previous draft named dates' -and $_ -match 'Colera ja matou' }) | Select-Object -First 1
+  Assert-Harness 'the date repair names the unsupported date' ($datePrompt -and $datePrompt -match 'March 11, 2026')
+  Assert-Harness 'call budget: one per story plus one rewrite or repair each' ($metrics.apiCalls -eq 12) "apiCalls $($metrics.apiCalls)"
   Assert-Harness 'metrics count the paths' ($metrics.styleRewrites -eq 3 -and $metrics.styleFixedByRewrite -eq 1 -and $metrics.styleKeptWithNotes -eq 2 -and $metrics.lensScoresCappedAsSpeculative -ge 1) ("rewrites {0} fixed {1} kept {2} capped {3}" -f $metrics.styleRewrites, $metrics.styleFixedByRewrite, $metrics.styleKeptWithNotes, $metrics.lensScoresCappedAsSpeculative)
   Write-Host "[harness] OK - $passed checks"
 } finally {
