@@ -191,6 +191,12 @@ public static class AsjDem {
       Marshal.Copy(line, 0, IntPtr.Add(data.Scan0, y * data.Stride), data.Stride);
     }
     bmpOut.UnlockBits(data);
+    // A .png is the lossless stage before Set-ReliefMask, which writes the one JPEG.
+    if (outPath.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) {
+      bmpOut.Save(outPath, ImageFormat.Png);
+      bmpOut.Dispose();
+      return new FileInfo(outPath).Length;
+    }
     var codec = Array.Find(ImageCodecInfo.GetImageEncoders(), cc => cc.MimeType == "image/jpeg");
     var ps = new EncoderParameters(1);
     ps.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
@@ -231,14 +237,17 @@ function Write-ReliefPreview([string]$Source, [string]$Target, [int]$MaxPixels =
   return (Get-Item $Target).Length
 }
 
-# A focus image's pixels off the country are never shown - the Atlas clips relief to the
-# outline - but they cost bytes: Equatorial Guinea's crop is mostly Cameroon and Gabon, and
-# came out 570 KB. They are painted one flat colour, which JPEG stores for almost nothing;
-# the outline is widened a few pixels first, so the clip's anti-aliased edge keeps real
-# relief under it. The outline is the chunk's "d" (M/L/Z only, in [lon, -lat]).
-function Set-ReliefMask([string]$Path, [string]$D, $Plan, [int]$JpegQuality) {
+# An image's pixels off the country are never shown - the Atlas clips relief to the
+# outline - but they cost bytes: each image is the country's box plus a margin, so it
+# carried the neighbours' hills (Equatorial Guinea's crop is mostly Cameroon and Gabon,
+# and came out 570 KB). They are painted one flat colour, which JPEG stores for almost
+# nothing; the outline is widened a few pixels first, so the clip's anti-aliased edge
+# keeps real relief under it. Reads the lossless PNG the builder wrote, writes the JPEG.
+# The outline is the chunk's "d" (M/L/Z only, in [lon, -lat]).
+function Set-ReliefMask([string]$Source, [string]$Path, [string]$D, $Plan, [int]$JpegQuality) {
   $culture = [Globalization.CultureInfo]::InvariantCulture
-  $shape = New-Object System.Drawing.Drawing2D.GraphicsPath
+  # Nonzero, as the Atlas's clip() fills the same outline: whatever it shows is kept.
+  $shape = New-Object System.Drawing.Drawing2D.GraphicsPath ([System.Drawing.Drawing2D.FillMode]::Winding)
   foreach ($sub in ($D -split '(?=M)')) {
     $nums = @([regex]::Matches($sub, '-?\d+(\.\d+)?') | ForEach-Object { [double]::Parse($_.Value, $culture) })
     if ($nums.Count -lt 6) { continue }
@@ -252,7 +261,7 @@ function Set-ReliefMask([string]$Path, [string]$D, $Plan, [int]$JpegQuality) {
   $edge = $shape.Clone()
   $edge.Widen((New-Object System.Drawing.Pen ([System.Drawing.Color]::Black), 8))
   $keep.Union($edge)
-  $src = [System.Drawing.Image]::FromFile($Path)
+  $src = [System.Drawing.Image]::FromFile($Source)
   $bmp = New-Object System.Drawing.Bitmap $src
   $src.Dispose()
   $g = [System.Drawing.Graphics]::FromImage($bmp)
@@ -377,11 +386,15 @@ foreach ($p in $plans) {
   $metres = $p.deg * 111320 * [Math]::Cos($midLat * [Math]::PI / 180)
   $ex = [Math]::Max(2.0, [Math]::Min(12.0, [Math]::Pow($metres / 25, 0.55)))
   $out = Join-Path $outDir $p.file
-  $bytes = [AsjDem]::Build($CacheDir, $p.z, $p.tx0, $p.ty0, $p.nx, $p.ny, $p.west, $p.north, $p.deg, $p.W, $p.H, $ex, $out, $Quality, $ToneBase, $ToneTint, $ToneShadow, $ToneLight)
-  if ($p.focus) {
-    $chunk = [IO.File]::ReadAllText((Join-Path $root "data\countries\$($p.cc).js"), [Text.Encoding]::UTF8)
-    $outline = [regex]::Match($chunk, '"d":"([^"]*)"').Groups[1].Value
-    if ($outline) { $bytes = Set-ReliefMask $out $outline $p $Quality }
+  $chunk = [IO.File]::ReadAllText((Join-Path $root "data\countries\$($p.cc).js"), [Text.Encoding]::UTF8)
+  $outline = [regex]::Match($chunk, '"d":"([^"]*)"').Groups[1].Value
+  if ($outline) {
+    $stage = $out + '.png'
+    [void][AsjDem]::Build($CacheDir, $p.z, $p.tx0, $p.ty0, $p.nx, $p.ny, $p.west, $p.north, $p.deg, $p.W, $p.H, $ex, $stage, $Quality, $ToneBase, $ToneTint, $ToneShadow, $ToneLight)
+    $bytes = Set-ReliefMask $stage $out $outline $p $Quality
+    Remove-Item $stage
+  } else {
+    $bytes = [AsjDem]::Build($CacheDir, $p.z, $p.tx0, $p.ty0, $p.nx, $p.ny, $p.west, $p.north, $p.deg, $p.W, $p.H, $ex, $out, $Quality, $ToneBase, $ToneTint, $ToneShadow, $ToneLight)
   }
   $total += $bytes
   $box = [ordered]@{

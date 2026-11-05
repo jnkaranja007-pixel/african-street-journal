@@ -3,3 +3,4 @@ window.UNITED_AFRICA_DATA.countryDetail["km"] = {"d":"M43.789 12.308 L43.797 12.
 window.UNITED_AFRICA_DATA.countryGis["km"] = {"rivers":[],"lakes":[],"places":[{"name":"Moroni","lon":43.24,"lat":-11.704,"pop":128698,"rank":6,"capital":true,"is_market":false,"market_type":"local","infrastructure":[],"ag_type":"crop_zone","source_data":"Natural Earth v5.1"}],"metadata":{"country":"Comoros","capital":"Moroni","source":"Natural Earth","version":"5.1","date":"2026-05-10","enriched_with":"agricultural_attributes","place_count":1,"ag_focus":"Farmers:crop_zone zone"}};
 window.UNITED_AFRICA_DATA.countryGis["km"].rail = {"km":0,"sgrKm":0,"lines":[]};
 window.UNITED_AFRICA_DATA.countryGis["km"].roads = {"major":[],"secondary":[]};
+window.UNITED_AFRICA_DATA.countryGis["km"].towns = {"places":[{"name":"Mutsamudu","lon":44.399,"lat":-12.167,"pop":26313,"src":"gn"},{"name":"Fomboni","lon":43.743,"lat":-12.288,"pop":17291,"src":"gn"}]};

@@ -3775,6 +3775,19 @@ function atlasPlaces(countryId) {
   return places.map(place => isCapital(place) === !!place.capital ? place : { ...place, capital: isCapital(place) });
 }
 
+// The towns the Atlas adds when zoomed in (data/country-towns.json: Natural Earth's other
+// populated places and GeoNames' towns of 15,000+, by scripts/build-atlas-towns.ps1),
+// minus any in a neighbour. Separate from the places, which everything else reads.
+const ATLAS_TOWNS = new Map();
+function atlasTowns(countryId) {
+  if (!ATLAS_TOWNS.has(countryId)) {
+    const towns = COUNTRY_GIS[countryId]?.towns?.places;
+    if (!towns) return [];
+    ATLAS_TOWNS.set(countryId, towns.filter(town => insideCountry(countryId, town.lon, town.lat, 5)));
+  }
+  return ATLAS_TOWNS.get(countryId);
+}
+
 function detailPoint(lon, lat) {
   return [lon, -lat];
 }
@@ -3876,11 +3889,11 @@ function drawCountryMap(countryId, countryPath) {
   // before the labels are placed, so none lands under it; drawn over them.
   const visible = { minX: -offsetX / scale, maxX: (width - offsetX) / scale, minY: -offsetY / scale, maxY: (height - offsetY) / scale };
   const locator = atlasLocatorBox(mapPath, visible, width, height, offsetX, offsetY, scale);
-  if (locator) placedLabels.push({ left: locator.x - 4, top: locator.y - 4, right: locator.x + locator.w + 4, bottom: locator.y + locator.h + 4 });
+  if (locator) placedLabels.push({ left: locator.x - 4, top: locator.y - 4, right: locator.x + locator.w + 4, bottom: locator.y + locator.h + 4, reserved: true });
   // So are the buttons over the map (fullscreen, zoom): a label under one could not be read.
   for (const button of countryMapCanvas.parentElement?.querySelectorAll('button') || []) {
     const b = button.getBoundingClientRect();
-    if (b.width) placedLabels.push({ left: b.left - rect.left - 4, top: b.top - rect.top - 4, right: b.right - rect.left + 4, bottom: b.bottom - rect.top + 4 });
+    if (b.width) placedLabels.push({ left: b.left - rect.left - 4, top: b.top - rect.top - 4, right: b.right - rect.left + 4, bottom: b.bottom - rect.top + 4, reserved: true });
   }
   drawGisLayers(countryId, project, placedLabels, width, height, mapPath, offsetX, offsetY, scale, mapDpr);
   if (locator) drawAtlasLocator(countryId, mapPath, visible, locator);
@@ -4341,10 +4354,16 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
   // port" and "CPT" when ports came first; Mount Kenya lost out to Sotik when landmarks
   // came last.
   const majorPlace = place => place.capital || place.pop > 180000;
-  const drawPlace = place => {
+  // Small towns are labelled up to a budget, counting labels only - not the infrastructure
+  // squares, the locator inset or the buttons reserved above. Zoomed in, the screen holds
+  // a smaller area, with room for more.
+  const reservedBoxes = placedLabels.filter(box => box.reserved).length;
+  const labelCount = () => placedLabels.length - markerBoxes.length - reservedBoxes;
+  const minorBudget = atlasView.k > 1 ? 22 : 14;
+  const drawPlace = (place, town = false) => {
     const [x, y] = project(place.lon, place.lat);
     let labelDrawn = labelledPlaces.has(place);
-    const shouldLabel = majorPlace(place) || placedLabels.length - markerBoxes.length < 14;
+    const shouldLabel = (!town && majorPlace(place)) || labelCount() < minorBudget;
     if (mapLayers.labels && shouldLabel && !labelDrawn) {
       countryMapCtx.font = '600 12px system-ui, -apple-system, "Segoe UI", sans-serif';
       labelDrawn = drawSmartLabel(place.name, x, y, '#e0ecdf', placedLabels, width, height, 'top');
@@ -4367,7 +4386,7 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
     countryMapCtx.lineWidth = 1.2;
     countryMapCtx.stroke();
   };
-  if (mapLayers.places) places.filter(p => !p.capital && p.pop >= 1000000).forEach(drawPlace);
+  if (mapLayers.places) places.filter(p => !p.capital && p.pop >= 1000000).forEach(p => drawPlace(p));
   const labelledInfra = new Set();
   // A port or airport named after the city it sits beside needs no label of its own:
   // the diamond is on the map and the city's name is next to it. On a phone, Kenya's
@@ -4409,9 +4428,17 @@ function drawGisLayers(countryId, project, placedLabels, width, height, mapPath,
       countryMapCtx.lineWidth = 1.2;
       countryMapCtx.stroke();
     }
-    places.filter(p => p.capital).forEach(drawPlace);
-    places.filter(p => !p.capital && p.pop > 180000 && p.pop < 1000000).forEach(drawPlace);
-    places.filter(p => !p.capital && !(p.pop > 180000)).forEach(drawPlace);
+    places.filter(p => p.capital).forEach(p => drawPlace(p));
+    places.filter(p => !p.capital && p.pop > 180000 && p.pop < 1000000).forEach(p => drawPlace(p));
+    places.filter(p => !p.capital && !(p.pop > 180000)).forEach(p => drawPlace(p));
+    // Zoomed in, the towns (atlasTowns) after every place, largest first, as far as the
+    // label budget goes; a town with no room gets no dot either.
+    if (atlasView.k > 1) {
+      for (const town of atlasTowns(countryId)) {
+        if (!mapLayers.labels || labelCount() >= minorBudget) break;
+        drawPlace(town, true);
+      }
+    }
   }
 
   if (mapLayers.infra) {

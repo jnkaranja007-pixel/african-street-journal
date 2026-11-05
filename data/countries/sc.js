@@ -3,3 +3,4 @@ window.UNITED_AFRICA_DATA.countryDetail["sc"] = {"d":"M46.51 9.72 L46.508 9.732 
 window.UNITED_AFRICA_DATA.countryGis["sc"] = {"rivers":[],"lakes":[],"places":[{"name":"Victoria","lon":55.45,"lat":-4.617,"pop":33576,"rank":3,"capital":true,"is_market":false,"market_type":"local","infrastructure":[],"ag_type":"crop_zone","source_data":"Natural Earth v5.1"}],"metadata":{"country":"Seychelles","capital":"Victoria","source":"Natural Earth","version":"5.1","date":"2026-05-10","enriched_with":"agricultural_attributes","place_count":1,"ag_focus":"Farmers:crop_zone zone"}};
 window.UNITED_AFRICA_DATA.countryGis["sc"].rail = {"km":0,"sgrKm":0,"lines":[]};
 window.UNITED_AFRICA_DATA.countryGis["sc"].roads = {"major":[],"secondary":[]};
+window.UNITED_AFRICA_DATA.countryGis["sc"].towns = {"places":[]};
