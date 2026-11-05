@@ -784,7 +784,11 @@ const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('tooltip');
 const FRONT_GREEN = getComputedStyle(document.documentElement).getPropertyValue('--front-green').trim() || '#439447';
 
-const dpr = Math.min(3, window.devicePixelRatio || 1);
+// Line widths are set for the screen's pixel ratio (HAIR); the backing store's own
+// resolution, dpr, is cut to the map's size on screen once it is laid out
+// (fitMapResolution).
+const SCREEN_DPR = Math.min(3, window.devicePixelRatio || 1);
+let dpr = SCREEN_DPR;
 canvas.width = 1000 * dpr;
 canvas.height = 1001 * dpr;
 ctx.scale(dpr, dpr);
@@ -1077,7 +1081,7 @@ function offscreen() {
   const x = c.getContext('2d'); x.scale(dpr, dpr); x.lineJoin = 'round';
   return [c, x];
 }
-const HAIR = 1 / dpr;
+const HAIR = 1 / SCREEN_DPR;
 function strokeBorders(x, shape) {
   x.lineWidth = Math.max(0.55, 1.6 * HAIR); x.strokeStyle = 'rgba(9,26,11,0.82)'; x.stroke(shape);
 }
@@ -1125,6 +1129,27 @@ function buildBase() {
   paintLakes(x, 1);
   baseLayer = c;
 }
+// Each country filled and bordered once into its own small canvas, for the draw-in to
+// blit: filling and stroking 55 coastlines every frame was the rest of a frame's cost.
+// The box starts on a whole device pixel, so a landed country is blitted pixel-exact.
+// Dropped when the map settles.
+let assemblySprites = null;
+function paintAssemblySprites() {
+  return paths.map(c => {
+    const b = c.bbox;
+    if (!b || !Number.isFinite(b.minX)) return null;
+    const x0 = Math.floor((b.minX + 0.41 - 2) * dpr), y0 = Math.floor((b.minY + 2 - 2) * dpr);
+    const s = document.createElement('canvas');
+    s.width = Math.max(1, Math.ceil((b.maxX + 0.41 + 2) * dpr) - x0);
+    s.height = Math.max(1, Math.ceil((b.maxY + 2 + 2) * dpr) - y0);
+    const x = s.getContext('2d');
+    x.setTransform(dpr, 0, 0, dpr, -x0, -y0);
+    x.translate(0.41, 2); x.lineJoin = 'round';
+    x.fillStyle = FRONT_GREEN; x.fill(c.shape);
+    strokeBorders(x, c.shape);
+    return { canvas: s, x: x0, y: y0 };
+  });
+}
 function drawCountryOverlay(c, fill, lift) {
   ctx.save(); ctx.translate(0.41, 2);
   if (lift) { ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 2; }
@@ -1164,17 +1189,24 @@ function render(elapsed) {
     if (!shadeLayer) shadeLayer = paintShade();
     ctx.save(); ctx.globalAlpha = settled; ctx.drawImage(shadeLayer, 0, 0, 1000, 1001); ctx.restore();
   }
+  if (!assemblySprites) assemblySprites = paintAssemblySprites();
   for (let i = 0; i < paths.length; i++) {
     const c = paths[i];
     const t = c.dur === 0 ? 1 : Math.max(0, Math.min(1, (elapsed - c.delay) / c.dur));
     if (t === 0) continue;
     const eased = easeOut(t);
+    const sprite = assemblySprites[i];
     ctx.save();
-    ctx.translate(0.41 + c.sx * (1 - eased), 2 + c.sy * (1 - eased));
     ctx.globalAlpha = Math.min(1, t / 0.18);
-    ctx.fillStyle = FRONT_GREEN;
-    ctx.fill(c.shape);
-    strokeBorders(ctx, c.shape);
+    if (sprite) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.drawImage(sprite.canvas, sprite.x + c.sx * (1 - eased) * dpr, sprite.y + c.sy * (1 - eased) * dpr);
+    } else {
+      ctx.translate(0.41 + c.sx * (1 - eased), 2 + c.sy * (1 - eased));
+      ctx.fillStyle = FRONT_GREEN;
+      ctx.fill(c.shape);
+      strokeBorders(ctx, c.shape);
+    }
     ctx.restore();
   }
   paintLakes(ctx, Math.min(1, Math.max(0, (elapsed - 1.6) / 1.4)));
@@ -1190,6 +1222,7 @@ const MAP_STATIC = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 function finishAssembly() {
   if (assemblyDone) return;
   assemblyDone = true;
+  assemblySprites = null;
   render(3.5);
 }
 function frame(now) {
@@ -1278,9 +1311,31 @@ function layoutPhoneMap() {
   }
   render(assemblyDone ? 3.5 : 0);
 }
-layoutPhoneMap();
-window.addEventListener('resize', () => requestAnimationFrame(layoutPhoneMap));
-(phoneMapMQ.addEventListener ? phoneMapMQ.addEventListener('change', layoutPhoneMap) : phoneMapMQ.addListener(layoutPhoneMap));
+// The canvas is 1000 map units at the screen's pixel ratio, but a phone shows it about
+// 490px wide: at dpr 3 that is 3000x3003 pixels for the 1,470 the screen has. Every
+// assembly frame cleared and blitted that four times over (ocean, shade, 55 countries,
+// lakes), ~100 ms a frame on a mid-range phone at 4x throttling. The backing store and
+// its layers now match the size on screen, in quarter steps, never above the screen's
+// ratio or below 1 - so a desktop at ratio 1 is unchanged.
+function fitMapResolution() {
+  const shown = canvas.getBoundingClientRect().width;
+  if (!shown) return;
+  const want = Math.min(SCREEN_DPR, Math.max(1, Math.ceil(shown * (window.devicePixelRatio || 1) / 1000 * 4) / 4));
+  if (want === dpr) return;
+  dpr = want;
+  canvas.width = Math.round(1000 * dpr);
+  canvas.height = Math.round(1001 * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  oceanLayer = shadeLayer = baseLayer = assemblySprites = null;
+  render(assemblyDone ? 3.5 : 0);
+}
+function layoutHomeMap() {
+  layoutPhoneMap();
+  fitMapResolution();
+}
+layoutHomeMap();
+window.addEventListener('resize', () => requestAnimationFrame(layoutHomeMap));
+(phoneMapMQ.addEventListener ? phoneMapMQ.addEventListener('change', layoutHomeMap) : phoneMapMQ.addListener(layoutHomeMap));
 
 function eventToLocal(e) {
   const rect = canvas.getBoundingClientRect();
@@ -6031,8 +6086,8 @@ canvas.addEventListener('touchstart', (e) => {
     // screen: the masthead's own "231 stories" entry (it turns into "N new" for a
     // returning reader, below) already leads to the rest. The map is re-fitted to the
     // space left the first time the card appears.
-    if (fill(slots.top, items.slice(0, 1), { lead: true, cta: '', label: 'Top story', dek: false }) && typeof layoutPhoneMap === 'function') {
-      requestAnimationFrame(layoutPhoneMap);
+    if (fill(slots.top, items.slice(0, 1), { lead: true, cta: '', label: 'Top story', dek: false }) && typeof layoutHomeMap === 'function') {
+      requestAnimationFrame(layoutHomeMap);
     }
     // The sign-up form lives inside these blocks and is wiped by the repaint above.
     try { window.dispatchEvent(new CustomEvent('asj:front-painted')); } catch {}
