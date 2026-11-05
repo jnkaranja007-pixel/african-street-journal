@@ -4753,20 +4753,30 @@ function startReliefLoad(countryId) {
 // at once with a flat texture and the relief arrived seconds later on a phone - Rwanda's
 // image is 560 KB - changing the map under the reader. Past the wait it draws anyway.
 const RELIEF_WAIT_MS = 2500;
+// The preview only after this long without the full image: from the HTTP or service-worker
+// cache the full one lands a few milliseconds after it, and the map showed the soft
+// preview for a frame and then sharpened.
+const RELIEF_FULL_GRACE_MS = 150;
 function reliefDrawable(countryId) {
   if (!RELIEF.index) return false;
   if (!RELIEF.index[countryId]) return true;
-  return reliefReady(RELIEF.images.get(countryId)) || reliefReady(RELIEF.images.get(countryId + '-s'));
+  if (reliefReady(RELIEF.images.get(countryId))) return true;
+  const waited = performance.now() - (RELIEF.waitStart.get(countryId) || 0);
+  return waited >= RELIEF_FULL_GRACE_MS && reliefReady(RELIEF.images.get(countryId + '-s'));
 }
 function holdAtlasForRelief(countryId) {
-  const waiting = mapLayers.terrain && !window.ASJ_SAVE_DATA && !reliefDrawable(countryId);
   if (!RELIEF.waitStart.has(countryId)) RELIEF.waitStart.set(countryId, performance.now());
-  const left = RELIEF_WAIT_MS - (performance.now() - RELIEF.waitStart.get(countryId));
+  const waiting = mapLayers.terrain && !window.ASJ_SAVE_DATA && !reliefDrawable(countryId);
+  const waited = performance.now() - RELIEF.waitStart.get(countryId);
+  const left = RELIEF_WAIT_MS - waited;
   if (waiting && left > 0) {
     countryMapCanvas.classList.add('cv-map-waiting');
     if (!RELIEF.images.has(countryId + '-s')) startReliefLoad(countryId);
     clearTimeout(RELIEF.holdTimer);
-    RELIEF.holdTimer = setTimeout(() => repaintAtlasFor(countryId), left + 20);
+    // Check again when the grace for the full image ends (the preview may be in by then),
+    // or when the whole wait does.
+    const next = waited < RELIEF_FULL_GRACE_MS ? RELIEF_FULL_GRACE_MS - waited : left;
+    RELIEF.holdTimer = setTimeout(() => repaintAtlasFor(countryId), next + 20);
     return true;
   }
   countryMapCanvas.classList.remove('cv-map-waiting');

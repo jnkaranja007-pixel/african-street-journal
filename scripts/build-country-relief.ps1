@@ -226,7 +226,15 @@ function Write-ReliefPreview([string]$Source, [string]$Target, [int]$MaxPixels =
     $bmp = New-Object System.Drawing.Bitmap $w, $h
     $g = [System.Drawing.Graphics]::FromImage($bmp)
     $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-    $g.DrawImage($src, 0, 0, $w, $h)
+    # GDI+'s default pixel offset put every preview half a pixel right of and below the
+    # full image (measured 0.25-0.5 preview px on dj, ke, rw), so the Atlas jumped 1-2 px
+    # up and left when the full image replaced it. TileFlipXY stops the edge pixels
+    # blending with transparent black.
+    $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+    $attrs = New-Object System.Drawing.Imaging.ImageAttributes
+    $attrs.SetWrapMode([System.Drawing.Drawing2D.WrapMode]::TileFlipXY)
+    $g.DrawImage($src, (New-Object System.Drawing.Rectangle 0, 0, $w, $h), 0, 0, $src.Width, $src.Height, [System.Drawing.GraphicsUnit]::Pixel, $attrs)
+    $attrs.Dispose()
     $g.Dispose()
     $codec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
     $ps = New-Object System.Drawing.Imaging.EncoderParameters 1
