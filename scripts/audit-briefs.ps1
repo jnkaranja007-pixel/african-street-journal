@@ -36,7 +36,10 @@ $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $root = Split-Path $PSScriptRoot -Parent
 . (Join-Path $PSScriptRoot 'story-shape.ps1')
-$briefsPath = Join-Path $root 'data\briefs.js'
+# Get-NewsDeskTerms and Get-StoryPlaceIssue, for the off-country check.
+. (Join-Path $PSScriptRoot 'news-ranking.ps1')
+$placeRegistry = [IO.File]::ReadAllText((Join-Path $root 'data\sources.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json
+$briefsPath =Join-Path $root 'data\briefs.js'
 if (-not (Test-Path $briefsPath)) { Write-Host '[audit] data/briefs.js missing' -ForegroundColor Red; exit 1 }
 
 # Citation URLs live in the deferred half, so the link audit needs both files merged.
@@ -124,6 +127,7 @@ $rejectIds = New-Object 'System.Collections.Generic.HashSet[string]'
 foreach ($prop in $byCountry.PSObject.Properties) {
   $code = $prop.Name
   $list = @($prop.Value)
+  $placeTerms = Get-NewsDeskTerms $placeRegistry $code $root
   $penalty = 0
   $notes = New-Object System.Collections.Generic.List[string]
 
@@ -137,6 +141,15 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 
     if (-not $head -or -not $body) { $critical.Add("$code : brief missing headline or body"); [void]$rejectIds.Add([string]$b.articleId); continue }
     if ($srcs.Count -eq 0) { $critical.Add("$code : '$($head.Substring(0,[Math]::Min(50,$head.Length)))' has no source"); [void]$rejectIds.Add([string]$b.articleId); continue }
+
+    # A story about somewhere else is dropped like a dead citation, including one an
+    # earlier edition published (the desk's reject path removes it from the state too).
+    $placeIssue = Get-StoryPlaceIssue $b $placeTerms
+    if ($placeIssue) {
+      $critical.Add("$code : OFF-COUNTRY ($placeIssue) '$($head.Substring(0,[Math]::Min(60,$head.Length)))'")
+      [void]$rejectIds.Add([string]$b.articleId)
+      continue
+    }
 
     foreach ($s in $srcs) {
       if ($s.url -notmatch '^https?://') { $critical.Add("$code : non-http source $($s.url)"); [void]$rejectIds.Add([string]$b.articleId); continue }

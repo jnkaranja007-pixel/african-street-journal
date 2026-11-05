@@ -469,20 +469,16 @@ foreach ($code in $codes) {
   # Explicit country terms serve two jobs: regional-feed admission and a relevance
   # component in the editorial meter. Matching uses Unicode word boundaries, so Niger
   # no longer matches the first five letters of Nigeria.
-  $matchTerms = @($name)
-  if ($entry.match) { $matchTerms = @($entry.match) }
-  $foreignTerms = @($registry.PSObject.Properties |
-                    Where-Object { $_.Name -ne '_comment' -and $_.Name -ne $code } |
-                    ForEach-Object { [string]$_.Value.name } | Where-Object { $_ })
+  # Both sides carry each country's other names (Get-NewsDeskTerms): "RDC" and
+  # "Algerie" are foreign on the Angola desk, "Tchad" is home on Chad's.
   # Other countries' capitals: a story set only in Addis Ababa is not Somali news. The
   # desk's own capital counts as home, so "Mogadishu delegation flies to Nairobi" is
   # not made foreign by naming Nairobi (Somalia's registry entry lists no terms but its
   # name). Not Victoria or Praia: those would admit Lake Victoria and beach stories.
-  $foreignPlaces = @(Get-ForeignCapitalTerms $root $code)
-  $ownCapital = [string]$script:AFRICAN_CAPITALS[$code]
-  if ($ownCapital -and $script:CAPITAL_SKIP -notcontains $ownCapital.ToLowerInvariant() -and $matchTerms -notcontains $ownCapital) {
-    $matchTerms = @($matchTerms) + $ownCapital
-  }
+  $deskTerms = Get-NewsDeskTerms $registry $code $root
+  $matchTerms = @($deskTerms.Own)
+  $foreignTerms = @($deskTerms.Foreign)
+  $foreignPlaces = @($deskTerms.Places)
 
   $pool = New-Object System.Collections.Generic.List[object]
   $liveSources = 0

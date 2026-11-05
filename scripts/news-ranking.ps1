@@ -167,13 +167,9 @@ function Get-NewsEditorialRejectReason([string]$Title, [string]$Summary, [string
 
 function ConvertTo-NewsText([string]$Text) {
   if (-not $Text) { return '' }
-  $decomposed = $Text.Normalize([Text.NormalizationForm]::FormD)
-  $builder = New-Object Text.StringBuilder
-  foreach ($ch in $decomposed.ToCharArray()) {
-    $category = [Globalization.CharUnicodeInfo]::GetUnicodeCategory($ch)
-    if ($category -ne [Globalization.UnicodeCategory]::NonSpacingMark) { [void]$builder.Append($ch) }
-  }
-  $plain = $builder.ToString().Normalize([Text.NormalizationForm]::FormC).ToLowerInvariant()
+  # Accents off (\p{Mn}, the non-spacing marks FormD splits out). One regex, not a loop
+  # over characters: this runs on every feed item and every story.
+  $plain = [regex]::Replace($Text.Normalize([Text.NormalizationForm]::FormD), '\p{Mn}+', '').Normalize([Text.NormalizationForm]::FormC).ToLowerInvariant()
   return (($plain -replace '[^\p{L}\p{N}]+', ' ') -replace '\s+', ' ').Trim()
 }
 
@@ -313,30 +309,32 @@ function Get-CountryRelevance([string]$Title, [string]$Summary, [string[]]$Terms
   $titleText = ConvertTo-NewsText $Title
   $lede = if ($Summary) { $Summary.Substring(0, [Math]::Min(140, $Summary.Length)) } else { '' }
   $ledeText = ConvertTo-NewsText $lede
-  $titleHits = Get-NewsMatchCount $titleText $Terms 3
-  $ledeHits = Get-NewsMatchCount $ledeText $Terms 3
-  $titleTargetLength = Get-NewsLongestMatchLength $titleText $Terms
-  $ledeTargetLength = Get-NewsLongestMatchLength $ledeText $Terms
-  $titleForeignLength = Get-NewsLongestMatchLength $titleText $ForeignTerms
-  $ledeForeignLength = Get-NewsLongestMatchLength $ledeText $ForeignTerms
+  # Overlapping names go to the longer one ("Equatorial Guinea" is not Guinea, "Niger
+  # State" is not Niger); names side by side both count. The old rule compared the
+  # longest match on each side, so "Kenya and Tanzania sign deal" was foreign news on
+  # the Kenya desk because "tanzania" is longer than "kenya".
+  $titlePlaces = Get-NewsPlaceHits $titleText $Terms $ForeignTerms
+  $ledePlaces = Get-NewsPlaceHits $ledeText $Terms $ForeignTerms
   # Other African capitals count as abroad too ($ForeignPlaces, Get-ForeignCapitalTerms):
   # on 30 Oct 2026 a Somali radio station's report of a journalists' meeting in Addis
   # Ababa ran on the Somalia desk with no Somali angle. Like the list above, this only
   # decides stories that name neither the desk's country nor its places.
+  # Through the cached matcher: a phrase-by-phrase scan of these ~200 names cost about a
+  # third of a second per feed item under Windows PowerShell.
   $externalTerms = @($script:NEWS_EXTERNAL_COUNTRIES) + @($ForeignPlaces)
-  $titleExternalHits = Get-NewsMatchCount $titleText $externalTerms 1
-  $ledeExternalHits = Get-NewsMatchCount $ledeText $externalTerms 1
+  $titleExternalHits = (Get-NewsPlaceHits $titleText @() $externalTerms).Foreign
+  $ledeExternalHits = (Get-NewsPlaceHits $ledeText @() $externalTerms).Foreign
 
-  if ($titleForeignLength -gt $titleTargetLength) {
+  if ($titlePlaces.Foreign -and -not $titlePlaces.Own) {
     return [pscustomobject]@{ HardReject = $true; Score = -20.0; Match = 'foreign'; Reason = 'headline names another country' }
   }
-  if ($titleHits -gt 0) {
+  if ($titlePlaces.Own) {
     return [pscustomobject]@{ HardReject = $false; Score = 4.0; Match = 'title'; Reason = 'country named in headline' }
   }
-  if ($ledeForeignLength -gt $ledeTargetLength) {
+  if ($ledePlaces.Foreign -and -not $ledePlaces.Own) {
     return [pscustomobject]@{ HardReject = $true; Score = -20.0; Match = 'foreign'; Reason = 'opening names another country' }
   }
-  if ($ledeHits -gt 0) {
+  if ($ledePlaces.Own) {
     return [pscustomobject]@{ HardReject = $false; Score = 2.5; Match = 'lede'; Reason = 'country named in opening' }
   }
   if ($titleExternalHits -gt 0 -or $ledeExternalHits -gt 0) {
@@ -555,6 +553,185 @@ function Get-ForeignCapitalTerms([string]$Root, [string]$Code) {
     $out.Add($capital)
   }
   return $out.ToArray()
+}
+
+# Other names for each country, as the paper's French-, Portuguese- and Spanish-language
+# outlets and its own English copy write them. data/sources.json has one English name per
+# country (and match terms for some), so on 4 Nov 2026 Folha 8's Ebola count "NA
+# RDCONGO" ran as Angola's news and a Sidwaya editorial on Algerian troops for Niger as
+# Burkina Faso's: neither "RDCongo" nor "Algerie" was a foreign name to the desk. A list
+# is the desk's own terms on its own desk and foreign on every other. Left out because
+# they are ordinary words elsewhere: Maurice (a first name), Gana (Spanish "wins"), Somali
+# (Ethiopia's Somali region), Central African (CEMAC, the region), CAR.
+$script:NEWS_COUNTRY_ALIASES = @{
+  dz = @('Algerian','Algerie','Algerien','Algerienne','Argelia')
+  ao = @('Angolan','Angolais','Angolaise','Angolano','Angolana')
+  bj = @('Beninese','Beninois','Beninoise')
+  bw = @('Motswana','Batswana')
+  bf = @('Burkina','Burkinabe')
+  bi = @('Burundian','Burundais','Burundaise')
+  cm = @('Cameroonian','Cameroun','Camerounais','Camerounaise','Camaroes','Camerun')
+  cv = @('Cabo Verde','Cape Verdean','Cap Vert','Cabo Verdiano','Caboverdiano','Cabo Verdiana')
+  cf = @('Centrafrique','Republique centrafricaine','Centrafricain','Centrafricaine')
+  td = @('Chadian','Tchad','Tchadien','Tchadienne','Chade')
+  km = @('Comorian','Comoran','Comores','Comorien','Comorienne')
+  cg = @('Congo','Congolese','Congolais','Congolaise','Congo Brazzaville','Republique du Congo','Republica do Congo','Brazzaville')
+  cd = @('Congo','Congolese','Congolais','Congolaise','DRC','Democratic Republic of Congo','Democratic Republic of the Congo',
+         'RDC','RD Congo','RDCongo','Republique democratique du Congo','Republica Democratica do Congo','Congo Kinshasa')
+  ci = @('Cote d Ivoire','Ivorian','Ivoirien','Ivoirienne','Costa do Marfim','Costa de Marfil')
+  dj = @('Djiboutien','Djiboutienne')
+  eg = @('Egyptian','Egypte','Egyptien','Egyptienne','Egito','Egipto')
+  gq = @('Equatorial Guinean','Equatoguinean','Equato Guinean','Guinee equatoriale','Guinea Ecuatorial','Guine Equatorial','Ecuatoguineano')
+  er = @('Eritrean','Erythree','Erythreen','Erythreenne','Eritreia')
+  sz = @('Swaziland','Swazi')
+  et = @('Ethiopian','Ethiopie','Ethiopien','Ethiopienne','Etiopia')
+  ga = @('Gabonese','Gabonais','Gabonaise')
+  gm = @('Gambian','Gambie','Gambien','Gambienne')
+  gh = @('Ghanaian','Ghaneen','Ghaneenne')
+  gn = @('Guinean','Guinee','Guineen','Guineenne','Guinee Conakry','Guine Conakry','Guine Conacri')
+  # "Guinean" is both Guineas' word in English copy ("Guinean wrestler Ndoc" is from Bissau).
+  gw = @('Guinea Bissau','Guinee Bissau','Guine Bissau','Bissau Guinean','Bissau Guineen','Guineense','Guine','Guinean')
+  ke = @('Kenyan','Kenyane','Quenia')
+  ls = @('Basotho','Mosotho')
+  lr = @('Liberian','Liberien','Liberienne')
+  ly = @('Libyan','Libye','Libyen','Libyenne','Libia')
+  mg = @('Malagasy','Malgache')
+  mw = @('Malawian')
+  ml = @('Malian','Malien','Malienne')
+  mr = @('Mauritanian','Mauritanie','Mauritanien','Mauritanienne')
+  mu = @('Mauritian','Ile Maurice','Mauricien','Mauricienne')
+  ma = @('Moroccan','Maroc','Marocain','Marocaine','Marrocos','Marruecos')
+  mz = @('Mozambican','Mocambique','Mocambicano','Mocambicana','Mozambicain')
+  na = @('Namibian','Namibie','Namibien','Namibienne')
+  ne = @('Nigerien','Nigerienne')
+  # Places in Nigeria named after its neighbours: without these, "Niger State governor"
+  # and "Benin City" read as Niger and Benin news on the Nigeria desk.
+  ng = @('Nigerian','Nigeriane','Niger State','Niger Delta','Benin City')
+  rw = @('Rwandan','Rwandais','Rwandaise','Ruanda')
+  st = @('Sao Tome','Sao Tome and Principe','Sao Tome e Principe','Santomean','Santomense')
+  sn = @('Senegalese','Senegalais','Senegalaise')
+  sc = @('Seychellois','Seychelloise')
+  sl = @('Sierra Leonean','Serra Leoa','Sierra Leonais','Sierra Leonaise')
+  so = @('Somalie','Somalien','Somalienne','Somaliland')
+  za = @('South African','Afrique du Sud','Sud africain','Sud africaine','Africa do Sul','Sudafrica','East London')
+  ss = @('South Sudanese','Soudan du Sud','Sud Soudan','Sudao do Sul')
+  sd = @('Sudanese','Soudan','Soudanais','Soudanaise','Sudao')
+  tz = @('Tanzanian','Tanzanie','Tanzanien','Tanzanienne')
+  tg = @('Togolese','Togolais','Togolaise')
+  tn = @('Tunisian','Tunisie','Tunisien','Tunisienne')
+  ug = @('Ugandan','Ouganda','Ougandais','Ougandaise')
+  zm = @('Zambian','Zambie','Zambien','Zambienne')
+  zw = @('Zimbabwean','Zimbabween')
+  eh = @('Sahara Occidental','Sahara Occidentale','Sahrawi','Saharawi')
+}
+# Morocco's press writes about the Sahara every day; Western Sahara's names stay off the
+# Morocco desk's foreign list, as the English name always has (sources.json lists it
+# only as the desk's own country).
+$script:NEWS_ALIAS_SKIP_FOR = @{ ma = @('eh') }
+# Home on the desk, but too broad to make a story foreign anywhere else.
+$script:NEWS_COUNTRY_OWN_ONLY = @{ so = @('Somali','Somalis'); cf = @('Central African') }
+# Places and things named after a country that are not that country: they take their
+# words before a country name can, and count for no desk. Indian hemp is what Senegal's
+# police seize ("Louga police seize 7 kg of cannabis" read as Indian news).
+$script:NEWS_PLACE_NEUTRAL = @(
+  'Gulf of Guinea','Golfe de Guinee','Golfo da Guine','Golfo de Guinea','Lake Chad','Lac Tchad','Lake Chad Basin',
+  'River Niger','Niger River','Fleuve Niger','Congo River','Fleuve Congo','Congo Basin','Bassin du Congo',
+  'Senegal River','Fleuve Senegal','Gambia River','Lake Malawi','Lac Malawi','Papua New Guinea',
+  'Indian Ocean','Ocean Indien','Oceano Indico','Indian hemp','Chanvre indien'
+)
+# Competitions that share their name with African ones (the CAF Champions League, Benin's
+# Celtiis Ligue 1, Ghana's Premier League): they make a feed item external at ranking,
+# but they do not make a written story foreign.
+$script:NEWS_SHARED_COMPETITIONS = @('premier league','champions league','ligue 1')
+# Town names that are ordinary words or names in English copy.
+$script:NEWS_TOWN_SKIP = @('george','nigel','brits','orkney','lira','same','victoria','praia')
+
+# One desk's names: its own (registry name, match terms, the aliases above and its
+# capital) and everyone else's. Returns Name, Own, Foreign (other countries' names, for
+# Get-CountryRelevance), Places (other African capitals, Get-ForeignCapitalTerms) and
+# Towns (the country's towns of 100,000 or more from its map chunk, for
+# Get-StoryPlaceIssue only: "US Navy destroyer arrives in Mombasa" is Kenyan news).
+function Get-NewsDeskTerms($Registry, [string]$Code, [string]$Root) {
+  $entry = $Registry.$Code
+  $name = [string]$entry.name
+  $own = New-Object System.Collections.Generic.List[string]
+  foreach ($t in @($name) + @($entry.match) + @($script:NEWS_COUNTRY_ALIASES[$Code]) + @($script:NEWS_COUNTRY_OWN_ONLY[$Code])) {
+    if ($t -and -not $own.Contains([string]$t)) { $own.Add([string]$t) }
+  }
+  $places = @(Get-ForeignCapitalTerms $Root $Code)
+  $capital = [string]$script:AFRICAN_CAPITALS[$Code]
+  if ($capital -and $script:CAPITAL_SKIP -notcontains $capital.ToLowerInvariant() -and -not $own.Contains($capital)) { $own.Add($capital) }
+  $ownKeys = @{}
+  foreach ($t in $own) { $ownKeys[(ConvertTo-NewsText $t)] = $true }
+  $foreign = New-Object System.Collections.Generic.List[string]
+  foreach ($p in $Registry.PSObject.Properties) {
+    if ($p.Name -eq '_comment' -or $p.Name -eq $Code -or @($script:NEWS_ALIAS_SKIP_FOR[$Code]) -contains $p.Name) { continue }
+    foreach ($t in @($p.Value.name) + @($script:NEWS_COUNTRY_ALIASES[$p.Name])) {
+      if (-not $t) { continue }
+      $k = ConvertTo-NewsText ([string]$t)
+      if ($k -and -not $ownKeys.ContainsKey($k)) { $foreign.Add([string]$t) }
+    }
+  }
+  $named = @{}
+  foreach ($t in @($foreign) + @($places) + @($script:NEWS_EXTERNAL_COUNTRIES)) { $named[(ConvertTo-NewsText $t)] = $true }
+  $towns = New-Object System.Collections.Generic.List[string]
+  $chunk = Join-Path $Root "data\countries\$Code.js"
+  if (Test-Path $chunk) {
+    $js = [IO.File]::ReadAllText($chunk, [Text.Encoding]::UTF8)
+    foreach ($m in [regex]::Matches($js, '\{"name":"([^"]+)","lon":[-\d.]+,"lat":[-\d.]+,"pop":(\d+)')) {
+      if ([long]$m.Groups[2].Value -lt 100000) { continue }
+      $k = ConvertTo-NewsText $m.Groups[1].Value
+      if ($k.Length -lt 4 -or $named.ContainsKey($k) -or $ownKeys.ContainsKey($k) -or $script:NEWS_TOWN_SKIP -contains $k) { continue }
+      $ownKeys[$k] = $true
+      $towns.Add($m.Groups[1].Value)
+    }
+  }
+  return [pscustomobject]@{ Name = $name; Own = $own.ToArray(); Foreign = $foreign.ToArray(); Places = $places; Towns = $towns.ToArray()
+                            StoryOwn = @($own) + @($towns)
+                            StoryForeign = @($foreign) + @($places) + @($script:NEWS_EXTERNAL_COUNTRIES | Where-Object { $script:NEWS_SHARED_COMPETITIONS -notcontains $_ }) }
+}
+
+# The country names in normalised text, each word claimed once, longest name first:
+# "south sudan" takes its words before "sudan" can, "dr congo" before "congo", "gulf of
+# guinea" before "guinea". Own beats foreign for a name on both lists. One regex per
+# list pair, cached: the desk calls this for every feed item.
+$script:NEWS_PLACE_REGEX = @{}
+function Get-NewsPlaceHits([string]$NormalText, [string[]]$Own, [string[]]$Foreign) {
+  $key = (@($Own) -join '|') + '#' + (@($Foreign) -join '|')
+  $matcher = $script:NEWS_PLACE_REGEX[$key]
+  if (-not $matcher) {
+    $side = @{}
+    foreach ($t in $script:NEWS_PLACE_NEUTRAL) { $side[(ConvertTo-NewsText $t)] = 'neutral' }
+    foreach ($t in @($Foreign)) { $k = ConvertTo-NewsText $t; if ($k -and -not $side.ContainsKey($k)) { $side[$k] = 'foreign' } }
+    foreach ($t in @($Own)) { $k = ConvertTo-NewsText $t; if ($k) { $side[$k] = 'own' } }
+    $alternatives = @($side.Keys | Sort-Object -Property Length -Descending | ForEach-Object { [regex]::Escape($_) })
+    $matcher = [pscustomobject]@{ Side = $side
+                                  Regex = New-Object regex ('(?<![\p{L}\p{N}])(?:' + ($alternatives -join '|') + ')(?![\p{L}\p{N}])') }
+    $script:NEWS_PLACE_REGEX[$key] = $matcher
+  }
+  $ownHits = 0
+  $foreignNames = New-Object System.Collections.Generic.List[string]
+  if ($NormalText) {
+    foreach ($m in $matcher.Regex.Matches($NormalText)) {
+      $s = $matcher.Side[$m.Value]
+      if ($s -eq 'own') { $ownHits++ } elseif ($s -eq 'foreign') { $foreignNames.Add($m.Value) }
+    }
+  }
+  return [pscustomobject]@{ Own = $ownHits; Foreign = $foreignNames.Count; ForeignNames = $foreignNames.ToArray() }
+}
+
+# A written story is the desk's when its headline, dek or opening paragraph names the
+# country (or its people or places). One that names none of them while its headline or
+# dek names another country, an African capital or a city abroad belongs to that place.
+# The writer's own countryLink answer missed both 4 Nov 2026 stories above: the Ebola
+# story never mentions Angola, and the Algeria one names Burkina Faso only in passing in
+# its second paragraph. Returns the reason, or '' when the story is the desk's.
+function Get-StoryPlaceIssue($Story, $Desk) {
+  $head = Get-NewsPlaceHits (ConvertTo-NewsText (([string]$Story.headline) + ' ' + ([string]$Story.dek))) $Desk.StoryOwn $Desk.StoryForeign
+  if ($head.Own -or -not $head.Foreign) { return '' }
+  $opening = [string](@($Story.paragraphs | Where-Object { ([string]$_).Trim() }) | Select-Object -First 1)
+  if ((Get-NewsPlaceHits (ConvertTo-NewsText $opening) $Desk.StoryOwn $Desk.StoryForeign).Own) { return '' }
+  return ('names ' + ((@($head.ForeignNames) | Select-Object -Unique) -join ', ') + ' but never ' + $Desk.Name)
 }
 
 function Test-NewsCountryLink([string]$CountryMatch, [int]$OutletCount, [bool]$NamesCountry = $true) {

@@ -37,6 +37,8 @@ $root = Split-Path $PSScriptRoot -Parent
 # read a date stamp the same way. See the note in story-shape.ps1.
 . (Join-Path $PSScriptRoot 'story-shape.ps1')   # Get-IsoDay, Get-StorySlug, Import-PublishedEdition
 . (Join-Path $PSScriptRoot 'share-image.ps1')   # New-StoryShareImage
+. (Join-Path $PSScriptRoot 'news-ranking.ps1')  # Get-NewsDeskTerms, Get-StoryPlaceIssue
+$placeRegistry = [IO.File]::ReadAllText((Join-Path $root 'data\sources.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json
 $BaseUrl = $BaseUrl.TrimEnd('/')
 
 # --- country metadata out of app.js -----------------------------------------
@@ -276,12 +278,18 @@ function Read-StoryPageHead([string]$Path) {
   # The line above the headline: the story's topic, or its country when the topic is
   # plain "News". A link to the topic page since Nov 2026.
   $k = [regex]::Match($text, '<div class="meta">(?:<a [^>]*>)?([^<]*)(?:</a>)?</div>\s*<h1>')
+  # The dek and opening paragraph, for the place check (Get-StoryPlaceIssue). The opening
+  # is the first plain <p> after the headline, in pages with a share bar and older ones.
+  $dk = [regex]::Match($text, '<p class="dek">([^<]*)</p>')
+  $op = [regex]::Match($text, '<h1>.*?</h1>.*?<p>(.*?)</p>', 'Singleline')
   $when = $null
   if ($d.Success) { $when = ConvertTo-UtcStamp ($d.Groups[1].Value + $d.Groups[2].Value) }
   return [pscustomobject]@{ When = $when; Headline = [Net.WebUtility]::HtmlDecode($h.Groups[1].Value)
                             MovedTo = $(if ($mv.Success) { $mv.Groups[1].Value } else { '' })
                             StoryId = $(if ($id.Success) { $id.Groups[1].Value } else { '' })
-                            Kicker = [Net.WebUtility]::HtmlDecode($k.Groups[1].Value) }
+                            Kicker = [Net.WebUtility]::HtmlDecode($k.Groups[1].Value)
+                            Dek = [Net.WebUtility]::HtmlDecode($dk.Groups[1].Value)
+                            Opening = [Net.WebUtility]::HtmlDecode(([regex]::Replace($op.Groups[1].Value, '<[^>]+>', ''))) }
 }
 function Get-TopicSlug([string]$Topic) { return ([regex]::Replace($Topic.ToLowerInvariant(), '[^a-z0-9]+', '-')).Trim('-') }
 # The topic in that line, or nothing when it names a country. Pages from September carry
@@ -357,13 +365,35 @@ function Select-DistinctStories($Items, [int]$Max) {
 }
 
 $pagesOnDisk = New-Object System.Collections.Generic.List[object]
+# A kept page whose story is about another country is taken down, by the same rule the
+# desk now applies before publishing (Get-StoryPlaceIssue): before 4 Nov 2026 such
+# stories stayed on their country's "Earlier stories" list for 90 days (Paris v
+# Barcelona on Burundi's, a Lisbon protest on Namibia's, South Sudan on Sudan's).
+$withdrawn = 0
 foreach ($c in $pageCodes) {
   $cDir = Join-Path $root $c
   if (-not (Test-Path $cDir)) { continue }
+  $placeDesk = $null
   foreach ($sub in Get-ChildItem -Path $cDir -Directory -ErrorAction SilentlyContinue) {
     $page = Join-Path $sub.FullName 'index.html'
     if (-not (Test-Path $page)) { continue }
     $head = Read-StoryPageHead $page
+    if ($head.Headline -and -not $head.MovedTo -and $placeRegistry.$c) {
+      if (-not $placeDesk) { $placeDesk = Get-NewsDeskTerms $placeRegistry $c $root }
+      $placeIssue = Get-StoryPlaceIssue ([pscustomobject]@{ headline = $head.Headline; dek = $head.Dek; paragraphs = @($head.Opening) }) $placeDesk
+      if ($placeIssue -and -not $head.Opening) {
+        # A long citation list can push the opening past the 16 KB the head read covers.
+        $op = [regex]::Match([IO.File]::ReadAllText($page, [Text.Encoding]::UTF8), '<h1>.*?</h1>.*?<p>(.*?)</p>', 'Singleline')
+        $opening = [Net.WebUtility]::HtmlDecode([regex]::Replace($op.Groups[1].Value, '<[^>]+>', ''))
+        $placeIssue = Get-StoryPlaceIssue ([pscustomobject]@{ headline = $head.Headline; dek = $head.Dek; paragraphs = @($opening) }) $placeDesk
+      }
+      if ($placeIssue) {
+        Write-Host "[static] withdrawn $c/$($sub.Name): $placeIssue" -ForegroundColor DarkYellow
+        [IO.Directory]::Delete($sub.FullName, $true)
+        $withdrawn++
+        continue
+      }
+    }
     # A page with no readable date is kept (and listed with its file date) rather than
     # swept on a guess.
     $pagesOnDisk.Add([pscustomobject]@{ code = $c; slug = $sub.Name; dir = $sub.FullName; headline = $head.Headline
@@ -785,7 +815,7 @@ foreach ($p in $pagesOnDisk) {
   $earlierUrls.Add([pscustomobject]@{ url = "$BaseUrl/$($p.code)/$($p.slug)/"; lastmod = $lastmod
                                       image = $(if (Test-Path (Join-Path $p.dir 'share.jpg')) { "$BaseUrl/$($p.code)/$($p.slug)/share.jpg" } else { '' }) })
 }
-Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected" -ForegroundColor DarkGray
+Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected, $withdrawn withdrawn as off-country" -ForegroundColor DarkGray
 
 # The same earlier stories for the app's country view (data/earlier/<cc>.json, a few KB,
 # loaded when a country opens): headline, page and day of the 30 newest that are not in

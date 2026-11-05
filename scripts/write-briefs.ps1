@@ -102,7 +102,10 @@ $root    = Split-Path $PSScriptRoot -Parent
 # under pwsh, and stringifying one directly stamps the runner's culture onto the
 # published field the site sorts by.
 . (Join-Path $PSScriptRoot 'story-shape.ps1')
-$inPath  = if ([IO.Path]::IsPathRooted($InFile))  { $InFile }  else { Join-Path $root $InFile }
+# Get-NewsDeskTerms and Get-StoryPlaceIssue: each country's names, for the place check.
+. (Join-Path $PSScriptRoot 'news-ranking.ps1')
+$placeRegistry = [IO.File]::ReadAllText((Join-Path $root 'data\sources.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json
+$inPath  =if ([IO.Path]::IsPathRooted($InFile))  { $InFile }  else { Join-Path $root $InFile }
 $outPath = if ([IO.Path]::IsPathRooted($OutFile)) { $OutFile } else { Join-Path $root $OutFile }
 $cachePath = if ([IO.Path]::IsPathRooted($CacheFile)) { $CacheFile } else { Join-Path $root $CacheFile }
 $metricsPath = if ([IO.Path]::IsPathRooted($MetricsFile)) { $MetricsFile } else { Join-Path $root $MetricsFile }
@@ -1047,6 +1050,7 @@ foreach ($code in $codes) {
   $countriesEligibleForWriting++
 
   $name = [string]$entry.country
+  $placeTerms = Get-NewsDeskTerms $placeRegistry $code $root
   # The meter has already done the assigning. Keep the sixth candidate at the ranking
   # boundary, but isolate each of the first five evidence packets in its own model call.
   # That makes cross-story fact leakage impossible and lets unchanged assignments hit cache.
@@ -1250,6 +1254,14 @@ rather than digits. If a figure is not needed, omit it. Do not add facts while r
     }
     }
     if (-not $oneBrief) { continue }
+    # Place, checked on the finished story (cached ones too): the writer's countryLink
+    # passed "Ebola kills 5,103 in DR Congo" for Angola on 4 Nov 2026.
+    $placeIssue = Get-StoryPlaceIssue $oneBrief $placeTerms
+    if ($placeIssue) {
+      $offCountryDropped++
+      Write-Host ("      {0}#{1}: dropped, {2}: {3}" -f $code, $i, $placeIssue, ([string]$oneBrief.headline)) -ForegroundColor DarkYellow
+      continue
+    }
     $briefList.Add($oneBrief)
     if ($i -ge $MaxBriefs) { $reserveCandidatesUsed++ }
     Start-Sleep -Milliseconds $DelayMs

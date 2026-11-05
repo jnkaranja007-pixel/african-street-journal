@@ -144,6 +144,52 @@ $keTerms = @('Kenya', 'Kenyan', 'Nairobi')
 $lake = Get-CountryRelevance 'Lake Victoria fishermen count losses after storm' 'Boats were damaged at Dunga beach on Sunday.' $keTerms '' $false @() @(Get-ForeignCapitalTerms $repoRoot 'ke')
 Assert-Desk 'Lake Victoria does not make a Kenyan story foreign' ($lake.Match -eq 'domestic')
 
+# The 4 Nov 2026 edition: Folha 8's Ebola count for DR Congo ran as Angola's news and a
+# Sidwaya piece on Algerian troops for Niger as Burkina Faso's.
+$registry = [IO.File]::ReadAllText((Join-Path $repoRoot 'data\sources.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json
+$desk = @{}
+foreach ($cc in 'ao','bf','ke','ng','gw','sn','tn','so','sd','cd') { $desk[$cc] = Get-NewsDeskTerms $registry $cc $repoRoot }
+function Get-DeskRelevance([string]$Code, [string]$Title, [string]$Summary) {
+  return Get-CountryRelevance $Title $Summary $desk[$Code].Own '' $false $desk[$Code].Foreign $desk[$Code].Places
+}
+Assert-Desk 'a Portuguese headline about "RDCongo" is foreign on the Angola desk' `
+  (Get-DeskRelevance 'ao' 'MAIS DE 5.100 MORTOS E 10.500 INFECTADOS COM EBOLA NA RDCONGO' 'O Instituto Nacional de Saude Publica').HardReject
+Assert-Desk 'a French lede about Algeria is foreign on the Burkina Faso desk' `
+  (Get-DeskRelevance 'bf' 'Un exemple de cooperation' "L'Algerie va deployer des troupes au Niger pour soutenir son voisin").HardReject
+Assert-Desk 'two countries side by side: the desk''s own is still named' `
+  ((Get-DeskRelevance 'ke' 'Kenya and Tanzania sign border trade deal' 'Officials met on Tuesday').Match -eq 'title')
+Assert-Desk '"Niger State" is Nigerian, not Niger' `
+  ((Get-DeskRelevance 'ng' 'Niger State governor opens new hospital' 'The facility in Minna has 200 beds').Match -eq 'title')
+Assert-Desk '"Guinee-Bissau" is home on the Guinea-Bissau desk, not Guinea' `
+  ((Get-DeskRelevance 'gw' 'La Guinee-Bissau adopte son budget' 'Les deputes ont vote mardi').Match -eq 'title')
+Assert-Desk '"Tchad" is a foreign name on the Sudan desk' `
+  (Get-DeskRelevance 'sd' 'Le Tchad ferme sa frontiere' 'Les autorites ont annonce mardi').HardReject
+Assert-Desk '"Gulf of Guinea" names no country' `
+  ((Get-DeskRelevance 'ng' 'Navy steps up patrols in the Gulf of Guinea' 'Pirates attacked two tankers last week').Match -ne 'foreign')
+
+Write-Host '[ranking-test] written story place' -ForegroundColor Cyan
+function New-PlaceStory([string]$Headline, [string]$Dek, [string]$Opening) {
+  return [pscustomobject]@{ headline = $Headline; dek = $Dek; paragraphs = @($Opening, 'More detail followed.') }
+}
+Assert-Desk 'the Ebola count for DR Congo is not Angola''s story' `
+  ([bool](Get-StoryPlaceIssue (New-PlaceStory 'Ebola kills 5,103 in DR Congo' "The Democratic Republic of Congo's health ministry reports 10,467 total cases." 'The Democratic Republic of Congo''s National Institute of Public Health confirmed 5,103 deaths.') $desk['ao']))
+Assert-Desk 'Algeria''s troops for Niger are not Burkina Faso''s story' `
+  ([bool](Get-StoryPlaceIssue (New-PlaceStory 'Algeria sends troops to Niger' 'Algeria formalised military support for Niger on October 21.' 'Algeria will send troops to Niger to support its neighbour against armed groups.') $desk['bf']))
+Assert-Desk 'a story naming the desk''s country in its opening stays' `
+  (-not (Get-StoryPlaceIssue (New-PlaceStory 'Algeria sends troops to Niger' 'Algeria formalised military support.' 'Burkina Faso welcomed the deployment, which Algeria says will help Niger.') $desk['bf']))
+Assert-Desk 'a Kenyan town is home: Mombasa' `
+  (-not (Get-StoryPlaceIssue (New-PlaceStory 'US Navy destroyer arrives in Mombasa after Iran operation' 'The USS Ross made a scheduled port visit.' 'The destroyer arrived in Mombasa on Saturday.') $desk['ke']))
+Assert-Desk 'Indian hemp is not India' `
+  (-not (Get-StoryPlaceIssue (New-PlaceStory 'Louga police seize 7 kg of cannabis' 'Officers seized Indian hemp in Moukh Moukh.' 'The Louga regional drug brigade arrested two people.') $desk['sn']))
+Assert-Desk 'the CAF Champions League is not European football' `
+  (-not (Get-StoryPlaceIssue (New-PlaceStory 'Club Africain leads TP Mazembe 1-0 at half-time' 'The CAF Champions League tie is in Rades.' 'Club Africain scored before the break.') $desk['tn']))
+Assert-Desk '"Somali" is home on the Somalia desk' `
+  (-not (Get-StoryPlaceIssue (New-PlaceStory 'Somali official survives alleged Turkish drone strike' 'The official was travelling near Afgoye.' 'A Somali official survived the strike on Tuesday.') $desk['so']))
+Assert-Desk 'European club football on the Senegal desk goes' `
+  ([bool](Get-StoryPlaceIssue (New-PlaceStory 'Mbappe double gives Real Madrid victory over Barcelona' 'La Liga leaders extend their run.' 'Kylian Mbappe scored twice on Sunday.') $desk['sn']))
+Assert-Desk 'a story that names no place at all stays' `
+  (-not (Get-StoryPlaceIssue (New-PlaceStory 'Teachers strike over unpaid allowances' 'Unions say arrears date back to March.' 'Teachers stayed home on Monday.') $desk['ke']))
+
 Write-Host '[ranking-test] event identity' -ForegroundColor Cyan
 $ignore = @('Togo','Togolese','Lome')
 $leftTitle = Get-NewsSignature 'Arrestation de deux journalistes francais au Togo' $ignore
