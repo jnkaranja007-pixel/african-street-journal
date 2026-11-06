@@ -35,7 +35,7 @@ s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.h
 <li><b>Largest cities:</b> the middle value of three sources: Natural Earth, GeoNames and Wikidata. A city needs at least two of them. Sources draw city limits differently, so treat populations as approximate.</li>
 <li><b>Ports and airports:</b> the NGA World Port Index, and OurAirports for airports with scheduled flights.</li>
 <li><b>Railways:</b> the OpenStreetMap route length of lines not marked disused, shown beside the CIA World Factbook's total for the whole network. Where track is mapped but no trains run (Libya, Chad, Niger), we say so.</li>
-<li><b>Maps and landmarks:</b> Natural Earth outlines, following African Union membership: Somaliland is shown as part of Somalia, and Western Sahara as its own territory. Landmark positions are checked against Wikidata and OpenStreetMap.</li>
+<li><b>Maps and landmarks:</b> Natural Earth outlines, following African Union membership: Somaliland is shown as part of Somalia, and Western Sahara as its own territory. Landmark positions are checked against Wikidata and OpenStreetMap. The extra towns shown when a map is zoomed in come from Natural Earth and <a href="https://www.geonames.org/">GeoNames</a> (CC BY 4.0).</li>
 </ul>
 <h2>How the checks keep running</h2>
 <p>Most sources refresh automatically every month. A monthly audit repeats the cross-checks (railway lengths against the Factbook, city figures against each other, landmark positions) and flags anything that has drifted, and a daily check flags any source that has stopped updating.</p>
