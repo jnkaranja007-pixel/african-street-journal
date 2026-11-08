@@ -373,7 +373,7 @@
         "home": "https://www.sundaystandard.info/",
         "feed": "https://www.sundaystandard.info/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The Voice Botswana",
@@ -450,7 +450,7 @@
         "home": "https://www.sidwaya.info/",
         "feed": "https://www.sidwaya.info/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "RFI Afrique",
@@ -617,7 +617,7 @@
         "home": "https://cameroonnewsagency.com/",
         "feed": "https://cameroonnewsagency.com/web-stories/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Farmers Review Africa",
@@ -645,7 +645,7 @@
         "home": "https://expressodasilhas.cv/",
         "feed": "https://expressodasilhas.cv/rss",
         "tier": 1,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Inforpress",
@@ -924,7 +924,7 @@
         "home": "https://tchadactuel.com/",
         "feed": "https://tchadactuel.com/feed/",
         "tier": 3,
-        "state": "missing"
+        "state": "error"
       },
       {
         "name": "RFI Afrique",
@@ -1021,7 +1021,7 @@
         "home": "https://alwatwan.net/",
         "feed": "https://alwatwan.net/feed/",
         "tier": 1,
-        "state": "missing"
+        "state": "error"
       },
       {
         "name": "Comores Infos",
@@ -1245,7 +1245,7 @@
         "home": "https://www.mediacongo.net/",
         "feed": "https://www.mediacongo.net/rss.html",
         "tier": 2,
-        "state": "missing"
+        "state": "error"
       },
       {
         "name": "Farmers Review Africa",
@@ -1514,7 +1514,7 @@
         "home": "https://www.hch24.com/",
         "feed": "https://www.hch24.com/feed/",
         "tier": 3,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Africanews",
@@ -1881,7 +1881,7 @@
         "home": "https://eswatinipositivenews.online/",
         "feed": "https://eswatinipositivenews.online/feed/",
         "tier": 3,
-        "state": "blocked"
+        "state": "ok"
       }
     ]
   },
@@ -2104,7 +2104,7 @@
         "home": "https://foroyaa.net/",
         "feed": "https://foroyaa.net/feed/",
         "tier": 1,
-        "state": "blocked"
+        "state": "ok"
       },
       {
         "name": "The Standard Gambia",
@@ -2259,7 +2259,7 @@
         "home": "https://3news.com/",
         "feed": "https://3news.com/feed.xml",
         "tier": 2,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Ghanaian Times",
@@ -2611,7 +2611,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "error"
+        "state": "ok"
       }
     ]
   },
@@ -2653,7 +2653,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "GNN Liberia",
@@ -2709,7 +2709,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "hijacked"
+        "state": "ok"
       }
     ]
   },
@@ -2758,7 +2758,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "hijacked"
+        "state": "ok"
       }
     ]
   },
@@ -2927,7 +2927,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "hijacked"
+        "state": "ok"
       }
     ],
     "match": [
@@ -2981,7 +2981,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "hijacked"
+        "state": "ok"
       }
     ]
   },
@@ -3037,7 +3037,7 @@
         "feed": "https://www.foodbusinessafrica.com/feed/",
         "tier": 2,
         "scope": "regional",
-        "state": "hijacked"
+        "state": "ok"
       }
     ]
   },
@@ -3244,9 +3244,9 @@
       {
         "name": "ActuNiger",
         "home": "https://www.actuniger.com/",
-        "feed": "https://www.actuniger.com/feed/",
+        "feed": "https://www.actuniger.com/?format=feed&amp;type=rss",
         "tier": 1,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Agence Nigerienne de Presse",
