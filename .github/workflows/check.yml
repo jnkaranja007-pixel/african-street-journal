@@ -128,9 +128,14 @@ jobs:
       - name: Install Playwright
         run: |
           mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i playwright@1 >/dev/null
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium webkit
       - name: Site check
         run: NODE_PATH=/tmp/pw/node_modules node tools/stress/site-check.mjs
+      # Section links in Signals, tapped on an iPhone (WebKit) and on Android: each must
+      # land its section under the link row and stay there.
+      - name: Signals section links on phones
+        if: always()
+        run: NODE_PATH=/tmp/pw/node_modules node tools/stress/signals-jump.mjs
 
   desk:
     # The writer's repair loop end to end: write-briefs.ps1 runs for real against a
