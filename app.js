@@ -2109,11 +2109,84 @@ function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
         if (!mobileDossierMedia.matches) return;
         setSignalsSectionOpen(section, !section.classList.contains('is-open'));
       });
+      // The headline figure beside a closed heading, kept current as the section's
+      // content arrives (country data, then prices and rates a moment later).
+      const sum = document.createElement('span');
+      sum.className = 'cv-fold-sum';
+      sum.setAttribute('aria-hidden', 'true');
+      head.appendChild(sum);
+      if (typeof MutationObserver !== 'undefined') {
+        let queued = false;
+        new MutationObserver(() => {
+          if (queued) return;
+          queued = true;
+          requestAnimationFrame(() => { queued = false; updateSignalsFoldSummary(section); });
+        }).observe(section, { childList: true, subtree: true, characterData: true });
+      }
     }
+    updateSignalsFoldSummary(section);
     const isOpen = open.has(index);
     section.classList.toggle('is-open', isOpen);
     button.setAttribute('aria-expanded', String(isOpen));
   });
+}
+
+function updateSignalsFoldSummary(section) {
+  const sum = section.querySelector(':scope > .cv-section-head > .cv-fold-sum');
+  if (!sum) return;
+  const text = signalsFoldSummary(section);
+  if (sum.textContent !== text) sum.textContent = text;
+}
+
+// One line a closed section can show without being opened: its first figure, in the
+// words of the section itself. Empty when the section has nothing yet.
+function signalsFoldSummary(section) {
+  const clean = node => String(node?.textContent || '').replace(/\s+/g, ' ').trim();
+  const q = selector => section.querySelector(selector);
+  let el;
+  if ((el = q('.cv-dia-rate-val'))) return '$1 = ' + clean(el);
+  if ((el = q('.cv-index-line'))) return [clean(el.querySelector('.cv-index-name')), clean(el.querySelector('.cv-index-chg'))].filter(Boolean).join(' ');
+  if ((el = q('.cv-food-list li'))) {
+    const label = el.querySelector('span');
+    const name = clean(label?.firstChild);
+    const unit = clean(label?.querySelector('small')).replace(/^per\s+/i, '').toLowerCase();
+    const price = clean(el.querySelector('b'));
+    return price ? (name + ' ' + price + (unit ? '/' + unit : '')).trim() : '';
+  }
+  if ((el = q('.cv-mkt-row:not(.head)'))) return [clean(el.querySelector('.cv-mkt-name')), clean(el.querySelector('.cv-mkt-pop'))].filter(Boolean).join(' ');
+  const routes = Array.from(section.querySelectorAll('.cv-route-title')).map(title => {
+    const count = clean(title.querySelector('b'));
+    const word = (clean(title).replace(count, '').trim().split(' ')[0] || '').toLowerCase();
+    return count && count !== '0' && word ? count + ' ' + word : '';
+  }).filter(Boolean);
+  if (routes.length) return routes.slice(0, 2).join(' · ');
+  const rows = section.querySelectorAll('.cv-cal-row');
+  if (rows.length) {
+    const month = new Date().getMonth();
+    const now = kind => Array.from(rows).filter(row => row.querySelectorAll('.cv-cal-cell')[month]?.classList.contains(kind))
+      .map(row => clean(row.querySelector('i b') || row.querySelector('i')));
+    const list = names => names.slice(0, 2).join(', ') + (names.length > 2 ? ' +' + (names.length - 2) : '');
+    const harvest = now('h');
+    if (harvest.length) return 'Harvest now: ' + list(harvest);
+    const sowing = now('s');
+    if (sowing.length) return 'Sowing now: ' + list(sowing);
+    // Nothing this month: the next harvest, so the line still answers "when".
+    for (let ahead = 1; ahead < 12; ahead++) {
+      const m = (month + ahead) % 12;
+      const crops = Array.from(rows).filter(row => row.querySelectorAll('.cv-cal-cell')[m]?.classList.contains('h')).map(row => clean(row.querySelector('i b') || row.querySelector('i')));
+      if (crops.length) return 'Next harvest: ' + list(crops) + ', ' + new Date(2000, m, 1).toLocaleString('en-GB', { month: 'short' });
+    }
+    return '';
+  }
+  if ((el = q('.cv-econ-cell'))) return [clean(el.querySelector('.cv-econ-val')), clean(el.querySelector('.cv-econ-key'))].filter(Boolean).join(' ');
+  if ((el = q('.cv-fact'))) {
+    const val = clean(el.querySelector('.cv-fact-val'));
+    // A figure, not "No recent figure" or a dash.
+    if (!/[0-9]/.test(val)) return '';
+    const sub = clean(el.querySelector('.cv-fact-sub')).split('·')[0].trim();
+    return val + ' ' + (/^(share of |of |per )/i.test(sub) ? sub.replace(/^share /i, '') : clean(el.querySelector('.cv-fact-key')));
+  }
+  return '';
 }
 
 function setSignalsSectionOpen(section, isOpen) {
