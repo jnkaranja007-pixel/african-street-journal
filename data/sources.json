@@ -1720,6 +1720,20 @@
         "state": "missing"
       },
       {
+        "name": "Awate",
+        "home": "https://awate.com/",
+        "feed": "https://awate.com/feed/",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
+        "name": "Eritrea Focus",
+        "home": "https://eritrea-focus.org/",
+        "feed": "https://eritrea-focus.org/feed/",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
         "name": "African Arguments",
         "home": "https://africanarguments.org/",
         "feed": "https://africanarguments.org/feed/",

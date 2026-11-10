@@ -57,6 +57,14 @@ param(
   # variables (comma-separated). OpenRouter tries the list in order on its side.
   [string]$Model      = '',
   [string[]]$FallbackModels,
+  # The style rewrite goes to a stronger model than the first draft. On the 9 Nov 2026
+  # edition the writer's own rewrite fixed 29 of 103 drafts it was sent back with; 74
+  # stories went out still copying the source word for word (31), with a why line that
+  # said the dek again (24) or guessed (13). Only rewrites (about a hundred calls a run)
+  # pay the higher rate. ASJ_REWRITE_MODEL overrides it; 'none' sends rewrites back to
+  # the writer's own model. A model that refuses the call is dropped for the run and the
+  # rewrite goes to the writer's model instead.
+  [string]$RewriteModel = '',
   # Abort the whole run after this many API errors in a row, instead of grinding
   # through 55 countries x 3 attempts against a dead endpoint for half an hour.
   [int]$MaxConsecutiveApiErrors = 3,
@@ -130,6 +138,11 @@ if (-not $FallbackModels) {
 }
 $FallbackModels = @($FallbackModels | Where-Object { $_ -and $_ -ne $Model } | Select-Object -First 2)
 if ($Provider -eq 'gemini') { $Model = $Model -replace '^google/',''; $FallbackModels = @() }
+# Claude Haiku 5.5: $0.10 / $0.50 per million tokens in / out on OpenRouter on 10 Nov
+# 2026, against $0.10 / $0.40 for the writer - about six cents a run for the rewrites.
+$DEFAULT_REWRITE_MODEL = 'anthropic/claude-haiku-5.5'
+if (-not $RewriteModel) { $RewriteModel = if ($env:ASJ_REWRITE_MODEL) { $env:ASJ_REWRITE_MODEL.Trim() } else { $DEFAULT_REWRITE_MODEL } }
+if ($RewriteModel -eq 'none' -or $RewriteModel -eq $Model -or $Provider -ne 'openrouter') { $RewriteModel = '' }
 $consecutiveApiErrors = 0
 $servedModels = @{}
 if (-not (Test-Path $inPath)) {
@@ -922,7 +935,19 @@ function Get-RecentLeadIds([string]$Root, [int]$Editions = 4) {
 }
 $recentLeadIds = Get-RecentLeadIds $root
 
-function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$ExpectedItem, [string]$Provider, [string]$Model, [string]$ApiUrl, [string]$apiKey) {
+# The JSON shape without its length, count and range limits. The rewrite model's route
+# (Claude) takes a strict schema but not every limit in one, and every limit is checked
+# again on the draft anyway (Get-DraftContractIssues and the checks after it).
+function Remove-SchemaLimits($Node) {
+  if ($Node -is [System.Collections.IDictionary]) {
+    foreach ($k in @('minLength','maxLength','minimum','maximum','minItems','maxItems','const')) { if ($Node.Contains($k)) { $Node.Remove($k) } }
+    foreach ($k in @($Node.Keys)) { Remove-SchemaLimits $Node[$k] }
+  } elseif ($Node -is [System.Collections.IList]) {
+    foreach ($v in $Node) { Remove-SchemaLimits $v }
+  }
+}
+
+function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$ExpectedItem, [string]$Provider, [string]$Model, [string]$ApiUrl, [string]$apiKey, [switch]$RewriteRoute) {
   if (-not $apiKey) {
     throw "API key for provider '$Provider' is not set (OPENROUTER_API_KEY or GEMINI_API_KEY)"
   }
@@ -932,9 +957,11 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
       @{ role = 'system'; content = $STYLE },
       @{ role = 'user'; content = $prompt }
     )
-    temperature = $Temperature
     max_tokens  = $MaxOutputTokens
   }
+  # Claude Haiku 5.5 takes no temperature on OpenRouter, and with require_parameters
+  # (below) a parameter the model does not list is a 404 for the whole call.
+  if (-not $RewriteRoute) { $body['temperature'] = $Temperature }
     if ($Provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
   if ($JsonMode) {
     # "why" before "score": a model that has to state the connection first scores the
@@ -992,6 +1019,7 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
         }
       }
     }
+    if ($RewriteRoute) { Remove-SchemaLimits $body['response_format'] }
     # Do not silently route to a provider that ignores the schema.
     if ($Provider -eq 'openrouter') {
       $body['provider'] = @{
@@ -1084,10 +1112,48 @@ if ($env:GEMINI_API_KEY) {
   $script:routes.Add(@{ provider='gemini'; model=($gm -replace '^google/',''); url='https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'; key=$env:GEMINI_API_KEY; dead=$false })
 }
 $script:routeCalls = @{}
+# Style rewrites only (see RewriteModel). Tried first for a rewrite; the routes above
+# take the call if it fails.
+$script:rewriteRoute = $null
+if ($RewriteModel -and $Provider -eq 'openrouter' -and $env:OPENROUTER_API_KEY) {
+  $script:rewriteRoute = @{ provider='openrouter'; model=$RewriteModel; url=$OpenRouterUrl; key=$env:OPENROUTER_API_KEY; dead=$false }
+}
+$script:rewriteCalls = 0
+$script:rewriteRouteErrors = 0
 
-function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$ExpectedItem = -1) {
+function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$ExpectedItem = -1, [switch]$Rewrite) {
   if (-not $script:routes.Count) { throw 'No API key set (OPENROUTER_API_KEY or GEMINI_API_KEY)' }
   $last = 'no live route'
+  $rr = $script:rewriteRoute
+  if ($Rewrite -and $rr -and -not $rr.dead) {
+    for ($try = 1; $try -le 2; $try++) {
+      try {
+        $out = Invoke-ModelOnce $prompt $ExpectedStories $ExpectedItem $rr.provider $rr.model $rr.url $rr.key -RewriteRoute
+        $k = "rewrite:$($rr.model)"
+        $script:routeCalls[$k] = 1 + [int]$script:routeCalls[$k]
+        $script:rewriteCalls++
+        return $out
+      } catch {
+        $last = $_.Exception.Message.Split("`n")[0]
+        $script:rewriteRouteErrors++
+        $code = 0
+        if ($last -match '^HTTP (\d+)') { $code = [int]$Matches[1] }
+        if ($code -in 401,402,403) {
+          # The key, not the model: every OpenRouter route is out (as below).
+          $rr.dead = $true
+          foreach ($x in $script:routes) { if ($x.provider -eq 'openrouter') { $x.dead = $true } }
+          Write-Host "      [route] openrouter disabled for this run ($last)" -ForegroundColor Red
+          break
+        }
+        if (-not ($code -eq 0 -or $code -eq 408 -or $code -eq 429 -or $code -ge 500)) {
+          $rr.dead = $true
+          Write-Host "      [route] rewrite model $($rr.model) refused the call ($last); rewrites go to the writer's model for the rest of this run" -ForegroundColor DarkYellow
+          break
+        }
+        if ($try -lt 2) { Start-Sleep -Seconds $(if ($code -eq 429) { 15 } else { 3 }) }
+      }
+    }
+  }
   foreach ($r in $script:routes) {
     if ($r.dead) { continue }
     for ($try = 1; $try -le 3; $try++) {
@@ -1248,6 +1314,16 @@ $caseRepaired = 0
 $leadIdsReused = 0
 $relativeTimeFlagged = 0
 $copyFlagged = 0
+$keptStillCopying = 0
+$keptWhyRestating = 0
+$keptWhyGuessing = 0
+# What a story kept with style notes still carries (the metrics above).
+function Add-KeptStyleCounts($Brief, $Item) {
+  $kept = Get-DraftStyleIssues $Brief (Get-ItemEvidenceText $Item)
+  if (@($kept.Copied).Count) { $script:keptStillCopying++ }
+  if ($kept.RestatedWhy) { $script:keptWhyRestating++ }
+  if ($kept.SpeculativeWhy) { $script:keptWhyGuessing++ }
+}
 
 foreach ($code in $codes) {
   $entry = $feed.byCountry.$code
@@ -1354,7 +1430,9 @@ number, date, cause or context from any other event. Return ONLY a JSON object i
     $offCountryItem = $false
     for ($attempt = 1; $attempt -le ($Retries + 1); $attempt++) {
       try {
-        $response = Invoke-OpenRouter ($prompt + $repairNote) 1 $i
+        # Once a draft has been sent back for style, the rewrite model writes the rest of
+        # this story's attempts, a fact repair of its rewrite included.
+        $response = Invoke-OpenRouter ($prompt + $repairNote) 1 $i -Rewrite:($styleRepairsThisItem -gt 0)
         $consecutiveApiErrors = 0
         $apiCalls++
         $usagePrompt += $response.PromptTokens
@@ -1476,6 +1554,7 @@ weekday, write that instead of a month. Do not add facts while repairing.
           }
           $oneBrief = $styleBest
           $styleAccepted++
+          Add-KeptStyleCounts $oneBrief $it
           Write-Host ("      {0}#{1}: kept with style notes after one rewrite: {2}" -f $code, $i, (@($draftStyle.Issues) -join '; ')) -ForegroundColor DarkGray
           break
         }
@@ -1507,6 +1586,7 @@ weekday, write that instead of a month. Do not add facts while repairing.
     if (-not $oneBrief -and $styleBest -and -not $offCountryItem) {
       $oneBrief = $styleBest
       $styleAccepted++
+      Add-KeptStyleCounts $oneBrief $it
       Write-Host ("      {0}#{1}: kept the fact-checked draft; its style rewrite failed ({2})" -f $code, $i, $lastErr) -ForegroundColor DarkGray
     }
     }
@@ -1745,6 +1825,14 @@ $metrics = [ordered]@{
   styleRewrites = $styleRepairs
   styleFixedByRewrite = $styleFixed
   styleKeptWithNotes = $styleAccepted
+  # What the kept-with-notes stories still carry, so a change of rewrite model can be
+  # judged on the published copy, not only on how many rewrites "passed".
+  keptStillCopying = $keptStillCopying
+  keptWhyRestating = $keptWhyRestating
+  keptWhyGuessing = $keptWhyGuessing
+  rewriteModel = $RewriteModel
+  rewriteCalls = $script:rewriteCalls
+  rewriteRouteErrors = $script:rewriteRouteErrors
   offCountryDropped = $offCountryDropped
   lensScoresCappedAsSpeculative = $lensCapped
   headlinesRecased = $caseRepaired
@@ -1789,6 +1877,7 @@ if ($Merge -and (Test-Path $outPath)) {
 Write-Host ''
 Write-Host "[write] $stories on-site stories across $($result.Count) countries -> $OutFile" -ForegroundColor Green
 Write-Host "[write] model: $Model" -ForegroundColor DarkGray
+if ($RewriteModel) { Write-Host "[write] style rewrites: $RewriteModel ($($script:rewriteCalls) call(s), $($script:rewriteRouteErrors) error(s))" -ForegroundColor DarkGray }
 foreach ($k in $script:routeCalls.Keys) { Write-Host "[write] calls served via ${k}: $($script:routeCalls[$k])" -ForegroundColor DarkGray }
 Write-Host ("[write] usage: {0} input + {1} output = {2} tokens; {3} API calls; {4} cache hits; reported cost `${5}" -f `
            $usagePrompt, $usageCompletion, $usageTotal, $apiCalls, $cacheHits, ([Math]::Round($usageCost, 4))) -ForegroundColor DarkGray

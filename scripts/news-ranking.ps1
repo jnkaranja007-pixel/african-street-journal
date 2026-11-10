@@ -113,7 +113,46 @@ $script:NEWS_EXTERNAL_COUNTRIES = @(
   'premier league','champions league','europa league','la liga','serie a','bundesliga','ligue 1',
   'manchester united','manchester city','man united','man city','liverpool','chelsea','arsenal',
   'tottenham','newcastle united','aston villa','west ham','real madrid','atletico madrid',
-  'bayern munich','borussia dortmund','juventus','inter milan','ac milan','paris saint-germain','psg'
+  'bayern munich','borussia dortmund','juventus','inter milan','ac milan','paris saint-germain','psg',
+  # Added 10 Nov 2026: the rest of the world, not only the places that had already slipped
+  # through. The 9 Nov edition wrote, then threw away, Poland's Krakow shooting for the
+  # Morocco and Mauritius desks, a Norway king's marathon in France, a papal vigil in
+  # Montevideo and a Sao Paulo Grand Prix for Benin's. English, French, Portuguese and
+  # Spanish names; no word that is also a common word or a first name (Jordan, Nice,
+  # Sydney, Polish, English), and not Dubai, which most African trade stories name.
+  'poland','pologne','polonia','krakow','cracow','cracovie','warsaw','varsovie','norway','norwegian',
+  'norvege','noruega','oslo','sweden','swedish','suede','suecia','stockholm','finland','finnish',
+  'finlande','helsinki','denmark','danish','danemark','copenhagen','iceland','islande','ireland','irish',
+  'irlande','irlanda','dublin','scotland','scottish','ecosse','edinburgh','glasgow','wales','welsh',
+  'england','angleterre','inglaterra','manchester','birmingham','switzerland','swiss','suisse','suica',
+  'suiza','geneva','geneve','zurich','austria','austrian','autriche','vienna','greece','greek','grece',
+  'grecia','athens','athenes','hungary','hungarian','hongrie','budapest','romania','romanian','roumanie',
+  'bucharest','bulgaria','bulgarian','bulgarie','serbia','serbian','serbie','belgrade','croatia',
+  'croatian','croatie','bosnia','bosnie','albania','albanie','kosovo','montenegro','north macedonia',
+  'slovenia','slovakia','czech','czechia','republique tcheque','prague','lithuania','latvia','estonia',
+  'belarus','bielorussie','minsk','moldova','luxembourg','cyprus','chypre','malta','malte','monaco',
+  'vatican','rome','milan','naples','pays bas','paises baixos','holanda','amsterdam','alemanha',
+  'alemania','espanha','italia','reino unido','estados unidos','munich','frankfurt','hamburg','cologne',
+  'marseille','lyon','bordeaux','toulouse','strasbourg','cannes','kyiv','kiev','ucrania','turquia',
+  'istanbul','ankara','georgia','georgie','armenia','armenie','azerbaijan','kazakhstan','uzbekistan',
+  'kyrgyzstan','tajikistan','turkmenistan','mongolia','korea','korean','coree','coreia','corea','seoul',
+  'pyongyang','tokyo','japao','taiwan','hong kong','shanghai','vietnam','vietnamese','thailand','thai',
+  'thailande','bangkok','cambodia','cambodge','laos','myanmar','birmanie','bangladesh','bangladeshi',
+  'sri lanka','nepal','afghan','pakistani','karachi','islamabad','kabul','mumbai','new delhi','delhi',
+  'indonesia','indonesian','indonesie','jakarta','malaysia','malaysian','malaisie','singapore',
+  'philippines','filipino','manila','new zealand','nouvelle zelande','auckland','melbourne','fiji',
+  'iraqi','iraque','baghdad','syrian','siria','damascus','damas','lebanese','libano','beirut','beyrouth',
+  'jordanie','amman','kuwait','koweit','bahrain','bahrein','oman','omani','emirati','saudi','qatari',
+  'riyadh','riyad','jeddah','doha','abu dhabi','tehran','teheran','irao','jerusalem','tel aviv',
+  'west bank','cisjordanie','palestinian','mexique','mexican','mexico city','guatemala','honduras',
+  'nicaragua','el salvador','costa rica','panama','cuba','cuban','havana','haiti','haitian','jamaica',
+  'jamaican','jamaique','trinidad','barbados','bahamas','dominican republic','puerto rico','colombia',
+  'colombian','colombie','bogota','venezuela','venezuelan','caracas','ecuador','equador',
+  'peru','peruvian','perou','chile','chilean','chili','bolivia','bolivie','paraguay','paraguai',
+  'uruguay','uruguai','montevideo','argentine','argentinian','buenos aires','brasil','sao paulo',
+  'rio de janeiro','new york','los angeles','california','californie','florida','floride','texas',
+  'chicago','miami','san francisco','white house','maison blanche','pentagon','toronto','montreal',
+  'vancouver','ottawa','formula 1','formula one','formule 1'
 )
 
 function Get-NewsWordCount([string]$Text) {
@@ -686,7 +725,14 @@ $script:NEWS_PLACE_NEUTRAL = @(
   'Gulf of Guinea','Golfe de Guinee','Golfo da Guine','Golfo de Guinea','Lake Chad','Lac Tchad','Lake Chad Basin',
   'River Niger','Niger River','Fleuve Niger','Congo River','Fleuve Congo','Congo Basin','Bassin du Congo',
   'Senegal River','Fleuve Senegal','Gambia River','Lake Malawi','Lac Malawi','Papua New Guinea',
-  'Indian Ocean','Ocean Indien','Oceano Indico','Indian hemp','Chanvre indien'
+  'Indian Ocean','Ocean Indien','Oceano Indico','Indian hemp','Chanvre indien',
+  # Currencies are not places: "from United States dollars to Chinese renminbi" is how
+  # the Zimbabwe Independent described a Zimbabwean utility's loan (9 Nov 2026).
+  'United States dollar','United States dollars','American dollar','American dollars','dollar americain',
+  'dollars americains','dolar americano','dolares americanos','Chinese yuan','Chinese renminbi','yuan chinois',
+  'British pound','British pounds','livre sterling','Indian rupee','Indian rupees','Japanese yen',
+  'Swiss franc','Swiss francs','franc suisse','Saudi riyal','Emirati dirham','Russian rouble','Russian ruble',
+  'Turkish lira'
 )
 # Competitions that share their name with African ones (the CAF Champions League, Benin's
 # Celtiis Ligue 1, Ghana's Premier League): they make a feed item external at ranking,
@@ -781,6 +827,23 @@ function Get-StoryPlaceIssue($Story, $Desk) {
   $opening = [string](@($Story.paragraphs | Where-Object { ([string]$_).Trim() }) | Select-Object -First 1)
   if ((Get-NewsPlaceHits (ConvertTo-NewsText $opening) $Desk.StoryOwn $Desk.StoryForeign).Own) { return '' }
   return ('names ' + ((@($head.ForeignNames) | Select-Object -Unique) -join ', ') + ' but never ' + $Desk.Name)
+}
+
+# The same test on a feed item, before any model call: an item that never names the
+# country (or its people or towns) anywhere in its title, summary or article text, while
+# its headline or opening names somewhere else, is that place's news. On 9 Nov 2026 the
+# writer was paid to draft nine such items and then threw them away (Poland's Krakow
+# shooting for Morocco, DR Congo's North Kivu for Rwanda, a marathon in France for
+# Benin). Only the opening counts against an item: "Zesa makes bid to pay US$1bn debt in
+# yuan" names the United States and China deep in the text, never Zimbabwe, and is
+# Zimbabwean news. Returns the reason, or ''.
+function Get-NewsItemPlaceIssue($Item, $Desk) {
+  $body = (([string]$Item.summary) + ' ' + ([string]$Item.articleEvidence)).Trim()
+  $all = Get-NewsPlaceHits (ConvertTo-NewsText (([string]$Item.title) + ' ' + $body)) $Desk.StoryOwn $Desk.StoryForeign
+  if ($all.Own -or -not $all.Foreign) { return '' }
+  $opening = Get-NewsPlaceHits (ConvertTo-NewsText (([string]$Item.title) + ' ' + $body.Substring(0, [Math]::Min(300, $body.Length)))) $Desk.StoryOwn $Desk.StoryForeign
+  if (-not $opening.Foreign) { return '' }
+  return ('names ' + ((@($opening.ForeignNames) | Select-Object -Unique -First 3) -join ', ') + ' but never ' + $Desk.Name)
 }
 
 function Test-NewsCountryLink([string]$CountryMatch, [int]$OutletCount, [bool]$NamesCountry = $true) {

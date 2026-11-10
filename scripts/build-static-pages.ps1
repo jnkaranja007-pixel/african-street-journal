@@ -77,7 +77,7 @@ function Get-ShownTopic($Topic) {
   return ''
 }
 function Test-ShowWhy($Brief) {
-  return ([bool]$Brief.why -and -not (Test-WhyRestatesDek $Brief))
+  return ([bool]$Brief.why -and -not (Test-WhyRestatesDek $Brief) -and -not (Test-WhyGuesses ([string]$Brief.why)))
 }
 
 function JsonEsc($s) {

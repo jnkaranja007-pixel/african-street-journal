@@ -91,8 +91,17 @@ function Test-SameSite([string]$a, [string]$b) {
   return ($ha.EndsWith(".$hb") -or $hb.EndsWith(".$ha"))
 }
 
+# The innermost exception message, which says why ("Connection reset by peer", "The
+# remote certificate is invalid"): the weekly log said only ERROR, so a feed that works
+# from a desktop and fails from the runner could not be told apart from a dead site.
+function Get-InnerMessage($e) {
+  while ($e.InnerException) { $e = $e.InnerException }
+  return ([string]$e.Message).Split("`n")[0].Trim()
+}
+
 function Get-Url([string]$url) {
   # Returns @{ text; code; state; finalUrl }, state = ok | blocked | http | error
+  $script:lastUrlError = ''
   $req = [Net.HttpWebRequest]::Create($url)
   $req.UserAgent = $UA
   $req.Timeout = $TimeoutSec * 1000
@@ -108,12 +117,14 @@ function Get-Url([string]$url) {
     } finally { $resp.Close() }
   } catch [Net.WebException] {
     $code = 0
+    $script:lastUrlError = Get-InnerMessage $_.Exception
     if ($_.Exception.Response) { $code = [int]$_.Exception.Response.StatusCode }
     $state = if ($code -eq 403 -or $code -eq 429 -or $code -eq 401) { 'blocked' }
              elseif ($code -gt 0) { 'http' }
              else { 'error' }
     return @{ text = ''; code = $code; state = $state; finalUrl = $url }
   } catch {
+    $script:lastUrlError = Get-InnerMessage $_.Exception
     return @{ text = ''; code = 0; state = 'error'; finalUrl = $url }
   }
 }
@@ -253,7 +264,7 @@ foreach ($code in $codes) {
         'error' {
           $tally.error++; $errorList.Add("$code/$($s.name)")
           if ($Fix) { Set-State $s 'error' }
-          Write-Host ("    ERROR     {0,-31} {1}" -f $s.name, $s.home) -ForegroundColor DarkRed
+          Write-Host ("    ERROR     {0,-31} {1} ({2})" -f $s.name, $s.home, $script:lastUrlError) -ForegroundColor DarkRed
         }
         default {
           $tally.missing++; $missingList.Add("$code/$($s.name)")

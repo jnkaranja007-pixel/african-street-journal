@@ -254,6 +254,12 @@ try {
   $note = Get-StyleRepairNote $style $draft
   if ($note -notmatch 'Previous draft:' -or $note -notmatch 'broader strategy' -or $note -notmatch '"item":0') { throw 'the repair note lacks the phrases or the previous draft' }
   Write-Host 'PASS style issues produce a repair note carrying the phrases and the previous draft'
+  # 10 Nov 2026: a why line that has to guess is not shown at all (the site and the static
+  # pages both call this). "May" the month is not a guess.
+  if (-not (Test-WhyGuesses 'Farmers could pay more for seed next season.')) { throw 'a guessing why line was not caught' }
+  if (Test-WhyGuesses 'The new tariff takes effect in May for every household.') { throw 'the month May was read as a guess' }
+  if (Test-WhyGuesses 'The ministry says traders will pay 5% less at the border.') { throw 'a stated effect was read as a guess' }
+  Write-Host 'PASS a why line that guesses is caught, and the month of May is not'
   # 28 Oct 2026: a quarter of the "why" lines said the dek again in other words.
   $echo = [pscustomobject]@{ item = 0; headline = 'Benin launches sixth phase of commune development fund'; dek = 'The FADeC VI program will support investments in all 77 communes, with a resilience component for 27 northern communes.'; paragraphs = @('Benin launched the sixth phase of its commune fund on Monday.', 'All 77 communes will receive investment money.', 'Twenty-seven northern communes get an extra resilience component.'); why = 'Benin''s FADeC VI program will support investments in all 77 communes, with a specific resilience component for 27 northern communes.' }
   $style = Get-DraftStyleIssues $echo 'Benin launched FADeC VI for 77 communes.'

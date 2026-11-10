@@ -346,6 +346,23 @@ Assert-Desk 'a year in both titles is not a shared event' (-not (Test-NewsCorrob
 $figures = Get-NewsFigureKeys 'Malawi lost K640 billion; pilgrims pay 3 630 000 FCFA; 5.103 deaths in 2026.'
 Assert-Desk 'figures behind a currency letter and in grouped digits are read, years are not' ($figures.ContainsKey('640') -and $figures.ContainsKey('3630000') -and $figures.ContainsKey('5103') -and -not $figures.ContainsKey('2026'))
 
+# 10 Nov 2026: items about other countries reached the writer (a Krakow march on a Kenyan
+# feed, Melania Trump on Cabo Verde's) and were dropped there, after a call. The fetch
+# now reads the article text and turns them away first.
+Write-Host '[ranking-test] off-country items at fetch' -ForegroundColor Cyan
+foreach ($cc in 'zw','ly') { $desk[$cc] = Get-NewsDeskTerms $registry $cc $repoRoot }
+function New-PlaceItem([string]$Title, [string]$Summary, [string]$Evidence = '') {
+  return [pscustomobject]@{ title = $Title; summary = $Summary; articleEvidence = $Evidence }
+}
+$krakow = Get-NewsItemPlaceIssue (New-PlaceItem 'Thousands march in Krakow over housing costs' 'Protesters in Poland''s second city demanded rent controls on Saturday.') $desk['ke']
+Assert-Desk 'a Krakow march that never names Kenya is turned away' ($krakow -match 'Krakow|Poland' -and $krakow -match 'never Kenya')
+$zesa = Get-NewsItemPlaceIssue (New-PlaceItem 'ZESA to bill mines in United States dollars' 'The power utility said large users will pay in United States dollars, with Chinese renminbi accepted for some imports.') $desk['zw']
+Assert-Desk 'a currency is not a place: ZESA billing in dollars and renminbi is kept' (-not $zesa)
+$libya = Get-NewsItemPlaceIssue (New-PlaceItem 'Delegation from Hungarian company visits port' 'The delegation met Libyan port officials to discuss a terminal.') $desk['ly']
+Assert-Desk 'a foreign company visiting is kept when the article names the country' (-not $libya)
+$late = Get-NewsItemPlaceIssue (New-PlaceItem 'County opens new fresh produce market' ('Traders moved into the new stalls on Monday. ' * 9) 'One supplier had driven in from Uganda.') $desk['ke']
+Assert-Desk 'a foreign name deep in the article, not the opening, is kept' (-not $late)
+
 Write-Host ''
 if ($failed) {
   Write-Host "[ranking-test] FAIL - $failed failed, $passed passed" -ForegroundColor Red

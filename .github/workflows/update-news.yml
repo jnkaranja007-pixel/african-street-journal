@@ -161,6 +161,11 @@ jobs:
           #   gh variable set ASJ_FALLBACK_MODELS --body 'google/gemini-3.1-flash-lite,deepseek/deepseek-v3.2'
           ASJ_MODEL: ${{ github.event.inputs.model || vars.ASJ_MODEL }}
           ASJ_FALLBACK_MODELS: ${{ vars.ASJ_FALLBACK_MODELS }}
+          # Style rewrites (a draft that copied its source or padded its why line) go to
+          # a stronger model; empty means the default in write-briefs.ps1, 'none' turns
+          # it off and sends rewrites back to the writer's model:
+          #   gh variable set ASJ_REWRITE_MODEL --body anthropic/claude-haiku-5.5
+          ASJ_REWRITE_MODEL: ${{ vars.ASJ_REWRITE_MODEL }}
           # Free alternative: create a key at https://aistudio.google.com/apikey, then
           #   gh secret set GEMINI_API_KEY ; gh variable set ASJ_PROVIDER --body gemini
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

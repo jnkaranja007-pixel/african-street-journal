@@ -444,6 +444,7 @@ $evidenceReadyTotal = 0
 $articleHostFailures = @{}
 $editorialRejectedTotal = 0
 $countryLinkRejectedTotal = 0
+$placeRejectedTotal = 0
 $splitFromClusters = 0
 
 foreach ($code in $codes) {
@@ -606,10 +607,13 @@ foreach ($code in $codes) {
     }
     $meter = if ($best._meterOutlets -eq $outlets.Count) { $best._meter } else { Get-EditorialScore $best $outlets.Count $now }
     $namesCountry = if ([string]$best.countryMatch -eq 'external') { Test-NewsClusterNamesCountry $cluster.members $matchTerms } else { $true }
-    if (-not (Test-NewsCountryLink ([string]$best.countryMatch) $outlets.Count $namesCountry)) {
-      $countryLinkRejectedTotal++
-      continue
-    }
+    # A home outlet's report that names somewhere abroad up front and the country only
+    # further down is still home news: Libya Herald's "delegation from Hungarian company
+    # ... a desalination plant in Libya" (9 Nov 2026). Its feed summary stops before the
+    # country, so the item waits for the article text and is kept only if that names the
+    # country (below, after enrichment). Regional feeds never get here: they must name it
+    # up front.
+    $mustNameCountry = -not (Test-NewsCountryLink ([string]$best.countryMatch) $outlets.Count $namesCountry)
 
     $others = New-Object System.Collections.Generic.List[object]
     $seenOutlet = @{}
@@ -650,6 +654,7 @@ foreach ($code in $codes) {
       itemId         = Get-NewsItemId $best.url $best.title $best.summary
       _titleSig      = $best._titleSig
       _eventSig      = $best._eventSig
+      _mustNameCountry = $mustNameCountry
     })
   }
 
@@ -660,50 +665,80 @@ foreach ($code in $codes) {
   # Keep two no-model-cost reserves until evidence enrichment has run. The published
   # assignment slate remains six, but a thin feed item cannot crowd out a writeable one.
   $shortlistLimit = $PerCountry + 2
-  $selected = @(Select-NewsCandidates $eligible $shortlistLimit $liveSources)
+  # Up to three passes: a finalist the place checks turn away (below) leaves its slot to
+  # the next candidate, as a dropped draft does at the writer, without paying for a draft.
+  $pool = $eligible
+  for ($selectPass = 1; $selectPass -le 3; $selectPass++) {
+    $selected = @(Select-NewsCandidates $pool $shortlistLimit $liveSources)
+    $turnedAwayIds = New-Object 'System.Collections.Generic.HashSet[string]'
 
-  # Ranking stays cheap and feed-based. Fetch fuller article text only for the finalists,
-  # and only when the feed did not already provide enough evidence to write from safely.
-  foreach ($candidate in $selected) {
-    $articleEvidence = ''
-    $feedWords = Get-TextWordCount ([string]$candidate.summary)
-    if (-not $SkipArticleEnrichment -and $feedWords -lt 180 -and $candidate.url -match '^https?://') {
-      $urlKey = [string]$candidate.url
-      if ($articleCache.ContainsKey($urlKey)) {
-        $articleEvidence = [string]$articleCache[$urlKey]
-      } else {
-        $hostKey = ''
-        try { $hostKey = ([Uri]$urlKey).DnsSafeHost.ToLowerInvariant() } catch { }
-        $hostFailures = if ($hostKey -and $articleHostFailures.ContainsKey($hostKey)) { [int]$articleHostFailures[$hostKey] } else { 0 }
-        if ($ArticleHostFailureLimit -gt 0 -and $hostKey -and $hostFailures -ge $ArticleHostFailureLimit) {
-          $articleCache[$urlKey] = ''
-          $articlePagesSuppressed++
-        } else {
-          $articlePagesAttempted++
-          try {
-            $articleEvidence = [string](Get-ArticleEvidence $urlKey)
-            $articleCache[$urlKey] = $articleEvidence
-            if ($articleEvidence) {
-              if ($hostKey) { $articleHostFailures[$hostKey] = 0 }
+    # Ranking stays cheap and feed-based. Fetch fuller article text only for the finalists,
+    # and only when the feed did not already provide enough evidence to write from safely.
+    # Once per finalist: a later pass meets the same ones again.
+    foreach ($candidate in $selected) {
+      if (-not $candidate.PSObject.Properties['evidenceWords']) {
+        $articleEvidence = ''
+        $feedWords = Get-TextWordCount ([string]$candidate.summary)
+        if (-not $SkipArticleEnrichment -and $feedWords -lt 180 -and $candidate.url -match '^https?://') {
+          $urlKey = [string]$candidate.url
+          if ($articleCache.ContainsKey($urlKey)) {
+            $articleEvidence = [string]$articleCache[$urlKey]
+          } else {
+            $hostKey = ''
+            try { $hostKey = ([Uri]$urlKey).DnsSafeHost.ToLowerInvariant() } catch { }
+            $hostFailures = if ($hostKey -and $articleHostFailures.ContainsKey($hostKey)) { [int]$articleHostFailures[$hostKey] } else { 0 }
+            if ($ArticleHostFailureLimit -gt 0 -and $hostKey -and $hostFailures -ge $ArticleHostFailureLimit) {
+              $articleCache[$urlKey] = ''
+              $articlePagesSuppressed++
             } else {
-              $articlePagesFailed++
-              if ($hostKey) { $articleHostFailures[$hostKey] = $hostFailures + 1 }
+              $articlePagesAttempted++
+              try {
+                $articleEvidence = [string](Get-ArticleEvidence $urlKey)
+                $articleCache[$urlKey] = $articleEvidence
+                if ($articleEvidence) {
+                  if ($hostKey) { $articleHostFailures[$hostKey] = 0 }
+                } else {
+                  $articlePagesFailed++
+                  if ($hostKey) { $articleHostFailures[$hostKey] = $hostFailures + 1 }
+                }
+              } catch {
+                $articleCache[$urlKey] = ''
+                $articlePagesFailed++
+                if ($hostKey) { $articleHostFailures[$hostKey] = $hostFailures + 1 }
+              }
+              Start-Sleep -Milliseconds ([Math]::Min(100, $DelayMs))
             }
-          } catch {
-            $articleCache[$urlKey] = ''
-            $articlePagesFailed++
-            if ($hostKey) { $articleHostFailures[$hostKey] = $hostFailures + 1 }
           }
-          Start-Sleep -Milliseconds ([Math]::Min(100, $DelayMs))
+        }
+        $articleWords = Get-TextWordCount $articleEvidence
+        if ($articleWords -lt 70 -or $articleWords -lt $feedWords) { $articleEvidence = '' }
+        if ($articleEvidence) { $articlePagesEnriched++ }
+        $candidate | Add-Member -NotePropertyName articleEvidence -NotePropertyValue $articleEvidence -Force
+        $evidenceWords = [Math]::Max($feedWords, (Get-TextWordCount $articleEvidence))
+        $candidate | Add-Member -NotePropertyName evidenceWords -NotePropertyValue $evidenceWords -Force
+      }
+
+      # Place, on everything the desk now has for the item (Get-NewsItemPlaceIssue).
+      $turnAway = ''
+      if ($candidate._mustNameCountry) {
+        $fullText = ConvertTo-NewsText (([string]$candidate.title) + ' ' + ([string]$candidate.summary) + ' ' + ([string]$candidate.articleEvidence))
+        if (-not (Get-NewsPlaceHits $fullText $deskTerms.StoryOwn $deskTerms.StoryForeign).Own) {
+          $turnAway = 'one outlet, set abroad, never names ' + $name
+          $countryLinkRejectedTotal++
         }
       }
+      if (-not $turnAway) {
+        $turnAway = Get-NewsItemPlaceIssue $candidate $deskTerms
+        if ($turnAway) { $placeRejectedTotal++ }
+      }
+      if ($turnAway) {
+        [void]$turnedAwayIds.Add([string]$candidate.itemId)
+        Write-Host ("      {0}: turned away, {1}: {2}" -f $code, $turnAway, $candidate.title) -ForegroundColor DarkGray
+      }
     }
-    $articleWords = Get-TextWordCount $articleEvidence
-    if ($articleWords -lt 70 -or $articleWords -lt $feedWords) { $articleEvidence = '' }
-    if ($articleEvidence) { $articlePagesEnriched++ }
-    $candidate | Add-Member -NotePropertyName articleEvidence -NotePropertyValue $articleEvidence -Force
-    $evidenceWords = [Math]::Max($feedWords, (Get-TextWordCount $articleEvidence))
-    $candidate | Add-Member -NotePropertyName evidenceWords -NotePropertyValue $evidenceWords -Force
+    if (-not $turnedAwayIds.Count) { break }
+    $pool = @($pool | Where-Object { -not $turnedAwayIds.Contains([string]$_.itemId) })
+    $selected = @($selected | Where-Object { -not $turnedAwayIds.Contains([string]$_.itemId) })
   }
 
   $selected = @(Select-NewsWriteableCandidates $selected $PerCountry $MinEvidenceWords)
@@ -766,6 +801,7 @@ $payload = [ordered]@{
     durationSeconds = [Math]::Round($runTimer.Elapsed.TotalSeconds, 1)
     editorialRejected = $editorialRejectedTotal
     countryLinkRejected = $countryLinkRejectedTotal
+    placeRejected = $placeRejectedTotal
     splitFromClusters = $splitFromClusters
     articlePagesAttempted = $articlePagesAttempted
     articlePagesEnriched = $articlePagesEnriched
@@ -786,6 +822,9 @@ if (-not $SkipArticleEnrichment) {
 Write-Host "[fetch] editorial gate rejected $editorialRejectedTotal low-value item(s); runtime $([Math]::Round($runTimer.Elapsed.TotalSeconds, 1))s" -ForegroundColor DarkGray
 if ($countryLinkRejectedTotal) {
   Write-Host "[fetch] country-link gate rejected $countryLinkRejectedTotal single-source foreign item(s)" -ForegroundColor DarkGray
+}
+if ($placeRejectedTotal) {
+  Write-Host "[fetch] place check turned away $placeRejectedTotal item(s) set abroad that never name their desk's country" -ForegroundColor DarkGray
 }
 if ($splitFromClusters) {
   Write-Host "[fetch] $splitFromClusters report(s) split off a cluster whose lead covers another event" -ForegroundColor DarkGray

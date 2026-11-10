@@ -165,7 +165,7 @@ for ($try = 0; $try -lt 10 -and -not $listener.IsListening; $try++) {
   try { $listener.Start() } catch { $listener = New-Object System.Net.HttpListener }
 }
 if (-not $listener.IsListening) { throw 'could not start the stand-in model listener' }
-$log = [hashtable]::Synchronized(@{ prompts = (New-Object System.Collections.ArrayList) })
+$log = [hashtable]::Synchronized(@{ prompts = (New-Object System.Collections.ArrayList); requests = (New-Object System.Collections.ArrayList) })
 $server = [PowerShell]::Create()
 [void]$server.AddScript({
   param($Listener, $Log, $ResponderText)
@@ -190,6 +190,23 @@ $server = [PowerShell]::Create()
       }
       $prompt = [string]$req.messages[1].content
       [void]$Log.prompts.Add($prompt)
+      # What each call asked for, so the test can tell which route a rewrite took. The
+      # rewrite model (Claude on OpenRouter) takes no temperature and no length limits.
+      [void]$Log.requests.Add([pscustomobject]@{
+        model = [string]$req.model
+        temperature = [bool]$req.PSObject.Properties['temperature']
+        limits = ($raw -match '"(?:minLength|maxLength|minItems|maxItems|minimum|maximum|const)"')
+        style = ($prompt -match 'REPAIR: Your previous draft')
+        repair = ($prompt -match 'REPAIR:')
+        dateRepair = ($prompt -match 'REPAIR: The previous draft named dates')
+      })
+      # As OpenRouter answers a model that cannot take the call (404, not transient).
+      if ([string]$req.model -eq 'stand-in/refuser') {
+        $ctx.Response.StatusCode = 404
+        $err = [Text.Encoding]::UTF8.GetBytes('{"error":{"message":"No endpoints found that support the requested parameters","code":404}}')
+        $ctx.Response.OutputStream.Write($err, 0, $err.Length)
+        continue
+      }
       $content = & $respond $prompt
       $body = [ordered]@{ model = 'stand-in'; choices = @(@{ message = @{ role = 'assistant'; content = $content } }); usage = @{ prompt_tokens = 100; completion_tokens = 100; total_tokens = 200; cost = 0 } } | ConvertTo-Json -Depth 8 -Compress
       $bytes = [Text.Encoding]::UTF8.GetBytes($body)
@@ -205,8 +222,11 @@ $serverHandle = $server.BeginInvoke()
 $outPath = Join-Path $tmp 'out.json'
 $metricsPath = Join-Path $tmp 'metrics.json'
 $logPath = Join-Path $tmp 'writer.log'
+$refuseOutPath = Join-Path $tmp 'out-refused.json'
+$refuseMetricsPath = Join-Path $tmp 'metrics-refused.json'
+$refuseLogPath = Join-Path $tmp 'writer-refused.log'
 $saved = @{}
-foreach ($k in 'ASJ_OPENROUTER_URL','OPENROUTER_API_KEY','GEMINI_API_KEY','ASJ_PROVIDER','ASJ_MODEL','ASJ_FALLBACK_MODELS') { $saved[$k] = [Environment]::GetEnvironmentVariable($k) }
+foreach ($k in 'ASJ_OPENROUTER_URL','OPENROUTER_API_KEY','GEMINI_API_KEY','ASJ_PROVIDER','ASJ_MODEL','ASJ_FALLBACK_MODELS','ASJ_REWRITE_MODEL') { $saved[$k] = [Environment]::GetEnvironmentVariable($k) }
 try {
   $env:ASJ_OPENROUTER_URL = "http://127.0.0.1:$port/"
   $env:OPENROUTER_API_KEY = 'stand-in-key'
@@ -214,12 +234,21 @@ try {
   $env:ASJ_PROVIDER = $null
   $env:ASJ_MODEL = 'stand-in/model'
   $env:ASJ_FALLBACK_MODELS = 'stand-in/fallback'
+  $env:ASJ_REWRITE_MODEL = 'stand-in/rewriter'
   # The same engine as this test: pwsh in CI and on the desk.
   $exe = (Get-Process -Id $PID).Path
   # Six slots, so the seventh assignment is the reserve the desk reaches for.
   & $exe -NoProfile -ExecutionPolicy Bypass -File $writer -Only xx -InFile $feedPath -OutFile $outPath `
     -MetricsFile $metricsPath -NoCache -JsonMode -DelayMs 0 -MaxBriefs 6 *> $logPath
   $writerExit = $LASTEXITCODE
+  $mainRequests = @($log.requests)
+  # The same desk with a rewrite model that refuses every call: its rewrites must go
+  # back to the writer's model, not be lost.
+  $env:ASJ_REWRITE_MODEL = 'stand-in/refuser'
+  & $exe -NoProfile -ExecutionPolicy Bypass -File $writer -Only xx -InFile $feedPath -OutFile $refuseOutPath `
+    -MetricsFile $refuseMetricsPath -NoCache -JsonMode -DelayMs 0 -MaxBriefs 6 *> $refuseLogPath
+  $refuseExit = $LASTEXITCODE
+  $refuseRequests = @($log.requests)[$mainRequests.Count..($log.requests.Count - 1)]
 } finally {
   foreach ($k in $saved.Keys) { [Environment]::SetEnvironmentVariable($k, $saved[$k]) }
   $listener.Stop()
@@ -262,6 +291,29 @@ try {
   # The scripted drafts paraphrase and date their facts, so a check that misfired on them
   # would cost every story on the desk a rewrite.
   Assert-Harness 'paraphrased, dated drafts are not sent back for copying or relative time' ($metrics.draftsCopyingSource -eq 0 -and $metrics.draftsWithRelativeTime -eq 0) ("copying {0} relative {1}" -f $metrics.draftsCopyingSource, $metrics.draftsWithRelativeTime)
+
+  Write-Host '[harness] style rewrites go to the rewrite model' -ForegroundColor Cyan
+  $styleCalls = @($mainRequests | Where-Object { $_.style })
+  $firstDrafts = @($mainRequests | Where-Object { -not $_.repair })
+  $dateCalls = @($mainRequests | Where-Object { $_.dateRepair })
+  Assert-Harness 'every style rewrite is sent to the rewrite model' ($styleCalls.Count -eq 3 -and @($styleCalls | Where-Object { $_.model -ne 'stand-in/rewriter' }).Count -eq 0) (($styleCalls | ForEach-Object { $_.model }) -join ', ')
+  Assert-Harness 'a rewrite sends no temperature and no schema limits' (@($styleCalls | Where-Object { $_.temperature -or $_.limits }).Count -eq 0)
+  Assert-Harness 'first drafts stay on the writer model, with temperature and limits' ($firstDrafts.Count -eq 7 -and @($firstDrafts | Where-Object { $_.model -ne 'stand-in/model' -or -not $_.temperature -or -not $_.limits }).Count -eq 0) (($firstDrafts | ForEach-Object { $_.model }) -join ', ')
+  Assert-Harness 'a date repair of a first draft stays on the writer model' ($dateCalls.Count -ge 1 -and @($dateCalls | Where-Object { $_.model -ne 'stand-in/model' }).Count -eq 0)
+  # Four: three style rewrites, and the fact repair of the one that invented a figure,
+  # which the rewrite model is also asked to fix.
+  Assert-Harness 'metrics name the rewrite model and count its calls' ($metrics.rewriteModel -eq 'stand-in/rewriter' -and $metrics.rewriteCalls -eq 4 -and @($mainRequests | Where-Object { $_.model -eq 'stand-in/rewriter' }).Count -eq 4 -and $metrics.rewriteRouteErrors -eq 0) ("model {0} calls {1} errors {2}" -f $metrics.rewriteModel, $metrics.rewriteCalls, $metrics.rewriteRouteErrors)
+
+  Write-Host '[harness] a rewrite model that refuses the call' -ForegroundColor Cyan
+  $script:logPath = $refuseLogPath
+  if ($refuseExit -ne 0) { Get-Content $refuseLogPath | Select-Object -Last 30 | ForEach-Object { Write-Host "    $_" } }
+  Assert-Harness 'writer exits cleanly' ($refuseExit -eq 0) "exit $refuseExit"
+  $refused = @(([IO.File]::ReadAllText($refuseOutPath, [Text.Encoding]::UTF8) | ConvertFrom-Json).xx)
+  $refusedMetrics = [IO.File]::ReadAllText($refuseMetricsPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+  $refusedCalls = @($refuseRequests | Where-Object { $_.model -eq 'stand-in/refuser' })
+  Assert-Harness 'the refusing model is asked once, then left for the run' ($refusedCalls.Count -eq 1 -and $refusedMetrics.rewriteRouteErrors -eq 1 -and $refusedMetrics.rewriteCalls -eq 0) ("asked {0} errors {1} calls {2}" -f $refusedCalls.Count, $refusedMetrics.rewriteRouteErrors, $refusedMetrics.rewriteCalls)
+  Assert-Harness 'its rewrites go to the writer model, with the writer settings' (@($refuseRequests | Where-Object { $_.style -and $_.model -eq 'stand-in/model' -and $_.temperature }).Count -eq 3)
+  Assert-Harness 'the same six stories are published' ($refused.Count -eq 6 -and $refusedMetrics.styleRewrites -eq 3 -and $refusedMetrics.apiCalls -eq $metrics.apiCalls) ("stories {0} rewrites {1} calls {2}" -f $refused.Count, $refusedMetrics.styleRewrites, $refusedMetrics.apiCalls)
   Write-Host "[harness] OK - $passed checks"
 } finally {
   Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue

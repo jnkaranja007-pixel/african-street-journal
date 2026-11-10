@@ -3064,7 +3064,12 @@ function wireBriefAccordion(cards) {
 // every business story on the site. Neither is shown now.
 function briefWhy(brief) {
   const why = String(brief?.why || '').trim();
-  return why && !whyRestates(why, brief) ? why : '';
+  return why && !whyRestates(why, brief) && !whyGuesses(why) ? why : '';
+}
+// Nor one that has to guess: the desk asks for the effect the report states (the same
+// words as story-shape.ps1 Test-WhyGuesses). Lower-case "may" only: "in May" is a month.
+function whyGuesses(why) {
+  return /\b(?:may|might|could)\b/.test(why) || /\b(?:potentially|possibly|perhaps|presumably|likely to)\b/i.test(why);
 }
 
 function whyWords(text) {

@@ -567,6 +567,15 @@ function Get-WhyWords([string]$Text) {
   return @([regex]::Matches($Text.ToLowerInvariant(), '[\p{L}\p{N}]+') | ForEach-Object { $_.Value } |
     Where-Object { $_.Length -gt 2 -and $script:WHY_STOP -notcontains $_ })
 }
+# A why line that has to guess (may, might, could, possibly) is not printed either: 13
+# of the 9 Nov 2026 edition's stories kept one after their rewrite. The same words as
+# the writer's Test-SpeculativeText (write-briefs.ps1) and app.js whyGuesses; lower-case
+# "may" only, since "in May" is a month.
+function Test-WhyGuesses([string]$Why) {
+  if (-not $Why) { return $false }
+  return ([regex]::IsMatch($Why, '\b(?:may|might|could)\b') -or
+          [regex]::IsMatch($Why, '\b(?:potentially|possibly|perhaps|presumably|likely to)\b', 'IgnoreCase'))
+}
 function Test-WhyRestatesDek($Brief, [double]$Share = 0.6) {
   $words = @(Get-WhyWords ([string]$Brief.why))
   if ($words.Count -lt 4) { return $false }
