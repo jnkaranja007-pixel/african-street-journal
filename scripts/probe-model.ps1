@@ -98,7 +98,8 @@ $variants = @(
   @{ name = 'C. schema, no require_parameters, 6000 tokens'; body = (New-Body 6000 $true $false $null) },
   @{ name = 'D. no schema at all, 1400 tokens'; body = (New-Body 1400 $false $false $null) },
   @{ name = 'E. schema, reasoning disabled, 1400 tokens'; body = (New-Body 1400 $true $false @{ enabled = $false }) },
-  @{ name = 'F. schema, reasoning effort low, 6000 tokens'; body = (New-Body 6000 $true $false @{ effort = 'low' }) }
+  @{ name = 'F. schema, reasoning effort low, 6000 tokens'; body = (New-Body 6000 $true $false @{ effort = 'low' }) },
+  @{ name = 'G. as the desk sends a rewrite now (2400 tokens, schema, require_parameters, reasoning disabled)'; body = (New-Body 2400 $true $true @{ enabled = $false }) }
 )
 
 Write-Host ("model: {0}" -f $Model)

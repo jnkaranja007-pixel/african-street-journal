@@ -962,6 +962,16 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
   # Claude Haiku 5.5 takes no temperature on OpenRouter, and with require_parameters
   # (below) a parameter the model does not list is a 404 for the whole call.
   if (-not $RewriteRoute) { $body['temperature'] = $Temperature }
+  else {
+    # Haiku 5.5 thinks before it writes unless told not to, and the thinking is billed
+    # against max_tokens. On 10 Nov 2026 that left nothing for the story: 193 rewrite
+    # calls came back HTTP 200 with empty content and not one rewrite was used. The
+    # probe (scripts/probe-model.ps1) measured about 800 thinking tokens on a
+    # 300-token answer, and none with reasoning off. Headroom as well, so a long story
+    # is never cut mid-JSON.
+    $body['reasoning'] = @{ enabled = $false }
+    $body['max_tokens'] = [Math]::Max([int]$MaxOutputTokens, 2400)
+  }
     if ($Provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
   if ($JsonMode) {
     # "why" before "score": a model that has to state the connection first scores the
@@ -1084,8 +1094,25 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
     $script:servedModels[[string]$obj.model] = $true
     Write-Host ("      [api] served by {0}" -f $obj.model) -ForegroundColor DarkGray
   }
+  # HTTP 200 is not an answer. A provider can fail inside the choice, and a model that
+  # spends its whole allowance thinking returns no content at all. Both used to reach
+  # the caller as "no JSON object in response", which names neither the cause nor the
+  # model, and cost the story an attempt.
+  $choice = @($obj.choices)[0]
+  if ($choice -and $choice.error) {
+    $choiceError = [string]$choice.error.message
+    Write-Host ("      [api] model={0} failed inside the answer: {1}" -f $Model, $choiceError) -ForegroundColor Red
+    throw "API error: $choiceError"
+  }
+  $answer = if ($choice -and $choice.message) { [string]$choice.message.content } else { '' }
+  if (-not $answer.Trim()) {
+    $finish = if ($choice) { [string]$choice.finish_reason } else { 'no choice' }
+    $spent = if ($obj.usage -and $obj.usage.completion_tokens) { [int]$obj.usage.completion_tokens } else { 0 }
+    Write-Host ("      [api] model={0} answered with no content (finish_reason={1}, {2} completion tokens of {3} allowed)" -f $Model, $finish, $spent, $body['max_tokens']) -ForegroundColor Red
+    throw "EMPTY answer from $Model (finish_reason=$finish)"
+  }
   return [pscustomobject]@{
-    Content          = [string]$obj.choices[0].message.content
+    Content          = $answer
     PromptTokens     = if ($obj.usage.prompt_tokens) { [int]$obj.usage.prompt_tokens } else { 0 }
     CompletionTokens = if ($obj.usage.completion_tokens) { [int]$obj.usage.completion_tokens } else { 0 }
     TotalTokens      = if ($obj.usage.total_tokens) { [int]$obj.usage.total_tokens } else { 0 }
@@ -1120,6 +1147,8 @@ if ($RewriteModel -and $Provider -eq 'openrouter' -and $env:OPENROUTER_API_KEY) 
 }
 $script:rewriteCalls = 0
 $script:rewriteRouteErrors = 0
+$script:rewriteEmptyAnswers = 0
+$script:rewriteEmptyStreak = 0
 
 function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$ExpectedItem = -1, [switch]$Rewrite) {
   if (-not $script:routes.Count) { throw 'No API key set (OPENROUTER_API_KEY or GEMINI_API_KEY)' }
@@ -1132,12 +1161,24 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
         $k = "rewrite:$($rr.model)"
         $script:routeCalls[$k] = 1 + [int]$script:routeCalls[$k]
         $script:rewriteCalls++
+        $script:rewriteEmptyStreak = 0
         return $out
       } catch {
         $last = $_.Exception.Message.Split("`n")[0]
         $script:rewriteRouteErrors++
         $code = 0
         if ($last -match '^HTTP (\d+)') { $code = [int]$Matches[1] }
+        if ($last -match '^EMPTY answer') {
+          # Asking again gets the same nothing. The writer's model takes this rewrite,
+          # and after three in a row it takes the rest of the run's.
+          $script:rewriteEmptyStreak++
+          $script:rewriteEmptyAnswers++
+          if ($script:rewriteEmptyStreak -ge 3) {
+            $rr.dead = $true
+            Write-Host "      [route] rewrite model $($rr.model) answered three rewrites with no content; rewrites go to the writer's model for the rest of this run" -ForegroundColor DarkYellow
+          }
+          break
+        }
         if ($code -in 401,402,403) {
           # The key, not the model: every OpenRouter route is out (as below).
           $rr.dead = $true
@@ -1171,6 +1212,9 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
         $last = $_.Exception.Message.Split("`n")[0]
         $code = 0
         if ($last -match '^HTTP (\d+)') { $code = [int]$Matches[1] }
+        # A model that answered with nothing answers the same way when asked again: the
+        # next route takes the call.
+        if ($last -match '^EMPTY answer') { break }
         if ($code -in 401,402,403) {
           # Account-level: no point trying another OpenRouter model on the same key.
           foreach ($x in $script:routes) { if ($x.provider -eq $r.provider) { $x.dead = $true } }
@@ -1833,6 +1877,7 @@ $metrics = [ordered]@{
   rewriteModel = $RewriteModel
   rewriteCalls = $script:rewriteCalls
   rewriteRouteErrors = $script:rewriteRouteErrors
+  rewriteEmptyAnswers = $script:rewriteEmptyAnswers
   offCountryDropped = $offCountryDropped
   lensScoresCappedAsSpeculative = $lensCapped
   headlinesRecased = $caseRepaired
@@ -1877,7 +1922,7 @@ if ($Merge -and (Test-Path $outPath)) {
 Write-Host ''
 Write-Host "[write] $stories on-site stories across $($result.Count) countries -> $OutFile" -ForegroundColor Green
 Write-Host "[write] model: $Model" -ForegroundColor DarkGray
-if ($RewriteModel) { Write-Host "[write] style rewrites: $RewriteModel ($($script:rewriteCalls) call(s), $($script:rewriteRouteErrors) error(s))" -ForegroundColor DarkGray }
+if ($RewriteModel) { Write-Host "[write] style rewrites: $RewriteModel ($($script:rewriteCalls) call(s), $($script:rewriteRouteErrors) error(s), $($script:rewriteEmptyAnswers) empty)" -ForegroundColor DarkGray }
 foreach ($k in $script:routeCalls.Keys) { Write-Host "[write] calls served via ${k}: $($script:routeCalls[$k])" -ForegroundColor DarkGray }
 Write-Host ("[write] usage: {0} input + {1} output = {2} tokens; {3} API calls; {4} cache hits; reported cost `${5}" -f `
            $usagePrompt, $usageCompletion, $usageTotal, $apiCalls, $cacheHits, ([Math]::Round($usageCost, 4))) -ForegroundColor DarkGray

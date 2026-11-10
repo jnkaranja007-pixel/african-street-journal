@@ -199,12 +199,22 @@ $server = [PowerShell]::Create()
         style = ($prompt -match 'REPAIR: Your previous draft')
         repair = ($prompt -match 'REPAIR:')
         dateRepair = ($prompt -match 'REPAIR: The previous draft named dates')
+        reasoningOff = ([bool]$req.PSObject.Properties['reasoning'] -and $req.reasoning.enabled -eq $false)
+        maxTokens = [int]$req.max_tokens
       })
       # As OpenRouter answers a model that cannot take the call (404, not transient).
       if ([string]$req.model -eq 'stand-in/refuser') {
         $ctx.Response.StatusCode = 404
         $err = [Text.Encoding]::UTF8.GetBytes('{"error":{"message":"No endpoints found that support the requested parameters","code":404}}')
         $ctx.Response.OutputStream.Write($err, 0, $err.Length)
+        continue
+      }
+      # As Claude Haiku 5.5 answered every rewrite on 10 Nov 2026: HTTP 200, the whole
+      # allowance spent thinking, and no content.
+      if ([string]$req.model -eq 'stand-in/silent') {
+        $silent = [Text.Encoding]::UTF8.GetBytes('{"model":"stand-in","choices":[{"finish_reason":"length","message":{"role":"assistant","content":"","reasoning":"Thinking it over."}}],"usage":{"prompt_tokens":100,"completion_tokens":1400,"total_tokens":1500,"cost":0}}')
+        $ctx.Response.ContentType = 'application/json'
+        $ctx.Response.OutputStream.Write($silent, 0, $silent.Length)
         continue
       }
       $content = & $respond $prompt
@@ -225,6 +235,9 @@ $logPath = Join-Path $tmp 'writer.log'
 $refuseOutPath = Join-Path $tmp 'out-refused.json'
 $refuseMetricsPath = Join-Path $tmp 'metrics-refused.json'
 $refuseLogPath = Join-Path $tmp 'writer-refused.log'
+$silentOutPath = Join-Path $tmp 'out-silent.json'
+$silentMetricsPath = Join-Path $tmp 'metrics-silent.json'
+$silentLogPath = Join-Path $tmp 'writer-silent.log'
 $saved = @{}
 foreach ($k in 'ASJ_OPENROUTER_URL','OPENROUTER_API_KEY','GEMINI_API_KEY','ASJ_PROVIDER','ASJ_MODEL','ASJ_FALLBACK_MODELS','ASJ_REWRITE_MODEL') { $saved[$k] = [Environment]::GetEnvironmentVariable($k) }
 try {
@@ -249,6 +262,13 @@ try {
     -MetricsFile $refuseMetricsPath -NoCache -JsonMode -DelayMs 0 -MaxBriefs 6 *> $refuseLogPath
   $refuseExit = $LASTEXITCODE
   $refuseRequests = @($log.requests)[$mainRequests.Count..($log.requests.Count - 1)]
+  # And with a rewrite model that answers every call with nothing.
+  $beforeSilent = $log.requests.Count
+  $env:ASJ_REWRITE_MODEL = 'stand-in/silent'
+  & $exe -NoProfile -ExecutionPolicy Bypass -File $writer -Only xx -InFile $feedPath -OutFile $silentOutPath `
+    -MetricsFile $silentMetricsPath -NoCache -JsonMode -DelayMs 0 -MaxBriefs 6 *> $silentLogPath
+  $silentExit = $LASTEXITCODE
+  $silentRequests = @($log.requests)[$beforeSilent..($log.requests.Count - 1)]
 } finally {
   foreach ($k in $saved.Keys) { [Environment]::SetEnvironmentVariable($k, $saved[$k]) }
   $listener.Stop()
@@ -298,6 +318,10 @@ try {
   $dateCalls = @($mainRequests | Where-Object { $_.dateRepair })
   Assert-Harness 'every style rewrite is sent to the rewrite model' ($styleCalls.Count -eq 3 -and @($styleCalls | Where-Object { $_.model -ne 'stand-in/rewriter' }).Count -eq 0) (($styleCalls | ForEach-Object { $_.model }) -join ', ')
   Assert-Harness 'a rewrite sends no temperature and no schema limits' (@($styleCalls | Where-Object { $_.temperature -or $_.limits }).Count -eq 0)
+  # Haiku 5.5 thinks by default and the thinking is billed against max_tokens: on
+  # 10 Nov 2026 that left every one of 193 rewrites empty.
+  Assert-Harness 'a rewrite turns the model''s reasoning off and leaves room for the story' (@($styleCalls | Where-Object { -not $_.reasoningOff -or $_.maxTokens -lt 2400 }).Count -eq 0) (($styleCalls | ForEach-Object { "{0}/{1}" -f $_.reasoningOff, $_.maxTokens }) -join ', ')
+  Assert-Harness 'first drafts send no reasoning setting' (@($firstDrafts | Where-Object { $_.reasoningOff }).Count -eq 0)
   Assert-Harness 'first drafts stay on the writer model, with temperature and limits' ($firstDrafts.Count -eq 7 -and @($firstDrafts | Where-Object { $_.model -ne 'stand-in/model' -or -not $_.temperature -or -not $_.limits }).Count -eq 0) (($firstDrafts | ForEach-Object { $_.model }) -join ', ')
   Assert-Harness 'a date repair of a first draft stays on the writer model' ($dateCalls.Count -ge 1 -and @($dateCalls | Where-Object { $_.model -ne 'stand-in/model' }).Count -eq 0)
   # Four: three style rewrites, and the fact repair of the one that invented a figure,
@@ -314,6 +338,18 @@ try {
   Assert-Harness 'the refusing model is asked once, then left for the run' ($refusedCalls.Count -eq 1 -and $refusedMetrics.rewriteRouteErrors -eq 1 -and $refusedMetrics.rewriteCalls -eq 0) ("asked {0} errors {1} calls {2}" -f $refusedCalls.Count, $refusedMetrics.rewriteRouteErrors, $refusedMetrics.rewriteCalls)
   Assert-Harness 'its rewrites go to the writer model, with the writer settings' (@($refuseRequests | Where-Object { $_.style -and $_.model -eq 'stand-in/model' -and $_.temperature }).Count -eq 3)
   Assert-Harness 'the same six stories are published' ($refused.Count -eq 6 -and $refusedMetrics.styleRewrites -eq 3 -and $refusedMetrics.apiCalls -eq $metrics.apiCalls) ("stories {0} rewrites {1} calls {2}" -f $refused.Count, $refusedMetrics.styleRewrites, $refusedMetrics.apiCalls)
+
+  Write-Host '[harness] a rewrite model that answers with nothing' -ForegroundColor Cyan
+  $script:logPath = $silentLogPath
+  if ($silentExit -ne 0) { Get-Content $silentLogPath | Select-Object -Last 30 | ForEach-Object { Write-Host "    $_" } }
+  Assert-Harness 'writer exits cleanly' ($silentExit -eq 0) "exit $silentExit"
+  $quiet = @(([IO.File]::ReadAllText($silentOutPath, [Text.Encoding]::UTF8) | ConvertFrom-Json).xx)
+  $quietMetrics = [IO.File]::ReadAllText($silentMetricsPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+  $quietCalls = @($silentRequests | Where-Object { $_.model -eq 'stand-in/silent' })
+  Assert-Harness 'the silent model is asked three times, then left for the run' ($quietCalls.Count -eq 3 -and $quietMetrics.rewriteEmptyAnswers -eq 3 -and $quietMetrics.rewriteCalls -eq 0) ("asked {0} empty {1} calls {2}" -f $quietCalls.Count, $quietMetrics.rewriteEmptyAnswers, $quietMetrics.rewriteCalls)
+  Assert-Harness 'an empty answer is not asked for twice' (@($silentRequests | Where-Object { $_.style -and $_.model -eq 'stand-in/model' }).Count -eq 3)
+  Assert-Harness 'the log says the answer was empty, and why' ((Get-Content $silentLogPath -Raw) -match 'answered with no content \(finish_reason=length, 1400 completion tokens')
+  Assert-Harness 'the same six stories are published, rewrites and all' ($quiet.Count -eq 6 -and $quietMetrics.styleRewrites -eq 3 -and $quietMetrics.styleFixedByRewrite -eq $metrics.styleFixedByRewrite -and $quietMetrics.apiCalls -eq $metrics.apiCalls) ("stories {0} rewrites {1} fixed {2} calls {3}" -f $quiet.Count, $quietMetrics.styleRewrites, $quietMetrics.styleFixedByRewrite, $quietMetrics.apiCalls)
   Write-Host "[harness] OK - $passed checks"
 } finally {
   Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
