@@ -2072,14 +2072,14 @@ function updateAudienceMeta() {
    (10 Nov 2026, all three lenses): Safari's own scrolling won over the jump however it
    was held. Now each section heading is a button that opens or closes the section in
    place, so nothing scrolls the page: the headings of a lens fit on one screen, and the
-   reader opens the one they came for. The first section of each lens starts open.
+   reader opens the one they came for. Every section starts closed (owner, 10 Nov 2026).
    On wider screens the sections sit side by side and every section is always shown. */
 const signalsOpenByMode = {};
 
 function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
   const grid = document.querySelector('.audience-mode.cv-info-grid[data-mode="' + mode + '"]');
   if (!grid) return;
-  if (!signalsOpenByMode[mode]) signalsOpenByMode[mode] = new Set([0]);
+  if (!signalsOpenByMode[mode]) signalsOpenByMode[mode] = new Set();
   const open = signalsOpenByMode[mode];
   // A new lens, panel or country: drop any room a closed section left at the bottom.
   const body = grid.closest('.cv-panel-body');
@@ -2120,7 +2120,7 @@ function setSignalsSectionOpen(section, isOpen) {
   if (!grid) return;
   const mode = grid.dataset.mode;
   const index = Number(section.dataset.foldIndex);
-  const open = signalsOpenByMode[mode] || (signalsOpenByMode[mode] = new Set([0]));
+  const open = signalsOpenByMode[mode] || (signalsOpenByMode[mode] = new Set());
   // Closing a section near the end of the page would leave the page shorter than where it
   // is scrolled to, and the browser would pull it up under the reader's finger. Add that
   // room at the bottom first, so the heading stays put (no scrolling, here or anywhere).

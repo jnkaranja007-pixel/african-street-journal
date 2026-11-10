@@ -4,7 +4,7 @@
 // iPhone (10 Nov 2026) it kept landing short, past or nowhere in all three lenses. So:
 //   - a heading tap must never move the page: the heading stays where the finger was;
 //   - it must open the section (content shown, with height) and a second tap close it;
-//   - the first section of each lens starts open, the rest closed;
+//   - every section starts closed;
 //   - an At a glance figure must open its section, alone, and leave it on screen;
 //   - wider screens show every section, with nothing to tap.
 // Run: npx -y playwright@1 install --with-deps chromium webkit && node tools/stress/signals-fold.mjs
@@ -67,7 +67,7 @@ async function runDevice(engine, device) {
       const start = await pg.evaluate(SECTIONS, mode);
       const tag0 = device + ' ' + country + ' ' + mode;
       if (start.length < 2) { fail(tag0 + ': ' + start.length + ' fold sections'); continue; }
-      if (!start[0].open || start.slice(1).some(s => s.open)) fail(tag0 + ': on open, expected only the first section open (' + start.map(s => s.open ? 1 : 0).join('') + ')');
+      if (start.some(s => s.open)) fail(tag0 + ': on open, expected every section closed (' + start.map(s => s.open ? 1 : 0).join('') + ')');
       for (const s of start) {
         const tag = tag0 + ' "' + s.label + '"';
         const head = pg.locator('#' + s.id + ' > .cv-section-head');
