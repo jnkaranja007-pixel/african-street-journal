@@ -1759,7 +1759,7 @@ main{position:relative}
 /* signals-jump-v1: section links at the top of Signals, sticky under the tab bar, phones only. */
 .cv-jump{display:none}
 @media (max-width:720px){
-  #cv-panel-signals .cv-jump:not([hidden]){display:flex;position:sticky;top:var(--cv-jump-top,111px);z-index:14;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:-10px -10px 0;padding:6px 10px;background:rgba(19,19,19,.97);border-bottom:1px solid var(--rule)}
+  #cv-panel-signals .cv-jump:not([hidden]){display:flex;position:sticky;top:var(--cv-jump-top,111px);z-index:14;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:-10px -10px 0;padding:6px 10px;background:var(--bg);border-bottom:1px solid var(--rule)}
   #cv-panel-signals .cv-jump::-webkit-scrollbar{display:none}
   #cv-panel-signals .cv-jump-btn{flex:0 0 auto;min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:17px;background:transparent;color:var(--text-muted);font:600 12px/1 var(--sans);white-space:nowrap;cursor:pointer;touch-action:manipulation}
   /* Two quick taps on a link must not zoom the page (above), and the panels do not slide

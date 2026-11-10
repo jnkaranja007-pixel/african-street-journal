@@ -8,7 +8,8 @@
 //   - parts of the page arrive after the tap and Safari does not hold the view on what
 //     the reader was looking at: a block added above the section after the tap, and
 //     exchange prices that arrive two seconds late, must not move it;
-//   - web fonts are left to load, so text wraps as it does on a phone.
+//   - web fonts are left to load, so text wraps as it does on a phone;
+//   - a tap that stops a gliding page: Safari moves the page after the jump, untouched.
 // Run: npx -y playwright@1 install --with-deps chromium webkit && node tools/stress/signals-jump.mjs
 // Serves the repo itself, so it tests exactly what would deploy. ASCII only.
 import http from 'node:http';
@@ -110,6 +111,14 @@ async function runDevice(engine, device) {
           await pg.evaluate(() => document.getElementById('signals-jump-late-block')?.remove());
           await pg.waitForTimeout(600);
           check(tag + ', then removed', null, await pg.evaluate(MEASURE, b.id));
+          // Safari, when the tap stopped a page still gliding: the glide's own stopping point
+          // lands after the jump, with no touch and no change in size.
+          await pg.evaluate(() => { document.getElementById('country-view').scrollTop += 600; });
+          await pg.waitForTimeout(500);
+          check(tag + ', page moved 600px after the tap', null, await pg.evaluate(MEASURE, b.id));
+          await pg.evaluate(() => { document.getElementById('country-view').scrollTop -= 900; });
+          await pg.waitForTimeout(500);
+          check(tag + ', then 900px back', null, await pg.evaluate(MEASURE, b.id));
         }
       }
     }

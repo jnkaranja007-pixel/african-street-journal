@@ -2111,12 +2111,20 @@ function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
 // Chrome holds the view on what the reader is looking at, Safari does not, so on an
 // iPhone the section slid away under the reader. Until the reader touches the page, any
 // change in size puts the section back under the row.
+//
+// And any scroll the reader did not make. On a real iPhone (10 Nov 2026) the links still
+// landed short, past, or not at all: a tap that stops a page still gliding from a flick
+// fires the link, then Safari applies the glide's own stopping point after the jump.
+// Nothing changes size, so the hold above never saw it. While the hold lasts, a scroll
+// that settles anywhere but on the section is put back.
 let signalsPin = null;
 
 function unpinSignals() {
   if (!signalsPin) return;
   signalsPin.observer?.disconnect();
   clearTimeout(signalsPin.timer);
+  clearTimeout(signalsPin.settle);
+  countryView.removeEventListener('scroll', signalsPin.onScroll);
   signalsPin = null;
 }
 
@@ -2150,6 +2158,14 @@ function scrollSignalsTo(section) {
     Array.from(el.parentElement?.children || []).forEach(sibling => pin.observer.observe(sibling));
   }
   pin.timer = setTimeout(() => { if (signalsPin === pin) unpinSignals(); }, 8000);
+  // Checked once the scrolling stops (120ms quiet), so a glide is not fought frame by frame.
+  pin.onScroll = () => {
+    clearTimeout(pin.settle);
+    pin.settle = setTimeout(() => { if (signalsPin === pin && !alignSignalsSection(section)) unpinSignals(); }, 120);
+  };
+  countryView.addEventListener('scroll', pin.onScroll, { passive: true });
+  // A position overwritten without a scroll event reaching the page: look again.
+  pin.onScroll();
   signalsPin = pin;
 }
 // The reader's own touch, wheel or key ends the hold (a tap on the next link starts a new one).
