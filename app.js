@@ -2126,9 +2126,9 @@ function setSignalsSectionOpen(section, isOpen) {
   // room at the bottom first, so the heading stays put (no scrolling, here or anywhere).
   const body = section.closest('.cv-panel-body');
   if (!isOpen && body && section.classList.contains('is-open') && mobileDossierMedia.matches) {
-    const head = section.querySelector(':scope > .cv-section-head');
-    const removed = Array.from(section.children).filter(el => el !== head)
-      .reduce((sum, el) => sum + el.getBoundingClientRect().height, 0) + 40;
+    // The whole section, not only its content: the source line beside the title goes too,
+    // and a closed heading may be a line shorter. Too much room only costs blank space.
+    const removed = section.getBoundingClientRect().height;
     const room = countryView.scrollHeight - countryView.clientHeight - countryView.scrollTop;
     if (removed > room) body.style.paddingBottom = Math.ceil((parseFloat(getComputedStyle(body).paddingBottom) || 0) + removed - room) + 'px';
   }
