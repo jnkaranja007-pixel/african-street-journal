@@ -117,7 +117,7 @@ jobs:
     # NaN/undefined in any country panel or lens, sane market numbers, and no private
     # owner details anywhere in the shipped files.
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -131,8 +131,9 @@ jobs:
           npx playwright install --with-deps chromium webkit
       - name: Site check
         run: NODE_PATH=/tmp/pw/node_modules node tools/stress/site-check.mjs
-      # Section links in Signals, tapped on an iPhone (WebKit) and on Android: each must
-      # land its section under the link row and stay there.
+      # Section links in Signals, tapped on iPhones (WebKit) and on Android: each must land
+      # its section under the link row, uncovered, the last one included, and hold it there
+      # while late content (prices, a block added above) changes the page.
       - name: Signals section links on phones
         if: always()
         run: NODE_PATH=/tmp/pw/node_modules node tools/stress/signals-jump.mjs

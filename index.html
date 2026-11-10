@@ -69,7 +69,7 @@ function asjAnalytics() {
   }
 }
 </script>
-<script src="data/analytics-config.js?v=101" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=102" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 <!-- Data saver: with Save-Data on, or on 3G and slower, the decorative headline font
      (~60-90 KB on a first visit) is not fetched at all; headlines use Georgia. The same
      test sets window.ASJ_SAVE_DATA in app.js. -->
@@ -100,10 +100,10 @@ function asjAnalytics() {
      immediately and reflow to Playfair when it arrives. The noscript copy keeps the
      original behaviour for a reader with JavaScript off. -->
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=101" as="script">
-<link rel="preload" href="data/app-core.js?v=101" as="script">
-<link rel="preload" href="data/briefs.js?v=101" as="script">
-<link rel="stylesheet" href="styles.css?v=101">
+<link rel="preload" href="app.js?v=102" as="script">
+<link rel="preload" href="data/app-core.js?v=102" as="script">
+<link rel="preload" href="data/briefs.js?v=102" as="script">
+<link rel="stylesheet" href="styles.css?v=102">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
@@ -476,20 +476,20 @@ function asjAnalytics() {
 
 <div class="asj-install" id="asj-install" role="region" aria-label="Add to home screen" hidden></div>
 
-<script src="data/app-core.js?v=101"></script>
+<script src="data/app-core.js?v=102"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
-<script>window.ASJ_ASSET_VERSION='101';</script>
-<script src="data/country-facts.js?v=101" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
-<script src="data/indices.js?v=101" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=101" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=101" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=101" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=101" onerror="window.ASJ_NEWSLETTER=null"></script>
-<script src="data/social-config.js?v=101" onerror="window.ASJ_SOCIAL=null"></script>
+<script>window.ASJ_ASSET_VERSION='102';</script>
+<script src="data/country-facts.js?v=102" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
+<script src="data/indices.js?v=102" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=102" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=102" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=102" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=102" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script src="data/social-config.js?v=102" onerror="window.ASJ_SOCIAL=null"></script>
 
-<script src="app.js?v=101"></script>
-<script src="country-sidebar.js?v=101" defer></script>
-<script src="/info-panel.js?v=101" defer></script>
+<script src="app.js?v=102"></script>
+<script src="country-sidebar.js?v=102" defer></script>
+<script src="/info-panel.js?v=102" defer></script>
 </body>
 </html>

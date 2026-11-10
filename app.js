@@ -2086,6 +2086,12 @@ function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
       scrollSignalsTo(button && document.getElementById(button.dataset.jump));
     });
   }
+  // A new lens, panel or country: let go of the last section link and its extra room.
+  unpinSignals();
+  if (body.dataset.jumpRoom) {
+    body.style.paddingBottom = '';
+    delete body.dataset.jumpRoom;
+  }
   const sections = Array.from(grid.children).filter(el => el.querySelector('.cv-section-head h4'));
   nav.innerHTML = sections.map((section, index) => {
     if (!section.id) section.id = 'cv-sec-' + mode + '-' + index;
@@ -2097,12 +2103,58 @@ function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
 
 // Land a Signals section just under the section row once it has stuck. An instant jump:
 // animating ~3,000px is janky on the low-end phones this is for.
-function scrollSignalsTo(section) {
-  if (!section) return;
+//
+// Then hold it there. Investors' sections are short and come last, so on a tall phone
+// the page ran out before Exchange or Indicators reached the row and the view stopped on
+// the section above; Signals now grows just enough room at the bottom. And parts of the
+// page arrive after the tap (exchange prices, a GDP series, exchange rates, web fonts):
+// Chrome holds the view on what the reader is looking at, Safari does not, so on an
+// iPhone the section slid away under the reader. Until the reader touches the page, any
+// change in size puts the section back under the row.
+let signalsPin = null;
+
+function unpinSignals() {
+  if (!signalsPin) return;
+  signalsPin.observer?.disconnect();
+  clearTimeout(signalsPin.timer);
+  signalsPin = null;
+}
+
+function alignSignalsSection(section) {
+  if (!section?.isConnected || !section.offsetParent) return false;
   const nav = document.querySelector('#cv-panel-signals .cv-panel-body > .cv-jump');
   const offset = nav && !nav.hidden ? (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight + 16 : 16;
-  countryView.scrollBy({ top: section.getBoundingClientRect().top - offset, behavior: 'auto' });
+  const delta = section.getBoundingClientRect().top - countryView.getBoundingClientRect().top - offset;
+  const body = section.closest('.cv-panel-body');
+  const short = delta - (countryView.scrollHeight - countryView.clientHeight - countryView.scrollTop);
+  if (body && short > 1) {
+    if (!body.dataset.jumpRoom) body.dataset.jumpRoom = String(parseFloat(getComputedStyle(body).paddingBottom) || 0);
+    body.style.paddingBottom = (parseFloat(body.style.paddingBottom) || Number(body.dataset.jumpRoom)) + Math.ceil(short) + 'px';
+  }
+  if (Math.abs(delta) > 1) countryView.scrollBy({ top: delta, behavior: 'auto' });
+  return true;
 }
+
+function scrollSignalsTo(section) {
+  unpinSignals();
+  if (!alignSignalsSection(section)) return;
+  if (typeof ResizeObserver === 'undefined') return;
+  const pin = { section };
+  pin.observer = new ResizeObserver(() => {
+    if (signalsPin === pin && !alignSignalsSection(section)) unpinSignals();
+  });
+  // The section and everything beside it at each level up to the page: only a change in
+  // one of those can move it. (Not .cv-body itself: on phones it keeps the view's height
+  // and its content overflows, so it never changes size.)
+  for (let el = section; el && el !== countryView; el = el.parentElement) {
+    Array.from(el.parentElement?.children || []).forEach(sibling => pin.observer.observe(sibling));
+  }
+  pin.timer = setTimeout(() => { if (signalsPin === pin) unpinSignals(); }, 8000);
+  signalsPin = pin;
+}
+// The reader's own touch, wheel or key ends the hold (a tap on the next link starts a new one).
+['touchstart', 'pointerdown', 'wheel', 'keydown'].forEach(type =>
+  countryView.addEventListener(type, unpinSignals, { capture: true, passive: true }));
 
 // The scroll position that puts the top of the panels just under the sticky header and
 // tab row (both sticky on phone and desktop).
