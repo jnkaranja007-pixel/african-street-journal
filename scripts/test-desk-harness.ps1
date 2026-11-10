@@ -153,6 +153,9 @@ $responder = {
   }
   $words = ([regex]::Matches(($paragraphs -join ' '), '[\p{L}\p{N}]+')).Count
   $story = [ordered]@{ item = $item; countryLink = $link; topic = 'Business'; headline = $headline; dek = $dek; paragraphs = $paragraphs; wordCount = $words; why = $why; lenses = $lens }
+  # Reach: the outbreak matters most, the council budget least; the rest send none, as a
+  # cached story from before reach existed would, and count as 3.
+  if ($title -like 'Colera*') { $story['reach'] = 5 } elseif ($title -eq 'Council adopts city budget') { $story['reach'] = 1 }
   return ([ordered]@{ stories = @($story) } | ConvertTo-Json -Depth 8 -Compress)
 }
 
@@ -291,6 +294,13 @@ try {
 
   Assert-Harness 'six stories published from seven assignments' ($stories.Count -eq 6) "got $($stories.Count)"
   Assert-Harness 'the off-country story is dropped' (-not $byId.ContainsKey('lisbon') -and $metrics.offCountryDropped -eq 1)
+  $order = @($stories | ForEach-Object { [string]$_.articleId })
+  $scores = @($stories | ForEach-Object { [double]$_.selectionScore })
+  $sortedDown = $true
+  for ($k = 1; $k -lt $scores.Count; $k++) { if ($scores[$k] -gt $scores[$k - 1]) { $sortedDown = $false } }
+  Assert-Harness 'reach orders the country: the outbreak leads, the council budget comes last, missing reach counts as 3' `
+    ($order[0] -eq 'cholera' -and $order[-1] -eq 'budget' -and $sortedDown -and [int]$byId['cholera'].reach -eq 5 -and [int]$byId['port'].reach -eq 3 -and [double]$byId['budget'].selectionScore -lt [double]$byId['port'].selectionScore) `
+    ("order {0}; scores {1}" -f ($order -join ','), ($scores -join ','))
   Assert-Harness 'a clean draft costs one call and is published as written' ($byId.ContainsKey('port') -and (& $text $byId['port']) -match '400,000 containers')
   $fert = $byId['fert']
   Assert-Harness 'a style rewrite removes the stock phrases' ($fert -and (& $text $fert) -notmatch 'crucial|underscores|broader strategy')

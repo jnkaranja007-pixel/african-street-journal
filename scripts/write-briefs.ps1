@@ -93,7 +93,7 @@ param(
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
   [int]$MinEvidenceWords = 45,
-  [string]$PromptVersion = 'story-v14-checked-style-lenses',
+  [string]$PromptVersion = 'story-v15-reach-context',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -488,6 +488,13 @@ THE STORY
   matters, what it "signals", "marks" or "underscores", or what it is "part of", is
   commentary. Cut it.
 - Never state the same fact twice, in the same words or different ones.
+- Readers are all over Africa and abroad, not only in this country. The first time the
+  story names a person, party, body, inquiry or case that a reader elsewhere would not
+  know, say in a few words who or what it is, from the packet: "Vusimuzi Matlala, a
+  businessman whose plea deal collapsed, ..." not "Matlala ...". If the packet does not
+  say who they are, give their role in this event ("the company's chief executive",
+  "the opposition MP who brought the motion"). Never add an identification the packet
+  does not support.
 
 HEADLINE, DEK AND WHY
 - Headline: actor + active verb + concrete result. Maximum 90 characters. Sentence
@@ -500,9 +507,28 @@ HEADLINE, DEK AND WHY
   for six historic Comorian." is a failed dek, and so is any dek whose last word is a
   preposition, article or conjunction.
 - "why": one sentence naming who is affected and how, as the packet reports it. Do not
-  use "may", "might" or "could" here, and do not restate the headline or dek: it has
-  to add something they do not say. If the packet establishes no wider effect, name
-  the people directly involved and what happened to them.
+  use "may", "might" or "could" here, and do not restate the headline, the dek or the
+  first paragraph: it has to tell the reader something they do not, such as who pays
+  or gains, a figure, a deadline, or what happens next. If the packet establishes no
+  wider effect, name the people directly involved and what happened to them. A why
+  line that only repeats the story is not printed.
+
+REACH
+- "reach": how much the event matters to a reader anywhere in Africa, a whole number
+  from 1 to 5. Judge the event, not how well the packet is written.
+  5 - a national turning point or an event felt beyond the country: an election
+      result, a change of government or a coup, a central bank rate decision, a major
+      disaster or attack, a large default or deal, a ruling that changes national law.
+  4 - national consequences for many people: a new law, budget, tax or price change,
+      a strike that shuts a sector, a major trial, an outbreak, a large company result.
+  3 - national news with a concrete result for a group: a project opened, arrests, a
+      trial step, a company's plans, a national team's result.
+  2 - local or narrow news: one district or town, one firm's routine announcement, a
+      minor appointment.
+  1 - routine or ceremonial: visits, courtesy calls, speeches, workshops, trainings,
+      seminars, award ceremonies, anniversaries, an official attending an event.
+  Most stories are 2 or 3. Give 5 rarely. The paper still runs every story; reach only
+  decides which ones lead.
 
 TOPIC
 - Topic: the ONE label for what the story is about, not for what it mentions.
@@ -1004,6 +1030,7 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
         paragraphs = @{ type = 'array'; minItems = 3; maxItems = 3; items = @{ type = 'string'; minLength = 20 } }
         wordCount = @{ type = 'integer'; minimum = $MinStoryWords; maximum = $MaxStoryWords }
         why = @{ type = 'string'; minLength = 20; maxLength = 320 }
+        reach = @{ type = 'integer'; minimum = 1; maximum = 5 }
         lenses = [ordered]@{
           type = 'object'
           properties = $lensProperties
@@ -1011,7 +1038,7 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
           additionalProperties = $false
         }
       }
-      required = @('item','countryLink','topic','headline','dek','paragraphs','wordCount','why','lenses')
+      required = @('item','countryLink','topic','headline','dek','paragraphs','wordCount','why','reach','lenses')
       additionalProperties = $false
     }
     $body['response_format'] = [ordered]@{
@@ -1454,13 +1481,14 @@ $packet
 Write exactly one original on-site story from this assignment. Do not import a name,
 number, date, cause or context from any other event. Return ONLY a JSON object in this shape:
 
-{"stories":[{"item":$i,"countryLink":"<in-country|involves-country|none>","topic":"<one topic>","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":<words>,"why":"...","lenses":{"farmers":{"why":"...","score":<0-100>},"investors":{"why":"...","score":<0-100>},"diaspora":{"why":"...","score":<0-100>}}}]}
+{"stories":[{"item":$i,"countryLink":"<in-country|involves-country|none>","topic":"<one topic>","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":<words>,"why":"...","reach":<1-5>,"lenses":{"farmers":{"why":"...","score":<0-100>},"investors":{"why":"...","score":<0-100>},"diaspora":{"why":"...","score":<0-100>}}}]}
 
 - "item" must be exactly $i.
 - "countryLink" says how this event relates to ${name}: in-country, involves-country, or none.
 - Fill every <...> slot from this story alone; none of them has a default.
 - "topic" must be exactly one of: $($VALID_TOPICS -join ', ').
 - "wordCount" counts only the three paragraph strings and must be $MinStoryWords-$MaxStoryWords.
+- "reach" is 1-5 by the REACH rules: how much the event matters, not how it is written.
 - Include all three lens objects. Write each lens "why" first: one specific sentence
   grounded only in this packet. Then the score, a whole number from 0 to 100 that the
   why supports. A why that needs may, might, could or if scores 0-20.
@@ -1784,6 +1812,21 @@ weekday, write that instead of a month. Do not add facts while repairing.
       }
     }
 
+    # Reach moves the story up or down the paper, never in or out of it. The assignment
+    # meter scores how a report reads (sources, figures, action words), so on 10 Nov 2026
+    # a minister attending a UNESCO prize event (20.2) sat level with the ANC's lowest
+    # vote share since 1994 (20.3), and a 96-word piece led the continent. Reach is the
+    # writer's judgement of the event itself: 3 changes nothing, 5 adds 5 points, 1
+    # takes 5 away, against a spread of about 6 to 23. A short story from one outlet
+    # gives up one more point, so it does not lead on a thin account.
+    $storyReach = 3
+    $reachParsed = 0
+    if ($null -ne $b.reach -and [int]::TryParse([string]$b.reach, [ref]$reachParsed) -and $reachParsed -ge 1 -and $reachParsed -le 5) { $storyReach = $reachParsed }
+    $baseSelection = if ($src.selectionScore) { [double]$src.selectionScore } else { 0.0 }
+    $reachShift = ($storyReach - 3) * 2.5
+    if ($srcList.Count -lt 2 -and $wordCount -lt 120) { $reachShift -= 1.0 }
+    $adjustedSelection = [Math]::Round([Math]::Max(0.0, $baseSelection + $reachShift), 2)
+
     $clean.Add([ordered]@{
       articleId       = if ($src.itemId) { [string]$src.itemId } else { Get-TextHash ([string]$src.url) }
       headline        = $headline
@@ -1797,7 +1840,8 @@ weekday, write that instead of a month. Do not add facts while repairing.
       published       = Get-IsoInstant $src.published
       sourceTitle     = [string]$src.title
       editorialScore  = if ($src.editorialScore) { [double]$src.editorialScore } else { 0.0 }
-      selectionScore  = if ($src.selectionScore) { [double]$src.selectionScore } else { 0.0 }
+      selectionScore  = $adjustedSelection
+      reach           = $storyReach
       confidence      = [string]$src.confidence
       corroboration   = if ($src.corroboration) { [int]$src.corroboration } else { 1 }
       scoreBreakdown  = $src.scoreBreakdown
@@ -1844,7 +1888,13 @@ weekday, write that instead of a month. Do not add facts while repairing.
   # .ToArray(), not @($clean). Assigning @(<List[object]>) into an ordered dictionary
   # throws "Argument types do not match" in PS 5.1 - the binder mis-resolves the
   # Item[int] / Item[object] overload pair. An Object[] binds cleanly.
-  $result[[string]$code] = $clean.ToArray()
+  # The country's own column follows reach too: its lead is its most important story.
+  $cleanSorted = New-Object System.Collections.Generic.List[object]
+  # Ties keep the assignment order.
+  $cleanRanked = New-Object System.Collections.Generic.List[object]
+  for ($ci = 0; $ci -lt $clean.Count; $ci++) { $cleanRanked.Add([pscustomobject]@{ i = $ci; score = [double]$clean[$ci]['selectionScore'] }) }
+  foreach ($cr in ($cleanRanked.ToArray() | Sort-Object -Property @{ Expression = { $_.score }; Descending = $true }, @{ Expression = { $_.i } })) { $cleanSorted.Add($clean[$cr.i]) }
+  $result[[string]$code] = $cleanSorted.ToArray()
   $stories += $clean.Count
   Write-Host ("  {0}  {1,-30} {2} on-site stories" -f $code, $name, $clean.Count) -ForegroundColor Green
   Start-Sleep -Milliseconds $DelayMs

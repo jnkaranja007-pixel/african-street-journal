@@ -38,6 +38,10 @@ on:
         description: 'Optional OpenRouter model slug override for this run.'
         required: false
         default: ''
+      timed:
+        description: 'Set to yes by the on-time trigger (tools/desk-trigger): the run then behaves like a scheduled one and is skipped if today''s edition is out. Leave empty to force a run.'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -60,6 +64,8 @@ jobs:
       - name: Skip if today's edition already published
         id: guard
         shell: pwsh
+        env:
+          ASJ_TIMED: ${{ github.event.inputs.timed }}
         run: |
           # The second daily attempt exists only to cover a delayed or failed first one.
           # If the edition is already out, every step below is skipped and the run costs
@@ -69,7 +75,10 @@ jobs:
           # first already did. A manual dispatch is an explicit instruction to run, so it
           # must never be skipped - otherwise there is no way to force a re-run on a day
           # the edition has already published, including to test this workflow.
-          if ($env:GITHUB_EVENT_NAME -ne 'schedule') {
+          # The on-time trigger (tools/desk-trigger) starts the desk by dispatch, because
+          # GitHub runs the schedule five to seven hours late; it says timed=yes so it is
+          # treated as the schedule and never makes a second edition.
+          if ($env:GITHUB_EVENT_NAME -ne 'schedule' -and $env:ASJ_TIMED -ne 'yes') {
             Write-Host "event=$env:GITHUB_EVENT_NAME - not a scheduled run, proceeding regardless"
             "stale=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
             exit 0
