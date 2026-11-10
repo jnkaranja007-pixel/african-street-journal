@@ -264,10 +264,16 @@ try {
   $echo = [pscustomobject]@{ item = 0; headline = 'Benin launches sixth phase of commune development fund'; dek = 'The FADeC VI program will support investments in all 77 communes, with a resilience component for 27 northern communes.'; paragraphs = @('Benin launched the sixth phase of its commune fund on Monday.', 'All 77 communes will receive investment money.', 'Twenty-seven northern communes get an extra resilience component.'); why = 'Benin''s FADeC VI program will support investments in all 77 communes, with a specific resilience component for 27 northern communes.' }
   $style = Get-DraftStyleIssues $echo 'Benin launched FADeC VI for 77 communes.'
   if (-not $style.RestatedWhy) { throw "a why line that restates the dek was not flagged: $(@($style.Issues) -join '; ')" }
-  if ((Get-StyleRepairNote $style $echo) -notmatch 'says the headline and dek again') { throw 'the repair note does not ask for a new why line' }
+  if ((Get-StyleRepairNote $style $echo) -notmatch 'says the headline, dek or opening paragraph again') { throw 'the repair note does not ask for a new why line' }
   $echo.why = 'Northern communes hit by flooding and attacks get money set aside to rebuild roads and markets.'
   if ((Get-DraftStyleIssues $echo 'Benin launched FADeC VI for 77 communes.').RestatedWhy) { throw 'a why line that adds a consequence was flagged' }
   Write-Host 'PASS a why line that restates the dek is sent back; one that adds a consequence is not'
+  # 10 Nov 2026: the opening paragraph counts as already told.
+  $crash = [pscustomobject]@{ item = 0; headline = 'Two buses collide, killing six in Burkina Faso'; dek = 'The crash happened on the road to Bobo-Dioulasso.'; paragraphs = @('Six people died and others were injured when two buses collided on the national road.', 'The transport ministry opened an inquiry.'); why = 'Six people died and others were injured in a road accident involving two buses in Burkina Faso.' }
+  if (-not (Test-WhyRestatesDek $crash)) { throw 'a why line that repeats the opening paragraph was not caught' }
+  $crash.why = 'The national road is the main freight route to Bobo-Dioulasso and stays closed while the inquiry runs.'
+  if (Test-WhyRestatesDek $crash) { throw 'a why line with new facts was read as a repeat of the opening paragraph' }
+  Write-Host 'PASS a why line that repeats the opening paragraph is caught; one with new facts is not'
 
   $times = @(Get-RelativeTimeWords 'The ministry said on Tuesday that talks resume next week. Yesterday the union walked out.')
   if (($times -join '|') -ne 'next week|Yesterday') { throw "relative time words missed: $($times -join '|')" }

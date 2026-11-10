@@ -576,11 +576,24 @@ function Test-WhyGuesses([string]$Why) {
   return ([regex]::IsMatch($Why, '\b(?:may|might|could)\b') -or
           [regex]::IsMatch($Why, '\b(?:potentially|possibly|perhaps|presumably|likely to)\b', 'IgnoreCase'))
 }
-function Test-WhyRestatesDek($Brief, [double]$Share = 0.6) {
+# 10 Nov 2026: and the opening paragraph. With the headline and dek alone, 46 of the
+# 172 why lines shown that day passed while saying the first paragraph again ("Six
+# people died ... in a road accident involving two buses" under "Two buses collide,
+# killing six"): the reader reads it twice in thirty words.
+function Get-WhyToldShare([string[]]$Words, [string]$Told) {
+  $seen = @{}
+  foreach ($w in (Get-WhyWords $Told)) { $seen[$w] = $true }
+  return (@($Words | Where-Object { $seen.ContainsKey($_) }).Count / [double]$Words.Count)
+}
+function Test-WhyRestatesDek($Brief, [double]$Share = 0.6, [double]$LeadShare = 0.7) {
   $words = @(Get-WhyWords ([string]$Brief.why))
   if ($words.Count -lt 4) { return $false }
-  $told = @{}
-  foreach ($w in (Get-WhyWords (([string]$Brief.headline) + ' ' + ([string]$Brief.dek)))) { $told[$w] = $true }
-  $hits = @($words | Where-Object { $told.ContainsKey($_) }).Count
-  return (($hits / [double]$words.Count) -ge $Share)
+  $top = ([string]$Brief.headline) + ' ' + ([string]$Brief.dek)
+  if ((Get-WhyToldShare $words $top) -ge $Share) { return $true }
+  # The opening paragraph tells more, so its bar is higher: a why line may reuse a few
+  # of its names and still add the consequence.
+  $lead = ''
+  foreach ($p in @($Brief.paragraphs)) { if ([string]$p) { $lead = [string]$p; break } }
+  if (-not $lead) { return $false }
+  return ((Get-WhyToldShare $words ($top + ' ' + $lead)) -ge $LeadShare)
 }

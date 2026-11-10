@@ -31,6 +31,7 @@ const STORY_READ_KEY = 'asj:story-read:v1';
 const STORY_LENSES = ['general','farmers','investors','diaspora'];
 const WHY_STOP = new Set('the and for with from that this these those will would could may might has have had their his her they she our not but over after into more than about who which what when are was were been its also can said says'.split(' '));
 const WHY_RESTATE_SHARE = 0.6;
+const WHY_RESTATE_LEAD_SHARE = 0.7;
 const STORY_LENS_LABELS = { general:'Top', farmers:'Farmer', investors:'Investor', diaspora:'Diaspora' };
 const STORY_LENS_TOPIC_SCORES = {
   farmers: { Politics:48, Business:62, Sport:24, Tech:52, Climate:88, Agriculture:96, Culture:30, Health:58, Education:54, News:44 },
@@ -3093,8 +3094,13 @@ function whyWords(text) {
 function whyRestates(why, story) {
   const words = whyWords(why);
   if (words.length < 4) return false;
-  const told = new Set(whyWords((story?.headline || '') + ' ' + (story?.dek || '')));
-  return words.filter(w => told.has(w)).length / words.length >= WHY_RESTATE_SHARE;
+  const share = text => { const told = new Set(whyWords(text)); return words.filter(w => told.has(w)).length / words.length; };
+  const top = (story?.headline || '') + ' ' + (story?.dek || '');
+  if (share(top) >= WHY_RESTATE_SHARE) return true;
+  // The opening paragraph too (10 Nov 2026), at a higher bar, as story-shape.ps1
+  // Test-WhyRestatesDek.
+  const lead = (story?.paragraphs || []).find(p => String(p || '').trim()) || '';
+  return !!lead && share(top + ' ' + lead) >= WHY_RESTATE_LEAD_SHARE;
 }
 
 

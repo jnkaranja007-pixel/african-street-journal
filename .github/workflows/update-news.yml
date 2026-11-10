@@ -279,6 +279,52 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
+      # The numbers above were only in an artifact nobody opens. On 10 Nov 2026 the style
+      # rewrites fixed 0 of 102 stories (the rewrite model spent its whole answer
+      # thinking) and the edition published as if nothing was wrong. Now every run prints
+      # the quality figures on its summary page, and a rewrite step that stops working
+      # opens an issue. Never fails the run: the edition still goes out.
+      - name: Report story quality
+        if: always() && steps.guard.outputs.stale == 'true' && hashFiles('data/desk-run-metrics.json') != ''
+        continue-on-error: true
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $m = Get-Content data/desk-run-metrics.json -Raw | ConvertFrom-Json
+          $now = (Get-Date).ToUniversalTime()
+          $rows = @(
+            @('Stories written', $m.storiesWritten),
+            @('Countries written', $m.countriesWritten),
+            @('Style rewrites asked', $m.styleRewrites),
+            @('Fixed by the rewrite', $m.styleFixed),
+            @('Kept with notes', $m.styleKeptWithNotes),
+            @('Kept, still copying the source', $m.keptStillCopying),
+            @('Kept, why line restating', $m.keptWhyRestating),
+            @('Kept, why line guessing', $m.keptWhyGuessing),
+            @('Rewrite model', $m.rewriteModel),
+            @('Rewrite calls / errors / empty answers', ('{0} / {1} / {2}' -f $m.rewriteCalls, $m.rewriteRouteErrors, $m.rewriteEmptyAnswers)),
+            @('Off-country stories dropped', $m.offCountryDropped),
+            @('Reported cost (USD)', $m.reportedCostUsd),
+            @('Written at', ('{0:HH:mm} UTC, {1:HH:mm} in Nairobi, {2:HH:mm} in Lagos' -f $now, $now.AddHours(3), $now.AddHours(1)))
+          )
+          $md = @('## Story quality', '', '| | |', '|---|---|') + @($rows | ForEach-Object { '| ' + $_[0] + ' | ' + $_[1] + ' |' })
+          $md -join "`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          $asked = [int]$m.styleRewrites
+          $fixed = [int]$m.styleFixed
+          $problems = New-Object System.Collections.Generic.List[string]
+          if ($asked -ge 10 -and ($fixed / [double]$asked) -lt 0.15) { $problems.Add("the style rewrites fixed $fixed of $asked stories") }
+          if ([int]$m.rewriteEmptyAnswers -ge 5) { $problems.Add("the rewrite model answered with nothing $($m.rewriteEmptyAnswers) times") }
+          if ([int]$m.rewriteRouteErrors -ge 3) { $problems.Add("the rewrite model refused or errored $($m.rewriteRouteErrors) times") }
+          $title = 'ASJ style rewrites are not fixing stories'
+          $existing = gh issue list --state open --search "$title in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq $title } | Select-Object -First 1
+          if ($problems.Count) {
+            $body = "In today's edition $($problems -join '; '). Stories that fail the house style (copying the source, a why line that restates or guesses) were published with those faults. Rewrite model: $($m.rewriteModel). Run: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID. Check the 'style rewrites' line in the Write on-site stories log; ASJ_REWRITE_MODEL (repository variable) picks the model."
+            if ($existing) { gh issue comment $existing.number --body $body } else { gh issue create --title $title --body $body }
+          } elseif ($existing) {
+            gh issue close $existing.number --comment "Rewrites fixed $fixed of $asked stories today. Closing."
+          }
+
       # What each story was written from. Neither file is committed, so without this a
       # story questioned the next day could not be checked against its own evidence
       # packet, only against whatever the outlet's page says by then.

@@ -169,9 +169,16 @@ function Get-NewsWordCount([string]$Text) {
 # so a column has to be declined rather than laundered.
 $script:NEWS_OPINION_PATHS = '/opinion|/opinions|/columnist|/column/|/editorial|/commentary|/analysis/|/blog/|/blogs/|/perspective|/viewpoint|/op-ed'
 
+# Photo galleries and picture roundups are not reports: "24 hours in pictures: Diwali,
+# Matlala at the Madlanga commission and more" (The Citizen, 9 Nov 2026) became the
+# continent's lead story, 96 words written from photo captions. A gallery section in the
+# path, not a slug ending in -photos (an ordinary report with pictures).
+$script:NEWS_GALLERY_PATHS = '/multimedia/|/gallery/|/galleries/|/photo-gallery|/photos/|/pictures/|in-pictures'
+
 # $Url is optional so every existing caller and test keeps working unchanged.
 function Get-NewsEditorialRejectReason([string]$Title, [string]$Summary, [string]$Url = '') {
   if ($Url -and $Url -match $script:NEWS_OPINION_PATHS) { return 'filed under opinion or analysis' }
+  if ($Url -and $Url -match $script:NEWS_GALLERY_PATHS) { return 'photo gallery or picture roundup' }
   $headline = ConvertTo-CanonicalNewsText $Title
   $text = ConvertTo-CanonicalNewsText ($Title + ' ' + $Summary)
   if ((Get-NewsMatchCount $text $script:NEWS_JUNK 1) -gt 0) { return 'junk or gossip' }

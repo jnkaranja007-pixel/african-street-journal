@@ -225,6 +225,10 @@ Assert-Desk 'roundup package is rejected before scoring' `
   ((Get-NewsEditorialRejectReason 'THE WEEKEND WRAP: politics, AI and sport' 'This edition covers three stories.') -ne '')
 Assert-Desk 'political insult clickbait is rejected before scoring' `
   ((Get-NewsEditorialRejectReason 'Minister takes fresh swipe and calls rival a fool' 'Mourners laughed at the remarks.') -ne '')
+Assert-Desk 'a picture roundup is rejected before scoring' `
+  ((Get-NewsEditorialRejectReason 'Matlala at Madlanga commission and more' 'Diwali and the inquiry.' 'https://www.citizen.co.za/multimedia/24-hours-in-pictures-diwali-celebrations-matlala-at-madlanga-commission-and-more/') -ne '')
+Assert-Desk 'a report with photos in its slug is not a gallery' `
+  ((Get-NewsEditorialRejectReason 'Chapo launches agricultural campaign' 'The president launched PROSPERA.' 'https://clubofmozambique.com/news/mozambique-chapo-launches-2026-27-agricultural-campaign-and-prospera-initiative-photos/') -eq '')
 Assert-Desk 'material refinery event survives editorial rejection' `
   ((Get-NewsEditorialRejectReason 'Niger approves $1.9 billion refinery' 'The project adds processing capacity.') -eq '')
 Assert-Desk 'listicle is rejected before scoring' `

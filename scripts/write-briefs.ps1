@@ -445,7 +445,7 @@ function Get-StyleRepairNote($Style, $Candidate) {
     [void]$lines.Add('- The story is written in lower case. Return it with normal capitals: the start of every sentence, and every name, place, organisation and month.')
   }
   if ($Style.RestatedWhy) {
-    [void]$lines.Add('- The "why" line says the headline and dek again. Say what the event changes and for whom - a consequence the packet reports, not the event again.')
+    [void]$lines.Add('- The "why" line says the headline, dek or opening paragraph again. Say what the event changes and for whom - a consequence the packet reports, not the event again.')
   }
   if (@($Style.RelativeTime).Count) {
     [void]$lines.Add('- It counts days from today: ' + ((@($Style.RelativeTime) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '. The story is read for weeks, so give the weekday or date the packet itself states, or leave the time out. Do not work out a date the packet does not give.')
