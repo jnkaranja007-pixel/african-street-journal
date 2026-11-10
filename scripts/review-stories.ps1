@@ -147,7 +147,11 @@ if (-not $graded.Count) { throw "every review call failed ($failedCalls)" }
 $lines = New-Object System.Collections.Generic.List[string]
 $lines.Add('## Weekly editor review')
 $lines.Add('')
-$lines.Add("$($graded.Count) stories from the edition of $(([string]$state.generated).Substring(0, [Math]::Min(10, ([string]$state.generated).Length))), read by $Model as a reader elsewhere in Africa would. 5 is good, 1 fails.")
+# pwsh's ConvertFrom-Json turns the stamp into a [datetime], and [string] of that is
+# the runner's culture ("11/10/2026"), not ISO.
+$gen = $state.generated
+$editionDay = if ($gen -is [datetime]) { $gen.ToUniversalTime().ToString('yyyy-MM-dd') } else { ([string]$gen).Substring(0, [Math]::Min(10, ([string]$gen).Length)) }
+$lines.Add("$($graded.Count) stories from the edition of $editionDay, read by $Model as a reader elsewhere in Africa would. 5 is good, 1 fails.")
 $lines.Add('')
 $lines.Add('| Grade | Average | Stories at 1-2 |')
 $lines.Add('|---|---|---|')
