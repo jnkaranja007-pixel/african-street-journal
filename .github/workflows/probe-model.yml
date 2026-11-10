@@ -1,0 +1,34 @@
+name: Probe a model
+
+# Run by hand only. Sends one tiny rewrite request to a model, several ways, and
+# prints the shape of each answer. Writes nothing and publishes nothing. Use it
+# before pointing the desk at a new model, or when a model answers with nothing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'OpenRouter model slug to probe.'
+        required: false
+        default: 'anthropic/claude-haiku-5.5'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Probe
+        shell: pwsh
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          PROBE_MODEL: ${{ github.event.inputs.model }}
+        run: |
+          $m = $env:PROBE_MODEL
+          if (-not $m) { $m = 'anthropic/claude-haiku-5.5' }
+          ./scripts/probe-model.ps1 -Model $m
