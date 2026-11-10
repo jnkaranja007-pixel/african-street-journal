@@ -7,11 +7,11 @@
 // v16. Nothing broke - the fetch handler matches with ignoreSearch, and GitHub Pages
 // ignores query strings - but the numbers lied, and a version that lies is worse than
 // no version. Bump V alone; index.html's ?v= must match it.
-const V = '104';
+const V = '105';
 const CACHE = 'asj-v' + V;
 // briefs-full.js (~500 KB of prose) is no longer precached on install; app.js fetches
 // it after first paint and the network-first handler caches it then.
-const SHELL = ['./', 'index.html', 'data/country-facts.js?v=' + V, 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/indices.js?v=' + V, 'data/archive/index.js?v=' + V, 'data/supabase-config.js?v=' + V, 'data/analytics-config.js?v=' + V, 'data/newsletter-config.js?v=' + V, 'data/social-config.js?v=' + V, 'manifest.json', 'icon.svg', 'info-panel.js', 'country-sidebar.js?v=' + V];
+const SHELL = ['./', 'index.html', 'data/country-facts.js?v=' + V, 'styles.css?v=' + V, 'app.js?v=' + V, 'data/app-core.js?v=' + V, 'data/briefs.js?v=' + V, 'data/indices.js?v=' + V, 'data/archive/index.js?v=' + V, 'data/supabase-config.js?v=' + V, 'data/analytics-config.js?v=' + V, 'data/newsletter-config.js?v=' + V, 'data/social-config.js?v=' + V, 'manifest.json', 'icon.svg', 'info-panel.js', 'country-sidebar.js?v=' + V, 'story-kit.js?v=' + V];
 
 // The Atlas's heavy files - relief images (up to 560 KB), map chunks, country facts -
 // change a few times a month, but network-first made a returning reader wait a round
@@ -23,7 +23,7 @@ const SHELL = ['./', 'index.html', 'data/country-facts.js?v=' + V, 'styles.css?v
 // writes these files. A release whose app.js cannot draw the previous files (a renamed
 // field, a new required one) bumps MAP_CACHE, so no reader pairs new code with old maps.
 const MAP_CACHE = 'asj-maps-v1';
-const MAP_ASSET = /\/data\/(relief\/[a-z]{2}(-s|-focus)?\.jpg|countries\/[a-z]{2}\.js|facts\/[a-z]{2}\.js)$/;
+const MAP_ASSET = /\/data\/(relief\/[a-z]{2}(-s|-focus)?\.jpg|countries\/[a-z]{2}\.js|facts\/[a-z]{2}\.js|locator\.json)$/;
 
 self.addEventListener('install', event => {
   event.waitUntil(
