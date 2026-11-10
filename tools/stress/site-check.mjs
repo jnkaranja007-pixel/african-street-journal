@@ -64,27 +64,14 @@ for (const [w, h, dpr] of [[320, 568, 2], [390, 844, 3], [768, 1024, 2], [1440, 
   const lb = await pg.evaluate(LABELS); if (lb.n < 5) fail(tag + ' island tags missing'); lb.bad.forEach(b => fail(tag + ' ' + b));
   if (lb.overflow) fail(tag + ' horizontal overflow');
   // Today's news on the landing screen: the top-story card under the map below 1080px,
-  // the column beside it from 1080px. The map and that news keep the first screen; the
-  // front page (#home-paper) follows below, and its heading strip must show at the foot
-  // of the first screen so a reader can see there is more. With no edition loaded there
-  // is no front page, and a phone's landing page stays one screen.
+  // the column beside it from 1080px. A phone's landing page stays one screen.
   const front = await pg.evaluate(() => {
     const shown = id => { const el = document.getElementById(id); return !!el && !el.hidden && el.offsetParent !== null && !!el.querySelector('.home-story'); };
-    const paper = document.getElementById('home-paper');
-    const peek = paper && !paper.hidden ? paper.querySelector('.paper-peek') : null;
-    return {
-      top: shown('home-front-top'), side: shown('home-front-side'),
-      tall: document.documentElement.scrollHeight - innerHeight,
-      peek: peek ? Math.round(peek.getBoundingClientRect().bottom - innerHeight) : null
-    };
+    return { top: shown('home-front-top'), side: shown('home-front-side'), tall: document.documentElement.scrollHeight - innerHeight };
   });
   if (w < 1080 && !front.top) fail(tag + ' no top story under the map');
   if (w >= 1080 && !front.side) fail(tag + ' no news column beside the map');
-  if (front.peek === null) {
-    if (w <= 640 && h >= 560 && front.tall > 1) fail(tag + ' landing page is ' + front.tall + 'px taller than the screen');
-  } else if (h >= 560 && front.peek > 1) {
-    fail(tag + ' front page heading is ' + front.peek + 'px below the first screen');
-  }
+  if (w <= 640 && h >= 560 && front.tall > 1) fail(tag + ' landing page is ' + front.tall + 'px taller than the screen');
   if (w === 390) {
     const ids = await pg.evaluate(() => paths.map(p => p.id));
     for (const id of ids) for (const route of ['', '/signals', '/investors', '/farmers', '/diaspora', '/atlas']) {
