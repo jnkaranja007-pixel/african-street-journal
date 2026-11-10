@@ -1,0 +1,51 @@
+name: Editor review
+
+# Weekly: a model reads 20 stories of the current edition the way a reader elsewhere in
+# Africa would, and grades context, headline, why line, clarity and country fit
+# (scripts/review-stories.ps1). The mechanical checks on the desk cannot see a story
+# that never says who its people are, or a why line about a different event; a reader
+# can. The report goes on the run's summary page and as a comment on one open issue,
+# "ASJ editor review", which GitHub emails to the owner. Costs a few cents.
+
+on:
+  schedule:
+    - cron: '30 10 * * 1'   # Mondays 10:30 UTC, after the morning edition
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'How many stories to grade.'
+        required: false
+        default: '20'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Grade a sample of stories
+        shell: pwsh
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          ASJ_REVIEW_MODEL: ${{ vars.ASJ_REVIEW_MODEL }}
+        run: |
+          $count = '${{ github.event.inputs.count }}'
+          if (-not $count) { $count = '20' }
+          ./scripts/review-stories.ps1 -Count ([int]$count) -OutFile story-review.md
+          Get-Content story-review.md -Raw | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+      - name: Post the report
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $title = 'ASJ editor review'
+          $body = (Get-Content story-review.md -Raw) + "`n`nRun: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+          $existing = gh issue list --state open --search "$title in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq $title } | Select-Object -First 1
+          if ($existing) { gh issue comment $existing.number --body $body } else { gh issue create --title $title --body $body }
