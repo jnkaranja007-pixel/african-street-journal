@@ -272,9 +272,10 @@ async function runSelfTest() {
   add('facts: Africa medians exist for rates, not for dollar totals',
     Number.isFinite(africaMedian('inflation')) && africaMedian('remitUsd') === null, String(africaMedian('inflation')));
   renderSignalsJump('farmers');
-  const jumpButtons = document.querySelectorAll('#cv-panel-signals .cv-jump [data-jump]');
-  add('signals: phone section links cover every farmer section', jumpButtons.length === 5 &&
-    Array.from(jumpButtons).every(b => document.getElementById(b.dataset.jump)), jumpButtons.length + ' links');
+  const foldButtons = document.querySelectorAll('.audience-mode[data-mode="farmers"] .cv-fold-btn[aria-controls]');
+  add('signals: every farmer section heading opens its section on phones', foldButtons.length === 5 &&
+    Array.from(foldButtons).every(b => document.getElementById(b.getAttribute('aria-controls'))) &&
+    !document.querySelector('#cv-panel-signals .cv-jump'), foldButtons.length + ' headings');
   renderSignalsJump();
   add('rail: Sierra Leone shows its freight line with a note', /Pepel-Tonkolili/.test(railSummaryHtml('sl')));
   // The Atlas relief is shaded from real elevation, not shapes generated from the

@@ -2066,111 +2066,78 @@ function updateAudienceMeta() {
   if (mode === 'investors') refitHeatTickers();
 }
 
-/* Section links for Signals on phones. There the sections stack into ~3,000px (three
-   and a half screens for a farmer), and the only way to the calendar at the bottom was
-   to scroll past everything above it. The row is the first thing in the Signals body and
-   sticks under the tab bar (the Signals header itself is static on phones, by design).
-   Hidden on wider screens, where the sections sit side by side. */
+/* Signals sections fold on phones. There they stack into some 3,000px (three and a half
+   screens for a farmer). A row of section links used to sit at the top and scroll the page
+   to the section, but on a real iPhone the links kept landing short, past or nowhere
+   (10 Nov 2026, all three lenses): Safari's own scrolling won over the jump however it
+   was held. Now each section heading is a button that opens or closes the section in
+   place, so nothing scrolls the page: the headings of a lens fit on one screen, and the
+   reader opens the one they came for. The first section of each lens starts open.
+   On wider screens the sections sit side by side and every section is always shown. */
+const signalsOpenByMode = {};
+
 function renderSignalsJump(mode = audienceSelect?.value || 'farmers') {
-  const body = document.querySelector('#cv-panel-signals .cv-panel-body');
   const grid = document.querySelector('.audience-mode.cv-info-grid[data-mode="' + mode + '"]');
-  if (!body || !grid) return;
-  let nav = body.querySelector(':scope > .cv-jump');
-  if (!nav) {
-    nav = document.createElement('nav');
-    nav.className = 'cv-jump';
-    nav.setAttribute('aria-label', 'Sections');
-    body.insertBefore(nav, body.firstChild);
-    nav.addEventListener('click', event => {
-      const button = event.target.closest('[data-jump]');
-      scrollSignalsTo(button && document.getElementById(button.dataset.jump));
-    });
-  }
-  // A new lens, panel or country: let go of the last section link and its extra room.
-  unpinSignals();
-  if (body.dataset.jumpRoom) {
-    body.style.paddingBottom = '';
-    delete body.dataset.jumpRoom;
-  }
-  const sections = Array.from(grid.children).filter(el => el.querySelector('.cv-section-head h4'));
-  nav.innerHTML = sections.map((section, index) => {
+  if (!grid) return;
+  if (!signalsOpenByMode[mode]) signalsOpenByMode[mode] = new Set([0]);
+  const open = signalsOpenByMode[mode];
+  // A new lens, panel or country: drop any room a closed section left at the bottom.
+  const body = grid.closest('.cv-panel-body');
+  if (body) body.style.paddingBottom = '';
+  Array.from(grid.children).filter(el => el.querySelector(':scope > .cv-section-head h4')).forEach((section, index) => {
     if (!section.id) section.id = 'cv-sec-' + mode + '-' + index;
-    const label = section.querySelector('.cv-section-head h4').textContent.trim();
-    return '<button class="cv-jump-btn" type="button" data-jump="' + section.id + '">' + escapeHtml(label) + '</button>';
-  }).join('');
-  nav.hidden = sections.length < 3;
-}
-
-// Land a Signals section just under the section row once it has stuck. An instant jump:
-// animating ~3,000px is janky on the low-end phones this is for.
-//
-// Then hold it there. Investors' sections are short and come last, so on a tall phone
-// the page ran out before Exchange or Indicators reached the row and the view stopped on
-// the section above; Signals now grows just enough room at the bottom. And parts of the
-// page arrive after the tap (exchange prices, a GDP series, exchange rates, web fonts):
-// Chrome holds the view on what the reader is looking at, Safari does not, so on an
-// iPhone the section slid away under the reader. Until the reader touches the page, any
-// change in size puts the section back under the row.
-//
-// And any scroll the reader did not make. On a real iPhone (10 Nov 2026) the links still
-// landed short, past, or not at all: a tap that stops a page still gliding from a flick
-// fires the link, then Safari applies the glide's own stopping point after the jump.
-// Nothing changes size, so the hold above never saw it. While the hold lasts, a scroll
-// that settles anywhere but on the section is put back.
-let signalsPin = null;
-
-function unpinSignals() {
-  if (!signalsPin) return;
-  signalsPin.observer?.disconnect();
-  clearTimeout(signalsPin.timer);
-  clearTimeout(signalsPin.settle);
-  countryView.removeEventListener('scroll', signalsPin.onScroll);
-  signalsPin = null;
-}
-
-function alignSignalsSection(section) {
-  if (!section?.isConnected || !section.offsetParent) return false;
-  const nav = document.querySelector('#cv-panel-signals .cv-panel-body > .cv-jump');
-  const offset = nav && !nav.hidden ? (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight + 16 : 16;
-  const delta = section.getBoundingClientRect().top - countryView.getBoundingClientRect().top - offset;
-  const body = section.closest('.cv-panel-body');
-  const short = delta - (countryView.scrollHeight - countryView.clientHeight - countryView.scrollTop);
-  if (body && short > 1) {
-    if (!body.dataset.jumpRoom) body.dataset.jumpRoom = String(parseFloat(getComputedStyle(body).paddingBottom) || 0);
-    body.style.paddingBottom = (parseFloat(body.style.paddingBottom) || Number(body.dataset.jumpRoom)) + Math.ceil(short) + 'px';
-  }
-  if (Math.abs(delta) > 1) countryView.scrollBy({ top: delta, behavior: 'auto' });
-  return true;
-}
-
-function scrollSignalsTo(section) {
-  unpinSignals();
-  if (!alignSignalsSection(section)) return;
-  if (typeof ResizeObserver === 'undefined') return;
-  const pin = { section };
-  pin.observer = new ResizeObserver(() => {
-    if (signalsPin === pin && !alignSignalsSection(section)) unpinSignals();
+    section.dataset.foldIndex = String(index);
+    section.classList.add('cv-fold');
+    const head = section.querySelector(':scope > .cv-section-head');
+    const h4 = head.querySelector('h4');
+    let button = h4.querySelector(':scope > .cv-fold-btn');
+    if (!button) {
+      button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'cv-fold-btn';
+      while (h4.firstChild) button.appendChild(h4.firstChild);
+      h4.appendChild(button);
+      // The section's content gets an id the button can point at.
+      const content = Array.from(section.children).filter(el => el !== head);
+      if (content[0]) {
+        if (!content[0].id) content[0].id = section.id + '-body';
+        button.setAttribute('aria-controls', content[0].id);
+      }
+      // The whole heading is the target (the meta beside the title too), not only the words.
+      head.addEventListener('click', () => {
+        if (!mobileDossierMedia.matches) return;
+        setSignalsSectionOpen(section, !section.classList.contains('is-open'));
+      });
+    }
+    const isOpen = open.has(index);
+    section.classList.toggle('is-open', isOpen);
+    button.setAttribute('aria-expanded', String(isOpen));
   });
-  // The section and everything beside it at each level up to the page: only a change in
-  // one of those can move it. (Not .cv-body itself: on phones it keeps the view's height
-  // and its content overflows, so it never changes size.)
-  for (let el = section; el && el !== countryView; el = el.parentElement) {
-    Array.from(el.parentElement?.children || []).forEach(sibling => pin.observer.observe(sibling));
-  }
-  pin.timer = setTimeout(() => { if (signalsPin === pin) unpinSignals(); }, 8000);
-  // Checked once the scrolling stops (120ms quiet), so a glide is not fought frame by frame.
-  pin.onScroll = () => {
-    clearTimeout(pin.settle);
-    pin.settle = setTimeout(() => { if (signalsPin === pin && !alignSignalsSection(section)) unpinSignals(); }, 120);
-  };
-  countryView.addEventListener('scroll', pin.onScroll, { passive: true });
-  // A position overwritten without a scroll event reaching the page: look again.
-  pin.onScroll();
-  signalsPin = pin;
 }
-// The reader's own touch, wheel or key ends the hold (a tap on the next link starts a new one).
-['touchstart', 'pointerdown', 'wheel', 'keydown'].forEach(type =>
-  countryView.addEventListener(type, unpinSignals, { capture: true, passive: true }));
+
+function setSignalsSectionOpen(section, isOpen) {
+  const grid = section?.closest('.audience-mode.cv-info-grid');
+  if (!grid) return;
+  const mode = grid.dataset.mode;
+  const index = Number(section.dataset.foldIndex);
+  const open = signalsOpenByMode[mode] || (signalsOpenByMode[mode] = new Set([0]));
+  // Closing a section near the end of the page would leave the page shorter than where it
+  // is scrolled to, and the browser would pull it up under the reader's finger. Add that
+  // room at the bottom first, so the heading stays put (no scrolling, here or anywhere).
+  const body = section.closest('.cv-panel-body');
+  if (!isOpen && body && section.classList.contains('is-open') && mobileDossierMedia.matches) {
+    const head = section.querySelector(':scope > .cv-section-head');
+    const removed = Array.from(section.children).filter(el => el !== head)
+      .reduce((sum, el) => sum + el.getBoundingClientRect().height, 0) + 40;
+    const room = countryView.scrollHeight - countryView.clientHeight - countryView.scrollTop;
+    if (removed > room) body.style.paddingBottom = Math.ceil((parseFloat(getComputedStyle(body).paddingBottom) || 0) + removed - room) + 'px';
+  }
+  if (isOpen) open.add(index); else open.delete(index);
+  section.classList.toggle('is-open', isOpen);
+  section.querySelector('.cv-fold-btn')?.setAttribute('aria-expanded', String(isOpen));
+  // Content drawn while folded had no width; tickers refit themselves once shown.
+  if (isOpen && mode === 'investors') refitHeatTickers();
+}
 
 // The scroll position that puts the top of the panels just under the sticky header and
 // tab row (both sticky on phone and desktop).
@@ -3221,9 +3188,17 @@ function renderGlance(countryId) {
         audienceSelect.value = button.dataset.glanceMode;
         audienceSelect.dispatchEvent(new Event('change'));
       }
-      // The audience switch above shows its sections synchronously, so this measures them.
+      // Open that section alone, so it sits right under the headings above it, and bring
+      // it up once if it starts low on the screen. One plain scroll from a page at rest,
+      // not the held jumps the section links needed.
       const target = document.getElementById(button.dataset.glanceTarget);
-      scrollSignalsTo(target?.closest('.cv-info-grid > div') || target);
+      const section = target?.closest('.cv-info-grid > .cv-fold');
+      if (!section) return;
+      section.parentElement.querySelectorAll(':scope > .cv-fold.is-open').forEach(other => {
+        if (other !== section) setSignalsSectionOpen(other, false);
+      });
+      setSignalsSectionOpen(section, true);
+      if (section.getBoundingClientRect().top > window.innerHeight * 0.6) section.scrollIntoView({ block: 'start' });
     });
   }
   const cell = (item, mode, target, cls = '') =>

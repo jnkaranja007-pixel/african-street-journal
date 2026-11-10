@@ -1756,17 +1756,25 @@ main{position:relative}
 .cv-fact-source a{color:var(--green-bright);text-decoration:underline;text-underline-offset:2px}
 .cv-fact-source a:hover,.cv-fact-source a:focus-visible{color:var(--text)}
 
-/* signals-jump-v1: section links at the top of Signals, sticky under the tab bar, phones only. */
-.cv-jump{display:none}
+/* signals-fold-v1: on phones each Signals section heading opens or closes its section in
+   place (renderSignalsJump). On wider screens the heading is plain text and every section
+   is shown. */
+.cv-fold-btn{all:unset;font:inherit;color:inherit}
 @media (max-width:720px){
-  #cv-panel-signals .cv-jump:not([hidden]){display:flex;position:sticky;top:var(--cv-jump-top,111px);z-index:14;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:-10px -10px 0;padding:6px 10px;background:var(--bg);border-bottom:1px solid var(--rule)}
-  #cv-panel-signals .cv-jump::-webkit-scrollbar{display:none}
-  #cv-panel-signals .cv-jump-btn{flex:0 0 auto;min-height:34px;padding:0 12px;border:1px solid var(--rule);border-radius:17px;background:transparent;color:var(--text-muted);font:600 12px/1 var(--sans);white-space:nowrap;cursor:pointer;touch-action:manipulation}
-  /* Two quick taps on a link must not zoom the page (above), and the panels do not slide
-     on phones, so the track needs no layer of its own: on iOS a sticky row inside one
-     can be drawn apart from where the page has it. */
+  #cv-panel-signals .cv-fold > .cv-section-head{cursor:pointer;touch-action:manipulation;min-height:44px;align-items:center;padding:6px 0!important;border-bottom:1px solid var(--rule)!important;-webkit-tap-highlight-color:transparent}
+  #cv-panel-signals .cv-fold.is-open > .cv-section-head{border-bottom-color:transparent!important;margin-bottom:6px!important}
+  #cv-panel-signals .cv-fold:not(.is-open) > :not(.cv-section-head){display:none!important}
+  /* Closed, a section is one row: its heading, no source line, little padding. */
+  #cv-panel-signals .cv-info-grid > .cv-fold{padding-top:10px!important}
+  #cv-panel-signals .cv-info-grid > .cv-fold:not(.is-open){padding-bottom:0!important}
+  #cv-panel-signals .cv-fold:not(.is-open) > .cv-section-head .meta{display:none}
+  #cv-panel-signals .cv-fold-btn{display:flex;align-items:center;gap:10px;cursor:pointer}
+  #cv-panel-signals .cv-fold-btn::before{content:"";flex:0 0 auto;width:8px;height:8px;margin:0 2px 3px 2px;border-right:2px solid var(--text-muted);border-bottom:2px solid var(--text-muted);transform:rotate(-45deg);transition:transform .15s}
+  #cv-panel-signals .cv-fold.is-open .cv-fold-btn::before{transform:rotate(45deg);margin-bottom:6px}
+  #cv-panel-signals .cv-fold-btn:focus-visible{outline:2px solid var(--green-bright);outline-offset:3px;border-radius:2px}
+  #cv-panel-signals .cv-fold{scroll-margin-top:120px}
+  /* The panels do not slide on phones, so the track needs no layer of its own. */
   .cv-carousel-track{will-change:auto}
-  #cv-panel-signals .cv-jump-btn:hover,#cv-panel-signals .cv-jump-btn:focus-visible{color:var(--green-bright);border-color:var(--green-dim);outline:none}
 }
 /* glance-v1: six figures at the top of Signals, phones only (renderGlance). On a wider
    screen the sections sit side by side and the header strip carries the same figures. */
