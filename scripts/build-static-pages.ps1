@@ -603,6 +603,89 @@ $($navLinks.ToString())
 # files a year in a git repository, which is not a thing a static host should carry.
 # Pages older than -StoryDays are swept, and 404.html turns an expired story URL into
 # its country page rather than a dead end.
+# --- kept pages, rebuilt from the archive ------------------------------------
+# Only the stories in today's edition used to be written. A page kept for the rest of
+# its 90 days was frozen as it was built, so a fix to the template or the story never
+# reached it: on 10 Nov 2026 1,320 of 3,746 kept pages still said "Open the full desk",
+# four still had the model's lower-case headline ("fire kills six in malabo family")
+# that Repair-StoryCase had since fixed in the state, and 13 linked to stories whose
+# pages had been withdrawn or moved. Each kept page is now rebuilt from the newest
+# archived edition (data/archive/<day>.js) that carries its story under the same address.
+# Its related lists name stories from that same edition whose pages still exist, not
+# today's, so a page reads the same from one run to the next and is only written when it
+# changes. A page whose story is in no archive file (before 21 Oct 2026) is left alone.
+$archivePages = New-Object System.Collections.Generic.List[object]
+$archiveWanted = @{}
+$liveKeys = @{}
+$todayKeys = @{}
+foreach ($sp in $storyPages) { $liveKeys["$($sp.code)/$($sp.slug)"] = $true; $todayKeys["$($sp.code)/$($sp.slug)"] = $true }
+foreach ($p in $pagesOnDisk) {
+  if ($p.superseded -or -not $p.headline) { continue }
+  if ($StoryDays -gt 0 -and $p.dated -and $p.when -lt $storyCutoff) { continue }
+  $ak = "$($p.code)/$($p.slug)"
+  $liveKeys[$ak] = $true
+  if (-not $todayKeys.ContainsKey($ak)) { $archiveWanted[$ak] = $p }
+}
+$archiveDir = Join-Path $root 'data\archive'
+$archiveFiles = @(Get-ChildItem -Path $archiveDir -Filter '*.js' -ErrorAction SilentlyContinue |
+  Where-Object { $_.Name -match '^\d{4}-\d\d-\d\d\.js$' } | Sort-Object Name -Descending)
+foreach ($f in $archiveFiles) {
+  if (-not $archiveWanted.get_Count()) { break }
+  $raw = [IO.File]::ReadAllText($f.FullName, [Text.Encoding]::UTF8)
+  $m = [regex]::Match($raw, 'byCountry:\s*(\{[\s\S]*?\}),\s*markets:')
+  if (-not $m.Success) { continue }
+  try { $dayEdition = $m.Groups[1].Value | ConvertFrom-Json } catch { Write-Host "[static] cannot read $($f.Name): $($_.Exception.Message)" -ForegroundColor DarkYellow; continue }
+  # The edition's day, newest first: the last edition that carried a story is the one its
+  # page was last written from, so the page keeps the date it showed then.
+  $fileDay = $f.BaseName
+  # Every story of the day that still has a page: the pool the related lists draw on.
+  $dayStories = New-Object System.Collections.Generic.List[object]
+  foreach ($prop in $dayEdition.PSObject.Properties) {
+    if (-not $info[$prop.Name]) { continue }
+    foreach ($ab in @($prop.Value)) {
+      if (-not (Test-StoryIsRenderable $ab) -or -not $ab.articleId) { continue }
+      $slug = Get-StorySlug ([string]$ab.headline) ([string]$ab.articleId)
+      $dayStories.Add([pscustomobject]@{ code = $prop.Name; slug = $slug; brief = $ab; country = $info[$prop.Name].name
+                                         live = $liveKeys.ContainsKey("$($prop.Name)/$slug") })
+    }
+  }
+  $dayLeads = @($dayStories | Where-Object { $_.live } | Group-Object code | ForEach-Object { $_.Group[0] } |
+    Sort-Object { [string](Get-IsoInstant $_.brief.published) } -Descending)
+  foreach ($ds in $dayStories) {
+    $ak = "$($ds.code)/$($ds.slug)"
+    if (-not $archiveWanted.ContainsKey($ak)) { continue }
+    $p = $archiveWanted[$ak]
+    $archiveWanted.Remove($ak)
+    [void](Repair-StoryCase $ds.brief '' $root)
+    if ($p.headline -cne [string]$ds.brief.headline) { $p.headline = [string]$ds.brief.headline }
+    $archivePages.Add([pscustomobject]@{ code = $ds.code; slug = $ds.slug; brief = $ds.brief; when = $fileDay; country = $ds.country
+                                         key = 'id:' + [string]$ds.brief.articleId; archived = $true
+                                         more = @($dayStories | Where-Object { $_.live -and $_.code -eq $ds.code -and $_.slug -ne $ds.slug } | Select-Object -First 4)
+                                         latest = @($dayLeads | Where-Object { $_.code -ne $ds.code } | Select-Object -First 4) })
+  }
+}
+$archiveRebuilt = 0
+# A kept page no archived edition carries (built before 21 Oct 2026, when archiving
+# began, or from an edition replaced later the same day) cannot be rebuilt, so it is
+# patched in place: the old "Read in the ASJ desk" link takes today's wording, and a
+# related link to a page that has gone is dropped. Each such page goes when it is swept.
+$archivePatched = 0
+foreach ($p in @($archiveWanted.Values)) {
+  $pageFile = Join-Path $p.dir 'index.html'
+  if (-not (Test-Path $pageFile)) { continue }
+  $html = [IO.File]::ReadAllText($pageFile, [Text.Encoding]::UTF8)
+  $patched = $html.Replace('>Read in the ASJ desk &rarr;<', '>Open today''s edition &rarr;<')
+  $patched = [regex]::Replace($patched, '<li><a href="https?://[^/"]+/([a-z]{2})/([^/"]+)/">(?:(?!</li>).)*</li>', {
+    param($lm)
+    if ($liveKeys.ContainsKey($lm.Groups[1].Value + '/' + $lm.Groups[2].Value)) { return $lm.Value }
+    return ''
+  })
+  if ($patched -cne $html) {
+    [IO.File]::WriteAllText($pageFile, $patched, (New-Object Text.UTF8Encoding($false)))
+    $archivePatched++
+  }
+}
+
 $storyKept = @{}
 $storyBuilt = 0
 # Lead story of each country, newest first, for the "Latest across Africa" rail.
@@ -629,7 +712,11 @@ foreach ($k in $topicSeen.Keys) { $ts = $k.Split('|')[0]; $topicCount[$ts] = 1 +
 $topicPages = @{}
 foreach ($ts in $topicCount.Keys) { if ($ts -and $topicCount[$ts] -ge 3) { $topicPages[$ts] = $topicName[$ts] } }
 $feedItems = New-Object System.Collections.Generic.List[object]
-foreach ($sp in $storyPages) {
+# One list, built by hand: @($list) + @($list) throws "Argument types do not match" here.
+$pagesToWrite = New-Object System.Collections.Generic.List[object]
+foreach ($x in $storyPages) { $pagesToWrite.Add($x) }
+foreach ($x in $archivePages) { $pagesToWrite.Add($x) }
+foreach ($sp in $pagesToWrite) {
   $b = $sp.brief
   $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
   if (-not $paragraphs.Count -and $b.body) { $paragraphs = @([string]$b.body) }
@@ -694,9 +781,11 @@ foreach ($sp in $storyPages) {
   $encUrl = [Uri]::EscapeDataString($storyCanonical)
   $waText = [Uri]::EscapeDataString(([string]$b.headline) + ' ' + $storyCanonical)
   $xText = [Uri]::EscapeDataString([string]$b.headline)
-  $moreHtml = (@($storyPages | Where-Object { $_.code -eq $sp.code -and $_.slug -ne $sp.slug } | Select-Object -First 4 | ForEach-Object {
+  $moreSrc = if ($sp.archived) { @($sp.more) } else { @($storyPages | Where-Object { $_.code -eq $sp.code -and $_.slug -ne $sp.slug } | Select-Object -First 4) }
+  $latestSrc = if ($sp.archived) { @($sp.latest) } else { @($leadPages | Where-Object { $_.code -ne $sp.code } | Select-Object -First 4) }
+  $moreHtml = (@($moreSrc | ForEach-Object {
     "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/"">$(if (Get-ShownTopic $_.brief.topic) { '<span class="rel-topic">' + (Esc $_.brief.topic) + '</span>' })$(Esc $_.brief.headline)</a></li>" }) -join '')
-  $latestHtml = (@($leadPages | Where-Object { $_.code -ne $sp.code } | Select-Object -First 4 | ForEach-Object {
+  $latestHtml = (@($latestSrc | ForEach-Object {
     "<li><a href=""$BaseUrl/$($_.code)/$($_.slug)/""><span class=""rel-topic"">$(Esc $_.country)</span>$(Esc $_.brief.headline)</a></li>" }) -join '')
   # The country in the title when the headline does not name it: people search "kenya"
   # plus a name, and the title is what the result shows.
@@ -781,8 +870,20 @@ $($srcHtml.ToString())
 </body>
 </html>
 "@
+  $pageFile = Join-Path $storyDirPath 'index.html'
+  if ($sp.archived) {
+    # A kept page stays out of today's lists (feed, sitemap entry of the day, the
+    # country's "Earlier stories" are worked out from $pagesOnDisk below), and is only
+    # written when it reads differently, so an unchanged page is not a daily commit.
+    $before = if (Test-Path $pageFile) { [IO.File]::ReadAllText($pageFile, [Text.Encoding]::UTF8) } else { '' }
+    if ($before -cne $storyHtml) {
+      [IO.File]::WriteAllText($pageFile, $storyHtml, (New-Object Text.UTF8Encoding($false)))
+      $archiveRebuilt++
+    }
+    continue
+  }
   if (-not (Test-Path $storyDirPath)) { New-Item -ItemType Directory -Path $storyDirPath -Force | Out-Null }
-  [IO.File]::WriteAllText((Join-Path $storyDirPath 'index.html'), $storyHtml, (New-Object Text.UTF8Encoding($false)))
+  [IO.File]::WriteAllText($pageFile, $storyHtml, (New-Object Text.UTF8Encoding($false)))
   $storyKept["$($sp.code)/$($sp.slug)"] = $true
   $urls.Add($storyCanonical)
   $imgFile = if ($hasShare) { $shareFile } else { Join-Path $root "og\$($sp.code).jpg" }
@@ -827,7 +928,7 @@ foreach ($p in $superseded) {
   }
   if ($p.home -and $p.movedTo -ne $target) { Write-MovedStoryPage $p $target; $moved++ }
 }
-Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $moved older addresses redirected, $withdrawn withdrawn as off-country, $orphaned redirects to removed pages dropped" -ForegroundColor DarkGray
+Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $archiveRebuilt kept pages rebuilt from the archive and $archivePatched patched, $moved older addresses redirected, $withdrawn withdrawn as off-country, $orphaned redirects to removed pages dropped" -ForegroundColor DarkGray
 
 # The same earlier stories for the app's country view (data/earlier/<cc>.json, a few KB,
 # loaded when a country opens): headline, page and day of the 30 newest that are not in

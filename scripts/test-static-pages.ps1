@@ -162,6 +162,22 @@ if ($UnitOnly) {
   }
   Check 'every "Earlier stories" link resolves' ($deadEarlier.Count -eq 0) (($deadEarlier | Select-Object -First 5) -join ', ')
 
+  # Kept story pages are rebuilt from the archive, or patched in place when no archived
+  # edition carries them (Nov 2026). Before that they froze as built: on 10 Nov 13 of
+  # them linked to stories whose pages had gone and 1,320 still said "desk".
+  $deadRelated = New-Object System.Collections.Generic.List[string]
+  $oldFooter = New-Object System.Collections.Generic.List[string]
+  foreach ($sd in $storyDirs) {
+    $html = [IO.File]::ReadAllText((Join-Path (Join-Path $root $sd) 'index.html'), [Text.Encoding]::UTF8)
+    if ($html -match 'Open the full desk|Read in the ASJ desk') { $oldFooter.Add($sd) }
+    $block = [regex]::Match($html, '(?s)<nav class="related" aria-label="More stories">(.*?)</nav>').Groups[1].Value
+    foreach ($m in [regex]::Matches($block, 'href="https?://[^/"]+/([a-z]{2})/([^/"]+)/"')) {
+      if (-not (Test-Path (Join-Path (Join-Path $root $m.Groups[1].Value) (Join-Path $m.Groups[2].Value 'index.html')))) { $deadRelated.Add("$sd -> $($m.Groups[1].Value)/$($m.Groups[2].Value)") }
+    }
+  }
+  Check "all $($storyDirs.Count) story pages link only to story pages that exist" ($deadRelated.Count -eq 0) "$($deadRelated.Count): $(($deadRelated | Select-Object -First 3) -join '; ')"
+  Check 'no story page still says "desk"' ($oldFooter.Count -eq 0) "$($oldFooter.Count): $(($oldFooter | Select-Object -First 3) -join ', ')"
+
   # The app's lists (data/earlier/<cc>.json): one per country page, valid JSON, every
   # link a story page that exists.
   $badLists = New-Object System.Collections.Generic.List[string]
