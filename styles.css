@@ -1840,7 +1840,7 @@ main{position:relative}
 body.has-paper{height:auto;min-height:100svh;overflow-x:hidden;overflow-y:auto}
 body.has-paper main{flex:none;height:calc(100svh - var(--head-h,46px) - 46px);min-height:0}
 @media (max-width:640px){
-  body.has-paper main{height:auto;min-height:calc(100svh - var(--head-h,45px) - 46px)}
+  body.has-paper main{height:calc(100svh - var(--head-h,45px) - 46px);min-height:0}
 }
 #country-view,#wire-view,.wire-results{overscroll-behavior:contain}
 .home-paper{position:relative;z-index:1;flex:none;align-self:stretch;width:100%;background:var(--bg);text-align:left}
@@ -1899,8 +1899,10 @@ body.has-paper main{flex:none;height:calc(100svh - var(--head-h,46px) - 46px);mi
   .paper-cols{grid-template-columns:minmax(0,1fr);gap:22px}
   .paper-card{padding:14px 0 16px}
   .paper-peek{font-size:14px}
+  .paper-peek{white-space:nowrap}
   .paper-foot{margin-top:36px}
 }
 /* The story reader's visual (story-kit.js) sits between the byline and the first paragraph. */
 #story-reader-kit.asj-kit-visual{margin:20px 0 0}
 .home-front > [hidden]{display:none!important}
+@media (max-width:359px){.paper-peek small{display:none}}
