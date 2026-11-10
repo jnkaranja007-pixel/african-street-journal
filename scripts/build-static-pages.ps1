@@ -88,71 +88,75 @@ function JsonEsc($s) {
 }
 
 $css = @'
+/* Colours are variables named after their dark-theme value; the light theme, set on
+   <html data-theme="light"> by the inline script in the page head, swaps them. */
+:root{color-scheme:dark;--c-0c0c0c:#0c0c0c;--c-131313:#131313;--c-161616:#161616;--c-181818:#181818;--c-1d3a24:#1d3a24;--c-1f1f1f:#1f1f1f;--c-1f241f:#1f241f;--c-232323:#232323;--c-2a2a2a:#2a2a2a;--c-2c2c2c:#2c2c2c;--c-2e2e2e:#2e2e2e;--c-2f5c33:#2f5c33;--c-2f6b3b:#2f6b3b;--c-3a3733:#3a3733;--c-4caf50:#4caf50;--c-66615b:#66615b;--c-66bb6a:#66bb6a;--c-8a847b:#8a847b;--c-8f8a83:#8f8a83;--c-948e85:#948e85;--c-9a958e:#9a958e;--c-a8a39d:#a8a39d;--c-b4aea6:#b4aea6;--c-c9c5c0:#c9c5c0;--c-cfcac3:#cfcac3;--c-cfcbc6:#cfcbc6;--c-d3cfc9:#d3cfc9;--c-d6d2cc:#d6d2cc;--c-dcd8d2:#dcd8d2;--c-dff3e1:#dff3e1;--c-e2dfda:#e2dfda;--c-e8e6e3:#e8e6e3;--c-ebe8e4:#ebe8e4;--c-f2f0ed:#f2f0ed;--c-f3efe8:#f3efe8}
+:root[data-theme="light"]{color-scheme:light;--c-0c0c0c:#ffffff;--c-131313:#f5f2eb;--c-161616:#fbf9f4;--c-181818:#fbf9f4;--c-1d3a24:#e2f0e3;--c-1f1f1f:#ebe6dc;--c-1f241f:#e7efe3;--c-232323:#ddd6c9;--c-2a2a2a:#d9d2c5;--c-2c2c2c:#d9d2c5;--c-2e2e2e:#d2cabc;--c-2f5c33:#9cc9a0;--c-2f6b3b:#9cc9a0;--c-3a3733:#c9c1b2;--c-4caf50:#2e7d32;--c-66615b:#736c62;--c-66bb6a:#2a7a2f;--c-8a847b:#686259;--c-8f8a83:#5f5a52;--c-948e85:#5a554e;--c-9a958e:#55514a;--c-a8a39d:#4d4943;--c-b4aea6:#47433d;--c-c9c5c0:#36332f;--c-cfcac3:#33302c;--c-cfcbc6:#33302c;--c-d3cfc9:#2e2c28;--c-d6d2cc:#2b2925;--c-dcd8d2:#2a2825;--c-dff3e1:#1b5e20;--c-e2dfda:#24221f;--c-e8e6e3:#1c1b19;--c-ebe8e4:#1f1e1b;--c-f2f0ed:#1c1b19;--c-f3efe8:#1c1b19}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:#131313;color:#e8e6e3;font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;padding:0 20px}
+body{margin:0;background:var(--c-131313);color:var(--c-e8e6e3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;padding:0 20px}
 .wrap{max-width:760px;margin:0 auto;padding:48px 0 80px}
-a{color:#66bb6a}
-.masthead{display:flex;flex-wrap:nowrap;white-space:nowrap;align-items:baseline;gap:0 8px;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.24em;text-transform:uppercase;color:#8a847b;padding-bottom:28px;border-bottom:1px solid #2a2a2a}
-.masthead a{color:#8a847b;text-decoration:none}
+a{color:var(--c-66bb6a)}
+.masthead{display:flex;flex-wrap:nowrap;white-space:nowrap;align-items:baseline;gap:0 8px;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.24em;text-transform:uppercase;color:var(--c-8a847b);padding-bottom:28px;border-bottom:1px solid var(--c-2a2a2a)}
+.masthead a{color:var(--c-8a847b);text-decoration:none}
 h1{font:700 clamp(34px,7vw,56px)/1 'Playfair Display',Georgia,'Times New Roman',serif;margin:34px 0 10px;letter-spacing:0}
-.meta{font:700 11px/1.7 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#8a847b;margin-bottom:8px}
-.open{display:inline-block;margin:18px 0 6px;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid #4caf50;padding-bottom:5px}
-article{padding:26px 0;border-bottom:1px solid #232323}
-h2{font:700 clamp(22px,3.2vw,28px)/1.2 'Playfair Display',Georgia,'Times New Roman',serif;margin:0 0 10px;color:#f2f0ed}
+.meta{font:700 11px/1.7 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--c-8a847b);margin-bottom:8px}
+.open{display:inline-block;margin:18px 0 6px;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--c-4caf50);padding-bottom:5px}
+article{padding:26px 0;border-bottom:1px solid var(--c-232323)}
+h2{font:700 clamp(22px,3.2vw,28px)/1.2 'Playfair Display',Georgia,'Times New Roman',serif;margin:0 0 10px;color:var(--c-f2f0ed)}
 h2 a{color:inherit;text-decoration:none}
-h2 a:hover,h2 a:focus-visible{color:#66bb6a;outline:none}
-.kicker{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#66bb6a;margin-bottom:9px}
-.dek{font-size:17px;line-height:1.45;color:#e8e6e3;margin-bottom:18px}
-p{margin:0 0 12px;color:#c9c5c0}
-.why{color:#8a847b;font-size:14.5px}
-.why b{color:#e8e6e3;font-weight:600;margin-right:8px}
+h2 a:hover,h2 a:focus-visible{color:var(--c-66bb6a);outline:none}
+.kicker{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--c-66bb6a);margin-bottom:9px}
+.dek{font-size:17px;line-height:1.45;color:var(--c-e8e6e3);margin-bottom:18px}
+p{margin:0 0 12px;color:var(--c-c9c5c0)}
+.why{color:var(--c-8a847b);font-size:14.5px}
+.why b{color:var(--c-e8e6e3);font-weight:600;margin-right:8px}
 .src{font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase}
-.src a{margin-right:14px;text-decoration:none;border-bottom:1px solid #2f5c33}
-.read{display:inline-block;margin-top:8px;font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid #4caf50;padding-bottom:5px}
-footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:#66615b}
-.morenav{margin-top:34px;padding-top:20px;border-top:1px solid #232323}
-.morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#8a847b;margin:0 0 12px}
-.morenav a{display:inline-block;margin:0 14px 7px 0;font:400 13px/1.5 'Playfair Display',Georgia,'Times New Roman',serif;color:#9a958e;text-decoration:none;border-bottom:1px solid transparent}
-.morenav a:hover{color:#66bb6a;border-bottom-color:#2f5c33}
-.asj-info{position:relative;display:inline-block;font:inherit;letter-spacing:inherit;text-transform:uppercase}.asj-info>summary{list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:#8f8a83;padding:4px 0;white-space:nowrap;-webkit-user-select:none;user-select:none}.asj-info>summary::-webkit-details-marker{display:none}.asj-info>summary::marker{content:''}.asj-info>summary::after{content:'';width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .18s}.asj-info[open]>summary::after{transform:translateY(1px) rotate(225deg)}.asj-info>summary:hover,.asj-info>summary:focus-visible,.asj-info[open]>summary{color:#66bb6a;outline:none}.asj-info>summary:focus-visible{outline:2px solid #66bb6a;outline-offset:3px}.asj-info-menu{position:absolute;top:calc(100% + 8px);left:0;z-index:2000;min-width:180px;max-width:calc(100vw - 24px);display:flex;flex-direction:column;background:#161616;border:1px solid #2c2c2c;border-radius:4px;box-shadow:0 12px 32px rgba(0,0,0,.55);padding:6px 0;text-align:left}.asj-info-menu a,.asj-info-menu a:visited{display:block;padding:10px 16px;color:#cfcbc6;text-decoration:none;border:0;font:700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}.asj-info-menu a:hover,.asj-info-menu a:focus-visible{background:#1f241f;color:#66bb6a;outline:none}.asj-info--right{margin-left:auto;padding-left:10px}.asj-info--right .asj-info-menu{left:auto;right:0}
+.src a{margin-right:14px;text-decoration:none;border-bottom:1px solid var(--c-2f5c33)}
+.read{display:inline-block;margin-top:8px;font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--c-4caf50);padding-bottom:5px}
+footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--c-66615b)}
+.morenav{margin-top:34px;padding-top:20px;border-top:1px solid var(--c-232323)}
+.morenav h2{font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--c-8a847b);margin:0 0 12px}
+.morenav a{display:inline-block;margin:0 14px 7px 0;font:400 13px/1.5 'Playfair Display',Georgia,'Times New Roman',serif;color:var(--c-9a958e);text-decoration:none;border-bottom:1px solid transparent}
+.morenav a:hover{color:var(--c-66bb6a);border-bottom-color:var(--c-2f5c33)}
+.asj-info{position:relative;display:inline-block;font:inherit;letter-spacing:inherit;text-transform:uppercase}.asj-info>summary{list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--c-8f8a83);padding:4px 0;white-space:nowrap;-webkit-user-select:none;user-select:none}.asj-info>summary::-webkit-details-marker{display:none}.asj-info>summary::marker{content:''}.asj-info>summary::after{content:'';width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .18s}.asj-info[open]>summary::after{transform:translateY(1px) rotate(225deg)}.asj-info>summary:hover,.asj-info>summary:focus-visible,.asj-info[open]>summary{color:var(--c-66bb6a);outline:none}.asj-info>summary:focus-visible{outline:2px solid var(--c-66bb6a);outline-offset:3px}.asj-info-menu{position:absolute;top:calc(100% + 8px);left:0;z-index:2000;min-width:180px;max-width:calc(100vw - 24px);display:flex;flex-direction:column;background:var(--c-161616);border:1px solid var(--c-2c2c2c);border-radius:4px;box-shadow:0 12px 32px rgba(0,0,0,.55);padding:6px 0;text-align:left}.asj-info-menu a,.asj-info-menu a:visited{display:block;padding:10px 16px;color:var(--c-cfcbc6);text-decoration:none;border:0;font:700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}.asj-info-menu a:hover,.asj-info-menu a:focus-visible{background:var(--c-1f241f);color:var(--c-66bb6a);outline:none}.asj-info--right{margin-left:auto;padding-left:10px}.asj-info--right .asj-info-menu{left:auto;right:0}
 
 .masthead>a{overflow:hidden;text-overflow:ellipsis;min-width:0}.masthead>a:last-of-type{flex-shrink:1}.masthead>a:first-child{flex-shrink:2}
 @media (max-width:520px){.masthead{font-size:10px;letter-spacing:.12em}}.asj-info--right .asj-info-menu{left:auto;right:0}
 
-.page p,.page li{color:#c9c5c0;font-size:16.5px;line-height:1.65}
+.page p,.page li{color:var(--c-c9c5c0);font-size:16.5px;line-height:1.65}
 /* Story pages only (scoped to .story / .related / .share so country pages are unchanged). */
-.skip-link{position:absolute;left:12px;top:-60px;padding:10px 14px;background:#66bb6a;color:#0c0c0c;font:700 12px/1 ui-monospace,Consolas,monospace;text-decoration:none;z-index:9}
+.skip-link{position:absolute;left:12px;top:-60px;padding:10px 14px;background:var(--c-66bb6a);color:var(--c-0c0c0c);font:700 12px/1 ui-monospace,Consolas,monospace;text-decoration:none;z-index:9}
 .skip-link:focus{top:12px}
-.story :focus-visible,.related :focus-visible{outline:2px solid #66bb6a;outline-offset:3px}
+.story :focus-visible,.related :focus-visible{outline:2px solid var(--c-66bb6a);outline-offset:3px}
 .story{padding:0;border-bottom:0}
-.story-head{padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid #232323}
+.story-head{padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid var(--c-232323)}
 .story-head h1{font-size:clamp(32px,6vw,49px);line-height:1.08;margin:14px 0}
-.story-head .dek{font-size:clamp(18px,2.4vw,21px);line-height:1.45;color:#e2dfda;margin:0 0 16px}
-.byline{font:12px/1.6 ui-monospace,Consolas,monospace;letter-spacing:.06em;color:#948e85;margin:0 0 16px}
-.byline a{color:#66bb6a;text-decoration:none;border-bottom:1px solid #2f5c33}
-.story p{font-size:17.5px;line-height:1.7;color:#d3cfc9;max-width:66ch}
+.story-head .dek{font-size:clamp(18px,2.4vw,21px);line-height:1.45;color:var(--c-e2dfda);margin:0 0 16px}
+.byline{font:12px/1.6 ui-monospace,Consolas,monospace;letter-spacing:.06em;color:var(--c-948e85);margin:0 0 16px}
+.byline a{color:var(--c-66bb6a);text-decoration:none;border-bottom:1px solid var(--c-2f5c33)}
+.story p{font-size:17.5px;line-height:1.7;color:var(--c-d3cfc9);max-width:66ch}
 .share{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.share a,.share button{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid #2e2e2e;background:#181818;color:#e8e6e3;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer}
-.share a:hover,.share button:hover{border-color:#66bb6a}
-.share .share-wa{background:#1d3a24;border-color:#2f6b3b;color:#dff3e1}
-.share-status{font:12px ui-monospace,monospace;color:#66bb6a}
-.section-label{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#948e85;margin:30px 0 12px}
+.share a,.share button{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--c-2e2e2e);background:var(--c-181818);color:var(--c-e8e6e3);font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.share a:hover,.share button:hover{border-color:var(--c-66bb6a)}
+.share .share-wa{background:var(--c-1d3a24);border-color:var(--c-2f6b3b);color:var(--c-dff3e1)}
+.share-status{font:12px ui-monospace,monospace;color:var(--c-66bb6a)}
+.section-label{font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--c-948e85);margin:30px 0 12px}
 .related{margin-top:34px}
 .related ul{list-style:none;margin:0;padding:0}
-.related li a{display:block;padding:10px 0;border-bottom:1px solid #1f1f1f;color:#ebe8e4;text-decoration:none;font:700 17px/1.3 'Playfair Display',Georgia,serif}
-.related li a:hover{color:#66bb6a}
-.rel-topic{display:block;font:700 10px/1.6 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#66bb6a;margin-bottom:2px}
+.related li a{display:block;padding:10px 0;border-bottom:1px solid var(--c-1f1f1f);color:var(--c-ebe8e4);text-decoration:none;font:700 17px/1.3 'Playfair Display',Georgia,serif}
+.related li a:hover{color:var(--c-66bb6a)}
+.rel-topic{display:block;font:700 10px/1.6 ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--c-66bb6a);margin-bottom:2px}
 
 .page h2{margin-top:30px}
 .page ul{padding-left:20px}
 /* readability-v1: BDA style guide - sans body, no caps tracking, calm spacing */
 .page p,.page li{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:18px;line-height:1.6;letter-spacing:.01em;word-spacing:.06em;max-width:65ch}
 .story-head h1{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-weight:700;font-size:clamp(28px,5.4vw,42px);line-height:1.2;letter-spacing:-.005em}
-.story-head .dek{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:19px;line-height:1.5;color:#d6d2cc}
-.story p{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:18px;line-height:1.65;color:#dcd8d2;letter-spacing:.01em;word-spacing:.06em;max-width:65ch;margin:0 0 1.1em}
-.byline{font:15px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;color:#b4aea6}
+.story-head .dek{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:19px;line-height:1.5;color:var(--c-d6d2cc)}
+.story p{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:18px;line-height:1.65;color:var(--c-dcd8d2);letter-spacing:.01em;word-spacing:.06em;max-width:65ch;margin:0 0 1.1em}
+.byline{font:15px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;color:var(--c-b4aea6)}
 .share a,.share button{min-height:44px;font:600 15px/1 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none;border-radius:8px}
-.section-label{font:700 15px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none;color:#cfcac3}
+.section-label{font:700 15px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none;color:var(--c-cfcac3)}
 .related li a{font:600 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;padding:14px 0}
 .rel-topic{font:500 13px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none}
 .why{font-style:normal}
@@ -166,30 +170,30 @@ footer{margin-top:44px;font:700 10px/1.9 ui-monospace,Consolas,monospace;letter-
    tracking; v2 reached the story pages but country pages still set them in 10-11px
    monospace capitals. */
 .meta,.open,.src,.read,footer,.morenav h2{font-family:system-ui,-apple-system,'Segoe UI',sans-serif!important;letter-spacing:0!important;text-transform:none!important}
-.meta{font-size:14px!important;font-weight:400!important;color:#a8a39d}
-.meta a{color:inherit;text-decoration:none;border-bottom:1px solid #3a3733}
-.meta a:hover{color:#f3efe8;border-bottom-color:#f3efe8}
+.meta{font-size:14px!important;font-weight:400!important;color:var(--c-a8a39d)}
+.meta a{color:inherit;text-decoration:none;border-bottom:1px solid var(--c-3a3733)}
+.meta a:hover{color:var(--c-f3efe8);border-bottom-color:var(--c-f3efe8)}
 .open{font-size:15px!important;font-weight:600!important;margin:18px 0 10px!important}
 .src{font-size:14px!important;font-weight:500!important;line-height:1.8!important}
 .read{font-size:15px!important;font-weight:600!important}
-footer{font-size:13px!important;font-weight:400!important;line-height:1.8!important;color:#8a847b}
-.morenav h2{font-size:15px!important;font-weight:650!important;color:#cfcac3}
+footer{font-size:13px!important;font-weight:400!important;line-height:1.8!important;color:var(--c-8a847b)}
+.morenav h2{font-size:15px!important;font-weight:650!important;color:var(--c-cfcac3)}
 .morenav a{font:400 15px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif!important}
 article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI',sans-serif!important}
 .story-head h1{font:700 clamp(30px,5.6vw,46px)/1.12 'Playfair Display',Georgia,'Times New Roman',serif!important;letter-spacing:0!important}
 .related li a{font:650 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif!important}
-.hub-intro{color:#a8a39d!important}
+.hub-intro{color:var(--c-a8a39d)!important}
 .country-hub{list-style:none;padding:0!important;margin:24px 0 0}
-.country-hub li{display:flex;flex-direction:column;gap:4px;padding:14px 0;border-bottom:1px solid #2a2a2a;max-width:none!important}
-.country-hub .hub-country{font:600 14px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;color:#8f8a83;text-decoration:none}
-.country-hub .hub-story{font:650 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;color:#e8e6e3;text-decoration:none}
-.country-hub span.hub-story{font-weight:400;color:#8f8a83}
-.country-hub a:hover,.country-hub a:focus-visible{color:#66bb6a}
-.hub-note{margin-top:28px;color:#a8a39d!important}
-.page code{font:14px/1.4 ui-monospace,Consolas,monospace;color:#e8e6e3;word-break:break-all}
+.country-hub li{display:flex;flex-direction:column;gap:4px;padding:14px 0;border-bottom:1px solid var(--c-2a2a2a);max-width:none!important}
+.country-hub .hub-country{font:600 14px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--c-8f8a83);text-decoration:none}
+.country-hub .hub-story{font:650 17px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--c-e8e6e3);text-decoration:none}
+.country-hub span.hub-story{font-weight:400;color:var(--c-8f8a83)}
+.country-hub a:hover,.country-hub a:focus-visible{color:var(--c-66bb6a)}
+.hub-note{margin-top:28px;color:var(--c-a8a39d)!important}
+.page code{font:14px/1.4 ui-monospace,Consolas,monospace;color:var(--c-e8e6e3);word-break:break-all}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=67" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=68" defer></script>'
 # The paper's social accounts (data/social-config.js): a Follow line in every footer
 # once a handle is set, and sameAs on the publisher so search engines tie them to it.
 $socialTelegram = ''; $socialBluesky = ''
@@ -546,6 +550,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <link rel="alternate" type="application/rss+xml" title="$(Esc $name) - The African Street Journal" href="$BaseUrl/$code/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta name="theme-color" content="#131313">
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -564,7 +569,7 @@ $analytics
 <meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"$(JsonEsc $name)","item":"$canonical"}]}</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 </head>
 <body>
 <div class="wrap">
@@ -812,6 +817,7 @@ $(if ($b.articleId) { '<meta name="asj-story" content="' + (Esc ([string]$b.arti
 <link rel="alternate" type="application/rss+xml" title="$(Esc $sp.country) - The African Street Journal" href="$BaseUrl/$($sp.code)/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta name="theme-color" content="#131313">
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -832,7 +838,7 @@ $analytics
 <meta name="twitter:image" content="$ogImage">
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">$crumbs</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
@@ -971,6 +977,7 @@ $trustPages = [ordered]@{
 <p>The site is served by GitHub Pages, and its domain name is handled by Cloudflare. Like any web host, they may keep short-lived server logs (such as IP addresses) for security and reliability. Typefaces are loaded from Google Fonts, which receives your IP address when it serves them. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>.</p>
 <h2>Offline reading</h2>
 <p>The site stores a copy of its own pages in your browser so it can open quickly and work offline. That copy stays on your device and is never sent to us.</p>
+<p>Choices you make on the site, such as the countries you follow and a light or dark theme, are kept in your browser's local storage on this device. They are never sent to us.</p>
 <h2>Email</h2>
 <p>If you email us, we use your message and address only to reply. We do not run a mailing list at the moment.</p>
 <p>For privacy questions, email <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a>.</p>
@@ -1031,9 +1038,10 @@ foreach ($slug in $trustPages.Keys) {
 <meta name="description" content="$(Esc $tp.desc)">
 <link rel="canonical" href="$tpUrl">
 <meta name="theme-color" content="#131313">
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 </head>
 <body>
 <div class="wrap page">
@@ -1096,6 +1104,7 @@ foreach ($ts in $topicOrder) {
 <meta name="description" content="$(Esc $tDesc)">
 <link rel="canonical" href="$tUrl">
 <meta name="theme-color" content="#131313">
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:type" content="website">
@@ -1107,7 +1116,7 @@ foreach ($ts in $topicOrder) {
 <script type="application/ld+json">$tLd</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"Topics","item":"$BaseUrl/topics/"},{"@type":"ListItem","position":3,"name":"$(JsonEsc $tName)","item":"$tUrl"}]}</script>
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 </head>
 <body>
 <div class="wrap page">
@@ -1139,8 +1148,9 @@ $tiHtml = @"
 <meta name="description" content="African news by subject: politics, business, health, agriculture, climate and more, from 55 countries.">
 <link rel="canonical" href="$tiUrl">
 <meta name="theme-color" content="#131313">
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 </head>
 <body>
 <div class="wrap page">
@@ -1219,7 +1229,8 @@ $digestHtml = @"
 <meta name="robots" content="noindex">
 <title>Today's posts | The African Street Journal</title>
 <meta name="theme-color" content="#131313">
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 <style>.dg{margin:0 0 26px}.dg textarea{width:100%;box-sizing:border-box;background:#1b1b1b;color:#ece8e1;border:1px solid #333;border-radius:6px;padding:12px;font:15px/1.5 system-ui,sans-serif;resize:vertical}
 .dg-actions{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0}.dg-actions a,.dg-actions button{font:600 15px system-ui,sans-serif;padding:9px 14px;border-radius:6px;border:1px solid #3a3a3a;background:#222;color:#f3efe8;text-decoration:none;cursor:pointer}
 .dg-actions a:hover,.dg-actions button:hover{border-color:#5fbf6a}details{border-top:1px solid #262626;padding:10px 0}summary{cursor:pointer;font:600 16px system-ui,sans-serif}</style>
@@ -1285,7 +1296,9 @@ $hubHtml = @"
 <meta property="og:url" content="$BaseUrl/countries/">
 <meta property="og:image" content="$BaseUrl/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=70">
+<meta name="theme-color" content="#131313">
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 $analytics
 </head>
 <body>

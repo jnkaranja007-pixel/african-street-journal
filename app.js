@@ -856,6 +856,9 @@ const microHitTargets = paths
 // and blitted. Rebuilding two radial gradients 60 times a second was most of the
 // landing page's main-thread time on a throttled Android profile.
 let oceanLayer = null;
+// The map is drawn on a canvas, so it reads the theme itself (styles.css --map-*).
+const mapLight = () => document.documentElement.getAttribute('data-theme') === 'light';
+const mapVar = (name, fallback) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 function drawOcean(elapsed) {
   const alpha = Math.min(1, elapsed / 1.2);
   if (alpha === 0) return;
@@ -875,8 +878,9 @@ function paintOcean(ctx) {
   ctx.save();
   // Deep-water wash that fades to transparent — no hard rectangle seam against the page.
   const wash = ctx.createRadialGradient(500, 480, 60, 500, 480, 640);
-  wash.addColorStop(0, 'rgba(22,30,24,0.5)');
-  wash.addColorStop(0.55, 'rgba(13,18,15,0.34)');
+  const light = mapLight();
+  wash.addColorStop(0, light ? 'rgba(120,150,128,0.16)' : 'rgba(22,30,24,0.5)');
+  wash.addColorStop(0.55, light ? 'rgba(120,150,128,0.08)' : 'rgba(13,18,15,0.34)');
   wash.addColorStop(1, 'rgba(10,12,10,0)');
   ctx.fillStyle = wash;
   ctx.fillRect(0, 0, 1000, 1001);
@@ -1032,7 +1036,7 @@ function drawIslandMarkers(elapsed) {
       ctx.stroke();
     }
     ctx.textAlign = L.align;
-    ctx.fillStyle = hovered ? 'rgba(232,246,233,0.98)' : 'rgba(170,196,174,0.78)';
+    ctx.fillStyle = hovered ? (mapLight() ? '#1b5e20' : 'rgba(232,246,233,0.98)') : mapVar('--map-tag', 'rgba(170,196,174,0.78)');
     ctx.fillText(ISLAND_MARKERS[t.id].tag, L.x, L.y);
   }
   ctx.restore();
@@ -1090,7 +1094,9 @@ function paintShade() {
   // Soft contact shadow under the whole landmass: depth, not decoration.
   const [c, x] = offscreen();
   x.translate(0.41, 2);
-  x.shadowColor = 'rgba(0,0,0,0.55)'; x.shadowBlur = 26; x.shadowOffsetY = 7;
+  // On the light page a black shadow read as a grey smudge round the continent.
+  if (mapLight()) { x.shadowColor = 'rgba(40,64,46,0.22)'; x.shadowBlur = 16; x.shadowOffsetY = 4; }
+  else { x.shadowColor = 'rgba(0,0,0,0.55)'; x.shadowBlur = 26; x.shadowOffsetY = 7; }
   x.fillStyle = '#10301a';
   for (const p of paths) x.fill(p.shape);
   return c;
@@ -1109,7 +1115,7 @@ function paintLight(x) {
 function paintLakes(x, alpha) {
   if (!LAKES || alpha <= 0) return;
   x.save(); x.translate(0.41, 2); x.globalAlpha = alpha;
-  x.fillStyle = '#121815'; x.fill(LAKES);
+  x.fillStyle = mapVar('--map-lake', '#121815'); x.fill(LAKES);
   x.lineWidth = Math.max(0.5, 1.4 * HAIR); x.strokeStyle = 'rgba(9,26,11,0.9)'; x.stroke(LAKES);
   x.restore();
 }
@@ -1156,7 +1162,7 @@ function drawCountryOverlay(c, fill, lift) {
   if (lift) { ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 2; }
   ctx.fillStyle = fill; ctx.fill(c.shape);
   ctx.shadowColor = 'transparent';
-  if (LAKES) { ctx.save(); ctx.clip(c.shape); ctx.fillStyle = '#121815'; ctx.fill(LAKES); ctx.restore(); }
+  if (LAKES) { ctx.save(); ctx.clip(c.shape); ctx.fillStyle = mapVar('--map-lake', '#121815'); ctx.fill(LAKES); ctx.restore(); }
   ctx.restore();
 }
 function render(elapsed) {
@@ -1330,6 +1336,11 @@ function fitMapResolution() {
   oceanLayer = shadeLayer = baseLayer = assemblySprites = null;
   render(assemblyDone ? 3.5 : 0);
 }
+// A theme switch repaints the map from scratch: its layers are cached pictures.
+window.addEventListener('asj:themechange', () => {
+  oceanLayer = shadeLayer = baseLayer = assemblySprites = null;
+  render(assemblyDone ? 3.5 : 0);
+});
 function layoutHomeMap() {
   layoutPhoneMap();
   fitMapResolution();

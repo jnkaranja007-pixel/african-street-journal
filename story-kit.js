@@ -403,7 +403,7 @@
 
   /* ── Styles: the kit carries its own, reading the page's colours where it has them ── */
   var CSS = [
-    '.asj-kit{--k-ink:var(--text,#e8e6e3);--k-muted:var(--text-muted,#a8a39d);--k-dim:var(--text-dim,#8a847b);--k-rule:var(--rule,#2a2a2a);--k-surface:var(--surface,#1a1a1a);--k-accent:var(--green-bright,#66bb6a);--k-hi:var(--front-green,#439447);--k-cta:var(--kit-cta,#2e7d32);--k-land:var(--kit-land,#2c322d);--k-sea:var(--kit-sea,#151816);--k-mono:var(--mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);--k-serif:var(--serif,"Playfair Display",Georgia,serif);box-sizing:border-box}',
+    '.asj-kit{--k-ink:var(--text,var(--c-e8e6e3,#e8e6e3));--k-muted:var(--text-muted,var(--c-a8a39d,#a8a39d));--k-dim:var(--text-dim,var(--c-8a847b,#8a847b));--k-rule:var(--rule,var(--c-2a2a2a,#2a2a2a));--k-surface:var(--surface,var(--c-181818,#1a1a1a));--k-accent:var(--green-bright,var(--c-66bb6a,#66bb6a));--k-hi:var(--front-green,#439447);--k-cta:var(--kit-cta,#2e7d32);--k-land:var(--kit-land,#2c322d);--k-sea:var(--kit-sea,#151816);--k-mono:var(--mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);--k-serif:var(--serif,"Playfair Display",Georgia,serif);box-sizing:border-box}',
     '.asj-kit *{box-sizing:border-box}',
     '.asj-kit[hidden]{display:none!important}',
     '.asj-kit-visual{display:flex;gap:18px;align-items:center;margin:22px 0 8px;padding:14px;border:1px solid var(--k-rule);background:var(--k-surface);text-align:left}',
