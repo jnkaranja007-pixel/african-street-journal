@@ -137,6 +137,13 @@ jobs:
       - name: Signals sections on phones
         if: always()
         run: NODE_PATH=/tmp/pw/node_modules node tools/stress/signals-fold.mjs
+      # Both themes, as a reader sees them: AA text contrast on the front page, the Wire,
+      # a country's three panels and the story reader; no dark panel left in the light
+      # theme; the service worker still registers; story pages keep their search and
+      # share tags.
+      - name: Themes readable, guards hold
+        if: always()
+        run: NODE_PATH=/tmp/pw/node_modules node tools/stress/theme-check.mjs
 
   desk:
     # The writer's repair loop end to end: write-briefs.ps1 runs for real against a

@@ -1,13 +1,16 @@
 /* The African Street Journal - service worker.
-   Network-first for everything same-origin (dev and daily data never go stale),
-   cache fallback so the journal still opens offline. */
+   Code at this release's version: served from cache at once, refreshed behind.
+   Pages and daily data: network first, but a slow network (a phone on 2G, a stalled
+   connection) falls back to the cached copy after a few seconds instead of a blank
+   screen; the network answer still lands in the cache for next time.
+   Map files: their own long-lived cache, stale-while-revalidate (below). */
 
 // One version constant drives both the cache name and every precached URL. They used
 // to be separate strings and drifted: the cache said v18 while SHELL still asked for
 // v16. Nothing broke - the fetch handler matches with ignoreSearch, and GitHub Pages
 // ignores query strings - but the numbers lied, and a version that lies is worse than
 // no version. Bump V alone; index.html's ?v= must match it.
-const V = '113';
+const V = '114';
 const CACHE = 'asj-v' + V;
 // briefs-full.js (~500 KB of prose) is no longer precached on install; app.js fetches
 // it after first paint and the network-first handler caches it then.
@@ -24,6 +27,11 @@ const SHELL = ['./', 'index.html', 'data/country-facts.js?v=' + V, 'styles.css?v
 // field, a new required one) bumps MAP_CACHE, so no reader pairs new code with old maps.
 const MAP_CACHE = 'asj-maps-v1';
 const MAP_ASSET = /\/data\/(relief\/[a-z]{2}(-s|-focus)?\.jpg|countries\/[a-z]{2}\.js|facts\/[a-z]{2}\.js|locator\.json)$/;
+// Front-end code that ships with a ?v= stamp. Data files carry the stamp too
+// (data/briefs.js?v=V) but the desk rewrites them every morning, so they are not here.
+const CODE_ASSET = /\/(app\.js|styles\.css|story-kit\.js|country-sidebar\.js|data\/country-facts\.js)$/;
+// How long a page or data request waits on the network before a cached copy answers.
+const NETWORK_WAIT_MS = 3500;
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -39,6 +47,22 @@ self.addEventListener('activate', event => {
   );
 });
 
+// Serve the cached copy at once and refresh it behind; with no copy, wait for the network.
+function staleWhileRevalidate(event, cacheName, key, revalidating) {
+  return caches.open(cacheName).then(async cache => {
+    const hit = await cache.match(key);
+    const refresh = fetch(revalidating).then(response => {
+      if (response.ok) cache.put(key, response.clone()).catch(() => {});
+      return response;
+    });
+    if (hit) {
+      event.waitUntil(refresh.catch(() => {}));
+      return hit;
+    }
+    return refresh;
+  });
+}
+
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) return;
   // `cache: 'no-cache'` forces a revalidation against the server (cheap: GitHub Pages answers
@@ -49,30 +73,36 @@ self.addEventListener('fetch', event => {
   const revalidating = new Request(event.request, { cache: 'no-cache' });
   const url = new URL(event.request.url);
   if (MAP_ASSET.test(url.pathname)) {
-    const key = url.origin + url.pathname;
-    event.respondWith(caches.open(MAP_CACHE).then(async cache => {
-      const hit = await cache.match(key);
-      const refresh = fetch(revalidating).then(response => {
-        if (response.ok) cache.put(key, response.clone()).catch(() => {});
-        return response;
-      });
-      if (hit) {
-        event.waitUntil(refresh.catch(() => {}));
-        return hit;
-      }
-      return refresh;
-    }));
+    event.respondWith(staleWhileRevalidate(event, MAP_CACHE, url.origin + url.pathname, revalidating));
     return;
   }
-  event.respondWith(
-    fetch(revalidating)
-      .then(response => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(event.request, copy)).catch(() => {});
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request, { ignoreSearch: true }))
-  );
+  // This release's own code (app.js?v=V and friends) changes under the same version only
+  // when a fix is pushed without a bump; it still reaches the reader, one visit late.
+  if (CODE_ASSET.test(url.pathname) && url.searchParams.get('v') === V) {
+    event.respondWith(staleWhileRevalidate(event, CACHE, event.request, revalidating));
+    return;
+  }
+  const network = fetch(revalidating).then(response => {
+    if (response.ok) {
+      const copy = response.clone();
+      caches.open(CACHE).then(cache => cache.put(event.request, copy)).catch(() => {});
+    }
+    return response;
+  });
+  event.waitUntil(network.catch(() => {}));
+  event.respondWith(new Promise(resolve => {
+    let settled = false;
+    let timer = 0;
+    const settle = response => {
+      if (settled || !response) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(response);
+    };
+    const cached = () => caches.match(event.request, { ignoreSearch: true });
+    // Past this, with a copy in hand, the reader would be staring at nothing. With no
+    // copy, keep waiting for the network.
+    timer = setTimeout(() => { cached().then(settle); }, NETWORK_WAIT_MS);
+    network.then(settle).catch(() => cached().then(hit => settle(hit || Response.error())));
+  }));
 });

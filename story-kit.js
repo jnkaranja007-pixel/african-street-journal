@@ -295,6 +295,9 @@
   }
   var CLAUSE_END = /[,;:.!?()—–"“”]|\s-\s/;
   var TRAIL = /^(to|by|at|of|a|an|the|about|nearly|over|around|some|almost|up|down|as|with|and|in|for|on|from|than|more|is|are|was|were)$/i;
+  // "keeps key rate at 12 per cent as inflation rises": the words after the figure start
+  // another clause, so the figure is not "as inflation rises" - it is the key rate.
+  var NEW_CLAUSE = /^(as|while|after|amid|despite|because|since|when|but|though|although|following|ahead|before|until|unless|whereas|if|even)$/i;
   function caption(text, fig) {
     var afterRaw = text.slice(fig.index + fig.text.length);
     var cut = CLAUSE_END.exec(afterRaw);
@@ -304,7 +307,7 @@
     var beforeWords = (parts[parts.length - 1] || '').trim().split(/\s+/).filter(Boolean);
     while (beforeWords.length && TRAIL.test(beforeWords[beforeWords.length - 1])) beforeWords.pop();
     var words, clipped = false;
-    if (afterWords.length >= 3 || !beforeWords.length) {
+    if ((afterWords.length >= 3 && !(beforeWords.length >= 2 && NEW_CLAUSE.test(afterWords[0]))) || !beforeWords.length) {
       words = afterWords;
       if (words.length > 7) { words = words.slice(0, 7); clipped = true; }
       while (clipped && words.length > 3 && TRAIL.test(words[words.length - 1])) words.pop();

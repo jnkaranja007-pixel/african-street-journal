@@ -16,7 +16,7 @@
     '.ip .ip-full{display:inline-block;letter-spacing:.12em;text-transform:uppercase;margin-top:8px;font:700 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}' +
     '@media (max-width:640px){.ip-back{align-items:flex-end}.ip{width:100%;max-height:85vh;border-radius:14px 14px 0 0;border-bottom:0;transform:translateY(100%);padding:30px 20px 28px}.ip-back.ip-on .ip{transform:none}}' +
     '@media (prefers-reduced-motion:reduce){.ip-back,.ip{transition:none}}';
-  var MENU_CSS = ".asj-info{position:relative;display:inline-block;text-transform:uppercase}.asj-info>summary{list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--c-8f8a83,var(--text-dim,#8f8a83));padding:4px 0;white-space:nowrap;-webkit-user-select:none;user-select:none}.asj-info>summary::-webkit-details-marker{display:none}.asj-info>summary::marker{content:''}.asj-info>summary::after{content:'';width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .18s}.asj-info[open]>summary::after{transform:translateY(1px) rotate(225deg)}.asj-info>summary:hover,.asj-info>summary:focus-visible,.asj-info[open]>summary{color:var(--c-66bb6a,var(--green-bright,#66bb6a));outline:none}.asj-info>summary:focus-visible{outline:2px solid var(--c-66bb6a,var(--green-bright,#66bb6a));outline-offset:3px}.asj-info-menu{position:absolute;top:calc(100% + 8px);left:0;z-index:2000;min-width:180px;max-width:calc(100vw - 24px);display:flex;flex-direction:column;background:var(--c-161616,var(--surface,#161616));border:1px solid var(--c-2c2c2c,var(--rule,#2c2c2c));border-radius:4px;box-shadow:0 12px 32px rgba(0,0,0,.55);padding:6px 0;text-align:left}.asj-info-menu a,.asj-info-menu a:visited{display:block;padding:10px 16px;color:var(--c-cfcbc6,var(--text-muted,#cfcbc6));text-decoration:none;border:0;font:700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}.asj-info-menu a:hover,.asj-info-menu a:focus-visible{background:var(--c-1f241f,var(--surface-raised,#1f241f));color:var(--c-66bb6a,var(--green-bright,#66bb6a));outline:none}.asj-info--right{margin-left:auto;padding-left:10px}.asj-info--right .asj-info-menu{left:auto;right:0}";
+  var MENU_CSS = ".asj-info{position:relative;display:inline-block;text-transform:uppercase}.asj-info>summary{list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:max(12px,1em);min-height:32px;color:var(--c-8f8a83,var(--text-dim,#8f8a83));padding:4px 0;white-space:nowrap;-webkit-user-select:none;user-select:none}.asj-info>summary::-webkit-details-marker{display:none}.asj-info>summary::marker{content:''}.asj-info>summary::after{content:'';width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .18s}.asj-info[open]>summary::after{transform:translateY(1px) rotate(225deg)}.asj-info>summary:hover,.asj-info>summary:focus-visible,.asj-info[open]>summary{color:var(--c-66bb6a,var(--green-bright,#66bb6a));outline:none}.asj-info>summary:focus-visible{outline:2px solid var(--c-66bb6a,var(--green-bright,#66bb6a));outline-offset:3px}.asj-info-menu{position:absolute;top:calc(100% + 8px);left:0;z-index:2000;min-width:180px;max-width:calc(100vw - 24px);display:flex;flex-direction:column;background:var(--c-161616,var(--surface,#161616));border:1px solid var(--c-2c2c2c,var(--rule,#2c2c2c));border-radius:4px;box-shadow:0 12px 32px rgba(0,0,0,.55);padding:6px 0;text-align:left}.asj-info-menu a,.asj-info-menu a:visited{display:block;padding:14px 16px;color:var(--c-cfcbc6,var(--text-muted,#cfcbc6));text-decoration:none;border:0;font:700 12px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}.asj-info-menu a:hover,.asj-info-menu a:focus-visible{background:var(--c-1f241f,var(--surface-raised,#1f241f));color:var(--c-66bb6a,var(--green-bright,#66bb6a));outline:none}.asj-info--right{margin-left:auto;padding-left:10px}.asj-info--right .asj-info-menu{left:auto;right:0}";
   if (!document.getElementById('asj-info-style')) { var ms = document.createElement('style'); ms.id = 'asj-info-style'; ms.textContent = MENU_CSS; (document.head || document.documentElement).appendChild(ms); }
   var cache = {}, back = null, lastFocus = null, openSlug = '';
 
@@ -182,7 +182,7 @@
     if (!document.getElementById('asj-theme-style')) {
       var st = document.createElement('style');
       st.id = 'asj-theme-style';
-      st.textContent = '.asj-info-menu .asj-theme{display:block;width:100%;padding:10px 16px;margin:4px 0 0;border:0;border-top:1px solid var(--c-2c2c2c,var(--rule,#2c2c2c));background:none;color:var(--c-cfcbc6,var(--text-muted,#cfcbc6));text-align:left;cursor:pointer;font:700 11px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}' +
+      st.textContent = '.asj-info-menu .asj-theme{display:block;width:100%;padding:14px 16px;margin:4px 0 0;border:0;border-top:1px solid var(--c-2c2c2c,var(--rule,#2c2c2c));background:none;color:var(--c-cfcbc6,var(--text-muted,#cfcbc6));text-align:left;cursor:pointer;font:700 12px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}' +
         '.asj-info-menu .asj-theme:hover,.asj-info-menu .asj-theme:focus-visible{background:var(--c-1f241f,var(--surface-raised,#1f241f));color:var(--c-66bb6a,var(--green-bright,#66bb6a));outline:none}';
       (document.head || document.documentElement).appendChild(st);
     }
@@ -199,5 +199,74 @@
       menu.appendChild(b);
     });
   }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
+}());
+
+/* report-v1: the site has no server to send errors to, so it keeps the last few script
+   errors on the reader's own device (localStorage asj:errors, never sent anywhere by
+   itself) and adds "Report a problem" to every About menu. That opens the reader's mail
+   app with the page address, the site version, the browser and those errors filled in;
+   the reader sees everything before choosing to send it. */
+(function () {
+  'use strict';
+  var KEY = 'asj:errors';
+  var MAX = 8;
+  function read() { try { return JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch (e) { return []; } }
+  function note(message, where) {
+    message = String(message || '').slice(0, 200);
+    if (!message) return;
+    try {
+      var list = read();
+      var last = list[list.length - 1];
+      if (last && last.m === message) { last.n = (last.n || 1) + 1; last.t = new Date().toISOString(); }
+      else list.push({ t: new Date().toISOString(), m: message, w: String(where || '').slice(0, 120), p: location.pathname + location.search.slice(0, 60) });
+      localStorage.setItem(KEY, JSON.stringify(list.slice(-MAX)));
+    } catch (e) {}
+  }
+  window.addEventListener('error', function (e) {
+    if (!e || !e.message) return;
+    note(e.message, (e.filename || '').replace(location.origin, '') + ':' + (e.lineno || 0) + ':' + (e.colno || 0));
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var r = e && e.reason;
+    note('Unhandled: ' + (r && (r.message || r.name) || String(r)), r && r.stack ? String(r.stack).split('\n')[1] : '');
+  });
+  function version() {
+    if (window.ASJ_ASSET_VERSION) return 'v' + window.ASJ_ASSET_VERSION;
+    var s = document.querySelector('script[src*="info-panel.js"]');
+    var m = s && /[?&]v=([\w.]+)/.exec(s.getAttribute('src') || '');
+    return m ? 'info-panel v' + m[1] : 'unknown';
+  }
+  function body() {
+    var theme = document.documentElement.getAttribute('data-theme') || '';
+    var lines = [
+      'What went wrong (what you did, what you expected, what happened):',
+      '', '', '',
+      '--- Filled in by the site; delete anything you would rather not send ---',
+      'Page: ' + location.href.split('#')[0].slice(0, 200) + (location.hash ? location.hash.slice(0, 40) : ''),
+      'Version: ' + version(),
+      'Screen: ' + window.innerWidth + 'x' + window.innerHeight + ' @' + (window.devicePixelRatio || 1) + ', ' + theme + ' theme',
+      'Browser: ' + navigator.userAgent.slice(0, 180),
+      'Time: ' + new Date().toISOString()
+    ];
+    var errs = read();
+    lines.push(errs.length ? 'Recent errors on this device:' : 'Recent errors on this device: none');
+    errs.slice(-5).forEach(function (x) { lines.push('- ' + x.t.slice(0, 16) + ' ' + x.m + (x.n > 1 ? ' (x' + x.n + ')' : '') + (x.w ? ' @ ' + x.w : '') + ' on ' + x.p); });
+    return lines.join('\n');
+  }
+  function add() {
+    Array.prototype.forEach.call(document.querySelectorAll('.asj-info-menu'), function (menu) {
+      if (menu.querySelector('.asj-report')) return;
+      var a = document.createElement('a');
+      a.className = 'asj-report';
+      a.href = 'mailto:hello@africanstreetjournal.com';
+      a.textContent = 'Report a problem';
+      a.addEventListener('click', function () {
+        a.href = 'mailto:hello@africanstreetjournal.com?subject=' + encodeURIComponent('Problem on the site (' + version() + ')') + '&body=' + encodeURIComponent(body());
+      });
+      menu.insertBefore(a, menu.querySelector('.asj-theme'));
+    });
+  }
+  window.ASJ_ERRORS = { list: read, clear: function () { try { localStorage.removeItem(KEY); } catch (e) {} } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
 }());

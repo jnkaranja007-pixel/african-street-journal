@@ -193,7 +193,7 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 .page code{font:14px/1.4 ui-monospace,Consolas,monospace;color:var(--c-e8e6e3);word-break:break-all}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=68" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=69" defer></script>'
 # The paper's social accounts (data/social-config.js): a Follow line in every footer
 # once a handle is set, and sameAs on the publisher so search engines tie them to it.
 $socialTelegram = ''; $socialBluesky = ''
@@ -977,6 +977,7 @@ $trustPages = [ordered]@{
 <p>The site is served by GitHub Pages, and its domain name is handled by Cloudflare. Like any web host, they may keep short-lived server logs (such as IP addresses) for security and reliability. Typefaces are loaded from Google Fonts, which receives your IP address when it serves them. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>.</p>
 <h2>Offline reading</h2>
 <p>The site stores a copy of its own pages in your browser so it can open quickly and work offline. That copy stays on your device and is never sent to us.</p>
+<p>If a page hits a script error, the site notes the last few on your device too, so that "Report a problem" in the About menu can include them. They are only sent if you choose to send that email, and you can delete any of it before you do.</p>
 <p>Choices you make on the site, such as the countries you follow and a light or dark theme, are kept in your browser's local storage on this device. They are never sent to us.</p>
 <h2>Email</h2>
 <p>If you email us, we use your message and address only to reply. We do not run a mailing list at the moment.</p>

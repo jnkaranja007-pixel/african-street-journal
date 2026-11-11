@@ -119,7 +119,15 @@ function storyLensRank(story, lens = activeStoryLens, sourceIndex = 0) {
     ? Math.max(0, Math.min(100, rawEditorial * 4))
     : Math.max(20, 45 - sourceIndex * 6);
   const mode = normalizeStoryLens(lens);
-  if (mode === 'general') return editorial;
+  // The desk's front-page editor reads every country's top two side by side and orders
+  // the continent's front page (write-briefs.ps1 Invoke-FrontRanking). For general
+  // readers those stories lead, in that order, on the edition day they were picked;
+  // above any score (scores top out at 100). Lenses keep their own ranking.
+  if (mode === 'general') {
+    const front = Number(story?.frontRank);
+    if (front > 0 && story.frontRankOn && story.frontRankOn === latestBriefDate()) return 200 - front;
+    return editorial;
+  }
   return editorial * 0.60 + storyLensData(story, mode).score * 0.30 + storyFreshnessScore(story) * 0.10;
 }
 
@@ -783,7 +791,7 @@ setInterval(() => {
 const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('tooltip');
-const FRONT_GREEN = getComputedStyle(document.documentElement).getPropertyValue('--front-green').trim() || '#439447';
+const FRONT_GREEN = getComputedStyle(document.documentElement).getPropertyValue('--map-green').trim() || '#439447';
 
 // Line widths are set for the screen's pixel ratio (HAIR); the backing store's own
 // resolution, dpr, is cut to the map's size on screen once it is laid out
@@ -2658,6 +2666,39 @@ function updateReaderContinuation() {
   document.getElementById('story-reader-next-kicker').textContent =
     (next.unread ? 'Next unread' : 'Next story') + (country ? ' · ' + country : '');
   document.getElementById('story-reader-next-title').textContent = next.record.story.headline;
+  renderReaderMore(activeReaderNextKey);
+}
+
+// Under the next story, up to three more from the same country, unread first, so a reader
+// who finishes one story has somewhere to go besides the single next link.
+let readerMoreRows = [];
+function renderReaderMore(nextKey) {
+  const list = document.getElementById('story-reader-more');
+  if (!list) return;
+  const cc = activeReaderRecord?.context?.countryCode;
+  const currentKey = storyRecordKey(activeReaderRecord);
+  readerMoreRows = !cc ? [] : globalReaderQueue()
+    .filter(row => row.context.countryCode === cc)
+    .filter(row => { const k = storyRecordKey(row); return k && k !== currentKey && k !== nextKey; })
+    .sort((a, b) => (isStoryReadKey(storyRecordKey(a)) ? 1 : 0) - (isStoryReadKey(storyRecordKey(b)) ? 1 : 0) || a.rank - b.rank)
+    .slice(0, 3);
+  list.hidden = !readerMoreRows.length;
+  if (!readerMoreRows.length) { list.replaceChildren(); return; }
+  const head = document.createElement('p');
+  head.className = 'story-reader-more-head';
+  head.textContent = 'More from ' + (readerMoreRows[0].context.country || '');
+  const ul = document.createElement('ul');
+  readerMoreRows.forEach((row, i) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.dataset.moreIndex = String(i);
+    b.textContent = row.story.headline;
+    if (isStoryReadKey(storyRecordKey(row))) b.classList.add('is-read');
+    li.appendChild(b);
+    ul.appendChild(li);
+  });
+  list.replaceChildren(head, ul);
 }
 
 function openRegisteredStory(key, sourceElement = document.activeElement) {
@@ -2854,6 +2895,31 @@ window.addEventListener('popstate', () => {
     const found = findPublishedStory(stillAStory);
     if (found) openStoryReader(found.story, found.context, document.body);
   }
+});
+// Phones: the Wire's title, search, pickers and summary took a third of the screen
+// before the first headline. Scrolling down folds the pickers and summary away; any
+// scroll back up, or reaching the top, brings them back.
+(function wireCompactOnScroll() {
+  const view = document.getElementById('wire-view');
+  const results = document.getElementById('wire-results');
+  if (!view || !results) return;
+  const phone = window.matchMedia('(max-width: 767px)');
+  let last = 0;
+  results.addEventListener('scroll', () => {
+    const top = results.scrollTop;
+    const delta = top - last;
+    if (!phone.matches || top < 24) { view.classList.remove('wire-compact'); last = top; return; }
+    if (Math.abs(delta) < 10) return;
+    const busy = view.querySelector('.wire-controls :focus, #wire-mobile-actions-toggle[aria-expanded="true"], #wire-compare-toggle[aria-expanded="true"]');
+    if (delta > 0 && top > 90 && !busy) view.classList.add('wire-compact');
+    else if (delta < 0) view.classList.remove('wire-compact');
+    last = top;
+  }, { passive:true });
+})();
+document.getElementById('story-reader-more')?.addEventListener('click', event => {
+  const b = event.target.closest('[data-more-index]');
+  const row = b && readerMoreRows[Number(b.dataset.moreIndex)];
+  if (row) openStoryReader(row.story, row.context, storyReaderLastFocus, { continueQueue:true });
 });
 document.getElementById('story-reader-next')?.addEventListener('click', () => {
   const record = activeReaderQueue.find(item => storyRecordKey(item) === activeReaderNextKey);
@@ -5165,7 +5231,7 @@ function squarifyTreemap(items, W, H) {
 function heatColor(ch) {
   const t = Math.max(-1, Math.min(1, ch / 3));
   if (Math.abs(ch) < 0.06) return 'rgb(40,46,42)';
-  if (t >= 0) return 'rgb(' + Math.round(26 + 6 * t) + ',' + Math.round(60 + 110 * t) + ',' + Math.round(40 + 24 * t) + ')';
+  if (t >= 0) return 'rgb(' + Math.round(26 + 6 * t) + ',' + Math.round(60 + 58 * t) + ',' + Math.round(40 + 24 * t) + ')';
   const a = -t;
   return 'rgb(' + Math.round(70 + 130 * a) + ',' + Math.round(40 - 14 * a) + ',' + Math.round(40 - 14 * a) + ')';
 }
@@ -5201,7 +5267,7 @@ function renderIndexLine(countryId) {
     '<span class="cv-index-name">' + escapeHtml(r.name) + '</span> ' +
     '<b class="cv-index-level">' + escapeHtml(r.level.toLocaleString('en-US', { maximumFractionDigits: 2 })) + '</b> ' +
     (pct == null ? '<span class="cv-index-chg">flat / n.a.</span>' : '<span class="cv-index-chg' + cls + '">' + (pct > 0 ? '+' : '') + pct.toFixed(2) + '%</span>') +
-    '<span class="cv-index-asof">' + (stale ? 'Stale · ' : '') + 'as of ' + escapeHtml(formatMarketDate(r.date)) + ' · ' + escapeHtml(window.ASJ_INDICES.source || '') + '</span>' +
+    '<span class="cv-index-asof">' + (stale ? 'Stale · ' : '') + 'as of ' + escapeHtml(formatMarketDate(r.date)) + ' · ' + escapeHtml(r.source || window.ASJ_INDICES.source || '') + '</span>' +
   '</div>';
 }
 // A ticker wider than its tile was cut to "STANDA..." or "NPFMCR..." (the Signals panel
@@ -6794,6 +6860,14 @@ function countCountryDay(countryId) {
   if (rec.d !== TODAY_ISO) { rec.n = (Number(rec.n) || 0) + 1; rec.d = TODAY_ISO; all[countryId] = rec; writeStore(COUNTRY_DAYS_KEY, all); }
   return rec.n;
 }
+// Following lives on this device only (there is no account to sign in to). A country's
+// RSS feed (built by the desk at /<code>/feed.xml) is the one way to take it anywhere
+// else today: a feed reader, a phone's news app, an email-by-feed service.
+function countryFeedLink(countryId) {
+  const name = COUNTRY_INFO[countryId]?.name || '';
+  if (!name || !/^[a-z]{2}$/.test(countryId)) return '';
+  return '<a href="/' + countryId + '/feed.xml" type="application/rss+xml">' + escapeHtml(name) + ' feed (RSS)</a>';
+}
 function renderFollowNudge(countryId) {
   const el = document.getElementById('cv-follow');
   if (!el) return;
@@ -6808,14 +6882,16 @@ function renderFollowNudge(countryId) {
   el.innerHTML = '<p class="cv-follow-copy"><b>Back for ' + escapeHtml(name) + '?</b> Follow it, and its new stories wait for you at the top of the front page on this device.</p>' +
     '<div class="cv-follow-actions"><button type="button" class="cv-follow-go" data-follow>Follow ' + escapeHtml(name) + '</button>' +
     (/^[A-Za-z0-9_]{5,32}$/.test(tg) ? '<a href="https://t.me/' + tg + '" target="_blank" rel="noopener">Get the paper on Telegram</a>' : '') +
+    countryFeedLink(countryId) +
     '<button type="button" class="cv-follow-later" data-later>Not now</button></div>';
   el.hidden = false;
   el.onclick = e => {
     if (e.target.closest('[data-follow]')) {
       if (!getWatchlist().includes(countryId)) document.getElementById('cv-star')?.click();
-      el.innerHTML = '<p class="cv-follow-copy"><b>Following ' + escapeHtml(name) + '.</b> Its new stories are at the top of the front page now.</p>';
+      el.innerHTML = '<p class="cv-follow-copy"><b>Following ' + escapeHtml(name) + '.</b> Its new stories are at the top of the front page now, on this device. ' +
+        'To get them anywhere else, add its feed to a news reader.</p><div class="cv-follow-actions">' + countryFeedLink(countryId) + '</div>';
       el.hidden = false;
-      setTimeout(() => { if (activeCountryMap?.countryId === countryId) el.hidden = true; }, 4000);
+      setTimeout(() => { if (activeCountryMap?.countryId === countryId) el.hidden = true; }, 9000);
     } else if (e.target.closest('[data-later]')) {
       dismissPrompt('follow-' + countryId);
       el.hidden = true;
