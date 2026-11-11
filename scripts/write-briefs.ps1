@@ -97,6 +97,8 @@ param(
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
+  # Skips the side-by-side ranking call (Invoke-CountryRanking); the column keeps its score order.
+  [switch]$NoCountryRanking,
   [switch]$JsonMode,
   [switch]$Merge
 )
@@ -407,6 +409,35 @@ function Get-CopiedRuns([string[]]$Paragraphs, [string]$EvidenceText, [int]$Word
   return @($runs)
 }
 
+# Which copied runs a rewrite should be asked to fix. A 12-word match is mostly names,
+# titles and lists the fact check makes the writer keep exactly ("Martin's Drift Border
+# Gate, Palapye, the Mamuno Border Gate, Kasane..."), and on 11 Nov 2026 those flagged
+# 64 of 239 stories that no rewrite could pass. A run counts only when it carries at
+# least five ordinary words (lower case, not a function word), and the story is sent
+# back only when the copying is substantial: one such run of 20 words or more, or such
+# runs adding up to 15% of the story. That still caught every story that was 40-64%
+# source text.
+function Get-SubstantialCopies([string[]]$Paragraphs, [string]$EvidenceText, [int]$MinOrdinary = 5, [int]$LongRun = 20, [double]$MaxShare = 0.15) {
+  $functionWords = New-Object "System.Collections.Generic.HashSet[string]" (,[string[]]('the of and a an in on at to for by with from as is was were be been has had have that which who whom its his her their this these those it or but said says into over after before than also not no will would'.Split(" ")))
+  $runs = @(Get-CopiedRuns $Paragraphs $EvidenceText)
+  if (-not $runs.Count) { return @() }
+  $storyWords = [regex]::Matches((@($Paragraphs) -join ' '), '[\p{L}\p{N}]+').Count
+  $counted = New-Object System.Collections.Generic.List[string]
+  $copiedWords = 0
+  $longest = 0
+  foreach ($r in $runs) {
+    $tokens = @([regex]::Matches([string]$r, '[\p{L}\p{N}]+') | ForEach-Object { $_.Value })
+    $ordinary = @($tokens | Where-Object { $_ -cmatch '^\p{Ll}' -and $_.Length -gt 1 -and -not $functionWords.Contains($_) }).Count
+    if ($ordinary -lt $MinOrdinary) { continue }
+    $counted.Add([string]$r)
+    $copiedWords += $tokens.Count
+    if ($tokens.Count -gt $longest) { $longest = $tokens.Count }
+  }
+  if (-not $counted.Count) { return @() }
+  if ($longest -ge $LongRun -or ($storyWords -gt 0 -and ($copiedWords / [double]$storyWords) -ge $MaxShare)) { return $counted.ToArray() }
+  return @()
+}
+
 function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $paragraphs = @($Brief.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
   $prose = (@([string]$Brief.headline, [string]$Brief.dek) + $paragraphs + @([string]$Brief.why)) -join "`n"
@@ -416,7 +447,7 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $restatedWhy = Test-WhyRestatesDek $Brief
   $lowerProse = Test-LowerCaseProse $Brief
   $relativeTime = @(Get-RelativeTimeWords $prose)
-  $copied = @(Get-CopiedRuns $paragraphs $EvidenceText)
+  $copied = @(Get-SubstantialCopies $paragraphs $EvidenceText)
   $issues = New-Object System.Collections.Generic.List[string]
   if ($lowerProse) { $issues.Add('prose in lower case') }
   if ($phrases.Count) { $issues.Add('stock phrasing: ' + (($phrases | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
@@ -450,8 +481,11 @@ function Get-StyleRepairNote($Style, $Candidate) {
   if (@($Style.RelativeTime).Count) {
     [void]$lines.Add('- It counts days from today: ' + ((@($Style.RelativeTime) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '. The story is read for weeks, so give the weekday or date the packet itself states, or leave the time out. Do not work out a date the packet does not give.')
   }
-  foreach ($c in @($Style.Copied | Select-Object -First 2)) {
-    [void]$lines.Add('- This passage is the source''s own wording: "' + $c + '" Say it in your own words, keeping every name, figure and date exactly.')
+  if (@($Style.Copied).Count) {
+    foreach ($c in @($Style.Copied | Select-Object -First 3)) {
+      [void]$lines.Add('- This passage is the source''s own wording: "' + $c + '"')
+    }
+    [void]$lines.Add('  Rebuild those sentences, do not swap words: start each from a different element (the figure, the place, the people affected), use a different main verb, and split or join sentences. Names, titles, figures and dates stay exactly as they are; only the sentence around them changes. Leave out detail the reader does not need.')
   }
   [void]$lines.Add('Return the corrected story as the same JSON object. Keep the item number and every name, figure and date exactly as in the previous draft, and add nothing that is not in the packet. A shorter story is fine.')
   [void]$lines.Add('')
@@ -1258,6 +1292,82 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
   throw $last
 }
 
+# --- the country's order -------------------------------------------------------------
+# Each story is written in its own call, so its reach (1-5) is judged alone, and alone
+# nearly everything is a 3: on 11 Nov 2026, 181 of 239 stories. Once a country's stories
+# are written, one short call reads them side by side and puts them in order, so one of
+# them has to lead. The rewrite model (Haiku) takes it when it is set up; otherwise the
+# writer's model. Any failure keeps the order the scores gave: this never costs a story.
+$script:rankCalls = 0
+$script:rankFailures = 0
+$script:rankReordered = 0
+function Invoke-CountryRanking([string]$CountryName, $Stories) {
+  $n = @($Stories).Count
+  if ($n -lt 2) { return $null }
+  $route = $null
+  if ($script:rewriteRoute -and -not $script:rewriteRoute.dead) { $route = $script:rewriteRoute }
+  else { $route = @($script:routes | Where-Object { -not $_.dead }) | Select-Object -First 1 }
+  if (-not $route) { return $null }
+  $lines = New-Object System.Collections.Generic.List[string]
+  for ($k = 0; $k -lt $n; $k++) {
+    $s = $Stories[$k]
+    $outlets = @($s['sources']).Count
+    $lines.Add(('[{0}] {1} - {2} (reported by {3} outlet{4})' -f $k, [string]$s['headline'], [string]$s['dek'], $outlets, $(if ($outlets -eq 1) { '' } else { 's' })))
+  }
+  $prompt = @"
+RANK THE STORIES. These are today's $n stories from $CountryName on The African Street Journal.
+Put them in order for the top of the country's page: first the event that changes the most
+for the most people in $CountryName (money in their pockets, prices, safety, health, rights,
+jobs, who governs them), last the one that changes least. Ceremonies, visits, meetings,
+launches of plans and prize-givings come below decisions, figures and events that already
+affect people. When two stories matter about as much, put the one more outlets reported first.
+
+$($lines.ToArray() -join "`n")
+
+Return ONLY a JSON object: {"order":[<the story numbers, most important first>]}
+"@
+  $body = [ordered]@{
+    model = $route.model
+    messages = @(
+      @{ role = 'system'; content = 'You are the front-page editor of a pan-African news site. You answer with JSON only.' },
+      @{ role = 'user'; content = $prompt }
+    )
+    max_tokens = 200
+    response_format = @{ type = 'json_object' }
+  }
+  if ($route -eq $script:rewriteRoute) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
+  if ($route.provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
+  $headers = @{ 'Authorization' = "Bearer $($route.key)"; 'Content-Type' = 'application/json'; 'HTTP-Referer' = 'https://africanstreetjournal.com'; 'X-Title' = 'The African Street Journal' }
+  if ($route.provider -eq 'gemini') { $headers.Remove('HTTP-Referer'); $headers.Remove('X-Title'); $headers['x-goog-api-key'] = $route.key }
+  try {
+    $script:rankCalls++
+    $resp = Invoke-WebRequest -Uri $route.url -Method Post -Headers $headers -Body ([Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Depth 8 -Compress))) -TimeoutSec 60 -UseBasicParsing -ErrorAction Stop
+    $obj = [Text.Encoding]::UTF8.GetString($resp.RawContentStream.ToArray()) | ConvertFrom-Json
+    if ($obj.usage) {
+      $script:usagePrompt += [int]$obj.usage.prompt_tokens
+      $script:usageCompletion += [int]$obj.usage.completion_tokens
+      $script:usageTotal += [int]$obj.usage.total_tokens
+      if ($obj.usage.cost) { $script:usageCost += [double]$obj.usage.cost }
+    }
+    $text = [string]@($obj.choices)[0].message.content
+    $m = [regex]::Match($text, '\{[\s\S]*\}')
+    if (-not $m.Success) { throw 'no JSON in the answer' }
+    $order = New-Object System.Collections.Generic.List[int]
+    foreach ($v in @(($m.Value | ConvertFrom-Json).order)) {
+      $idx = -1
+      if ([int]::TryParse([string]$v, [ref]$idx) -and $idx -ge 0 -and $idx -lt $n -and -not $order.Contains($idx)) { $order.Add($idx) }
+    }
+    # A story the answer left out keeps its place after the ones it ranked.
+    for ($k = 0; $k -lt $n; $k++) { if (-not $order.Contains($k)) { $order.Add($k) } }
+    return $order.ToArray()
+  } catch {
+    $script:rankFailures++
+    Write-Host ("      [rank] {0}: kept the score order ({1})" -f $CountryName, $_.Exception.Message.Split("`n")[0]) -ForegroundColor DarkYellow
+    return $null
+  }
+}
+
+
 function Get-EvidencePacket($Item, [int]$Index) {
   $lines = New-Object System.Text.StringBuilder
   [void]$lines.AppendLine("[$Index] ASSIGNED - $($Item.title)")
@@ -1379,6 +1489,10 @@ $reserveCandidatesUsed = 0
 $styleRepairs = 0
 $styleFixed = 0
 $styleAccepted = 0
+# Per problem: how many drafts were sent back for it, and how many came back without it.
+$styleAskedByProblem = [ordered]@{}
+$styleFixedByProblem = [ordered]@{}
+function Get-StyleProblemKinds($Issues) { return @(@($Issues) | ForEach-Object { ([string]$_ -split ":")[0].Trim() } | Select-Object -Unique) }
 $offCountryDropped = 0
 $lensCapped = 0
 $caseRepaired = 0
@@ -1389,8 +1503,10 @@ $keptStillCopying = 0
 $keptWhyRestating = 0
 $keptWhyGuessing = 0
 # What a story kept with style notes still carries (the metrics above).
-function Add-KeptStyleCounts($Brief, $Item) {
+function Add-KeptStyleCounts($Brief, $Item, $AskedKinds) {
   $kept = Get-DraftStyleIssues $Brief (Get-ItemEvidenceText $Item)
+  $left = Get-StyleProblemKinds $kept.Issues
+  foreach ($k in @($AskedKinds)) { if ($left -notcontains $k) { $script:styleFixedByProblem[$k] = 1 + [int]$script:styleFixedByProblem[$k] } }
   if (@($kept.Copied).Count) { $script:keptStillCopying++ }
   if ($kept.RestatedWhy) { $script:keptWhyRestating++ }
   if ($kept.SpeculativeWhy) { $script:keptWhyGuessing++ }
@@ -1499,6 +1615,7 @@ number, date, cause or context from any other event. Return ONLY a JSON object i
     $styleBest = $null
     $styleBestCount = 0
     $styleRepairsThisItem = 0
+    $itemStyleKinds = @()
     $offCountryItem = $false
     for ($attempt = 1; $attempt -le ($Retries + 1); $attempt++) {
       try {
@@ -1620,17 +1737,19 @@ weekday, write that instead of a month. Do not add facts while repairing.
           if ($styleRepairsThisItem -lt 1 -and $attempt -le $Retries) {
             $styleRepairsThisItem++
             $styleRepairs++
+            $itemStyleKinds = Get-StyleProblemKinds $draftStyle.Issues
+            foreach ($k in $itemStyleKinds) { $styleAskedByProblem[$k] = 1 + [int]$styleAskedByProblem[$k] }
             $lastErr = "item $i style: " + (@($draftStyle.Issues) -join '; ')
             $repairNote = Get-StyleRepairNote $draftStyle $candidate
             continue
           }
           $oneBrief = $styleBest
           $styleAccepted++
-          Add-KeptStyleCounts $oneBrief $it
+          Add-KeptStyleCounts $oneBrief $it $itemStyleKinds
           Write-Host ("      {0}#{1}: kept with style notes after one rewrite: {2}" -f $code, $i, (@($draftStyle.Issues) -join '; ')) -ForegroundColor DarkGray
           break
         }
-        if ($styleRepairsThisItem) { $styleFixed++ }
+        if ($styleRepairsThisItem) { $styleFixed++; foreach ($k in $itemStyleKinds) { $styleFixedByProblem[$k] = 1 + [int]$styleFixedByProblem[$k] } }
         $oneBrief = $candidate
         break
       } catch {
@@ -1658,7 +1777,7 @@ weekday, write that instead of a month. Do not add facts while repairing.
     if (-not $oneBrief -and $styleBest -and -not $offCountryItem) {
       $oneBrief = $styleBest
       $styleAccepted++
-      Add-KeptStyleCounts $oneBrief $it
+      Add-KeptStyleCounts $oneBrief $it $itemStyleKinds
       Write-Host ("      {0}#{1}: kept the fact-checked draft; its style rewrite failed ({2})" -f $code, $i, $lastErr) -ForegroundColor DarkGray
     }
     }
@@ -1893,7 +2012,28 @@ weekday, write that instead of a month. Do not add facts while repairing.
   # Ties keep the assignment order.
   $cleanRanked = New-Object System.Collections.Generic.List[object]
   for ($ci = 0; $ci -lt $clean.Count; $ci++) { $cleanRanked.Add([pscustomobject]@{ i = $ci; score = [double]$clean[$ci]['selectionScore'] }) }
-  foreach ($cr in ($cleanRanked.ToArray() | Sort-Object -Property @{ Expression = { $_.score }; Descending = $true }, @{ Expression = { $_.i } })) { $cleanSorted.Add($clean[$cr.i]) }
+  $scoreOrder = @($cleanRanked.ToArray() | Sort-Object -Property @{ Expression = { $_.score }; Descending = $true }, @{ Expression = { $_.i } } | ForEach-Object { $_.i })
+  # The editor's order, read side by side (Invoke-CountryRanking). The column keeps its
+  # own scores but hands them out in that order - the highest to the story ranked first -
+  # so the country's lead still competes for the front page on the score its column
+  # earned, and nothing ranked lower can outscore it.
+  $rankOrder = if ($NoCountryRanking) { $null } else { Invoke-CountryRanking $name $clean.ToArray() }
+  if ($rankOrder) {
+    $scoresDesc = @($cleanRanked.ToArray() | ForEach-Object { $_.score } | Sort-Object -Descending)
+    $prevScore = $null
+    for ($p = 0; $p -lt $rankOrder.Count; $p++) {
+      $newScore = [double]$scoresDesc[$p]
+      if ($null -ne $prevScore -and $newScore -ge $prevScore) { $newScore = $prevScore - 0.01 }
+      $newScore = [Math]::Round([Math]::Max(0.0, $newScore), 2)
+      $clean[$rankOrder[$p]]['selectionScore'] = $newScore
+      $clean[$rankOrder[$p]]['countryRank'] = $p + 1
+      $prevScore = $newScore
+      $cleanSorted.Add($clean[$rankOrder[$p]])
+    }
+    if ((@($rankOrder) -join ',') -ne ($scoreOrder -join ',')) { $script:rankReordered++ }
+  } else {
+    foreach ($ci in $scoreOrder) { $cleanSorted.Add($clean[$ci]) }
+  }
   $result[[string]$code] = $cleanSorted.ToArray()
   $stories += $clean.Count
   Write-Host ("  {0}  {1,-30} {2} on-site stories" -f $code, $name, $clean.Count) -ForegroundColor Green
@@ -1919,6 +2059,8 @@ $metrics = [ordered]@{
   styleRewrites = $styleRepairs
   styleFixedByRewrite = $styleFixed
   styleKeptWithNotes = $styleAccepted
+  # "problem": "fixed/asked", e.g. "copies the source word for word": "9/21".
+  styleRewritesByProblem = $($o = [ordered]@{}; foreach ($k in $styleAskedByProblem.Keys) { $o[$k] = ("{0}/{1}" -f [int]$styleFixedByProblem[$k], $styleAskedByProblem[$k]) }; $o)
   # What the kept-with-notes stories still carry, so a change of rewrite model can be
   # judged on the published copy, not only on how many rewrites "passed".
   keptStillCopying = $keptStillCopying
@@ -1937,6 +2079,9 @@ $metrics = [ordered]@{
   countriesWritten = $result.Count
   storiesWritten = $stories
   apiCalls = $apiCalls
+  countriesRanked = $script:rankCalls - $script:rankFailures
+  countryRankFailures = $script:rankFailures
+  countriesReorderedByRanking = $script:rankReordered
   cacheHits = $cacheHits
   promptTokens = $usagePrompt
   completionTokens = $usageCompletion

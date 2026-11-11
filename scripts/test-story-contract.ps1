@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','ConvertTo-NumberKey','Get-NumberReadings','Get-RelativeTimeWords','Get-CopiedRuns','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote')) {
+foreach ($functionName in @('Convert-NumberScanText','ConvertTo-NumberKey','Get-NumberReadings','Get-RelativeTimeWords','Get-CopiedRuns','Get-SubstantialCopies','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -289,6 +289,19 @@ try {
   if (@(Get-CopiedRuns @('Kenya''s central bank kept its main rate at 9.5 percent on Tuesday as inflation eased.') $source).Count) { throw 'a paraphrase was reported as copied' }
   if (@(Get-CopiedRuns @('The governor said "the Central Bank of Kenya held its benchmark lending rate at 9.5 percent" on Tuesday.') $source).Count) { throw 'a quotation was reported as copied' }
   Write-Host 'PASS a copied run of twelve words is found whole; paraphrase and quotation are not'
+
+  # 11 Nov 2026: a list of border posts the fact check makes the writer keep was sent back
+  # as "copying" and no rewrite could pass. Names and lists do not count; copied prose does.
+  $posts = 'Officers seized 2.8 tonnes of illegal medicines at Martin''s Drift Border Gate, Palapye, the Mamuno Border Gate, Kasane, Kazungula and Pandamatenga last month, the ministry said.'
+  $listStory = @('Botswana seized 2.8 tonnes of unregistered medicine in October.', 'The goods were stopped at Martin''s Drift Border Gate, Palapye, the Mamuno Border Gate, Kasane, Kazungula and Pandamatenga.', 'The ministry said the medicine was worth more than P500,000 and will be destroyed.')
+  if (@(Get-CopiedRuns $listStory $posts).Count -lt 1) { throw 'the test list was not even a 12-word match' }
+  if (@(Get-SubstantialCopies $listStory $posts).Count) { throw 'a list of names kept exactly was sent back as copying' }
+  $prose = 'Farmers in the region have been forced to sell their maize at a loss because traders arrived late and storage facilities remained closed for most of the harvest season, leaving many households without income.'
+  $copyStory = @('Kenyan farmers are losing money on this year''s crop.', 'Farmers in the region have been forced to sell their maize at a loss because traders arrived late and storage facilities remained closed for most of the harvest season.', 'The county plans new stores next year.')
+  if (@(Get-SubstantialCopies $copyStory $prose).Count -ne 1) { throw 'a long copied passage of ordinary prose was not sent back' }
+  $copyStyle = Get-DraftStyleIssues ([pscustomobject]@{ item = 0; headline = 'Kenyan farmers sell maize at a loss'; dek = 'Late traders and closed stores cut prices this harvest.'; paragraphs = $copyStory; why = 'Households that rely on the maize harvest lose their main income for the season.' }) $prose
+  if (@($copyStyle.Copied).Count -ne 1 -or (Get-StyleRepairNote $copyStyle ([pscustomobject]@{ item = 0 })) -notmatch 'Rebuild those sentences, do not swap words') { throw 'copied prose did not get the restructure note' }
+  Write-Host 'PASS names and lists kept exactly are not copying; a long copied passage is sent back to be rebuilt'
 
 
   $longDek = ('The transport authority changed the passenger reporting window after publishing a detailed operational notice for every ticket holder. ' * 2).Trim()

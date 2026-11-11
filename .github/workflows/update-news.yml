@@ -306,8 +306,9 @@ jobs:
             @('Stories written', $m.storiesWritten),
             @('Countries written', $m.countriesWritten),
             @('Style rewrites asked', $m.styleRewrites),
-            @('Fixed by the rewrite', $m.styleFixed),
+            @('Fixed by the rewrite', $m.styleFixedByRewrite),
             @('Kept with notes', $m.styleKeptWithNotes),
+            @('Fixed / asked, by problem', $(if ($m.styleRewritesByProblem) { (@($m.styleRewritesByProblem.PSObject.Properties) | ForEach-Object { '{0} {1}' -f $_.Name, $_.Value }) -join '; ' } else { '' })),
             @('Kept, still copying the source', $m.keptStillCopying),
             @('Kept, why line restating', $m.keptWhyRestating),
             @('Kept, why line guessing', $m.keptWhyGuessing),
@@ -320,7 +321,7 @@ jobs:
           $md = @('## Story quality', '', '| | |', '|---|---|') + @($rows | ForEach-Object { '| ' + $_[0] + ' | ' + $_[1] + ' |' })
           $md -join "`n" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           $asked = [int]$m.styleRewrites
-          $fixed = [int]$m.styleFixed
+          $fixed = [int]$m.styleFixedByRewrite
           $problems = New-Object System.Collections.Generic.List[string]
           if ($asked -ge 10 -and ($fixed / [double]$asked) -lt 0.15) { $problems.Add("the style rewrites fixed $fixed of $asked stories") }
           if ([int]$m.rewriteEmptyAnswers -ge 5) { $problems.Add("the rewrite model answered with nothing $($m.rewriteEmptyAnswers) times") }

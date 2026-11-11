@@ -63,6 +63,18 @@ $feedPath = Join-Path $tmp 'feed.json'
 # under test differ.
 $responder = {
   param($PromptText)
+  # The side-by-side ranking call (Invoke-CountryRanking): the stand-in editor orders by
+  # this list, which is not the order the scores give, so the test sees it applied.
+  if ($PromptText -match 'RANK THE STORIES') {
+    $priority = @('Cholera', 'fertiliser', 'ambulances', 'masts', 'berth', 'budget')
+    $found = @()
+    foreach ($rm in [regex]::Matches($PromptText, '(?m)^\[(\d+)\] ([^\r\n]+)')) {
+      $rank = 99
+      for ($q = 0; $q -lt $priority.Count; $q++) { if ($rm.Groups[2].Value -match $priority[$q]) { $rank = $q; break } }
+      $found += [pscustomobject]@{ i = [int]$rm.Groups[1].Value; r = $rank }
+    }
+    return ([ordered]@{ order = @($found | Sort-Object r | ForEach-Object { $_.i }) } | ConvertTo-Json -Compress)
+  }
   $lens = [ordered]@{
     farmers = [ordered]@{ why = 'The report establishes no direct effect on farming or rural livelihoods in Fixtureland.'; score = 5 }
     investors = [ordered]@{ why = 'The report names a public body and a state bank acting on port capacity for shipping companies.'; score = 70 }
@@ -202,6 +214,7 @@ $server = [PowerShell]::Create()
         style = ($prompt -match 'REPAIR: Your previous draft')
         repair = ($prompt -match 'REPAIR:')
         dateRepair = ($prompt -match 'REPAIR: The previous draft named dates')
+        rank = ($prompt -match "RANK THE STORIES")
         reasoningOff = ([bool]$req.PSObject.Properties['reasoning'] -and $req.reasoning.enabled -eq $false)
         maxTokens = [int]$req.max_tokens
       })
@@ -301,6 +314,12 @@ try {
   Assert-Harness 'reach orders the country: the outbreak leads, the council budget comes last, missing reach counts as 3' `
     ($order[0] -eq 'cholera' -and $order[-1] -eq 'budget' -and $sortedDown -and [int]$byId['cholera'].reach -eq 5 -and [int]$byId['port'].reach -eq 3 -and [double]$byId['budget'].selectionScore -lt [double]$byId['port'].selectionScore) `
     ("order {0}; scores {1}" -f ($order -join ','), ($scores -join ','))
+  # 11 Nov 2026: alone, 181 of 239 stories scored reach 3. One side-by-side call orders
+  # the column, and the column's scores follow that order.
+  $rankCalls = @($mainRequests | Where-Object { $_.rank })
+  Assert-Harness 'the editor ranks the country side by side and the column follows that order' `
+    (($order -join ',') -eq 'cholera,fert,amb,tele,port,budget' -and $sortedDown -and $rankCalls.Count -eq 1 -and [int]$metrics.countriesRanked -eq 1 -and [int]$metrics.countriesReorderedByRanking -eq 1 -and [int]$byId['cholera'].countryRank -eq 1) `
+    ("order {0}; rank calls {1}; ranked {2} reordered {3}" -f ($order -join ','), $rankCalls.Count, $metrics.countriesRanked, $metrics.countriesReorderedByRanking)
   Assert-Harness 'a clean draft costs one call and is published as written' ($byId.ContainsKey('port') -and (& $text $byId['port']) -match '400,000 containers')
   $fert = $byId['fert']
   Assert-Harness 'a style rewrite removes the stock phrases' ($fert -and (& $text $fert) -notmatch 'crucial|underscores|broader strategy')
@@ -324,7 +343,7 @@ try {
 
   Write-Host '[harness] style rewrites go to the rewrite model' -ForegroundColor Cyan
   $styleCalls = @($mainRequests | Where-Object { $_.style })
-  $firstDrafts = @($mainRequests | Where-Object { -not $_.repair })
+  $firstDrafts = @($mainRequests | Where-Object { -not $_.repair -and -not $_.rank })
   $dateCalls = @($mainRequests | Where-Object { $_.dateRepair })
   Assert-Harness 'every style rewrite is sent to the rewrite model' ($styleCalls.Count -eq 3 -and @($styleCalls | Where-Object { $_.model -ne 'stand-in/rewriter' }).Count -eq 0) (($styleCalls | ForEach-Object { $_.model }) -join ', ')
   Assert-Harness 'a rewrite sends no temperature and no schema limits' (@($styleCalls | Where-Object { $_.temperature -or $_.limits }).Count -eq 0)
@@ -336,7 +355,7 @@ try {
   Assert-Harness 'a date repair of a first draft stays on the writer model' ($dateCalls.Count -ge 1 -and @($dateCalls | Where-Object { $_.model -ne 'stand-in/model' }).Count -eq 0)
   # Four: three style rewrites, and the fact repair of the one that invented a figure,
   # which the rewrite model is also asked to fix.
-  Assert-Harness 'metrics name the rewrite model and count its calls' ($metrics.rewriteModel -eq 'stand-in/rewriter' -and $metrics.rewriteCalls -eq 4 -and @($mainRequests | Where-Object { $_.model -eq 'stand-in/rewriter' }).Count -eq 4 -and $metrics.rewriteRouteErrors -eq 0) ("model {0} calls {1} errors {2}" -f $metrics.rewriteModel, $metrics.rewriteCalls, $metrics.rewriteRouteErrors)
+  Assert-Harness 'metrics name the rewrite model and count its calls' ($metrics.rewriteModel -eq 'stand-in/rewriter' -and $metrics.rewriteCalls -eq 4 -and @($mainRequests | Where-Object { $_.model -eq "stand-in/rewriter" -and -not $_.rank }).Count -eq 4 -and $metrics.rewriteRouteErrors -eq 0) ("model {0} calls {1} errors {2}" -f $metrics.rewriteModel, $metrics.rewriteCalls, $metrics.rewriteRouteErrors)
 
   Write-Host '[harness] a rewrite model that refuses the call' -ForegroundColor Cyan
   $script:logPath = $refuseLogPath
