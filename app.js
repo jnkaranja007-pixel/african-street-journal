@@ -1340,6 +1340,7 @@ function fitMapResolution() {
 window.addEventListener('asj:themechange', () => {
   oceanLayer = shadeLayer = baseLayer = assemblySprites = null;
   render(assemblyDone ? 3.5 : 0);
+  if (activeCountryMap) drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath);
 });
 function layoutHomeMap() {
   layoutPhoneMap();
@@ -4144,7 +4145,7 @@ function drawCountryMap(countryId, countryPath) {
   // One Next drew the map five times - the open, two layout-settle passes, the relief
   // preview, the full relief - about 70 ms each at 3x on a phone. A draw whose inputs are
   // all unchanged is skipped (before the canvas is resized, which would clear it).
-  const signature = [countryId, !!detail, isFs, width, height, mapDpr, mobileDossierMedia.matches,
+  const signature = [countryId, !!detail, isFs, width, height, mapDpr, mobileDossierMedia.matches, mapLight(),
     view.k, view.ux, view.uy, JSON.stringify(mapLayers), !!window.ASJ_SAVE_DATA, !!RELIEF.index,
     reliefReady(RELIEF.images.get(countryId)), reliefReady(RELIEF.images.get(countryId + '-s')),
     reliefReady(RELIEF.images.get(countryId + '-focus')), !!COUNTRY_GIS[countryId],
@@ -4510,9 +4511,10 @@ function mapViewBounds(countryId, bounds, useIslandFocus) {
 
 function fillMapBackdrop(width, height) {
   const bg = countryMapCtx.createLinearGradient(0, 0, width, height);
-  bg.addColorStop(0, '#171a17');
-  bg.addColorStop(0.56, '#101210');
-  bg.addColorStop(1, '#131313');
+  const light = mapLight();
+  bg.addColorStop(0, light ? '#ece7dc' : '#171a17');
+  bg.addColorStop(0.56, light ? '#e5e0d4' : '#101210');
+  bg.addColorStop(1, light ? '#e9e4d9' : '#131313');
   countryMapCtx.fillStyle = bg;
   countryMapCtx.fillRect(0, 0, width, height);
 

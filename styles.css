@@ -510,6 +510,21 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .cv-map-legend .city i{background:#66bb6a}
 .cv-map-legend .story i{background:#fff;box-shadow:0 0 0 1.5px #66bb6a}
 .cv-map-legend .infra i{background:#c9a44a;border-radius:1px;transform:rotate(45deg)}
+/* atlas-light-v1: the atlas frame, toolbar, legend and layer menu were dark-only */
+:root[data-theme="light"] .cv-map-wrap{border-color:var(--rule);background:var(--surface)}
+:root[data-theme="light"] .cv-map-toolbar{background:linear-gradient(90deg,rgba(46,125,50,.07),rgba(46,125,50,.02))}
+:root[data-theme="light"] .cv-map-legend{background:var(--surface);color:var(--text-muted)}
+:root[data-theme="light"] .cv-map-legend .mountain i{background:#8f887d}
+:root[data-theme="light"] .cv-map-legend .water i{background:#2f86ab}
+:root[data-theme="light"] .cv-map-legend .infra i{background:#a8822a}
+:root[data-theme="light"] .cv-map-legend .infra.airport i{background:#3f86d6}
+:root[data-theme="light"] .cv-map-legend .road i{background:#9c937f}
+:root[data-theme="light"] .cv-map-legend .rail i{background:#a88a4c}
+:root[data-theme="light"] .cv-country-map{background:linear-gradient(145deg,#ece7dc,#e5e0d4)}
+:root[data-theme="light"] .cv-map-portal.active{background:var(--bg)}
+:root[data-theme="light"] .cv-layer-menu-list{background:var(--pop);border-color:var(--rule);box-shadow:0 14px 32px rgba(40,36,28,.18)}
+:root[data-theme="light"] .cv-layer-pill[aria-pressed="true"]::before{box-shadow:inset 0 0 0 2px rgba(255,255,255,.8)}
+:root[data-theme="light"] .cv-map-fs,:root[data-theme="light"] .cv-map-zoom button{background:rgba(251,249,244,.92);border-color:var(--rule);color:var(--text-muted)}
 
 /* News cards */
 .cv-cards{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(270px,0.75fr);gap:1px;background:var(--rule);border:1px solid var(--rule);overflow:hidden;transition:grid-template-columns 200ms ease}
