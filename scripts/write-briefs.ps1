@@ -99,6 +99,7 @@ param(
   [switch]$NoCache,
   # Skips the side-by-side ranking call (Invoke-CountryRanking); the column keeps its score order.
   [switch]$NoCountryRanking,
+  [switch]$NoFrontRanking,
   [switch]$JsonMode,
   [switch]$Merge
 )
@@ -1367,6 +1368,100 @@ Return ONLY a JSON object: {"order":[<the story numbers, most important first>]}
   }
 }
 
+# The front page across countries. Each country's column is ranked side by side above,
+# but the Wire and the landing page then compare leads from different countries on
+# their column scores, and a busy country's minor story can outscore a quiet country's
+# big one: on 11 Nov 2026 a Burkina Faso film week sat fifth on the continent's Wire.
+# One more call reads every country's top two side by side and picks the front page.
+# Those stories carry frontRank 1..N with frontRankOn (the edition day); the site leads
+# with them in that order on that day only. Any failure leaves frontRank off and the
+# site falls back to the scores. One call per run, on the rewrite route.
+$script:frontCalls = 0
+$script:frontFailures = 0
+function Invoke-FrontRanking($ByCountry, $CountryNames, [int]$Pick) {
+  $codesWithStories = @($ByCountry.Keys | Where-Object { @($ByCountry[$_]).Count -gt 0 })
+  if ($codesWithStories.Count -lt 3) { return 0 }
+  $cands = New-Object System.Collections.Generic.List[object]
+  foreach ($cc in $codesWithStories) {
+    $list = @($ByCountry[$cc])
+    $take = [Math]::Min(2, $list.Count)
+    for ($k = 0; $k -lt $take; $k++) { $cands.Add([pscustomobject]@{ code = [string]$cc; story = $list[$k] }) }
+  }
+  $route = $null
+  if ($script:rewriteRoute -and -not $script:rewriteRoute.dead) { $route = $script:rewriteRoute }
+  else { $route = @($script:routes | Where-Object { -not $_.dead }) | Select-Object -First 1 }
+  if (-not $route) { return 0 }
+  $want = [Math]::Min($Pick, $cands.Count)
+  $lines = New-Object System.Collections.Generic.List[string]
+  for ($k = 0; $k -lt $cands.Count; $k++) {
+    $s = $cands[$k].story
+    $outlets = @($s['sources']).Count
+    $cname = [string]$CountryNames[$cands[$k].code]
+    if (-not $cname) { $cname = $cands[$k].code }
+    $lines.Add(('[{0}] {1}: {2} - {3} (reported by {4} outlet{5})' -f $k, $cname, [string]$s['headline'], [string]$s['dek'], $outlets, $(if ($outlets -eq 1) { '' } else { 's' })))
+  }
+  $prompt = @"
+PICK THE FRONT PAGE. These are the top stories from each African country on The African
+Street Journal today. Choose the $want that matter most to readers across Africa and put
+them in order, most important first. Weigh what changes for the most people: money and
+prices, safety and conflict, health, rights, jobs, elections and who governs, and
+anything that reaches beyond one country's borders. Ceremonies, visits, meetings,
+festivals, film and culture weeks, prize-givings and launches of plans come below
+decisions, figures and events that already affect people. A small country's big story
+outranks a big country's small one. When two matter about as much, put the one more
+outlets reported first.
+
+$($lines.ToArray() -join "`n")
+
+Return ONLY a JSON object: {"order":[<the $want story numbers, most important first>]}
+"@
+  $body = [ordered]@{
+    model = $route.model
+    messages = @(
+      @{ role = 'system'; content = 'You are the front-page editor of a pan-African news site. You answer with JSON only.' },
+      @{ role = 'user'; content = $prompt }
+    )
+    max_tokens = 300
+    response_format = @{ type = 'json_object' }
+  }
+  if ($route -eq $script:rewriteRoute) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
+  if ($route.provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
+  $headers = @{ 'Authorization' = "Bearer $($route.key)"; 'Content-Type' = 'application/json'; 'HTTP-Referer' = 'https://africanstreetjournal.com'; 'X-Title' = 'The African Street Journal' }
+  if ($route.provider -eq 'gemini') { $headers.Remove('HTTP-Referer'); $headers.Remove('X-Title'); $headers['x-goog-api-key'] = $route.key }
+  try {
+    $script:frontCalls++
+    $resp = Invoke-WebRequest -Uri $route.url -Method Post -Headers $headers -Body ([Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Depth 8 -Compress))) -TimeoutSec 90 -UseBasicParsing -ErrorAction Stop
+    $obj = [Text.Encoding]::UTF8.GetString($resp.RawContentStream.ToArray()) | ConvertFrom-Json
+    if ($obj.usage) {
+      $script:usagePrompt += [int]$obj.usage.prompt_tokens
+      $script:usageCompletion += [int]$obj.usage.completion_tokens
+      $script:usageTotal += [int]$obj.usage.total_tokens
+      if ($obj.usage.cost) { $script:usageCost += [double]$obj.usage.cost }
+    }
+    $text = [string]@($obj.choices)[0].message.content
+    $m = [regex]::Match($text, '\{[\s\S]*\}')
+    if (-not $m.Success) { throw 'no JSON in the answer' }
+    $order = New-Object System.Collections.Generic.List[int]
+    foreach ($v in @(($m.Value | ConvertFrom-Json).order)) {
+      $idx = -1
+      if ($order.Count -lt $want -and [int]::TryParse([string]$v, [ref]$idx) -and $idx -ge 0 -and $idx -lt $cands.Count -and -not $order.Contains($idx)) { $order.Add($idx) }
+    }
+    if ($order.Count -lt 3) { throw "only $($order.Count) usable story numbers" }
+    $day = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+    for ($p = 0; $p -lt $order.Count; $p++) {
+      $st = $cands[$order[$p]].story
+      $st['frontRank'] = $p + 1
+      $st['frontRankOn'] = $day
+    }
+    Write-Host ("  [front] {0} stories on the front page, led by {1}: {2}" -f $order.Count, $cands[$order[0]].code, [string]$cands[$order[0]].story['headline']) -ForegroundColor Green
+    return $order.Count
+  } catch {
+    $script:frontFailures++
+    Write-Host ("  [front] kept the score order ({0})" -f $_.Exception.Message.Split("`n")[0]) -ForegroundColor DarkYellow
+    return 0
+  }
+}
+
 
 function Get-EvidencePacket($Item, [int]$Index) {
   $lines = New-Object System.Text.StringBuilder
@@ -1474,6 +1569,7 @@ function Get-DraftContractIssues($Brief) {
 }
 
 $result  = [ordered]@{}
+$frontNames = @{}
 $stories = 0
 $skipped = New-Object System.Collections.Generic.List[string]
 $usagePrompt = 0
@@ -2035,10 +2131,13 @@ weekday, write that instead of a month. Do not add facts while repairing.
     foreach ($ci in $scoreOrder) { $cleanSorted.Add($clean[$ci]) }
   }
   $result[[string]$code] = $cleanSorted.ToArray()
+  $frontNames[[string]$code] = $name
   $stories += $clean.Count
   Write-Host ("  {0}  {1,-30} {2} on-site stories" -f $code, $name, $clean.Count) -ForegroundColor Green
   Start-Sleep -Milliseconds $DelayMs
 }
+
+$frontPicked = if ($NoFrontRanking) { 0 } else { Invoke-FrontRanking $result $frontNames 12 }
 
 if (-not $NoCache -and $storyCache.Count) {
   $cacheEntries = [ordered]@{}
@@ -2081,6 +2180,8 @@ $metrics = [ordered]@{
   apiCalls = $apiCalls
   countriesRanked = $script:rankCalls - $script:rankFailures
   countryRankFailures = $script:rankFailures
+  frontPageStories = $frontPicked
+  frontPageFailures = $script:frontFailures
   countriesReorderedByRanking = $script:rankReordered
   cacheHits = $cacheHits
   promptTokens = $usagePrompt
