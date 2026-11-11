@@ -18,12 +18,12 @@
    the atlas, heat maps) stay dark in both themes: they are pictures, not page. */
 :root[data-theme="light"]{
   --bg:#f5f2eb;--surface:#fbf9f4;--surface-raised:#ebe6dc;--rule:#d9d2c5;
-  --green:#2e7d32;--green-dim:#1b5e20;--green-bright:#276b2b;--front-green:#2a6f2e;--map-green:#439447;
+  --green:#2a6f2e;--green-dim:#1b5e20;--green-bright:#276b2b;--front-green:#2a6f2e;--map-green:#439447;
   --text:#1c1b19;--text-muted:#47433d;--text-dim:#686259;--paper:#3b3833;--amber:#8a6510;
   --ink-rgb:28,27,25;--hi-rgb:0,0,0;color-scheme:light;
   --pop:rgba(251,249,244,.98);--card-grad:linear-gradient(145deg,#fbf9f4,#f1ede4);
   --field:#fffdf8;--field-hi:#f3efe6;--text-body:#2b2925;--green-ink:#1b5e20;--on-green:#fff;
-  --warn:#9a5a0c;--down:#b23b22;--up:#2e7d32;--wa-bg:#e2f0e3;--wa-rule:#9cc9a0;
+  --warn:#9a5a0c;--down:#b23b22;--up:#2a6f2e;--wa-bg:#e2f0e3;--wa-rule:#9cc9a0;
   --map-sea:rgba(120,150,128,.16);--map-lake:#f5f2eb;--map-tag:rgba(52,72,56,.85);
 }
 body{margin:0;height:100vh;height:100svh;background:var(--bg);color:var(--text);font:14px/1.5 var(--sans);display:flex;flex-direction:column;align-items:center;overflow:hidden}
