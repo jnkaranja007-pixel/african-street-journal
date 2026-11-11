@@ -107,9 +107,9 @@ for (const theme of ['light', 'dark']) {
       if (theme === 'light') for (const d of (await pg.evaluate(DARK_PANELS)).slice(0, 4)) { fail(tag + ' ' + where + ': dark panel ' + d); n++; }
     };
     await check('front page');
-    await pg.click('#wire-entry'); await wait(900);
+    await pg.evaluate(() => document.getElementById('wire-entry').click()); await wait(900);
     await check('Wire');
-    await pg.click('#wire-close'); await wait(400);
+    await pg.evaluate(() => document.getElementById('wire-close').click()); await wait(400);
     await pg.evaluate(() => openCountry('ke')); await wait(1500);
     for (const [i, name] of [[0, 'News'], [1, 'Signals'], [2, 'Atlas']]) {
       await pg.evaluate(i => { document.querySelector('.cv-dot[data-panel="' + i + '"]').click(); }, i); await wait(1200);
