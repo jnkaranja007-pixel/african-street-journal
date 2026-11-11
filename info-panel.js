@@ -158,8 +158,8 @@
 })();
 
 /* theme-v1: a Light / Dark switch at the end of every About menu. The page head sets
-   data-theme before first paint (the reader's choice in localStorage asj:theme, or the
-   system setting); this only changes it and remembers the choice. Pages that draw on a
+   data-theme before first paint (the reader's choice in localStorage asj:theme, or light by
+   default); this only changes it and remembers the choice. Pages that draw on a
    canvas (the home map) listen for asj:themechange and repaint. */
 (function () {
   'use strict';

@@ -193,7 +193,7 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 .page code{font:14px/1.4 ui-monospace,Consolas,monospace;color:var(--c-e8e6e3);word-break:break-all}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=69" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=70" defer></script>'
 # The paper's social accounts (data/social-config.js): a Follow line in every footer
 # once a handle is set, and sameAs on the publisher so search engines tie them to it.
 $socialTelegram = ''; $socialBluesky = ''
@@ -550,7 +550,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <link rel="alternate" type="application/rss+xml" title="$(Esc $name) - The African Street Journal" href="$BaseUrl/$code/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta name="theme-color" content="#131313">
-<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -817,7 +817,7 @@ $(if ($b.articleId) { '<meta name="asj-story" content="' + (Esc ([string]$b.arti
 <link rel="alternate" type="application/rss+xml" title="$(Esc $sp.country) - The African Street Journal" href="$BaseUrl/$($sp.code)/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta name="theme-color" content="#131313">
-<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1039,7 +1039,7 @@ foreach ($slug in $trustPages.Keys) {
 <meta name="description" content="$(Esc $tp.desc)">
 <link rel="canonical" href="$tpUrl">
 <meta name="theme-color" content="#131313">
-<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
@@ -1105,7 +1105,7 @@ foreach ($ts in $topicOrder) {
 <meta name="description" content="$(Esc $tDesc)">
 <link rel="canonical" href="$tUrl">
 <meta name="theme-color" content="#131313">
-<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:type" content="website">
@@ -1149,7 +1149,7 @@ $tiHtml = @"
 <meta name="description" content="African news by subject: politics, business, health, agriculture, climate and more, from 55 countries.">
 <link rel="canonical" href="$tiUrl">
 <meta name="theme-color" content="#131313">
-<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 </head>
@@ -1230,7 +1230,7 @@ $digestHtml = @"
 <meta name="robots" content="noindex">
 <title>Today's posts | The African Street Journal</title>
 <meta name="theme-color" content="#131313">
-<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 <style>.dg{margin:0 0 26px}.dg textarea{width:100%;box-sizing:border-box;background:#1b1b1b;color:#ece8e1;border:1px solid #333;border-radius:6px;padding:12px;font:15px/1.5 system-ui,sans-serif;resize:vertical}
 .dg-actions{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0}.dg-actions a,.dg-actions button{font:600 15px system-ui,sans-serif;padding:9px 14px;border-radius:6px;border:1px solid #3a3a3a;background:#222;color:#f3efe8;text-decoration:none;cursor:pointer}
@@ -1298,7 +1298,7 @@ $hubHtml = @"
 <meta property="og:image" content="$BaseUrl/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#131313">
-<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
 $analytics
 </head>

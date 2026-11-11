@@ -13,8 +13,9 @@
   --map-sea:rgba(22,30,24,.5);--map-lake:#121815;--map-tag:rgba(170,196,174,.78);
 }
 /* Light theme. data-theme is set on <html> before first paint by the inline script in
-   the page head: from the reader's choice (localStorage asj:theme) or, without one, from
-   the system setting. Without JavaScript the page stays dark. Map plates (country relief,
+   the page head: the reader's choice (localStorage asj:theme) or, without one, light -
+   the default since 11 Nov 2026, whatever the system setting. Without JavaScript the
+   page stays dark. Map plates (country relief,
    the atlas, heat maps) stay dark in both themes: they are pictures, not page. */
 :root[data-theme="light"]{
   --bg:#f5f2eb;--surface:#fbf9f4;--surface-raised:#ebe6dc;--rule:#d9d2c5;
