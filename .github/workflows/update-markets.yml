@@ -22,7 +22,7 @@ concurrency:
 jobs:
   markets:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -42,9 +42,12 @@ jobs:
         id: indices
         shell: pwsh
         continue-on-error: true
-        timeout-minutes: 3
+        timeout-minutes: 6
         # Headline index per exchange from a source the runner can reach. Independent of
         # the company listings above, so one dead host cannot blank both.
+        # Falls back to afx.kwayisi.org, through the relay when it is set.
+        env:
+          ASJ_AFX_RELAY: ${{ vars.ASJ_AFX_RELAY }}
         run: ./scripts/update-indices.ps1
 
       - name: Report unreachable source
@@ -72,6 +75,27 @@ jobs:
           })
           $age = ($ages | Measure-Object -Minimum).Minimum
           if ($age -gt 7) { Write-Host "::error::Exchange listings are $([int]$age) days old. Check scripts/update-markets.ps1 against afx.kwayisi.org."; exit 1 }
+
+      - name: Alarm on stale index levels
+        # From 1 Nov 2026 the index source showed a maintenance page, the step above kept
+        # the old file, and the run stayed green for ten days while the site said "Stale".
+        # Past four days without a fresh session (a long weekend is three) the job goes red
+        # so the failure is seen. The commit step below still runs.
+        if: always()
+        shell: pwsh
+        run: |
+          $t = Get-Content data/indices.js -Raw
+          $dates = @([regex]::Matches($t, '"date":"(\d{4}-\d{2}-\d{2})"') | ForEach-Object {
+            [datetime]::ParseExact($_.Groups[1].Value, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
+          })
+          if (-not $dates.Count) { Write-Host '::error::data/indices.js holds no dated index rows.'; exit 1 }
+          $newest = ($dates | Measure-Object -Maximum).Maximum
+          $age = [int]((Get-Date).ToUniversalTime().Date - $newest).TotalDays
+          Write-Host "Newest index session: $($newest.ToString('yyyy-MM-dd')) ($age days old)"
+          if ($age -gt 4) {
+            Write-Host "::error::Index levels are $age days old. african-markets.com and afx.kwayisi.org both failed from this runner; see the indices step log. Setting the ASJ_AFX_RELAY variable (tools/afx-relay) routes afx through Cloudflare."
+            exit 1
+          }
 
       - name: Commit refreshed markets
         # always(): the stale-listings alarm above fails the job on purpose, and must not
