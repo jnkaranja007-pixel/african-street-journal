@@ -1839,6 +1839,8 @@ main{position:relative}
   .cv-glance-val{font:650 16px/1.25 var(--sans);color:var(--text);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
   .cv-glance-cell.up .cv-glance-val{color:var(--warn)}
   .cv-glance-cell.down .cv-glance-val{color:var(--green-bright)}
+  .cv-glance-cell.gain .cv-glance-val{color:var(--up)}
+  .cv-glance-cell.loss .cv-glance-val{color:var(--down)}
   .cv-glance-cell.is-missing .cv-glance-val{color:var(--text-dim)}
   .cv-glance-sub{font:400 12px/1.35 var(--sans);color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 }

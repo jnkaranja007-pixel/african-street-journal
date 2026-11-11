@@ -91,11 +91,16 @@ async function runDevice(engine, device) {
       }
     }
 
-    // An At a glance figure opens its section alone and leaves it on screen.
+    // At a glance follows the lens: in each, every figure belongs to that lens, opens its
+    // section alone, leaves the lens as it was and the heading on screen.
+    for (const lens of ['farmers', 'investors', 'diaspora']) {
+    await pg.locator('.cv-audience-tab[data-audience="' + lens + '"]').tap();
+    await pg.waitForTimeout(400);
     await pg.evaluate(() => { document.getElementById('country-view').scrollTop = 0; });
     await pg.waitForTimeout(200);
     const cells = await pg.$$eval('#cv-glance [data-glance-target]', bs => bs.map(b => ({ target: b.dataset.glanceTarget, mode: b.dataset.glanceMode, key: b.querySelector('.cv-glance-key')?.textContent })));
     if (!cells.length) fail(device + ' ' + country + ': no At a glance figures');
+    if (cells.some(c => c.mode !== lens)) fail(device + ' ' + country + ' ' + lens + ': At a glance shows another lens\x27s figures (' + cells.map(c => c.key + '/' + c.mode).join(', ') + ')');
     for (const cell of cells) {
       await pg.evaluate(() => { document.getElementById('country-view').scrollTop = 0; });
       await pg.waitForTimeout(200);
@@ -114,6 +119,7 @@ async function runDevice(engine, device) {
       if (r.lens !== cell.mode) fail(tag + ': lens is ' + r.lens + ', expected ' + cell.mode);
       if (!r.open || r.others) fail(tag + ': section open ' + r.open + ', ' + r.others + ' others open');
       if (r.top < 0 || r.bottom > r.vh) fail(tag + ': heading off screen (' + r.top + '..' + r.bottom + ' of ' + r.vh + ')');
+    }
     }
     errs.forEach(e => fail(device + ' ' + country + ' page error: ' + e));
     await ctx.close();

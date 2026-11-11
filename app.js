@@ -2291,6 +2291,7 @@ audienceSelect?.addEventListener('change', () => {
   const countryId = activeCountryMap.countryId;
   const info = COUNTRY_INFO[countryId];
   renderAudienceKpis(countryId, info);
+  renderGlance(countryId);
   syncRoute();
 });
 audienceTabs.forEach(tab => tab.addEventListener('click', () => {
@@ -2308,6 +2309,7 @@ document.addEventListener('fx-ready', () => {
   renderDiasporaPanel(countryId, info);
   renderHeaderMeta(countryId, info);
   renderAudienceKpis(countryId, info);
+  renderGlance(countryId);
 });
 document.getElementById('cv-copy-brief')?.addEventListener('click', async event => {
   if (!activeCountryMap) return;
@@ -3383,23 +3385,92 @@ function renderGlance(countryId) {
           sub: (firstFood.currency === 'SLL' ? 'SLE ' + Math.round(firstFood.price / 1000) : firstFood.currency + ' ' + Math.round(firstFood.price).toLocaleString('en-US')) +
                ' a ' + String(firstFood.unit || '').toLowerCase() + where }
       : { key: 'Food prices', value: '—', sub: 'No current WFP prices' };
+  // The World Port Index's own spelling, or the English name it gives in brackets
+  // ("Mina Tarabulus (Tripoli)"). The airport by name: OurAirports' city is often the
+  // airport's own town (Lumbadzi for Lilongwe, Plaine Magnien for Mauritius).
+  const portItem = port
+    ? { key: 'Main seaport', value: (/\(([^)]+)\)/.exec(port.name) || [])[1] || port.name, sub: (port.size ? port.size.toLowerCase() + ' harbour' : 'Seaport') + (portCount > 1 ? ' · ' + portCount + ' in all' : '') }
+    : { key: 'Main seaport', value: LANDLOCKED.has(countryId) ? 'Landlocked' : '—', sub: LANDLOCKED.has(countryId) ? 'No coast' : 'None listed' };
+  const airportItem = airport
+    ? { key: 'Main airport', value: airport.name.replace(/\s+Airport$/i, ''), sub: (airport.city || '') + (airport.iata ? ' (' + airport.iata + ')' : '') }
+    : { key: 'Main airport', value: '—', sub: 'No scheduled flights listed' };
+
+  // The figures follow the reader's lens (the For Farmers / Investors / Diaspora tabs
+  // above), and each opens a section of that same lens. Until Nov 2026 it was one mixed
+  // set of six for everyone, and tapping growth from the farmers' tab quietly switched
+  // the reader to the investors' tab.
+  // A World Bank figure says what it measures ("share of GDP") as well as its year.
+  const fact = (key, label) => {
+    const k = kpiFact(countryId, key, label);
+    if (k.value !== '—') k.sub = FACT_DEFS[key].sub + ' · ' + String(k.sub).replace(/^World Bank /, '');
+    return k;
+  };
+  const mode = ['farmers', 'investors', 'diaspora'].includes(audienceSelect?.value) ? audienceSelect.value : 'farmers';
+  let cells;
+  if (mode === 'investors') {
+    const idx = indexForCountry(countryId);
+    const pct = idx && Number.isFinite(idx.changePct) ? idx.changePct : null;
+    const idxStale = idx && marketAgeDays(idx.date) > 7;
+    const indexItem = idx
+      ? { key: 'Stock market', value: Number(idx.level).toLocaleString('en-US', { maximumFractionDigits: idx.level >= 1000 ? 0 : 2 }),
+          sub: idx.name + (pct !== null ? ' · ' + (pct > 0 ? '+' : '') + pct + '% on the day' : '') + ' · ' + (idxStale ? 'stale, ' : '') + formatMarketDate(idx.date) }
+      : { key: 'Stock market', value: '—', sub: 'No index on file' };
+    cells = [
+      cell(fact('growth'), mode, 'cv-econ-wrap'),
+      cell(fact('inflation'), mode, 'cv-econ-wrap'),
+      cell(indexItem, mode, 'cv-heatmap', pct === null || idxStale ? '' : pct > 0 ? ' gain' : pct < 0 ? ' loss' : ''),
+      cell(fact('fdi'), mode, 'cv-sectors'),
+      cell(fact('exports'), mode, 'cv-sectors'),
+      cell(fact('extDebt'), mode, 'cv-sectors')
+    ];
+  } else if (mode === 'diaspora') {
+    const ccy = investorForCountry(countryId, COUNTRY_INFO[countryId]).currency;
+    const rate = (window.__FX || {})[ccy];
+    const fxItem = Number.isFinite(rate)
+      ? { key: '$1 buys', value: formatFxRate(rate) + ' ' + ccy, sub: (CCY_NAME[ccy] || 'Local currency') + (formatFxDate(window.__FX_AT) ? ' · ' + formatFxDate(window.__FX_AT) : '') }
+      : { key: '$1 buys', value: '—', sub: ccy ? 'No rate for ' + ccy : 'No currency on file' };
+    cells = [
+      cell(fxItem, mode, 'cv-dia-fx'),
+      cell(fact('remitCost'), mode, 'cv-dia-sectors'),
+      cell(fact('remitUsd'), mode, 'cv-dia-sectors'),
+      cell(fact('remitGdp'), mode, 'cv-dia-sectors'),
+      cell(fact('internet'), mode, 'cv-dia-sectors'),
+      cell(fact('electricity'), mode, 'cv-dia-sectors')
+    ];
+  } else {
+    cells = [
+      cell({ key: 'Top farm export', value: topExport ? topExport.label : '—', sub: topExport ? formatFactValue('usd', topExport.usd) + ' a year' : 'Not published' }, mode, 'cv-ag'),
+      cell(foodItem, mode, 'cv-food', median === null ? '' : median > 0 ? ' up' : ' down'),
+      cell(seasonGlanceItem(countryId), mode, 'cv-crop-cal'),
+      cell(fact('agJobs', 'Jobs in farming'), mode, 'cv-ag'),
+      cell(portItem, mode, 'cv-infra'),
+      cell(airportItem, mode, 'cv-infra')
+    ];
+  }
   el.innerHTML =
     '<header class="cv-section-head"><h4>At a glance</h4><span class="meta">Tap a figure for the detail</span></header>' +
-    '<div class="cv-glance-grid">' +
-      cell(kpiFact(countryId, 'growth'), 'investors', 'cv-econ-wrap') +
-      cell(kpiFact(countryId, 'inflation'), 'investors', 'cv-econ-wrap') +
-      cell({ key: 'Top farm export', value: topExport ? topExport.label : '—', sub: topExport ? formatFactValue('usd', topExport.usd) + ' a year' : 'Not published' }, 'farmers', 'cv-ag') +
-      cell(foodItem, 'farmers', 'cv-food', median === null ? '' : median > 0 ? ' up' : ' down') +
-      // The World Port Index's own spelling, or the English name it gives in brackets
-      // ("Mina Tarabulus (Tripoli)"). The airport by name: OurAirports' city is often the
-      // airport's own town (Lumbadzi for Lilongwe, Plaine Magnien for Mauritius).
-      cell(port
-        ? { key: 'Main seaport', value: (/\(([^)]+)\)/.exec(port.name) || [])[1] || port.name, sub: (port.size ? port.size.toLowerCase() + ' harbour' : 'Seaport') + (portCount > 1 ? ' · ' + portCount + ' in all' : '') }
-        : { key: 'Main seaport', value: LANDLOCKED.has(countryId) ? 'Landlocked' : '—', sub: LANDLOCKED.has(countryId) ? 'No coast' : 'None listed' }, 'farmers', 'cv-infra') +
-      cell(airport
-        ? { key: 'Main airport', value: airport.name.replace(/\s+Airport$/i, ''), sub: (airport.city || '') + (airport.iata ? ' (' + airport.iata + ')' : '') }
-        : { key: 'Main airport', value: '—', sub: 'No scheduled flights listed' }, 'farmers', 'cv-infra') +
-    '</div>';
+    '<div class="cv-glance-grid">' + cells.join('') + '</div>';
+}
+
+// What the season calendar says about this month: the crops being harvested, or failing
+// that planted, among the ones the calendar shows (staples first, then main exports).
+function seasonGlanceItem(countryId) {
+  const staples = (countryFacts(countryId)?.staples || []).filter(Boolean);
+  const crops = Array.from(new Set([...staples, ...farmExportsForCountry(countryId).slice(0, 3)])).slice(0, 5);
+  const month = new Date().getMonth() + 1;
+  const monthName = new Date().toLocaleDateString('en-GB', { month: 'long' });
+  if (!crops.length) return { key: 'This month', value: '—', sub: 'No season file' };
+  const harvest = [], planting = [];
+  for (const crop of crops) {
+    const spec = seasonSpecForCountry(countryId, crop);
+    if (!spec) continue;
+    if ((spec.h || []).includes(month)) harvest.push(crop);
+    else if ((spec.s || []).includes(month)) planting.push(crop);
+  }
+  const name = list => list.slice(0, 2).join(', ') + (list.length > 2 ? ' +' + (list.length - 2) : '');
+  if (harvest.length) return { key: 'This month', value: name(harvest), sub: 'Harvest or market season, ' + monthName };
+  if (planting.length) return { key: 'This month', value: name(planting), sub: 'Planting season, ' + monthName };
+  return { key: 'This month', value: 'Between seasons', sub: 'For ' + name(crops) + ', ' + monthName };
 }
 
 // WFP retail prices for the four foods it tracks most at one market. Where WFP has no
