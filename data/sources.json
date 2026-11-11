@@ -60,6 +60,13 @@
     "name": "Angola",
     "sources": [
       {
+        "name": "Mercado",
+        "home": "https://mercado.co.ao/",
+        "feed": "https://mercado.co.ao/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
         "name": "ANGOP",
         "home": "https://www.angop.ao/en/",
         "feed": "https://www.angop.ao/en/rss/",
@@ -228,6 +235,20 @@
   "bj": {
     "name": "Benin",
     "sources": [
+      {
+        "name": "Fraternite",
+        "home": "https://fraternitebj.info/",
+        "feed": "https://www.fraternitebj.info/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
+        "name": "La Nouvelle Tribune",
+        "home": "https://lanouvelletribune.info/",
+        "feed": "https://lanouvelletribune.info/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
       {
         "name": "La Nation Benin",
         "home": "https://lanationbenin.info/",
@@ -641,6 +662,13 @@
     "name": "Cape Verde",
     "sources": [
       {
+        "name": "Mindel Insite",
+        "home": "https://mindelinsite.com/",
+        "feed": "https://mindelinsite.com/feed/",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
         "name": "Expresso das Ilhas",
         "home": "https://expressodasilhas.cv/",
         "feed": "https://expressodasilhas.cv/rss",
@@ -1017,6 +1045,13 @@
     "name": "Comoros",
     "sources": [
       {
+        "name": "Habari za Comores",
+        "home": "https://www.habarizacomores.com/",
+        "feed": "https://www.habarizacomores.com/feeds/posts/default",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
         "name": "Al-Watwan",
         "home": "https://alwatwan.net/",
         "feed": "https://alwatwan.net/feed/",
@@ -1220,6 +1255,20 @@
     "name": "DR Congo",
     "sources": [
       {
+        "name": "Eco News RDC",
+        "home": "https://econewsrdc.com/",
+        "feed": "https://econewsrdc.com/feed/",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
+        "name": "Congo Independant",
+        "home": "https://www.congoindependant.com/",
+        "feed": "https://www.congoindependant.com/feed/",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
         "name": "Radio Okapi",
         "home": "https://www.radiookapi.net/",
         "feed": "https://www.radiookapi.net/feed/",
@@ -1416,6 +1465,13 @@
   "dj": {
     "name": "Djibouti",
     "sources": [
+      {
+        "name": "RTD",
+        "home": "https://www.rtd.dj/",
+        "feed": "https://rtd.dj/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
       {
         "name": "La Nation Djibouti",
         "home": "https://www.lanationdj.com/",
@@ -2107,6 +2163,20 @@
     "name": "Gambia",
     "sources": [
       {
+        "name": "Kerr Fatou",
+        "home": "https://kerrfatou.com/",
+        "feed": "https://www.kerrfatou.com/feed/",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
+        "name": "The Alkamba Times",
+        "home": "https://alkambatimes.com/",
+        "feed": "https://alkambatimes.com/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
         "name": "The Point",
         "home": "https://thepoint.gm/",
         "feed": "https://thepoint.gm/posts/rss/xml",
@@ -2343,6 +2413,13 @@
   "gw": {
     "name": "Guinea-Bissau",
     "sources": [
+      {
+        "name": "Conosaba do Porto",
+        "home": "https://conosaba.blogspot.com/",
+        "feed": "https://conosaba.blogspot.com/feeds/posts/default",
+        "tier": 3,
+        "state": "ok"
+      },
       {
         "name": "O Democrata GB",
         "home": "https://odemocratagb.com/",
@@ -3058,6 +3135,27 @@
   "ma": {
     "name": "Morocco",
     "sources": [
+      {
+        "name": "Les Inspirations ECO",
+        "home": "https://leseco.ma/",
+        "feed": "https://leseco.ma/feed",
+        "tier": 2,
+        "state": "ok"
+      },
+      {
+        "name": "North Africa Post",
+        "home": "https://northafricapost.com/",
+        "feed": "https://northafricapost.com/feed",
+        "tier": 3,
+        "state": "ok"
+      },
+      {
+        "name": "Maroc Diplomatique",
+        "home": "https://maroc-diplomatique.net/",
+        "feed": "https://maroc-diplomatique.net/feed/",
+        "tier": 2,
+        "state": "ok"
+      },
       {
         "name": "Morocco World News",
         "home": "https://www.moroccoworldnews.com/",
@@ -4517,6 +4615,13 @@
   "tg": {
     "name": "Togo",
     "sources": [
+      {
+        "name": "24heureinfo",
+        "home": "https://www.24heureinfo.com/",
+        "feed": "https://24heureinfo.com/feed/",
+        "tier": 3,
+        "state": "ok"
+      },
       {
         "name": "Togo First",
         "home": "https://www.togofirst.com/",
