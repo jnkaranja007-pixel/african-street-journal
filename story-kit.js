@@ -463,6 +463,11 @@
     '.asj-listen .asj-listen-play svg{color:var(--k-hi)}',
     '.asj-listen .asj-listen-stop{padding:0 14px 0 12px}',
     '.asj-listen-note{font:400 14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--k-muted)}',
+    // Story pages: Listen sits on the topic row, and a phone's first screen keeps the
+    // headline, the summary and the opening sentence (the head was ~460px before).
+    '.story-head .meta.asj-meta-listen{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px}',
+    '.story-head .meta.asj-meta-listen .asj-listen{margin:0}',
+    '@media (max-width:560px){.asj-story-page .wrap{padding-top:22px!important}.asj-story-page .masthead{padding-bottom:14px!important}.story-head h1{margin-top:8px!important}.story-head .dek{margin-bottom:10px!important}.story-head .byline{margin-bottom:0!important}body .story-head{padding-bottom:14px!important;margin-bottom:16px!important}}',
     '.asj-kit-share-label{margin:28px 0 8px;font:600 14px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--k-muted)}',
     '@media (max-width:520px){.asj-kit-visual{gap:12px;padding:10px;align-items:flex-start}.asj-kit-map{flex-basis:112px}.asj-kit-map svg{width:112px;height:112px}.asj-kit-signal b,.asj-kit-where b{font-size:22px}.asj-kit-figs b{font-size:20px}}'
   ].join('\n');
@@ -715,9 +720,12 @@
           first.parentNode.replaceChild(frag, first);
         }
       }
-      // Listen, under the byline.
+      // Listen, on the topic row (under the byline when a page has no topic row).
       var listen = document.createElement('div');
-      if (byline) byline.parentNode.insertBefore(listen, byline.nextSibling); else head.appendChild(listen);
+      document.documentElement.classList.add('asj-story-page');
+      var metaRow = head.querySelector('.meta');
+      if (metaRow) { metaRow.classList.add('asj-meta-listen'); metaRow.appendChild(listen); }
+      else if (byline) byline.parentNode.insertBefore(listen, byline.nextSibling); else head.appendChild(listen);
       mountListen(listen, function () { return [headline, dek].concat(paragraphs); });
     }
 

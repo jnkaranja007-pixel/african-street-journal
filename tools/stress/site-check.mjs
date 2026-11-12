@@ -160,6 +160,37 @@ for (const mode of ['save-data', 'prose-fails']) {
   if (mk.fx < 35) fail('markets page shows ' + mk.fx + ' currencies');
   if (mk.overflow) fail('markets page overflows a phone');
   for (const bad of ['NaN', 'undefined', 'Infinity']) if (mk.text.includes(bad)) fail('markets page shows "' + bad + '"');
+  // Story pages on a phone (iPhone 13's 390x664 visible area): Listen on the topic row,
+  // share after the body, every outlet in the byline, and the opening sentence on the
+  // first screen. Pages name their scripts by absolute URL; serve those from this checkout.
+  await pg.setViewportSize({ width: 390, height: 664 });
+  await ctx.route(/^https:\/\/africanstreetjournal\.com\//, r => {
+    const f = path.join(root, decodeURIComponent(new URL(r.request().url()).pathname));
+    if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) return r.fulfill({ status: 404, body: '' });
+    r.fulfill({ status: 200, contentType: types[path.extname(f)] || 'application/octet-stream', body: fs.readFileSync(f) });
+  });
+  const storyDirs = fs.readdirSync(path.join(root, 'ke'), { withFileTypes: true }).filter(d => d.isDirectory() && fs.existsSync(path.join(root, 'ke', d.name, 'index.html'))).map(d => d.name).sort().slice(0, 10);
+  let firstShown = 0;
+  for (const dir of storyDirs) {
+    await pg.goto(BASE + 'ke/' + dir + '/', { waitUntil: 'load' }); await pg.waitForTimeout(700);
+    const st = await pg.evaluate(() => {
+      const head = document.querySelector('.story-head'); const para = head && head.nextElementSibling;
+      if (!head || !para) return null;
+      const text = para.textContent; const m = text.match(/^.*?[.!?](?=\s+[A-Z"\u201c]|$)/); const len = m ? m[0].length : text.length;
+      const w = document.createTreeWalker(para, NodeFilter.SHOW_TEXT); let n = 0, node, end = null;
+      while ((node = w.nextNode())) { if (n + node.length >= len) { const r = document.createRange(); r.setStart(node, Math.max(0, len - n - 1)); r.setEnd(node, len - n); end = r.getBoundingClientRect().bottom; break; } n += node.length; }
+      const article = head.parentElement; const kids = [...article.children];
+      const share = article.querySelector('.share'); const srcs = new Set([...article.querySelectorAll('.src a')].map(a => a.textContent.trim().toLowerCase()));
+      return { end, vh: innerHeight, listenOnMeta: !!head.querySelector('.meta .asj-listen'), shareAfter: !share || kids.indexOf(share.closest('.share-after') || share) > kids.indexOf(para),
+        byline: (head.querySelector('.byline') || {}).textContent || '', srcs: srcs.size };
+    });
+    if (!st) { fail('story ke/' + dir + ' has no head or body'); continue; }
+    if (st.end !== null && st.end <= st.vh) firstShown++;
+    if (!st.shareAfter) fail('story ke/' + dir + ': share buttons sit above the story');
+    if (st.srcs > 1 && !/^\s*Sources:/.test(st.byline)) fail('story ke/' + dir + ': byline names one of ' + st.srcs + ' outlets');
+  }
+  console.log('story pages: opening sentence on the first phone screen on ' + firstShown + ' of ' + storyDirs.length);
+  if (storyDirs.length && firstShown < Math.ceil(storyDirs.length * 0.8)) fail('opening sentence on the first phone screen on only ' + firstShown + ' of ' + storyDirs.length + ' story pages');
   errs.forEach(e => fail('tools page error: ' + e));
   await ctx.close();
 }
