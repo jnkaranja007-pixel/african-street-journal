@@ -676,35 +676,107 @@ function renderTicker() {
 
 renderTicker();
 
-/* Phones: drive the city ticker by scrolling the strip rather than translating a
-   ~25,000px-wide element. iOS Safari drops composited layers that large, which left an
-   empty band where the ticker should be. scrollLeft is tiled like ordinary content. */
-(function phoneTicker() {
+/* The country strip moves by itself and can be moved by hand, on every screen size.
+   It is driven by scrollLeft, not a CSS transform: iOS Safari dropped the ~25,000px
+   composited layer a transform needs (an empty band where the strip should be), and a
+   real scroller is what makes swipe, trackpad and shift-wheel work for free. Three
+   identical copies sit side by side; the position is kept inside the middle copy, so a
+   wrap moves by exactly one copy's width and looks like nothing happened. Any touch,
+   wheel, drag, hover or keyboard focus pauses it; it resumes a few seconds after.
+   With reduced motion it never moves by itself but still scrolls. */
+const cityTicker = (function cityTickerScroller() {
   const wrap = tickerEl && tickerEl.closest('.ticker-wrap');
-  if (!wrap) return;
-  const mq = window.matchMedia('(max-width:720px)');
+  if (!wrap) return null;
+  document.documentElement.classList.add('ticker-js');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let last = 0, pos = 0, held = false, raf = 0;
-  const SPEED = 38; // px per second: calm, readable
-  function seg() { const s = tickerEl.querySelector('.ticker-segment'); return s ? s.offsetWidth : 0; }
+  const SPEED = 34;          // px per second: calm, readable
+  const RESUME_MS = 3000;    // after the last touch, wheel or drag
+  let last = 0, pos = 0, raf = 0, pausedUntil = 0, hovering = false, focused = false, set = -1;
+  let drag = null, dragMoved = false;
+  const seg = () => { const s = tickerEl.querySelector('.ticker-segment'); return s ? s.getBoundingClientRect().width : 0; };
+  function wrapInto(x) {
+    const w = seg();
+    if (!w) return x;
+    while (x < w) x += w;
+    while (x >= 2 * w) x -= w;
+    return x;
+  }
+  function setScroll(x) { set = Math.round(x); wrap.scrollLeft = x; }
+  function hold(ms) { pausedUntil = Math.max(pausedUntil, performance.now() + (ms == null ? RESUME_MS : ms)); }
+  function moving() { return !reduce.matches && !hovering && !focused && !drag && !document.hidden && performance.now() >= pausedUntil; }
   function step(now) {
     raf = 0;
-    if (!mq.matches || reduce.matches) return;
     const dt = last ? Math.min(0.1, (now - last) / 1000) : 0; last = now;
-    const w = seg();
-    if (!held && !document.hidden && w) { pos += SPEED * dt; if (pos >= w) pos -= w; wrap.scrollLeft = pos; }
+    if (wrap.offsetParent !== null && moving()) {
+      pos = wrapInto(pos + SPEED * dt);
+      setScroll(pos);
+    }
     raf = requestAnimationFrame(step);
   }
   function start() { if (!raf) { last = 0; raf = requestAnimationFrame(step); } }
-  function sync() { document.documentElement.classList.toggle('ticker-js', mq.matches && !reduce.matches); if (mq.matches) start(); else wrap.scrollLeft = 0; }
-  wrap.addEventListener('pointerdown', () => { held = true; });
-  window.addEventListener('pointerup', () => { if (held) { held = false; pos = wrap.scrollLeft; } });
-  wrap.addEventListener('focusin', () => { held = true; });
-  wrap.addEventListener('focusout', () => { held = false; pos = wrap.scrollLeft; });
-  wrap.addEventListener('scroll', () => { if (held) pos = wrap.scrollLeft; }, { passive: true });
-  (mq.addEventListener ? mq.addEventListener('change', sync) : mq.addListener(sync));
-  sync();
-})();
+  // The reader's own scrolling: follow it, and keep it inside the middle copy once it
+  // settles (or at once when it nears either end, so a long fling never hits a wall).
+  let settle = 0;
+  wrap.addEventListener('scroll', () => {
+    const x = wrap.scrollLeft;
+    if (Math.abs(x - set) <= 2) return; // our own step
+    hold();
+    pos = x;
+    const w = seg(), max = wrap.scrollWidth - wrap.clientWidth;
+    if (w && (x < w * 0.25 || x > max - w * 0.25)) { pos = wrapInto(x); setScroll(pos); }
+    clearTimeout(settle);
+    settle = setTimeout(() => { if (!drag) { const y = wrapInto(wrap.scrollLeft); if (Math.abs(y - wrap.scrollLeft) > 1) { pos = y; setScroll(y); } else pos = wrap.scrollLeft; } }, 180);
+  }, { passive: true });
+  wrap.addEventListener('touchstart', () => hold(), { passive: true });
+  wrap.addEventListener('touchmove', () => hold(), { passive: true });
+  wrap.addEventListener('touchend', () => hold(), { passive: true });
+  // A mouse wheel turned over the strip moves it sideways (the page itself never scrolls).
+  wrap.addEventListener('wheel', event => {
+    hold();
+    if (event.shiftKey || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return; // trackpad or shift-wheel: native
+    const unit = event.deltaMode === 1 ? 32 : event.deltaMode === 2 ? wrap.clientWidth : 1;
+    pos = wrapInto(wrap.scrollLeft + event.deltaY * unit);
+    setScroll(pos);
+    event.preventDefault();
+  }, { passive: false });
+  // Drag with a mouse; a drag is not a click on the country under the pointer.
+  wrap.addEventListener('pointerdown', event => {
+    hold();
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    drag = { x: event.clientX, left: wrap.scrollLeft, id: event.pointerId };
+    dragMoved = false;
+  });
+  window.addEventListener('pointermove', event => {
+    if (!drag || event.pointerId !== drag.id) return;
+    const dx = event.clientX - drag.x;
+    if (!dragMoved && Math.abs(dx) < 5) return;
+    if (!dragMoved) { dragMoved = true; wrap.classList.add('is-dragging'); try { wrap.setPointerCapture(drag.id); } catch {} }
+    pos = drag.left - dx;
+    setScroll(pos);
+    const w = seg();
+    if (w && (pos < w * 0.25 || pos > wrap.scrollWidth - wrap.clientWidth - w * 0.25)) { const y = wrapInto(pos); drag.left += y - pos; pos = y; setScroll(y); }
+  });
+  const endDrag = () => { if (!drag) return; drag = null; wrap.classList.remove('is-dragging'); pos = wrapInto(wrap.scrollLeft); setScroll(pos); hold(); };
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
+  wrap.addEventListener('click', event => { if (dragMoved) { event.preventDefault(); event.stopPropagation(); dragMoved = false; } }, true);
+  wrap.addEventListener('dragstart', event => event.preventDefault());
+  // A desktop pointer resting on the strip holds it still so a name can be clicked.
+  // (pointer events with a mouse only: iOS fakes mouseenter on a tap and never leaves.)
+  wrap.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') hovering = true; });
+  wrap.addEventListener('pointerleave', event => { if (event.pointerType === 'mouse') { hovering = false; hold(1200); } });
+  // Keyboard: a focused country stays on screen while the reader tabs along.
+  wrap.addEventListener('focusin', event => {
+    if (event.target.matches && event.target.matches(':focus-visible')) focused = true;
+  });
+  wrap.addEventListener('focusout', () => { focused = false; pos = wrap.scrollLeft; hold(1500); });
+  function place() { const w = seg(); if (w) { pos = wrapInto(Math.max(w, pos)); setScroll(pos); } }
+  window.addEventListener('resize', () => requestAnimationFrame(place));
+  document.fonts?.ready?.then(place);
+  place();
+  start();
+  return { resume() { focused = false; hovering = false; pausedUntil = 0; } };
+}());
 
 // Every few seconds, ping the map country whose capital is currently centered in the ticker.
 // Skipped when reduced motion is preferred, the tab is hidden, or the landing map isn't visible.
@@ -1342,7 +1414,11 @@ function layoutPhoneMap() {
     // Cape Verde and Mauritius sit beyond the scaled mainland: dock them in open
     // ocean at the screen edge (Atlantic below the western bulge; Indian Ocean
     // below Madagascar) rather than on top of Senegal or Madagascar.
-    if (t.id === 'cv' && sl) { t.cx = ux0 + padX + 6 / s; t.cy = sl.maxY + 46 / s; t.side = 'below'; continue; }
+    // The ring must stay on the canvas itself: on a height-limited phone map the screen
+    // edge lies left of the canvas, and a ring docked there (x < 0) was neither drawn nor
+    // tappable - only the clamped 'CPV' tag showed. Keep it in the strip of Atlantic
+    // between the canvas edge and Senegal.
+    if (t.id === 'cv' && sl) { t.cx = Math.max(ux0 + padX + 6 / s, 4 + 9 / s); t.cy = sl.maxY + 46 / s; t.side = 'below'; continue; }
     if (t.id === 'mu' && mg) { t.cx = Math.min(ux1 - padX, mg.maxX + 4 / s); t.cy = mg.maxY + 22 / s; t.side = 'left'; continue; }
     let cx = Math.max(ux0 + padX, Math.min(ux1 - padX, t.ox));
     let cy = Math.max(b.y0 + padY, Math.min(b.y1 + 6 / s, t.oy));
@@ -1393,7 +1469,7 @@ if (window.ResizeObserver) {
   const relayout = () => { if (layoutQueued) return; layoutQueued = true; requestAnimationFrame(() => { layoutQueued = false; layoutHomeMap(); }); };
   const landingWatch = new ResizeObserver(relayout);
   document.addEventListener('DOMContentLoaded', () => {
-    ['.title-block', '.pop-counter', '#home-front-top', '#home-tools', '.ticker-wrap'].forEach(sel => { const el = document.querySelector(sel); if (el) landingWatch.observe(el); });
+    ['.title-block', '.pop-counter', '#home-front-top', '.ticker-wrap'].forEach(sel => { const el = document.querySelector(sel); if (el) landingWatch.observe(el); });
   }, { once: true });
 }
 document.fonts?.ready?.then(() => requestAnimationFrame(layoutHomeMap));
@@ -2065,9 +2141,7 @@ function resumeCityTicker() {
   requestAnimationFrame(() => {
     const focused = document.activeElement;
     if (focused?.closest?.('#ticker')) focused.blur();
-    tickerEl.style.animationPlayState = 'running';
-    tickerEl.getAnimations?.().forEach(animation => animation.play());
-    window.setTimeout(() => tickerEl.style.removeProperty('animation-play-state'), 240);
+    cityTicker?.resume();
   });
 }
 

@@ -2004,3 +2004,12 @@ html.cf-open, html.cf-open body{overflow:hidden}
 .cmp-share-status{font:400 15px/1.4 var(--sans);color:var(--text-muted);overflow-wrap:anywhere}
 .cmp-intro{font:400 15px/1.5 var(--sans)!important}
 .your-desk[hidden]{display:none!important}
+
+/* Country strip: a real horizontal scroller on every screen (app.js cityTickerScroller
+   moves it and wraps it); no CSS animation, no visible scrollbar. */
+.ticker-wrap{overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x;cursor:grab;user-select:none;-webkit-user-select:none}
+.ticker-wrap::-webkit-scrollbar{display:none}
+.ticker-wrap.is-dragging{cursor:grabbing}
+.ticker-wrap.is-dragging button{pointer-events:none}
+html.ticker-js .ticker,.ticker{animation:none!important}
+.ticker button{-webkit-user-drag:none}

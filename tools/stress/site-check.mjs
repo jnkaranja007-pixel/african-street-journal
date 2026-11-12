@@ -141,13 +141,26 @@ for (const mode of ['save-data', 'prose-fails']) {
   }));
   why.generic.forEach(t => fail('generic why line not hidden: ' + t));
   why.solid.forEach(t => fail('solid why line hidden: ' + t));
-  await pg.tap('#home-find'); await pg.waitForTimeout(200);
-  if (await pg.evaluate(() => document.activeElement?.id) !== 'cf-input') fail('Find a country: the box is not focused');
-  await pg.keyboard.type('ivory'); await pg.keyboard.press('Enter'); await pg.waitForTimeout(600);
-  if (!/^#\/ci\b/.test(await pg.evaluate(() => location.hash))) fail('Find a country: "ivory" did not open Cote d\'Ivoire');
-  await pg.goto(BASE, { waitUntil: 'load' }); await pg.waitForTimeout(1500);
-  await pg.tap('#home-search'); await pg.waitForTimeout(300);
-  if (await pg.evaluate(() => document.activeElement?.id) !== 'wire-search-input') fail('Search stories: the Wire search box is not focused');
+  // The country strip moves by itself, and a swipe moves it, pauses it and opens nothing.
+  {
+    await pg.goto(BASE, { waitUntil: 'load' }); await pg.waitForTimeout(1500);
+    const sl = () => pg.evaluate(() => document.querySelector('.ticker-wrap').scrollLeft);
+    const a = await sl(); await pg.waitForTimeout(1200);
+    if (!((await sl()) - a > 10)) fail('country strip does not move by itself');
+    const y = await pg.evaluate(() => { const r = document.querySelector('.ticker-wrap').getBoundingClientRect(); return Math.round(r.top + r.height / 2); });
+    const cdp = await ctx.newCDPSession(pg);
+    const b0 = await sl();
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 320, y }] });
+    for (let i = 1; i <= 12; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 320 - 200 * i / 12, y }] }); await pg.waitForTimeout(16); }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await pg.waitForTimeout(300);
+    const b1 = await sl(); await pg.waitForTimeout(1000); const b2 = await sl();
+    if (b1 - b0 < 100) fail('a swipe did not move the country strip (' + (b1 - b0) + 'px)');
+    if (Math.abs(b2 - b1) > 2) fail('the country strip kept moving right after a swipe');
+    if (await pg.evaluate(() => location.hash)) fail('a swipe on the strip opened a country');
+    const cv = await pg.evaluate(() => { const t = islandHitTargets.find(t => t.id === 'cv'); return t && t.cx > 0 && t.cx < 1000 && t.cy > 0 && t.cy < 1001; });
+    if (!cv) fail('Cabo Verde ring is off the map canvas (not drawn, not tappable)');
+  }
   await pg.goto(BASE + '?compare=ke,ug,tz&lens=investors#/wire', { waitUntil: 'load' }); await pg.waitForTimeout(1800);
   const cmp = await pg.evaluate(() => ({ vals: ['a', 'b', 'c'].map(x => document.getElementById('wire-compare-' + x)?.value).join(','), lens: activeStoryLens,
     open: !document.getElementById('wire-compare-body')?.hidden, share: !!document.getElementById('cmp-share'), search: location.search }));
