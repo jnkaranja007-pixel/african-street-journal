@@ -1843,6 +1843,7 @@ main{position:relative}
   .cv-glance-cell.loss .cv-glance-val{color:var(--down)}
   .cv-glance-cell.is-missing .cv-glance-val{color:var(--text-dim)}
   .cv-glance-sub{font:400 12px/1.35 var(--sans);color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .cv-glance-cmp{margin-top:auto;padding-top:4px;font:500 12px/1.3 var(--sans);color:var(--text-muted)}
 }
 /* wire-phone-v2: on a phone the filters took 205px (three labelled boxes and a full-width
    More button), so two stories showed on the first screen. The labels stay for screen

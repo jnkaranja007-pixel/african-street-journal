@@ -3360,12 +3360,17 @@ function renderGlance(countryId) {
       if (section.getBoundingClientRect().top > window.innerHeight * 0.6) section.scrollIntoView({ block: 'start' });
     });
   }
-  const cell = (item, mode, target, cls = '') =>
-    '<button type="button" class="cv-glance-cell' + cls + (item.value === '—' ? ' is-missing' : '') + '" data-glance-mode="' + mode + '" data-glance-target="' + target + '">' +
+  // item.when: the date the figure is from, in ms (0 for things with no date, like a
+  // port); item.cmp: how it sits against the rest of Africa, where that is known.
+  const cell = (item, mode, target, cls = '') => ({
+    when: item.value === '—' ? -1 : Number(item.when) || 0,
+    html: '<button type="button" class="cv-glance-cell' + cls + (item.value === '—' ? ' is-missing' : '') + '" data-glance-mode="' + mode + '" data-glance-target="' + target + '">' +
       '<span class="cv-glance-key">' + escapeHtml(item.key) + '</span>' +
       '<span class="cv-glance-val">' + escapeHtml(item.value) + '</span>' +
       '<span class="cv-glance-sub">' + escapeHtml(item.sub) + '</span>' +
-    '</button>';
+      (item.cmp ? '<span class="cv-glance-cmp">' + escapeHtml(item.cmp) + '</span>' : '') +
+    '</button>'
+  });
   const farm = countryFacts(countryId)?.farm;
   const topExport = (farm?.items || [])[0];
   const port = countryPorts(countryId)[0];
@@ -3376,12 +3381,14 @@ function renderGlance(countryId) {
   const median = changes.length ? changes[Math.floor((changes.length - 1) / 2)] / 2 + changes[Math.ceil((changes.length - 1) / 2)] / 2 : null;
   // Without a year-earlier price (23 countries in Nov 2026), the first food's price.
   const firstFood = (food?.items || [])[0];
-  const where = ' at ' + foodMarketName(food) + (food?.camp ? ', a refugee camp' : '');
+  const foodWhen = Date.parse(String(food?.date || '').slice(0, 7) + '-15T12:00:00Z') || 0;
+  const foodMonth = foodWhen ? ' · ' + new Date(foodWhen).toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' }) : '';
+  const where = ' at ' + foodMarketName(food) + (food?.camp ? ', a refugee camp' : '') + foodMonth;
   const foodItem = median !== null
-    ? { key: 'Food prices', value: (median > 0 ? '+' : '') + Math.round(median) + '% on a year',
+    ? { key: 'Food prices', value: (median > 0 ? '+' : '') + Math.round(median) + '% on a year', when: foodWhen,
         sub: (changes.length > 1 ? 'Median of ' + changes.length + ' foods' : '1 food') + where }
     : firstFood
-      ? { key: 'Food prices', value: firstFood.commodity,
+      ? { key: 'Food prices', value: firstFood.commodity, when: foodWhen,
           sub: (firstFood.currency === 'SLL' ? 'SLE ' + Math.round(firstFood.price / 1000) : firstFood.currency + ' ' + Math.round(firstFood.price).toLocaleString('en-US')) +
                ' a ' + String(firstFood.unit || '').toLowerCase() + where }
       : { key: 'Food prices', value: '—', sub: 'No current WFP prices' };
@@ -3399,10 +3406,23 @@ function renderGlance(countryId) {
   // above), and each opens a section of that same lens. Until Nov 2026 it was one mixed
   // set of six for everyone, and tapping growth from the farmers' tab quietly switched
   // the reader to the investors' tab.
-  // A World Bank figure says what it measures ("share of GDP") as well as its year.
+  // A World Bank figure says what it measures ("share of GDP") as well as its year, and
+  // where the median of the African countries reporting it is known, which side of it
+  // this country sits. Neutral words: higher inflation is worse, higher internet use is
+  // better, and the reader knows which is which.
   const fact = (key, label) => {
     const k = kpiFact(countryId, key, label);
-    if (k.value !== '—') k.sub = FACT_DEFS[key].sub + ' · ' + String(k.sub).replace(/^World Bank /, '');
+    const f = countryFact(countryId, key);
+    if (k.value === '—' || !f) return k;
+    k.sub = FACT_DEFS[key].sub + ' · ' + String(k.sub).replace(/^World Bank /, '');
+    k.when = Date.UTC(f.y, 6, 1);
+    const med = africaMedian(key);
+    if (Number.isFinite(med)) {
+      const fmt = FACT_DEFS[key].fmt;
+      const mine = formatFactValue(fmt, f.v), theirs = formatFactValue(fmt, med);
+      k.cmp = mine === theirs ? 'At the Africa median'
+        : (f.v > med ? 'Above' : 'Below') + ' the Africa median (' + theirs + ')';
+    }
     return k;
   };
   const mode = ['farmers', 'investors', 'diaspora'].includes(audienceSelect?.value) ? audienceSelect.value : 'farmers';
@@ -3413,6 +3433,7 @@ function renderGlance(countryId) {
     const idxStale = idx && marketAgeDays(idx.date) > 7;
     const indexItem = idx
       ? { key: 'Stock market', value: Number(idx.level).toLocaleString('en-US', { maximumFractionDigits: idx.level >= 1000 ? 0 : 2 }),
+          when: Date.parse(String(idx.date || '').slice(0, 10) + 'T12:00:00Z') || 0,
           sub: idx.name + (pct !== null ? ' · ' + (pct > 0 ? '+' : '') + pct + '% on the day' : '') + ' · ' + (idxStale ? 'stale, ' : '') + formatMarketDate(idx.date) }
       : { key: 'Stock market', value: '—', sub: 'No index on file' };
     cells = [
@@ -3427,7 +3448,7 @@ function renderGlance(countryId) {
     const ccy = investorForCountry(countryId, COUNTRY_INFO[countryId]).currency;
     const rate = (window.__FX || {})[ccy];
     const fxItem = Number.isFinite(rate)
-      ? { key: '$1 buys', value: formatFxRate(rate) + ' ' + ccy, sub: (CCY_NAME[ccy] || 'Local currency') + (formatFxDate(window.__FX_AT) ? ' · ' + formatFxDate(window.__FX_AT) : '') }
+      ? { key: '$1 buys', value: formatFxRate(rate) + ' ' + ccy, when: Date.parse(window.__FX_AT || '') || 0, sub: (CCY_NAME[ccy] || 'Local currency') + (formatFxDate(window.__FX_AT) ? ' · ' + formatFxDate(window.__FX_AT) : '') }
       : { key: '$1 buys', value: '—', sub: ccy ? 'No rate for ' + ccy : 'No currency on file' };
     cells = [
       cell(fxItem, mode, 'cv-dia-fx'),
@@ -3439,17 +3460,22 @@ function renderGlance(countryId) {
     ];
   } else {
     cells = [
-      cell({ key: 'Top farm export', value: topExport ? topExport.label : '—', sub: topExport ? formatFactValue('usd', topExport.usd) + ' a year' : 'Not published' }, mode, 'cv-ag'),
+      // FAOSTAT's 2022-24 average, dated to its middle year.
+      cell({ key: 'Top farm export', value: topExport ? topExport.label : '—', when: Date.UTC(2023, 6, 1), sub: topExport ? formatFactValue('usd', topExport.usd) + ' a year' : 'Not published' }, mode, 'cv-ag'),
       cell(foodItem, mode, 'cv-food', median === null ? '' : median > 0 ? ' up' : ' down'),
-      cell(seasonGlanceItem(countryId), mode, 'cv-crop-cal'),
+      // About this month, so it is the freshest thing on the farmers' card.
+      cell({ ...seasonGlanceItem(countryId), when: Date.now() }, mode, 'cv-crop-cal'),
       cell(fact('agJobs', 'Jobs in farming'), mode, 'cv-ag'),
       cell(portItem, mode, 'cv-infra'),
       cell(airportItem, mode, 'cv-infra')
     ];
   }
+  // Newest first: today's exchange rate or stock move before a World Bank figure from two
+  // years ago, and anything with no figure last. Ties keep the order above.
+  cells = cells.map((c, i) => ({ ...c, i })).sort((a, b) => b.when - a.when || a.i - b.i);
   el.innerHTML =
-    '<header class="cv-section-head"><h4>At a glance</h4><span class="meta">Tap a figure for the detail</span></header>' +
-    '<div class="cv-glance-grid">' + cells.join('') + '</div>';
+    '<header class="cv-section-head"><h4>At a glance</h4><span class="meta">Newest first · tap for the detail</span></header>' +
+    '<div class="cv-glance-grid">' + cells.map(c => c.html).join('') + '</div>';
 }
 
 // What the season calendar says about this month: the crops being harvested, or failing
