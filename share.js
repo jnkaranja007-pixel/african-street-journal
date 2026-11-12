@@ -24,7 +24,7 @@
   if (window.ASJ_STORY_KIT || !document.querySelector('article.story')) return;
   var me = document.currentScript, src = (me && me.src) || '';
   var s = document.createElement('script');
-  s.src = (src ? src.replace(/share\.js(\?.*)?$/, '') : '/') + 'story-kit.js?v=118';
+  s.src = (src ? src.replace(/share\.js(\?.*)?$/, '') : '/') + 'story-kit.js?v=119';
   s.async = true;
   document.head.appendChild(s);
 }());

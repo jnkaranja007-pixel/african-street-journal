@@ -406,7 +406,7 @@
 
   /* ── Styles: the kit carries its own, reading the page's colours where it has them ── */
   var CSS = [
-    '.asj-kit{--k-ink:var(--text,var(--c-e8e6e3,#e8e6e3));--k-muted:var(--text-muted,var(--c-a8a39d,#a8a39d));--k-dim:var(--text-dim,var(--c-8a847b,#8a847b));--k-rule:var(--rule,var(--c-2a2a2a,#2a2a2a));--k-surface:var(--surface,var(--c-181818,#1a1a1a));--k-accent:var(--green-bright,var(--c-66bb6a,#66bb6a));--k-hi:var(--front-green,#439447);--k-cta:var(--kit-cta,#2e7d32);--k-land:var(--kit-land,#2c322d);--k-sea:var(--kit-sea,#151816);--k-mono:var(--mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);--k-serif:var(--serif,"Playfair Display",Georgia,serif);box-sizing:border-box}',
+    '.asj-kit,.asj-listen,.asj-kit-share-label{--k-ink:var(--text,var(--c-e8e6e3,#e8e6e3));--k-muted:var(--text-muted,var(--c-a8a39d,#a8a39d));--k-dim:var(--text-dim,var(--c-8a847b,#8a847b));--k-rule:var(--rule,var(--c-2a2a2a,#2a2a2a));--k-surface:var(--surface,var(--c-181818,#1a1a1a));--k-accent:var(--green-bright,var(--c-66bb6a,#66bb6a));--k-hi:var(--front-green,#439447);--k-cta:var(--kit-cta,#2e7d32);--k-land:var(--kit-land,#2c322d);--k-sea:var(--kit-sea,#151816);--k-mono:var(--mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);--k-serif:var(--serif,"Playfair Display",Georgia,serif);box-sizing:border-box}',
     '.asj-kit *{box-sizing:border-box}',
     '.asj-kit[hidden]{display:none!important}',
     '.asj-kit-visual{display:flex;gap:18px;align-items:center;margin:22px 0 8px;padding:14px;border:1px solid var(--k-rule);background:var(--k-surface);text-align:left}',
@@ -454,6 +454,16 @@
     '.asj-kit-cta b{display:block;font:700 21px/1.2 var(--k-serif)}',
     '.asj-kit-cta span{display:block;margin-top:3px;font-size:13.5px;line-height:1.35;color:#fff}',
     '.asj-kit-cta i{font-style:normal;font-size:24px;line-height:1}',
+    '.asj-listen{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 4px}',
+    '.asj-listen[hidden],.asj-listen [hidden]{display:none!important}',
+    '.asj-listen button{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px 0 12px;border:1px solid var(--k-rule);border-radius:999px;background:var(--k-surface);color:var(--k-ink);font:600 15px/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:0;text-transform:none;cursor:pointer}',
+    '.asj-listen button:hover{border-color:var(--k-hi)}',
+    '.asj-listen button:focus-visible{outline:2px solid var(--k-hi);outline-offset:2px}',
+    '.asj-listen svg{width:16px;height:16px;fill:currentColor;flex:none}',
+    '.asj-listen .asj-listen-play svg{color:var(--k-hi)}',
+    '.asj-listen .asj-listen-stop{padding:0 14px 0 12px}',
+    '.asj-listen-note{font:400 14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--k-muted)}',
+    '.asj-kit-share-label{margin:28px 0 8px;font:600 14px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--k-muted)}',
     '@media (max-width:520px){.asj-kit-visual{gap:12px;padding:10px;align-items:flex-start}.asj-kit-map{flex-basis:112px}.asj-kit-map svg{width:112px;height:112px}.asj-kit-signal b,.asj-kit-where b{font-size:22px}.asj-kit-figs b{font-size:20px}}'
   ].join('\n');
   function ensureCss() {
@@ -510,6 +520,114 @@
     }).catch(function () { return false; });
   }
 
+  /* -- Listen: the browser reads the story aloud --------------------------------------
+     speechSynthesis, on the reader's own device: no server, no cost, nothing sent
+     anywhere. The voice is whatever the phone or computer has, so quality varies. One
+     utterance per paragraph: Chrome cuts a long single utterance off after ~15 s, and a
+     paragraph is also where pause and resume land naturally. Hidden where unsupported. */
+  var LISTEN_ICONS = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg>',
+    stop: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5h11v11h-11z"/></svg>'
+  };
+  var listenCurrent = null;
+  function speechSupported() {
+    return typeof window !== 'undefined' && 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function';
+  }
+  function pickVoice() {
+    try {
+      var voices = window.speechSynthesis.getVoices() || [];
+      var en = voices.filter(function (v) { return /^en(-|_|$)/i.test(v.lang || ''); });
+      var rank = function (v) {
+        var n = (v.name || '') + ' ' + (v.lang || '');
+        return (/natural|enhanced|premium|neural/i.test(n) ? 0 : 4) + (/en[-_](GB|ZA|KE|NG|GH)/i.test(v.lang || '') ? 0 : /en[-_]US/i.test(v.lang || '') ? 1 : 2) + (v.localService ? 0 : 1);
+      };
+      en.sort(function (a, b) { return rank(a) - rank(b); });
+      return en[0] || null;
+    } catch (e) { return null; }
+  }
+  // host: an element to fill. getParts(): the text to read, as an array of strings.
+  function mountListen(host, getParts) {
+    if (!host) return null;
+    if (listenCurrent && listenCurrent.host === host) listenCurrent.stop();
+    host.className = 'asj-listen';
+    if (!speechSupported()) { host.hidden = true; host.innerHTML = ''; return null; }
+    ensureCss();
+    host.hidden = false;
+    host.innerHTML =
+      '<button type="button" class="asj-listen-play" aria-label="Listen to this story">' + LISTEN_ICONS.play + '<span>Listen</span></button>' +
+      '<button type="button" class="asj-listen-stop" hidden>' + LISTEN_ICONS.stop + '<span>Stop</span></button>' +
+      '<span class="asj-listen-note" aria-live="polite"></span>';
+    var play = host.querySelector('.asj-listen-play'), stopBtn = host.querySelector('.asj-listen-stop'), note = host.querySelector('.asj-listen-note');
+    var synth = window.speechSynthesis, state = 'idle', queue = [], at = 0, run = 0;
+    function paint() {
+      var label = state === 'playing' ? 'Pause' : state === 'paused' ? 'Resume' : 'Listen';
+      play.innerHTML = (state === 'playing' ? LISTEN_ICONS.pause : LISTEN_ICONS.play) + '<span>' + label + '</span>';
+      play.setAttribute('aria-label', state === 'playing' ? 'Pause reading' : state === 'paused' ? 'Resume reading' : 'Listen to this story');
+      stopBtn.hidden = state === 'idle';
+      note.textContent = state === 'idle' ? '' : state === 'paused' ? 'Paused' : 'Reading aloud';
+    }
+    function speakNext(myRun) {
+      if (myRun !== run || state === 'idle') return;
+      if (at >= queue.length) { state = 'idle'; paint(); return; }
+      var u = new window.SpeechSynthesisUtterance(queue[at]);
+      var voice = pickVoice();
+      if (voice) { u.voice = voice; u.lang = voice.lang; } else u.lang = 'en';
+      u.rate = 0.98;
+      u.onend = function () { if (myRun !== run) return; at++; speakNext(myRun); };
+      u.onerror = function (e) {
+        if (myRun !== run) return;
+        if (e && (e.error === 'interrupted' || e.error === 'canceled')) return;
+        state = 'idle'; paint(); note.textContent = 'Your browser could not read this aloud.';
+      };
+      synth.speak(u);
+    }
+    function start() {
+      queue = [];
+      (getParts() || []).forEach(function (t) {
+        t = String(t || '').replace(/\s+/g, ' ').trim();
+        if (!t) return;
+        // Long paragraphs in sentence-sized pieces, under ~220 characters each.
+        var pieces = t.match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) || [t], buf = '';
+        pieces.forEach(function (p) {
+          if ((buf + p).length > 220 && buf) { queue.push(buf.trim()); buf = ''; }
+          buf += p;
+        });
+        if (buf.trim()) queue.push(buf.trim());
+      });
+      if (!queue.length) return;
+      if (listenCurrent && listenCurrent !== api) listenCurrent.stop();
+      listenCurrent = api;
+      try { synth.cancel(); } catch (e) {}
+      at = 0; run++; state = 'playing'; paint();
+      speakNext(run);
+    }
+    function stop() {
+      run++; state = 'idle';
+      try { synth.cancel(); } catch (e) {}
+      paint();
+    }
+    play.addEventListener('click', function () {
+      if (state === 'idle') start();
+      else if (state === 'playing') { try { synth.pause(); } catch (e) {} state = 'paused'; paint(); }
+      else {
+        state = 'playing'; paint();
+        try { synth.resume(); } catch (e) {}
+        // Some engines (Android Chrome) drop a paused queue: speak from this paragraph.
+        setTimeout(function () { if (state === 'playing' && !synth.speaking) { var r = ++run; try { synth.cancel(); } catch (e) {} speakNext(r); } }, 350);
+      }
+    });
+    stopBtn.addEventListener('click', stop);
+    var api = { host: host, stop: stop };
+    paint();
+    return api;
+  }
+  function stopListening() { if (listenCurrent) listenCurrent.stop(); }
+  if (speechSupported()) {
+    try { window.speechSynthesis.getVoices(); } catch (e) {}
+    window.addEventListener('pagehide', stopListening);
+  }
+
   /* ── Static story pages: the way further into the paper ── */
   var WATCH_KEY = 'asj:watchlist';
   function watchlist() {
@@ -559,12 +677,48 @@
     var home = new URL('.', BASE).href;
     var link = function (tab) { return home + '#/' + cc + '/' + tab; };
 
+    // The story first (12 Nov 2026). The share buttons and this map card sat between the
+    // byline and the first paragraph, which put the opening sentence below a phone's first
+    // screen. Both now follow the story, before its sources. Pages built since carry the
+    // share row there already; older ones are moved here.
+    var after = article.querySelector('.share-after') || article.querySelector('.section-label') || null;
+    var place = function (el) { if (after && after.parentNode === article) article.insertBefore(el, after); else article.appendChild(el); };
     if (head) {
       var visual = document.createElement('aside');
       visual.setAttribute('aria-label', 'This story at a glance');
       visual.hidden = true;
-      head.parentNode.insertBefore(visual, head.nextSibling);
+      place(visual);
       mountVisual(visual, { cc: cc, country: country, headline: headline, dek: dek, paragraphs: paragraphs, topic: topic, link: link });
+      var oldShare = head.querySelector('.share');
+      if (oldShare) {
+        var label = document.createElement('p');
+        label.className = 'asj-kit-share-label';
+        label.textContent = 'Share this story';
+        place(label);
+        place(oldShare);
+      }
+      // A byline that named one outlet when the story cites several (pages built before
+      // 12 Nov 2026): name them all, from the sources list under the story.
+      var byline = head.querySelector('.byline');
+      var srcLinks = Array.prototype.slice.call(article.querySelectorAll('.src a'));
+      if (byline && srcLinks.length > 1 && /^\s*Source:/.test(byline.textContent)) {
+        var first = byline.querySelector('a');
+        var seen = {}, names = [];
+        srcLinks.forEach(function (a) { var n = a.textContent.trim(); if (n && !seen[n.toLowerCase()]) { seen[n.toLowerCase()] = 1; names.push(a); } });
+        if (first && names.length > 1) {
+          var frag = document.createDocumentFragment();
+          names.forEach(function (a, i) {
+            if (i) frag.appendChild(document.createTextNode(i === names.length - 1 ? ' and ' : ', '));
+            var c = a.cloneNode(true); frag.appendChild(c);
+          });
+          if (first.previousSibling && first.previousSibling.nodeType === 3) first.previousSibling.textContent = first.previousSibling.textContent.replace('Source:', 'Sources:');
+          first.parentNode.replaceChild(frag, first);
+        }
+      }
+      // Listen, under the byline.
+      var listen = document.createElement('div');
+      if (byline) byline.parentNode.insertBefore(listen, byline.nextSibling); else head.appendChild(listen);
+      mountListen(listen, function () { return [headline, dek].concat(paragraphs); });
     }
 
     var land = document.createElement('section');
@@ -624,6 +778,8 @@
 
   window.ASJ_STORY_KIT = {
     mountVisual: mountVisual,
+    mountListen: mountListen,
+    stopListening: stopListening,
     pickSignal: pickSignal,
     resolveSignal: resolveSignal,
     bigNumber: bigNumber,

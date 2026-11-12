@@ -77,7 +77,7 @@ function Get-ShownTopic($Topic) {
   return ''
 }
 function Test-ShowWhy($Brief) {
-  return ([bool]$Brief.why -and -not (Test-WhyRestatesDek $Brief) -and -not (Test-WhyGuesses ([string]$Brief.why)))
+  return ([bool]$Brief.why -and -not (Test-WhyRestatesDek $Brief) -and -not (Test-WhyGuesses ([string]$Brief.why)) -and -not (Test-WhyGeneric ([string]$Brief.why)))
 }
 
 function JsonEsc($s) {
@@ -191,6 +191,10 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 .country-hub a:hover,.country-hub a:focus-visible{color:var(--c-66bb6a)}
 .hub-note{margin-top:28px;color:var(--c-a8a39d)!important}
 .page code{font:14px/1.4 ui-monospace,Consolas,monospace;color:var(--c-e8e6e3);word-break:break-all}
+/* 12 Nov 2026: share row after the story, so the opening sentence is on a phone's first screen */
+.share-after{margin:30px 0 4px;padding-top:22px;border-top:1px solid var(--c-232323)}
+.story .share-label,.story .asj-kit-share-label{font:600 15px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;color:var(--c-cfcac3);margin:0 0 10px}
+.story-head{padding-bottom:18px;margin-bottom:22px}
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=70" defer></script>'
@@ -213,7 +217,7 @@ $sameAs = @(@($socialTelegram, $socialBluesky) | Where-Object { $_ } | ForEach-O
 $sameAsLd = if ($sameAs) { ',"sameAs":[' + $sameAs + ']' } else { '' }
 # Five entries: "Email us" repeated Contact (whose first line is the address), and RSS
 # opened a raw XML file - it is explained on About and the text-only edition instead.
-$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">Text-only edition</a><a href="'+$BaseUrl+'/topics/">Topics</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/privacy/">Privacy</a></div></details>'
+$infoMenu = '<details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="'+$BaseUrl+'/countries/">Text-only edition</a><a href="'+$BaseUrl+'/topics/">Topics</a><a href="'+$BaseUrl+'/markets/">Markets</a><a href="'+$BaseUrl+'/about/">About</a><a href="'+$BaseUrl+'/contact/">Contact</a><a href="'+$BaseUrl+'/corrections/">Corrections</a><a href="'+$BaseUrl+'/privacy/">Privacy</a></div></details>'
 
 
 # Same analytics loader as index.html. These pages are where search traffic lands, so
@@ -569,7 +573,7 @@ $analytics
 <meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"$(JsonEsc $name)","item":"$canonical"}]}</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
 </head>
 <body>
 <div class="wrap">
@@ -753,6 +757,21 @@ foreach ($sp in $pagesToWrite) {
     foreach ($s in $srcs) { [void]$srcHtml.Append("<a href=""$(Esc $s.url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $s.name)</a>") }
     [void]$srcHtml.Append('</div>')
   }
+  # The byline names every outlet the story was written from ("Capital FM, Nation and
+  # The Star"), not only the first; each links to its report.
+  $bylineNames = New-Object System.Collections.Generic.List[string]
+  $bylineSeen = @{}
+  foreach ($s in $srcs) {
+    $sn = ([string]$s.name).Trim()
+    if (-not $sn -or $bylineSeen.ContainsKey($sn.ToLowerInvariant())) { continue }
+    $bylineSeen[$sn.ToLowerInvariant()] = $true
+    $bylineNames.Add("<a href=""$(Esc $s.url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $sn)</a>")
+  }
+  $bylineSrc = ''
+  if ($bylineNames.Count -eq 1) { $bylineSrc = 'Source: ' + $bylineNames[0] }
+  elseif ($bylineNames.Count -gt 1) {
+    $bylineSrc = 'Sources: ' + (($bylineNames | Select-Object -First ($bylineNames.Count - 1)) -join ', ') + ' and ' + $bylineNames[$bylineNames.Count - 1]
+  }
   $bodyHtml = New-Object System.Text.StringBuilder
   foreach ($p in $paragraphs) { [void]$bodyHtml.Append("<p>$(Esc $p)</p>`n") }
   if (Test-ShowWhy $b) { [void]$bodyHtml.Append("<p class=""why""><b>Why it matters</b>$(Esc $b.why)</p>`n") }
@@ -838,7 +857,7 @@ $analytics
 <meta name="twitter:image" content="$ogImage">
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">$crumbs</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
@@ -850,7 +869,11 @@ $analytics
   <div class="meta">$(if ((Get-ShownTopic $b.topic) -and $topicPages.ContainsKey((Get-TopicSlug $b.topic))) { "<a href=""$BaseUrl/topics/$(Get-TopicSlug $b.topic)/"">$(Esc $b.topic)</a>" } else { Esc $(if (Get-ShownTopic $b.topic) { $b.topic } else { $sp.country }) })</div>
   <h1>$(Esc $b.headline)</h1>
   <p class="dek">$(Esc $dek)</p>
-  <p class="byline">$(if($srcs.Count){"Source: <a href=""$(Esc $srcs[0].url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $srcs[0].name)</a> &middot; "})$(if($published){"<time datetime=""$published"">$(Esc $sp.when)</time> &middot; "})$readMin min read</p>
+  <p class="byline">$(if($bylineSrc){"$bylineSrc &middot; "})$(if($published){"<time datetime=""$published"">$(Esc $sp.when)</time> &middot; "})$readMin min read</p>
+  </header>
+$($bodyHtml.ToString())
+  <div class="share-after">
+  <p class="share-label">Share this story</p>
   <div class="share" data-url="$storyCanonical" data-title="$(Esc $b.headline)">
     <a class="share-wa" href="https://wa.me/?text=$waText" target="_blank" rel="noopener">WhatsApp</a>
     <a href="https://x.com/intent/post?text=$xText&amp;url=$encUrl" target="_blank" rel="noopener">X</a>
@@ -859,8 +882,7 @@ $analytics
     <button type="button" class="share-native" hidden>Share&hellip;</button>
     <span class="share-status" role="status" aria-live="polite"></span>
   </div>
-  </header>
-$($bodyHtml.ToString())
+  </div>
   $(if($srcs.Count){"<h2 class=""section-label"">Sources</h2>"})
 $($srcHtml.ToString())
   </article>
@@ -1042,7 +1064,7 @@ foreach ($slug in $trustPages.Keys) {
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
 </head>
 <body>
 <div class="wrap page">
@@ -1117,7 +1139,7 @@ foreach ($ts in $topicOrder) {
 <script type="application/ld+json">$tLd</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"Topics","item":"$BaseUrl/topics/"},{"@type":"ListItem","position":3,"name":"$(JsonEsc $tName)","item":"$tUrl"}]}</script>
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
 </head>
 <body>
 <div class="wrap page">
@@ -1151,7 +1173,7 @@ $tiHtml = @"
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
 </head>
 <body>
 <div class="wrap page">
@@ -1231,7 +1253,7 @@ $digestHtml = @"
 <title>Today's posts | The African Street Journal</title>
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
 <style>.dg{margin:0 0 26px}.dg textarea{width:100%;box-sizing:border-box;background:#1b1b1b;color:#ece8e1;border:1px solid #333;border-radius:6px;padding:12px;font:15px/1.5 system-ui,sans-serif;resize:vertical}
 .dg-actions{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0}.dg-actions a,.dg-actions button{font:600 15px system-ui,sans-serif;padding:9px 14px;border-radius:6px;border:1px solid #3a3a3a;background:#222;color:#f3efe8;text-decoration:none;cursor:pointer}
 .dg-actions a:hover,.dg-actions button:hover{border-color:#5fbf6a}details{border-top:1px solid #262626;padding:10px 0}summary{cursor:pointer;font:600 16px system-ui,sans-serif}</style>
@@ -1299,7 +1321,7 @@ $hubHtml = @"
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=71">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
 $analytics
 </head>
 <body>
@@ -1321,6 +1343,8 @@ $hubDir = Join-Path $root 'countries'
 if (-not (Test-Path $hubDir)) { New-Item -ItemType Directory -Path $hubDir -Force | Out-Null }
 [IO.File]::WriteAllText((Join-Path $hubDir 'index.html'), $hubHtml, (New-Object Text.UTF8Encoding($false)))
 $urls.Add("$BaseUrl/countries/")
+# /markets/ is a committed page (markets/index.html), not built here; list it for search.
+if (Test-Path (Join-Path $root 'markets\index.html')) { $urls.Add("$BaseUrl/markets/") }
 
 # --- RSS feed and Google News sitemap ------------------------------------------
 function XmlEsc([string]$t) { if ($null -eq $t) { return '' }; return [Security.SecurityElement]::Escape($t) }
