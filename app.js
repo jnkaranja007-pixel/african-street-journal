@@ -34,9 +34,9 @@ const WHY_RESTATE_SHARE = 0.6;
 const WHY_RESTATE_LEAD_SHARE = 0.7;
 const STORY_LENS_LABELS = { general:'Top', farmers:'Farmer', investors:'Investor', diaspora:'Diaspora' };
 const STORY_LENS_TOPIC_SCORES = {
-  farmers: { Politics:48, Business:62, Sport:24, Tech:52, Climate:88, Agriculture:96, Culture:30, Health:58, Education:54, News:44 },
-  investors: { Politics:72, Business:96, Sport:35, Tech:88, Climate:62, Agriculture:68, Culture:38, Health:54, Education:58, News:48 },
-  diaspora: { Politics:78, Business:72, Sport:68, Tech:58, Climate:52, Agriculture:48, Culture:88, Health:66, Education:74, News:56 }
+  farmers: { Politics:48, Security:40, Business:62, Sport:24, Tech:52, Climate:88, Agriculture:96, Culture:30, Health:58, Education:54, News:44 },
+  investors: { Politics:72, Security:50, Business:96, Sport:35, Tech:88, Climate:62, Agriculture:68, Culture:38, Health:54, Education:58, News:48 },
+  diaspora: { Politics:78, Security:70, Business:72, Sport:68, Tech:58, Climate:52, Agriculture:48, Culture:88, Health:66, Education:74, News:56 }
 };
 
 function normalizeStoryLens(value) {
@@ -5845,7 +5845,7 @@ canvas.addEventListener('click', (e) => {
 
 /* ── The Wire: continental topic + search axis ───────────────────────── */
 (function(){
-  const TOPICS = ['All','Politics','Business','Sport','Tech','Climate','Agriculture','Culture','Health','Education','News'];
+  const TOPICS = ['All','Politics','Security','Business','Sport','Tech','Climate','Agriculture','Culture','Health','Education','News'];
   const view = document.getElementById('wire-view');
   const entries = Array.from(document.querySelectorAll('#wire-entry,[data-wire-entry]'));
   const entry = entries[0] || null;

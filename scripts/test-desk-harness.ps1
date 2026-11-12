@@ -73,11 +73,18 @@ $responder = {
       for ($q = 0; $q -lt $priority.Count; $q++) { if ($rm.Groups[2].Value -match $priority[$q]) { $rank = $q; break } }
       $found += [pscustomobject]@{ i = [int]$rm.Groups[1].Value; r = $rank }
     }
-    return ([ordered]@{ order = @($found | Sort-Object r | ForEach-Object { $_.i }) } | ConvertTo-Json -Compress)
+    # The stand-in editor also reads the council story's dek as a different event.
+    $off = @()
+    foreach ($rm in [regex]::Matches($PromptText, '(?m)^\[(\d+)\] ([^\r\n]+)')) { if ($rm.Groups[2].Value -match 'council adopts') { $off += [int]$rm.Groups[1].Value } }
+    return ([ordered]@{ order = @($found | Sort-Object r | ForEach-Object { $_.i }); mismatch = $off } | ConvertTo-Json -Compress)
+  }
+  # The dek rewrite for a story the editor flagged (Get-RepairedDek).
+  if ($PromptText -match 'WRITE THE SUMMARY LINE') {
+    return '{"dek":"Opposition councillors voted against the plan, which gives roads 25 million dollars and water 15 million."}'
   }
   $lens = [ordered]@{
     farmers = [ordered]@{ why = 'The report establishes no direct effect on farming or rural livelihoods in Fixtureland.'; score = 5 }
-    investors = [ordered]@{ why = 'The report names a public body and a state bank acting on port capacity for shipping companies.'; score = 70 }
+    investors = [ordered]@{ why = 'The packet names a public body and a state bank acting on port capacity for shipping companies.'; score = 70 }
     diaspora = [ordered]@{ why = 'The report establishes no direct effect on diaspora travel, families or cross-border money.'; score = 10 }
   }
   $title = ''
@@ -126,7 +133,7 @@ $responder = {
       $paragraphs = @(
         'After a four-hour session on Thursday, the Port Nova city council approved its budget for next year, with total spending of 80 million dollars.',
         'Roads get 25 million dollars of that and water 15 million. Opposition councillors voted against the budget, the council said after the session ended.',
-        'Councillors called the vote a pivotal moment for the city. The mayor said road works paid for by the budget will start in January.')
+        'Councillors called the vote a pivotal moment for the city. The mayor said road works paid for by the budget will start in January. The packet does not say when tenders close.')
       $why = 'Port Nova residents will see road works from January funded by the new 80 million dollar budget.'
     }
     'Telecom company expands network' {
@@ -215,6 +222,7 @@ $server = [PowerShell]::Create()
         repair = ($prompt -match 'REPAIR:')
         dateRepair = ($prompt -match 'REPAIR: The previous draft named dates')
         rank = ($prompt -match "RANK THE STORIES")
+        dek = ($prompt -match "WRITE THE SUMMARY LINE")
         reasoningOff = ([bool]$req.PSObject.Properties['reasoning'] -and $req.reasoning.enabled -eq $false)
         maxTokens = [int]$req.max_tokens
       })
@@ -340,10 +348,15 @@ try {
   # The scripted drafts paraphrase and date their facts, so a check that misfired on them
   # would cost every story on the desk a rewrite.
   Assert-Harness 'paraphrased, dated drafts are not sent back for copying or relative time' ($metrics.draftsCopyingSource -eq 0 -and $metrics.draftsWithRelativeTime -eq 0) ("copying {0} relative {1}" -f $metrics.draftsCopyingSource, $metrics.draftsWithRelativeTime)
+  # 12 Nov 2026: twelve stories told the reader about "the packet", and Kenya's lead ran
+  # a headline about one event over a dek about another.
+  Assert-Harness 'the desk''s working words are taken out of the story and the lens reasons' ((& $text $byId['budget']) -notmatch 'packet' -and [string]@($byId['budget'].paragraphs)[-1] -match 'start in January\.$' -and [string]$byId['port'].lenses.investors.why -match '^The report names' -and [int]$metrics.deskLanguageRemoved -ge 1) ("budget: {0} | lens: {1} | removed {2}" -f @($byId['budget'].paragraphs)[-1], $byId['port'].lenses.investors.why, $metrics.deskLanguageRemoved)
+  $dekCalls = @($mainRequests | Where-Object { $_.dek })
+  Assert-Harness 'a dek the editor reads as another event is written again from the story' ([string]$byId['budget'].dek -match '^Opposition councillors voted against the plan' -and $dekCalls.Count -eq 1 -and [int]$metrics.deksRepaired -eq 1 -and [string]$byId['port'].dek -match '^Shipping lines start') ("dek: {0}; calls {1}; repaired {2}" -f $byId['budget'].dek, $dekCalls.Count, $metrics.deksRepaired)
 
   Write-Host '[harness] style rewrites go to the rewrite model' -ForegroundColor Cyan
   $styleCalls = @($mainRequests | Where-Object { $_.style })
-  $firstDrafts = @($mainRequests | Where-Object { -not $_.repair -and -not $_.rank })
+  $firstDrafts = @($mainRequests | Where-Object { -not $_.repair -and -not $_.rank -and -not $_.dek })
   $dateCalls = @($mainRequests | Where-Object { $_.dateRepair })
   Assert-Harness 'every style rewrite is sent to the rewrite model' ($styleCalls.Count -eq 3 -and @($styleCalls | Where-Object { $_.model -ne 'stand-in/rewriter' }).Count -eq 0) (($styleCalls | ForEach-Object { $_.model }) -join ', ')
   Assert-Harness 'a rewrite sends no temperature and no schema limits' (@($styleCalls | Where-Object { $_.temperature -or $_.limits }).Count -eq 0)
@@ -355,7 +368,7 @@ try {
   Assert-Harness 'a date repair of a first draft stays on the writer model' ($dateCalls.Count -ge 1 -and @($dateCalls | Where-Object { $_.model -ne 'stand-in/model' }).Count -eq 0)
   # Four: three style rewrites, and the fact repair of the one that invented a figure,
   # which the rewrite model is also asked to fix.
-  Assert-Harness 'metrics name the rewrite model and count its calls' ($metrics.rewriteModel -eq 'stand-in/rewriter' -and $metrics.rewriteCalls -eq 4 -and @($mainRequests | Where-Object { $_.model -eq "stand-in/rewriter" -and -not $_.rank }).Count -eq 4 -and $metrics.rewriteRouteErrors -eq 0) ("model {0} calls {1} errors {2}" -f $metrics.rewriteModel, $metrics.rewriteCalls, $metrics.rewriteRouteErrors)
+  Assert-Harness 'metrics name the rewrite model and count its calls' ($metrics.rewriteModel -eq 'stand-in/rewriter' -and $metrics.rewriteCalls -eq 4 -and @($mainRequests | Where-Object { $_.model -eq "stand-in/rewriter" -and -not $_.rank -and -not $_.dek }).Count -eq 4 -and $metrics.rewriteRouteErrors -eq 0) ("model {0} calls {1} errors {2}" -f $metrics.rewriteModel, $metrics.rewriteCalls, $metrics.rewriteRouteErrors)
 
   Write-Host '[harness] a rewrite model that refuses the call' -ForegroundColor Cyan
   $script:logPath = $refuseLogPath

@@ -324,8 +324,17 @@ function Read-Feed([string]$url) {
   try {
     $items = Read-FeedUncached $key
   } catch {
-    $script:FEED_CACHE[$key] = $_.Exception
-    throw
+    # One more try after a pause. On 12 Nov 2026 Food Business Africa, registered against
+    # every country, refused the runner once and was reported as 55 dead feeds; the same
+    # address answered from elsewhere minutes later. A host that is really down costs
+    # one extra timeout a night, not one per country (the failure is cached below).
+    Start-Sleep -Seconds 3
+    try {
+      $items = Read-FeedUncached $key
+    } catch {
+      $script:FEED_CACHE[$key] = $_.Exception
+      throw
+    }
   }
   $script:FEED_CACHE[$key] = $items
   return $items
@@ -435,6 +444,8 @@ $runTimer = [Diagnostics.Stopwatch]::StartNew()
 $result = [ordered]@{}
 $totalItems = 0
 $deadFeeds  = New-Object System.Collections.Generic.List[string]
+# Outlet name -> why its feed failed, and how many countries it is registered against.
+$deadOutlets = [ordered]@{}
 $articleCache = @{}
 $articlePagesAttempted = 0
 $articlePagesEnriched = 0
@@ -516,6 +527,9 @@ foreach ($code in $codes) {
       if ($kept) { $liveSources++ }
     } catch {
       $deadFeeds.Add("$code/$($s.name)")
+      $outletName = [string]$s.name
+      if (-not $deadOutlets.Contains($outletName)) { $deadOutlets[$outletName] = [pscustomobject]@{ countries = 0; why = ((([string]$_.Exception.Message).Split("`n")[0].Trim()) -replace '^Exception calling "[^"]+" with "\d+" argument\(s\): "?', '' -replace '"$', '') } }
+      $deadOutlets[$outletName].countries++
     }
     Start-Sleep -Milliseconds $DelayMs
   }
@@ -809,6 +823,7 @@ $payload = [ordered]@{
     articlePagesSuppressed = $articlePagesSuppressed
     evidenceReady = $evidenceReadyTotal
     deadFeeds = $deadFeeds.Count
+    deadOutlets = $deadOutlets.Count
   }
   byCountry = $result
 }
@@ -830,7 +845,13 @@ if ($splitFromClusters) {
   Write-Host "[fetch] $splitFromClusters report(s) split off a cluster whose lead covers another event" -ForegroundColor DarkGray
 }
 if ($deadFeeds.Count) {
-  Write-Host "[fetch] $($deadFeeds.Count) feed(s) failed this run: $(($deadFeeds | Select-Object -First 10) -join ', ')" -ForegroundColor DarkYellow
+  # By outlet, with the reason: one regional feed registered against 55 countries is one
+  # failure, and "403" and "timed out" call for different fixes.
+  Write-Host "[fetch] $($deadOutlets.Count) outlet feed(s) failed this run ($($deadFeeds.Count) country registrations):" -ForegroundColor DarkYellow
+  foreach ($outletName in @($deadOutlets.Keys)) {
+    $d = $deadOutlets[$outletName]
+    Write-Host ("[fetch]   {0} ({1} countr{2}): {3}" -f $outletName, $d.countries, $(if ($d.countries -eq 1) { 'y' } else { 'ies' }), $d.why) -ForegroundColor DarkYellow
+  }
   Write-Host '[fetch] run scripts/check-sources.ps1 -Fix if that list keeps growing.' -ForegroundColor DarkGray
 }
 exit 0

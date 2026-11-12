@@ -93,7 +93,10 @@ param(
   [int]$MinStoryWords = 70,
   [int]$MaxStoryWords = 220,
   [int]$MinEvidenceWords = 45,
-  [string]$PromptVersion = 'story-v15-reach-context',
+  # A low-scored report from a single outlet is written only while the country has
+  # fewer stories than this.
+  [int]$WeakStoryFloor = 3,
+  [string]$PromptVersion = 'story-v16-why-stakes',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -156,16 +159,16 @@ if (-not (Test-Path $inPath)) {
 $feed = [IO.File]::ReadAllText($inPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
 if (-not $feed.byCountry) { Write-Host '[write] feed has no byCountry block' -ForegroundColor Red; exit 1 }
 
-$VALID_TOPICS = @('Politics','Business','Sport','Tech','Climate','Agriculture','Culture','Health','Education','News')
+$VALID_TOPICS = @('Politics','Security','Business','Sport','Tech','Climate','Agriculture','Culture','Health','Education','News')
 $STORY_LENSES = @('farmers','investors','diaspora')
 # Used only when a model omits a lens. These were generous (investors 72 for any
 # Politics story) and, with the old floors, pushed whole topics into "direct effect".
 # Now: the home topic gets a supported-effect score, everything else reader interest
 # or less, and Resolve-LensScore still caps it to what the story text supports.
 $LENS_FALLBACK_SCORES = @{
-  farmers = @{ Politics=10; Business=15; Sport=0; Tech=10; Climate=45; Agriculture=70; Culture=0; Health=10; Education=5; News=10 }
-  investors = @{ Politics=15; Business=55; Sport=5; Tech=45; Climate=20; Agriculture=30; Culture=5; Health=10; Education=10; News=10 }
-  diaspora = @{ Politics=25; Business=15; Sport=30; Tech=10; Climate=10; Agriculture=5; Culture=30; Health=15; Education=30; News=15 }
+  farmers = @{ Politics=10; Security=10; Business=15; Sport=0; Tech=10; Climate=45; Agriculture=70; Culture=0; Health=10; Education=5; News=10 }
+  investors = @{ Politics=15; Security=10; Business=55; Sport=5; Tech=45; Climate=20; Agriculture=30; Culture=5; Health=10; Education=10; News=10 }
+  diaspora = @{ Politics=25; Security=25; Business=15; Sport=30; Tech=10; Climate=10; Agriculture=5; Culture=30; Health=15; Education=30; News=15 }
 }
 
 function Get-LensFallbackScore([string]$Lens, [string]$Topic) {
@@ -201,7 +204,7 @@ function Get-LensRelevanceBand([string]$Lens, [string]$Topic, [string]$StoryText
     if ($direct) { return [pscustomobject]@{ Min = 0; Max = 100; Mode = 'direct' } }
     # National sport, culture, schools and politics: reader interest, the rubric's
     # 21-40. This was 30-60, which counted every politics story as a direct effect.
-    if ($Topic -in @('Sport','Culture','Education','Politics')) {
+    if ($Topic -in @('Sport','Culture','Education','Politics','Security')) {
       return [pscustomobject]@{ Min = 21; Max = 40; Mode = 'identity' }
     }
     return [pscustomobject]@{ Min = 0; Max = 20; Mode = 'none' }
@@ -236,7 +239,7 @@ function Resolve-LensScore([string]$Lens, [string]$Topic, [string]$StoryText, $E
   $capped = $false
   if ($band.Mode -eq 'direct' -and $band.Min -eq 0 -and $score -gt 20 -and (Test-SpeculativeText $why)) {
     $capped = $true
-    if ($Lens -eq 'diaspora' -and $Topic -in @('Sport','Culture','Education','Politics')) {
+    if ($Lens -eq 'diaspora' -and $Topic -in @('Sport','Culture','Education','Politics','Security')) {
       $band = [pscustomobject]@{ Min = 21; Max = 40; Mode = 'identity' }
     } else {
       $band = [pscustomobject]@{ Min = 0; Max = 20; Mode = 'none' }
@@ -252,6 +255,7 @@ function Get-LensBandWhy([string]$Lens, [string]$Topic, [string]$Mode) {
     if ($Topic -eq 'Sport') { return 'This national sports report may interest diaspora readers following teams and players from abroad.' }
     if ($Topic -eq 'Culture') { return 'This culture report may interest diaspora readers maintaining ties to national life from abroad.' }
     if ($Topic -eq 'Education') { return 'This education report may interest diaspora readers following institutions and opportunities from abroad.' }
+    if ($Topic -eq 'Security') { return 'This security report may interest diaspora readers with family and property in the country.' }
     return 'This politics report may interest diaspora readers following national public affairs from abroad.'
   }
   if ($Lens -eq 'farmers') { return 'This report establishes no direct effect on farming, food markets or rural livelihoods.' }
@@ -369,6 +373,86 @@ function Get-RelativeTimeWords([string]$Text) {
   return @($hits | Select-Object -Unique)
 }
 
+# The desk's own working words. The prompt calls the source material "the packet", and
+# on 12 Nov 2026 twelve published stories said so to the reader ("...as the packet
+# reports", "The packet does not give a start date"), as did 41 lens reasons. A source
+# that is itself about a packet (of measures, of seed) keeps the word.
+function Get-DeskLanguageHits([string]$Text, [string]$EvidenceText) {
+  if (-not $Text) { return @() }
+  if ($EvidenceText -and [regex]::IsMatch($EvidenceText, '\bpackets?\b', 'IgnoreCase')) { return @() }
+  $hits = New-Object System.Collections.Generic.List[string]
+  foreach ($m in [regex]::Matches($Text, '\b(?:the|this|evidence|source) packet\b', 'IgnoreCase')) { $hits.Add($m.Value) }
+  return @($hits | Select-Object -Unique)
+}
+
+# The same, taken out of finished copy without a model call, so no route (a failed
+# rewrite, a cached story) can print it. ", as the packet reports" goes and its sentence
+# stays; a sentence about what the packet lacks ("The packet does not say which...")
+# tells the reader about the desk, not the event, and goes whole; any other mention
+# becomes "the report". -ReplaceOnly keeps every sentence, for a line that must not
+# come back empty.
+function Remove-DeskLanguage([string]$Text, [string]$EvidenceText, [switch]$ReplaceOnly) {
+  if (-not $Text -or -not [regex]::IsMatch($Text, '\b(?:the|this|evidence|source) packet\b', 'IgnoreCase')) { return $Text }
+  if ($EvidenceText -and [regex]::IsMatch($EvidenceText, '\bpackets?\b', 'IgnoreCase')) { return $Text }
+  $t = [regex]::Replace($Text, ',?\s+as (?:the|this) (?:evidence |source )?packet (?:reports|reported|states|stated|says|said|notes|noted|describes|shows|puts it|has it)(?: it)?(?=[\s,.;:!?]|$)', '', 'IgnoreCase')
+  if (-not $ReplaceOnly) {
+    $kept = New-Object System.Collections.Generic.List[string]
+    foreach ($s in [regex]::Split($t, '(?<=[.!?])\s+')) {
+      if ([regex]::IsMatch($s, '\b(?:the|this) (?:evidence |source )?packet\b[^.!?]*\b(?:does not|did not|gives? no|has no|offers? no|provides? no|contains? no|makes? no|is silent|leaves? out|omits)\b', 'IgnoreCase')) { continue }
+      $kept.Add($s)
+    }
+    $t = ($kept.ToArray() -join ' ')
+  }
+  $t = [regex]::Replace($t, '\b(T|t)h(?:e|is) (?:evidence |source )?packet\b', '${1}he report')
+  $t = [regex]::Replace($t, '\b(?:evidence|source) packet\b', 'report', 'IgnoreCase')
+  return ([regex]::Replace($t, '\s{2,}', ' ')).Trim()
+}
+
+# A date the story says something "will" happen on, that had already passed when the
+# edition went out. Reports are a day or two old when the desk reads them: on 12 Nov
+# 2026 the front page said lawmakers "will summon" a minister "on Tuesday, November 11".
+# Only a future verb followed closely by the date counts, outside quotation marks.
+function Get-OverdueFutureDates([string]$Text, [datetime]$Today) {
+  if (-not $Text) { return @() }
+  $months = @{ jan=1; feb=2; mar=3; apr=4; may=5; jun=6; jul=7; aug=8; sep=9; oct=10; nov=11; dec=12 }
+  $monthPattern = '(?<mon>Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?'
+  $datePattern = '(?:' + $monthPattern + '\s+(?<day>\d{1,2})(?:st|nd|rd|th)?\b|\b(?<day>\d{1,2})(?:st|nd|rd|th)?\s+' + $monthPattern + '(?![a-z]))(?:,?\s+(?<year>20\d{2}))?'
+  $future = '\b(?:will|shall|is set to|are set to|is due to|are due to|is expected to|are expected to|is scheduled to|are scheduled to|is to|are to|plans to|plan to)\b'
+  $plain = [regex]::Replace($Text, '[\u201C"][^\u201D"]*[\u201D"]', ' ')
+  $hits = New-Object System.Collections.Generic.List[string]
+  foreach ($s in [regex]::Split($plain, '(?<=[.!?])\s+')) {
+    foreach ($f in [regex]::Matches($s, $future)) {
+      $rest = $s.Substring($f.Index)
+      if ($rest.Length -gt 110) { $rest = $rest.Substring(0, 110) }
+      foreach ($d in [regex]::Matches($rest, $datePattern)) {
+        $mon = $months[$d.Groups['mon'].Value.Substring(0, 3).ToLowerInvariant()]
+        $day = [int]$d.Groups['day'].Value
+        if (-not $mon -or $day -lt 1 -or $day -gt 31) { continue }
+        $year = $Today.Year
+        if ($d.Groups['year'].Success) { $year = [int]$d.Groups['year'].Value }
+        $when = $null
+        try { $when = New-Object datetime($year, $mon, $day) } catch { continue }
+        # No year given: the nearest such date. One more than six months ahead was last year's.
+        if (-not $d.Groups['year'].Success -and $when -gt $Today.AddDays(183)) { $when = $when.AddYears(-1) }
+        if ($when -lt $Today.Date -and $when -ge $Today.Date.AddDays(-45)) { $hits.Add($d.Value.Trim()) }
+      }
+    }
+  }
+  return @($hits | Select-Object -Unique)
+}
+
+# A why line with nothing in it a reader could check: no figure, no date, and a stock
+# verb where the consequence should be ("raises questions about accountability", "aims
+# to equip young people"). The weekly editor review of 10 Nov 2026 failed all 20 sampled
+# why lines, most as "generic". Only a line with no figure and no weekday or month is
+# judged, so one that carries the stake is never sent back for its wording.
+function Test-WhyGeneric([string]$Why) {
+  if (-not $Why) { return $false }
+  if ([regex]::IsMatch($Why, '\d')) { return $false }
+  if ([regex]::IsMatch($Why, '\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|January|February|March|April|June|July|August|September|October|November|December)\b')) { return $false }
+  return [regex]::IsMatch($Why, '\b(?:rais(?:es|ed|ing) (?:\w+ )?(?:questions?|concerns?|fears|doubts)|unresolved questions|left with questions|highlight(?:s|ed|ing)?|underscor(?:es|ed|ing)|has implications|implications for|aims? to|seeks? to|is important|the importance of|remains? an? (?:\w+ )?(?:concern|challenge|issue|priority)|sheds? light|draws? attention|serves? as a reminder|reflects? (?:the|a|an|its|their)|demonstrat(?:es|ed|ing)|(?:affects?|matters? (?:to|for)) (?:the )?(?:economy|country|nation|sector|region|public|population|citizens|residents|people)\b)', 'IgnoreCase')
+}
+
 # Twelve words or more in a row exactly as the source has them, outside quotation marks.
 # The prompt says paraphrase; on 5 Nov 2026 one story in five written from an English
 # report still carried such a run, which is the outlet's copy under the desk's name.
@@ -449,6 +533,10 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $lowerProse = Test-LowerCaseProse $Brief
   $relativeTime = @(Get-RelativeTimeWords $prose)
   $copied = @(Get-SubstantialCopies $paragraphs $EvidenceText)
+  $deskWords = @(Get-DeskLanguageHits $prose $EvidenceText)
+  $editionNow = if ($script:editionDay) { [datetime]$script:editionDay } else { (Get-Date).ToUniversalTime().Date }
+  $overdue = @(Get-OverdueFutureDates ((@([string]$Brief.dek) + $paragraphs + @([string]$Brief.why)) -join "`n") $editionNow)
+  $genericWhy = (-not $restatedWhy) -and (Test-WhyGeneric ([string]$Brief.why))
   $issues = New-Object System.Collections.Generic.List[string]
   if ($lowerProse) { $issues.Add('prose in lower case') }
   if ($phrases.Count) { $issues.Add('stock phrasing: ' + (($phrases | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
@@ -457,7 +545,10 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   if ($restatedWhy) { $issues.Add('why line restates the dek') }
   if ($relativeTime.Count) { $issues.Add('relative time: ' + (($relativeTime | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
   if ($copied.Count) { $issues.Add('copies the source word for word') }
-  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied }
+  if ($deskWords.Count) { $issues.Add('desk language: ' + (($deskWords | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
+  if ($overdue.Count) { $issues.Add('future tense for a past date: ' + ($overdue -join ', ')) }
+  if ($genericWhy) { $issues.Add('why line is generic') }
+  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied; DeskWords = $deskWords; Overdue = $overdue; GenericWhy = [bool]$genericWhy }
 }
 
 function Get-StyleRepairNote($Style, $Candidate) {
@@ -481,6 +572,15 @@ function Get-StyleRepairNote($Style, $Candidate) {
   }
   if (@($Style.RelativeTime).Count) {
     [void]$lines.Add('- It counts days from today: ' + ((@($Style.RelativeTime) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '. The story is read for weeks, so give the weekday or date the packet itself states, or leave the time out. Do not work out a date the packet does not give.')
+  }
+  if (@($Style.DeskWords).Count) {
+    [void]$lines.Add('- It talks about the desk''s own source material (' + ((@($Style.DeskWords) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '). A reader has no packet. Attribute the fact to the outlet, official or document that gave it, and delete any sentence that only says what the source leaves out.')
+  }
+  if (@($Style.Overdue).Count) {
+    [void]$lines.Add('- It says something will happen on ' + (@($Style.Overdue) -join ', ') + ', which was already past on the edition date. Write that it "was due to" or "was scheduled to" happen then. Do not say it happened unless the source says so.')
+  }
+  if ($Style.GenericWhy) {
+    [void]$lines.Add('- The "why" line is generic: it names no figure, date or concrete change. Rewrite it as WHO is affected and HOW, with the figure, deadline or next step from the source that sizes it. No "raises questions", "highlights", "aims to" or "remains a concern".')
   }
   if (@($Style.Copied).Count) {
     foreach ($c in @($Style.Copied | Select-Object -First 3)) {
@@ -530,23 +630,59 @@ THE STORY
   say who they are, give their role in this event ("the company's chief executive",
   "the opposition MP who brought the motion"). Never add an identification the packet
   does not support.
+- Spell out an abbreviation the first time, or say what the body is: "the Economic
+  Community of West African States (ECOWAS)", "the OIF, the organisation of
+  French-speaking countries". This one thing you may take from general knowledge, and
+  only for a well-known international or continental body. A foreign club, league or
+  company gets its country: "Trabzonspor, a club in Turkey's top division".
+- Name only the people and bodies the story needs. A run of names the reader cannot
+  place (a festival line-up, a committee's members, every official present) is a list,
+  not a story: keep the two or three who acted and say what each did.
+- "Packet", "assignment" and "evidence" are the desk's working words. They never appear
+  in the story, the dek, the why line or a lens reason. Do not write "the packet says",
+  "as the packet reports" or "the packet does not say": a reader has no packet. Attribute
+  to the outlet, the official or the document ("the ministry said", "according to the
+  court filing"). When the source leaves something out, leave it out too, without
+  saying so.
+- The assignment gives the edition date, and the packet may have been written a day or
+  two before it. If the packet says something "will" happen on a date earlier than the
+  edition date, that date has passed: write that it "was due to" or "was scheduled to"
+  happen then. Never say it did happen unless the packet says so. The edition date is
+  for this check only: do not print it or date anything by it.
 
 HEADLINE, DEK AND WHY
 - Headline: actor + active verb + concrete result. Maximum 90 characters. Sentence
   case: capitalise the first word and proper nouns only ("Kenya confirms ninth Ebola
   case", not "Kenya Confirms Ninth Ebola Case"). Use the most specific fact the packet
   has: a number, a named body, a place.
-- Dek: ONE complete sentence that advances the headline with a new fact. Aim for 110
-  to 150 characters, and never more than 170. Compose a sentence that ends where you
-  meant it to. Do not write toward the limit and stop mid-phrase: "...the certificate
-  for six historic Comorian." is a failed dek, and so is any dek whose last word is a
-  preposition, article or conjunction.
-- "why": one sentence naming who is affected and how, as the packet reports it. Do not
-  use "may", "might" or "could" here, and do not restate the headline, the dek or the
-  first paragraph: it has to tell the reader something they do not, such as who pays
-  or gains, a figure, a deadline, or what happens next. If the packet establishes no
-  wider effect, name the people directly involved and what happened to them. A why
-  line that only repeats the story is not printed.
+- Dek: ONE complete sentence about the SAME event as the headline, giving its next most
+  important fact: the scale, the cause, who is behind it or what it led to. Read the
+  headline and the dek together: they must be the opening of one story. Headline
+  "Maraga accuses Ruto of hypocrisy over Ebola quarantine U-turn" with dek "Kenya begins
+  a 42-day countdown to Ebola-free status" is two stories; the dek should say what
+  Maraga accused him of. When the packet covers two events, the story is about the one
+  in the assigned title, and the other gets one sentence in paragraph 3 at most.
+  Aim for 110 to 150 characters, and never more than 170. Compose a sentence that ends
+  where you meant it to. Do not write toward the limit and stop mid-phrase: "...the
+  certificate for six historic Comorian." is a failed dek, and so is any dek whose last
+  word is a preposition, article or conjunction.
+- "why": one sentence that gives the reader the stake: WHO is affected, HOW, and the
+  figure, date or next step from the source that sizes it. Build it from the most
+  concrete consequence the source reports, in this order of preference: what it costs
+  or pays and to whom; the deadline or next dated step; how many people it reaches;
+  what a named person or body must now do.
+  Good: "Traders crossing at the border post now pay the levy in cash before their
+  trucks are cleared, starting on Monday."
+  Good: "The transport minister must answer to parliament for the crash, and the
+  president has ordered the whole line inspected."
+  Bad (says the story again): "Seven people died in a train collision, prompting an
+  inquiry." Bad (generic): "This raises questions about accountability." Bad (states
+  an aim, not an effect): "The programme aims to equip young people with skills."
+  Do not use "may", "might" or "could", and do not restate the headline, the dek or the
+  first paragraph. No "raises questions", "highlights", "underscores", "has
+  implications", "aims to" or "remains a concern". If the source reports no wider
+  effect, name the people directly involved and the one concrete thing that changes
+  for them. A why line that only repeats the story is not printed.
 
 REACH
 - "reach": how much the event matters to a reader anywhere in Africa, a whole number
@@ -567,17 +703,24 @@ REACH
 
 TOPIC
 - Topic: the ONE label for what the story is about, not for what it mentions.
-  Politics = government, parliament, elections, parties, courts and prosecutions of
-  officials, security, conflict, diplomacy, sanctions. Business = companies, markets,
-  banking, trade, investment, prices, jobs, the economy. Sport = teams, clubs, matches,
-  athletes and sports bodies. Tech = technology, telecoms, digital services, AI.
-  Climate = weather, environment, disasters, energy transition, conservation.
+  Politics = government, parliament, elections, parties, diplomacy, sanctions, trials
+  and inquiries of officials, rights and press freedom. Security = armed conflict,
+  insurgent and militia attacks, the army, police operations, crime, arrests, criminal
+  trials, prisons, people fleeing violence, migrant interceptions. Business =
+  companies, markets, banking, trade, investment, prices, jobs, the economy, and the
+  services people pay for: electricity and power cuts, water, fuel, transport, roads.
+  Sport = teams, clubs, matches, athletes and sports bodies. Tech = technology,
+  telecoms, digital services, AI. Climate = weather, storms, floods, drought,
+  environment, natural disasters, wildlife, energy transition, conservation.
   Agriculture = farming, livestock, fisheries, food production and land.
-  Culture = arts, music, film, religion, heritage, media. Health = disease, hospitals,
-  medicine, public health. Education = schools, universities, scholarships, research.
-  News = crime, accidents and anything that fits none of these. A story is not
-  Business because money appears in it: a football club's debts are Sport, a court
-  order over unpaid fees is Politics, a government changing the clocks is News.
+  Culture = arts, music, film, religion, heritage, media, memorials. Health = disease,
+  hospitals, medicine, public health. Education = schools, universities, exams,
+  scholarships, research.
+  News = the last resort, for a story that fits none of these: a road or rail
+  accident, a census, a human-interest piece. Fewer than one story in ten belongs
+  here. A story is not Business because money appears in it: a football club's debts
+  are Sport, a murder charge is Security, a court order against a minister is
+  Politics, a government changing the clocks is News.
 
 PLACE
 - countryLink says how the event relates to the assigned country:
@@ -1302,8 +1445,11 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
 $script:rankCalls = 0
 $script:rankFailures = 0
 $script:rankReordered = 0
+# Story numbers whose dek the editor read as a different event from its headline.
+$script:rankMismatch = @()
 function Invoke-CountryRanking([string]$CountryName, $Stories) {
   $n = @($Stories).Count
+  $script:rankMismatch = @()
   if ($n -lt 2) { return $null }
   $route = $null
   if ($script:rewriteRoute -and -not $script:rewriteRoute.dead) { $route = $script:rewriteRoute }
@@ -1325,7 +1471,12 @@ affect people. When two stories matter about as much, put the one more outlets r
 
 $($lines.ToArray() -join "`n")
 
-Return ONLY a JSON object: {"order":[<the story numbers, most important first>]}
+Then read each story's summary, the sentence after the dash. A summary should tell
+more about the event in its own headline. If one is about a different event (headline:
+a politician attacks the president; summary: the country nears the end of an outbreak),
+list its number under "mismatch". Most days there are none.
+
+Return ONLY a JSON object: {"order":[<the story numbers, most important first>],"mismatch":[<story numbers, or none>]}
 "@
   $body = [ordered]@{
     model = $route.model
@@ -1358,6 +1509,13 @@ Return ONLY a JSON object: {"order":[<the story numbers, most important first>]}
       $idx = -1
       if ([int]::TryParse([string]$v, [ref]$idx) -and $idx -ge 0 -and $idx -lt $n -and -not $order.Contains($idx)) { $order.Add($idx) }
     }
+    $flagged = New-Object System.Collections.Generic.List[int]
+    foreach ($v in @(($m.Value | ConvertFrom-Json).mismatch)) {
+      $idx = -1
+      if ([int]::TryParse([string]$v, [ref]$idx) -and $idx -ge 0 -and $idx -lt $n -and -not $flagged.Contains($idx)) { $flagged.Add($idx) }
+    }
+    # An editor that flags most of a column has misread the task; act on none of it.
+    if ($flagged.Count -and $flagged.Count -le [Math]::Max(1, [int][Math]::Floor($n / 2))) { $script:rankMismatch = $flagged.ToArray() }
     # A story the answer left out keeps its place after the ones it ranked.
     for ($k = 0; $k -lt $n; $k++) { if (-not $order.Contains($k)) { $order.Add($k) } }
     return $order.ToArray()
@@ -1366,6 +1524,91 @@ Return ONLY a JSON object: {"order":[<the story numbers, most important first>]}
     Write-Host ("      [rank] {0}: kept the score order ({1})" -f $CountryName, $_.Exception.Message.Split("`n")[0]) -ForegroundColor DarkYellow
     return $null
   }
+}
+
+# A dek the editor read as a different event from its headline (12 Nov 2026: "Maraga
+# accuses Ruto of hypocrisy over Ebola quarantine U-turn" over "Kenya begins a 42-day
+# countdown to Ebola-free status") is written again from the story's own paragraphs: one
+# short call on the same route as the ranking. The new dek has to pass the checks a
+# draft's dek does (length, a whole sentence, every figure and month in the source, no
+# desk language); if the call fails or it does not pass, the story's opening sentence
+# stands in, which is always about the headline's event. Returns the dek to print, or
+# nothing when there is no better one.
+$script:dekRepairCalls = 0
+$script:dekRepairFallbacks = 0
+function Get-RepairedDek($Story, $Item) {
+  $paragraphs = @($Story['paragraphs'] | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
+  if (-not $paragraphs.Count) { return $null }
+  $lead = ([regex]::Split($paragraphs[0].Trim(), '(?<=[.!?])\s+(?=[A-Z"\u201C])'))[0].Trim()
+  $fallback = if ($lead.Length -ge 40) { Limit-DeskSentence $lead 180 } else { $null }
+  $route = $null
+  if ($script:rewriteRoute -and -not $script:rewriteRoute.dead) { $route = $script:rewriteRoute }
+  else { $route = @($script:routes | Where-Object { -not $_.dead }) | Select-Object -First 1 }
+  if (-not $route) { $script:dekRepairFallbacks++; return $fallback }
+  $prompt = @"
+WRITE THE SUMMARY LINE. Below is a published story and its headline. Write one sentence,
+110 to 150 characters, that goes under the headline: about the same event the headline
+names, giving its next most important fact (the scale, the cause, who is behind it, or
+what it led to). Use only facts in the story. Do not repeat the headline's words back,
+do not use "today", "yesterday" or "tomorrow", and end on a complete thought.
+
+Headline: $([string]$Story['headline'])
+
+Story:
+$($paragraphs -join "`n`n")
+
+Return ONLY a JSON object: {"dek":"<the sentence>"}
+"@
+  $body = [ordered]@{
+    model = $route.model
+    messages = @(
+      @{ role = 'system'; content = 'You are a sub-editor on a pan-African news site. You answer with JSON only.' },
+      @{ role = 'user'; content = $prompt }
+    )
+    max_tokens = 200
+    response_format = @{ type = 'json_object' }
+  }
+  if ($route -eq $script:rewriteRoute) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
+  if ($route.provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
+  $headers = @{ 'Authorization' = "Bearer $($route.key)"; 'Content-Type' = 'application/json'; 'HTTP-Referer' = 'https://africanstreetjournal.com'; 'X-Title' = 'The African Street Journal' }
+  if ($route.provider -eq 'gemini') { $headers.Remove('HTTP-Referer'); $headers.Remove('X-Title'); $headers['x-goog-api-key'] = $route.key }
+  try {
+    $script:dekRepairCalls++
+    $resp = Invoke-WebRequest -Uri $route.url -Method Post -Headers $headers -Body ([Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Depth 8 -Compress))) -TimeoutSec 60 -UseBasicParsing -ErrorAction Stop
+    $obj = [Text.Encoding]::UTF8.GetString($resp.RawContentStream.ToArray()) | ConvertFrom-Json
+    if ($obj.usage) {
+      $script:usagePrompt += [int]$obj.usage.prompt_tokens
+      $script:usageCompletion += [int]$obj.usage.completion_tokens
+      $script:usageTotal += [int]$obj.usage.total_tokens
+      if ($obj.usage.cost) { $script:usageCost += [double]$obj.usage.cost }
+    }
+    $text = [string]@($obj.choices)[0].message.content
+    $m = [regex]::Match($text, '\{[\s\S]*\}')
+    if (-not $m.Success) { throw 'no JSON in the answer' }
+    $dek = ([string]($m.Value | ConvertFrom-Json).dek).Trim()
+    if ($dek.Length -lt 40) { throw 'dek too short' }
+    $dek = ConvertTo-NumeralStyle (Limit-DeskSentence $dek 180)
+    $evidence = Get-ItemEvidenceText $Item
+    if (Test-DeskSentenceEndsBadly $dek) { throw 'dek ends mid-phrase' }
+    if (@(Get-UngroundedNumbers $dek $evidence).Count) { throw 'dek has a figure the source does not' }
+    if (@(Get-ItemUngroundedMonths $dek $Item).Count) { throw 'dek has a date the source does not' }
+    if (@(Get-DeskLanguageHits $dek $evidence).Count -or @(Get-RelativeTimeWords $dek).Count) { throw 'dek uses desk language or a relative day' }
+    return $dek
+  } catch {
+    $script:dekRepairFallbacks++
+    Write-Host ("      [dek] kept the opening sentence ({0})" -f $_.Exception.Message.Split("`n")[0]) -ForegroundColor DarkYellow
+    return $fallback
+  }
+}
+
+# Hours since a story's source published it; 999 when the stamp cannot be read.
+function Get-StoryAgeHours($Story) {
+  $stamp = [datetime]::MinValue
+  $styles = [Globalization.DateTimeStyles]::AssumeUniversal -bor [Globalization.DateTimeStyles]::AdjustToUniversal
+  if ([datetime]::TryParse([string]$Story['published'], [Globalization.CultureInfo]::InvariantCulture, $styles, [ref]$stamp)) {
+    return [Math]::Max(0.0, ((Get-Date).ToUniversalTime() - $stamp).TotalHours)
+  }
+  return 999.0
 }
 
 # The front page across countries. Each country's column is ranked side by side above,
@@ -1385,7 +1628,20 @@ function Invoke-FrontRanking($ByCountry, $CountryNames, [int]$Pick) {
   foreach ($cc in $codesWithStories) {
     $list = @($ByCountry[$cc])
     $take = [Math]::Min(2, $list.Count)
-    for ($k = 0; $k -lt $take; $k++) { $cands.Add([pscustomobject]@{ code = [string]$cc; story = $list[$k] }) }
+    for ($k = 0; $k -lt $take; $k++) { $cands.Add([pscustomobject]@{ code = [string]$cc; story = $list[$k]; hours = (Get-StoryAgeHours $list[$k]) }) }
+  }
+  # A daily front page is today's news. On 12 Nov 2026 four of the twelve front stories
+  # were 40 to 51 hours old, all of them reports the previous edition could have led
+  # with. Stories up to 36 hours old are the pool; older ones come back in only when
+  # that pool is too small to choose from.
+  foreach ($limitHours in 36, 60) {
+    $fresh = @($cands.ToArray() | Where-Object { $_.hours -le $limitHours })
+    if ($fresh.Count -ge [Math]::Min($cands.Count, 2 * $Pick)) {
+      if ($fresh.Count -lt $cands.Count) { Write-Host ("  [front] choosing from {0} stories up to {1} hours old; {2} older set aside" -f $fresh.Count, $limitHours, ($cands.Count - $fresh.Count)) -ForegroundColor DarkGray }
+      $cands = New-Object System.Collections.Generic.List[object]
+      foreach ($f in $fresh) { $cands.Add($f) }
+      break
+    }
   }
   $route = $null
   if ($script:rewriteRoute -and -not $script:rewriteRoute.dead) { $route = $script:rewriteRoute }
@@ -1398,7 +1654,7 @@ function Invoke-FrontRanking($ByCountry, $CountryNames, [int]$Pick) {
     $outlets = @($s['sources']).Count
     $cname = [string]$CountryNames[$cands[$k].code]
     if (-not $cname) { $cname = $cands[$k].code }
-    $lines.Add(('[{0}] {1}: {2} - {3} (reported by {4} outlet{5})' -f $k, $cname, [string]$s['headline'], [string]$s['dek'], $outlets, $(if ($outlets -eq 1) { '' } else { 's' })))
+    $lines.Add(('[{0}] {1}: {2} - {3} (reported by {4} outlet{5}, {6})' -f $k, $cname, [string]$s['headline'], [string]$s['dek'], $outlets, $(if ($outlets -eq 1) { '' } else { 's' }), $(if ($cands[$k].hours -lt 900) { ('{0} hours ago' -f [int][Math]::Round($cands[$k].hours)) } else { 'time not given' })))
   }
   $prompt = @"
 PICK THE FRONT PAGE. These are the top stories from each African country on The African
@@ -1409,7 +1665,9 @@ anything that reaches beyond one country's borders. Ceremonies, visits, meetings
 festivals, film and culture weeks, prize-givings and launches of plans come below
 decisions, figures and events that already affect people. A small country's big story
 outranks a big country's small one. When two matter about as much, put the one more
-outlets reported first.
+outlets reported first. This is today's front page: between two that matter about as
+much, the newer report goes first, and an event more than a day old leads only when
+nothing newer matters as much.
 
 $($lines.ToArray() -join "`n")
 
@@ -1598,6 +1856,13 @@ $copyFlagged = 0
 $keptStillCopying = 0
 $keptWhyRestating = 0
 $keptWhyGuessing = 0
+$keptWhyGeneric = 0
+$deskLanguageRemoved = 0
+$weakAssignmentsSkipped = 0
+$deksRepaired = 0
+# The day this edition is dated: what "will happen on 11 November" is judged against.
+$script:editionDay = (Get-Date).ToUniversalTime().Date
+$editionLabel = $script:editionDay.ToString('dddd, d MMMM yyyy', [Globalization.CultureInfo]::InvariantCulture)
 # What a story kept with style notes still carries (the metrics above).
 function Add-KeptStyleCounts($Brief, $Item, $AskedKinds) {
   $kept = Get-DraftStyleIssues $Brief (Get-ItemEvidenceText $Item)
@@ -1606,6 +1871,7 @@ function Add-KeptStyleCounts($Brief, $Item, $AskedKinds) {
   if (@($kept.Copied).Count) { $script:keptStillCopying++ }
   if ($kept.RestatedWhy) { $script:keptWhyRestating++ }
   if ($kept.SpeculativeWhy) { $script:keptWhyGuessing++ }
+  if ($kept.GenericWhy) { $script:keptWhyGeneric++ }
 }
 
 foreach ($code in $codes) {
@@ -1645,6 +1911,14 @@ foreach ($code in $codes) {
   for ($i = 0; $i -lt $n; $i++) {
     if ($briefList.Count -ge $MaxBriefs) { break }
     $it = $items[$i]
+    # A report the meter scored low, from one outlet, is the weakest copy in the paper:
+    # 37 of the 244 stories on 12 Nov 2026. It still runs where it is all a country has
+    # (Mauritania had four that day), but not as a fourth or fifth story.
+    if ($briefList.Count -ge $WeakStoryFloor -and ([string]$it.confidence) -eq 'low' -and -not @($it.alsoSources | Where-Object { $_ }).Count) {
+      $weakAssignmentsSkipped++
+      Write-Host ("      {0}#{1}: skipped, a low-scored single-outlet report and the country has {2} stories" -f $code, $i, $briefList.Count) -ForegroundColor DarkGray
+      continue
+    }
     $earlierId = $recentLeadIds["$code $($it.url)"]
     if ($earlierId -and $earlierId -ne [string]$it.itemId) {
       Write-Host ("      {0}#{1}: same report as story {2}; keeping that id" -f $code, $i, $earlierId) -ForegroundColor DarkGray
@@ -1664,8 +1938,8 @@ foreach ($code in $codes) {
       # now is written again rather than dropped in final validation.
       if ($cachedStories.Count) {
         $cachedFacts = Get-DraftFactText $cachedStories[0]
-        if (@(Get-ItemUngroundedMonths $cachedFacts $it).Count -or @(Get-UngroundedNumbers $cachedFacts (Get-ItemEvidenceText $it)).Count) {
-          Write-Host ("      {0}#{1}: cached story fails a fact check now; writing it again" -f $code, $i) -ForegroundColor DarkYellow
+        if (@(Get-ItemUngroundedMonths $cachedFacts $it).Count -or @(Get-UngroundedNumbers $cachedFacts (Get-ItemEvidenceText $it)).Count -or @(Get-OverdueFutureDates $cachedFacts $script:editionDay).Count) {
+          Write-Host ("      {0}#{1}: cached story fails a fact check now, or promises a date that has passed; writing it again" -f $code, $i) -ForegroundColor DarkYellow
           $cachedStories = @()
         }
       }
@@ -1686,6 +1960,7 @@ foreach ($code in $codes) {
       # ever reaching the output, on every route.
       $prompt = @"
 Country: $name
+Edition date: $editionLabel
 
 Today's ranked assignment. This packet contains the ONLY facts allowed in the story.
 
@@ -1905,6 +2180,7 @@ weekday, write that instead of a month. Do not add facts while repairing.
   # --- everything below treats model output as untrusted ---------------------
   $clean = New-Object System.Collections.Generic.List[object]
   $usedItems = @{}
+  $srcByArticle = @{}
   $rejectReasons = New-Object System.Collections.Generic.List[string]
   foreach ($b in $briefs) {
     if (-not $b.headline -or -not $b.dek -or -not $b.why) { $rejectReasons.Add('missing headline/dek/why'); continue }
@@ -1930,6 +2206,16 @@ weekday, write that instead of a month. Do not add facts while repairing.
     if (-not $dek) { $rejectReasons.Add('invalid dek'); continue }
     $dek = Limit-DeskSentence $dek 180
     $why = ([string]$b.why).Trim()
+    # The desk's working words never reach the reader, whichever route the story took
+    # (a rewrite that failed, a story from the cache).
+    $deskEvidence = Get-ItemEvidenceText $src
+    $deskBefore = $headline + "`n" + $dek + "`n" + $why
+    $headline = Remove-DeskLanguage $headline $deskEvidence -ReplaceOnly
+    $dek = Remove-DeskLanguage $dek $deskEvidence -ReplaceOnly
+    $whyClean = Remove-DeskLanguage $why $deskEvidence
+    if ((Get-WordCount $whyClean) -lt 8) { $whyClean = Remove-DeskLanguage $why $deskEvidence -ReplaceOnly }
+    $why = $whyClean
+    $deskTouched = ($deskBefore -cne ($headline + "`n" + $dek + "`n" + $why))
     $whyWords = Get-WordCount $why
     if ($whyWords -lt 8 -or $whyWords -gt 50) { $rejectReasons.Add('why line outside 8-50 words'); continue }
 
@@ -1946,7 +2232,7 @@ weekday, write that instead of a month. Do not add facts while repairing.
       }
       $resolved = Resolve-LensScore $lens $topic $lensStoryText $lensEntry (Get-LensFallbackScore $lens $topic) $why
       if ($resolved.Capped) { $lensCapped++ }
-      $lensData[$lens] = [ordered]@{ score = $resolved.Score; why = $resolved.Why }
+      $lensData[$lens] = [ordered]@{ score = $resolved.Score; why = (Remove-DeskLanguage ([string]$resolved.Why) $deskEvidence -ReplaceOnly) }
     }
 
     $paragraphs = New-Object System.Collections.Generic.List[string]
@@ -1965,6 +2251,17 @@ weekday, write that instead of a month. Do not add facts while repairing.
         if ($text) { $paragraphs.Add($text) }
       }
     }
+    if (@($paragraphs | Where-Object { [regex]::IsMatch($_, '\b(?:the|this|evidence|source) packet\b', 'IgnoreCase') }).Count) {
+      $cleanParagraphs = @($paragraphs | ForEach-Object { Remove-DeskLanguage $_ $deskEvidence })
+      # Dropping a sentence must not cost the story its shape or its length.
+      if (@($cleanParagraphs | Where-Object { -not $_ }).Count -or (Get-WordCount ($cleanParagraphs -join ' ')) -lt $MinStoryWords) {
+        $cleanParagraphs = @($paragraphs | ForEach-Object { Remove-DeskLanguage $_ $deskEvidence -ReplaceOnly })
+      }
+      if (($cleanParagraphs -join "`n") -cne ($paragraphs.ToArray() -join "`n")) { $deskTouched = $true }
+      $paragraphs.Clear()
+      foreach ($cp in $cleanParagraphs) { $paragraphs.Add([string]$cp) }
+    }
+    if ($deskTouched) { $deskLanguageRemoved++ }
     # Some providers serialize the requested paragraph array as one long string. Split
     # that prose at sentence boundaries rather than rejecting grounded copy for shape alone.
     if ($paragraphs.Count -lt 3 -or $paragraphs.Count -gt 6) {
@@ -2042,8 +2339,10 @@ weekday, write that instead of a month. Do not add facts while repairing.
     if ($srcList.Count -lt 2 -and $wordCount -lt 120) { $reachShift -= 1.0 }
     $adjustedSelection = [Math]::Round([Math]::Max(0.0, $baseSelection + $reachShift), 2)
 
+    $storyArticleId = if ($src.itemId) { [string]$src.itemId } else { Get-TextHash ([string]$src.url) }
+    $srcByArticle[$storyArticleId] = $src
     $clean.Add([ordered]@{
-      articleId       = if ($src.itemId) { [string]$src.itemId } else { Get-TextHash ([string]$src.url) }
+      articleId       = $storyArticleId
       headline        = $headline
       dek             = $dek
       paragraphs      = $paragraphs.ToArray()
@@ -2114,6 +2413,19 @@ weekday, write that instead of a month. Do not add facts while repairing.
   # so the country's lead still competes for the front page on the score its column
   # earned, and nothing ranked lower can outscore it.
   $rankOrder = if ($NoCountryRanking) { $null } else { Invoke-CountryRanking $name $clean.ToArray() }
+  # A dek the editor read as a different event from its headline is written again.
+  foreach ($mi in @($script:rankMismatch)) {
+    if (-not $rankOrder) { break }
+    $flaggedStory = $clean[$mi]
+    $flaggedItem = $srcByArticle[[string]$flaggedStory['articleId']]
+    if (-not $flaggedItem) { continue }
+    $newDek = Get-RepairedDek $flaggedStory $flaggedItem
+    if ($newDek -and $newDek -cne [string]$flaggedStory['dek']) {
+      Write-Host ('      [dek] {0}: "{1}" had a dek about another event; rewritten' -f $code, [string]$flaggedStory['headline']) -ForegroundColor DarkGray
+      $flaggedStory['dek'] = $newDek
+      $deksRepaired++
+    }
+  }
   if ($rankOrder) {
     $scoresDesc = @($cleanRanked.ToArray() | ForEach-Object { $_.score } | Sort-Object -Descending)
     $prevScore = $null
@@ -2165,6 +2477,10 @@ $metrics = [ordered]@{
   keptStillCopying = $keptStillCopying
   keptWhyRestating = $keptWhyRestating
   keptWhyGuessing = $keptWhyGuessing
+  keptWhyGeneric = $keptWhyGeneric
+  deskLanguageRemoved = $deskLanguageRemoved
+  weakAssignmentsSkipped = $weakAssignmentsSkipped
+  deksRepaired = $deksRepaired
   rewriteModel = $RewriteModel
   rewriteCalls = $script:rewriteCalls
   rewriteRouteErrors = $script:rewriteRouteErrors

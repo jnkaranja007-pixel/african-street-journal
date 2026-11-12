@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','ConvertTo-NumberKey','Get-NumberReadings','Get-RelativeTimeWords','Get-CopiedRuns','Get-SubstantialCopies','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote')) {
+foreach ($functionName in @('Convert-NumberScanText','ConvertTo-NumberKey','Get-NumberReadings','Get-RelativeTimeWords','Get-CopiedRuns','Get-SubstantialCopies','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote','Get-DeskLanguageHits','Remove-DeskLanguage','Get-OverdueFutureDates','Test-WhyGeneric')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
@@ -402,5 +402,57 @@ foreach ($case in @(
   if ($got -ne $case[1]) { throw "numeral style: '$($case[0])' became '$got', expected '$($case[1])'" }
 }
 Write-Host 'PASS numbers from ten up are set as numerals; ordinals, years and small numbers are not'
-Write-Host '[story-contract] OK - 35 checks'
+
+# The desk's working words never reach the reader. Each case ran on 12 Nov 2026.
+$noEvidence = 'Dealers in Lagos quoted the dollar at higher rates on Thursday.'
+if (-not @(Get-DeskLanguageHits 'Importers face a widening gap, as the packet reports.' $noEvidence).Count) { throw 'the packet was not flagged' }
+if (@(Get-DeskLanguageHits 'Repairs could take a small packet of months.' $noEvidence).Count) { throw 'an ordinary packet was flagged' }
+if (@(Get-DeskLanguageHits 'The packet of measures takes effect in March.' 'The government adopted a packet of measures.').Count) { throw 'a packet the source itself reports was flagged' }
+foreach ($case in @(
+  @('Importers and businesses paying in dollars face a widening gap between official and street rates, as the packet reports.', 'Importers and businesses paying in dollars face a widening gap between official and street rates.'),
+  @('Ginning starts after the first step. The packet does not give a start date. Farmers were told to wait.', 'Ginning starts after the first step. Farmers were told to wait.'),
+  @('Yields fell after irregular rainfall damage, which the packet links to government delays.', 'Yields fell after irregular rainfall damage, which the report links to government delays.'),
+  @('The packet says success will depend on funding.', 'The report says success will depend on funding.'),
+  @('Repairs could take a small packet of months.', 'Repairs could take a small packet of months.'))) {
+  $got = Remove-DeskLanguage $case[0] $noEvidence
+  if ($got -cne $case[1]) { throw "desk language: '$($case[0])' became '$got'" }
+}
+if ((Remove-DeskLanguage 'The packet does not say which projects are funded.' $noEvidence -ReplaceOnly) -cne 'The report does not say which projects are funded.') { throw 'ReplaceOnly dropped a sentence' }
+if ((Remove-DeskLanguage 'The packet of measures takes effect in March.' 'The government adopted a packet of measures.') -cne 'The packet of measures takes effect in March.') { throw 'a packet the source reports was rewritten' }
+$leak = [pscustomobject]@{ headline = 'Naira slides against dollar as Thursday trading opens'; dek = 'Official and street rates diverge as importers buy dollars.'; why = 'Importers paying in dollars face a wider gap of 68 naira, as the packet reports.'; paragraphs = @('The naira opened lower in Lagos on Thursday.', 'Dealers quoted higher rates.', 'Analysts cited importer demand.') }
+if ((Get-DraftStyleIssues $leak $noEvidence).Issues -notmatch 'desk language') { throw 'a draft that says "the packet" passed the style check' }
+Write-Host 'PASS the desk''s working words are flagged in a draft and taken out of finished copy'
+
+# A date the story says something will happen on, already past on the edition day.
+$edition = New-Object datetime(2026, 11, 12)
+$late = @(Get-OverdueFutureDates 'Egyptian lawmakers will summon Transport Minister Kamel El-Wazir for an emergency session on Tuesday, November 11, following a deadly train collision on Sunday, November 8.' $edition)
+if ($late.Count -ne 1 -or $late[0] -notmatch 'November 11') { throw "overdue date not found: $($late -join '; ')" }
+foreach ($fine in @(
+  'Parliament will vote on the budget on 14 November.',
+  'The crash on November 8 killed seven people, and the minister was summoned.',
+  'The minister said "we will meet on November 10" before the talks collapsed.',
+  'Voters will choose a president on 3 January 2027.',
+  'The court is due to rule on November 12.',
+  'The plan may cost more, officials said on November 9.')) {
+  if (@(Get-OverdueFutureDates $fine $edition).Count) { throw "date wrongly read as overdue: '$fine'" }
+}
+if (@(Get-OverdueFutureDates 'The team is set to play on 28 December.' (New-Object datetime(2027, 1, 2))).Count -ne 1) { throw 'a date in the year just ended was not read as past' }
+Write-Host 'PASS a future tense on a date that has passed is caught; coming dates, past tenses and quotations are not'
+
+# A why line a reader cannot check. The first three were published on 12 Nov 2026.
+foreach ($generic in @(
+  'The skills revolution aims to equip young South Africans with the capabilities needed for existing and emerging economic opportunities.',
+  'Residents facing the shifting quarantine stance are left with unresolved questions about police accountability.',
+  'The ruling highlights the role of the courts in holding officials to account.')) {
+  if (-not (Test-WhyGeneric $generic)) { throw "generic why line passed: '$generic'" }
+}
+foreach ($solid in @(
+  'About 5 million people aged 15 to 34 are out of work, and the official rate rose in the same quarter.',
+  'Traders crossing at the border post now pay the levy in cash before their trucks are cleared, starting on Monday.',
+  'Importers and businesses paying in dollars face a widening gap between official and street rates.')) {
+  if (Test-WhyGeneric $solid) { throw "a why line that carries the stake was called generic: '$solid'" }
+}
+Write-Host 'PASS a generic why line is sent back; one with a figure, a day or a plain effect is not'
+
+Write-Host '[story-contract] OK - 38 checks'
 exit 0
