@@ -758,19 +758,6 @@ body[data-audience="farmers"] .audience-mode[data-mode="investors"],body[data-au
 .wire-compare select option{background-color:var(--field);color:var(--text);font:700 13px/1.45 var(--mono);letter-spacing:.03em;text-transform:uppercase}
 .wire-compare select option:checked{background-color:#285f39;color:#fff}
 .wire-compare-panel{grid-column:1/-1;min-width:0}
-.wire-compare-table-wrap{overflow-x:auto;border:1px solid rgba(var(--ink-rgb),.11);background:rgba(0,0,0,.12)}
-.wire-compare-table{width:100%;min-width:680px;border-collapse:collapse;table-layout:fixed}
-.wire-compare-table th,.wire-compare-table td{padding:10px 14px;border-right:1px solid rgba(var(--ink-rgb),.07);border-bottom:1px solid rgba(var(--ink-rgb),.07);vertical-align:middle}
-.wire-compare-table tr:last-child th,.wire-compare-table tr:last-child td{border-bottom:0}
-.wire-compare-table th:last-child,.wire-compare-table td:last-child{border-right:0}
-.wire-compare-table thead th{background:rgba(76,175,80,.05);font:700 15px/1.2 var(--sans);color:var(--text);text-align:left}
-.wire-compare-table thead th:first-child{width:120px;font:700 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
-.wire-compare-table tbody th{font:700 10px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);text-align:left}
-.wire-compare-table td{font:700 14px/1.25 var(--sans);color:var(--text)}
-.wire-compare-table td.metric{color:var(--green-bright);font-variant-numeric:tabular-nums}
-.wire-compare-table td.story{font:500 12px/1.35 var(--sans);color:var(--text-muted)}
-.wire-compare-open{border:0;background:none;color:var(--green-bright);padding:0;font:700 9px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
-.wire-compare-open:hover,.wire-compare-open:focus-visible{text-decoration:underline;outline:none}
 .wire-brief-card{width:100%;display:grid;grid-template-rows:auto auto;align-content:start;gap:9px;min-height:96px;text-align:left;text-decoration:none;color:inherit;padding:16px 20px;border:0;border-top:1px solid var(--rule);border-right:1px solid var(--rule);background:none;font:inherit;cursor:pointer;transition:background 140ms}
 .wire-brief-card:nth-child(3n){border-right:0}
 .wire-brief-card:hover,.wire-brief-card:focus-visible{background:rgba(76,175,80,0.045);outline:none}
@@ -1898,4 +1885,50 @@ main{position:relative}
 @media (max-width:767px){
   #wire-view.wire-compact .wire-controls,#wire-view.wire-compact .wire-summary,#wire-view.wire-compact .wire-result-count{display:none!important}
   #wire-view.wire-compact .wire-head{padding-top:8px;padding-bottom:8px}
+}
+/* Compare countries v2 (12 Nov 2026): a colour per slot, carried from the picker to
+   every bar, name and story column, so a reader never has to match names to columns. */
+:root{--cmp-0:#7ccf80;--cmp-1:#d9b25a;--cmp-2:#6fa8e6}
+:root[data-theme="light"]{--cmp-0:#2a6f2e;--cmp-1:#a2740c;--cmp-2:#2c68b0}
+.cmp-c0{--cmp:var(--cmp-0)}.cmp-c1{--cmp:var(--cmp-1)}.cmp-c2{--cmp:var(--cmp-2)}
+#wire-view .wire-compare{display:grid;grid-template-columns:auto repeat(3,minmax(0,230px));gap:8px 10px;align-items:center}
+.cmp-slot{position:relative;display:block;min-width:0}
+.cmp-slot > i{position:absolute;left:12px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--cmp);pointer-events:none}
+.cmp-slot[data-empty="true"] > i{background:none;box-shadow:inset 0 0 0 1.5px var(--cmp)}
+#wire-view .wire-compare-body .cmp-slot select{padding-left:30px;width:100%}
+.cmp-intro{margin:2px 0 10px;font:500 12.5px/1.45 var(--sans);color:var(--text-muted);max-width:72ch}
+.cmp-intro em,.cmp-median em{display:inline-block;width:2px;height:11px;margin:0 3px -1px;background:var(--text);opacity:.7;vertical-align:baseline}
+.cmp-empty{margin:6px 0;font:500 13px/1.4 var(--sans);color:var(--text-muted)}
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
+.cmp-card{border:1px solid var(--rule);border-radius:8px;padding:11px 14px 10px;background:rgba(var(--hi-rgb),.025);min-width:0}
+.cmp-card h5{margin:0 0 6px;font:700 13.5px/1.25 var(--sans);color:var(--text)}
+.cmp-card h5 small{display:block;margin-top:2px;font:500 11.5px/1.3 var(--sans);color:var(--text-muted)}
+.cmp-row{display:grid;grid-template-columns:minmax(76px,max-content) minmax(40px,1fr) minmax(86px,max-content);gap:10px;align-items:center;padding:6px 0;border-top:1px solid rgba(var(--ink-rgb),.07)}
+.cmp-row.no-bar{grid-template-columns:minmax(76px,max-content) 1fr}
+.cmp-name{display:flex;align-items:center;gap:7px;min-width:0;font:600 13px/1.25 var(--sans);color:var(--text)}
+.cmp-name i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--cmp)}
+.cmp-track{position:relative;height:10px;border-radius:2px;background:rgba(var(--ink-rgb),.08)}
+.cmp-track b{position:absolute;top:0;bottom:0;border-radius:2px;background:var(--cmp)}
+.cmp-track em{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--text);opacity:.7}
+.cmp-val{font:700 14px/1.2 var(--sans);font-variant-numeric:tabular-nums;color:var(--text);text-align:right;min-width:0;overflow-wrap:anywhere}
+.cmp-val small{display:block;margin-top:2px;font:500 11px/1.25 var(--sans);color:var(--text-muted)}
+.cmp-val.is-up{color:var(--up)}.cmp-val.is-down{color:var(--down)}
+.cmp-row.is-missing .cmp-val{font-weight:500;font-size:12.5px;color:var(--text-muted)}
+.cmp-median{margin:5px 0 0;font:500 11px/1.3 var(--sans);color:var(--text-muted)}
+.cmp-news-head{margin:16px 0 8px;font:700 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--green-bright)}
+.cmp-news{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px 18px}
+.cmp-news-col{border-top:3px solid var(--cmp);padding-top:8px;min-width:0}
+.cmp-news-col h6{display:flex;align-items:center;gap:7px;margin:0 0 2px;font:700 14px/1.25 var(--sans);color:var(--text)}
+.cmp-news-col h6 i{width:8px;height:8px;border-radius:50%;background:var(--cmp)}
+.cmp-story{display:block;width:100%;min-height:44px;padding:8px 0;border:0;border-bottom:1px solid rgba(var(--ink-rgb),.08);background:none;color:var(--text);text-align:left;font:600 14px/1.35 var(--sans);cursor:pointer}
+.cmp-story:hover,.cmp-story:focus-visible{text-decoration:underline;text-underline-offset:3px;outline:none}
+.cmp-story:focus-visible{box-shadow:0 0 0 2px var(--green-bright)}
+.cmp-none{margin:8px 0;font:500 13px/1.4 var(--sans);color:var(--text-muted)}
+.cmp-open{min-height:44px;padding:8px 0;border:0;background:none;color:var(--green-bright);font:700 11px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
+.cmp-open:hover,.cmp-open:focus-visible{text-decoration:underline;outline:none}
+@media (max-width:720px){
+  #wire-view .wire-compare{grid-template-columns:1fr 1fr}
+  #wire-view .wire-compare .wire-compare-label,#wire-view .wire-compare .cmp-c2{grid-column:1 / -1}
+  .cmp-grid{grid-template-columns:1fr}
+  .cmp-row{grid-template-columns:minmax(70px,max-content) minmax(30px,1fr) minmax(80px,max-content);gap:8px}
 }

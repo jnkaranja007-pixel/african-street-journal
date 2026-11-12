@@ -109,6 +109,12 @@ for (const theme of ['light', 'dark']) {
     await check('front page');
     await pg.evaluate(() => document.getElementById('wire-entry').click()); await wait(900);
     await check('Wire');
+    // Compare countries, with its bars, colour swatches and story columns.
+    await pg.evaluate(() => document.getElementById('wire-compare-toggle').click()); await wait(500);
+    const cmp = await pg.evaluate(() => ({ cards: document.querySelectorAll('#wire-compare-panel .cmp-card').length, stories: document.querySelectorAll('#wire-compare-panel .cmp-story').length }));
+    if (cmp.cards < 6 || !cmp.stories) fail(tag + ': Compare countries drew ' + cmp.cards + ' figure cards and ' + cmp.stories + ' stories');
+    await check('Wire compare');
+    await pg.evaluate(() => document.getElementById('wire-compare-toggle').click());
     await pg.evaluate(() => document.getElementById('wire-close').click()); await wait(400);
     await pg.evaluate(() => openCountry('ke')); await wait(1500);
     for (const [i, name] of [[0, 'News'], [1, 'Signals'], [2, 'Atlas']]) {
@@ -142,7 +148,9 @@ const pages = [];
 for (const cc of fs.readdirSync(root).filter(d => /^[a-z]{2}$/.test(d) && fs.statSync(path.join(root, d)).isDirectory())) {
   for (const s of fs.readdirSync(path.join(root, cc))) {
     const f = path.join(root, cc, s, 'index.html');
-    if (fs.existsSync(f)) { pages.push(f); break; }
+    // A story whose headline was corrected keeps its old address as a redirect stub
+    // (meta refresh to the new slug); that stub has no tags to guard.
+    if (fs.existsSync(f) && !/http-equiv="refresh"/i.test(fs.readFileSync(f, 'utf8'))) { pages.push(f); break; }
   }
   if (pages.length >= 12) break;
 }

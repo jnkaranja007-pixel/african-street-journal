@@ -6077,13 +6077,19 @@ canvas.addEventListener('click', (e) => {
       .map(([code, info]) => '<option value="' + code + '">' + escapeHtml(info.name) + '</option>')
       .join('');
   }
+  // The reader's last three countries, kept on this device.
+  const COMPARE_KEY = 'asj:compare:v1';
   function populateCompare(){
     if (!compareSelects.length) return;
-    const defaults = ['ng','ke','za'];
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem(COMPARE_KEY) || '[]'); } catch {}
+    const defaults = Array.isArray(saved) && saved.length >= 2 ? saved : ['ng','ke','za'];
     const options = countryOptions();
     compareSelects.forEach((select, index) => {
-      if (!select.options.length) select.innerHTML = options;
-      select.value = defaults[index] || Object.keys(COUNTRY_INFO)[index] || '';
+      // The third slot can be left empty, for a straight two-country comparison.
+      if (!select.options.length) select.innerHTML = (index === 2 ? '<option value="">+ Add a country</option>' : '') + options;
+      const want = defaults[index];
+      select.value = want === '' || COUNTRY_INFO[want] ? want : (['ng','ke','za'][index] || '');
     });
     renderCompare();
     setCompareOpen(false);
@@ -6105,50 +6111,159 @@ canvas.addEventListener('click', (e) => {
     compareOpen = !!open;
     if (compareBody) compareBody.hidden = !compareOpen;
     if (compareToggle) compareToggle.setAttribute('aria-expanded', String(compareOpen));
+    if (compareOpen) renderCompare();
     updateCompareSummary();
+  }
+  /* Compare countries, v2. Until Nov 2026 this was a five-row table: GDP, growth, the
+     currency code, a count of outlets and an unclickable headline. Now the figures follow
+     the Wire's "Reading for" pick, each one is drawn as bars on a shared scale with the
+     median of the African countries that report it marked, the year it is from beside
+     it, and each country's top stories open in the reader. */
+  const COMPARE_SETS = {
+    general:   ['pop', 'gdp', 'growth', 'inflation', 'fx', 'index', 'internet', 'electricity'],
+    farmers:   ['season', 'food', 'topExport', 'agJobs', 'agShare', 'cerealYield', 'undernourished', 'agLand'],
+    investors: ['index', 'fx', 'growth', 'inflation', 'fdi', 'exports', 'unemployment', 'extDebt'],
+    diaspora:  ['fx', 'remitCost', 'remitUsd', 'remitGdp', 'inflation', 'internet', 'electricity']
+  };
+  const COMPARE_FACTS_ASKED = new Set();
+  const COMPARE_LENS_LABEL = { general: 'all readers', farmers: 'farmers', investors: 'investors', diaspora: 'the diaspora' };
+  const compactCount = n => n >= 1e9 ? (n / 1e9).toFixed(2) + 'B' : n >= 1e6 ? (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + 'M' : Math.round(n / 1e3) + 'k';
+  const isoDay = s => { const t = Date.parse(String(s || '')); return Number.isFinite(t) ? new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }) : ''; };
+  // One figure for one country: { v: number for the bars or null, text, note, cls }.
+  function compareFigure(key, code){
+    const info = COUNTRY_INFO[code] || {};
+    if (FACT_DEFS[key]) {
+      const f = countryFact(code, key);
+      return f ? { v: f.v, text: formatFactValue(FACT_DEFS[key].fmt, f.v), note: String(f.y) } : { v: null, text: 'Not reported', note: '' };
+    }
+    if (key === 'pop') {
+      return Number.isFinite(info.pop) ? { v: livePopulation(info.pop, info.gr || 0), text: compactCount(livePopulation(info.pop, info.gr || 0)), note: 'today' } : { v: null, text: 'Not reported', note: '' };
+    }
+    if (key === 'gdp') {
+      const wb = WORLD_BANK_ECONOMY[code];
+      return Number.isFinite(wb?.gdp) ? { v: wb.gdp, text: formatBillions(wb.gdp), note: String(wb.gdpYear || '') } : { v: null, text: 'Not reported', note: '' };
+    }
+    if (key === 'fx') {
+      const ccy = investorForCountry(code, info).currency;
+      const rate = (window.__FX || {})[ccy];
+      return Number.isFinite(rate) ? { v: null, text: formatFxRate(rate) + ' ' + ccy, note: isoDay(window.__FX_AT) } : { v: null, text: ccy ? 'No rate for ' + ccy : 'No currency', note: '' };
+    }
+    if (key === 'index') {
+      const idx = indexForCountry(code);
+      if (!idx) return { v: null, text: 'No exchange index', note: '' };
+      const pct = Number.isFinite(idx.changePct) ? idx.changePct : null;
+      const stale = marketAgeDays(idx.date) > 7;
+      return { v: pct, signed: true, text: pct === null ? 'No day move' : (pct > 0 ? '+' : '') + pct + '%', note: idx.label + (stale ? ', stale ' : ' ') + isoDay(idx.date) };
+    }
+    if (key === 'food') {
+      const food = countryFacts(code)?.food;
+      const changes = (food?.items || []).map(foodPriceChange).filter(c => c !== null).sort((a, b) => a - b);
+      // No year-earlier price (23 countries in Nov 2026): today's price of the first food.
+      const first = (food?.items || [])[0];
+      if (!changes.length) return first
+        ? { v: null, text: first.commodity + ' ' + (first.currency === 'SLL' ? 'SLE ' + Math.round(first.price / 1000) : first.currency + ' ' + Math.round(first.price).toLocaleString('en-US')),
+            note: 'per ' + String(first.unit || '').toLowerCase() + ', no year-ago price' }
+        : { v: null, text: 'No WFP prices', note: '' };
+      const m = changes[Math.floor((changes.length - 1) / 2)] / 2 + changes[Math.ceil((changes.length - 1) / 2)] / 2;
+      return { v: m, signed: true, text: (m > 0 ? '+' : '') + Math.round(m) + '%', note: changes.length + ' food' + (changes.length > 1 ? 's' : '') + ', ' + String(food.date || '').slice(0, 7) };
+    }
+    if (key === 'topExport') {
+      const top = (countryFacts(code)?.farm?.items || [])[0];
+      return top ? { v: top.usd, text: top.label + ' ' + formatFactValue('usd', top.usd), note: '2022-24' } : { v: null, text: 'Not published', note: '' };
+    }
+    if (key === 'season') {
+      const s = seasonGlanceItem(code);
+      return { v: null, text: s.value, note: s.sub.replace(/,\s*\w+$/, '') };
+    }
+    return { v: null, text: '—', note: '' };
+  }
+  const COMPARE_META = {
+    pop: { label: 'Population', sub: 'estimate for today' },
+    gdp: { label: 'GDP', sub: 'US dollars, World Bank' },
+    fx: { label: '$1 buys', sub: 'reference rate, updated daily' },
+    index: { label: 'Stock market, last session', sub: 'main index, day move' },
+    food: { label: 'Food prices', sub: 'median change on a year, WFP' },
+    topExport: { label: 'Top farm export', sub: 'a year, FAOSTAT' },
+    season: { label: 'This month', sub: 'season calendar, FAO' }
+  };
+  function compareBlock(key, countries){
+    const def = FACT_DEFS[key];
+    const meta = COMPARE_META[key] || { label: def?.label || key, sub: (def?.sub || '') + ', World Bank' };
+    const figs = countries.map(c => compareFigure(key, c.code));
+    const median = def ? africaMedian(key) : null;
+    const nums = figs.map(f => f.v).filter(Number.isFinite);
+    const bars = nums.length > 0;
+    let lo = 0, hi = 0;
+    if (bars) {
+      lo = Math.min(0, ...nums, Number.isFinite(median) ? median : 0);
+      hi = Math.max(0, ...nums, Number.isFinite(median) ? median : 0);
+    }
+    const span = hi - lo || 1;
+    const pos = x => ((x - lo) / span) * 100;
+    const rows = countries.map((c, i) => {
+      const f = figs[i];
+      let bar = '';
+      if (bars) {
+        const track = Number.isFinite(f.v)
+          ? '<b style="left:' + Math.min(pos(0), pos(f.v)).toFixed(1) + '%;width:' + Math.max(0.8, Math.abs(pos(f.v) - pos(0))).toFixed(1) + '%"></b>'
+          : '';
+        const med = Number.isFinite(median) ? '<em style="left:' + pos(median).toFixed(1) + '%" aria-hidden="true"></em>' : '';
+        bar = '<span class="cmp-track" aria-hidden="true">' + track + med + '</span>';
+      }
+      const tone = f.signed && Number.isFinite(f.v) ? (f.v > 0 ? ' is-up' : f.v < 0 ? ' is-down' : '') : '';
+      return '<div class="cmp-row cmp-c' + c.slot + (bars ? '' : ' no-bar') + (Number.isFinite(f.v) || !bars ? '' : ' is-missing') + '">' +
+        '<span class="cmp-name"><i aria-hidden="true"></i>' + escapeHtml(c.name) + '</span>' + bar +
+        '<span class="cmp-val' + tone + '">' + escapeHtml(f.text) + (f.note ? '<small>' + escapeHtml(f.note) + '</small>' : '') + '</span>' +
+      '</div>';
+    }).join('');
+    return '<section class="cmp-card"><h5>' + escapeHtml(meta.label) + '<small>' + escapeHtml(meta.sub) + '</small></h5>' + rows +
+      (Number.isFinite(median) ? '<p class="cmp-median"><em aria-hidden="true"></em>Africa median ' + escapeHtml(formatFactValue(def.fmt, median)) + '</p>' : '') +
+    '</section>';
   }
   function renderCompare(){
     if (!comparePanel || !compareSelects.length) return;
     const seen = new Set();
-    const codes = compareSelects.map(select => select.value).filter(code => {
-      if (!code || seen.has(code)) return false;
+    const countries = [];
+    compareSelects.forEach((select, slot) => {
+      const code = select.value;
+      select.closest('.cmp-slot')?.setAttribute('data-empty', code ? 'false' : 'true');
+      if (!code || seen.has(code) || !COUNTRY_INFO[code]) return;
       seen.add(code);
-      return true;
+      countries.push({ code, slot, name: COUNTRY_INFO[code].name });
     });
-    const countries = codes.map(code => {
-      const info = COUNTRY_INFO[code] || {};
-      const inv = investorForCountry(code, info);
-      const top = (AI_BRIEFS[code] || []).find(brief => brief && brief.headline) || {};
-      return {
-        code,
-        name: info.name || code.toUpperCase(),
-        gdp: inv.gdp || '—',
-        growth: Number.isFinite(inv.gdp_growth) ? formatPct(inv.gdp_growth) : '—',
-        currency: inv.currency || '—',
-        sources: uniqueSourceCount(AI_BRIEFS[code] || []),
-        story: top.headline || 'No current story'
-      };
-    });
-    const row = (label, key, className = 'metric') =>
-      '<tr><th scope="row">' + label + '</th>' +
-        countries.map(country => '<td class="' + className + '">' + escapeHtml(String(country[key])) + '</td>').join('') +
-      '</tr>';
-    comparePanel.innerHTML =
-      '<div class="wire-compare-table-wrap"><table class="wire-compare-table">' +
-        '<thead><tr><th scope="col">Metric</th>' +
-          countries.map(country => '<th scope="col">' + escapeHtml(country.name) + '</th>').join('') +
-        '</tr></thead>' +
-        '<tbody>' +
-          row('GDP', 'gdp') +
-          row('Growth', 'growth') +
-          row('Currency', 'currency', '') +
-          row('Sources', 'sources', '') +
-          row('Top story', 'story', 'story') +
-          '<tr><th scope="row">Country file</th>' +
-            countries.map(country => '<td><button class="wire-compare-open" type="button" data-open-country="' + country.code + '">Open ' + escapeHtml(country.name) + '</button></td>').join('') +
-          '</tr>' +
-        '</tbody>' +
-      '</table></div>';
+    try { localStorage.setItem(COMPARE_KEY, JSON.stringify(compareSelects.map(s => s.value))); } catch {}
+    const lens = normalizeStoryLens(activeStoryLens);
+    // Food prices and crop months live in each country's own facts file
+    // (data/facts/<cc>.js), loaded when its page opens. Fetch them for the farmers' view.
+    if (lens === 'farmers') {
+      const need = countries.filter(c => !countryFacts(c.code)?.ports && !COMPARE_FACTS_ASKED.has(c.code));
+      if (need.length) {
+        need.forEach(c => COMPARE_FACTS_ASKED.add(c.code));
+        Promise.all(need.map(c => new Promise(done => {
+          const s = document.createElement('script');
+          s.src = 'data/facts/' + c.code + '.js?v=' + (window.ASJ_ASSET_VERSION || '1');
+          s.dataset.countryFacts = c.code;
+          s.onload = s.onerror = () => done();
+          document.head.appendChild(s);
+        }))).then(() => { if (compareOpen) renderCompare(); });
+      }
+    }
+    const news = countries.map(c => {
+      // In the reader's lens order, so a farmer sees the two stories that matter to farmers.
+      const stories = rankStoryEntries(AI_BRIEFS[c.code] || [], lens).filter(e => e.story && e.story.headline).slice(0, 2);
+      return '<div class="cmp-news-col cmp-c' + c.slot + '"><h6><i aria-hidden="true"></i>' + escapeHtml(c.name) + '</h6>' +
+        (stories.length ? stories.map(({ story: s, sourceIndex: rank }) => {
+          const key = registerStory(s, { countryCode: c.code, country: c.name, published: s.published || AI_BRIEFS_DATES[c.code], rank });
+          return '<button type="button" class="cmp-story" data-story-key="' + escapeHtml(key) + '">' + escapeHtml(s.headline) + '</button>';
+        }).join('') : '<p class="cmp-none">No story in this edition.</p>') +
+        '<button type="button" class="cmp-open" data-open-country="' + c.code + '">Open the ' + escapeHtml(c.name) + ' file <span aria-hidden="true">&rarr;</span></button>' +
+      '</div>';
+    }).join('');
+    comparePanel.innerHTML = countries.length < 2
+      ? '<p class="cmp-empty">Pick two different countries to compare.</p>'
+      : '<p class="cmp-intro">Figures for ' + escapeHtml(COMPARE_LENS_LABEL[lens] || 'all readers') + ', following Reading for. Bars share one scale from zero; <em aria-hidden="true"></em> marks the median of the African countries that report the figure.</p>' +
+        '<div class="cmp-grid">' + (COMPARE_SETS[lens] || COMPARE_SETS.general).map(key => compareBlock(key, countries)).join('') + '</div>' +
+        '<h5 class="cmp-news-head">' + (lens === 'general' ? 'Top stories today' : 'Top stories for ' + escapeHtml(COMPARE_LENS_LABEL[lens])) + '</h5><div class="cmp-news">' + news + '</div>';
     updateCompareSummary();
   }
   // The flag beside each story. In data-saver mode (window.ASJ_SAVE_DATA) the Wire would
@@ -6339,6 +6454,8 @@ canvas.addEventListener('click', (e) => {
   compareToggle?.addEventListener('click', () => setCompareOpen(!compareOpen));
   compareSelects.forEach(select => select.addEventListener('change', renderCompare));
   comparePanel?.addEventListener('click', event => {
+    const story = event.target.closest('[data-story-key]');
+    if (story) { openRegisteredStory(story.dataset.storyKey, story); return; }
     const button = event.target.closest('[data-open-country]');
     if (!button) return;
     const code = button.dataset.openCountry;
@@ -6372,6 +6489,7 @@ canvas.addEventListener('click', (e) => {
   lensSelect?.addEventListener('change', () => setStoryLens(lensSelect.value || 'general'));
   window.addEventListener('asj:lenschange', () => {
     if (!view.classList.contains('open')) return;
+    if (compareOpen) renderCompare();
     INDEX = buildIndex();
     visibleCount = 60;
     renderTopics(); renderTrust(); renderResults();
