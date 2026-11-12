@@ -1319,7 +1319,10 @@ function layoutPhoneMap() {
   const b = MAINLAND_BOX, mw = b.x1 - b.x0, mh = b.y1 - b.y0;
   // Height actually free for the map: the row's box once the stage is collapsed.
   stage.style.height = '0px';
-  const availH = Math.max(160, row.getBoundingClientRect().height - 8);
+  // The row's own padding is not free: counting it let the map push the screen by 12px.
+  const rowStyle = getComputedStyle(row);
+  const rowPad = (parseFloat(rowStyle.paddingTop) || 0) + (parseFloat(rowStyle.paddingBottom) || 0);
+  const availH = Math.max(160, row.getBoundingClientRect().height - Math.max(8, rowPad));
   const s = Math.min((vw * 0.95) / mw, availH / mh); // px per map unit
   const boxW = mw * s, boxH = mh * s;
   stage.style.width = boxW + 'px';
@@ -1382,6 +1385,18 @@ function layoutHomeMap() {
 }
 layoutHomeMap();
 window.addEventListener('resize', () => requestAnimationFrame(layoutHomeMap));
+// The map takes the height the rest of the landing screen leaves, so measure again when
+// that changes: the top story is filled in later, and the web fonts can wrap its headline
+// onto another line. Without this a phone's landing screen could scroll by a line.
+if (window.ResizeObserver) {
+  let layoutQueued = false;
+  const relayout = () => { if (layoutQueued) return; layoutQueued = true; requestAnimationFrame(() => { layoutQueued = false; layoutHomeMap(); }); };
+  const landingWatch = new ResizeObserver(relayout);
+  document.addEventListener('DOMContentLoaded', () => {
+    ['.title-block', '.pop-counter', '#home-front-top', '#home-tools', '.ticker-wrap'].forEach(sel => { const el = document.querySelector(sel); if (el) landingWatch.observe(el); });
+  }, { once: true });
+}
+document.fonts?.ready?.then(() => requestAnimationFrame(layoutHomeMap));
 (phoneMapMQ.addEventListener ? phoneMapMQ.addEventListener('change', layoutHomeMap) : phoneMapMQ.addListener(layoutHomeMap));
 
 function eventToLocal(e) {
