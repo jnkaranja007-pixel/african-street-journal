@@ -576,6 +576,20 @@ function Test-WhyGuesses([string]$Why) {
   return ([regex]::IsMatch($Why, '\b(?:may|might|could)\b') -or
           [regex]::IsMatch($Why, '\b(?:potentially|possibly|perhaps|presumably|likely to)\b', 'IgnoreCase'))
 }
+# A why line with nothing in it a reader could check: no figure, no date, and a stock
+# verb where the consequence should be ("raises questions about accountability", "aims
+# to equip young people"). The weekly editor review of 10 Nov 2026 failed all 20 sampled
+# why lines, most as "generic". Only a line with no figure and no weekday or month is
+# judged, so one that carries the stake is never sent back for its wording.
+function Test-WhyGeneric([string]$Why) {
+  if (-not $Why) { return $false }
+  if ([regex]::IsMatch($Why, '\d')) { return $false }
+  if ([regex]::IsMatch($Why, '\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|January|February|March|April|June|July|August|September|October|November|December)\b')) { return $false }
+  return [regex]::IsMatch($Why, '\b(?:rais(?:es|ed|ing) (?:\w+ )?(?:questions?|concerns?|fears|doubts)|unresolved questions|left with questions|highlight(?:s|ed|ing)?|underscor(?:es|ed|ing)|has implications|implications for|aims? to|seeks? to|is important|the importance of|remains? an? (?:\w+ )?(?:concern|challenge|issue|priority)|sheds? light|draws? attention|serves? as a reminder|reflects? (?:the|a|an|its|their)|demonstrat(?:es|ed|ing)|(?:affects?|matters? (?:to|for)) (?:the )?(?:economy|country|nation|sector|region|public|population|citizens|residents|people)\b)', 'IgnoreCase')
+}
+# Moved here from write-briefs.ps1 on 12 Nov 2026 so build-static-pages.ps1 can hide the
+# lines the writer kept anyway (keptWhyGeneric); app.js whyGeneric is the same test.
+
 # 10 Nov 2026: and the opening paragraph. With the headline and dek alone, 46 of the
 # 172 why lines shown that day passed while saying the first paragraph again ("Six
 # people died ... in a road accident involving two buses" under "Two buses collide,

@@ -21,7 +21,7 @@ $parseErrors = $null
 $writerAst = [Management.Automation.Language.Parser]::ParseInput($writerSource, [ref]$parseTokens, [ref]$parseErrors)
 if ($parseErrors.Count) { throw 'writer could not be parsed for grounding tests' }
 $groundingDefinitions = New-Object System.Collections.Generic.List[string]
-foreach ($functionName in @('Convert-NumberScanText','ConvertTo-NumberKey','Get-NumberReadings','Get-RelativeTimeWords','Get-CopiedRuns','Get-SubstantialCopies','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote','Get-DeskLanguageHits','Remove-DeskLanguage','Get-OverdueFutureDates','Test-WhyGeneric')) {
+foreach ($functionName in @('Convert-NumberScanText','ConvertTo-NumberKey','Get-NumberReadings','Get-RelativeTimeWords','Get-CopiedRuns','Get-SubstantialCopies','Get-NumberKeys','Get-UngroundedNumbers','Get-UngroundedMonths','Get-ItemEvidenceText','Get-ItemUngroundedMonths','Get-LensGroundingIssues','Get-LensRelevanceBand','Get-LensBandWhy','Limit-DeskSentence','Test-DeskSentenceEndsBadly','ConvertTo-NumeralStyle','Test-SpeculativeText','Resolve-LensScore','Get-StockPhraseRules','Get-StockPhraseHits','Get-RepeatedSentences','Get-DraftStyleIssues','Get-StyleRepairNote','Get-DeskLanguageHits','Remove-DeskLanguage','Get-OverdueFutureDates')) {
   $definition = $writerAst.FindAll({
     param($node)
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $functionName
