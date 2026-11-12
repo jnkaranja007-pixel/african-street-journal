@@ -90,7 +90,7 @@ function storyLensData(story, lens = activeStoryLens) {
   const fallback = STORY_LENS_TOPIC_SCORES[mode]?.[story?.topic || 'News'] ?? 50;
   const score = Number.isFinite(parsed) ? Math.round(Math.max(0, Math.min(100, parsed))) : fallback;
   const lensWhy = String(raw?.why || '').trim();
-  const why = lensWhy && !whyRestates(lensWhy, story) ? lensWhy : briefWhy(story);
+  const why = whyShown(lensWhy, story) ? lensWhy : briefWhy(story);
   return { score, why, explicit:!!raw };
 }
 
@@ -621,9 +621,12 @@ if (editionLineEl && AI_BRIEFS_AT) {
   }
 }
 
+// The strip under the map names the country first, then its capital. It used to list
+// capitals alone in capitals (ABUJA, ACCRA...), so a reader had to know Kenya is Nairobi
+// to find Kenya. Sorted by country.
 const cities = Object.entries(COUNTRY_INFO)
-  .map(([id, info]) => ({ city: String(info.capital || info.name).toUpperCase(), id }))
-  .sort((a, b) => a.city.localeCompare(b.city, 'en', { sensitivity: 'base' }) || a.id.localeCompare(b.id));
+  .map(([id, info]) => ({ name: String(info.name || id), city: String(info.capital || ''), id }))
+  .sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }) || a.id.localeCompare(b.id));
 
 const tickerEl = document.getElementById('ticker');
 
@@ -646,7 +649,18 @@ function renderTicker() {
     segment.className = 'ticker-segment';
     if (copy > 0) segment.setAttribute('aria-hidden', 'true');
     for (const item of cities) {
-      const button = makeCountryButton(item.city, item.id);
+      const button = makeCountryButton(item.name, item.id);
+      if (item.city && item.city !== item.name) {
+        button.textContent = '';
+        const name = document.createElement('b');
+        name.className = 'tk-name';
+        name.textContent = item.name;
+        const city = document.createElement('small');
+        city.className = 'tk-city';
+        city.textContent = item.city;
+        button.append(name, city);
+        button.setAttribute('aria-label', item.name + ', capital ' + item.city);
+      }
       if (copy > 0) button.tabIndex = -1;
       segment.appendChild(button);
       const dot = document.createElement('span');
@@ -749,6 +763,18 @@ setInterval(() => {
   try { cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch {}
   if (cached?.rates && cached.updatedAt) applySnapshot(cached.rates, cached.updatedAt, 'cached');
   else applySnapshot(FALLBACK_RATES, FALLBACK_AT, 'fallback');
+  // The desk saves the day's rates in data/fx-history.json, which is far fresher than the
+  // built-in fallback. Use its newest day until (or unless) the live rate arrives.
+  if (!cached?.rates) document.addEventListener('DOMContentLoaded', () => {
+    const trend = window.ASJ_FX_TREND;
+    if (!trend) return;
+    trend.load('/').then(h => {
+      if (!h || window.__FX_SOURCE !== 'fallback' || !Array.isArray(h.days) || !h.days.length || !h.rates) return;
+      const last = h.days.length - 1, rates = {};
+      Object.keys(h.rates).forEach(c => { const v = h.rates[c]?.[last]; if (Number.isFinite(v) && v > 0) rates[c] = v; });
+      if (Object.keys(rates).length > 20) applySnapshot(Object.assign({}, FALLBACK_RATES, rates), h.days[last] + 'T00:00:00Z', 'history');
+    });
+  }, { once: true });
 
   // One live refresh every six hours is enough for a reference-rate tool. Previously every
   // page view called the API even when a minute-old successful response was already cached.
@@ -2723,6 +2749,12 @@ function mountReaderKit(args) {
   try {
     window.ASJ_STORY_KIT.mountVisual(host, { ...o, link: tab => '#/' + o.cc + '/' + tab });
   } catch {}
+  // Listen (story-kit.js mountListen): the browser reads the story aloud. Hidden where
+  // the browser has no speech.
+  const listen = document.getElementById('story-reader-listen');
+  if (listen && window.ASJ_STORY_KIT.mountListen) {
+    try { window.ASJ_STORY_KIT.mountListen(listen, () => [o.headline, o.dek].concat(o.paragraphs || [])); } catch {}
+  }
 }
 document.addEventListener('DOMContentLoaded', () => {
   if (storyReader?.classList.contains('open')) mountReaderKit();
@@ -2859,6 +2891,7 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
 
 function closeStoryReader() {
   if (!storyReader?.classList.contains('open')) return;
+  try { window.ASJ_STORY_KIT?.stopListening?.(); } catch {}
   storyReader.classList.remove('open');
   const wireOpen = document.getElementById('wire-view')?.classList.contains('open');
   const countryOpen = countryView.classList.contains('open');
@@ -3233,7 +3266,21 @@ function wireBriefAccordion(cards) {
 // every business story on the site. Neither is shown now.
 function briefWhy(brief) {
   const why = String(brief?.why || '').trim();
-  return why && !whyRestates(why, brief) && !whyGuesses(why) ? why : '';
+  return whyShown(why, brief) ? why : '';
+}
+function whyShown(why, story) {
+  return !!why && !whyRestates(why, story) && !whyGuesses(why) && !whyGeneric(why);
+}
+// Nor one a reader cannot check: no figure, no date, and a stock verb where the effect
+// should be ("highlights the role of", "raises questions about", "aims to equip"). The
+// writer sends these back (write-briefs.ps1) but keeps one when the rewrite fails; the
+// same test as story-shape.ps1 Test-WhyGeneric, which hides it on the static pages.
+const WHY_GENERIC_RE = /\b(?:rais(?:es|ed|ing) (?:\w+ )?(?:questions?|concerns?|fears|doubts)|unresolved questions|left with questions|highlight(?:s|ed|ing)?|underscor(?:es|ed|ing)|has implications|implications for|aims? to|seeks? to|is important|the importance of|remains? an? (?:\w+ )?(?:concern|challenge|issue|priority)|sheds? light|draws? attention|serves? as a reminder|reflects? (?:the|a|an|its|their)|demonstrat(?:es|ed|ing)|(?:affects?|matters? (?:to|for)) (?:the )?(?:economy|country|nation|sector|region|public|population|citizens|residents|people)\b)/i;
+const WHY_DATED_RE = /\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|January|February|March|April|June|July|August|September|October|November|December)\b/;
+function whyGeneric(why) {
+  const text = String(why || '');
+  if (!text || /\d/.test(text) || WHY_DATED_RE.test(text)) return false;
+  return WHY_GENERIC_RE.test(text);
 }
 // Nor one that has to guess: the desk asks for the effect the report states (the same
 // words as story-shape.ps1 Test-WhyGuesses). Lower-case "may" only: "in May" is a month.
@@ -5533,6 +5580,7 @@ function renderDiasporaPanel(countryId, info) {
       '<div class="cv-dia-rate-val">' + rateStr + ' <span>' + escapeHtml(ccy || '') + '</span></div>' +
       '<div class="cv-dia-rate-sub">' + escapeHtml(CCY_NAME[ccy] || 'local currency') + (Number.isFinite(rate) ? ' · reference rate, updated daily' : ' · rate unavailable') + '</div>' +
     '</div>' +
+    '<div class="fx-trend" id="cv-dia-trend" hidden></div>' +
     (Number.isFinite(rate)
       ? '<div class="cv-dia-calc"><label for="cv-dia-amount">Sending</label><span>$</span><input id="cv-dia-amount" type="number" min="0" step="10" inputmode="decimal" aria-label="Amount in US dollars"><span aria-hidden="true">=</span><b id="cv-dia-converted">—</b></div>'
       : '') +
@@ -5557,6 +5605,26 @@ function renderDiasporaPanel(countryId, info) {
   // Remittances and connection, from the World Bank, where "Where Capital Goes" listed
   // four sector words.
   if (secEl) secEl.innerHTML = factGridHtml(countryId, 'diaspora');
+  fillFxTrend(document.getElementById('cv-dia-trend'), ccy);
+}
+
+// "$1 buys 129 KES today, 128 a month ago", with a small line (fx-trend.js, from the
+// rates the desk saves each day since 12 Nov 2026). Hidden until the file arrives.
+function fillFxTrend(el, ccy) {
+  if (!el || !ccy) return;
+  const kit = window.ASJ_FX_TREND;
+  if (!kit) { window.addEventListener('load', () => { if (el.isConnected && window.ASJ_FX_TREND) fillFxTrend(el, ccy); }, { once: true }); return; }
+  kit.load().then(h => {
+    if (!el.isConnected) return;
+    const tr = kit.trend(h, ccy);
+    const say = kit.sentence(tr);
+    if (!say) { el.hidden = true; return; }
+    const line = kit.spark(tr.points, 132, 34);
+    el.innerHTML = (line ? '<div class="fx-trend-line">' + line + '</div>' : '') +
+      '<div class="fx-trend-copy"><p class="fx-trend-head">' + escapeHtml(say.head) + '</p><p class="fx-trend-sub">' + escapeHtml(say.sub) + '</p></div>';
+    el.classList.toggle('has-line', !!line);
+    el.hidden = false;
+  });
 }
 
 function renderInvestorPanel(countryId, info) {
@@ -6079,11 +6147,56 @@ canvas.addEventListener('click', (e) => {
   }
   // The reader's last three countries, kept on this device.
   const COMPARE_KEY = 'asj:compare:v1';
+  // A shared comparison: /?compare=ng,ke,za&lens=investors#/wire opens the Wire with
+  // these countries compared, read for that audience. The address follows the panel
+  // while it is open, so copying it from the browser shares the same view.
+  let pendingCompare = null;
+  (function readSharedCompare(){
+    try {
+      const params = new URLSearchParams(location.search);
+      if (!params.has('compare')) return;
+      const codes = String(params.get('compare') || '').toLowerCase().split(/[\s,;|+-]+/)
+        .filter((c, i, all) => COUNTRY_INFO[c] && all.indexOf(c) === i).slice(0, 3);
+      if (codes.length < 2) return;
+      pendingCompare = codes;
+      const lens = params.get('lens');
+      if (lens && normalizeStoryLens(lens) !== activeStoryLens) setStoryLens(lens, { syncSignals: false });
+    } catch {}
+  }());
+  function compareCodes(){
+    const seen = new Set();
+    return compareSelects.map(s => s.value).filter(c => c && COUNTRY_INFO[c] && !seen.has(c) && seen.add(c));
+  }
+  function compareShareUrl(){
+    const url = new URL(location.origin + '/');
+    url.searchParams.set('compare', compareCodes().join(','));
+    const lens = normalizeStoryLens(activeStoryLens);
+    if (lens !== 'general') url.searchParams.set('lens', lens);
+    return url.origin + '/?' + url.searchParams.toString().replace(/%2C/gi, ',') + '#/wire';
+  }
+  function syncCompareUrl(){
+    try {
+      const url = new URL(location.href);
+      const on = compareOpen && view.classList.contains('open') && compareCodes().length >= 2;
+      if (on) {
+        url.searchParams.set('compare', compareCodes().join(','));
+        const lens = normalizeStoryLens(activeStoryLens);
+        if (lens !== 'general') url.searchParams.set('lens', lens); else url.searchParams.delete('lens');
+      } else {
+        if (!url.searchParams.has('compare')) return;
+        url.searchParams.delete('compare'); url.searchParams.delete('lens');
+      }
+      const next = url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString().replace(/%2C/gi, ',') : '') + url.hash;
+      if (next !== location.pathname + location.search + location.hash) history.replaceState(history.state, '', next);
+    } catch {}
+  }
   function populateCompare(){
     if (!compareSelects.length) return;
     let saved = [];
     try { saved = JSON.parse(localStorage.getItem(COMPARE_KEY) || '[]'); } catch {}
-    const defaults = Array.isArray(saved) && saved.length >= 2 ? saved : ['ng','ke','za'];
+    const shared = pendingCompare;
+    pendingCompare = null;
+    const defaults = shared ? shared.concat(shared.length < 3 ? [''] : []) : Array.isArray(saved) && saved.length >= 2 ? saved : ['ng','ke','za'];
     const options = countryOptions();
     compareSelects.forEach((select, index) => {
       // The third slot can be left empty, for a straight two-country comparison.
@@ -6092,7 +6205,7 @@ canvas.addEventListener('click', (e) => {
       select.value = want === '' || COUNTRY_INFO[want] ? want : (['ng','ke','za'][index] || '');
     });
     renderCompare();
-    setCompareOpen(false);
+    setCompareOpen(!!shared);
   }
   function compareNames(){
     return compareSelects.map(select => COUNTRY_INFO[select.value]?.name).filter(Boolean);
@@ -6113,6 +6226,7 @@ canvas.addEventListener('click', (e) => {
     if (compareToggle) compareToggle.setAttribute('aria-expanded', String(compareOpen));
     if (compareOpen) renderCompare();
     updateCompareSummary();
+    syncCompareUrl();
   }
   /* Compare countries, v2. Until Nov 2026 this was a five-row table: GDP, growth, the
      currency code, a count of outlets and an unclickable headline. Now the figures follow
@@ -6261,10 +6375,12 @@ canvas.addEventListener('click', (e) => {
     }).join('');
     comparePanel.innerHTML = countries.length < 2
       ? '<p class="cmp-empty">Pick two different countries to compare.</p>'
-      : '<p class="cmp-intro">Figures for ' + escapeHtml(COMPARE_LENS_LABEL[lens] || 'all readers') + ', following Reading for. Bars share one scale from zero; <em aria-hidden="true"></em> marks the median of the African countries that report the figure.</p>' +
+      : '<div class="cmp-share-row"><button type="button" class="cmp-share" id="cmp-share"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg><span>Share this comparison</span></button><span class="cmp-share-status" role="status" aria-live="polite"></span></div>' +
+        '<p class="cmp-intro">Figures for ' + escapeHtml(COMPARE_LENS_LABEL[lens] || 'all readers') + ', following Reading for. Bars share one scale from zero; <em aria-hidden="true"></em> marks the median of the African countries that report the figure.</p>' +
         '<div class="cmp-grid">' + (COMPARE_SETS[lens] || COMPARE_SETS.general).map(key => compareBlock(key, countries)).join('') + '</div>' +
         '<h5 class="cmp-news-head">' + (lens === 'general' ? 'Top stories today' : 'Top stories for ' + escapeHtml(COMPARE_LENS_LABEL[lens])) + '</h5><div class="cmp-news">' + news + '</div>';
     updateCompareSummary();
+    syncCompareUrl();
   }
   // The flag beside each story. In data-saver mode (window.ASJ_SAVE_DATA) the Wire would
   // fetch up to 55 flag images; the country code in text costs nothing and the country
@@ -6349,7 +6465,7 @@ canvas.addEventListener('click', (e) => {
       // Mount point for the sign-up, after the reader has had the front page.
       (frontPage ? '<div id="wire-signup"></div>' : '');
   }
-  function openWire(topic){
+  function openWire(topic, opts = {}){
     editionDate = null; editionBriefs = null; populateEditions();
     INDEX = buildIndex(); activeTopic = topic||'All'; query=''; visibleCount = 60; searchInput.value='';
     const dateEl = document.getElementById('wire-date');
@@ -6361,9 +6477,16 @@ canvas.addEventListener('click', (e) => {
     updateStoryLensControls(); renderTopics(); renderTrust(); populateCompare(); renderResults();
     resultsEl.scrollTop = 0;
     if (!editionDate) saveWireSnapshot(INDEX);
-    view.classList.add('open'); document.body.style.overflow='hidden';
+    view.classList.add('open'); document.body.style.overflow='hidden'; syncCompareUrl();
     updateOverlayAccessibility();
     syncRoute();
+    // Search from the front page: focus now, inside the tap. iOS Safari raises the
+    // keyboard only for a focus() made while handling the user's gesture; one made in a
+    // timer afterwards puts the caret in the box and leaves the keyboard down.
+    if (opts.focusSearch) {
+      try { searchInput.focus({ preventScroll: true }); } catch { searchInput.focus(); }
+      return;
+    }
     setTimeout(() => {
       if (window.matchMedia('(max-width:720px)').matches) closeBtn.focus();
       else searchInput.focus();
@@ -6374,6 +6497,7 @@ canvas.addEventListener('click', (e) => {
     // than leaving a Back that reopens a story over a page the reader has left.
     if (storyReader?.classList.contains('open')) requestCloseStoryReader();
     view.classList.remove('open');
+    syncCompareUrl();
     if (!document.getElementById('country-view').classList.contains('open')) document.body.style.overflow='';
     updateOverlayAccessibility();
     if (wireLastFocus && wireLastFocus.focus) wireLastFocus.focus();
@@ -6382,6 +6506,9 @@ canvas.addEventListener('click', (e) => {
   }
   window.__wireOpen = openWire;
   window.__wireClose = closeWire;
+  document.addEventListener('fx-ready', () => { if (compareOpen && view.classList.contains('open')) renderCompare(); });
+  // A shared comparison link with no #/wire in it (some apps drop the fragment).
+  if (pendingCompare) setTimeout(() => { if (pendingCompare && !view.classList.contains('open')) openWire('All'); }, 0);
   // The wire's index carries a folded search haystack built from whatever the story had
   // at the time. Built before the prose arrived, it holds headlines and deks only, and
   // full-text search would keep quietly missing until the next open. Rebuild in place.
@@ -6453,7 +6580,21 @@ canvas.addEventListener('click', (e) => {
   }, true);
   compareToggle?.addEventListener('click', () => setCompareOpen(!compareOpen));
   compareSelects.forEach(select => select.addEventListener('change', renderCompare));
-  comparePanel?.addEventListener('click', event => {
+  comparePanel?.addEventListener('click', async event => {
+    const shareButton = event.target.closest('#cmp-share');
+    if (shareButton) {
+      const url = compareShareUrl();
+      const names = compareNames();
+      const title = names.join(', ').replace(/, ([^,]*)$/, ' and $1') + ' compared';
+      const status = comparePanel.querySelector('.cmp-share-status');
+      const say = text => { if (status) { status.textContent = text; setTimeout(() => { if (status.isConnected) status.textContent = ''; }, 2600); } };
+      if (navigator.share && isTouchLikePointer()) {
+        try { await navigator.share({ title: title + ' | The African Street Journal', text: title + ' on The African Street Journal', url }); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+      }
+      const ok = await copyPlainText(url);
+      say(ok ? 'Link copied. Paste it into WhatsApp or anywhere.' : url);
+      return;
+    }
     const story = event.target.closest('[data-story-key]');
     if (story) { openRegisteredStory(story.dataset.storyKey, story); return; }
     const button = event.target.closest('[data-open-country]');
@@ -7620,3 +7761,138 @@ window.addEventListener('asj:full-loaded', () => {
     }
   } catch {}
 });
+
+/* -- Find a country, and search from the front page -----------------------------------
+   The map is the front door, but on a phone Gambia, Rwanda or Eswatini are a few pixels
+   wide and a reader has to know where they are. This is the same door by name: type a
+   country, a capital or a common other name ("Ivory Coast", "DRC", "Swaziland") and go.
+   The sheet sits at the top of the screen so the phone keyboard never covers the list. */
+(function countryFinder() {
+  const openBtn = document.getElementById('home-find');
+  const searchBtn = document.getElementById('home-search');
+  const sheet = document.getElementById('country-finder');
+  const input = document.getElementById('cf-input');
+  const list = document.getElementById('cf-list');
+  const empty = document.getElementById('cf-empty');
+  const closeBtn = document.getElementById('cf-close');
+
+  // Search stories: open the Wire with the caret in its search box. The focus happens in
+  // openWire, synchronously, inside this tap: iOS Safari only raises the keyboard then.
+  searchBtn?.addEventListener('click', () => {
+    if (window.__wireOpen) window.__wireOpen('All', { focusSearch: true });
+  });
+  if (!openBtn || !sheet || !input || !list) return;
+
+  const ALIASES = {
+    cd: ['DRC', 'Democratic Republic of the Congo', 'Congo-Kinshasa', 'Zaire'],
+    cg: ['Congo', 'Congo-Brazzaville', 'Congo Republic'],
+    ci: ['Ivory Coast', "Côte d'Ivoire", 'Abidjan'],
+    cv: ['Cape Verde'],
+    sz: ['Swaziland'],
+    st: ['São Tomé', 'Sao Tome'],
+    gm: ['The Gambia'],
+    gw: ['Guinea Bissau'],
+    cf: ['CAR'],
+    eh: ['Sahrawi Republic', 'SADR'],
+    so: ['Somaliland', 'Hargeisa'],
+    ng: ['Lagos'], za: ['Johannesburg', 'Cape Town', 'SA'], tz: ['Dar es Salaam', 'Zanzibar'],
+    ma: ['Casablanca'], cm: ['Douala'], bj: ['Cotonou'], bi: ['Bujumbura'], mw: ['Blantyre'],
+    eg: ['Alexandria'], gq: ['Bata'], ly: ['Benghazi'], et: ['Abyssinia'],
+    tg: ['Lomé']
+  };
+  const fold = s => foldForSearch(s).replace(/[^a-z0-9]+/g, ' ').trim();
+  const ENTRIES = Object.entries(COUNTRY_INFO).map(([id, info]) => ({
+    id, name: info.name, capital: info.capital || '',
+    nameF: fold(info.name), capF: fold(info.capital || ''),
+    alt: (ALIASES[id] || []).map(fold)
+  })).sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
+
+  // Lower is better; Infinity is no match. A name beats a capital beats another name.
+  function score(e, q) {
+    if (!q) return 50;
+    if (e.nameF === q) return 0;
+    if (e.nameF.startsWith(q)) return 1;
+    if (e.nameF.split(' ').some(w => w.startsWith(q))) return 2;
+    if (e.alt.some(a => a === q)) return 2.5;
+    if (e.capF.startsWith(q) || e.capF.split(' ').some(w => w.startsWith(q))) return 3;
+    if (e.alt.some(a => a.startsWith(q) || a.split(' ').some(w => w.startsWith(q)))) return 4;
+    if (q.length >= 3 && (e.nameF.includes(q) || e.capF.includes(q))) return 5;
+    return Infinity;
+  }
+  let shown = [], active = -1, lastFocus = null;
+  const optionId = i => 'cf-opt-' + i;
+  function setActive(i) {
+    active = shown.length ? Math.max(0, Math.min(shown.length - 1, i)) : -1;
+    list.querySelectorAll('[role="option"]').forEach((li, j) => li.setAttribute('aria-selected', j === active ? 'true' : 'false'));
+    if (active >= 0) {
+      input.setAttribute('aria-activedescendant', optionId(active));
+      list.children[active]?.scrollIntoView({ block: 'nearest' });
+    } else input.removeAttribute('aria-activedescendant');
+  }
+  function render() {
+    const q = fold(input.value);
+    shown = ENTRIES.map(e => ({ e, s: score(e, q) })).filter(x => x.s < Infinity)
+      .sort((a, b) => a.s - b.s || a.e.name.localeCompare(b.e.name, 'en', { sensitivity: 'base' }))
+      .map(x => x.e);
+    const flags = !window.ASJ_SAVE_DATA;
+    list.innerHTML = shown.map((e, i) =>
+      '<li role="option" id="' + optionId(i) + '" data-country="' + e.id + '" aria-selected="false">' +
+        (flags ? '<img src="https://flagcdn.com/w40/' + e.id + '.png" alt="" loading="lazy" width="24" height="16" onerror="this.style.visibility=\'hidden\'">' : '') +
+        '<span class="cf-name">' + escapeHtml(e.name) + '</span>' +
+        (e.capital && e.capital !== e.name ? '<span class="cf-cap">' + escapeHtml(e.capital) + '</span>' : '') +
+      '</li>').join('');
+    if (empty) {
+      empty.hidden = shown.length > 0;
+      empty.textContent = shown.length ? '' : 'No African country matches “' + input.value.trim() + '”. Try its capital, or a shorter spelling.';
+    }
+    setActive(q ? 0 : -1);
+  }
+  function open() {
+    lastFocus = document.activeElement;
+    sheet.hidden = false;
+    document.documentElement.classList.add('cf-open');
+    input.value = '';
+    render();
+    // In the tap handler, so iOS raises the keyboard.
+    try { input.focus({ preventScroll: true }); } catch { input.focus(); }
+    requestAnimationFrame(() => sheet.classList.add('is-on'));
+  }
+  function close(restore = true) {
+    if (sheet.hidden) return;
+    sheet.classList.remove('is-on');
+    sheet.hidden = true;
+    document.documentElement.classList.remove('cf-open');
+    if (restore && lastFocus?.focus) { try { lastFocus.focus({ preventScroll: true }); } catch {} }
+  }
+  function go(id) {
+    if (!COUNTRY_INFO[id]) return;
+    close(false);
+    input.blur();
+    openCountry(id, openBtn);
+  }
+  openBtn.addEventListener('click', open);
+  closeBtn?.addEventListener('click', () => close());
+  sheet.addEventListener('click', e => {
+    const li = e.target.closest('[data-country]');
+    if (li) { go(li.dataset.country); return; }
+    if (e.target === sheet) close();
+  });
+  input.addEventListener('input', render);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActive(active + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(active - 1); }
+    else if (e.key === 'Enter') { e.preventDefault(); const pick = shown[active >= 0 ? active : 0]; if (pick) go(pick.id); }
+    else if (e.key === 'Escape') { e.preventDefault(); close(); }
+  });
+  sheet.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); close(); }
+    // Keep Tab inside the sheet: the input, Close, and back.
+    if (e.key === 'Tab') {
+      const items = [input, closeBtn].filter(Boolean);
+      const i = items.indexOf(document.activeElement);
+      e.preventDefault();
+      items[(i + (e.shiftKey ? items.length - 1 : 1)) % items.length].focus();
+    }
+  });
+  window.__countryFinder = { open, close };
+}());

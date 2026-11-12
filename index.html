@@ -71,7 +71,7 @@ function asjAnalytics() {
   }
 }
 </script>
-<script src="data/analytics-config.js?v=118" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=119" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 <!-- Data saver: with Save-Data on, or on 3G and slower, the decorative headline font
      (~60-90 KB on a first visit) is not fetched at all; headlines use Georgia. The same
      test sets window.ASJ_SAVE_DATA in app.js. -->
@@ -102,21 +102,21 @@ function asjAnalytics() {
      immediately and reflow to Playfair when it arrives. The noscript copy keeps the
      original behaviour for a reader with JavaScript off. -->
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=118" as="script">
-<link rel="preload" href="data/app-core.js?v=118" as="script">
-<link rel="preload" href="data/briefs.js?v=118" as="script">
-<link rel="stylesheet" href="styles.css?v=118">
+<link rel="preload" href="app.js?v=119" as="script">
+<link rel="preload" href="data/app-core.js?v=119" as="script">
+<link rel="preload" href="data/briefs.js?v=119" as="script">
+<link rel="stylesheet" href="styles.css?v=119">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
 
 <div class="masthead">
-  <span class="masthead-left"><details class="asj-info" style="margin-left:0"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">Text-only edition</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/privacy/">Privacy</a></div></details></span>
+  <span class="masthead-left"><details class="asj-info" style="margin-left:0"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">Text-only edition</a><a href="/markets/">Markets</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/privacy/">Privacy</a></div></details></span>
   <div class="masthead-kicker"><span>DAILY NEWS</span><span class="kicker-dot" aria-hidden="true">&middot;</span><span>ALL 55 COUNTRIES</span></div>
   <span aria-hidden="true"></span>
   <div class="mobile-masthead">
     <a class="mobile-wordmark" href="./" aria-label="The African Street Journal home">ASJ</a>
-    <span class="mobile-wordmark-name">African Street<br>Journal</span><details class="asj-info asj-info--m"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">Text-only edition</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/privacy/">Privacy</a></div></details>
+    <span class="mobile-wordmark-name">African Street<br>Journal</span><details class="asj-info asj-info--m"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">Text-only edition</a><a href="/markets/">Markets</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/privacy/">Privacy</a></div></details>
     <button class="wire-entry mobile-wire-entry" data-wire-entry type="button" aria-label="Open today's stories" title="Open today's stories">
       <span class="wire-entry-count">ASJ Wire</span>
       <span class="wire-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
@@ -157,6 +157,20 @@ function asjAnalytics() {
     <section class="home-front home-front--top" id="home-front-top" aria-label="Top story" hidden></section>
   </div>
 
+  <!-- Two quiet ways in that do not need a map: a country by name (small countries are
+       small tap targets, and few readers know Gitega from Bujumbura), and story search,
+       which used to sit only inside the Wire. -->
+  <div class="home-tools" id="home-tools">
+    <button class="home-tool" id="home-find" type="button" aria-haspopup="dialog" aria-controls="country-finder">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+      <span>Find a country</span>
+    </button>
+    <button class="home-tool" id="home-search" type="button" aria-label="Search today's stories">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+      <span>Search stories</span>
+    </button>
+  </div>
+
   <div class="your-desk" id="your-desk" role="region" hidden aria-label="Your followed countries"></div>
   <div class="rule rule--bottom"></div>
   <div class="ticker-wrap" aria-label="Featured cities">
@@ -166,6 +180,21 @@ function asjAnalytics() {
 
 
 </main>
+
+<div class="country-finder" id="country-finder" role="dialog" aria-modal="true" aria-labelledby="cf-title" hidden>
+  <div class="cf-sheet">
+    <div class="cf-head">
+      <h2 id="cf-title">Find a country</h2>
+      <button class="cf-close" id="cf-close" type="button" aria-label="Close">Close</button>
+    </div>
+    <div class="cf-field">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+      <input id="cf-input" type="search" role="combobox" aria-expanded="true" aria-controls="cf-list" aria-autocomplete="list" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="go" placeholder="Country or capital, e.g. Kenya">
+    </div>
+    <ul class="cf-list" id="cf-list" role="listbox" aria-label="Countries"></ul>
+    <p class="cf-empty" id="cf-empty" hidden></p>
+  </div>
+</div>
 
 <div id="country-view" role="dialog" aria-modal="true" aria-labelledby="cv-name">
   <div class="cv-header">
@@ -314,6 +343,7 @@ function asjAnalytics() {
               <div class="info-market">
                 <header class="cv-section-head"><h4>Exchange &amp; Listings</h4><span class="meta" id="cv-heat-meta"></span></header>
                 <div class="cv-heatmap" id="cv-heatmap"></div>
+                <a class="cv-all-markets" href="/markets/">Every African stock market and currency on one page <span aria-hidden="true">&rarr;</span></a>
               </div>
               <div>
                 <header class="cv-section-head"><h4>Indicators</h4><span class="meta">World Bank</span></header>
@@ -324,6 +354,7 @@ function asjAnalytics() {
               <div>
                 <header class="cv-section-head"><h4>USD Conversion</h4><span class="meta" id="cv-dia-fx-meta"></span></header>
                 <div id="cv-dia-fx"></div>
+                <a class="cv-all-markets" href="/markets/">Every African currency against the dollar <span aria-hidden="true">&rarr;</span></a>
               </div>
               <div>
                 <header class="cv-section-head"><h4>Remittances &amp; connection</h4><span class="meta">World Bank</span></header>
@@ -462,9 +493,10 @@ function asjAnalytics() {
       <h2 id="story-reader-title"></h2>
       <p class="story-reader-dek" id="story-reader-dek"></p>
       <div class="story-reader-meta" id="story-reader-meta"></div>
-      <aside id="story-reader-kit" hidden aria-label="This story at a glance"></aside>
+      <div id="story-reader-listen" hidden></div>
       <div class="story-reader-copy" id="story-reader-copy"></div>
       <aside class="story-reader-why" id="story-reader-why"></aside>
+      <aside id="story-reader-kit" hidden aria-label="This story at a glance"></aside>
       <footer class="story-reader-sources" id="story-reader-sources"></footer>
       <nav class="story-reader-continue" id="story-reader-continue" aria-label="Continue reading">
         <button class="story-reader-next" id="story-reader-next" type="button">
@@ -480,21 +512,22 @@ function asjAnalytics() {
 
 <div class="asj-install" id="asj-install" role="region" aria-label="Add to home screen" hidden></div>
 
-<script src="data/app-core.js?v=118"></script>
+<script src="data/app-core.js?v=119"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
-<script>window.ASJ_ASSET_VERSION='118';</script>
-<script src="data/country-facts.js?v=118" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
-<script src="data/indices.js?v=118" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=118" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=118" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=118" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=118" onerror="window.ASJ_NEWSLETTER=null"></script>
-<script src="data/social-config.js?v=118" onerror="window.ASJ_SOCIAL=null"></script>
+<script>window.ASJ_ASSET_VERSION='119';</script>
+<script src="data/country-facts.js?v=119" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
+<script src="data/indices.js?v=119" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=119" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=119" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=119" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=119" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script src="data/social-config.js?v=119" onerror="window.ASJ_SOCIAL=null"></script>
 
-<script src="app.js?v=118"></script>
-<script src="story-kit.js?v=118" defer></script>
-<script src="country-sidebar.js?v=118" defer></script>
-<script src="/info-panel.js?v=118" defer></script>
+<script src="app.js?v=119"></script>
+<script src="story-kit.js?v=119" defer></script>
+<script src="fx-trend.js?v=119" defer></script>
+<script src="country-sidebar.js?v=119" defer></script>
+<script src="/info-panel.js?v=119" defer></script>
 </body>
 </html>

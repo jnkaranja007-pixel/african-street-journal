@@ -124,6 +124,45 @@ for (const mode of ['save-data', 'prose-fails']) {
   errs.forEach(e => fail(mode + ' page error: ' + e));
   await ctx.close();
 }
+// Front-door tools, the why filter, a shared Compare link and the markets page.
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+  await ctx.route(/cloudflareinsights|googleapis|gstatic|supabase|open\.er-api|open-meteo|flagcdn/, r => r.abort());
+  const pg = await ctx.newPage(); const errs = [];
+  pg.on('pageerror', e => errs.push(String(e)));
+  await pg.goto(BASE, { waitUntil: 'load' }); await pg.waitForTimeout(2500);
+  const why = await pg.evaluate(() => ({
+    generic: ['The skills revolution aims to equip young South Africans with the capabilities needed for existing and emerging economic opportunities.',
+      'Residents facing the shifting quarantine stance are left with unresolved questions about police accountability.',
+      'The ruling highlights the role of the courts in holding officials to account.'].filter(t => !whyGeneric(t)),
+    solid: ['About 5 million people aged 15 to 34 are out of work, and the official rate rose in the same quarter.',
+      'Traders crossing at the border post now pay the levy in cash before their trucks are cleared, starting on Monday.',
+      'Importers and businesses paying in dollars face a widening gap between official and street rates.'].filter(t => whyGeneric(t))
+  }));
+  why.generic.forEach(t => fail('generic why line not hidden: ' + t));
+  why.solid.forEach(t => fail('solid why line hidden: ' + t));
+  await pg.tap('#home-find'); await pg.waitForTimeout(200);
+  if (await pg.evaluate(() => document.activeElement?.id) !== 'cf-input') fail('Find a country: the box is not focused');
+  await pg.keyboard.type('ivory'); await pg.keyboard.press('Enter'); await pg.waitForTimeout(600);
+  if (!/^#\/ci\b/.test(await pg.evaluate(() => location.hash))) fail('Find a country: "ivory" did not open Cote d\'Ivoire');
+  await pg.goto(BASE, { waitUntil: 'load' }); await pg.waitForTimeout(1500);
+  await pg.tap('#home-search'); await pg.waitForTimeout(300);
+  if (await pg.evaluate(() => document.activeElement?.id) !== 'wire-search-input') fail('Search stories: the Wire search box is not focused');
+  await pg.goto(BASE + '?compare=ke,ug,tz&lens=investors#/wire', { waitUntil: 'load' }); await pg.waitForTimeout(1800);
+  const cmp = await pg.evaluate(() => ({ vals: ['a', 'b', 'c'].map(x => document.getElementById('wire-compare-' + x)?.value).join(','), lens: activeStoryLens,
+    open: !document.getElementById('wire-compare-body')?.hidden, share: !!document.getElementById('cmp-share'), search: location.search }));
+  if (cmp.vals !== 'ke,ug,tz' || cmp.lens !== 'investors' || !cmp.open || !cmp.share) fail('shared Compare link not restored ' + JSON.stringify(cmp));
+  if (!/compare=ke,ug,tz/.test(cmp.search)) fail('Compare address lost its countries ' + cmp.search);
+  await pg.goto(BASE + 'markets/', { waitUntil: 'load' }); await pg.waitForTimeout(1500);
+  const mk = await pg.evaluate(() => ({ idx: document.querySelectorAll('#mk-idx tbody tr').length, fx: document.querySelectorAll('#mk-fx tbody tr').length,
+    overflow: document.documentElement.scrollWidth > innerWidth, text: document.body.innerText }));
+  if (mk.idx < 10) fail('markets page shows ' + mk.idx + ' indices');
+  if (mk.fx < 35) fail('markets page shows ' + mk.fx + ' currencies');
+  if (mk.overflow) fail('markets page overflows a phone');
+  for (const bad of ['NaN', 'undefined', 'Infinity']) if (mk.text.includes(bad)) fail('markets page shows "' + bad + '"');
+  errs.forEach(e => fail('tools page error: ' + e));
+  await ctx.close();
+}
 await browser.close(); server.close();
 
 // Market data must never carry a fake or impossible number.

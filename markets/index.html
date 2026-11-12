@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="max-image-preview:large">
+<title>African stock markets and currencies today | The African Street Journal</title>
+<meta name="description" content="Every African stock market index and every African currency against the US dollar on one page: today's level, the day's move and how each currency has moved.">
+<link rel="canonical" href="https://africanstreetjournal.com/markets/">
+<meta property="og:site_name" content="The African Street Journal">
+<meta property="og:type" content="website">
+<meta property="og:title" content="African stock markets and currencies today">
+<meta property="og:description" content="17 stock market indices and every African currency against the US dollar, on one page.">
+<meta property="og:url" content="https://africanstreetjournal.com/markets/">
+<meta property="og:image" content="https://africanstreetjournal.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#131313">
+<script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
+<link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="https://africanstreetjournal.com/feed.xml">
+<script>
+function asjAnalytics(){var c=window.ASJ_ANALYTICS;if(!c)return;
+if(navigator.doNotTrack==='1'||window.doNotTrack==='1')return;var s;
+try{var q=location.search;if(/[?&]notrack=1(&|$)/.test(q))localStorage.setItem('asj-notrack','1');else if(/[?&]notrack=0(&|$)/.test(q))localStorage.removeItem('asj-notrack');if(localStorage.getItem('asj-notrack')==='1')return;}catch(e){}
+if(c.goatcounter){s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';
+s.setAttribute('data-goatcounter','https://'+c.goatcounter+'.goatcounter.com/count');document.head.appendChild(s);}
+if(c.cloudflare){s=document.createElement('script');s.defer=true;s.src='https://static.cloudflareinsights.com/beacon.min.js';
+s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.head.appendChild(s);}}
+</script>
+<script src="/data/analytics-config.js" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
+<link rel="stylesheet" href="/static-pages.css?v=72">
+<link rel="stylesheet" href="/markets/markets.css?v=119">
+</head>
+<body>
+<div class="wrap page markets-page">
+<div class="masthead"><a href="/">The African Street Journal</a><details class="asj-info asj-info--right"><summary>About</summary><div class="asj-info-menu"><a href="/countries/">Text-only edition</a><a href="/topics/">Topics</a><a href="/markets/">Markets</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a><a href="/privacy/">Privacy</a></div></details></div>
+<h1>Markets</h1>
+<p class="mk-intro">Every African stock market index we follow, and every African currency against the US dollar, on one page. Tap a column heading to sort.</p>
+
+<section class="mk-section" aria-labelledby="mk-idx-title">
+  <h2 id="mk-idx-title">Stock markets</h2>
+  <p class="mk-note" id="mk-idx-note">Main index of each exchange at its last session.</p>
+  <div class="mk-table-wrap"><table class="mk-table" id="mk-idx">
+    <thead><tr>
+      <th scope="col" aria-sort="none"><button type="button" data-sort="name">Market</button></th>
+      <th scope="col" class="num" aria-sort="none"><button type="button" data-sort="level">Level</button></th>
+      <th scope="col" class="num" aria-sort="descending"><button type="button" data-sort="move">Day</button></th>
+    </tr></thead>
+    <tbody><tr><td colspan="3" class="mk-loading">Loading market data&hellip;</td></tr></tbody>
+  </table></div>
+  <p class="mk-source" id="mk-idx-source"></p>
+</section>
+
+<section class="mk-section" aria-labelledby="mk-fx-title">
+  <h2 id="mk-fx-title">Currencies against the US dollar</h2>
+  <p class="mk-note" id="mk-fx-note">What one US dollar buys in each currency.</p>
+  <div class="mk-table-wrap"><table class="mk-table" id="mk-fx">
+    <thead><tr>
+      <th scope="col" aria-sort="ascending"><button type="button" data-sort="name">Currency</button></th>
+      <th scope="col" class="num" aria-sort="none"><button type="button" data-sort="rate">$1 buys</button></th>
+      <th scope="col" class="num" aria-sort="none"><button type="button" data-sort="change">Change</button></th>
+    </tr></thead>
+    <tbody><tr><td colspan="3" class="mk-loading">Loading exchange rates&hellip;</td></tr></tbody>
+  </table></div>
+  <p class="mk-source" id="mk-fx-source"></p>
+</section>
+
+<noscript><p>This page needs JavaScript to show the latest figures. Each <a href="/countries/">country page</a> lists its own market and exchange rate.</p></noscript>
+<p class="mk-foot">Reference figures only, not trading or transfer quotes. Compare licensed transfer services before you send money. <a href="/methods/">How we check our figures</a>.</p>
+<footer>The African Street Journal &middot; from the streets, for the streets<script src="/info-panel.js?v=70" defer></script></footer>
+</div>
+<script src="/fx-trend.js?v=119"></script>
+<script src="/data/indices.js?v=119" onerror="window.ASJ_INDICES=null"></script>
+<script src="/markets/markets.js?v=119"></script>
+</body>
+</html>

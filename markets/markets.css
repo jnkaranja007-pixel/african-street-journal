@@ -1,0 +1,59 @@
+/* /markets/ - sortable tables on the static-page type system (static-pages.css). */
+:root{--mk-up:#7ccf80;--mk-down:#ef9a80;--mk-head:#1a1a1a}
+:root[data-theme="light"]{--mk-up:#22652a;--mk-down:#a8361e;--mk-head:#ece7dd}
+.markets-page{max-width:880px}
+.markets-page h1{margin-bottom:12px}
+.mk-intro,.mk-note,.mk-source,.mk-foot{font:400 17px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--c-c9c5c0);max-width:65ch}
+.mk-note{font-size:16px;color:var(--c-a8a39d);margin:0 0 14px}
+.mk-source,.mk-foot{font-size:15px;color:var(--c-a8a39d);margin-top:12px}
+.mk-section{margin-top:36px}
+.mk-section h2{font:700 clamp(22px,3.4vw,28px)/1.2 'Playfair Display',Georgia,serif!important;margin:0 0 6px;color:var(--c-f2f0ed)}
+.mk-table-wrap{border:1px solid var(--c-2a2a2a);border-radius:10px;overflow:hidden}
+.mk-table{width:100%;border-collapse:collapse;font:400 16px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--c-e8e6e3);font-variant-numeric:tabular-nums}
+.mk-table thead th{background:var(--mk-head);padding:0;text-align:left;border-bottom:1px solid var(--c-2a2a2a)}
+.mk-table thead th.num{text-align:right}
+.mk-table thead button{display:inline-flex;align-items:center;gap:6px;width:100%;min-height:46px;padding:0 14px;border:0;background:none;color:var(--c-cfcac3);font:600 15px/1 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;text-transform:none;cursor:pointer;justify-content:inherit;white-space:nowrap}
+.mk-table thead th.num button{justify-content:flex-end}
+.mk-table thead button::after{content:'';width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;opacity:.35;border-top:5px solid currentColor}
+.mk-table thead th[aria-sort="ascending"] button::after{border-top:0;border-bottom:5px solid currentColor;opacity:1}
+.mk-table thead th[aria-sort="descending"] button::after{opacity:1}
+.mk-table thead th[aria-sort="ascending"] button,.mk-table thead th[aria-sort="descending"] button{color:var(--c-f2f0ed)}
+.mk-table thead button:hover,.mk-table thead button:focus-visible{color:var(--c-66bb6a);outline:none}
+.mk-table thead button:focus-visible{box-shadow:inset 0 0 0 2px var(--c-66bb6a)}
+.mk-table tbody th,.mk-table tbody td{padding:12px 14px;border-top:1px solid var(--c-232323);vertical-align:top;text-align:left;font-weight:400}
+.mk-table tbody tr:first-child th,.mk-table tbody tr:first-child td{border-top:0}
+.mk-table td.num{text-align:right;white-space:nowrap}
+.mk-name{display:block;font-weight:600;font-size:16.5px;color:var(--c-f2f0ed)}
+.mk-code{font-weight:400;font-size:14.5px;color:var(--c-a8a39d);margin-left:2px}
+.mk-sub{display:block;margin-top:3px;font-size:15px;line-height:1.4;color:var(--c-a8a39d)}
+.mk-sub a{color:var(--c-66bb6a);text-decoration:none;border-bottom:1px solid var(--c-2f5c33)}
+.mk-sub a:hover{border-bottom-color:currentColor}
+.mk-val{display:block;font-weight:600;font-size:16.5px}
+.mk-val.is-up{color:var(--mk-up)}
+.mk-val.is-down{color:var(--mk-down)}
+.mk-none{font-weight:400;color:var(--c-a8a39d)}
+.mk-spark{display:block;margin-top:4px;color:var(--c-66bb6a);line-height:0}
+.mk-spark svg{display:inline-block}
+.mk-loading{padding:20px 14px!important;color:var(--c-a8a39d);text-align:left!important}
+.is-stale .mk-val{color:var(--c-a8a39d)}
+/* Phones: each row is a small card. The name and where it is used get the full width;
+   the figures sit on one line under them, so a list of eight countries does not squeeze
+   into a third of the screen. */
+@media (max-width:560px){
+  .mk-table,.mk-table thead,.mk-table tbody{display:block}
+  .mk-table thead tr{display:flex}
+  .mk-table thead th{flex:1 1 auto;border-bottom:0}
+  .mk-table thead th:first-child{flex:1 1 100%}
+  .mk-table thead button{padding:0 12px;white-space:nowrap}
+  .mk-table thead tr{border-bottom:1px solid var(--c-2a2a2a)}
+  .mk-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:6px;padding:13px 14px;border-top:1px solid var(--c-232323)}
+  .mk-table tbody tr:first-child{border-top:0}
+  .mk-table tbody th,.mk-table tbody td{display:block;padding:0;border:0!important}
+  .mk-table tbody th[scope="row"]{grid-column:1 / -1}
+  .mk-table tbody td.num{text-align:left}
+  .mk-table tbody td.num:last-child{text-align:right}
+  .mk-table tbody td.num .mk-val{display:inline}
+  .mk-table tbody td.num .mk-sub{display:inline;margin-left:8px}
+  .mk-table tbody td.num .mk-spark{display:inline-block;margin:0 0 0 8px;vertical-align:middle}
+  .mk-table tbody td.mk-loading{grid-column:1 / -1}
+}
