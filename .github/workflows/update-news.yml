@@ -257,6 +257,17 @@ jobs:
           ./scripts/audit-briefs.ps1 -CheckLinks -Worst 8
           exit $LASTEXITCODE
 
+      # One US dollar rate a day per African currency, kept in data/fx-history.json, so
+      # country pages and /markets/ can show "$1 buys 129 KES today, 128 a month ago".
+      # The rate source keeps no history; it builds up from 12 Nov 2026. Never fails the
+      # run: an unreachable source leaves the file as it was.
+      - name: Save today's exchange rates
+        if: steps.guard.outputs.stale == 'true'
+        continue-on-error: true
+        timeout-minutes: 3
+        shell: pwsh
+        run: ./scripts/update-fx-history.ps1
+
       - name: Rebuild crawlable pages and sitemap
         if: steps.guard.outputs.stale == 'true'
         shell: pwsh

@@ -49,7 +49,7 @@ Set-Location $root
 $script:EDITION_PATHS = @(
   'data/briefs.js','data/briefs-full.js','data/briefs-state.json','data/archive','data/earlier','topics','digest',
   'sitemap.xml','news-sitemap.xml','feed.xml','robots.txt','static-pages.css','404.html',
-  'about','privacy','contact','corrections','methods','countries'
+  'about','privacy','contact','corrections','methods','countries','data/fx-history.json'
 )
 
 function Add-EditionFiles {
@@ -83,6 +83,9 @@ function Update-OnNewMain {
             '-MinFreshCountries', $MinFreshCountries, '-FreshStoriesPerCountry', $FreshStoriesPerCountry)
   if ($RequiredFreshCountries) { $gate += @('-RequiredFreshCountries', $RequiredFreshCountries) }
   if (-not (Invoke-Step 'gate'  { & powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/validate-briefs.ps1 @gate })) { return $false }
+  # Today's exchange rates went with the commit that was reset away; save them again.
+  # Never a reason to stop: the script exits 0 whatever the source does.
+  & powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/update-fx-history.ps1
   if (-not (Invoke-Step 'pages' { & powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-static-pages.ps1 })) { return $false }
   if (-not (Invoke-Step 'page checks' { & powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/test-static-pages.ps1 })) { return $false }
   return $true
