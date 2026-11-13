@@ -197,23 +197,36 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 .story-head{padding-bottom:18px;margin-bottom:22px}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=70" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=71" defer></script>'
 # The paper's social accounts (data/social-config.js): a Follow line in every footer
 # once a handle is set, and sameAs on the publisher so search engines tie them to it.
-$socialTelegram = ''; $socialBluesky = ''
+$socialTelegram = ''; $socialBluesky = ''; $socialX = ''; $socialXHandle = ''; $socialInstagram = ''; $socialYoutube = ''
 $socialPath = Join-Path $root 'data\social-config.js'
 if (Test-Path $socialPath) {
   $socialJs = [IO.File]::ReadAllText($socialPath)
   $mt = [regex]::Match($socialJs, "telegram:\s*'([A-Za-z0-9_]{5,32})'")
   $mb = [regex]::Match($socialJs, "bluesky:\s*'([A-Za-z0-9.-]{3,253})'")
+  $mx = [regex]::Match($socialJs, "\bx:\s*'([A-Za-z0-9_]{1,15})'")
+  $mi = [regex]::Match($socialJs, "instagram:\s*'([A-Za-z0-9_.]{1,30})'")
+  $my = [regex]::Match($socialJs, "youtube:\s*'([A-Za-z0-9_.-]{3,30})'")
   if ($mt.Success) { $socialTelegram = "https://t.me/$($mt.Groups[1].Value)" }
   if ($mb.Success) { $socialBluesky = "https://bsky.app/profile/$($mb.Groups[1].Value)" }
+  if ($mx.Success) { $socialXHandle = $mx.Groups[1].Value; $socialX = "https://x.com/$socialXHandle" }
+  if ($mi.Success) { $socialInstagram = "https://www.instagram.com/$($mi.Groups[1].Value)/" }
+  if ($my.Success) { $socialYoutube = "https://www.youtube.com/@$($my.Groups[1].Value)" }
 }
 $followParts = @()
+if ($socialX) { $followParts += "<a href=""$socialX"" rel=""me noopener"">X</a>" }
+if ($socialInstagram) { $followParts += "<a href=""$socialInstagram"" rel=""me noopener"">Instagram</a>" }
+if ($socialYoutube) { $followParts += "<a href=""$socialYoutube"" rel=""me noopener"">YouTube</a>" }
 if ($socialTelegram) { $followParts += "<a href=""$socialTelegram"" rel=""me noopener"">Telegram</a>" }
 if ($socialBluesky) { $followParts += "<a href=""$socialBluesky"" rel=""me noopener"">Bluesky</a>" }
-if ($followParts.Count) { $siteLinks = "<span class=""follow""> &middot; Follow on $($followParts -join ' &middot; ')</span>" + $siteLinks }
-$sameAs = @(@($socialTelegram, $socialBluesky) | Where-Object { $_ } | ForEach-Object { '"' + $_ + '"' }) -join ','
+$followHtml = $followParts -join ' &middot; '
+if ($followParts.Count) { $siteLinks = "<span class=""follow""> &middot; Follow on $followHtml</span>" + $siteLinks }
+# X share links credit the paper's account ("via @handle") once it is set.
+$xVia = if ($socialXHandle) { "&amp;via=$socialXHandle" } else { '' }
+$contactFollow = if ($followParts.Count) { "<h2>Follow us</h2>`r`n<p class=""contact-follow"">$followHtml</p>" } else { '' }
+$sameAs = @(@($socialX, $socialInstagram, $socialYoutube, $socialTelegram, $socialBluesky) | Where-Object { $_ } | ForEach-Object { '"' + $_ + '"' }) -join ','
 $sameAsLd = if ($sameAs) { ',"sameAs":[' + $sameAs + ']' } else { '' }
 # Five entries: "Email us" repeated Contact (whose first line is the address), and RSS
 # opened a raw XML file - it is explained on About and the text-only edition instead.
@@ -876,7 +889,7 @@ $($bodyHtml.ToString())
   <p class="share-label">Share this story</p>
   <div class="share" data-url="$storyCanonical" data-title="$(Esc $b.headline)">
     <a class="share-wa" href="https://wa.me/?text=$waText" target="_blank" rel="noopener">WhatsApp</a>
-    <a href="https://x.com/intent/post?text=$xText&amp;url=$encUrl" target="_blank" rel="noopener">X</a>
+    <a href="https://x.com/intent/post?text=$xText&amp;url=$encUrl$xVia" target="_blank" rel="noopener">X</a>
     <a href="https://t.me/share/url?url=$encUrl&amp;text=$([Uri]::EscapeDataString([string]$b.headline))" target="_blank" rel="noopener">Telegram</a>
     <button type="button" class="share-copy">Copy link</button>
     <button type="button" class="share-native" hidden>Share&hellip;</button>
@@ -1014,6 +1027,7 @@ $trustPages = [ordered]@{
 <li><b>Partnerships:</b> newsrooms, data providers and organisations who want to work with us.</li>
 <li><b>Tips and suggestions:</b> sources we should be reading, countries we cover thinly, or features you would like.</li>
 </ul>
+$contactFollow
 "@ }
   corrections = @{ title = 'Corrections'; desc = 'How The African Street Journal corrects mistakes.'; body = @"
 <p>We aim to be accurate. When we get something wrong, we fix it.</p>

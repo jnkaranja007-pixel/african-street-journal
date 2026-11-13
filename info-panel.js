@@ -270,3 +270,40 @@
   window.ASJ_ERRORS = { list: read, clear: function () { try { localStorage.removeItem(KEY); } catch (e) {} } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
 }());
+
+/* follow-v1: the paper's accounts as one compact row at the foot of every About menu.
+   Handles match data/social-config.js (which also feeds the static footers and sameAs). */
+(function () {
+  'use strict';
+  var LINKS = [
+    ['X', 'https://x.com/thestreetafrica'],
+    ['Instagram', 'https://www.instagram.com/theafricanstreetjournal/'],
+    ['YouTube', 'https://www.youtube.com/@theafricanstreetjournal']
+  ];
+  function add() {
+    if (!document.getElementById('asj-follow-style')) {
+      var st = document.createElement('style');
+      st.id = 'asj-follow-style';
+      st.textContent = '.asj-info-menu .asj-follow{display:grid;grid-template-columns:repeat(3,max-content);align-items:center;gap:0;margin:4px 0 0;padding:12px 8px 0 16px;border-top:1px solid var(--c-2c2c2c,var(--rule,#2c2c2c))}' +
+        '.asj-info-menu .asj-follow span{grid-column:1 / -1;margin:0 0 2px;color:var(--c-8f8a83,var(--text-dim,#8f8a83));font:700 10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}' +
+        '.asj-info-menu .asj-follow a,.asj-info-menu .asj-follow a:visited{display:inline-flex;align-items:center;min-height:44px;padding:0 14px 0 0!important;letter-spacing:.06em!important;white-space:nowrap}';
+      (document.head || document.documentElement).appendChild(st);
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.asj-info-menu'), function (menu) {
+      if (menu.querySelector('.asj-follow')) return;
+      var row = document.createElement('div');
+      row.className = 'asj-follow';
+      var label = document.createElement('span');
+      label.textContent = 'Follow';
+      row.appendChild(label);
+      LINKS.forEach(function (l) {
+        var a = document.createElement('a');
+        a.href = l[1]; a.target = '_blank'; a.rel = 'me noopener'; a.textContent = l[0];
+        a.setAttribute('aria-label', 'Follow The African Street Journal on ' + l[0]);
+        row.appendChild(a);
+      });
+      menu.appendChild(row);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
+}());
