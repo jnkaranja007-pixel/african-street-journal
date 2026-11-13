@@ -36,13 +36,19 @@ jobs:
         with:
           ref: main
 
+      # Kokoro supports Python 3.10 to 3.12; the runner's own Python is newer.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Install the speech tools
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq espeak-ng ffmpeg > /dev/null
-          python3 -m pip install --quiet --upgrade pip
-          python3 -m pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
-          python3 -m pip install --quiet -r scripts/voice-requirements.txt
+          python -m pip install --quiet --upgrade pip
+          python -m pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --quiet -r scripts/voice-requirements.txt
 
       - name: Restore the voice model
         uses: actions/cache/restore@v5
@@ -53,7 +59,7 @@ jobs:
       - name: Record today's front page
         env:
           LIMIT: ${{ inputs.limit || '0' }}
-        run: python3 scripts/voice-stories.py --limit "$LIMIT"
+        run: python scripts/voice-stories.py --limit "$LIMIT"
 
       - name: Save the voice model
         if: always()
