@@ -121,14 +121,34 @@ def say_names(text, pronunciations):
     return text
 
 
-def load_stories():
-    with open(os.path.join(ROOT, 'data', 'briefs.js'), encoding='utf-8') as f:
+def read_by_country(name):
+    with open(os.path.join(ROOT, 'data', name), encoding='utf-8') as f:
         src = f.read()
     start = src.index('byCountry: {') + len('byCountry: ')
     end = src.find('}, markets: {', start)
     if end < 0:
         end = src.rindex('} };')
     return json.loads(src[start:end + 1])
+
+
+def load_stories():
+    # briefs.js is the light half of the edition (headline, summary, ranking); the
+    # paragraphs are in briefs-full.js, matched on articleId.
+    by_country = read_by_country('briefs.js')
+    try:
+        full = read_by_country('briefs-full.js')
+    except (OSError, ValueError) as e:
+        print('[voice] briefs-full.js unreadable (%s); reading headlines and summaries only' % e)
+        full = {}
+    for cc, stories in by_country.items():
+        extra = {str(x.get('articleId')): x for x in (full.get(cc) or []) if isinstance(x, dict) and x.get('articleId')}
+        for s in stories or []:
+            more = extra.get(str(s.get('articleId')))
+            if more:
+                for field in ('paragraphs', 'body'):
+                    if more.get(field) and not s.get(field):
+                        s[field] = more[field]
+    return by_country
 
 
 def story_parts(story):
