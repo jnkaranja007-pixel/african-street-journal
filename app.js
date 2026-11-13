@@ -6854,8 +6854,46 @@ canvas.addEventListener('click', (e) => {
     return wasHidden;
   }
 
+  // Phones: the top stories slide past one at a time in the card under the map, so the
+  // landing page stays one screen but offers more than one way in. Every slide is laid
+  // out at once, so the card is as tall as its tallest slide and never jumps (the map is
+  // fitted once). It moves on by itself every few seconds; a swipe, a touch or keyboard
+  // focus holds it, and reduced motion keeps it still but swipeable.
+  const SLIDES = 6;
+  let sliderTimer = null;
+  function fillSlider(el, items) {
+    if (!el) return false;
+    clearInterval(sliderTimer);
+    if (!items.length) { el.innerHTML = ''; el.hidden = true; return false; }
+    el.innerHTML = '<div class="hf-track">' +
+      items.map(item => storyMarkup(item, true, { label: items.length > 1 ? 'Top stories' : 'Top story', dek: false })).join('') +
+      '</div>' +
+      (items.length > 1 ? '<div class="hf-dots" aria-hidden="true">' + items.map((_, i) => '<i' + (i === 0 ? ' class="on"' : '') + '></i>').join('') + '</div>' : '');
+    const wasHidden = el.hidden;
+    el.hidden = false;
+    const track = el.querySelector('.hf-track');
+    const dots = Array.from(el.querySelectorAll('.hf-dots i'));
+    if (track && dots.length > 1) {
+      let idx = 0, holdUntil = 0;
+      const hold = () => { holdUntil = Date.now() + 8000; };
+      track.addEventListener('scroll', () => {
+        const i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+        if (i !== idx && i >= 0 && i < dots.length) { idx = i; dots.forEach((d, j) => d.classList.toggle('on', j === i)); }
+      }, { passive: true });
+      ['pointerdown', 'touchstart', 'wheel', 'focusin'].forEach(t => track.addEventListener(t, hold, { passive: true }));
+      if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+        sliderTimer = setInterval(() => {
+          if (document.hidden || Date.now() < holdUntil || !track.offsetParent || track.matches(':hover')) return;
+          track.scrollTo({ left: ((idx + 1) % dots.length) * track.clientWidth, behavior: 'smooth' });
+        }, 6000);
+      }
+    }
+    return wasHidden;
+  }
+
   function paint() {
-    const items = topStories(4);
+    const sliderItems = topStories(SLIDES);
+    const items = sliderItems.slice(0, 4);
     if (!items.length) return;
     const fresh = newSinceLastVisit();
     const total = Object.values(AI_BRIEFS || {}).reduce((n, list) => n + (Array.isArray(list) ? list.filter(s => s && s.headline).length : 0), 0);
@@ -6868,7 +6906,7 @@ canvas.addEventListener('click', (e) => {
     // screen: the masthead's own "231 stories" entry (it turns into "N new" for a
     // returning reader, below) already leads to the rest. The map is re-fitted to the
     // space left the first time the card appears.
-    if (fill(slots.top, items.slice(0, 1), { lead: true, cta: '', label: 'Top story', dek: false }) && typeof layoutHomeMap === 'function') {
+    if (fillSlider(slots.top, sliderItems) && typeof layoutHomeMap === 'function') {
       requestAnimationFrame(layoutHomeMap);
     }
     // The sign-up form lives inside these blocks and is wiped by the repaint above.
