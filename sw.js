@@ -10,7 +10,7 @@
 // v16. Nothing broke - the fetch handler matches with ignoreSearch, and GitHub Pages
 // ignores query strings - but the numbers lied, and a version that lies is worse than
 // no version. Bump V alone; index.html's ?v= must match it.
-const V = '125';
+const V = '126';
 const CACHE = 'asj-v' + V;
 // briefs-full.js (~500 KB of prose) is no longer precached on install; app.js fetches
 // it after first paint and the network-first handler caches it then.
@@ -70,8 +70,11 @@ self.addEventListener('fetch', event => {
   // it, a code fix never reaches a returning reader, because index.html asks for the same
   // versioned URL (app.js?v=N) and the browser happily serves its stale copy. Freshness must not
   // depend on a human remembering to bump N.
-  const revalidating = new Request(event.request, { cache: 'no-cache' });
   const url = new URL(event.request.url);
+  // Recorded story audio goes straight to the network: players ask for byte ranges, and a
+  // cached whole-file answer to a range request stops Safari from playing it at all.
+  if (url.pathname.startsWith('/audio/')) return;
+  const revalidating = new Request(event.request, { cache: 'no-cache' });
   if (MAP_ASSET.test(url.pathname)) {
     event.respondWith(staleWhileRevalidate(event, MAP_CACHE, url.origin + url.pathname, revalidating));
     return;

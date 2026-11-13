@@ -1,0 +1,88 @@
+name: Voice front-page stories
+
+# After each desk edition, read that day's front-page stories aloud with the Kokoro
+# voice "Heart" (scripts/voice-stories.py) and publish the MP3s with data/audio.json,
+# which the Listen button plays. Stories without a recording keep the device voice.
+on:
+  workflow_run:
+    workflows: ["Update ASJ Desk"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Commit the recordings to main (off = keep them as a downloadable artifact only)'
+        type: boolean
+        default: true
+      limit:
+        description: 'Record at most this many new stories (0 = the whole front page)'
+        type: string
+        default: '0'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: asj-voice
+  cancel-in-progress: false
+
+jobs:
+  voice:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Install the speech tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng ffmpeg > /dev/null
+          python3 -m pip install --quiet --upgrade pip
+          python3 -m pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+          python3 -m pip install --quiet -r scripts/voice-requirements.txt
+
+      - name: Restore the voice model
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.cache/huggingface
+          key: kokoro-82m-v1
+
+      - name: Record today's front page
+        env:
+          LIMIT: ${{ inputs.limit || '0' }}
+        run: python3 scripts/voice-stories.py --limit "$LIMIT"
+
+      - name: Save the voice model
+        if: always()
+        uses: actions/cache/save@v5
+        with:
+          path: ~/.cache/huggingface
+          key: kokoro-82m-v1
+        continue-on-error: true
+
+      - name: Publish the recordings
+        if: github.event_name != 'workflow_dispatch' || inputs.publish
+        run: |
+          git config user.name 'asj-news-bot'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add --all -- audio data/audio.json 2>/dev/null || git add --all -- data/audio.json
+          if git diff --staged --quiet; then echo "No new recordings."; exit 0; fi
+          git commit -q -m "chore(asj-audio): record the front page ($(date -u +%F))"
+          for attempt in 1 2 3; do
+            if git pull -q --rebase origin main && git push -q origin main; then echo "Pushed."; exit 0; fi
+            echo "Push attempt $attempt failed; retrying."
+            sleep 15
+          done
+          exit 1
+
+      - name: Keep the samples
+        if: github.event_name == 'workflow_dispatch' && !inputs.publish
+        uses: actions/upload-artifact@v6
+        with:
+          name: voice-samples
+          path: |
+            audio/
+            data/audio.json

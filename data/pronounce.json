@@ -1,0 +1,6 @@
+{
+ "_note": "How the story voice (Kokoro, scripts/voice-stories.py) should say names it gets wrong. Phonemes use Kokoro's set: O = 'oh', A = 'ay', ˈ marks the stressed syllable. Test a spelling at https://huggingface.co/spaces/hexgrad/Kokoro-TTS with [Name](/phonemes/).",
+ "words": {
+  "Dangote": "dɑnɡˈOtA"
+ }
+}

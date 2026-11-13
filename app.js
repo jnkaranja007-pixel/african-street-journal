@@ -2842,7 +2842,7 @@ function mountReaderKit(args) {
   // the browser has no speech.
   const listen = document.getElementById('story-reader-listen');
   if (listen && window.ASJ_STORY_KIT.mountListen) {
-    try { window.ASJ_STORY_KIT.mountListen(listen, () => [o.headline, o.dek].concat(o.paragraphs || [])); } catch {}
+    try { window.ASJ_STORY_KIT.mountListen(listen, () => [o.headline, o.dek].concat(o.paragraphs || []), { audioKey: o.slug ? o.cc + '/' + o.slug : '' }); } catch {}
   }
 }
 document.addEventListener('DOMContentLoaded', () => {
@@ -2930,7 +2930,7 @@ function openStoryReader(story, context = {}, sourceElement = document.activeEle
   // 'high confidence' was the desk's own grade of its draft, not something a reader can use.
   if (readerLens !== 'general') meta.push('<span>' + escapeHtml(audienceLabel(readerLens)) + '</span>');
   document.getElementById('story-reader-meta').innerHTML = meta.join('');
-  mountReaderKit({ cc: context.countryCode || '', country, headline: story.headline, dek: story.dek || '', paragraphs, topic });
+  mountReaderKit({ cc: context.countryCode || '', country, headline: story.headline, dek: story.dek || '', paragraphs, topic, slug: story.slug || '' });
   document.getElementById('story-reader-copy').innerHTML = paragraphs
     .map(paragraph => '<p>' + escapeHtml(paragraph) + '</p>').join('');
   const why = document.getElementById('story-reader-why');

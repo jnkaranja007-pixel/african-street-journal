@@ -462,6 +462,7 @@
     '.asj-listen svg{width:16px;height:16px;fill:currentColor;flex:none}',
     '.asj-listen .asj-listen-play svg{color:var(--k-hi)}',
     '.asj-listen .asj-listen-stop{padding:0 14px 0 12px}',
+    '.asj-listen button small{font:500 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--k-muted);margin-left:2px}',
     '.asj-listen-note{font:400 14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--k-muted)}',
     // Story pages: Listen sits on the topic row, and a phone's first screen keeps the
     // headline, the summary and the opening sentence (the head was ~460px before).
@@ -551,26 +552,78 @@
       return en[0] || null;
     } catch (e) { return null; }
   }
+  /* Recorded voice: after each desk run, scripts/voice-stories.py reads the front-page
+     stories with the Kokoro voice "Heart" and lists them in data/audio.json as
+     "cc/slug". A story on that list plays its MP3; every other story keeps the device
+     voice above. The list is fetched once per page. */
+  var audioIndex = null;
+  function loadAudioIndex() {
+    if (!audioIndex) {
+      audioIndex = (typeof fetch === 'function'
+        ? fetch('/data/audio.json', { credentials: 'same-origin', cache: 'no-cache' })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .catch(function () { return null; })
+        : Promise.resolve(null));
+    }
+    return audioIndex;
+  }
+  function clockLabel(s) {
+    s = Math.max(0, Math.round(Number(s) || 0));
+    return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
   // host: an element to fill. getParts(): the text to read, as an array of strings.
-  function mountListen(host, getParts) {
+  // opts.audioKey: "cc/slug", to play the recorded voice when the story has one.
+  function mountListen(host, getParts, opts) {
     if (!host) return null;
+    opts = opts || {};
     if (listenCurrent && listenCurrent.host === host) listenCurrent.stop();
     host.className = 'asj-listen';
-    if (!speechSupported()) { host.hidden = true; host.innerHTML = ''; return null; }
+    var hasSpeech = speechSupported();
+    var audioKey = /^[a-z]{2}\/[a-z0-9-]+$/.test(String(opts.audioKey || '')) ? String(opts.audioKey) : '';
+    if (!hasSpeech && !audioKey) { host.hidden = true; host.innerHTML = ''; return null; }
     ensureCss();
-    host.hidden = false;
+    host.hidden = !hasSpeech;
     host.innerHTML =
       '<button type="button" class="asj-listen-play" aria-label="Listen to this story">' + LISTEN_ICONS.play + '<span>Listen</span></button>' +
       '<button type="button" class="asj-listen-stop" hidden>' + LISTEN_ICONS.stop + '<span>Stop</span></button>' +
       '<span class="asj-listen-note" aria-live="polite"></span>';
     var play = host.querySelector('.asj-listen-play'), stopBtn = host.querySelector('.asj-listen-stop'), note = host.querySelector('.asj-listen-note');
-    var synth = window.speechSynthesis, state = 'idle', queue = [], at = 0, run = 0;
+    var synth = hasSpeech ? window.speechSynthesis : null, state = 'idle', queue = [], at = 0, run = 0;
+    // mode: 'speech' (the device voice) or 'audio' (the recorded voice, once found).
+    var mode = 'speech', clip = null, clipLen = 0;
     function paint() {
       var label = state === 'playing' ? 'Pause' : state === 'paused' ? 'Resume' : 'Listen';
-      play.innerHTML = (state === 'playing' ? LISTEN_ICONS.pause : LISTEN_ICONS.play) + '<span>' + label + '</span>';
-      play.setAttribute('aria-label', state === 'playing' ? 'Pause reading' : state === 'paused' ? 'Resume reading' : 'Listen to this story');
+      var len = mode === 'audio' && state === 'idle' && clipLen ? ' <small>' + clockLabel(clipLen) + '</small>' : '';
+      play.innerHTML = (state === 'playing' ? LISTEN_ICONS.pause : LISTEN_ICONS.play) + '<span>' + label + len + '</span>';
+      play.setAttribute('aria-label', state === 'playing' ? 'Pause reading' : state === 'paused' ? 'Resume reading' : 'Listen to this story' + (len ? ', ' + clockLabel(clipLen) : ''));
       stopBtn.hidden = state === 'idle';
       note.textContent = state === 'idle' ? '' : state === 'paused' ? 'Paused' : 'Reading aloud';
+    }
+    function mediaSession() {
+      try {
+        if (!('mediaSession' in navigator) || typeof window.MediaMetadata !== 'function') return;
+        var title = String((getParts() || [])[0] || '').trim();
+        navigator.mediaSession.metadata = new window.MediaMetadata({ title: title, artist: 'The African Street Journal', artwork: [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }] });
+      } catch (e) {}
+    }
+    function useRecording(url, seconds) {
+      if (state !== 'idle') return;
+      mode = 'audio'; clipLen = Number(seconds) || 0;
+      clip = new Audio();
+      clip.preload = 'none';
+      clip.src = url;
+      clip.addEventListener('ended', function () { if (mode === 'audio') { state = 'idle'; paint(); } });
+      clip.addEventListener('error', function () {
+        // The file is missing or will not play: back to the device voice, if there is one.
+        if (mode !== 'audio') return;
+        var wasPlaying = state !== 'idle';
+        mode = 'speech'; clip = null; state = 'idle';
+        if (!hasSpeech) { host.hidden = true; return; }
+        paint();
+        if (wasPlaying) start();
+      });
+      host.hidden = false;
+      paint();
     }
     function speakNext(myRun) {
       if (myRun !== run || state === 'idle') return;
@@ -588,6 +641,16 @@
       synth.speak(u);
     }
     function start() {
+      if (mode === 'audio' && clip) {
+        if (listenCurrent && listenCurrent !== api) listenCurrent.stop();
+        listenCurrent = api;
+        try { clip.currentTime = 0; } catch (e) {}
+        state = 'playing'; paint(); mediaSession();
+        var p = clip.play();
+        if (p && p.catch) p.catch(function () { if (mode === 'audio' && state === 'playing') { state = 'idle'; paint(); } });
+        return;
+      }
+      if (!synth) return;
       queue = [];
       (getParts() || []).forEach(function (t) {
         t = String(t || '').replace(/\s+/g, ' ').trim();
@@ -609,11 +672,17 @@
     }
     function stop() {
       run++; state = 'idle';
-      try { synth.cancel(); } catch (e) {}
+      if (clip) { try { clip.pause(); clip.currentTime = 0; } catch (e) {} }
+      if (synth) { try { synth.cancel(); } catch (e) {} }
       paint();
     }
     play.addEventListener('click', function () {
       if (state === 'idle') start();
+      else if (mode === 'audio' && clip) {
+        if (state === 'playing') { try { clip.pause(); } catch (e) {} state = 'paused'; }
+        else { state = 'playing'; var p = clip.play(); if (p && p.catch) p.catch(function () {}); }
+        paint();
+      }
       else if (state === 'playing') { try { synth.pause(); } catch (e) {} state = 'paused'; paint(); }
       else {
         state = 'playing'; paint();
@@ -625,6 +694,14 @@
     stopBtn.addEventListener('click', stop);
     var api = { host: host, stop: stop };
     paint();
+    if (audioKey) {
+      loadAudioIndex().then(function (idx) {
+        var item = idx && idx.items && idx.items[audioKey];
+        if (!item) return;
+        var base = typeof idx.base === 'string' && /^(\/|https:\/\/)/.test(idx.base) ? idx.base : '/audio/';
+        useRecording(base + audioKey + '.mp3', item.s);
+      });
+    }
     return api;
   }
   function stopListening() { if (listenCurrent) listenCurrent.stop(); }
@@ -726,7 +803,8 @@
       var metaRow = head.querySelector('.meta');
       if (metaRow) { metaRow.classList.add('asj-meta-listen'); metaRow.appendChild(listen); }
       else if (byline) byline.parentNode.insertBefore(listen, byline.nextSibling); else head.appendChild(listen);
-      mountListen(listen, function () { return [headline, dek].concat(paragraphs); });
+      var pathKey = (location.pathname.match(/^\/([a-z]{2})\/([a-z0-9-]+)\/?$/) || []).slice(1).join('/');
+      mountListen(listen, function () { return [headline, dek].concat(paragraphs); }, { audioKey: pathKey });
     }
 
     var land = document.createElement('section');
