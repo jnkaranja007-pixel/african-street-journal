@@ -1377,6 +1377,7 @@ const phoneMapMQ = window.matchMedia('(max-width:640px)');
 function layoutPhoneMap() {
   const stage = canvas.parentElement;
   const row = stage.parentElement;
+  row.style.removeProperty('flex');
   if (!phoneMapMQ.matches) {
     stage.style.removeProperty('width'); stage.style.removeProperty('height');
     canvas.style.removeProperty('width'); canvas.style.removeProperty('height');
@@ -1399,6 +1400,10 @@ function layoutPhoneMap() {
   const boxW = mw * s, boxH = mh * s;
   stage.style.width = boxW + 'px';
   stage.style.height = boxH + 'px';
+  // A tall phone fills the map's width before its height, which left one big hole above
+  // the map and another below it. Shrink the row to the map instead: the landing column
+  // spreads the spare height evenly between title, counter, map and top stories.
+  if (availH - boxH > 12) row.style.flex = '0 0 auto';
   canvas.style.width = (1000 * s) + 'px';
   canvas.style.height = (1001 * s) + 'px';
   canvas.style.left = (-b.x0 * s) + 'px';
