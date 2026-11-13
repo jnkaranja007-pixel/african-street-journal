@@ -2,7 +2,7 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-13T03:40:50Z",
+ "updated": "2026-11-13T09:35:48Z",
  "items": {
   "bf/aes-ministers-review-second-year-roadmap-in-ouagadougou-d87e3d": {
    "s": 87,
@@ -11,6 +11,22 @@
   "cd/dr-congo-president-signs-referendum-law-7043dd": {
    "s": 82,
    "on": "2026-11-12"
+  },
+  "cf/central-african-opposition-gives-government-14-days-to-meet-1b88be": {
+   "s": 103,
+   "on": "2026-11-13"
+  },
+  "ci/ivory-coast-frees-more-than-200-ppa-ci-militants-under-fdfa27": {
+   "s": 88,
+   "on": "2026-11-13"
+  },
+  "ci/ivory-coast-health-budget-to-rise-21-in-2027-00a84b": {
+   "s": 68,
+   "on": "2026-11-13"
+  },
+  "cm/cameroon-imports-jump-22-8-in-first-quarter-despite-curbs-425468": {
+   "s": 92,
+   "on": "2026-11-13"
   },
   "cm/cameroon-regulators-fine-telecoms-firms-18-6-billion-fcfa-5e9ee9": {
    "s": 83,
@@ -24,6 +40,22 @@
    "s": 87,
    "on": "2026-11-12"
   },
+  "et/ethiopian-army-takes-control-of-tigray-capital-mekelle-ff9336": {
+   "s": 68,
+   "on": "2026-11-13"
+  },
+  "gm/darbo-submits-presidential-nomination-papers-c4f5c1": {
+   "s": 108,
+   "on": "2026-11-13"
+  },
+  "gw/guinea-bissau-president-attends-simandou-mining-summit-f0161a": {
+   "s": 75,
+   "on": "2026-11-13"
+  },
+  "ke/college-principal-butchered-in-bedroom-attack-bd4c53": {
+   "s": 93,
+   "on": "2026-11-13"
+  },
   "ke/maraga-accuses-ruto-of-hypocrisy-over-ebola-quarantine-u-300507": {
    "s": 94,
    "on": "2026-11-12"
@@ -31,6 +63,10 @@
   "km/two-comoros-murder-convicts-die-within-a-week-379c2d": {
    "s": 59,
    "on": "2026-11-12"
+  },
+  "mu/mauritius-raises-key-interest-rate-to-5-c54ef7": {
+   "s": 94,
+   "on": "2026-11-13"
   },
   "mz/insurgents-kill-22-in-cabo-delgado-farmland-770232": {
    "s": 78,
@@ -40,13 +76,25 @@
    "s": 111,
    "on": "2026-11-12"
   },
+  "ng/nigeria-faces-power-cuts-over-n639bn-unpaid-gas-debt-339f37": {
+   "s": 50,
+   "on": "2026-11-13"
+  },
   "so/al-shabaab-attack-kills-eight-near-somalia-border-6d8572": {
    "s": 76,
    "on": "2026-11-12"
   },
+  "tz/samia-calls-for-fair-carbon-returns-as-cop31-faces-finance-2766df": {
+   "s": 87,
+   "on": "2026-11-13"
+  },
   "za/cosatu-slams-ramaphosa-over-3-5-politician-salary-hike-b5c826": {
    "s": 70,
    "on": "2026-11-12"
+  },
+  "za/hawks-arrest-tenth-suspect-in-alleged-russia-ukraine-688882": {
+   "s": 81,
+   "on": "2026-11-13"
   },
   "za/south-africa-youth-unemployment-hits-47-3-c06d53": {
    "s": 90,
