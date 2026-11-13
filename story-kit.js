@@ -406,7 +406,7 @@
 
   /* ── Styles: the kit carries its own, reading the page's colours where it has them ── */
   var CSS = [
-    '.asj-kit,.asj-listen,.asj-kit-share-label{--k-ink:var(--text,var(--c-e8e6e3,#e8e6e3));--k-muted:var(--text-muted,var(--c-a8a39d,#a8a39d));--k-dim:var(--text-dim,var(--c-8a847b,#8a847b));--k-rule:var(--rule,var(--c-2a2a2a,#2a2a2a));--k-surface:var(--surface,var(--c-181818,#1a1a1a));--k-accent:var(--green-bright,var(--c-66bb6a,#66bb6a));--k-hi:var(--front-green,#439447);--k-cta:var(--kit-cta,#2e7d32);--k-land:var(--kit-land,#2c322d);--k-sea:var(--kit-sea,#151816);--k-mono:var(--mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);--k-serif:var(--serif,"Playfair Display",Georgia,serif);box-sizing:border-box}',
+    '.asj-kit,.asj-listen,.asj-kit-share-label{--k-ink:var(--text,var(--c-e8e6e3,#e8e6e3));--k-muted:var(--text-muted,var(--c-a8a39d,#a8a39d));--k-dim:var(--text-dim,var(--c-8a847b,#8a847b));--k-rule:var(--rule,var(--c-2a2a2a,#2a2a2a));--k-surface:var(--surface,var(--c-181818,#1a1a1a));--k-accent:var(--green-bright,var(--c-66bb6a,#66bb6a));--k-hi:var(--front-green,#439447);--k-cta:var(--kit-cta,#2e7d32);--k-land:var(--kit-land,#2c322d);--k-sea:var(--kit-sea,#151816);--k-map-ink:#f2f0ed;--k-mono:var(--mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);--k-serif:var(--serif,"Playfair Display",Georgia,serif);box-sizing:border-box}',
     '.asj-kit *{box-sizing:border-box}',
     '.asj-kit[hidden]{display:none!important}',
     '.asj-kit-visual{display:flex;gap:18px;align-items:center;margin:22px 0 8px;padding:14px;border:1px solid var(--k-rule);background:var(--k-surface);text-align:left}',
@@ -418,9 +418,9 @@
     '.asj-kit .k-hi{fill:var(--k-hi);stroke:var(--k-accent);stroke-width:.8;vector-effect:non-scaling-stroke}',
     '.asj-kit .k-hi--inset{stroke-width:.4}',
     '.asj-kit .k-inset{fill:var(--k-sea);stroke:var(--k-dim);stroke-width:.6}',
-    '.asj-kit .k-dot{fill:var(--k-ink)}',
-    '.asj-kit .k-ring{fill:none;stroke:var(--k-ink);stroke-width:1}',
-    '.asj-kit .k-txt{font:600 9.5px/1 system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--k-ink);paint-order:stroke;stroke:var(--k-sea);stroke-width:2.6px;stroke-linejoin:round}',
+    '.asj-kit .k-dot{fill:var(--k-map-ink)}',
+    '.asj-kit .k-ring{fill:none;stroke:var(--k-map-ink);stroke-width:1}',
+    '.asj-kit .k-txt{font:600 9.5px/1 system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--k-map-ink);paint-order:stroke;stroke:var(--k-sea);stroke-width:2.6px;stroke-linejoin:round}',
     '.asj-kit-stats{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:14px}',
     '.asj-kit-label,.asj-kit-signal small,.asj-kit-where small,.asj-kit-figs small{display:block;margin:0 0 5px;font:500 11px/1.3 var(--k-mono);letter-spacing:.03em;text-transform:uppercase;color:var(--k-hi)}',
     '.asj-kit-big b{display:block;font:700 clamp(32px,8vw,54px)/1 var(--k-serif);letter-spacing:0;color:var(--k-ink);overflow-wrap:anywhere}',
