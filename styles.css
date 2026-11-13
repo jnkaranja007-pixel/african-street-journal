@@ -1312,8 +1312,17 @@ main{position:relative}
 }
 @media (max-width:640px){
   .ticker-wrap{height:42px}
-  .your-desk.is-collapsed{margin:0 14px 6px!important;padding:0!important}
-  .your-desk.is-collapsed .yd-toggle{border:0!important;background:none!important;padding:6px 0!important;min-height:36px}
+  /* My Africa on phones (13 Nov 2026): a star and the follow count in the top bar
+     (.my-africa-entry); open, a sheet under the bar over the page. No landing row. */
+  .your-desk.is-collapsed{display:none!important}
+  .your-desk:not(.is-collapsed):not([hidden]){position:fixed;top:45px;left:0;right:0;z-index:9;width:auto!important;margin:0!important;padding:10px 16px 14px!important;background:var(--bg);border-bottom:1px solid var(--rule);box-shadow:0 16px 32px rgba(0,0,0,.16);max-height:calc(100svh - 60px);overflow:auto}
+}
+.my-africa-entry{display:none}
+@media (max-width:640px){
+  .my-africa-entry:not([hidden]){display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:44px;min-height:44px;padding:0 8px;border:0;border-radius:999px;background:none;color:var(--front-green);font:700 13px/1 var(--mono);letter-spacing:.04em;cursor:pointer}
+  .my-africa-entry svg{width:16px;height:16px;fill:currentColor}
+  .my-africa-entry[aria-expanded="true"]{background:rgba(76,175,80,.12)}
+  .my-africa-entry:focus-visible{outline:2px solid var(--front-green);outline-offset:-2px}
 }
 @media (min-width:641px){.landing-stage-row{padding-bottom:12px;box-sizing:border-box}}
 

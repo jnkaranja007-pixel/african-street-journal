@@ -7092,6 +7092,7 @@ function setYourDeskExpanded(expanded) {
     toggle.setAttribute('aria-expanded', String(yourDeskExpanded));
     toggle.setAttribute('aria-label', (yourDeskExpanded ? 'Collapse' : 'Expand') + ' My Africa');
   }
+  document.querySelectorAll('[data-desk-open]').forEach(btn => btn.setAttribute('aria-expanded', String(yourDeskExpanded)));
   if (rail) rail.hidden = !yourDeskExpanded;
   if (nav) nav.hidden = !yourDeskExpanded || cardCount < 2;
   if (yourDeskExpanded) requestAnimationFrame(() => setYourDeskIndex(yourDeskIndex, 'auto'));
@@ -7247,6 +7248,16 @@ function renderYourDesk() {
   const el = document.getElementById('your-desk');
   if (!el) return;
   const list = getWatchlist();
+  // Phones: My Africa is a star with the follow count in the top bar (index.html
+  // .my-africa-entry), and opens as a sheet under it, so the landing screen has no row
+  // between the top stories and the country strip (13 Nov 2026).
+  document.querySelectorAll('[data-desk-open]').forEach(btn => {
+    btn.hidden = !list.length;
+    btn.setAttribute('aria-label', 'My Africa: ' + list.length + ' followed ' + (list.length === 1 ? 'country' : 'countries'));
+    btn.setAttribute('aria-expanded', String(!!list.length && yourDeskExpanded));
+    const count = btn.querySelector('.my-africa-count');
+    if (count) count.textContent = list.length ? String(list.length) : '';
+  });
   if (!list.length) {
     yourDeskIndex = 0;
     yourDeskExpanded = false;
@@ -7433,6 +7444,15 @@ window.addEventListener('appinstalled', () => {
   if (el) el.hidden = true;
 });
 if (isIosSafari()) setTimeout(maybeShowInstallPrompt, 8000);
+// The top-bar star opens and closes My Africa; on a phone a tap anywhere else, or on a
+// country in it, closes the sheet again.
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-desk-open]')) { setYourDeskExpanded(!yourDeskExpanded); return; }
+  if (!yourDeskExpanded || !window.matchMedia?.('(max-width:640px)').matches) return;
+  const desk = document.getElementById('your-desk');
+  if (!desk || desk.hidden) return;
+  if (!desk.contains(e.target) || e.target.closest('button[data-country]')) setYourDeskExpanded(false);
+});
 document.getElementById('your-desk')?.addEventListener('click', e => {
   const toggle = e.target.closest('button[data-desk-toggle]');
   if (toggle) {
