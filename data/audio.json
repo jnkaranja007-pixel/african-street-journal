@@ -2,6 +2,55 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "",
- "items": {}
+ "updated": "2026-11-13T03:40:50Z",
+ "items": {
+  "bf/aes-ministers-review-second-year-roadmap-in-ouagadougou-d87e3d": {
+   "s": 87,
+   "on": "2026-11-12"
+  },
+  "cd/dr-congo-president-signs-referendum-law-7043dd": {
+   "s": 82,
+   "on": "2026-11-12"
+  },
+  "cm/cameroon-regulators-fine-telecoms-firms-18-6-billion-fcfa-5e9ee9": {
+   "s": 83,
+   "on": "2026-11-12"
+  },
+  "eg/egypt-lawmakers-summon-minister-after-fatal-train-crash-f6391e": {
+   "s": 77,
+   "on": "2026-11-12"
+  },
+  "er/ethiopia-accuses-eritrea-of-moving-troops-into-tigray-f865b2": {
+   "s": 87,
+   "on": "2026-11-12"
+  },
+  "ke/maraga-accuses-ruto-of-hypocrisy-over-ebola-quarantine-u-300507": {
+   "s": 94,
+   "on": "2026-11-12"
+  },
+  "km/two-comoros-murder-convicts-die-within-a-week-379c2d": {
+   "s": 59,
+   "on": "2026-11-12"
+  },
+  "mz/insurgents-kill-22-in-cabo-delgado-farmland-770232": {
+   "s": 78,
+   "on": "2026-11-12"
+  },
+  "ng/naira-slides-against-dollar-as-thursday-trading-opens-55b895": {
+   "s": 111,
+   "on": "2026-11-12"
+  },
+  "so/al-shabaab-attack-kills-eight-near-somalia-border-6d8572": {
+   "s": 76,
+   "on": "2026-11-12"
+  },
+  "za/cosatu-slams-ramaphosa-over-3-5-politician-salary-hike-b5c826": {
+   "s": 70,
+   "on": "2026-11-12"
+  },
+  "za/south-africa-youth-unemployment-hits-47-3-c06d53": {
+   "s": 90,
+   "on": "2026-11-12"
+  }
+ }
 }
