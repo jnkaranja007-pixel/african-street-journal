@@ -576,6 +576,17 @@ function Test-WhyGuesses([string]$Why) {
   return ([regex]::IsMatch($Why, '\b(?:may|might|could)\b') -or
           [regex]::IsMatch($Why, '\b(?:potentially|possibly|perhaps|presumably|likely to)\b', 'IgnoreCase'))
 }
+# A why line that only says what the report leaves out ("The packet names no company,
+# market, regulator or contract affected", "The report does not say how farmers are
+# affected"). The writer was told to say plainly when a reader lens had no link, and
+# did; the owner (13 Nov 2026) wants every line shown to say why the story matters, so
+# such a line is never shown: a lens falls back to the story's own why line, and a
+# story's why line is sent back for a rewrite. app.js whyNonAnswer is the same test.
+function Test-WhyNonAnswer([string]$Why) {
+  if (-not $Why) { return $false }
+  return [regex]::IsMatch($Why, '\b(?:establish(?:es)?|names?|mentions?|cites?|gives?|lists?|identifies|specifies|includes?|provides?|offers?|contains?|says?|shows?|states?) no\b|\b(?:does|do|did)(?: not|n''t) (?:name|say|mention|specify|identify|state|give|include|indicate|list|provide|report|detail|establish|show|link|connect|cite|describe|explain)\b|\bno (?:[\w-]+,? ){0,6}(?:is|are|was|were) (?:named|mentioned|given|reported|provided|cited|identified|specified|stated)\b|\bnot (?:specified|mentioned|stated|named|reported|identified|disclosed)\b|\bno (?:direct |clear |stated |reported |obvious )?(?:link|connection|relevance|bearing)\b|\b(?:is|are) not (?:directly )?(?:relevant|linked|connected)\b|\b(?:it is|it''s|remains) unclear\b|\bno (?:further )?(?:information|details?|figures?|data)\b', 'IgnoreCase')
+}
+
 # A why line with nothing in it a reader could check: no figure, no date, and a stock
 # verb where the consequence should be ("raises questions about accountability", "aims
 # to equip young people"). The weekly editor review of 10 Nov 2026 failed all 20 sampled
@@ -583,6 +594,8 @@ function Test-WhyGuesses([string]$Why) {
 # judged, so one that carries the stake is never sent back for its wording.
 function Test-WhyGeneric([string]$Why) {
   if (-not $Why) { return $false }
+  # A line that says what the report leaves out, or still names the desk's packet.
+  if ((Test-WhyNonAnswer $Why) -or [regex]::IsMatch($Why, '\bpacket\b', 'IgnoreCase')) { return $true }
   if ([regex]::IsMatch($Why, '\d')) { return $false }
   if ([regex]::IsMatch($Why, '\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|January|February|March|April|June|July|August|September|October|November|December)\b')) { return $false }
   return [regex]::IsMatch($Why, '\b(?:rais(?:es|ed|ing) (?:\w+ )?(?:questions?|concerns?|fears|doubts)|unresolved questions|left with questions|highlight(?:s|ed|ing)?|underscor(?:es|ed|ing)|has implications|implications for|aims? to|seeks? to|is important|the importance of|remains? an? (?:\w+ )?(?:concern|challenge|issue|priority)|sheds? light|draws? attention|serves? as a reminder|reflects? (?:the|a|an|its|their)|demonstrat(?:es|ed|ing)|(?:affects?|matters? (?:to|for)) (?:the )?(?:economy|country|nation|sector|region|public|population|citizens|residents|people)\b)', 'IgnoreCase')

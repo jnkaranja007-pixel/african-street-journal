@@ -3358,7 +3358,15 @@ function briefWhy(brief) {
   return whyShown(why, brief) ? why : '';
 }
 function whyShown(why, story) {
-  return !!why && !whyRestates(why, story) && !whyGuesses(why) && !whyGeneric(why);
+  return !!why && !whyNonAnswer(why) && !whyRestates(why, story) && !whyGuesses(why) && !whyGeneric(why);
+}
+// Nor one that only says what the report leaves out ("The packet names no company,
+// market, regulator or contract affected"; "This report establishes no direct effect on
+// farming"). A lens line like that falls back to the story's own why line. Same test
+// as story-shape.ps1 Test-WhyNonAnswer (13 Nov 2026).
+const WHY_NON_ANSWER_RE = /\bpacket\b|\b(?:establish(?:es)?|names?|mentions?|cites?|gives?|lists?|identifies|specifies|includes?|provides?|offers?|contains?|says?|shows?|states?) no\b|\b(?:does|do|did)(?: not|n't) (?:name|say|mention|specify|identify|state|give|include|indicate|list|provide|report|detail|establish|show|link|connect|cite|describe|explain)\b|\bno (?:[\w-]+,? ){0,6}(?:is|are|was|were) (?:named|mentioned|given|reported|provided|cited|identified|specified|stated)\b|\bnot (?:specified|mentioned|stated|named|reported|identified|disclosed)\b|\bno (?:direct |clear |stated |reported |obvious )?(?:link|connection|relevance|bearing)\b|\b(?:is|are) not (?:directly )?(?:relevant|linked|connected)\b|\b(?:it is|it's|remains) unclear\b|\bno (?:further )?(?:information|details?|figures?|data)\b/i;
+function whyNonAnswer(why) {
+  return WHY_NON_ANSWER_RE.test(String(why || ''));
 }
 // Nor one a reader cannot check: no figure, no date, and a stock verb where the effect
 // should be ("highlights the role of", "raises questions about", "aims to equip"). The

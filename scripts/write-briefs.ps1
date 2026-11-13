@@ -235,6 +235,8 @@ function Resolve-LensScore([string]$Lens, [string]$Topic, [string]$StoryText, $E
   if ($Entry) { $why = ([string]$Entry.why).Trim() }
   $whyWords = ([regex]::Matches($why, "[\p{L}\p{N}]+(?:['\u2019-][\p{L}\p{N}]+)*")).Count
   if ($whyWords -lt 8 -or $whyWords -gt 50) { $why = $FallbackWhy }
+  # A lens why that only says what the report leaves out is never shown (story-shape.ps1).
+  if (Test-WhyNonAnswer $why) { $why = $FallbackWhy }
   $band = Get-LensRelevanceBand $Lens $Topic $StoryText
   $capped = $false
   if ($band.Mode -eq 'direct' -and $band.Min -eq 0 -and $score -gt 20 -and (Test-SpeculativeText $why)) {
@@ -246,7 +248,9 @@ function Resolve-LensScore([string]$Lens, [string]$Topic, [string]$StoryText, $E
     }
   }
   $score = [int][Math]::Max($band.Min, [Math]::Min($band.Max, $score))
-  if ($band.Mode -ne 'direct') { $why = Get-LensBandWhy $Lens $Topic $band.Mode }
+  # No link for this reader: carry the story's own why line, not a sentence saying so.
+  if ($band.Mode -eq 'none') { $why = $FallbackWhy }
+  elseif ($band.Mode -ne 'direct') { $why = Get-LensBandWhy $Lens $Topic $band.Mode }
   return [pscustomobject]@{ Score = $score; Why = $why; Capped = $capped }
 }
 
@@ -737,7 +741,10 @@ Write each lens "why" first, then give the score that the why supports.
   consular services, family safety in a crisis, study abroad, cross-border money.
   National sport, culture, schools and politics are reader interest only (21-40).
 - The test: if you need "could", "may", "might", "potentially" or "if" to explain the
-  link, there is no direct link. Score it 0-20 and say so plainly. Never invent a
+  link, there is no direct link. Score it 0-20 and leave that lens "why" empty ("").
+  Never write what the report does not say ("names no company", "does not mention
+  farmers", "no link to"): a reader only sees a lens why that says why the story
+  matters to them. Never invent a
   hypothetical connection to make a story fit an audience.
 
 NUMBERS

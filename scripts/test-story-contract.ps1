@@ -218,8 +218,8 @@ try {
   if ($r.Score -ne 10) { throw "a trade mention lifted the investor score to $($r.Score) (the old floor was 65)" }
   Write-Host 'PASS a keyword mention no longer lifts the investor score'
   $r = Resolve-LensScore 'investors' 'Politics' 'Police arrested 55 protesters over housing costs and rental reforms backed by property companies.' (& $entry 65 'Investors may be concerned about social unrest and potential government policy changes in housing.') 15 'fallback why line for this story here'
-  if ($r.Score -gt 20 -or -not $r.Capped -or $r.Why -notmatch 'no direct effect') { throw "speculative investor reason kept score $($r.Score)" }
-  Write-Host 'PASS a may/could investor reason is scored as no direct link'
+  if ($r.Score -gt 20 -or -not $r.Capped -or $r.Why -ne 'fallback why line for this story here') { throw "speculative investor reason kept score $($r.Score)" }
+  Write-Host 'PASS a may/could investor reason is scored as no direct link and shows the story why'
   $r = Resolve-LensScore 'investors' 'Business' 'Standard Chartered Bank confirmed its chief executive after central bank approval.' (& $entry 85 'The bank named a chief executive after central bank approval, setting its leadership for clients and markets.') 55 'fallback why line for this story here'
   if ($r.Score -ne 85 -or $r.Capped) { throw "a direct, unhedged investor reason was changed to $($r.Score)" }
   Write-Host 'PASS a direct investor reason keeps its score'
@@ -420,7 +420,7 @@ foreach ($case in @(
 if ((Remove-DeskLanguage 'The packet does not say which projects are funded.' $noEvidence -ReplaceOnly) -cne 'The report does not say which projects are funded.') { throw 'ReplaceOnly dropped a sentence' }
 if ((Remove-DeskLanguage 'The packet of measures takes effect in March.' 'The government adopted a packet of measures.') -cne 'The packet of measures takes effect in March.') { throw 'a packet the source reports was rewritten' }
 $leak = [pscustomobject]@{ headline = 'Naira slides against dollar as Thursday trading opens'; dek = 'Official and street rates diverge as importers buy dollars.'; why = 'Importers paying in dollars face a wider gap of 68 naira, as the packet reports.'; paragraphs = @('The naira opened lower in Lagos on Thursday.', 'Dealers quoted higher rates.', 'Analysts cited importer demand.') }
-if ((Get-DraftStyleIssues $leak $noEvidence).Issues -notmatch 'desk language') { throw 'a draft that says "the packet" passed the style check' }
+if (-not @((Get-DraftStyleIssues $leak $noEvidence).Issues -match 'desk language').Count) { throw 'a draft that says "the packet" passed the style check' }
 Write-Host 'PASS the desk''s working words are flagged in a draft and taken out of finished copy'
 
 # A date the story says something will happen on, already past on the edition day.
@@ -453,6 +453,27 @@ foreach ($solid in @(
   if (Test-WhyGeneric $solid) { throw "a why line that carries the stake was called generic: '$solid'" }
 }
 Write-Host 'PASS a generic why line is sent back; one with a figure, a day or a plain effect is not'
+
+# A why line that only says what the report leaves out. The first was shown under "Why it
+# matters for investors" on 13 Nov 2026; the second was the desk's own stock line.
+foreach ($empty in @(
+  'The packet names no company, market, regulator or contract affected by the quarantine dispute.',
+  'This report establishes no direct effect on firms, markets, regulation, infrastructure or capital.',
+  'The report does not say how farmers in the region are affected by the 12 percent rise.',
+  'No company, market or regulator is named in the report.',
+  'It is unclear when the 3 new berths will open to shipping lines.')) {
+  if (-not (Test-WhyNonAnswer $empty)) { throw "a non-answer why line passed: '$empty'" }
+  if (-not (Test-WhyGeneric $empty)) { throw "a non-answer why line was not sent back: '$empty'" }
+}
+foreach ($solid in @(
+  'Importers will pay 12 percent more for fuel from Monday, which feeds into transport costs.',
+  'Families sending money home lose about 4 percent of each transfer to the new levy.',
+  'No new licences will be issued until March, so mining firms must wait to expand.')) {
+  if (Test-WhyNonAnswer $solid) { throw "a why line with a stake was called a non-answer: '$solid'" }
+}
+$lensEmpty = Resolve-LensScore 'investors' 'Health' 'Officials changed the quarantine rules twice this week.' ([pscustomobject]@{ why = 'The packet names no company, market, regulator or contract affected by the quarantine dispute.'; score = 10 }) 10 'Travellers arriving from Uganda must now isolate for 21 days, up from 14.'
+if ($lensEmpty.Why -ne 'Travellers arriving from Uganda must now isolate for 21 days, up from 14.') { throw "a non-answer lens why was kept: '$($lensEmpty.Why)'" }
+Write-Host 'PASS a why line that only says what the report leaves out is never shown; a lens falls back to the story why'
 
 Write-Host '[story-contract] OK - 38 checks'
 exit 0

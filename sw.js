@@ -10,7 +10,7 @@
 // v16. Nothing broke - the fetch handler matches with ignoreSearch, and GitHub Pages
 // ignores query strings - but the numbers lied, and a version that lies is worse than
 // no version. Bump V alone; index.html's ?v= must match it.
-const V = '126';
+const V = '127';
 const CACHE = 'asj-v' + V;
 // briefs-full.js (~500 KB of prose) is no longer precached on install; app.js fetches
 // it after first paint and the network-first handler caches it then.
