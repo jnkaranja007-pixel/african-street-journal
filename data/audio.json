@@ -2,7 +2,7 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-13T11:34:50Z",
+ "updated": "2026-11-14T08:49:31Z",
  "items": {
   "bf/aes-ministers-review-second-year-roadmap-in-ouagadougou-d87e3d": {
    "s": 87,
@@ -11,6 +11,18 @@
   "cd/dr-congo-president-signs-referendum-law-7043dd": {
    "s": 82,
    "on": "2026-11-12"
+  },
+  "cd/ebola-victims-bodies-sprayed-with-fuel-in-dr-congo-556996": {
+   "s": 66,
+   "on": "2026-11-14"
+  },
+  "cd/food-insecurity-hits-28-8-million-people-in-dr-congo-143f6f": {
+   "s": 62,
+   "on": "2026-11-14"
+  },
+  "cf/bangui-protesters-demand-lower-fuel-prices-d68ac1": {
+   "s": 79,
+   "on": "2026-11-14"
   },
   "cf/central-african-opposition-gives-government-14-days-to-meet-1b88be": {
    "s": 103,
@@ -56,6 +68,10 @@
    "s": 93,
    "on": "2026-11-13"
   },
+  "ke/kenyan-government-urges-1-5-million-flood-prone-residents-255ab1": {
+   "s": 88,
+   "on": "2026-11-14"
+  },
   "ke/maraga-accuses-ruto-of-hypocrisy-over-ebola-quarantine-u-300507": {
    "s": 94,
    "on": "2026-11-12"
@@ -67,6 +83,10 @@
   "mu/mauritius-raises-key-interest-rate-to-5-c54ef7": {
    "s": 94,
    "on": "2026-11-13"
+  },
+  "mw/malawians-plan-nationwide-protests-over-fuel-power-and-1f674e": {
+   "s": 62,
+   "on": "2026-11-14"
   },
   "mz/insurgents-kill-22-in-cabo-delgado-farmland-770232": {
    "s": 78,
@@ -80,13 +100,41 @@
    "s": 50,
    "on": "2026-11-13"
   },
+  "sd/sudanese-army-retakes-key-west-kordofan-town-from-rsf-bef732": {
+   "s": 97,
+   "on": "2026-11-14"
+  },
+  "sd/un-food-chief-urges-end-to-sudan-war-amid-famine-crisis-61a3c6": {
+   "s": 78,
+   "on": "2026-11-14"
+  },
   "so/al-shabaab-attack-kills-eight-near-somalia-border-6d8572": {
    "s": 76,
    "on": "2026-11-12"
   },
+  "so/un-experts-call-somalia-s-chief-justice-dismissal-a-blatant-cd3826": {
+   "s": 110,
+   "on": "2026-11-14"
+  },
+  "ss/south-sudan-s-electoral-commission-moves-december-vote-to-f42b0f": {
+   "s": 89,
+   "on": "2026-11-14"
+  },
+  "st/mlstp-fails-to-form-government-after-election-win-d8cc8c": {
+   "s": 100,
+   "on": "2026-11-14"
+  },
+  "st/president-names-adi-leader-americo-ramos-prime-minister-d8a377": {
+   "s": 83,
+   "on": "2026-11-14"
+  },
   "tz/samia-calls-for-fair-carbon-returns-as-cop31-faces-finance-2766df": {
    "s": 87,
    "on": "2026-11-13"
+  },
+  "ug/uganda-minister-urges-patience-as-drc-border-stays-shut-a46721": {
+   "s": 109,
+   "on": "2026-11-14"
   },
   "za/cosatu-slams-ramaphosa-over-3-5-politician-salary-hike-b5c826": {
    "s": 70,
