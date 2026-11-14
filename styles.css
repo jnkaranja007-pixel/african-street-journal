@@ -1318,7 +1318,11 @@ main{position:relative}
   .your-desk.is-collapsed{display:none!important}
   .your-desk:not(.is-collapsed):not([hidden]){position:fixed;top:45px;left:0;right:0;z-index:9;width:auto!important;margin:0!important;padding:10px 16px 14px!important;background:var(--bg);border-bottom:1px solid var(--rule);box-shadow:0 16px 32px rgba(0,0,0,.16);max-height:calc(100svh - 60px);overflow:auto}
 }
-.masthead-right{justify-self:end;display:flex;align-items:center}
+.masthead-right{justify-self:end;display:flex;align-items:center;gap:14px}
+/* 14 Nov 2026: Today's stories moved up from its own row under the bar, so the title sits higher. */
+.masthead-right .wire-entry{white-space:nowrap}
+@media (max-width:900px){.masthead-right .wire-entry-label{display:none}.masthead-right .wire-entry .wire-entry-count{border-left:0;padding-left:0}}
+@media (min-width:641px) and (max-width:760px){.masthead-kicker{visibility:hidden}}
 .my-africa-entry:not([hidden]){display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:44px;min-height:44px;padding:0 8px;border:0;border-radius:999px;background:none;color:var(--front-green);font:700 13px/1 var(--mono);letter-spacing:.04em;cursor:pointer}
 .my-africa-entry svg{width:16px;height:16px;fill:currentColor}
 .my-africa-entry[aria-expanded="true"]{background:rgba(76,175,80,.12)}
