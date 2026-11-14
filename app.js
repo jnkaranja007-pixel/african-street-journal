@@ -7449,11 +7449,11 @@ window.addEventListener('appinstalled', () => {
   if (el) el.hidden = true;
 });
 if (isIosSafari()) setTimeout(maybeShowInstallPrompt, 8000);
-// The top-bar star opens and closes My Africa; on a phone a tap anywhere else, or on a
-// country in it, closes the sheet again.
+// The top-bar star opens and closes My Africa; a tap or click anywhere else, or on a
+// country in it, closes the panel again (phones and desktop alike).
 document.addEventListener('click', e => {
   if (e.target.closest('[data-desk-open]')) { setYourDeskExpanded(!yourDeskExpanded); return; }
-  if (!yourDeskExpanded || !window.matchMedia?.('(max-width:640px)').matches) return;
+  if (!yourDeskExpanded) return;
   const desk = document.getElementById('your-desk');
   if (!desk || desk.hidden) return;
   if (!desk.contains(e.target) || e.target.closest('button[data-country]')) setYourDeskExpanded(false);

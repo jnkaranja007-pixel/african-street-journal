@@ -602,7 +602,7 @@ $earlierHtml
 <h2>Other countries</h2>
 $($navLinks.ToString())
 </nav>
-<footer>The African Street Journal &middot; from the streets, for the streets<br>Every story carries its sources. Figures are labelled with their origin and date.$siteLinks</footer>
+<footer>The African Street Journal<br>Every story carries its sources. Figures are labelled with their origin and date.$siteLinks</footer>
 </div>
 </body>
 </html>
@@ -1085,7 +1085,7 @@ $analytics
 <div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
 <h1>$($tp.title)</h1>
 $($tp.body)
-<footer>The African Street Journal &middot; from the streets, for the streets$siteLinks</footer>
+<footer>The African Street Journal$siteLinks</footer>
 </div>
 </body>
 </html>
@@ -1348,7 +1348,7 @@ $analytics
 $($hubList.ToString())</ul>
 <p class="hub-note">Use a news reader app? Add <code>$BaseUrl/feed.xml</code> to get the latest headlines as they are published, or one country's feed (Kenya: <code>$BaseUrl/ke/feed.xml</code>) for that country alone. <a href="$BaseUrl/about/#low-data">How this works</a></p>
 </main>
-<footer>The African Street Journal &middot; from the streets, for the streets$siteLinks</footer>
+<footer>The African Street Journal$siteLinks</footer>
 </div>
 </body>
 </html>
