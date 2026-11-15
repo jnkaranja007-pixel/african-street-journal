@@ -2,11 +2,15 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-14T10:57:39Z",
+ "updated": "2026-11-15T09:08:23Z",
  "items": {
   "bf/aes-ministers-review-second-year-roadmap-in-ouagadougou-d87e3d": {
    "s": 87,
    "on": "2026-11-12"
+  },
+  "cd/butembo-civil-society-warns-ebola-strike-by-care-workers-6729f0": {
+   "s": 55,
+   "on": "2026-11-15"
   },
   "cd/dr-congo-president-signs-referendum-law-7043dd": {
    "s": 82,
@@ -28,6 +32,10 @@
    "s": 103,
    "on": "2026-11-13"
   },
+  "cf/hundreds-march-in-bangui-against-fuel-price-rise-and-high-97c31e": {
+   "s": 67,
+   "on": "2026-11-15"
+  },
   "ci/ivory-coast-frees-more-than-200-ppa-ci-militants-under-fdfa27": {
    "s": 88,
    "on": "2026-11-13"
@@ -43,6 +51,10 @@
   "cm/cameroon-regulators-fine-telecoms-firms-18-6-billion-fcfa-5e9ee9": {
    "s": 83,
    "on": "2026-11-12"
+  },
+  "cv/cape-verdeans-vote-for-sixth-president-ed434f": {
+   "s": 71,
+   "on": "2026-11-15"
   },
   "eg/egypt-lawmakers-summon-minister-after-fatal-train-crash-f6391e": {
    "s": 77,
@@ -60,6 +72,10 @@
    "s": 108,
    "on": "2026-11-13"
   },
+  "gm/gambia-election-nine-cleared-for-december-5-vote-f6d7c1": {
+   "s": 90,
+   "on": "2026-11-15"
+  },
   "gw/guinea-bissau-president-attends-simandou-mining-summit-f0161a": {
    "s": 75,
    "on": "2026-11-13"
@@ -67,6 +83,10 @@
   "ke/college-principal-butchered-in-bedroom-attack-bd4c53": {
    "s": 93,
    "on": "2026-11-13"
+  },
+  "ke/kenya-holds-fuel-pump-prices-with-sh4-6bn-subsidy-f6ea72": {
+   "s": 88,
+   "on": "2026-11-15"
   },
   "ke/kenyan-government-urges-1-5-million-flood-prone-residents-255ab1": {
    "s": 88,
@@ -76,13 +96,25 @@
    "s": 94,
    "on": "2026-11-12"
   },
+  "ke/six-workers-dead-as-eight-storey-building-collapses-near-5740b5": {
+   "s": 85,
+   "on": "2026-11-15"
+  },
   "km/two-comoros-murder-convicts-die-within-a-week-379c2d": {
    "s": 59,
    "on": "2026-11-12"
   },
+  "mr/mauritania-orders-eu-fishing-boats-back-to-port-as-deal-86934c": {
+   "s": 75,
+   "on": "2026-11-15"
+  },
   "mu/mauritius-raises-key-interest-rate-to-5-c54ef7": {
    "s": 94,
    "on": "2026-11-13"
+  },
+  "mw/malawi-protest-group-suspends-fuel-and-blackout-005bed": {
+   "s": 60,
+   "on": "2026-11-15"
   },
   "mw/malawians-plan-nationwide-protests-over-fuel-power-and-1f674e": {
    "s": 62,
@@ -100,6 +132,10 @@
    "s": 50,
    "on": "2026-11-13"
   },
+  "ng/nigeria-s-central-bank-to-decide-on-interest-rates-on-212bd1": {
+   "s": 61,
+   "on": "2026-11-15"
+  },
   "sd/sudanese-army-retakes-key-west-kordofan-town-from-rsf-bef732": {
    "s": 97,
    "on": "2026-11-14"
@@ -115,6 +151,10 @@
   "so/un-experts-call-somalia-s-chief-justice-dismissal-a-blatant-cd3826": {
    "s": 110,
    "on": "2026-11-14"
+  },
+  "ss/south-sudan-begins-voter-registration-amid-logistical-strain-fbd1b0": {
+   "s": 90,
+   "on": "2026-11-15"
   },
   "ss/south-sudan-s-electoral-commission-moves-december-vote-to-f42b0f": {
    "s": 89,
@@ -147,6 +187,10 @@
   "za/south-africa-youth-unemployment-hits-47-3-c06d53": {
    "s": 90,
    "on": "2026-11-12"
+  },
+  "za/south-african-weather-service-keeps-orange-level-5-storm-24a752": {
+   "s": 75,
+   "on": "2026-11-15"
   }
  }
 }
