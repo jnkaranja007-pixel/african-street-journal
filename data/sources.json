@@ -471,7 +471,7 @@
         "home": "https://www.sidwaya.info/",
         "feed": "https://www.sidwaya.info/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "RFI Afrique",
@@ -673,7 +673,7 @@
         "home": "https://expressodasilhas.cv/",
         "feed": "https://expressodasilhas.cv/rss",
         "tier": 1,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Inforpress",
@@ -1056,7 +1056,7 @@
         "home": "https://alwatwan.net/",
         "feed": "https://alwatwan.net/feed/",
         "tier": 1,
-        "state": "error"
+        "state": "missing"
       },
       {
         "name": "Comores Infos",
@@ -1294,7 +1294,7 @@
         "home": "https://www.mediacongo.net/",
         "feed": "https://www.mediacongo.net/rss.html",
         "tier": 2,
-        "state": "error"
+        "state": "missing"
       },
       {
         "name": "Farmers Review Africa",
@@ -2188,7 +2188,7 @@
         "home": "https://foroyaa.net/",
         "feed": "https://foroyaa.net/feed/",
         "tier": 1,
-        "state": "ok"
+        "state": "blocked"
       },
       {
         "name": "The Standard Gambia",
@@ -3049,7 +3049,7 @@
         "home": "https://www.ami.mr/",
         "feed": "https://www.ami.mr/feed",
         "tier": 2,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Le Calame",
@@ -4376,7 +4376,7 @@
         "home": "https://www.dabangasudan.org/en",
         "feed": "https://www.dabangasudan.org/en/all-news/rss",
         "tier": 1,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Ayin Network",
@@ -4913,7 +4913,7 @@
         "home": "https://www.daily-mail.co.zm/",
         "feed": "https://www.daily-mail.co.zm/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Mwebantu",
@@ -5073,7 +5073,7 @@
         "home": "https://news.pindula.co.zw/",
         "feed": "https://news.pindula.co.zw/feed/",
         "tier": 3,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Techzim",
