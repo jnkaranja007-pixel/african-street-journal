@@ -2,7 +2,7 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-15T11:31:25Z",
+ "updated": "2026-11-16T09:28:10Z",
  "items": {
   "bf/aes-ministers-review-second-year-roadmap-in-ouagadougou-d87e3d": {
    "s": 87,
@@ -24,6 +24,10 @@
    "s": 62,
    "on": "2026-11-14"
   },
+  "cd/us-sends-dr-congo-list-of-agencies-receiving-over-400-93563e": {
+   "s": 57,
+   "on": "2026-11-16"
+  },
   "cf/bangui-protesters-demand-lower-fuel-prices-d68ac1": {
    "s": 79,
    "on": "2026-11-14"
@@ -44,6 +48,10 @@
    "s": 68,
    "on": "2026-11-13"
   },
+  "ci/ivory-coast-loses-88-6-billion-to-illicit-financial-flows-66e111": {
+   "s": 108,
+   "on": "2026-11-16"
+  },
   "cm/cameroon-imports-jump-22-8-in-first-quarter-despite-curbs-425468": {
    "s": 92,
    "on": "2026-11-13"
@@ -56,9 +64,21 @@
    "s": 71,
    "on": "2026-11-15"
   },
+  "cv/neves-wins-cape-verde-presidential-vote-with-nearly-64-7fadb9": {
+   "s": 77,
+   "on": "2026-11-16"
+  },
+  "dj/djibouti-opens-al-shifa-hospital-in-djibouti-ville-to-cut-32e6e4": {
+   "s": 60,
+   "on": "2026-11-16"
+  },
   "eg/egypt-lawmakers-summon-minister-after-fatal-train-crash-f6391e": {
    "s": 77,
    "on": "2026-11-12"
+  },
+  "er/eritrea-and-ethiopia-trade-drone-and-artillery-strikes-ba8977": {
+   "s": 87,
+   "on": "2026-11-16"
   },
   "er/ethiopia-accuses-eritrea-of-moving-troops-into-tigray-f865b2": {
    "s": 87,
@@ -67,6 +87,10 @@
   "et/ethiopian-army-takes-control-of-tigray-capital-mekelle-ff9336": {
    "s": 68,
    "on": "2026-11-13"
+  },
+  "et/sudan-and-ethiopia-trade-accusations-over-armed-groups-36ac7b": {
+   "s": 85,
+   "on": "2026-11-16"
   },
   "gm/darbo-submits-presidential-nomination-papers-c4f5c1": {
    "s": 108,
@@ -96,6 +120,10 @@
    "s": 94,
    "on": "2026-11-12"
   },
+  "ke/mombasa-teacher-assault-not-linked-to-kcse-says-cs-02cec2": {
+   "s": 91,
+   "on": "2026-11-16"
+  },
   "ke/six-workers-dead-as-eight-storey-building-collapses-near-5740b5": {
    "s": 85,
    "on": "2026-11-15"
@@ -107,6 +135,10 @@
   "mr/mauritania-orders-eu-fishing-boats-back-to-port-as-deal-86934c": {
    "s": 75,
    "on": "2026-11-15"
+  },
+  "mr/mauritania-orders-eu-fishing-vessels-to-leave-its-waters-86934c": {
+   "s": 67,
+   "on": "2026-11-16"
   },
   "mu/mauritius-raises-key-interest-rate-to-5-c54ef7": {
    "s": 94,
@@ -136,6 +168,10 @@
    "s": 61,
    "on": "2026-11-15"
   },
+  "ng/nigeria-s-power-minister-names-gas-grid-and-metering-c73fea": {
+   "s": 68,
+   "on": "2026-11-16"
+  },
   "sd/sudanese-army-retakes-key-west-kordofan-town-from-rsf-bef732": {
    "s": 97,
    "on": "2026-11-14"
@@ -143,6 +179,10 @@
   "sd/un-food-chief-urges-end-to-sudan-war-amid-famine-crisis-61a3c6": {
    "s": 78,
    "on": "2026-11-14"
+  },
+  "sn/senegal-wins-right-to-host-2031-francophonie-games-ce1d7d": {
+   "s": 77,
+   "on": "2026-11-16"
   },
   "so/al-shabaab-attack-kills-eight-near-somalia-border-6d8572": {
    "s": 76,
@@ -172,9 +212,17 @@
    "s": 87,
    "on": "2026-11-13"
   },
+  "ug/uganda-drivers-urge-return-of-speed-cameras-as-road-deaths-a5e3d1": {
+   "s": 106,
+   "on": "2026-11-16"
+  },
   "ug/uganda-minister-urges-patience-as-drc-border-stays-shut-a46721": {
    "s": 109,
    "on": "2026-11-14"
+  },
+  "za/anc-factions-clash-over-election-results-and-gnu-d51353": {
+   "s": 94,
+   "on": "2026-11-16"
   },
   "za/cosatu-slams-ramaphosa-over-3-5-politician-salary-hike-b5c826": {
    "s": 70,
