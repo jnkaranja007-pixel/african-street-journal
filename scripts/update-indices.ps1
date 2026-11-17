@@ -48,7 +48,7 @@ $ErrorActionPreference = 'Stop'
 # Runs under pwsh 7 on GitHub and under Windows PowerShell 5.1 from the owner's PC
 # (scripts/refresh-markets-desktop.ps1), because AFX answers a desktop but not runners.
 # 5.1 needs TLS 1.2 switched on and -UseBasicParsing; both are harmless under pwsh.
-[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::SystemDefault
 $root = Split-Path $PSScriptRoot -Parent
 $outPath = Join-Path $root 'data/indices.js'
 $src = 'https://www.african-markets.com/en/stock-markets/jse'
@@ -480,6 +480,46 @@ foreach ($slug in $AFX.Keys) {
 #    Malawi: "Indices Stats as at 17 November 2026 17:00 hrs Index Open Close ... MASI
 #    480,359.72 480,177.54" (open, then close). Mauritius: the home page's SEMDEX chart
 #    is fed by a JSON series of [epoch ms, level] points for the current session.
+#    Kampala: /api/delayed-data has the ALSI but no date. The home page's live ticker, a
+#    public websocket, sends every stock's close with a timestamp but no index. When the
+#    two agree on every stock price, they describe the same session, and the ticker's
+#    timestamp dates the feed's ALSI. Not during trading (10:00-17:00 East Africa), when
+#    both are intraday.
+
+# One bootstrap message from the USE ticker, as JSON text, or $null.
+function Get-UseTicks {
+  $ws = $null
+  try {
+    # Windows PowerShell (the PC run) offers only old TLS by default; this host needs what the OS offers (1.3).
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::SystemDefault
+    $tok = (Invoke-RestMethod -Uri 'https://scd.use.or.ug/ws-ticket/public' -TimeoutSec $TimeoutSec -UserAgent 'Mozilla/5.0 (compatible; ASJ-indices/1.0; +https://africanstreetjournal.com)').token
+    if (-not $tok) { return $null }
+    $ws = New-Object System.Net.WebSockets.ClientWebSocket
+    $ws.Options.SetRequestHeader('Origin', 'https://www.use.or.ug')
+    $ct = [Threading.CancellationToken]::None
+    if (-not $ws.ConnectAsync([Uri]"wss://scd.use.or.ug/ws?token=$tok", $ct).Wait(15000)) { return $null }
+    $hello = [Text.Encoding]::UTF8.GetBytes('{"type":"subscribe","channel":"prices","id":"broadcast"}')
+    if (-not $ws.SendAsync([ArraySegment[byte]]$hello, [System.Net.WebSockets.WebSocketMessageType]::Text, $true, $ct).Wait(5000)) { return $null }
+    $buf = New-Object byte[] 262144
+    for ($i = 0; $i -lt 4; $i++) {
+      $sb = New-Object Text.StringBuilder
+      do {
+        $task = $ws.ReceiveAsync([ArraySegment[byte]]$buf, $ct)
+        if (-not $task.Wait(15000)) { return $null }
+        [void]$sb.Append([Text.Encoding]::UTF8.GetString($buf, 0, $task.Result.Count))
+      } while (-not $task.Result.EndOfMessage)
+      $s = $sb.ToString()
+      if ($s -match '"market"\s*:\s*\[') { return $s }
+    }
+    return $null
+  } catch {
+    Write-Host "[indices] use.or.ug ticker: $($_.Exception.Message)"
+    return $null
+  } finally {
+    if ($ws) { $ws.Dispose() }
+  }
+}
+
 $LATE_SITES = @(
   @{ code = 'MSE'; site = 'mse.co.mw'; url = 'https://www.mse.co.mw/'
      name = 'Malawi All Share Index (MASI)'; labelRx = '\bMASI\b|All Share'; sameDay = $false
@@ -502,6 +542,45 @@ $LATE_SITES = @(
        # One session per series; a series spanning days is not the layout this expects.
        if ($days.Count -ne 1) { return $null }
        return @{ level = [Math]::Round([double]::Parse($last.Groups['v'].Value, $Inv), 2); pct = $null; date = $days[0] }
+     } }
+  @{ code = 'USE'; site = 'use.or.ug'; url = 'https://www.use.or.ug/api/delayed-data'
+     name = 'USE All Share Index (ALSI)'; labelRx = '\bALSI\b'; sameDay = $true
+     fetch = {
+       $eat = [DateTime]::UtcNow.AddHours(3)
+       $weekday = $eat.DayOfWeek -ne [DayOfWeek]::Saturday -and $eat.DayOfWeek -ne [DayOfWeek]::Sunday
+       if ($weekday -and $eat.Hour -ge 10 -and $eat.Hour -lt 17) { Write-Host '[indices] use.or.ug: market hours in Kampala, figures are intraday; skipped'; return $null }
+       $feed = Get-Page 'https://www.use.or.ug/api/delayed-data' 2
+       if (-not $feed) { return $null }
+       $ticks = Get-UseTicks
+       if (-not $ticks) { Write-Host '[indices] use.or.ug: the ticker did not answer, so the feed has no date; skipped'; return $null }
+       return '{"feed":' + $feed + ',"ticks":' + $ticks + '}'
+     }
+     parse = {
+       param($page)
+       $j = try { ($page | ConvertFrom-Json) } catch { $null }
+       if (-not $j) { return $null }
+       $alsi = @($j.feed | Where-Object { $_.type -eq 'INDEX' -and $_.stock -eq 'ALSI' })
+       $ticks = @($j.ticks.data.market)
+       if ($alsi.Count -ne 1 -or -not ($alsi[0].price -gt 0) -or $ticks.Count -lt 10) { return $null }
+       $price = @{}
+       foreach ($x in $j.feed) { if ($x.type -eq 'EQUITY') { $price[[string]$x.stock] = [double]$x.price } }
+       $same = 0; $differ = 0
+       foreach ($t in $ticks) {
+         $k = [string]$t.stock
+         if (-not $price.ContainsKey($k)) { continue }
+         # The feed shows the last deal for a stock that traded, else the close.
+         $p = $price[$k]
+         if ([Math]::Abs($p - [double]$t.close) -lt 0.005 -or ([double]$t.last_deal_price -gt 0 -and [Math]::Abs($p - [double]$t.last_deal_price) -lt 0.005)) { $same++ } else { $differ++ }
+       }
+       if ($same -lt 10) { return $null }
+       $days = @($ticks | ForEach-Object { Get-AnyDay $_.time } | Where-Object { $_ })
+       $day = $days | Sort-Object -Descending | Select-Object -First 1
+       $onDay = @($days | Where-Object { $_ -eq $day }).Count
+       if ($differ -gt 0 -or $onDay -lt $ticks.Count * 0.8) {
+         Write-Host "[indices] use.or.ug: the feed and the ticker are not the same session ($differ prices differ, $onDay of $($ticks.Count) stamped $day); skipped"
+         return 'skip'
+       }
+       return @{ level = [double]$alsi[0].price; pct = $null; date = $day }
      } }
 )
 Invoke-SiteLayer $LATE_SITES

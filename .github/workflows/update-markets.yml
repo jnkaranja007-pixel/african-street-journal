@@ -102,7 +102,7 @@ jobs:
           # An exchange is stale past this many days (a long weekend plus a holiday is four).
           STALE_DAYS: '5'
           # More stale exchanges than this turns the job red. Zambia has no source the runner
-          # may use and Uganda comes only from the owner PC, so two can be stale on a good day.
+          # may use, and Uganda is skipped by a run during its trading hours.
           MAX_STALE: '3'
         run: |
           $inv = [Globalization.CultureInfo]::InvariantCulture
