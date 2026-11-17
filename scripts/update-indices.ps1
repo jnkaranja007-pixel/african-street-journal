@@ -321,7 +321,8 @@ $SITES = @(
        return @{ level = $last.v; pct = $(if ($before.v -gt 0) { ($last.v - $before.v) / $before.v * 100 } else { $null }); date = $last.d }
      } }
 )
-foreach ($site in $SITES) {
+function Invoke-SiteLayer($List) {
+foreach ($site in $List) {
   if ($rows.Contains($site.code)) { continue }
   $page = Get-Page $site.url 2
   if (-not $page) { continue }
@@ -340,6 +341,8 @@ foreach ($site in $SITES) {
   if ($site.sameDay -and $fix.date -ne $EatToday) { Write-Host "[indices] $($site.site) ($how): date $($fix.date) is not today ($EatToday); skipped"; continue }
   Add-IndexRow $site.code $fix.level $fix.pct $fix.date "$($site.site) ($how)"
 }
+}
+Invoke-SiteLayer $SITES
 
 # 4. afx.kwayisi.org for the exchanges still missing. Two straight failures means the
 #    host is dropping this runner; stop asking.
@@ -361,6 +364,37 @@ foreach ($slug in $AFX.Keys) {
   # Add-IndexRow keeps the label the site already shows ("NGX ASI", not afx's "ASI").
   Add-IndexRow $m.code $level $pct $stamp.Groups['d'].Value 'afx.kwayisi.org' $hit.Groups['abbr'].Value
 }
+
+# 5. Exchange sites that print a dated level but not the day's move. They come after afx,
+#    which gives the move, so the PC run keeps it; from GitHub they are the only source.
+#    Malawi: "Indices Stats as at 17 November 2026 17:00 hrs Index Open Close ... MASI
+#    480,359.72 480,177.54" (open, then close). Mauritius: the home page's SEMDEX chart
+#    is fed by a JSON series of [epoch ms, level] points for the current session.
+$LATE_SITES = @(
+  @{ code = 'MSE'; site = 'mse.co.mw'; url = 'https://www.mse.co.mw/'
+     name = 'Malawi All Share Index (MASI)'; labelRx = '\bMASI\b|All Share'; sameDay = $false
+     parse = {
+       param($page)
+       $hit = [regex]::Match((Get-PageText $page), 'Stats as at (?<d>\d{1,2} [A-Za-z]+ \d{4}).{0,160}?\bMASI (?<open>[\d,]+\.\d+) (?<close>[\d,]+\.\d+)')
+       if (-not $hit.Success) { return $null }
+       $d = Find-NewestDate $hit.Groups['d'].Value
+       if (-not $d) { return $null }
+       return @{ level = [double]::Parse(($hit.Groups['close'].Value -replace ',', ''), $Inv); pct = $null; date = $d }
+     } }
+  @{ code = 'SEM'; site = 'stockexchangeofmauritius.com'; url = 'https://www.stockexchangeofmauritius.com/graph-semdex-home'
+     name = 'SEMDEX'; labelRx = '\bSEMDEX\b'; sameDay = $false
+     parse = {
+       param($page)
+       $pts = @([regex]::Matches($page, '\[(?<t>\d{13}),(?<v>\d+(?:\.\d+)?)\]'))
+       if (-not $pts.Count) { return $null }
+       $last = $pts[-1]
+       $days = @($pts | ForEach-Object { Get-UnixDay ([long]$_.Groups['t'].Value / 1000) } | Sort-Object -Unique)
+       # One session per series; a series spanning days is not the layout this expects.
+       if ($days.Count -ne 1) { return $null }
+       return @{ level = [Math]::Round([double]::Parse($last.Groups['v'].Value, $Inv), 2); pct = $null; date = $days[0] }
+     } }
+)
+Invoke-SiteLayer $LATE_SITES
 
 $fresh = $rows.Count
 if ($fresh -lt $MinRows) { Write-Host "[indices] only $fresh indices came back fresh; keeping previous file"; exit 1 }
