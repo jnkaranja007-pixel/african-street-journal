@@ -93,7 +93,7 @@ jobs:
           $age = [int]((Get-Date).ToUniversalTime().Date - $newest).TotalDays
           Write-Host "Newest index session: $($newest.ToString('yyyy-MM-dd')) ($age days old)"
           if ($age -gt 4) {
-            Write-Host "::error::Index levels are $age days old. african-markets.com and afx.kwayisi.org both failed from this runner; see the indices step log. Setting the ASJ_AFX_RELAY variable (tools/afx-relay) routes afx through Cloudflare."
+            Write-Host "::error::Index levels are $age days old. african-markets.com and afx.kwayisi.org both failed from this runner; see the indices step log. AFX also refuses Cloudflare (relay tested 17 Nov 2026: 522), so index levels now come from the ASJ markets refresh task on the owner PC (scripts/refresh-markets-desktop.ps1); check that it ran."
             exit 1
           }
 

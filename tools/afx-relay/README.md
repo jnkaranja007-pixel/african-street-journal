@@ -2,6 +2,10 @@
 
 Lets the GitHub workflow refresh exchange listings without the owner's PC.
 
+**Tested 17 Nov 2026: it does not work.** AFX times out for Cloudflare as well (error 522),
+so the relay was not deployed and `ASJ_AFX_RELAY` stays unset. Listings and index levels
+both come from the desktop task. Kept for reference in case AFX changes.
+
 `afx.kwayisi.org` drops traffic from GitHub's runners, so `update-markets.yml` timed out
 every day (16-20 Oct 2026). Since then the listings have been refreshed by a scheduled task on
 the owner's PC (`scripts/refresh-markets-desktop.ps1`, daily at 18:30). That only works while
@@ -16,7 +20,7 @@ else: other paths return 404, and only GET is allowed. Each page is cached for 3
    `afx-relay` and click **Deploy**.
 2. Click **Edit code**, replace everything with the contents of `worker.js`, then **Deploy**.
 3. Open `https://afx-relay.<your-subdomain>.workers.dev/nse/` in a browser. You should see
-   the Nairobi Securities Exchange listing page. A 404 means the path is wrong; a 403 or 503
+   the Nairobi Securities Exchange listing page. A 404 means the path is wrong; a 403, 503 or 522
    means AFX blocks Cloudflare too. In that case, delete the Worker and keep the desktop task.
 4. In GitHub: **Settings > Secrets and variables > Actions > Variables > New repository
    variable**. Name `ASJ_AFX_RELAY`, value `https://afx-relay.<your-subdomain>.workers.dev`.

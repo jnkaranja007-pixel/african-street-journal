@@ -1,4 +1,4 @@
-#Requires -Version 7
+#Requires -Version 5.1
 <#
 .SYNOPSIS
   Refresh headline stock-exchange indices into data/indices.js.
@@ -25,6 +25,10 @@
 #>
 param([int]$TimeoutSec = 25, [int]$MinRows = 8)
 $ErrorActionPreference = 'Stop'
+# Runs under pwsh 7 on GitHub and under Windows PowerShell 5.1 from the owner's PC
+# (scripts/refresh-markets-desktop.ps1), because AFX answers a desktop but not runners.
+# 5.1 needs TLS 1.2 switched on and -UseBasicParsing; both are harmless under pwsh.
+[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 $root = Split-Path $PSScriptRoot -Parent
 $outPath = Join-Path $root 'data/indices.js'
 $src = 'https://www.african-markets.com/en/stock-markets/jse'
@@ -57,7 +61,7 @@ function Strip([string]$h) { ([Net.WebUtility]::HtmlDecode(($h -replace '<[^>]+>
 function Get-Page([string]$Url, [int]$Tries) {
   for ($i = 1; $i -le $Tries; $i++) {
     try {
-      return (Invoke-WebRequest -Uri $Url -TimeoutSec $TimeoutSec -UserAgent 'Mozilla/5.0 (compatible; ASJ-indices/1.0; +https://africanstreetjournal.com)').Content
+      return (Invoke-WebRequest -UseBasicParsing -Uri $Url -TimeoutSec $TimeoutSec -UserAgent 'Mozilla/5.0 (compatible; ASJ-indices/1.0; +https://africanstreetjournal.com)').Content
     } catch { Write-Host "[indices] $Url attempt $i failed: $($_.Exception.Message.Split("`n")[0])"; if ($i -lt $Tries) { Start-Sleep -Seconds (3 * $i) } }
   }
   return $null
