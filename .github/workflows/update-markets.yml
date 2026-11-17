@@ -90,21 +90,64 @@ jobs:
         # the old file, and the run stayed green for ten days while the site said "Stale".
         # Past four days without a fresh session (a long weekend is three) the job goes red
         # so the failure is seen. The commit step below still runs.
+        # It used to judge only the newest row, so one fresh exchange hid sixteen stale ones,
+        # and it never asked whether the indices step itself had failed: from 17 Nov 2026 that
+        # step wrote fresh rows, ended on a stray exit code, and the commit step skipped them
+        # on every run while this stayed green. Now it checks each exchange and the step's
+        # outcome, and puts a table of every exchange in the run summary.
         if: always()
         shell: pwsh
+        env:
+          INDICES_OUTCOME: ${{ steps.indices.outcome }}
+          # An exchange is stale past this many days (a long weekend plus a holiday is four).
+          STALE_DAYS: '5'
+          # More stale exchanges than this turns the job red. Zambia has no source the runner
+          # may use and Uganda comes only from the owner PC, so two can be stale on a good day.
+          MAX_STALE: '3'
         run: |
+          $inv = [Globalization.CultureInfo]::InvariantCulture
           $t = Get-Content data/indices.js -Raw
-          $dates = @([regex]::Matches($t, '"date":"(\d{4}-\d{2}-\d{2})"') | ForEach-Object {
-            [datetime]::ParseExact($_.Groups[1].Value, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
+          $a = $t.IndexOf('{'); $b = $t.LastIndexOf('}')
+          if ($a -lt 0 -or $b -le $a) { Write-Host '::error::data/indices.js holds no JSON.'; exit 1 }
+          $data = ($t.Substring($a, $b - $a + 1) | ConvertFrom-Json)
+          $today = (Get-Date).ToUniversalTime().Date
+          $staleDays = [int]$env:STALE_DAYS
+          # pwsh's ConvertFrom-Json hands dates back as [datetime]; take either.
+          $rows = @(foreach ($p in $data.indices.PSObject.Properties) {
+            $o = $p.Value; $d = $o.date
+            if ($d -isnot [datetime]) { $d = [datetime]::ParseExact([string]$d, 'yyyy-MM-dd', $inv) }
+            [pscustomobject]@{ code = $o.code; level = $o.level; pct = $o.changePct; day = $d.Date; age = [int]($today - $d.Date).TotalDays; source = $o.source }
           })
-          if (-not $dates.Count) { Write-Host '::error::data/indices.js holds no dated index rows.'; exit 1 }
-          $newest = ($dates | Measure-Object -Maximum).Maximum
-          $age = [int]((Get-Date).ToUniversalTime().Date - $newest).TotalDays
-          Write-Host "Newest index session: $($newest.ToString('yyyy-MM-dd')) ($age days old)"
-          if ($age -gt 4) {
-            Write-Host "::error::Index levels are $age days old. african-markets.com and afx.kwayisi.org both failed from this runner; see the indices step log. AFX also refuses Cloudflare (relay tested 17 Nov 2026: 522), so index levels now come from the ASJ markets refresh task on the owner PC (scripts/refresh-markets-desktop.ps1); check that it ran."
-            exit 1
+          if (-not $rows.Count) { Write-Host '::error::data/indices.js holds no dated index rows.'; exit 1 }
+
+          $md = @('### Index levels', '', "Step outcome: $env:INDICES_OUTCOME", '', '| Exchange | Level | Move | Session | Days old | Source |', '|---|---:|---:|---|---:|---|')
+          foreach ($r in ($rows | Sort-Object age, code)) {
+            $mv = if ($r.pct -is [double] -or $r.pct -is [int] -or $r.pct -is [long] -or $r.pct -is [decimal]) { [string]::Format($inv, '{0:+0.00;-0.00;0.00}%', [double]$r.pct) } else { 'none' }
+            $flag = if ($r.age -gt $staleDays) { ' stale' } else { '' }
+            $md += "| $($r.code) | $([string]::Format($inv, '{0:N2}', [double]$r.level)) | $mv | $($r.day.ToString('yyyy-MM-dd')) | $($r.age)$flag | $($r.source) |"
           }
+          if ($env:GITHUB_STEP_SUMMARY) { Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ($md -join "`n") }
+
+          $bad = $false
+          $newest = ($rows | Measure-Object age -Minimum).Minimum
+          Write-Host "Newest index session: $newest days old"
+          if ($newest -gt 4) {
+            Write-Host "::error::Every index level is at least $newest days old. See the indices step log: each exchange site, TradingView and afx.kwayisi.org failed or were refused."
+            $bad = $true
+          }
+          $stale = @($rows | Where-Object { $_.age -gt $staleDays } | Sort-Object age -Descending)
+          foreach ($r in $stale) { Write-Host "::warning::$($r.code) last session $($r.day.ToString('yyyy-MM-dd')) ($($r.age) days old, from $($r.source))" }
+          Write-Host "$($rows.Count - $stale.Count) of $($rows.Count) exchanges are current"
+          if ($stale.Count -gt [int]$env:MAX_STALE) {
+            Write-Host "::error::$($stale.Count) of $($rows.Count) exchanges are more than $staleDays days old: $(($stale | ForEach-Object { $_.code }) -join ', '). Their sources are in scripts/update-indices.ps1; the warnings in the indices step log say which parser stopped matching."
+            $bad = $true
+          }
+          # Failure here means fewer than four fresh rows or a crash. Either way nothing new is saved.
+          if ($env:INDICES_OUTCOME -eq 'failure') {
+            Write-Host '::error::The indices step failed, so this run saves no index levels. See its log.'
+            $bad = $true
+          }
+          if ($bad) { exit 1 }
 
       - name: Commit refreshed markets
         # always(): the stale-listings alarm above fails the job on purpose, and must not
