@@ -10,7 +10,13 @@ on:
   schedule:
     # After the desk has published, so a market commit never races the story commit.
     - cron: '43 6 * * *'
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      test_repair:
+        description: "Prove the redesign repair: skip the site parsers (meaning) or the parsers and the meaning reader (ai). Nothing is committed."
+        type: choice
+        options: [none, meaning, ai]
+        default: none
 
 permissions:
   contents: write
@@ -48,6 +54,9 @@ jobs:
         # Falls back to afx.kwayisi.org, through the relay when it is set.
         env:
           ASJ_AFX_RELAY: ${{ vars.ASJ_AFX_RELAY }}
+          # The AI reader for a redesigned exchange site (scripts/update-indices.ps1).
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          ASJ_INDICES_SKIP: ${{ inputs.test_repair == 'meaning' && 'structured' || inputs.test_repair == 'ai' && 'structured,generic' || '' }}
         run: ./scripts/update-indices.ps1
 
       - name: Report unreachable source
@@ -100,7 +109,7 @@ jobs:
       - name: Commit refreshed markets
         # always(): the stale-listings alarm above fails the job on purpose, and must not
         # stop the index levels it does not concern from being saved.
-        if: always() && (steps.fetch.outcome == 'success' || steps.indices.outcome == 'success')
+        if: always() && (steps.fetch.outcome == 'success' || steps.indices.outcome == 'success') && (inputs.test_repair == '' || inputs.test_repair == 'none')
         shell: pwsh
         run: |
           git config user.name  "asj-news-bot"

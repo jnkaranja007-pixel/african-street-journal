@@ -92,7 +92,7 @@
       .filter(function (r) { return r && isFinite(r.level) && r.level > 0; })
       .map(function (r) {
         var cs = Array.isArray(r.countries) ? r.countries : [];
-        var pct = isFinite(r.changePct) && Math.abs(r.changePct) <= 50 ? r.changePct : NaN;
+        var pct = typeof r.changePct === 'number' && isFinite(r.changePct) && Math.abs(r.changePct) <= 50 ? r.changePct : NaN;
         return { r: r, cs: cs, pct: pct, stale: ageDays(r.date) > 7,
           sort: { name: r.name || r.label || r.code, level: r.level, move: pct } };
       });

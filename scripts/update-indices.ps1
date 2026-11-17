@@ -31,6 +31,14 @@
     4. afx.kwayisi.org, which answers only from the owner's PC.
   A source never replaces a row with an older session than the one already published.
 
+  Also 17 Nov 2026, for when an exchange redesigns its site: every source passes the same
+  checks (Add-IndexRow: no future dates, no older sessions, no move of more than 20% from
+  the published level), and a site whose parser stops matching is flagged as a workflow
+  warning and then read twice more: by meaning (the index's name, the number after it
+  nearest the published level, the date printed nearest that number), then by an AI
+  reader (OpenRouter, OPENROUTER_API_KEY) that must quote the level and date exactly as
+  they appear in the page. A repaired row leaves the day's move blank.
+
   Rules: never invent a number. A row whose level does not parse is dropped. If fewer
   than 4 indices come back fresh, the old file is kept and the script exits 1 so the
   workflow reports it.
@@ -95,22 +103,121 @@ $today = [DateTime]::UtcNow.Date
 $rows = [ordered]@{}
 $Inv = [Globalization.CultureInfo]::InvariantCulture
 
-# Adds one fresh row unless a source earlier in the order already supplied it, the level
-# is not a positive number, or the row already published is from a later session.
-function Add-IndexRow([string]$Code, [double]$Level, $Pct, [string]$Date, [string]$Source) {
+# Test hook: ASJ_INDICES_SKIP=structured,generic makes the site layer fall through to the
+# AI reader, so the repair path can be proven on a day when the parsers still work.
+$Skip = @(if ($env:ASJ_INDICES_SKIP) { $env:ASJ_INDICES_SKIP -split ',' | ForEach-Object { $_.Trim() } })
+
+function Get-PublishedRow([string]$Code) {
+  if (-not $prev -or -not $prev.indices.$Code) { return $null }
+  $kept = $prev.indices.$Code
+  $d = $kept.date; if ($d -is [datetime]) { $d = $d.ToString('yyyy-MM-dd') }
+  return @{ level = [double]$kept.level; date = [string]$d; label = [string]$kept.label }
+}
+
+# Every source goes through here, so a broken parser cannot publish nonsense. A row is
+# refused when an earlier source already supplied it, the level is not positive, the date
+# is malformed or in the future, the published row is from a later session, or the level
+# moved more than 20% from the published one (40% after a gap of over two weeks): no
+# African benchmark moves that far in a session, but a misread number easily does.
+function Add-IndexRow([string]$Code, [double]$Level, $Pct, [string]$Date, [string]$Source, [string]$Label = '') {
   if ($rows.Contains($Code) -or $Level -le 0 -or $Date -notmatch '^\d{4}-\d{2}-\d{2}$') { return }
+  if ($Date -gt $today.AddDays(1).ToString('yyyy-MM-dd')) { Write-Host "::warning::[indices] $Source $Code date $Date is in the future; refused"; return }
   $entry = $MAP.Values | Where-Object { $_.code -eq $Code } | Select-Object -First 1
   if (-not $entry) { return }
-  $label = $entry.name
-  if ($prev -and $prev.indices.$Code) {
-    $kept = $prev.indices.$Code
-    $keptDate = $kept.date; if ($keptDate -is [datetime]) { $keptDate = $keptDate.ToString('yyyy-MM-dd') }
-    if ([string]$keptDate -gt $Date) { Write-Host "[indices] $Source $Code $Date is older than the published $keptDate; skipped"; return }
-    if ($kept.label) { $label = [string]$kept.label }
+  $useLabel = if ($Label) { $Label } else { $entry.name }
+  $kept = Get-PublishedRow $Code
+  if ($kept) {
+    if ($kept.date -gt $Date) { Write-Host "[indices] $Source $Code $Date is older than the published $($kept.date); skipped"; return }
+    if ($kept.level -gt 0) {
+      $gap = ([datetime]::ParseExact($Date, 'yyyy-MM-dd', $Inv) - [datetime]::ParseExact($kept.date, 'yyyy-MM-dd', $Inv)).TotalDays
+      $limit = if ($gap -le 14) { 0.2 } else { 0.4 }
+      if ([Math]::Abs($Level / $kept.level - 1) -gt $limit) { Write-Host "::warning::[indices] $Source $Code $Level is more than $([int]($limit * 100))% from the published $($kept.level); refused as a likely misread"; return }
+    }
+    if ($kept.label) { $useLabel = $kept.label }
   }
   if ($null -ne $Pct) { $Pct = [Math]::Round([double]$Pct, 2) }
-  $rows[$Code] = [ordered]@{ code=$Code; label=$label; name=$entry.name; level=$Level; changePct=$Pct; date=$Date; countries=$entry.countries; source=$Source }
+  $rows[$Code] = [ordered]@{ code=$Code; label=$useLabel; name=$entry.name; level=$Level; changePct=$Pct; date=$Date; countries=$entry.countries; source=$Source }
   Write-Host "[indices] $Source -> $Code $Level ($Pct%) $Date"
+}
+
+# Dates as pages write them: 2026-11-17, 17-Nov-2026, 17 November 2026, Nov 17, 2026.
+# Slash dates (11/12/2026) are left out on purpose: day-first or month-first is a guess.
+# Find-Dates returns each one that is not in the future, with where it sits in the text.
+$MonthRx = '(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?'
+function Find-Dates([string]$Text) {
+  $limit = $today.AddDays(1)
+  $found = @()
+  $rx = "\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2}(?:st|nd|rd|th)?[\s-]+$MonthRx,?[\s-]+\d{4}\b|\b$MonthRx\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}\b"
+  foreach ($m in [regex]::Matches($Text, $rx, 'IgnoreCase')) {
+    $norm = $m.Value -replace '(\d)(st|nd|rd|th)\b', '$1' -replace '[,.]', '' -replace '-', ' ' -replace '\bSept\b', 'Sep' -replace '\s+', ' '
+    $d = [datetime]::MinValue
+    if ($m.Value -match '^\d{4}-\d{2}-\d{2}$') { $ok = [datetime]::TryParseExact($m.Value, 'yyyy-MM-dd', $Inv, 'None', [ref]$d) }
+    else { $ok = [datetime]::TryParseExact($norm, [string[]]@('d MMM yyyy', 'd MMMM yyyy', 'MMM d yyyy', 'MMMM d yyyy'), $Inv, 'AllowWhiteSpaces', [ref]$d) }
+    if ($ok -and $d -le $limit -and $d.Year -ge 2020) { $found += @{ d = $d.ToString('yyyy-MM-dd'); at = $m.Index } }
+  }
+  return ,$found
+}
+function Find-NewestDate([string]$Text) {
+  $all = Find-Dates $Text
+  if (-not $all.Count) { return $null }
+  return ($all | ForEach-Object { $_.d } | Sort-Object -Descending | Select-Object -First 1)
+}
+
+# Visible text of a page: scripts and styles dropped, tags become spaces so adjacent cells
+# ("240.90" and "-0.66") do not run together.
+function Get-PageText([string]$Html) {
+  [Net.WebUtility]::HtmlDecode((($Html -replace '(?s)<script.*?</script>|<style.*?</style>', ' ') -replace '<[^>]+>', ' ')) -replace '\s+', ' '
+}
+
+# Reading by meaning, for when a site is redesigned: find the index's name anywhere in the
+# visible text, take the numbers just after each mention, and keep the one nearest the
+# published level (within 20%). The date is the one printed nearest that number, within
+# 600 characters either side; with no date near it the page is not used.
+function Find-ByMeaning([string]$Text, [string]$LabelRx, [double]$Near) {
+  if ($Near -le 0) { return $null }
+  $best = $null
+  foreach ($m in [regex]::Matches($Text, $LabelRx, 'IgnoreCase')) {
+    $win = $Text.Substring($m.Index, [Math]::Min(250, $Text.Length - $m.Index))
+    foreach ($n in [regex]::Matches($win, '(?<![\d.,])\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\d,])|(?<![\d.,])\d+\.\d+(?![\d.])')) {
+      $v = [double]::Parse(($n.Value -replace ',', ''), $Inv)
+      $dist = [Math]::Abs($v / $Near - 1)
+      if ($dist -le 0.2 -and (-not $best -or $dist -lt $best.dist)) { $best = @{ v = $v; dist = $dist; at = $m.Index + $n.Index } }
+    }
+  }
+  if (-not $best) { return $null }
+  $from = [Math]::Max(0, $best.at - 600)
+  $dates = Find-Dates ($Text.Substring($from, [Math]::Min(1200, $Text.Length - $from)))
+  if (-not $dates.Count) { return $null }
+  $pos = $best.at - $from
+  $d = ($dates | Sort-Object { [Math]::Abs($_.at - $pos) } | Select-Object -First 1).d
+  return @{ level = $best.v; pct = $null; date = $d }
+}
+
+# The AI reader, the last repair step. It is handed the page we fetched and asked to point
+# at the number, never to supply one: both strings it returns must appear verbatim in the
+# page text, and the level must pass the same 20% check as every other source.
+$AiModel = if ($env:ASJ_INDICES_MODEL) { $env:ASJ_INDICES_MODEL } else { 'google/gemini-2.5-flash-lite' }
+function Read-WithAi([string]$Name, [string]$Site, [string]$Text, [string]$LabelRx, [double]$Near) {
+  if (-not $env:OPENROUTER_API_KEY -or $Near -le 0) { return $null }
+  $parts = @(); $spans = @([regex]::Matches($Text, $LabelRx, 'IgnoreCase') | Select-Object -First 4)
+  foreach ($m in $spans) { $from = [Math]::Max(0, $m.Index - 1500); $parts += $Text.Substring($from, [Math]::Min(3000, $Text.Length - $from)) }
+  $excerpt = if ($parts.Count) { ($parts -join "`n...`n") } else { $Text }
+  if ($excerpt.Length -gt 9000) { $excerpt = $excerpt.Substring(0, 9000) }
+  $ask = "Below is text from the web page of $Site. Find the most recent closing level of the $Name and the trading date that level is for. Copy both exactly as they are written in the text; do not calculate, round or reformat. Reply with JSON only, in this shape: {`"level`": `"...`", `"date`": `"...`"}. If the text does not show both, reply {`"level`": null, `"date`": null}.`n`nPAGE TEXT:`n$excerpt"
+  $body = @{ model = $AiModel; temperature = 0; max_tokens = 120; messages = @(@{ role = 'user'; content = $ask }) } | ConvertTo-Json -Depth 5
+  try {
+    $resp = Invoke-RestMethod -Method Post -Uri 'https://openrouter.ai/api/v1/chat/completions' -TimeoutSec 60 -ContentType 'application/json; charset=utf-8' `
+      -Headers @{ Authorization = "Bearer $env:OPENROUTER_API_KEY"; 'HTTP-Referer' = 'https://africanstreetjournal.com'; 'X-Title' = 'ASJ indices' } -Body ([Text.Encoding]::UTF8.GetBytes($body))
+    $said = [regex]::Match([string]$resp.choices[0].message.content, '(?s)\{.*\}').Value | ConvertFrom-Json
+  } catch { Write-Host "[indices] AI reader for ${Site}: $($_.Exception.Message.Split("`n")[0])"; return $null }
+  $lvlText = [string]$said.level; $dateText = [string]$said.date
+  if (-not $lvlText -or -not $dateText) { Write-Host "[indices] AI reader for ${Site}: the page does not show both a level and a date"; return $null }
+  if (-not $Text.Contains($lvlText) -or -not $Text.Contains($dateText)) { Write-Host "[indices] AI reader for ${Site}: '$lvlText' / '$dateText' is not in the page; refused"; return $null }
+  $v = 0.0
+  if (-not [double]::TryParse(($lvlText -replace '[^\d.]', ''), [Globalization.NumberStyles]::Float, $Inv, [ref]$v)) { return $null }
+  $d = Find-NewestDate $dateText
+  if (-not $d) { Write-Host "[indices] AI reader for ${Site}: could not read the date '$dateText'"; return $null }
+  return @{ level = $v; pct = $null; date = $d }
 }
 function Get-UnixDay($Seconds) { [DateTimeOffset]::FromUnixTimeSeconds([long]$Seconds).UtcDateTime.ToString('yyyy-MM-dd') }
 
@@ -120,8 +227,8 @@ $TV = [ordered]@{ 'JSE:J203'='JSE'; 'NSENG:ASI'='NGX'; 'EGX:EGX30'='EGX'; 'CSEMA
 foreach ($sym in $TV.Keys) {
   $json = Get-Page ('https://scanner.tradingview.com/symbol?symbol=' + [uri]::EscapeDataString($sym) + '&fields=close,change,time') 2
   if (-not $json) { continue }
-  try { $q = $json | ConvertFrom-Json } catch { Write-Host "[indices] tradingview ${sym}: not JSON"; continue }
-  if ($null -eq $q.close -or $null -eq $q.time) { Write-Host "[indices] tradingview ${sym}: no close or time"; continue }
+  try { $q = ($json | ConvertFrom-Json) } catch { Write-Host "::warning::[indices] tradingview ${sym}: answered, but not with JSON (has the feed changed?)"; continue }
+  if ($null -eq $q.close -or $null -eq $q.time) { Write-Host "::warning::[indices] tradingview ${sym}: JSON without close or time (has the feed changed?)"; continue }
   Add-IndexRow $TV[$sym] ([double]$q.close) $q.change (Get-UnixDay $q.time) 'tradingview.com'
 }
 
@@ -157,64 +264,81 @@ else {
       if ($d -gt $today.AddDays(2)) { $d = $d.AddYears(-1) }
       $pct = $null
       if ($chg -match '^([+-]?\d+(\.\d+)?)%$') { $pct = [double]$Matches[1] }
-      $m = $MAP[$key]
-      if ($rows.Contains($m.code)) { continue }
-      $rows[$m.code] = [ordered]@{ code=$m.code; label=$label; name=$m.name; level=$level; changePct=$pct; date=$d.ToString('yyyy-MM-dd'); countries=$m.countries; source='african-markets.com' }
+      Add-IndexRow $MAP[$key].code $level $pct $d.ToString('yyyy-MM-dd') 'african-markets.com' $label
     }
   }
   Write-Host "[indices] african-markets.com: $($rows.Count) indices"
 }
 
-# 3. The exchanges' own sites, for the ones still missing.
-# 3a. Nairobi: "Statistics as of 17-Nov-2026 ... NSE ALL SHARE INDEX 240.90 -0.66" (the
-#     change is in points; the percentage is worked out from the previous close).
-if (-not $rows.Contains('NSE')) {
-  $page = Get-Page 'https://www.nse.co.ke/dataservices/market-statistics/' 2
-  if ($page) {
-    # Tags become spaces, not nothing: the level and change sit in adjacent cells, and
-    # "240.90" + "0.66" must not run together.
-    $text = [Net.WebUtility]::HtmlDecode((($page -replace '(?s)<script.*?</script>', ' ') -replace '<[^>]+>', ' ')) -replace '\s+', ' '
-    $asOf = [regex]::Match($text, 'Statistics as of (\d{1,2}-[A-Za-z]{3}-\d{4})')
-    $hit = [regex]::Match($text, 'NSE ALL SHARE INDEX (?<lvl>[\d,]+\.\d+) (?<chg>[+-]?[\d,]+\.\d+)')
-    if ($asOf.Success -and $hit.Success) {
-      $level = [double]::Parse(($hit.Groups['lvl'].Value -replace ',', ''), $Inv)
-      $chg = [double]::Parse(($hit.Groups['chg'].Value -replace ',', ''), $Inv)
-      $pct = if ($level - $chg -gt 0) { $chg / ($level - $chg) * 100 } else { $null }
-      $d = [datetime]::ParseExact($asOf.Groups[1].Value, 'd-MMM-yyyy', $Inv).ToString('yyyy-MM-dd')
-      Add-IndexRow 'NSE' $level $pct $d 'nse.co.ke'
-    } else { Write-Host '[indices] nse.co.ke: no dated NSE All Share line' }
-  }
-}
-# 3b. Dar es Salaam: the DSEI tile on the home page (level, and a % whose direction is the
-#     tile's text-up/text-down class). The page carries no session date of its own, so the
-#     row is taken only when the newest "Daily Market Report" is today's (East Africa
-#     time); otherwise the number could be filed under the wrong day.
-if (-not $rows.Contains('DSE')) {
-  $page = Get-Page 'https://www.dse.co.tz/' 2
-  if ($page) {
-    $tile = [regex]::Match($page, '(?s)DSEI</span><span[^>]*text-(?<dir>up|down)[^>]*>(?:(?!</span>).)*?(?<pct>\d+(?:\.\d+)?)<!-- -->%</span></div><span[^>]*>(?<lvl>[\d,]+\.\d+)</span>')
-    $reports = @([regex]::Matches($page, 'Daily Market Report (\d{4}-\d{2}-\d{2})') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Descending)
-    $eatToday = [DateTime]::UtcNow.AddHours(3).ToString('yyyy-MM-dd')
-    if (-not $tile.Success) { Write-Host '[indices] dse.co.tz: no DSEI tile' }
-    elseif (-not $reports.Count -or $reports[0] -ne $eatToday) { Write-Host "[indices] dse.co.tz: newest daily report is $(if ($reports.Count) { $reports[0] } else { 'missing' }), not $eatToday; skipped" }
-    else {
-      $pct = [double]::Parse($tile.Groups['pct'].Value, $Inv); if ($tile.Groups['dir'].Value -eq 'down') { $pct = -$pct }
-      Add-IndexRow 'DSE' ([double]::Parse(($tile.Groups['lvl'].Value -replace ',', ''), $Inv)) $pct $reports[0] 'dse.co.tz'
-    }
-  }
-}
-# 3c. Kigali: the home page embeds the index series as {"closing_date":..,"RSI":..,"ALSI":..};
-#     ALSI is the RSE All Share Index.
-if (-not $rows.Contains('RSE')) {
-  $page = Get-Page 'https://www.rse.rw/' 2
-  if ($page) {
-    $pts = @([regex]::Matches($page, '\{"closing_date":"(?<d>\d{4}-\d{2}-\d{2})","RSI":"[\d.]+","ALSI":"(?<v>[\d.]+)"\}') | ForEach-Object { [pscustomobject]@{ d = $_.Groups['d'].Value; v = [double]::Parse($_.Groups['v'].Value, $Inv) } } | Sort-Object d)
-    if ($pts.Count -ge 2) {
-      $last = $pts[-1]; $before = $pts[-2]
-      $pct = if ($before.v -gt 0) { ($last.v - $before.v) / $before.v * 100 } else { $null }
-      Add-IndexRow 'RSE' $last.v $pct $last.d 'rse.rw'
-    } else { Write-Host '[indices] rse.rw: no index series in the page' }
-  }
+# 3. The exchanges' own sites, for the ones still missing. Each has a parser written for
+#    its current layout. A parser returns a row, 'skip' (the layout matched but there is
+#    nothing fresh to take), or $null (the layout no longer matches). On $null the run is
+#    flagged so the parser gets fixed, and the page is read twice more before giving up:
+#    by meaning (Find-ByMeaning), then by the AI reader. Both repairs leave the day's move
+#    blank rather than work one out, and sameDay sites (no session date of their own)
+#    accept a repaired row only for today's date in East Africa.
+$EatToday = [DateTime]::UtcNow.AddHours(3).ToString('yyyy-MM-dd')
+$SITES = @(
+  # Nairobi: "Statistics as of 17-Nov-2026 ... NSE ALL SHARE INDEX 240.90 -0.66" (the
+  # change is in points; the percentage is worked out from the previous close).
+  @{ code = 'NSE'; site = 'nse.co.ke'; url = 'https://www.nse.co.ke/dataservices/market-statistics/'
+     name = 'NSE All Share Index (NASI)'; labelRx = 'NSE ALL SHARE|\bNASI\b'; sameDay = $false
+     parse = {
+       param($page)
+       $text = Get-PageText $page
+       $asOf = [regex]::Match($text, 'Statistics as of (\d{1,2}-[A-Za-z]{3}-\d{4})')
+       $hit = [regex]::Match($text, 'NSE ALL SHARE INDEX (?<lvl>[\d,]+\.\d+) (?<chg>[+-]?[\d,]+\.\d+)')
+       if (-not $asOf.Success -or -not $hit.Success) { return $null }
+       $level = [double]::Parse(($hit.Groups['lvl'].Value -replace ',', ''), $Inv)
+       $chg = [double]::Parse(($hit.Groups['chg'].Value -replace ',', ''), $Inv)
+       $pct = if ($level - $chg -gt 0) { $chg / ($level - $chg) * 100 } else { $null }
+       return @{ level = $level; pct = $pct; date = [datetime]::ParseExact($asOf.Groups[1].Value, 'd-MMM-yyyy', $Inv).ToString('yyyy-MM-dd') }
+     } }
+  # Dar es Salaam: the DSEI tile on the home page (level, and a % whose direction is the
+  # tile's text-up/text-down class). The page carries no session date of its own, so the
+  # row is taken only when the newest "Daily Market Report" is today's (East Africa time);
+  # otherwise the number could be filed under the wrong day.
+  @{ code = 'DSE'; site = 'dse.co.tz'; url = 'https://www.dse.co.tz/'
+     name = 'DSE All Share Index (DSEI)'; labelRx = '\bDSEI\b|All Share Index'; sameDay = $true
+     parse = {
+       param($page)
+       $tile = [regex]::Match($page, '(?s)DSEI</span><span[^>]*text-(?<dir>up|down)[^>]*>(?:(?!</span>).)*?(?<pct>\d+(?:\.\d+)?)<!-- -->%</span></div><span[^>]*>(?<lvl>[\d,]+\.\d+)</span>')
+       $reports = @([regex]::Matches($page, 'Daily Market Report (\d{4}-\d{2}-\d{2})') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Descending)
+       if (-not $tile.Success -or -not $reports.Count) { return $null }
+       if ($reports[0] -ne $EatToday) { Write-Host "[indices] dse.co.tz: newest daily report is $($reports[0]), not $EatToday; skipped"; return 'skip' }
+       $pct = [double]::Parse($tile.Groups['pct'].Value, $Inv); if ($tile.Groups['dir'].Value -eq 'down') { $pct = -$pct }
+       return @{ level = [double]::Parse(($tile.Groups['lvl'].Value -replace ',', ''), $Inv); pct = $pct; date = $reports[0] }
+     } }
+  # Kigali: the home page embeds the index series as {"closing_date":..,"RSI":..,"ALSI":..};
+  # ALSI is the RSE All Share Index.
+  @{ code = 'RSE'; site = 'rse.rw'; url = 'https://www.rse.rw/'
+     name = 'RSE All Share Index (ALSI)'; labelRx = '\bALSI\b|All Share'; sameDay = $false
+     parse = {
+       param($page)
+       $pts = @([regex]::Matches($page, '\{"closing_date":"(?<d>\d{4}-\d{2}-\d{2})","RSI":"[\d.]+","ALSI":"(?<v>[\d.]+)"\}') | ForEach-Object { [pscustomobject]@{ d = $_.Groups['d'].Value; v = [double]::Parse($_.Groups['v'].Value, $Inv) } } | Sort-Object d)
+       if ($pts.Count -lt 2) { return $null }
+       $last = $pts[-1]; $before = $pts[-2]
+       return @{ level = $last.v; pct = $(if ($before.v -gt 0) { ($last.v - $before.v) / $before.v * 100 } else { $null }); date = $last.d }
+     } }
+)
+foreach ($site in $SITES) {
+  if ($rows.Contains($site.code)) { continue }
+  $page = Get-Page $site.url 2
+  if (-not $page) { continue }
+  $got = if ($Skip -contains 'structured') { $null } else { & $site.parse $page }
+  if ($got -is [string]) { continue }
+  if ($got) { Add-IndexRow $site.code $got.level $got.pct $got.date $site.site; continue }
+  Write-Host "::warning::[indices] $($site.site) no longer matches its parser (redesigned?); the parser in scripts/update-indices.ps1 needs updating. Trying to read the page by meaning."
+  $kept = Get-PublishedRow $site.code
+  $near = if ($kept) { $kept.level } else { 0.0 }
+  if ($near -le 0) { Write-Host "[indices] $($site.site): no published level to check a repaired reading against; skipped"; continue }
+  $text = Get-PageText $page
+  $how = 'read by meaning'
+  $fix = if ($Skip -contains 'generic') { $null } else { Find-ByMeaning $text $site.labelRx $near }
+  if (-not $fix) { $how = 'read by AI'; $fix = Read-WithAi $site.name $site.site $text $site.labelRx $near }
+  if (-not $fix) { Write-Host "[indices] $($site.site): could not read $($site.code) from the page; the published row stays"; continue }
+  if ($site.sameDay -and $fix.date -ne $EatToday) { Write-Host "[indices] $($site.site) ($how): date $($fix.date) is not today ($EatToday); skipped"; continue }
+  Add-IndexRow $site.code $fix.level $fix.pct $fix.date "$($site.site) ($how)"
 }
 
 # 4. afx.kwayisi.org for the exchanges still missing. Two straight failures means the
@@ -234,11 +358,8 @@ foreach ($slug in $AFX.Keys) {
   $level = 0.0
   if (-not [double]::TryParse(($hit.Groups['lvl'].Value -replace ',', ''), [Globalization.NumberStyles]::Float, [Globalization.CultureInfo]::InvariantCulture, [ref]$level) -or $level -le 0) { continue }
   $pct = [double]::Parse($hit.Groups['pct'].Value, [Globalization.CultureInfo]::InvariantCulture)
-  # Keep the label the site already shows for this exchange ("NGX ASI", not afx's "ASI").
-  $label = $hit.Groups['abbr'].Value
-  if ($prev -and $prev.indices.($m.code) -and $prev.indices.($m.code).label) { $label = [string]$prev.indices.($m.code).label }
-  $rows[$m.code] = [ordered]@{ code=$m.code; label=$label; name=$m.name; level=$level; changePct=$pct; date=$stamp.Groups['d'].Value; countries=$m.countries; source='afx.kwayisi.org' }
-  Write-Host "[indices] afx $slug -> $($m.code) $level ($pct%) $($stamp.Groups['d'].Value)"
+  # Add-IndexRow keeps the label the site already shows ("NGX ASI", not afx's "ASI").
+  Add-IndexRow $m.code $level $pct $stamp.Groups['d'].Value 'afx.kwayisi.org' $hit.Groups['abbr'].Value
 }
 
 $fresh = $rows.Count

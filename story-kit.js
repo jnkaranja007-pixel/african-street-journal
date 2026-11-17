@@ -251,7 +251,7 @@
           var hit = Object.keys(all).map(function (k) { return all[k]; })
             .filter(function (ix) { return ix && (ix.countries || []).indexOf(cc) >= 0 && isFinite(ix.level); })[0];
           if (!hit) return null;
-          var ch = isFinite(hit.changePct) ? (hit.changePct > 0 ? '+' : '') + (Math.round(hit.changePct * 100) / 100) + '% on the day' : '';
+          var ch = typeof hit.changePct === 'number' && isFinite(hit.changePct) ? (hit.changePct > 0 ? '+' : '') + (Math.round(hit.changePct * 100) / 100) + '% on the day' : '';
           return { label: hit.label || hit.name || 'Stock index', value: fmtNum(hit.level), sub: [hit.name, ch, dayLabel(hit.date)].filter(Boolean).join(' · '), source: '', tab: 'investors' };
         }).catch(function () { return null; });
       }
