@@ -219,6 +219,26 @@ function Read-WithAi([string]$Name, [string]$Site, [string]$Text, [string]$Label
   if (-not $d) { Write-Host "[indices] AI reader for ${Site}: could not read the date '$dateText'"; return $null }
   return @{ level = $v; pct = $null; date = $d }
 }
+# A POST for APIs that answer nothing else (bse.co.bw), with the same curl fallback.
+function Post-Page([string]$Url, [string]$Body = '') {
+  try {
+    return (Invoke-WebRequest -UseBasicParsing -Method Post -Uri $Url -Body $Body -ContentType 'application/json' -TimeoutSec $TimeoutSec -UserAgent 'Mozilla/5.0 (compatible; ASJ-indices/1.0; +https://africanstreetjournal.com)').Content
+  } catch { Write-Host "[indices] POST $Url failed: $($_.Exception.Message.Split("`n")[0])" }
+  $curl = Get-Command curl -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($curl) {
+    $out = & $curl.Source -sL -X POST -H 'Content-type: application/json' --max-time $TimeoutSec -A 'Mozilla/5.0 (compatible; ASJ-indices/1.0; +https://africanstreetjournal.com)' $Url 2>$null
+    if ($LASTEXITCODE -eq 0 -and $out) { Write-Host "[indices] POST $Url read with curl"; return ($out -join "`n") }
+  }
+  return $null
+}
+# A date from JSON as yyyy-MM-dd: pwsh's ConvertFrom-Json may already have made it a
+# [datetime]; otherwise "2026-11-16", "2026-11-16T00:00:00" or "2026/11/16". Else $null.
+function Get-AnyDay($Value) {
+  if ($Value -is [datetime]) { return $Value.ToString('yyyy-MM-dd') }
+  $s = [string]$Value
+  if ($s -match '^(\d{4})[-/](\d{2})[-/](\d{2})') { return "$($Matches[1])-$($Matches[2])-$($Matches[3])" }
+  return $null
+}
 function Get-UnixDay($Seconds) { [DateTimeOffset]::FromUnixTimeSeconds([long]$Seconds).UtcDateTime.ToString('yyyy-MM-dd') }
 
 # 1a. TradingView's scanner: one JSON object per index. "time" is the opening time of the
@@ -320,11 +340,95 @@ $SITES = @(
        $last = $pts[-1]; $before = $pts[-2]
        return @{ level = $last.v; pct = $(if ($before.v -gt 0) { ($last.v - $before.v) / $before.v * 100 } else { $null }); date = $last.d }
      } }
+  # Accra: the home page's "Index Performance" table, "PREVIOUS (16/11/2026) 13,892.29 ...
+  # CURRENT (17/11/2026) 13,887.10" (GSE-CI first, then GSE-FSI). Dates are day/month,
+  # and CURRENT must be later than PREVIOUS or the row is not used.
+  @{ code = 'GSE'; site = 'gse.com.gh'; url = 'https://gse.com.gh/'
+     name = 'GSE Composite Index (GSE-CI)'; labelRx = 'GSE[- ]CI|Composite Index'; sameDay = $false
+     parse = {
+       param($page)
+       $hit = [regex]::Match((Get-PageText $page), 'PREVIOUS \((?<pd>\d{2}/\d{2}/\d{4})\) (?<p>[\d,]+\.\d+) .{0,60}?CURRENT \((?<d>\d{2}/\d{2}/\d{4})\) (?<c>[\d,]+\.\d+)')
+       if (-not $hit.Success) { return $null }
+       $pd = [datetime]::ParseExact($hit.Groups['pd'].Value, 'dd/MM/yyyy', $Inv); $d = [datetime]::ParseExact($hit.Groups['d'].Value, 'dd/MM/yyyy', $Inv)
+       if ($d -le $pd) { return $null }
+       $p = [double]::Parse(($hit.Groups['p'].Value -replace ',', ''), $Inv); $c = [double]::Parse(($hit.Groups['c'].Value -replace ',', ''), $Inv)
+       return @{ level = $c; pct = $(if ($p -gt 0) { ($c - $p) / $p * 100 } else { $null }); date = $d.ToString('yyyy-MM-dd') }
+     } }
+  # Harare: zse.co.zw is a Next.js app that loads its indices from this JSON API (found in
+  # the site's script bundle, 17 Nov 2026). If the API moves, look for "fetch/indices" in
+  # the bundles under https://www.zse.co.zw/_next/static/chunks/.
+  @{ code = 'ZSE'; site = 'zse.co.zw'; url = 'https://ds88jcmqc11je.cloudfront.net/api/fetch/indices?exchange=ZSE'
+     name = 'ZSE All Share Index'; labelRx = 'ALL SHARE'; sameDay = $false
+     parse = {
+       param($page)
+       try { $j = ($page | ConvertFrom-Json) } catch { return $null }
+       $r = @($j.data | Where-Object { $_.index -eq 'ALL SHARE' }) | Select-Object -First 1
+       if (-not $r -or -not $r.close -or @($r.latestDate).Count -ne 3) { return $null }
+       $ld = @($r.latestDate)
+       return @{ level = [Math]::Round([double]$r.close, 2); pct = $r.percentageChange; date = ('{0:D4}-{1:D2}-{2:D2}' -f [int]$ld[0], [int]$ld[1], [int]$ld[2]) }
+     } }
+  # Windhoek: nsx.com.na embeds Iress market-data widgets; the one whose data is security
+  # N098 (NSX Overall) carries a dated close series in its __NEXT_DATA__ block.
+  @{ code = 'NSX'; site = 'nsx.com.na'; url = 'https://nsx.com.na/'
+     name = 'NSX Overall Index'; labelRx = 'N098|Overall'; sameDay = $false
+     fetch = {
+       $front = Get-Page 'https://nsx.com.na/' 2
+       if (-not $front) { return $null }
+       foreach ($m in [regex]::Matches($front, 'https://df\.marketdata\.feeds\.iress\.com/feed/\d+/\?token=[^"''\s<>]+')) {
+         $feed = Get-Page ($m.Value -replace '&amp;', '&') 1
+         if ($feed -and $feed -match '"SecurityCode":"N098"') { return $feed }
+       }
+       return $front
+     }
+     parse = {
+       param($page)
+       $m = [regex]::Match($page, '(?s)<script id="__NEXT_DATA__"[^>]*>(.*?)</script>')
+       if (-not $m.Success) { return $null }
+       try { $data = ($m.Groups[1].Value | ConvertFrom-Json) } catch { return $null }
+       $pts = @($data.props.pageProps.data.Snapshot | Where-Object { $_.SecurityCode -eq 'N098' -and $_.ClosePrice -gt 0 } |
+         ForEach-Object { [pscustomobject]@{ d = (Get-AnyDay $_.TimeSeriesDate); v = [double]$_.ClosePrice } } | Where-Object { $_.d } | Sort-Object d)
+       if ($pts.Count -lt 2) { return $null }
+       $last = $pts[-1]; $before = $pts[-2]
+       return @{ level = [Math]::Round($last.v, 2); pct = $(if ($before.v -gt 0) { ($last.v - $before.v) / $before.v * 100 } else { $null }); date = $last.d }
+     } }
+  # Gaborone: bse.co.bw draws its index chart from this API (POST, no body), one dated
+  # series per index; DCI is the Domestic Company Index.
+  @{ code = 'BSE'; site = 'bse.co.bw'; url = 'https://apis.bse.co.bw/api/v1/index-chart'
+     name = 'BSE Domestic Company Index (DCI)'; labelRx = '\bDCI\b'; sameDay = $false
+     fetch = { Post-Page 'https://apis.bse.co.bw/api/v1/index-chart' }
+     parse = {
+       param($page)
+       try { $j = ($page | ConvertFrom-Json) } catch { return $null }
+       $dci = @($j.message[0].indices.data | Where-Object { $_.indexname -eq 'DCI' }) | Select-Object -First 1
+       if (-not $dci) { return $null }
+       $pts = @($dci.history | Where-Object { $_.price -gt 0 } | ForEach-Object { [pscustomobject]@{ d = (Get-AnyDay $_.date); v = [double]$_.price } } | Where-Object { $_.d } | Sort-Object d)
+       if ($pts.Count -lt 2) { return $null }
+       $last = $pts[-1]; $before = $pts[-2]
+       return @{ level = [Math]::Round($last.v, 2); pct = $(if ($before.v -gt 0) { ($last.v - $before.v) / $before.v * 100 } else { $null }); date = $last.d }
+     } }
+  # Abidjan (BRVM, eight WAEMU countries): brvm.org/fr/indices, in French: "Derniere mise a
+  # jour : Mardi, 17 novembre, 2026 - 19:30 ... BRVM - COMPOSITE 512,85 502,68 -1,98"
+  # (previous close, close, % move; decimal commas). Accented letters are matched with .{1,2}
+  # so a page decoded as Latin-1 still matches.
+  @{ code = 'BRVM'; site = 'brvm.org'; url = 'https://www.brvm.org/fr/indices'
+     name = 'BRVM Composite Index'; labelRx = 'BRVM[ -]+C(OMPOSITE)?\b'; sameDay = $false
+     parse = {
+       param($page)
+       $text = Get-PageText $page
+       $u = [regex]::Match($text, 'mise .{1,2} jour : [A-Za-z]+,? (?<d>\d{1,2}) (?<m>[^\s,]+),? (?<y>\d{4})')
+       $hit = [regex]::Match($text, 'BRVM - COMPOSITE (?<p>\d[\d ]*,\d+) (?<c>\d[\d ]*,\d+) (?<pct>-?\d+,\d+)')
+       if (-not $u.Success -or -not $hit.Success) { return $null }
+       $mon = 0; $fr = @('^jan', '^f', '^mar', '^avr', '^mai', '^juin', '^juil', '^ao', '^sep', '^oct', '^nov', '^d')
+       for ($i = 0; $i -lt 12; $i++) { if ($u.Groups['m'].Value -match $fr[$i]) { $mon = $i + 1; break } }
+       if (-not $mon) { return $null }
+       $num = { param($s) [double]::Parse(($s -replace ' ', '' -replace ',', '.'), $Inv) }
+       return @{ level = (& $num $hit.Groups['c'].Value); pct = (& $num $hit.Groups['pct'].Value); date = ('{0:D4}-{1:D2}-{2:D2}' -f [int]$u.Groups['y'].Value, $mon, [int]$u.Groups['d'].Value) }
+     } }
 )
 function Invoke-SiteLayer($List) {
 foreach ($site in $List) {
   if ($rows.Contains($site.code)) { continue }
-  $page = Get-Page $site.url 2
+  $page = if ($site.fetch) { & $site.fetch } else { Get-Page $site.url 2 }
   if (-not $page) { continue }
   $got = if ($Skip -contains 'structured') { $null } else { & $site.parse $page }
   if ($got -is [string]) { continue }
