@@ -296,8 +296,14 @@ else {
 #    flagged so the parser gets fixed, and the page is read twice more before giving up:
 #    by meaning (Find-ByMeaning), then by the AI reader. Both repairs leave the day's move
 #    blank rather than work one out, and sameDay sites (no session date of their own)
-#    accept a repaired row only for today's date in East Africa.
-$EatToday = [DateTime]::UtcNow.AddHours(3).ToString('yyyy-MM-dd')
+#    accept a repaired row only for the session the page must be showing.
+# That session, in East Africa time: today once the market has opened (10:00), otherwise the
+# previous weekday, whose close the page still shows. The scheduled run is 09:43 there, so
+# "today" alone refused Dar es Salaam on every scheduled run.
+$eatNow = [DateTime]::UtcNow.AddHours(3)
+$eatDay = if ($eatNow.Hour -lt 10) { $eatNow.Date.AddDays(-1) } else { $eatNow.Date }
+while ($eatDay.DayOfWeek -eq [DayOfWeek]::Saturday -or $eatDay.DayOfWeek -eq [DayOfWeek]::Sunday) { $eatDay = $eatDay.AddDays(-1) }
+$EatSessionDay = $eatDay.ToString('yyyy-MM-dd')
 $SITES = @(
   # Nairobi: "Statistics as of 17-Nov-2026 ... NSE ALL SHARE INDEX 240.90 -0.66" (the
   # change is in points; the percentage is worked out from the previous close).
@@ -316,8 +322,8 @@ $SITES = @(
      } }
   # Dar es Salaam: the DSEI tile on the home page (level, and a % whose direction is the
   # tile's text-up/text-down class). The page carries no session date of its own, so the
-  # row is taken only when the newest "Daily Market Report" is today's (East Africa time);
-  # otherwise the number could be filed under the wrong day.
+  # row is taken only when the newest "Daily Market Report" is for the session the page
+  # must be showing ($EatSessionDay); otherwise the number could be filed under the wrong day.
   @{ code = 'DSE'; site = 'dse.co.tz'; url = 'https://www.dse.co.tz/'
      name = 'DSE All Share Index (DSEI)'; labelRx = '\bDSEI\b|All Share Index'; sameDay = $true
      parse = {
@@ -325,7 +331,7 @@ $SITES = @(
        $tile = [regex]::Match($page, '(?s)DSEI</span><span[^>]*text-(?<dir>up|down)[^>]*>(?:(?!</span>).)*?(?<pct>\d+(?:\.\d+)?)<!-- -->%</span></div><span[^>]*>(?<lvl>[\d,]+\.\d+)</span>')
        $reports = @([regex]::Matches($page, 'Daily Market Report (\d{4}-\d{2}-\d{2})') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Descending)
        if (-not $tile.Success -or -not $reports.Count) { return $null }
-       if ($reports[0] -ne $EatToday) { Write-Host "[indices] dse.co.tz: newest daily report is $($reports[0]), not $EatToday; skipped"; return 'skip' }
+       if ($reports[0] -ne $EatSessionDay) { Write-Host "[indices] dse.co.tz: newest daily report is $($reports[0]), not $EatSessionDay; skipped"; return 'skip' }
        $pct = [double]::Parse($tile.Groups['pct'].Value, $Inv); if ($tile.Groups['dir'].Value -eq 'down') { $pct = -$pct }
        return @{ level = [double]::Parse(($tile.Groups['lvl'].Value -replace ',', ''), $Inv); pct = $pct; date = $reports[0] }
      } }
@@ -442,7 +448,7 @@ foreach ($site in $List) {
   $fix = if ($Skip -contains 'generic') { $null } else { Find-ByMeaning $text $site.labelRx $near }
   if (-not $fix) { $how = 'read by AI'; $fix = Read-WithAi $site.name $site.site $text $site.labelRx $near }
   if (-not $fix) { Write-Host "[indices] $($site.site): could not read $($site.code) from the page; the published row stays"; continue }
-  if ($site.sameDay -and $fix.date -ne $EatToday) { Write-Host "[indices] $($site.site) ($how): date $($fix.date) is not today ($EatToday); skipped"; continue }
+  if ($site.sameDay -and $fix.date -ne $EatSessionDay) { Write-Host "[indices] $($site.site) ($how): date $($fix.date) is not the session the page shows ($EatSessionDay); skipped"; continue }
   Add-IndexRow $site.code $fix.level $fix.pct $fix.date "$($site.site) ($how)"
 }
 }
