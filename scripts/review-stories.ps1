@@ -39,6 +39,10 @@ foreach ($c in $state.byCountry.PSObject.Properties) {
   }
 }
 if (-not $all.Count) { throw "no stories in $StateFile" }
+# The whole edition against the Wall Street Journal targets, checked without a model.
+. (Join-Path $PSScriptRoot 'news-ranking.ps1')
+. (Join-Path $PSScriptRoot 'wsj-standards.ps1')
+$editionMix = Get-WsjEditionMix $state.byCountry
 
 # The same sample for the same week, so a rerun grades the same stories.
 if (-not $Seed) {
@@ -73,14 +77,20 @@ Grade each from 1 (fails) to 5 (good):
 - clarity: plain, specific and readable. 1 for padding, jargon or press-release voice.
 - country: the event happens in the country, or the country's people, government or
   companies are directly involved. 1 when it is foreign news with a thin local link.
+- standards: would The Wall Street Journal, read through an African lens, print this?
+  5 for business, markets, policy, governance, or a war, coup or disaster told through
+  what it changes for Africans. 1 for a routine crime, crash or killing, tabloid words
+  ("horrific", "brutal", "tragedy"), graphic detail of injuries or bodies, a headline
+  that opens with a death toll, or Africa written as a place where things happen to
+  people rather than where people decide and act.
 
 "problems": up to three short sentences naming what a reader would trip on, most
 serious first. Empty when there is nothing.
 
 Return ONLY a JSON object:
-{"context":<1-5>,"headline":<1-5>,"why":<1-5>,"clarity":<1-5>,"country":<1-5>,"problems":["..."]}
+{"context":<1-5>,"headline":<1-5>,"why":<1-5>,"clarity":<1-5>,"country":<1-5>,"standards":<1-5>,"problems":["..."]}
 '@
-$CRITERIA = @('context','headline','why','clarity','country')
+$CRITERIA = @('context','headline','why','clarity','country','standards')
 
 function Get-Review($Entry) {
   $s = $Entry.story
@@ -100,7 +110,7 @@ function Get-Review($Entry) {
   ) -join "`n"
   if ($DryRun) {
     $n = ([string]$s.headline).Length
-    return [pscustomobject]@{ context = 1 + ($n % 5); headline = 5; why = 1 + (($n + 2) % 5); clarity = 4; country = 5; problems = @("dry run problem for $($s.articleId)") }
+    return [pscustomobject]@{ context = 1 + ($n % 5); headline = 5; why = 1 + (($n + 2) % 5); clarity = 4; country = 5; standards = 1 + (($n + 4) % 5); problems = @("dry run problem for $($s.articleId)") }
   }
   $body = [ordered]@{
     model = $Model
@@ -180,6 +190,23 @@ if ($weak.Count) {
   $lines.Add('No story in the sample failed a grade.')
 }
 if ($failedCalls) { $lines.Add(''); $lines.Add("$failedCalls review call(s) failed and are not counted.") }
+$lines.Add('')
+$lines.Add('### The edition against the Wall Street Journal bar')
+$lines.Add('')
+$lines.Add(('All {0} stories: Business, Agriculture and Tech {1:P0}; Security {2:P0}; routine crime and casualty stories {3:P0}; stories with a standards problem {4:P0}.' -f `
+  $editionMix.stories, $editionMix.economyShare, $editionMix.securityShare, $editionMix.routineHarmShare, $editionMix.standardsShare))
+if (@($editionMix.targetsMissed).Count) {
+  $lines.Add('')
+  $lines.Add('Targets missed:')
+  foreach ($t in @($editionMix.targetsMissed)) { $lines.Add("- $t") }
+}
+foreach ($pair in @(@('Below the bar (the desk now drops these)', $editionMix.belowBar), @('Standards problems', $editionMix.standardsHits))) {
+  if (@($pair[1]).Count) {
+    $lines.Add('')
+    $lines.Add("$($pair[0]):")
+    foreach ($h in @($pair[1] | Select-Object -First 12)) { $lines.Add("- $h") }
+  }
+}
 $report = $lines.ToArray() -join "`n"
 $outPath = if ([IO.Path]::IsPathRooted($OutFile)) { $OutFile } else { Join-Path $root $OutFile }
 [IO.File]::WriteAllText($outPath, $report + "`n", (New-Object Text.UTF8Encoding($false)))

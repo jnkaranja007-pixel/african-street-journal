@@ -74,6 +74,7 @@ jobs:
           # Only the last command's exit code fails a pwsh step; check each one.
           ./scripts/test-news-ranking.ps1;     if ($LASTEXITCODE) { exit $LASTEXITCODE }
           ./scripts/test-story-contract.ps1;   if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ./scripts/test-wsj-standards.ps1;    if ($LASTEXITCODE) { exit $LASTEXITCODE }
           ./scripts/test-article-evidence.ps1; if ($LASTEXITCODE) { exit $LASTEXITCODE }
           ./scripts/test-food-basket.ps1;      if ($LASTEXITCODE) { exit $LASTEXITCODE }
           ./scripts/test-story-case.ps1;       if ($LASTEXITCODE) { exit $LASTEXITCODE }

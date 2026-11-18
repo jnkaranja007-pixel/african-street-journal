@@ -96,7 +96,7 @@ param(
   # A low-scored report from a single outlet is written only while the country has
   # fewer stories than this.
   [int]$WeakStoryFloor = 3,
-  [string]$PromptVersion = 'story-v16-why-stakes',
+  [string]$PromptVersion = 'story-v17-wsj-african-lens',
   [string]$CacheFile = 'data/story-cache.json',
   [string]$MetricsFile = 'data/desk-run-metrics.json',
   [switch]$NoCache,
@@ -118,6 +118,8 @@ $root    = Split-Path $PSScriptRoot -Parent
 . (Join-Path $PSScriptRoot 'story-shape.ps1')
 # Get-NewsDeskTerms and Get-StoryPlaceIssue: each country's names, for the place check.
 . (Join-Path $PSScriptRoot 'news-ranking.ps1')
+# The Wall Street Journal bar and standards checks (Test-WsjBar, Get-WsjStandardsIssues).
+. (Join-Path $PSScriptRoot 'wsj-standards.ps1')
 $placeRegistry = [IO.File]::ReadAllText((Join-Path $root 'data\sources.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json
 $inPath  =if ([IO.Path]::IsPathRooted($InFile))  { $InFile }  else { Join-Path $root $InFile }
 $outPath = if ([IO.Path]::IsPathRooted($OutFile)) { $OutFile } else { Join-Path $root $OutFile }
@@ -532,7 +534,11 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $editionNow = if ($script:editionDay) { [datetime]$script:editionDay } else { (Get-Date).ToUniversalTime().Date }
   $overdue = @(Get-OverdueFutureDates ((@([string]$Brief.dek) + $paragraphs + @([string]$Brief.why)) -join "`n") $editionNow)
   $genericWhy = (-not $restatedWhy) -and (Test-WhyGeneric ([string]$Brief.why))
+  # The Wall Street Journal standard (scripts/wsj-standards.ps1): loaded words, graphic
+  # detail, a toll at the head of the headline, a story that only counts the dead.
+  $wsj = Get-WsjStandardsIssues $Brief
   $issues = New-Object System.Collections.Generic.List[string]
+  foreach ($w in @($wsj.Issues)) { $issues.Add($w) }
   if ($lowerProse) { $issues.Add('prose in lower case') }
   if ($phrases.Count) { $issues.Add('stock phrasing: ' + (($phrases | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
   if ($repeats.Count) { $issues.Add('repeats a fact') }
@@ -543,13 +549,14 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   if ($deskWords.Count) { $issues.Add('desk language: ' + (($deskWords | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
   if ($overdue.Count) { $issues.Add('future tense for a past date: ' + ($overdue -join ', ')) }
   if ($genericWhy) { $issues.Add('why line is generic') }
-  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied; DeskWords = $deskWords; Overdue = $overdue; GenericWhy = [bool]$genericWhy }
+  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied; DeskWords = $deskWords; Overdue = $overdue; GenericWhy = [bool]$genericWhy; Wsj = $wsj }
 }
 
 function Get-StyleRepairNote($Style, $Candidate) {
   $lines = New-Object System.Collections.Generic.List[string]
   [void]$lines.Add('')
   [void]$lines.Add('REPAIR: Your previous draft (below) passed the fact checks but broke the house style.')
+  if ($Style.Wsj) { foreach ($w in @(Get-WsjRepairLines $Style.Wsj)) { [void]$lines.Add($w) } }
   if (@($Style.Phrases).Count) {
     [void]$lines.Add('- It used commentary the desk never prints in its own voice: ' + ((@($Style.Phrases) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '. Replace each with the concrete fact from the packet it was gesturing at (who, what, how many, when), or delete the sentence.')
   }
@@ -604,6 +611,13 @@ THE PAPER'S LINE
 - The model is The Wall Street Journal: a serious paper about money, markets,
   business, policy and who governs, for readers who make decisions. Write every story
   in that register, whatever it is about.
+- Its lens is African. The reader is in Lagos, Nairobi, Kinshasa or the diaspora, and
+  what matters is what changes for Africans: their money and prices, jobs, trade
+  across African borders, who governs them, and their safety at national scale. A
+  coup, a war or an insurgency that changes who holds territory is major news here; a
+  road crash or a single murder is not. Never write Africa as a place where things
+  happen to people: lead with the decision, the deal, the response and the people
+  acting on it.
 - Crime, crashes and killings are reported plainly and briefly, never as spectacle.
   Tell a violent event through what it changes: for the government, the economy,
   aid, trade, travel, or the people forced from their homes. State a death toll once,
@@ -1870,6 +1884,7 @@ $styleAskedByProblem = [ordered]@{}
 $styleFixedByProblem = [ordered]@{}
 function Get-StyleProblemKinds($Issues) { return @(@($Issues) | ForEach-Object { ([string]$_ -split ":")[0].Trim() } | Select-Object -Unique) }
 $offCountryDropped = 0
+$wsjBarDropped = 0
 $lensCapped = 0
 $caseRepaired = 0
 $leadIdsReused = 0
@@ -2181,6 +2196,14 @@ weekday, write that instead of a month. Do not add facts while repairing.
     if ($placeIssue) {
       $offCountryDropped++
       Write-Host ("      {0}#{1}: dropped, {2}: {3}" -f $code, $i, $placeIssue, ([string]$oneBrief.headline)) -ForegroundColor DarkYellow
+      continue
+    }
+    # The Wall Street Journal bar (scripts/wsj-standards.ps1): a crime, crash or killing
+    # story runs only when it is a national event. The next candidate takes the slot.
+    $wsjBar = Test-WsjBar $oneBrief
+    if (-not $wsjBar.Pass) {
+      $wsjBarDropped++
+      Write-Host ("      {0}#{1}: dropped, {2}: {3}" -f $code, $i, $wsjBar.Reason, ([string]$oneBrief.headline)) -ForegroundColor DarkYellow
       continue
     }
     $briefList.Add($oneBrief)
@@ -2508,6 +2531,10 @@ $metrics = [ordered]@{
   rewriteRouteErrors = $script:rewriteRouteErrors
   rewriteEmptyAnswers = $script:rewriteEmptyAnswers
   offCountryDropped = $offCountryDropped
+  # Crime, crash and killing stories below the Wall Street Journal bar, and the shape of
+  # the edition against its targets (scripts/wsj-standards.ps1).
+  wsjBarDropped = $wsjBarDropped
+  editionMix = (Get-WsjEditionMix $result)
   lensScoresCappedAsSpeculative = $lensCapped
   headlinesRecased = $caseRepaired
   draftsWithRelativeTime = $relativeTimeFlagged
@@ -2528,6 +2555,10 @@ $metrics = [ordered]@{
   reportedCostUsd = [Math]::Round($usageCost, 6)
 }
 [IO.File]::WriteAllText($metricsPath, ($metrics | ConvertTo-Json -Depth 4), (New-Object Text.UTF8Encoding($false)))
+$mixOut = $metrics.editionMix
+Write-Host ("[write] Wall Street Journal bar: {0} dropped; edition {1} stories, economy {2:P0}, security {3:P0}, routine harm {4:P0}, standards problems {5:P0}" -f `
+  $wsjBarDropped, $mixOut.stories, $mixOut.economyShare, $mixOut.securityShare, $mixOut.routineHarmShare, $mixOut.standardsShare) -ForegroundColor DarkGray
+foreach ($missedTarget in @($mixOut.targetsMissed)) { Write-Host "::warning::[write] edition mix: $missedTarget" }
 
 if ($result.Count -eq 0) {
   Write-Host "[write] FAIL: no country produced usable stories across $($codes.Count) attempted." -ForegroundColor Red

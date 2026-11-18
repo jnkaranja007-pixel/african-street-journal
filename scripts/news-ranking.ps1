@@ -77,7 +77,17 @@ $script:NEWS_ROUTINE_HARM = @('killed','kills','kill','killing','killings','dead
                               'murder','murdered','murders','stabbed','shot dead','shooting','shootings','gunmen','gunman',
                               'bandits','robbery','robbers','lynched','lynching','bodies','corpse','massacre','beheaded',
                               'crash','crashes','collision','rollover','accident','drowned','drowning','capsize','capsized',
-                              'attack','attacks','attacked','abducted','abduction','kidnapped','kidnapping','ransom','injured')
+                              'attack','attacks','attacked','abducted','abduction','kidnapped','kidnapping','ransom','injured',
+                              'drowns','stabbing','murders')
+# The African lens: an insurgency or civil war decides who controls territory and who
+# governs (the Sahel, Sudan, eastern Congo, Somalia, northern Mozambique). Harm by these
+# actors is conflict news, not crime, and is not marked down. Bandits, robbers and a
+# single killer are not here: that is crime. Used by scripts/wsj-standards.ps1 too.
+$script:NEWS_CONFLICT_ACTORS = @('jihadist','jihadists','jihadi','insurgent','insurgents','insurgency','rebel','rebels',
+                                 'militia','militias','boko haram','iswap','islamic state','al shabaab','shabaab','jnim',
+                                 'al qaeda','m23','rapid support forces','rsf','adf','allied democratic forces','ambazonia',
+                                 'ambazonian','separatist','separatists','junta','mutiny','mutineers','ceasefire','peace deal',
+                                 'peace talks','armed forces','army','troops','airstrike','airstrikes','drone strike','drone strikes')
 # What turns a harm story into business or policy news: the economy, a law, money.
 $script:NEWS_HARM_EXEMPT = @('election','budget','tax','debt','inflation','interest rate','currency','law','bill','parliament',
                              'sanctions','treaty','fuel','food','power','electricity','unemployment','jobs','wage','policy',
@@ -532,8 +542,12 @@ function Get-EditorialScore($Item, [int]$OutletCount, [datetime]$Now) {
   $breakdown.publicImpact = ([Math]::Min($urgent, 2) * 1.75) + ([Math]::Min($public, 2) * 1.35) + ([Math]::Min($economic, 2) * 0.85)
   # Routine crime and crash reports: marked down unless the story also carries a war,
   # coup or disaster, or a policy or economic consequence.
-  $harm = Get-NewsMatchCount $text $script:NEWS_ROUTINE_HARM 1
-  if ($harm -and -not $urgent -and -not (Get-NewsMatchCount $text $script:NEWS_HARM_EXEMPT 1)) {
+  # In the headline, or twice in the summary: "the late founder, who died in 2023" in a
+  # church succession story is background, not a casualty report.
+  $harm = (Get-NewsMatchCount (ConvertTo-CanonicalNewsText $Item.title) $script:NEWS_ROUTINE_HARM 1) -or
+    ((Get-NewsMatchCount $text $script:NEWS_ROUTINE_HARM 2) -ge 2)
+  if ($harm -and -not $urgent -and -not (Get-NewsMatchCount $text $script:NEWS_HARM_EXEMPT 1) -and
+      -not (Get-NewsMatchCount (ConvertTo-NewsText ([string]$Item.title + ' ' + [string]$Item.summary)) $script:NEWS_CONFLICT_ACTORS 1)) {
     $breakdown.penalties -= 3.0
     $reasons.Add('routine crime or casualty report')
   }
@@ -590,6 +604,40 @@ function Get-EditorialScore($Item, [int]$OutletCount, [datetime]$Now) {
   }
 }
 
+# The largest death toll a report states: a number next to "killed", "dead", "died",
+# "deaths" and the like, in either order ("31 dead", "kills at least 40"). Years are not
+# tolls. Used by the Wall Street Journal bar below and in scripts/wsj-standards.ps1.
+function Get-NewsMassToll([string]$Text) {
+  $plain = ConvertTo-NewsText $Text
+  if (-not $plain) { return 0 }
+  $num = '(?<n>\d{1,3}(?: \d{3})+|\d+)'
+  $death = '(?:killed|dead|died|deaths|bodies|slain|fatalities|lives)'
+  $best = 0
+  foreach ($rx in @(
+      ($num + ' (?:[a-z]+ ){0,3}?' + $death + '\b'),
+      ('\b(?:kills|killed|killing|claims|claimed|leaves|left|toll(?: rises| climbs)?(?: to| at)?) (?:at least |more than |over |nearly |about |some )?' + $num + '\b'))) {
+    foreach ($m in [regex]::Matches($plain, $rx)) {
+      $digits = $m.Groups['n'].Value -replace ' ', ''
+      $v = 0
+      if (-not [int]::TryParse($digits, [ref]$v)) { continue }
+      if ($digits.Length -eq 4 -and $v -ge 1900 -and $v -le 2100) { continue }
+      if ($v -gt $best) { $best = $v }
+    }
+  }
+  return $best
+}
+
+# The Wall Street Journal bar for a feed item, before any model is paid to write it.
+# A routine crime or casualty report (see the penalty in Get-EditorialScore) is not
+# assigned at all unless the toll is large enough to be national news; the writer then
+# judges that one again (Test-WsjBar in scripts/wsj-standards.ps1). Owner, 18 Nov 2026:
+# "delete stories that include death or killed ... unless it's super major".
+$script:NEWS_WSJ_MASS_TOLL = 25
+function Test-NewsBelowWsjBar($Item) {
+  if (@($Item.rankReasons) -notcontains 'routine crime or casualty report') { return $false }
+  return ((Get-NewsMassToll ([string]$Item.title + ' ' + [string]$Item.summary)) -lt $script:NEWS_WSJ_MASS_TOLL)
+}
+
 function Select-NewsCandidates([object[]]$Items, [int]$Limit, [int]$LiveSources) {
   $picked = New-Object System.Collections.Generic.List[object]
   $pickedUrls = @{}
@@ -602,6 +650,7 @@ function Select-NewsCandidates([object[]]$Items, [int]$Limit, [int]$LiveSources)
       $bestAdjusted = [double]::NegativeInfinity
       foreach ($item in $Items) {
         if ($pickedUrls.ContainsKey([string]$item.url)) { continue }
+        if (Test-NewsBelowWsjBar $item) { continue }
         $sameEvent = $false
         foreach ($chosen in $picked) {
           if (Test-SameNewsEvent $item._titleSig $item._eventSig $chosen._titleSig $chosen._eventSig) {

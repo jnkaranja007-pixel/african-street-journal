@@ -32,6 +32,9 @@ foreach ($functionName in @('Convert-NumberScanText','ConvertTo-NumberKey','Get-
 Invoke-Expression ($groundingDefinitions.ToArray() -join "`n")
 # The writer dot-sources story-shape.ps1 (Test-WhyRestatesDek, used by Get-DraftStyleIssues).
 . (Join-Path $PSScriptRoot 'story-shape.ps1')
+# ...and the Wall Street Journal checks, which Get-DraftStyleIssues also runs.
+. (Join-Path $PSScriptRoot 'news-ranking.ps1')
+. (Join-Path $PSScriptRoot 'wsj-standards.ps1')
 $STORY_LENSES = @('farmers','investors','diaspora')
 
 function Write-Fixture([int]$ParagraphCount, [switch]$BadLens, [switch]$ShortStory) {
