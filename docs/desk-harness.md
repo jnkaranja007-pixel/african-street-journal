@@ -16,11 +16,11 @@ is major news. A road crash or a single murder is not.
 |---|---|---|---|---|
 | 1 | **Assignment** | Feed items with too little source text, weak single-outlet reports | Never assigned | `fetch-news.ps1`, `write-briefs.ps1` |
 | 2 | **Feed-stage WSJ bar** | Routine crime and casualty reports before any model is paid | Never assigned | `Test-NewsBelowWsjBar`, `news-ranking.ps1` |
-| 3 | **Writer** | Writes one story from one evidence packet, never seeing another story's facts | A draft | GPT-6 Luna (`ASJ_MODEL`) |
+| 3 | **Writer** | Writes one story from one evidence packet, never seeing another story's facts. It first notes the stake, never printed: who gains, pays or must act, and what changes for them. The why line is written from it | A draft | GPT-6 Luna (`ASJ_MODEL`) |
 | 4 | **Contract** | Wrong shape: not 3 paragraphs, 70 to 220 words, a missing dek or why line | Sent back | `Get-DraftContractIssues` |
 | 5 | **Facts** | A figure, month or date that is not in the source; a lens score with no grounded reason | Sent back | `Get-UngroundedNumbers`, `Get-ItemUngroundedMonths` |
 | 6 | **Place** | A story that is not about the country it is filed under | Dropped | `countryLink`, `Get-StoryPlaceIssue` |
-| 7 | **House style** | Copying the source, stock phrases, relative dates, a why line that guesses or restates, and the WSJ copy rules (loaded words, graphic detail, toll headlines) | Sent back once to Claude Haiku 5.5 | `Get-DraftStyleIssues`, `wsj-standards.ps1` |
+| 7 | **House style** | Copying the source, stock phrases, relative dates, a why line that guesses or restates, initials never spelled out (`Get-UnexplainedInitials`), and the WSJ copy rules (loaded words, graphic detail, toll headlines) | Sent back once to Claude Haiku 5.5 | `Get-DraftStyleIssues`, `wsj-standards.ps1` |
 | 8 | **WSJ bar** | A crime, crash or killing that is not a national event | Dropped | `Test-WsjBar` |
 | 9 | **Standards editor** | What code cannot judge: names and initials a reader elsewhere cannot place, a why line that says nothing new, a headline about the wrong thing, soft news | Dropped, or sent back once with fixes | `editor-desk.ps1` |
 | 10 | **Final validation** | Anything the model returned that the desk did not ask for; real outlet URLs attached by code | Cleaned or dropped | `write-briefs.ps1` |
@@ -44,10 +44,16 @@ it from 1 to 5 on six points:
 
 What happens next:
 
-- **Drop**: standards or country at 2 or below, and the country has other copy. Soft
-  news (forum speeches, ceremonies, courtesy visits) goes here. A country's only story
+- **Drop**: standards or country at 1, and the country has other copy: nothing to
+  report, routine crime, tabloid copy, or foreign news. At most two a country a run. A country's only story
   is never dropped, because a stale page is worse.
-- **Revise**: context, headline, why or clarity at 2 or below. The writer gets one
+- **Hold**: standards at 2 (soft news). The story is set aside and the next candidate
+  in the country's queue is written to try for the slot. The soft story runs only if
+  the country would otherwise be short.
+- **Revise**: off by default. Three A/B runs on the same stories scored 3.78 with
+  rewrites for every weak grade, 3.77 with rewrites for context and headlines only, and
+  3.77 with none, at $0.0019, $0.0016 and $0.0012 a story. `ASJ_EDITOR_REVISE`
+  (e.g. `context,headline`) turns it back on. When on, the writer gets one
   rewrite with the editor's fixes. The fixes may only use facts from the packet:
   where the reader needs something the packet does not give, the fix is to cut, never
   to invent. The rewrite then goes through every check again (facts, place, style,
@@ -73,7 +79,7 @@ Every desk run prints these on its GitHub summary page, under **Story quality**:
 | Editor grade, published: why | 3 or more | The why rule needs work |
 | Editor errors / not read | 0 / 0 | An issue opens at 3 errors or 20 stories unread |
 | Below the WSJ bar, dropped | a handful | A sudden jump means the crime filter is too wide |
-| Reported cost | about $0.30 to $0.60 a run | Check the OpenRouter credit, since the desk stops silently at zero |
+| Reported cost | about $0.25 to $0.35 a run | Check the OpenRouter credit, since the desk stops silently at zero |
 
 `data/desk-run-metrics.json` holds every number for the latest run. Each run's evidence
 and log are saved as the `desk-evidence` artifact for 14 days.
@@ -119,6 +125,6 @@ Every push runs these in **Checks**:
 |---|---|---|
 | Writer | GPT-6 Luna | $0.10 / $0.50 per million tokens |
 | Style rewrites, ranking, editor | Claude Haiku 5.5 | $0.10 / $0.50 per million tokens |
-| A desk run | all of the above | $0.30 to $0.60 |
+| A desk run | all of the above | about $0.28 (230 stories at $0.0012, measured in the bake-off of 18 Nov 2026), about $8 a month |
 
-Prices are from OpenRouter on 18 Nov 2026.
+Prices are from OpenRouter on 18 Nov 2026. The OpenRouter key has its own monthly spending limit, separate from the account credit ($8 since 18 Nov 2026); the desk warns when either runs low. Bake-offs spend from the same key.

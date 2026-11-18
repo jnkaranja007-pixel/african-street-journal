@@ -555,6 +555,7 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $editionNow = if ($script:editionDay) { [datetime]$script:editionDay } else { (Get-Date).ToUniversalTime().Date }
   $overdue = @(Get-OverdueFutureDates ((@([string]$Brief.dek) + $paragraphs + @([string]$Brief.why)) -join "`n") $editionNow)
   $genericWhy = (-not $restatedWhy) -and (Test-WhyGeneric ([string]$Brief.why))
+  $initials = @(Get-UnexplainedInitials $Brief)
   # The Wall Street Journal standard (scripts/wsj-standards.ps1): loaded words, graphic
   # detail, a toll at the head of the headline, a story that only counts the dead.
   $wsj = Get-WsjStandardsIssues $Brief
@@ -570,7 +571,8 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   if ($deskWords.Count) { $issues.Add('desk language: ' + (($deskWords | ForEach-Object { '"' + $_ + '"' }) -join ', ')) }
   if ($overdue.Count) { $issues.Add('future tense for a past date: ' + ($overdue -join ', ')) }
   if ($genericWhy) { $issues.Add('why line is generic') }
-  return [pscustomobject]@{ Issues = $issues.ToArray(); Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied; DeskWords = $deskWords; Overdue = $overdue; GenericWhy = [bool]$genericWhy; Wsj = $wsj }
+  if ($initials.Count) { $issues.Add('unexplained initials: ' + ($initials -join ', ')) }
+  return [pscustomobject]@{ Issues = $issues.ToArray(); Initials = $initials; Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied; DeskWords = $deskWords; Overdue = $overdue; GenericWhy = [bool]$genericWhy; Wsj = $wsj }
 }
 
 function Get-StyleRepairNote($Style, $Candidate) {
@@ -604,6 +606,9 @@ function Get-StyleRepairNote($Style, $Candidate) {
   }
   if ($Style.GenericWhy) {
     [void]$lines.Add('- The "why" line is generic: it names no figure, date or concrete change. Rewrite it as WHO is affected and HOW, with the figure, deadline or next step from the source that sizes it. No "raises questions", "highlights", "aims to" or "remains a concern".')
+  }
+  if (@($Style.Initials).Count) {
+    [void]$lines.Add('- A reader in another country cannot place these initials: ' + ((@($Style.Initials) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '. On first use, spell each out with the initials in brackets, or say in a few words what the body is ("GIZ, Germany''s state development agency"), from the packet or, for a well-known international body, from general knowledge. If the packet does not say what it is, call it by its role in the event ("the state electricity company", "an opposition party") and drop the initials.')
   }
   if (@($Style.Copied).Count) {
     foreach ($c in @($Style.Copied | Select-Object -First 3)) {
@@ -654,13 +659,23 @@ Every draft is checked automatically before it is published: figures against the
 source, the house style below, the audience scores against their reasons. A draft
 that fails is sent back to you, so follow the rules the first time.
 
+STAKE FIRST
+Before the headline, fill "stake": a note of at most 25 words, never printed. Name who
+gains, pays or must now act because of the event, beyond the people who announced it,
+as the packet names them ("maize traders crossing at Busia", "holders of the 2027
+bond"), and what changes for them, with the figure, date or next step from the packet
+that sizes it. When the packet names nobody beyond the actors, the actors and what they
+must now do. The "why" line is written from this note, never from the headline.
+
 THE STORY
 - Paragraph 1: what happened. Who did what, where, when, and how much or how many.
 - Paragraph 2: the detail that makes it real. Who said it (attribution), the scale,
   the people affected, the official next step.
 - Paragraph 3: what comes next or what else the packet reports: dates, reactions,
   figures, background the packet itself states. If the packet has nothing more, keep
-  this paragraph short. A tight 90-word story beats a padded 180-word one.
+  this paragraph short. A tight 90-word story beats a padded 180-word one. Paragraph
+  3 never sums up or repeats paragraphs 1 and 2: when it has no new fact, it is the
+  shortest paragraph, not a restatement.
 - Exactly 3 paragraphs, 70 to 220 words in total; aim for 90 to 160. Count the story
   words before returning the JSON.
 - Every sentence carries at least one fact from the packet: a name, a number, a place,
@@ -668,6 +683,9 @@ THE STORY
   matters, what it "signals", "marks" or "underscores", or what it is "part of", is
   commentary. Cut it.
 - Never state the same fact twice, in the same words or different ones.
+- A meeting, forum, visit or ceremony is news only for what was decided, signed, paid
+  or announced at it: lead with that. If nothing was, write the story tight around the
+  little it has.
 - Readers are all over Africa and abroad, not only in this country. The first time the
   story names a person, party, body, inquiry or case that a reader elsewhere would not
   know, say in a few words who or what it is, from the packet: "Vusimuzi Matlala, a
@@ -677,8 +695,14 @@ THE STORY
   does not support.
 - Spell out an abbreviation the first time, or say what the body is: "the Economic
   Community of West African States (ECOWAS)", "the OIF, the organisation of
-  French-speaking countries". This one thing you may take from general knowledge, and
-  only for a well-known international or continental body. A foreign club, league or
+  French-speaking countries". Two things you may take from general knowledge: what a
+  well-known international or continental body is, and where a state, province, region
+  or capital city lies in its country ("Plateau State, in central Nigeria", "Kisumu,
+  in western Kenya"), only when you are certain of it. Anything smaller (a district, a
+  village, a neighbourhood) is explained from the packet or, failing that, as "in
+  <city or country>". A national body the packet names only by its initials is called
+  by its role in the event ("the state power company", "an opposition party") when the
+  packet does not say what the initials stand for. A foreign club, league or
   company gets its country: "Trabzonspor, a club in Turkey's top division".
 - Name only the people and bodies the story needs. A run of names the reader cannot
   place (a festival line-up, a committee's members, every official present) is a list,
@@ -711,8 +735,9 @@ HEADLINE, DEK AND WHY
   where you meant it to. Do not write toward the limit and stop mid-phrase: "...the
   certificate for six historic Comorian." is a failed dek, and so is any dek whose last
   word is a preposition, article or conjunction.
-- "why": one sentence that gives the reader the stake: WHO is affected, HOW, and the
-  figure, date or next step from the source that sizes it. Build it from the most
+- "why": one sentence, built from the "stake" note, that gives the reader
+  the stake: WHO is affected, HOW, and the figure, date or next step from the source
+  that sizes it. Build it from the most
   concrete consequence the source reports, in this order of preference: what it costs
   or pays and to whom; the deadline or next dated step; how many people it reaches;
   what a named person or body must now do.
@@ -1251,6 +1276,12 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
         item = $itemSchema
         countryLink = @{ type = 'string'; enum = @('in-country','involves-country','none') }
         topic = @{ type = 'string'; enum = $VALID_TOPICS }
+        # Before the headline, so the writer has named who is affected and what changes
+        # for them before it writes a word of the story. Never published: the final
+        # clean step builds each story from named fields only. One flat string, not an
+        # object: on 18 Nov 2026 a four-part plan object nearly doubled the writer's
+        # output tokens and broke the JSON of 3 of 29 drafts on the compat route.
+        stake = @{ type = 'string'; maxLength = 200 }
         headline = @{ type = 'string'; minLength = 12; maxLength = 100 }
         # 170, not 180. At 180 the model wrote to the ceiling and stopped mid-noun-phrase
         # on 51 of 249 deks; the desk then punctuated the fragment and shipped it. The
@@ -1268,7 +1299,7 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
           additionalProperties = $false
         }
       }
-      required = @('item','countryLink','topic','headline','dek','paragraphs','wordCount','why','reach','lenses')
+      required = @('item','countryLink','topic','stake','headline','dek','paragraphs','wordCount','why','reach','lenses')
       additionalProperties = $false
     }
     $body['response_format'] = [ordered]@{
@@ -2054,6 +2085,8 @@ $editorDropped = 0
 $editorRevised = 0
 $editorImproved = 0
 $editorSkipped = 0
+$editorHeld = 0
+$editorHeldUsed = 0
 # The day this edition is dated: what "will happen on 11 November" is judged against.
 $script:editionDay = (Get-Date).ToUniversalTime().Date
 $editionLabel = $script:editionDay.ToString('dddd, d MMMM yyyy', [Globalization.CultureInfo]::InvariantCulture)
@@ -2103,6 +2136,10 @@ foreach ($code in $codes) {
   $n    = [Math]::Min($MaxBriefs + 2, [Math]::Max(1, $items.Count))
   $briefList = New-Object System.Collections.Generic.List[object]
   $edDropsHere = 0
+  # Soft news the editor graded 2 on standards (a forum, a visit, a ceremony): held
+  # back while a reserve candidate tries for the slot, and put back only if the
+  # country ends the run short.
+  $edHeld = New-Object System.Collections.Generic.List[object]
   $storyCacheKeys = @{}
   $lastErr = ''
   for ($i = 0; $i -lt $n; $i++) {
@@ -2167,12 +2204,13 @@ $packet
 Write exactly one original on-site story from this assignment. Do not import a name,
 number, date, cause or context from any other event. Return ONLY a JSON object in this shape:
 
-{"stories":[{"item":$i,"countryLink":"<in-country|involves-country|none>","topic":"<one topic>","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":<words>,"why":"...","reach":<1-5>,"lenses":{"farmers":{"why":"...","score":<0-100>},"investors":{"why":"...","score":<0-100>},"diaspora":{"why":"...","score":<0-100>}}}]}
+{"stories":[{"item":$i,"countryLink":"<in-country|involves-country|none>","topic":"<one topic>","stake":"...","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":<words>,"why":"...","reach":<1-5>,"lenses":{"farmers":{"why":"...","score":<0-100>},"investors":{"why":"...","score":<0-100>},"diaspora":{"why":"...","score":<0-100>}}}]}
 
 - "item" must be exactly $i.
 - "countryLink" says how this event relates to ${name}: in-country, involves-country, or none.
 - Fill every <...> slot from this story alone; none of them has a default.
 - "topic" must be exactly one of: $($VALID_TOPICS -join ', ').
+- "stake" comes before the headline, by the STAKE FIRST rule: at most 25 words.
 - "wordCount" counts only the three paragraph strings and must be $MinStoryWords-$MaxStoryWords.
 - "reach" is 1-5 by the REACH rules: how much the event matters, not how it is written.
 - Include all three lens objects. Write each lens "why" first: one specific sentence
@@ -2302,6 +2340,10 @@ weekday, write that instead of a month. Do not add facts while repairing.
         if (@($draftStyle.RelativeTime).Count) { $relativeTimeFlagged++ }
         if (@($draftStyle.Copied).Count) { $copyFlagged++ }
         $styleCount = @($draftStyle.Issues).Count
+        # Initials the rewrite still could not explain (the packet never says what the
+        # body is) do not hold back a story that is otherwise clean: they are asked for
+        # once, and the standards editor reads the context next.
+        if ($styleRepairsThisItem -ge 1) { $styleCount = @($draftStyle.Issues | Where-Object { $_ -notlike 'unexplained initials*' }).Count }
         if ($styleCount) {
           if ($null -eq $styleBest -or $styleCount -le $styleBestCount) { $styleBest = $candidate; $styleBestCount = $styleCount }
           if ($styleRepairsThisItem -lt 1 -and $attempt -le $Retries) {
@@ -2351,7 +2393,12 @@ weekday, write that instead of a month. Do not add facts while repairing.
       Write-Host ("      {0}#{1}: kept the fact-checked draft; its style rewrite failed ({2})" -f $code, $i, $lastErr) -ForegroundColor DarkGray
     }
     }
-    if (-not $oneBrief) { continue }
+    if (-not $oneBrief) {
+      # Every attempt failed a check or the API. Said once, so a story that never ran
+      # is never a silent gap in a country's column.
+      if ($prompt -and $lastErr) { Write-Host ("      {0}#{1}: not written after {2} attempt(s): {3}" -f $code, $i, ($Retries + 1), $lastErr) -ForegroundColor DarkYellow }
+      continue
+    }
     # Place, checked on the finished story (cached ones too): the writer's countryLink
     # passed "Ebola kills 5,103 in DR Congo" for Angola on 4 Nov 2026.
     $placeIssue = Get-StoryPlaceIssue $oneBrief $placeTerms
@@ -2380,7 +2427,7 @@ weekday, write that instead of a month. Do not add facts while repairing.
           Add-EditorGrades 'first' $edVerdict.Grades
           $edFinal = $edVerdict
           # A country's only story is never dropped: a stale page is worse.
-          $edCanDrop = (($briefList.Count -ge 1) -or (($i + 1) -lt $n)) -and $edDropsHere -lt $script:EDITOR_MAX_DROPS_PER_COUNTRY
+          $edCanDrop = ((($briefList.Count + $edHeld.Count) -ge 1) -or (($i + 1) -lt $n)) -and $edDropsHere -lt $script:EDITOR_MAX_DROPS_PER_COUNTRY
           $edDecision = Get-EditorDecision $edVerdict.Grades $edCanDrop
           if ($edDecision -eq 'drop') {
             $editorDropped++
@@ -2427,6 +2474,12 @@ weekday, write that instead of a month. Do not add facts while repairing.
             }
             if ($edWhyNot) { Write-Host ("      {0}#{1}: editor's rewrite not used ({2})" -f $code, $i, $edWhyNot) -ForegroundColor DarkGray }
           }
+          if ((($i + 1) -lt $n) -and (Test-EditorHold $edFinal.Grades)) {
+            $edHeld.Add([pscustomobject]@{ Brief = $oneBrief; Grades = $edFinal.Grades; Index = $i })
+            $editorHeld++
+            Write-Host ("      {0}#{1}: held as soft news (standards {2}); a reserve tries for the slot: {3}" -f $code, $i, $edFinal.Grades['standards'], ([string]$oneBrief.headline)) -ForegroundColor DarkGray
+            continue
+          }
           Add-EditorGrades 'final' $edFinal.Grades
         }
       }
@@ -2434,6 +2487,14 @@ weekday, write that instead of a month. Do not add facts while repairing.
     $briefList.Add($oneBrief)
     if ($i -ge $MaxBriefs) { $reserveCandidatesUsed++ }
     Start-Sleep -Milliseconds $DelayMs
+  }
+  # The reserves did not fill the column: the held stories run after all, in the order
+  # the meter ranked them.
+  foreach ($h in $edHeld) {
+    if ($briefList.Count -ge $MaxBriefs) { break }
+    $briefList.Add($h.Brief)
+    Add-EditorGrades 'final' $h.Grades
+    $editorHeldUsed++
   }
 
   $briefs = if ($briefList.Count -ge $MinBriefs) {
@@ -2770,6 +2831,8 @@ $metrics = [ordered]@{
   editorRevised = $editorRevised
   editorRewritesKept = $editorImproved
   editorSkippedForBudget = $editorSkipped
+  editorHeldSoft = $editorHeld
+  editorHeldSoftUsed = $editorHeldUsed
   editorGradesFirst = (Get-EditorGradeAverages 'first')
   editorGradesFinal = (Get-EditorGradeAverages 'final')
   lensScoresCappedAsSpeculative = $lensCapped
@@ -2795,9 +2858,9 @@ $metrics = [ordered]@{
 if ($EditorModel) {
   $edFirstOut = $metrics.editorGradesFirst
   $edFinalOut = $metrics.editorGradesFinal
-  Write-Host ("[write] standards editor {0}: {1} calls, {2} errors; {3} dropped, {4} sent back, {5} rewrites kept, {6} not read (budget); grade {7} -> {8} (why {9} -> {10})" -f `
+  Write-Host ("[write] standards editor {0}: {1} calls, {2} errors; {3} dropped, {4} sent back, {5} rewrites kept, {6} not read (budget); {11} held as soft news, {12} of them run; grade {7} -> {8} (why {9} -> {10})" -f `
     $EditorModel, $script:editorCalls, $script:editorErrors, $editorDropped, $editorRevised, $editorImproved, $editorSkipped,
-    $edFirstOut['mean'], $edFinalOut['mean'], $edFirstOut['why'], $edFinalOut['why']) -ForegroundColor DarkGray
+    $edFirstOut['mean'], $edFinalOut['mean'], $edFirstOut['why'], $edFinalOut['why'], $editorHeld, $editorHeldUsed) -ForegroundColor DarkGray
 }
 $mixOut = $metrics.editionMix
 Write-Host ("[write] Wall Street Journal bar: {0} dropped; edition {1} stories, economy {2:P0}, security {3:P0}, routine harm {4:P0}, standards problems {5:P0}" -f `

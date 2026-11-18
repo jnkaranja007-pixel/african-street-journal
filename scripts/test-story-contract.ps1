@@ -478,5 +478,23 @@ $lensEmpty = Resolve-LensScore 'investors' 'Health' 'Officials changed the quara
 if ($lensEmpty.Why -ne 'Travellers arriving from Uganda must now isolate for 21 days, up from 14.') { throw "a non-answer lens why was kept: '$($lensEmpty.Why)'" }
 Write-Host 'PASS a why line that only says what the report leaves out is never shown; a lens falls back to the story why'
 
-Write-Host '[story-contract] OK - 38 checks'
+# Initials a reader elsewhere cannot place (story-shape.ps1 Get-UnexplainedInitials).
+function New-InitialsStory([string]$Body) { return [pscustomobject]@{ headline = 'Ghana wins two seats'; dek = 'The vote was held in Geneva.'; paragraphs = @($Body, 'p2 text here.', 'p3 text here.'); why = 'Officials now sit on the board.' } }
+$bareInit = @(Get-UnexplainedInitials (New-InitialsStory 'GIZ will fund the scheme with COP31 delegates watching.'))
+if (($bareInit -join ',') -ne 'GIZ,COP31') { throw "bare initials not found: '$($bareInit -join ',')'" }
+foreach ($ok in @(
+  'The Economic Community of West African States (ECOWAS) met.',
+  'GIZ, the German development agency, will fund the scheme.',
+  'GIZ (Germany''s development agency) will fund the scheme.',
+  'The IMF and the AU met MPs in Accra over a USD 300 loan.',
+  'Benin''s Institute of Artisans of Justice and Peace (IAJP/CO) met.',
+  'TOL Gases shares rose, Politico SL reported.',
+  'Prices in FY2027 rose to CFA1,000 in the second part of the baccalaureate (BAC II).'
+)) {
+  $got = @(Get-UnexplainedInitials (New-InitialsStory $ok))
+  if ($got.Count) { throw "explained or well-known initials were flagged ($($got -join ',')): '$ok'" }
+}
+Write-Host 'PASS initials a reader cannot place are found; spelled-out, glossed, well-known and named ones are not'
+
+Write-Host '[story-contract] OK - 39 checks'
 exit 0

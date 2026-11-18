@@ -26,6 +26,30 @@ $script:EDITOR_DROP_AT = 1
 # And never more than this many per country in a run: coverage of 55 countries is the
 # paper's promise, and an editor that disagrees with a whole column is miscalibrated.
 $script:EDITOR_MAX_DROPS_PER_COUNTRY = 2
+# Hold at or below this grade on standards: soft news (a forum, a visit, a ceremony)
+# is not cut, but a reserve candidate is written to try for its slot first, and the
+# soft story runs only if the country would otherwise be short. The independent judge of
+# the 18 Nov 2026 A/B named soft news as the last thing keeping standards near 3.
+$script:EDITOR_HOLD_AT = 2
+# The grades the editor sends a story back for: none by default, so the editor reads
+# each story once and its work is the drop and the soft-news hold. Three A/B runs on
+# the same 30 stories (18 Nov 2026, judge GPT-6.1 Terra):
+#   rewrites for any weak grade      3.78, $0.0019 a story (22 of 26 sent back, 3 kept)
+#   rewrites for context, headline   3.77, $0.0016 a story (17 of 27 sent back)
+#   no rewrites                      3.77, $0.0012 a story
+# Each rewrite is a full writer call and a second read; they bought nothing the judge
+# could see. ASJ_EDITOR_REVISE (a comma list, e.g. "context,headline") turns them back on.
+$script:EDITOR_REVISE_ON = @(([string]$env:ASJ_EDITOR_REVISE) -split ',' | ForEach-Object { $_.Trim() } |
+  Where-Object { $script:EDITOR_CRITERIA -contains $_ })
+# The editor reads this much of the packet: enough to check names and the main facts,
+# half the input of the first version.
+$script:EDITOR_PACKET_CHARS = 3000
+
+# True when the story is printable but soft, and a reserve should try for its slot.
+function Test-EditorHold($Grades) {
+  $s = [int]$Grades['standards']
+  return ($s -gt $script:EDITOR_DROP_AT -and $s -le $script:EDITOR_HOLD_AT)
+}
 
 function Get-EditorRubric([switch]$WithPacket) {
   $lines = New-Object System.Collections.Generic.List[string]
@@ -115,7 +139,7 @@ function Get-EditorStoryText($Story, [string]$CountryName) {
   ) -join "`n")
 }
 
-function Get-EditorPrompt($Story, [string]$CountryName, [string]$PacketText, [int]$MaxPacketChars = 6000) {
+function Get-EditorPrompt($Story, [string]$CountryName, [string]$PacketText, [int]$MaxPacketChars = $script:EDITOR_PACKET_CHARS) {
   $packet = [string]$PacketText
   if ($packet.Length -gt $MaxPacketChars) { $packet = $packet.Substring(0, $MaxPacketChars) + ' [...]' }
   return (@(
@@ -162,15 +186,15 @@ function Get-EditorMean($Grades) {
 #   drop   - the paper would not print it (standards or country at 1) and the country
 #            has other copy: the next candidate takes the slot. A country's only story is
 #            never dropped here; a stale page is worse than a weak story.
-#   revise - a craft grade (context, headline, why, clarity) at 2 or below: one rewrite
-#            with the editor's fixes, kept only if it passes every check again and the
-#            editor grades it higher.
-#   pass   - nothing at 2 or below.
+#   revise - context or headline at 2 or below (EDITOR_REVISE_ON): one rewrite with the
+#            editor's fixes, kept only if it passes every check again and the editor
+#            grades it higher.
+#   pass   - everything else; a weak why or clarity grade is recorded, not rewritten.
 function Get-EditorDecision($Grades, [bool]$CanDrop) {
   $fail = $script:EDITOR_FAIL_AT
   $cut = $script:EDITOR_DROP_AT
   if ($CanDrop -and ([int]$Grades['standards'] -le $cut -or [int]$Grades['country'] -le $cut)) { return 'drop' }
-  foreach ($c in @('context','headline','why','clarity')) {
+  foreach ($c in $script:EDITOR_REVISE_ON) {
     if ([int]$Grades[$c] -le $fail) { return 'revise' }
   }
   return 'pass'
