@@ -40,7 +40,38 @@ $cases = @(
   @{ n = 'a road-safety target is policy'; s = (New-Story 'Eswatini sets 2030 goal to halve road deaths' 'The transport ministry published the target with new speed rules.' 3); pass = $true }
   @{ n = 'a central bank decision is never touched'; s = (New-Story 'Bank of Ghana holds policy rate at 27 percent' 'The committee said inflation slowed for a fifth month.' 4 -Topic 'Business'); pass = $true }
 )
+# From the archive audit (18 Nov 2026): what an African reader of the Journal still needs.
+$cases += @(
+  @{ n = 'African lens: a law that reinstates the death penalty is policy'; s = (New-Story 'Burkina Faso reinstates death penalty' 'The junta-appointed assembly voted for capital punishment for treason.' 0); pass = $true }
+  @{ n = 'an archived massacre with no reach recorded runs on its toll'; s = (New-Story 'Attackers kill 48 civilians near Menaka' 'Local officials said the attack hit three villages.' 0); pass = $true }
+  @{ n = 'an archived murder with no reach recorded is cut'; s = (New-Story 'Pharmacist murdered in Constantine' 'Police opened an investigation.' 0); pass = $false }
+  @{ n = 'an obituary of a public figure runs'; s = (New-Story 'Kofi Wayo, Ghanaian politician and businessman, dies at 71' 'He founded a party and ran for president.' 0); pass = $true }
+  @{ n = 'African lens: protesters injured is politics'; s = (New-Story 'Kolwezi protests leave two injured' 'Residents protested power cuts at the mine town.' 0); pass = $true }
+  @{ n = 'a terrorism designation is policy, not an attack'; s = (New-Story 'Egypt permanently lists Muslim Brotherhood as terrorist entity' 'The court order bars the group from all activity.' 0); pass = $true }
+  @{ n = 'a mass terrorism trial is security policy'; s = (New-Story 'Nigeria convicts 653 terrorism suspects' 'The trials ran at Kainji military base.' 0); pass = $true }
+  @{ n = 'an obituary "dies aged 72" runs'; s = (New-Story 'Former Attorney General Paul Kihara dies aged 72' 'He served under two presidents.' 0); pass = $true }
+  @{ n = 'a dengue toll is health news'; s = (New-Story 'Chad health ministry reports 14 dengue deaths' 'Cases rose in N''Djamena this month.' 0); pass = $true }
+  @{ n = 'African lens: South Sudan communal fighting is conflict'; s = (New-Story 'Nine killed in Bor County communal fighting' 'Local officials blamed a cattle dispute.' 0); pass = $true }
+  @{ n = 'African lens: a mass abduction in Borno runs'; s = (New-Story 'Borno community urges Tinubu to rescue 78 abducted children' 'The children were taken from a school in Gwoza.' 0); pass = $true }
+  @{ n = 'political violence against a candidate runs'; s = (New-Story 'Sokoto ultimatum issued over attack on ADC candidate' 'The party gave police seven days to make arrests.' 0); pass = $true }
+  @{ n = 'a man who dies after a family attack is still crime'; s = (New-Story 'Man dies after sister pours hot water on him' 'Police arrested the sister.' 0); pass = $false }
+  @{ n = 'a stabbing in Roche-Bois is still crime'; s = (New-Story 'Man stabbed in Roche-Bois' 'Police are looking for two suspects.' 0); pass = $false }
+)
 foreach ($c in $cases) { Assert-Wsj $c.n ((Test-WsjBar $c.s).Pass -eq $c.pass) }
+Assert-Wsj 'an age is not a death toll' ((Get-NewsMassToll 'The 86-year-old woman died of stab wounds') -eq 0)
+$museum = [pscustomobject]@{ headline = 'Equatorial Guinea plans museums for archaeological finds'; dek = 'Sites will house artifacts dating from 50 BC.'; paragraphs = @('x'); reach = 0 }
+Assert-Wsj '"artifacts dating from" is not a dating story' ((Test-WsjArchiveKeep $museum).Keep)
+$lottery = [pscustomobject]@{ headline = 'Finance and tourism ministries review national lottery plan'; dek = 'A feasibility report was examined.'; paragraphs = @('x'); reach = 0 }
+Assert-Wsj 'a government lottery plan is policy' ((Test-WsjArchiveKeep $lottery).Keep)
+$tape = [pscustomobject]@{ headline = 'Court detains four teens over sex tape leak'; dek = 'The video spread on WhatsApp.'; paragraphs = @('x'); reach = 0 }
+Assert-Wsj 'a sex-tape story is withdrawn' (-not (Test-WsjArchiveKeep $tape).Keep)
+Assert-Wsj 'spelled-out hundreds are a mass toll' ((Get-NewsMassToll 'Cult leader convicted of one hundred ninety-one murders') -ge 100)
+$hyena = [pscustomobject]@{ headline = 'Spotted hyena returns to Egypt''s Red Sea Governorate'; dek = 'Villagers found mutilated sheep, signaling the return of a predator.'; paragraphs = @('x'); reach = 0 }
+Assert-Wsj 'a graphic word in a wildlife dek is not a graphic story' ((Test-WsjArchiveKeep $hyena).Keep)
+$chilima = [pscustomobject]@{ headline = 'Malawi plane crash evidence vanishes'; dek = 'Forensic samples from the 2024 crash that killed the vice president are missing.'; paragraphs = @('x'); reach = 0 }
+Assert-Wsj 'African lens: a state cover-up of a vice president''s crash runs' ((Test-WsjArchiveKeep $chilima).Keep)
+$herders = [pscustomobject]@{ headline = 'Fulani leaders demand probe into pastoralist attacks'; dek = 'Hundreds killed and cattle lost in five states.'; paragraphs = @('x'); reach = 0 }
+Assert-Wsj 'African lens: the farmer-herder conflict runs' ((Test-WsjArchiveKeep $herders).Keep)
 
 Write-Host '[wsj] standards on the copy'
 $tab = Get-WsjStandardsIssues (New-Story 'Horrific attack leaves village in mourning' 'Residents described a brutal raid.' 3 @('Gunmen hacked to death four farmers and their bodies were charred.', 'Police said they were searching for the attackers.', 'The governor visited the village on Sunday.'))

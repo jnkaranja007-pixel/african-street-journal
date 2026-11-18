@@ -4028,82 +4028,7 @@
       }
     ],
     "za": [
-      {
-        "articleId": "06c4f6da6dd1151fc53d",
-        "headline": "17 killed in two South African mass shootings",
-        "dek": "Gunmen killed nine people in Gauteng and eight in KwaZulu-Natal on Sunday, prompting a police manhunt.",
-        "paragraphs": [
-          "17 people were killed in two separate mass shootings across two provinces on Sunday, 15 November 2026. General Fannie Masemola, the National Commissioner of the South African Police Service, vowed to bring the perpetrators to justice after gunmen gunned down nine people at an informal settlement in Atteridgeville, Gauteng, and another eight in Sweetwaters outside Pietermaritzburg, KwaZulu-Natal.",
-          "A schoolchild discovered the bodies of six men and three women inside a shack in the Jeffsville informal settlement on Monday morning at around 06:45 after officers found them in four separate rooms. Gauteng police commissioner Lieutenant-General Tommy Mthombeni revealed that one of the Atteridgeville victims was a person of interest in a December 2025 massacre that claimed 12 lives, while Gauteng Premier Panyaza Lesufi called on police to investigate whether revenge, territorial disputes or extortion motivated the latest killings. Meanwhile, KwaZulu-Natal police found the bodies of eight men inside a bullet-riddled vehicle in Sweetwaters on Sunday night.",
-          "Masemola stated that an intelligence-led multidisciplinary team was following up on leads and noted that environmental challenges in the Jeffsville informal settlement make crime prevention operations extremely difficult. Police launched a manhunt for the Atteridgeville gunmen and urged anyone with information to contact Crime Stop on 08600 10111 or use the MySAPS app."
-        ],
-        "body": "17 people were killed in two separate mass shootings across two provinces on Sunday, 15 November 2026. General Fannie Masemola, the National Commissioner of the South African Police Service, vowed to bring the perpetrators to justice after gunmen gunned down nine people at an informal settlement in Atteridgeville, Gauteng, and another eight in Sweetwaters outside Pietermaritzburg, KwaZulu-Natal.\n\nA schoolchild discovered the bodies of six men and three women inside a shack in the Jeffsville informal settlement on Monday morning at around 06:45 after officers found them in four separate rooms. Gauteng police commissioner Lieutenant-General Tommy Mthombeni revealed that one of the Atteridgeville victims was a person of interest in a December 2025 massacre that claimed 12 lives, while Gauteng Premier Panyaza Lesufi called on police to investigate whether revenge, territorial disputes or extortion motivated the latest killings. Meanwhile, KwaZulu-Natal police found the bodies of eight men inside a bullet-riddled vehicle in Sweetwaters on Sunday night.\n\nMasemola stated that an intelligence-led multidisciplinary team was following up on leads and noted that environmental challenges in the Jeffsville informal settlement make crime prevention operations extremely difficult. Police launched a manhunt for the Atteridgeville gunmen and urged anyone with information to contact Crime Stop on 08600 10111 or use the MySAPS app.",
-        "why": "Residents and communities in Atteridgeville and Sweetwaters face ongoing violent crime and illegal firearms as police pursue the gunmen responsible for 17 deaths.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 0,
-            "why": "Residents and communities in Atteridgeville and Sweetwaters face ongoing violent crime and illegal firearms as police pursue the gunmen responsible for 17 deaths."
-          },
-          "investors": {
-            "score": 0,
-            "why": "Residents and communities in Atteridgeville and Sweetwaters face ongoing violent crime and illegal firearms as police pursue the gunmen responsible for 17 deaths."
-          },
-          "diaspora": {
-            "score": 21,
-            "why": "This security report may interest diaspora readers with family and property in the country."
-          }
-        },
-        "topic": "Security",
-        "published": "2026-11-16T15:43:21Z",
-        "sourceTitle": "Masemola vows justice after 17 killed in two mass shootings",
-        "editorialScore": 25.9,
-        "selectionScore": 28.4,
-        "reach": 4,
-        "confidence": "high",
-        "corroboration": 5,
-        "scoreBreakdown": {
-          "relevance": 2.5,
-          "corroboration": 7.5,
-          "sourceQuality": 3.0,
-          "freshness": 2.5,
-          "publicImpact": 7.9,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in opening",
-          "5-source corroboration",
-          "tier-1 source",
-          "published within 36h",
-          "urgent public consequence",
-          "specific figure"
-        ],
-        "countryMatch": "lede",
-        "wordCount": 209,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "name": "The Citizen SA",
-            "url": "https://www.citizen.co.za/news/south-africa/crime/national-commissioner-masemola-vows-justice-after-17-killed-in-two-mass-shootings/",
-            "published": "2026-11-16T15:43:21Z"
-          },
-          {
-            "name": "BBC Africa",
-            "url": "https://www.bbc.co.uk/news/articles/c8y5x3n4kywpo?at_medium=RSS&at_campaign=rss",
-            "published": "2026-11-16T10:57:48Z"
-          },
-          {
-            "name": "The South African",
-            "url": "https://www.thesouthafrican.com/news/child-discovers-nine-bodies-in-atteridgeville-mass-shooting/",
-            "published": "2026-11-17T06:38:31Z"
-          }
-        ],
-        "countryRank": 1,
-        "frontRank": 1,
-        "frontRankOn": "2026-11-17"
-      },
+      
       {
         "articleId": "4b2c187cc3bcbcc55753",
         "headline": "Proposed fiscal anchor could tighten budgets for health and education",
@@ -6726,67 +6651,6 @@
           }
         ],
         "countryRank": 4
-      },
-      {
-        "articleId": "c386840db2bb211d40dc",
-        "headline": "Former Chiredzi councillor remanded over murder",
-        "dek": "Lovemore Muchono faces allegations of raping and killing a four-year-old pupil.",
-        "paragraphs": [
-          "Lovemore Muchono, a former Chiredzi Rural District Council Ward 19 councillor who worked as a school transporter, was held in custody at the Chiredzi Magistrates Court last Wednesday. The court set 25 November as his next date, pending indictment at the High Court over the alleged rape and murder of four-year-old early childhood development learner Steadfast Makondo.",
-          "The State alleges Muchono collected the child from her home on 27 January without taking her to school, and drove her to an undisclosed location where she was sexually assaulted and killed. According to court filings, he then joined a search party for the missing learner before dumping her body in a bushy area, where it was found the following day. Medical examinations at Chiredzi Hospital confirmed sexual assault, and a post-mortem at United Bulawayo Hospitals attributed the death to suffocation.",
-          "The prosecution further states that on 2 February Muchono wrote a letter claiming the child had suffocated in his vehicle and saying he intended to take his own life. He remains in custody until the High Court proceedings."
-        ],
-        "body": "Lovemore Muchono, a former Chiredzi Rural District Council Ward 19 councillor who worked as a school transporter, was held in custody at the Chiredzi Magistrates Court last Wednesday. The court set 25 November as his next date, pending indictment at the High Court over the alleged rape and murder of four-year-old early childhood development learner Steadfast Makondo.\n\nThe State alleges Muchono collected the child from her home on 27 January without taking her to school, and drove her to an undisclosed location where she was sexually assaulted and killed. According to court filings, he then joined a search party for the missing learner before dumping her body in a bushy area, where it was found the following day. Medical examinations at Chiredzi Hospital confirmed sexual assault, and a post-mortem at United Bulawayo Hospitals attributed the death to suffocation.\n\nThe prosecution further states that on 2 February Muchono wrote a letter claiming the child had suffocated in his vehicle and saying he intended to take his own life. He remains in custody until the High Court proceedings.",
-        "why": "Parents who relied on Muchono to take their children to school now face a murder case involving a child in his care, with the High Court to decide whether he is indicted.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 0,
-            "why": "Parents who relied on Muchono to take their children to school now face a murder case involving a child in his care, with the High Court to decide whether he is indicted."
-          },
-          "investors": {
-            "score": 0,
-            "why": "Parents who relied on Muchono to take their children to school now face a murder case involving a child in his care, with the High Court to decide whether he is indicted."
-          },
-          "diaspora": {
-            "score": 21,
-            "why": "This security report may interest diaspora readers with family and property in the country."
-          }
-        },
-        "topic": "Security",
-        "published": "2026-11-16T18:49:54Z",
-        "sourceTitle": "Former councillor remanded over alleged rape and murder of ECD learner",
-        "editorialScore": 13.2,
-        "selectionScore": 10.05,
-        "reach": 3,
-        "confidence": "medium",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 0.5,
-          "corroboration": 0.0,
-          "sourceQuality": 0.5,
-          "freshness": 3.5,
-          "publicImpact": 6.2,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "published within 18h",
-          "urgent public consequence",
-          "specific figure"
-        ],
-        "countryMatch": "domestic",
-        "wordCount": 176,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "name": "Pindula News",
-            "url": "https://news.pindula.co.zw/2026/11/16/former-councillor-remanded-over-alleged-rape-and-murder-of-ecd-learner/",
-            "published": "2026-11-16T18:49:54Z"
-          }
-        ],
-        "countryRank": 5
       }
     ],
     "cv": [
@@ -7613,69 +7477,7 @@
         ],
         "countryRank": 3
       },
-      {
-        "articleId": "63b2afd9a0f66de80c1b",
-        "headline": "Pupil, 14, drowns in Mbabane River after leaving school to swim",
-        "dek": "Police and fire rescue divers recovered the body of the Form I pupil from Hermann Gmeiner (SOS) High School several hours after the drowning was reported.",
-        "paragraphs": [
-          "A 14-year-old pupil at Hermann Gmeiner (SOS) High School drowned in the Mbabane River at Manzana, behind the Sidvwashini Correctional Facility, at about 12:45pm after an examination, police said. The deceased, identified as Ryan, was a Form I pupil from Ngwenya, and police say he had left school with other pupils to go swimming.",
-          "Chief Police Information and Communication Officer Senior Superintendent Phindile Vilakati confirmed the incident. Community member Banele Vilakati said he and a colleague found the pupil's school uniform and shoes at the scene and entered the river to search, but failed to find him. Police divers and fire rescue personnel began the search between 4:40pm and 5pm, and recovered the body after relatives were brought from Ngwenya.",
-          "Community members questioned the delay, which police attributed to divers attending another drowning at Gebeni. Vilakati urged parents and communities to protect children from swimming in rivers, particularly during hot weather."
-        ],
-        "body": "A 14-year-old pupil at Hermann Gmeiner (SOS) High School drowned in the Mbabane River at Manzana, behind the Sidvwashini Correctional Facility, at about 12:45pm after an examination, police said. The deceased, identified as Ryan, was a Form I pupil from Ngwenya, and police say he had left school with other pupils to go swimming.\n\nChief Police Information and Communication Officer Senior Superintendent Phindile Vilakati confirmed the incident. Community member Banele Vilakati said he and a colleague found the pupil's school uniform and shoes at the scene and entered the river to search, but failed to find him. Police divers and fire rescue personnel began the search between 4:40pm and 5pm, and recovered the body after relatives were brought from Ngwenya.\n\nCommunity members questioned the delay, which police attributed to divers attending another drowning at Gebeni. Vilakati urged parents and communities to protect children from swimming in rivers, particularly during hot weather.",
-        "why": "Parents of pupils at the school now face a direct risk, as a teacher said pupils had previously escaped through a hole in the fence to swim in the river.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 5,
-            "why": "Parents of pupils at the school now face a direct risk, as a teacher said pupils had previously escaped through a hole in the fence to swim in the river."
-          },
-          "investors": {
-            "score": 3,
-            "why": "Parents of pupils at the school now face a direct risk, as a teacher said pupils had previously escaped through a hole in the fence to swim in the river."
-          },
-          "diaspora": {
-            "score": 21,
-            "why": "This education report may interest diaspora readers following institutions and opportunities from abroad."
-          }
-        },
-        "topic": "Education",
-        "published": "2026-11-17T01:00:00Z",
-        "sourceTitle": "Hermann Gmeiner (SOS) pupil (14) drowns after exams",
-        "editorialScore": 17.7,
-        "selectionScore": 12.65,
-        "reach": 3,
-        "confidence": "high",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 2.5,
-          "corroboration": 0.0,
-          "sourceQuality": 3.0,
-          "freshness": 3.5,
-          "publicImpact": 6.2,
-          "evidence": 2.5,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in opening",
-          "tier-1 source",
-          "published within 18h",
-          "urgent public consequence",
-          "specific figure"
-        ],
-        "countryMatch": "lede",
-        "wordCount": 153,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "name": "Times of Eswatini",
-            "url": "https://times.co.sz/48672/news/hermann-gmeiner-sos-pupil-14-drowns-after-exams/",
-            "published": "2026-11-17T01:00:00Z"
-          }
-        ],
-        "countryRank": 4
-      },
+      
       {
         "articleId": "5f44966a7a1e67802775",
         "headline": "Eswatini U-23 AFCON dream ends in Algeria",
@@ -10366,69 +10168,7 @@
         ],
         "countryRank": 1
       },
-      {
-        "articleId": "45726b91511f4a1e7294",
-        "headline": "Truck crash in Windhoek kills passenger after brake failure",
-        "dek": "A truck crashed into the College of the Arts theatre yard after its brakes failed, and police have opened a culpable homicide case.",
-        "paragraphs": [
-          "A 51-year-old Namibian man died on Monday morning after a truck crashed into the College of the Arts theatre yard in Windhoek.",
-          "Police spokesperson chief inspector Elifas Kuwinga said the incident occurred at around 10:37 between Robert Mugabe Avenue and Schwerinsburg Road. A 43-year-old Namibian man was driving the truck from east to west when the brakes failed, and the driver could not regain control before the vehicle hit the theatre yard. The passenger died at the scene.",
-          "Police have opened a culpable homicide case. The identity of the deceased is being withheld until his next of kin have been informed."
-        ],
-        "body": "A 51-year-old Namibian man died on Monday morning after a truck crashed into the College of the Arts theatre yard in Windhoek.\n\nPolice spokesperson chief inspector Elifas Kuwinga said the incident occurred at around 10:37 between Robert Mugabe Avenue and Schwerinsburg Road. A 43-year-old Namibian man was driving the truck from east to west when the brakes failed, and the driver could not regain control before the vehicle hit the theatre yard. The passenger died at the scene.\n\nPolice have opened a culpable homicide case. The identity of the deceased is being withheld until his next of kin have been informed.",
-        "why": "The passenger's family must be told before his name can be made public, so they will hear of the death first.",
-        "lensVersion": 1,
-        "lenses": {
-          "farmers": {
-            "score": 0,
-            "why": "The passenger's family must be told before his name can be made public, so they will hear of the death first."
-          },
-          "investors": {
-            "score": 0,
-            "why": "The passenger's family must be told before his name can be made public, so they will hear of the death first."
-          },
-          "diaspora": {
-            "score": 0,
-            "why": "The passenger's family must be told before his name can be made public, so they will hear of the death first."
-          }
-        },
-        "topic": "News",
-        "published": "2026-11-17T07:03:57Z",
-        "sourceTitle": "Man killed in Windhoek truck crash",
-        "editorialScore": 16.0,
-        "selectionScore": 14.8,
-        "reach": 2,
-        "confidence": "high",
-        "corroboration": 1,
-        "scoreBreakdown": {
-          "relevance": 4.0,
-          "corroboration": 0.0,
-          "sourceQuality": 3.0,
-          "freshness": 3.5,
-          "publicImpact": 3.5,
-          "evidence": 2.0,
-          "materiality": 0.0,
-          "penalties": 0.0
-        },
-        "rankReasons": [
-          "country in headline",
-          "tier-1 source",
-          "published within 18h",
-          "urgent public consequence",
-          "specific figure"
-        ],
-        "countryMatch": "title",
-        "wordCount": 102,
-        "readMinutes": 1,
-        "sources": [
-          {
-            "name": "The Namibian",
-            "url": "https://www.namibian.com.na/man-killed-in-windhoek-truck-crash/",
-            "published": "2026-11-17T07:03:57Z"
-          }
-        ],
-        "countryRank": 2
-      },
+      
       {
         "articleId": "44b0597dec07be31e956",
         "headline": "Swakop Uranium invests $300 million in Husab Mine expansion",

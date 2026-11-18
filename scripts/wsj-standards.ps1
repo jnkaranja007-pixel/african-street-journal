@@ -31,7 +31,7 @@ $script:WSJ_GRAPHIC = @('hacked to death','beheaded','beheading','decapitated','
                         'disemboweled','charred','burnt beyond recognition','burned beyond recognition','pool of blood',
                         'blood soaked','bloodied','bullet riddled','riddled with bullets','body parts','severed head',
                         'burnt alive','burned alive','set ablaze alive','stabbed repeatedly','entrails','bodies littered',
-                        'bodies strewn','corpses','decomposing','decomposed','maggots','gouged')
+                        'bodies strewn','corpses','decomposing','decomposed','maggots','gouged','butchered','macheted')
 # Sentences about deaths. A story where most sentences count the dead is a casualty
 # report, whatever its headline says.
 $script:WSJ_DEATH_WORDS = @('killed','kill','kills','killing','dead','died','dies','death','deaths','bodies','slain',
@@ -94,12 +94,14 @@ function Get-WsjStoryParts($Brief) {
 # in 2023" under a church succession headline is background (17 Nov 2026 edition).
 function Get-WsjHarmClass([string]$Headline, [string]$Dek = '') {
   $canon = ConvertTo-CanonicalNewsText ($Headline + ' ' + $Dek)
-  $inHeadline = Get-NewsMatchCount (ConvertTo-CanonicalNewsText $Headline) $script:NEWS_ROUTINE_HARM 1
-  $inDek = Get-NewsMatchCount (ConvertTo-CanonicalNewsText $Dek) $script:NEWS_ROUTINE_HARM 2
+  # Plain text: the canonical form reads "terrorism" as "attack".
+  $inHeadline = Get-NewsMatchCount (ConvertTo-NewsText $Headline) $script:NEWS_ROUTINE_HARM 1
+  $inDek = Get-NewsMatchCount (ConvertTo-NewsText $Dek) $script:NEWS_ROUTINE_HARM 2
   if (-not $inHeadline -and $inDek -lt 2) { return 'none' }
   if (Get-NewsMatchCount $canon $script:NEWS_URGENT 1) { return 'conflict' }
   if (Get-NewsMatchCount (ConvertTo-NewsText ($Headline + ' ' + $Dek)) $script:WSJ_CONFLICT_ACTORS 1) { return 'conflict' }
-  if (Get-NewsMatchCount $canon $script:NEWS_HARM_EXEMPT 1) { return 'consequence' }
+  # Plain text, not canonical: the canonical form turns "investigation" into "investment".
+  if (Get-NewsMatchCount (ConvertTo-NewsText ($Headline + " " + $Dek)) $script:NEWS_HARM_EXEMPT 1) { return 'consequence' }
   return 'routine-harm'
 }
 
@@ -126,14 +128,46 @@ function Test-WsjBar($Brief) {
     $pass = $false
     $why = "conflict report the desk judged minor (reach $reach)"
   }
+  # An obituary of a public figure ("dies at 71") is not a casualty report.
+  if ($class -eq 'routine-harm' -and (Test-NewsObituary $parts.Headline)) { $class = 'obituary' }
   if ($class -eq 'routine-harm') {
-    $major = ($reach -ge 5) -or ($reach -ge 4 -and $toll -ge $script:WSJ_MASS_TOLL)
+    # Reach 0: a story from before the desk scored reach (archive before 17 Nov 2026).
+    # Then the toll alone decides: 48 civilians killed near Menaka is national news.
+    # A hundred or more dead or abducted is national news at any reach (Shakahola, 191).
+    $major = ($reach -ge 5) -or ($reach -ge 4 -and $toll -ge $script:WSJ_MASS_TOLL) -or ($reach -eq 0 -and $toll -ge $script:WSJ_MASS_TOLL) -or
+             ($toll -ge 100)
     if (-not $major) {
       $pass = $false
       $why = "routine crime or casualty story below the Wall Street Journal bar (reach $reach, toll $toll)"
     }
   }
   return [pscustomobject]@{ Pass = $pass; Class = $class; Reach = $reach; Toll = $toll; Reason = $why }
+}
+
+# Would the Wall Street Journal ever have published this story? The audit of the
+# archive (scripts/audit-wsj-archive.ps1) removes what fails. Beyond the bar: a tabloid
+# or gossip subject, or graphic detail in the headline or dek. Loaded words in the body
+# alone are a copy problem, not a reason to withdraw a story.
+function Test-WsjArchiveKeep($Story) {
+  $bar = Test-WsjBar $Story
+  if (-not $bar.Pass) { return [pscustomobject]@{ Keep = $false; Reason = $bar.Reason; Class = $bar.Class } }
+  $lead = [string]$Story.headline + ' ' + [string]$Story.dek
+  # Tabloid and gossip words in the headline only ("artifacts dating from 50 BC" in a dek
+  # is not a dating story), and never for a story about government or regulation
+  # (a lottery plan reviewed by two ministries, policing betting sites).
+  $head = ConvertTo-CanonicalNewsText ([string]$Story.headline)
+  $policy = (Get-NewsMatchCount (ConvertTo-NewsText $lead) ($script:NEWS_HARM_EXEMPT + @('government','ministry','ministries','regulator','regulation','revenue','police','conservation','tourism')) 1)
+  if (-not $policy -and ((Get-NewsMatchCount $head $script:NEWS_TABLOID 1) -or (Get-NewsMatchCount $head $script:NEWS_JUNK 1))) {
+    return [pscustomobject]@{ Keep = $false; Reason = 'tabloid or gossip subject'; Class = $bar.Class }
+  }
+  # A graphic word in the dek counts only on a harm story: "mutilated sheep" is how a
+  # wildlife story says a predator is back.
+  $graphicIn = if ($bar.Class -eq 'none') { [string]$Story.headline } else { $lead }
+  $graphic = @(Get-WsjPhraseHits $graphicIn $script:WSJ_GRAPHIC)
+  if ($graphic.Count) {
+    return [pscustomobject]@{ Keep = $false; Reason = ('graphic headline or dek: ' + ($graphic -join ', ')); Class = $bar.Class }
+  }
+  return [pscustomobject]@{ Keep = $true; Reason = ''; Class = $bar.Class }
 }
 
 # A headline that opens with a death toll: "17 killed in two mass shootings", "At least
@@ -198,7 +232,7 @@ function Get-WsjEditionMix($ByCountry) {
   foreach ($p in $pairs) { foreach ($s in @($p[1])) { if ($s -and $s.headline) { $stories.Add([pscustomobject]@{ code = [string]$p[0]; story = $s }) } } }
   $n = $stories.Count
   $topics = [ordered]@{}
-  $classes = [ordered]@{ 'none' = 0; 'conflict' = 0; 'consequence' = 0; 'routine-harm' = 0 }
+  $classes = [ordered]@{ 'none' = 0; 'conflict' = 0; 'consequence' = 0; 'obituary' = 0; 'routine-harm' = 0 }
   $belowBar = New-Object System.Collections.Generic.List[string]
   $standards = New-Object System.Collections.Generic.List[string]
   foreach ($e in $stories) {

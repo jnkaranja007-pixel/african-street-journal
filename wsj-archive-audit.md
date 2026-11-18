@@ -1,0 +1,383 @@
+# Archive audit: the Wall Street Journal bar, through an African lens
+
+Run 2026-11-18 04:53 UTC by scripts/audit-wsj-archive.ps1. Rule: Test-WsjArchiveKeep in scripts/wsj-standards.ps1.
+
+- Stories read: 5105 (27 archived editions, today's edition, and story pages older than the archive)
+- Withdrawn: 135 (2.6%)
+- Kept as conflict (war, insurgency, coup, epidemic, disaster): 84
+- Kept as harm with a policy or economic consequence: 94
+- Kept crime or casualty stories judged national events (reach 5, or reach 4 with a toll of 25 or more): 31
+
+| Reason | Stories |
+|---|---|
+| routine crime or casualty story below the Wall Street Journal bar | 134 |
+| tabloid or gossip subject | 1 |
+
+## Withdrawn stories
+
+- **BF** Man gets life for acid attack on partner in Dori - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **BF** Two buses collide, killing six in Burkina Faso - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 1)
+- **BI** Burundi agency director questioned over staff death - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **BI** Burundi death certificate questions agency premises - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **BI** Burundi man found hanged, neighbours suspect murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **BI** Mother Suspected of Killing Child, Attempting Suicide in Burundi - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **BI** Two bodies discovered in Gitega province - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 6)
+- **BI** Woman sentenced to life for husband's murder in Karusi - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **BJ** Man killed with machete in Ouénou - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **CD** Fire Kills 22 at Kinshasa Wedding Hall - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 22)
+- **CF** Bangui court detains four teens over sex tape leak - tabloid or gossip subject
+- **CG** Brazzaville court opens criminal session with murder cases - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **CI** Two men charged with murder near Korhogo - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **CV** Bus Crash Kills Ten on Fogo Island - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **CV** Driver Held After Schoolgirl Fatally Struck - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **CV** Two trains collide in Spain - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **DJ** Djibouti condemns Jordan church attack - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **DZ** Pharmacist murdered in Constantine - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **EG** Bus crash kills three on Red Sea highway - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **EG** Egypt condemns Saudi airport attack, reaffirms solidarity - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GA** Gabon navy finds three bodies in Prospector 5 wreck - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GH** Accra shooting kills CEO Irene Atubiga and uncle - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GH** family demands justice for boy killed at festival - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GH** Ghana Air Force evacuates injured immigration officer after Hamile blast - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GH** Ghana ambassador condoles family of teen shot in New York - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 15)
+- **GH** Ghana envoy expects US police to identify teen killer - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GH** Ghanaian man stabbed to death in London - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **GH** Ghanaian teenager killed in Toronto shooting - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GH** Police arrest three over Kasoa murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GH** Sakumono murder suspect arrested with pistol in Ashanti Region - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GH** Teenager charged with murder over Ghanaian boy's death in New York - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **GH** Tenerife striker De Miguel dies after collision - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GM** Man jailed seven months for stabbing brother - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GN** Boubacar Barry found dead after alleged kidnapping - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GN** Brooklyn building collapse kills two Guineans, injures pregnant survivor - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **GN** Child drowns in construction site pit in Sonfonia - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GN** Dubreka arts institute official dies in road accident - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GN** Police inspector thanks public for support after mother's death - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GN** Truck Hits and Kills Motorbike Taxi Driver in Lambanyi - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GN** Two-year-old boy drowns in well in Labé - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GQ** Equatorial Guinean goalkeeper involved in fatal clash - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GQ** fire kills six in malabo family home - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GQ** Malian man dies after falling from Malabo Gendarmerie window - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **GQ** Vehicle kills 17-year-old student in Luba - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **GW** 11 charged with Olof Sambú murder in Guinea-Bissau - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **GW** Guinea-Bissau prosecutor investigates vicar's death - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **GW** Lawyer urges faster probe into Olof Sambu lynching - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **KE** College principal butchered in bedroom attack - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **KE** Six killed as building collapses near Nairobi - routine crime or casualty story below the Wall Street Journal bar (reach 4, toll 0)
+- **KE** Six workers dead as eight-storey building collapses near Nairobi - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **KM** Comorian man died one hour after TikTok live - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **KM** Comorian man found dead on Marseille highway - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **KM** Comoros prisoner dies, another reportedly hospitalized - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **KM** Second convicted murderer dies in Naïcha case - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **KM** Two Comoros murder convicts die within a week - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **LR** Grebo leader urges calm after man found dead - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **LR** Liberia charges seven people over attack on police officer in Sinkor - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **LS** Durban court views CCTV of alleged gunmen before AKA, Tibz killings - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **LS** Leribe man sentenced to one year for fatal shooting - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **LS** two men sentenced for 2024 border murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **LY** Libya's Health Ministry reports girl's death from toxic wild mushrooms - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 17)
+- **MA** Boy, 11, found dead as Ziz river levels rise - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 11)
+- **MA** Morocco road accidents kill 23 in one week - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 23)
+- **MA** Morocco security chief orders promotion for injured officer - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MG** Madagascar grandmother sentenced to life for murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MG** Photographer killed in Andraharo road accident - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **ML** armed attack kills one in Mali's Bandiagara - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 22)
+- **ML** Bamako families fear for missing relatives amid rising murders - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ML** Mali police arrest suspects in three murders - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ML** Mali police arrest three suspected armed robbers in Bamako - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MU** Advocate Seeks High Risk Framework After Child's Death - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MU** Bus stations record 19 injured and two dead in two years - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 19)
+- **MU** Driver hospitalised after Mont-Ida road crash - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MU** man stabbed in Roche-Bois - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MU** Mauritius baby dies from intestinal tear - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MU** Mauritius police arrest third suspect in murder probe - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **MU** Mauritius sergeant kept in detention over shooting - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MU** Motorcyclist Dies in Poudre-d'Or Collision - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 19)
+- **MW** High Court acquits Egnat Katengeza of murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MW** Man dies after 28-year court battle for unpaid salary - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **MW** Nachipanti victim speaks 17 years after family killings - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **MZ** Mozambican boy, 15, found brutally murdered - routine crime or casualty story below the Wall Street Journal bar (reach 4, toll 0)
+- **MZ** Mozambique police arrest sixth suspect in bishop's murder - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **NA** Namibian man claims murder charges are false - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **NA** Swakopmund wall collapse kills casual worker at rest camp - routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)
+- **NA** Truck crash in Windhoek kills passenger after brake failure - routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)
+- **NG** Butcher stabs colleague to death in Ogun over sweeping chore - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **NG** Ex-Lagos civil servant found dead in UK home - routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)
+- **NG** Gunmen demand N500m for abducted FUNAAB graduate, three others - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **NG** Lagos driver kills okada rider fleeing police - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **NG** Osun building collapse kills three - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **NG** Police rescue 11 kidnapped victims - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 11)
+- **NG** two trucks overturn in Lagos, kill mother and child - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SL** Socfin worker dies after falling from moving truck - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SN** Senegal seeks suspect's return from Mauritania - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SS** Doctor shot in revenge attack at Cueibet hospital - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SS** ex-commissioner arrested after airstrip shooting - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SS** Nurse shot in suspected revenge attack at Cueibet hospital - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SS** South Sudan murder trial adjourned after bail absconders - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SS** Yambio infant needs surgery after baboon attack - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ST** Sao Tome president sends condolences for Spain train crash - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SZ** Bullet lodged in girl's foot after shooting incident - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SZ** Ex-deputy sheriff sentenced to 124 years for murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SZ** Man sentenced for four murders - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **SZ** Police probe death of missing guard found in Mfabantfu forest - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **SZ** Pupil, 14, drowns in Mbabane River after leaving school to swim - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **TD** Road accident kills three in Chad's Mandoul - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **TD** three die in N'Djamena road accident - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **TD** Vehicle crashes into home in N'Djaména, killing one - routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)
+- **TG** Two missing after pirogue accident on Lake Togo - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **TN** 12 farm workers injured in tunisia road accident - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **TN** Tunis court sentences neighbour to death for child murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **TN** Tunisia ministry supports children after mother's murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **TN** Tunisian man admits killing pregnant wife in Montreal - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **TZ** Bus and lorry crash kills 21 in Iringa - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 21)
+- **UG** Deaf Link Uganda director shot dead in Kisoro lodge attack - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **UG** Uganda DPP disputes Shs129 million robbery claim - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **UG** Uganda: epilepsy drug mix-up kills child, hospitalises 16 - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **UG** URA operation bullet kills 13-year-old boy in Busia - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZA** 17 killed in two South African mass shootings - routine crime or casualty story below the Wall Street Journal bar (reach 4, toll 17)
+- **ZA** Bail denied for man accused of killing TUT student - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZA** Cape Town shooting leaves five dead - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZA** Farm attack survivor Donovan Marx leaves hospital - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+- **ZA** foreign national beaten to death in Durban - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZA** Johannesburg zoo investigates over 20 bird deaths at Zoo Lake - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 20)
+- **ZA** Nine shot dead in Atteridgeville shack - routine crime or casualty story below the Wall Street Journal bar (reach 4, toll 0)
+- **ZA** South Africa minister condemns brutal farm attack - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZA** South Africa's Hyron Andrews died of natural causes - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZA** Swimmer killed by shark; East London beaches closed - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZA** Swimmer killed in shark attack at Orient Beach - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZA** three cops convicted over nathaniel julies murder - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZM** Kalumbila district commissioner and driver killed in road crash - routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)
+- **ZM** Man dies after sister pours hot water on him - routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)
+- **ZM** Police in Nchelenge arrest fisherman over Lake Mweru killing - routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)
+- **ZW** Former Chiredzi councillor remanded over murder - routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)
+
+## Kept although they involve deaths or violence
+
+- **AO** Ebola kills 5,103 in DR Congo - conflict
+- **BF** Burkina Faso Reintroduces Death Penalty for Terrorism, Treason, Parricide - conflict
+- **BF** Burkina Faso reinstates death penalty - conflict
+- **BI** boy killed by stray bullet near Burundi military range - conflict
+- **CD** DR Congo rangers attack Ugandan goat herders - conflict
+- **CD** ADF attack kills 35 civilians in Beni territory - conflict
+- **CD** Ebola victims' bodies sprayed with fuel in DR Congo - conflict, reach 4
+- **CD** Cholera Outbreak Kills Six in Kasongo Health Zone - conflict
+- **CD** UN condemns murder of Ebola nurse in Bafwasende - conflict
+- **CD** Four killed in attack on army position in Ituri - conflict
+- **CD** 26 deaths reported in Bunia amid Ebola fears - conflict
+- **CD** ADF attack sparks Ebola spread fears in North Kivu - conflict
+- **CF** Central African Republic forces attack rebels on home soil - conflict
+- **CF** CPC denies general Ndalé's death after defence ministry announcement - conflict
+- **CF** Families of two young men abducted by Wagner mercenaries in Bangui still have no news - conflict, reach 3
+- **CG** Republic of Congo records 261 Mpox cases and two deaths - conflict, reach 3
+- **CI** 12 charged over gendarme killing amid election tensions - conflict
+- **EG** Egypt condemns Israeli strike on Gaza hospital that killed at least six - conflict, reach 4
+- **EG** Egypt condemns missile attack on Medina - conflict
+- **ET** Sudan accuses Ethiopia of drone attacks - conflict
+- **ET** Drone strikes kill 25 civilians in Ethiopia - conflict
+- **KE** Kenya records second Ebola death - conflict
+- **KE** Kenya Red Cross trains staff after second Ebola death - conflict
+- **KE** Former Alego Usonga MP Otieno Mak’Onyango dies - conflict
+- **MA** Three men attack Marrakesh hotel - conflict
+- **MA** Third child dies of diphtheria in Morocco - conflict
+- **ML** Islamic State Attack Kills Over 40 Civilians in Mali - conflict
+- **ML** Mali weather events cause thirteen deaths, affect nearly three thousand - conflict
+- **ML** Mali journalists' murder case sees partial declassification - conflict
+- **ML** Mali army drone strikes kill civilians - conflict
+- **ML** Mali army and Russian corps kill over 200 livestock - conflict
+- **MU** Port-Louis drivers face delays of up to 90 minutes after road closure and crash - conflict, reach 3
+- **MZ** Boy dies after stepping on landmine in Macomia - conflict
+- **MZ** Insurgents Kill Two, Loot Mozambique Hunting Camp - conflict
+- **MZ** Mozambique reports 154 terror attacks in five months - conflict
+- **MZ** Insurgents kill 22 in Cabo Delgado farmland - conflict, reach 4
+- **NA** Namibia launches state air ambulance after patient deaths - conflict
+- **NE** Gunmen kill 12 in Niger bus attack - conflict
+- **NE** Niger association condemns Chadian drone attack - conflict
+- **NE** Niger accuses Chad of drone strike - conflict
+- **NE** Niger's security forces kill five mercenaries and seize weapons in first half of November - conflict, reach 3
+- **NG** Fulani leaders demand probe into pastoralist attacks - conflict
+- **RW** Seven miners killed in Kigali mine flood - conflict
+- **SD** African Union condemns drone strikes killing over 250 in Sudan - conflict
+- **SD** UN and France condemn escalating drone attacks in Sudan - conflict
+- **SD** Khartoum denies drone strike role in Abyei market attack - conflict
+- **SD** Drone attacks cripple Sudan's power stations - conflict, reach 4
+- **SD** China deploys anti-drone systems in Abyei after attack - conflict
+- **SD** Sudanese army drone strike kills 36 in Nyala market - conflict
+- **SD** Drone strike kills 102 civilians in Nyala market - conflict
+- **SD** RSF arrests Rizeigat members after deadly tribal clashes in East Darfur - conflict, reach 3
+- **SD** Drone attacks kill 14 civilians in Sudan - conflict
+- **SD** Sudan drone strikes killed 306 in three weeks - conflict
+- **SD** 400 inmates escape East Darfur prison after drone attack - conflict
+- **SD** Drone strike kills over 150 in Abyei market - conflict
+- **SD** Drone strike kills two traders in North Darfur - conflict
+- **SD** UN Condemns Drone Strikes Killing 48 Civilians in Sudan - conflict
+- **SD** Nine civilians killed in Blue Nile drone strike - conflict, reach 4
+- **SD** Delayed rains kill over 420 sheep in North Darfur - conflict
+- **SD** Sudan journalists warn of rising attacks amid war - conflict
+- **SO** Al-Shabaab attack kills eight near Somalia border - conflict, reach 3
+- **SO** Turkish airstrike kills Somali woman in Jameeco - conflict
+- **SO** Somali army suffers heavy losses in Al-Shabaab ambush - conflict
+- **SS** Five killed in Pochalla cattle raid - conflict
+- **SS** South Sudan confirms yellow fever death in Morobo County - conflict, reach 3
+- **SS** Rival SPLA-IO factions clash in Leer, killing five soldiers - conflict
+- **SS** Gunmen kill journalist Veronica Gordon in Western Equatoria ambush - conflict, reach 3
+- **SS** Drone attack displaces 8,000 in Abyei - conflict
+- **SS** 10 killed in Tonj North communal violence - conflict
+- **SS** Nine killed in Bor County communal fighting - conflict
+- **SS** South Sudan confirms fatal yellow fever case - conflict, reach 3
+- **SS** Rumbek Central paramount chief Madol Mathok dies at 87 - conflict
+- **SS** One killed in clashes near South Sudan-Uganda border - conflict
+- **SS** Gunmen kill two in ambush on SPLM delegates in Mundri - conflict, reach 3
+- **SS** SSPDF reunites two abducted children with parents in Juba - conflict
+- **SS** AU condemns deadly drone attack on Abyei market - conflict
+- **SS** Two killed in attack on SPLM delegates in South Sudan - conflict, reach 3
+- **SZ** Drought kills 99 cattle in Lavumisa, Eswatini - conflict, reach 3
+- **SZ** Eswatini farmers urged to sell livestock as drought kills over 50 cattle - conflict
+- **TD** Chad faces rising deaths amid health crisis - conflict
+- **TD** Chad health ministry reports 14 dengue deaths amid rising fatalities - conflict
+- **TD** Chad arrests 39 after deadly intercommunal clashes - conflict
+- **UG** ADF stages first major attack on Uganda from Zaire - conflict, reach 3
+- **ZW** Bad weather blamed for Chivayo helicopter crash - conflict, reach 3
+- **AO** African Union and FAJ condemn attacks on journalists - consequence
+- **BI** Burundi official dies in unclear circumstances at ADB - consequence
+- **BI** Burundi sugar engineer missing, two bodies found - consequence
+- **CD** Armed bandits target Kisangani businesses amid rising insecurity - consequence
+- **CD** Kolwezi protests leave two injured and property damaged - consequence
+- **CF** Four killed near Tiringoulou - consequence
+- **CI** PPA-CI demands full light on deaths of six detainees - consequence, reach 3
+- **CI** Tiken Jah Fakoly fled Ivory Coast after death threats - consequence
+- **CM** Cameroon governor calls for Metafrique Steel shutdown after fire kills four - consequence
+- **CM** Journalists face 86% impunity rate - consequence
+- **CM** Metafrique Steel explosion kills four in Douala - consequence
+- **CV** Praia students march for road safety after pupil's death - consequence
+- **EG** Egypt's parliament to question transport minister after train crash - consequence, reach 3
+- **EG** Egypt MP proposes end to leniency in honour killings - consequence
+- **EG** Two Egyptian Border Guards killed in Eastern Desert - consequence
+- **ET** 48 killed in Oromia armed attack, rights commission confirms - consequence
+- **GA** Gabon receives four bodies from Mayumba barge disaster - consequence
+- **GH** Mahama defends speed cameras after child deaths - consequence
+- **GH** Police hunt suspect after two shot dead in Sakumono - consequence
+- **GH** Ghana to track road crash data monthly - consequence
+- **GM** UN Rapporteur Urges Gambia to Abolish Death Penalty - consequence
+- **GN** Truck insurance validity questioned in fatal accident trial - consequence
+- **GN** Clashes at Balato leave 10 dead and 13 injured in Guinea - consequence, reach 3
+- **GN** Guinea minister attacks MP over electricity exports - consequence
+- **GN** Boké officials injured in mining road crash - consequence
+- **GQ** Equatorial Guinea parliament backs goalkeeper after fatal clash - consequence
+- **GQ** Prosecutor seeks life sentence for sergeant accused of murder - consequence
+- **GQ** Malian man dies after falling from Gendarmerie window in Malabo - consequence, reach 3
+- **GW** Rights group urges swift justice for three deaths - consequence, reach 3
+- **GW** Frente Popular asks new prosecutor to investigate activist's killing - consequence, reach 3
+- **GW** Prime Minister demands swift Vigário Balanta death probe - consequence
+- **KE** Kenya sends condolences to Poland after Krakow shooting - consequence
+- **KE** Natembeya's aide in intensive care after night attack - consequence, reach 3
+- **KE** Former LSK president demands prosecution for Migori attack - consequence
+- **KE** Kenyan family protest murder suspect extradition delay - consequence
+- **KM** Comoros radio journalist Mselem Ali dies - consequence
+- **KM** Comoros Man Killed in Protests Leaves Behind Eight Children - consequence
+- **MA** Morocco Faces Calls to Abolish Death Penalty Before Global Congress - consequence
+- **ML** three teachers abducted in Mali's San region - consequence
+- **ML** Mali marks 13 years since RFI journalists' murder - consequence
+- **ML** Malians remember Madou Dakolo 12 years after his death - consequence
+- **ML** Mali ex-detainee recounts torture and deaths - consequence
+- **ML** Malian media figure Abdoulaye Benson Diakité dies - consequence
+- **MR** Trarza team wins traditional shooting contest - consequence
+- **MU** Police sergeant accused of shooting woman remains in custody - consequence
+- **MU** Sergeant refuses to attend shooting inquiry reconstitution - consequence
+- **MU** Sergeant Taukoor Detained After Shooting Incident - consequence
+- **MU** 99-year-old pedestrian dies five days after motorcycle collision in Port-Louis - consequence, reach 2
+- **MW** Malawi plane crash evidence vanishes - consequence
+- **MW** Malawi opposition attacks government over corruption and fuel chaos - consequence
+- **MW** Malawi opposition leader attacks divisive politics - consequence
+- **MZ** Three alleged robbers killed in Maputo shootout - consequence
+- **NA** Namibian woman accused of murder to remain in custody - consequence
+- **NE** Niger records 7,116 road accidents in 2025, with 1,245 killed - consequence, reach 3
+- **NE** two European women freed in Libya after Niger kidnapping - consequence
+- **NG** Petrol Theft Fumes Kill 37 in Nigeria - consequence
+- **NG** Sokoto ultimatum issued over attack on ADC candidate - consequence
+- **NG** G-100 chieftain says opposition consensus candidate plan dead - consequence
+- **NG** Bandits kill 62 in Taraba market attack - consequence
+- **NG** Edo Governor vows to sign death warrants for kidnappers - consequence, reach 3
+- **RW** Burundi minister attacks Rwanda's OIF candidate - consequence, reach 3
+- **RW** Three bodies recovered from disused Ruhango mine - consequence
+- **SD** UNICEF condemns killing of 12 children in Sudan attacks - consequence
+- **SD** Sudan's veteran political leader al-Mirghani dies at 90 - consequence, reach 3
+- **SN** Senegal court seeks one year jail for student death - consequence
+- **SN** Two men die in car and motorcycle crash - consequence
+- **SS** Bor police release brothers who killed sister over marriage - consequence, reach 4
+- **SS** Gunmen free 3 abducted Yei aid workers for $2,500 ransom - consequence, reach 3
+- **SS** Gunmen kill veteran journalist Veronica Lucy Gordon in Mundri road ambush - consequence, reach 3
+- **SS** South Sudan police arrest two drivers after pedestrian death - consequence
+- **SS** Rumbek North bans alcohol after fatal clashes - consequence
+- **SS** South Sudan clashes kill soldiers, civilians in Kapoeta gold mine - consequence
+- **SS** South Sudan, Ethiopia Launch Joint Probe Into Peacekeeper Deaths - consequence
+- **SS** South Sudan parties demand probe into peacekeeper killings - consequence
+- **SZ** Eswatini sets 2030 goal to halve road deaths and injuries - consequence, reach 3
+- **TG** Burkina Faso reinstates death penalty for economic crimes - consequence
+- **TN** Tunisia transport attacks cost 4 million dinars - consequence
+- **TN** Tunisia aims to halve road deaths by 2034 - consequence
+- **TZ** Tanzania marks one year since deadly election unrest - consequence
+- **TZ** Tanzania sees 1,605 relationship-related killings - consequence
+- **TZ** CHADEMA memorial marks one year since election crisis deaths - consequence
+- **TZ** East African legal bodies press Kenya, Tanzania over activist's disappearance - consequence
+- **UG** Uganda drivers urge return of speed cameras as road deaths rise - consequence, reach 3
+- **UG** Salim Saleh found Besigye near death in prison - consequence
+- **UG** Kampala Mayor recounts crash that cost his leg as road deaths rise - consequence, reach 4
+- **UG** Karamoja hunger deaths prompt questions over state food relief - consequence, reach 4
+- **ZA** MK parliamentarian faces sanction over farm attack post - consequence
+- **ZA** Greytown police commander killed in shootout - consequence, reach 3
+- **ZA** Activist walks SA to protest farm attacks - consequence
+- **ZA** Sharpeville victims sue government over compensation law - consequence
+- **ZA** UDM councillor shot dead in Gqeberha - consequence
+- **ZA** UDM councillor shot dead in Gqeberha - consequence
+- **ZM** Veteran journalist Patson Phiri dies - consequence
+- **ZW** Police seek help identifying 11 bodies at Harare hospital mortuary - consequence, reach 2
+- **CM** Cameroon minister Hamadou Moustapha dies at 81 - obituary, reach 3
+- **GH** Kofi Wayo, Ghanaian politician and businessman, dies at 71 - obituary
+- **KE** Former Attorney General Paul Kihara dies aged 72 - obituary
+- **MG** Madagascar tennis and volleyball figure Ravalitera Rafolomanantsiatosika dies - obituary
+- **MR** Mauritanian Quranic school chief jailed over student's death - obituary, reach 3
+- **MU** Mauritian sculptor Dhyaneswar Dausoa dies at 82 - obituary
+- **MW** Malawi chief dies in India after treatment - obituary
+- **MZ** Mozambique's former defence minister Joaquim Tobias Dai dies - obituary
+- **NA** Willem Bock's Death Ends Football Legacy - obituary
+- **NG** Veteran Nollywood actor Francis Duru dies at 57 - obituary
+- **SS** Türkiye's ambassador to South Sudan dies - obituary
+- **TD** Chad delegate mourns canton chief death - obituary
+- **TG** Togo Environmentalist Séna Alouka Dies at 51 - obituary
+- **TN** Tunisian Actress Amel Baccouche Dies at 77 - obituary
+- **TZ** Alute Lissu, lawyer and brother of Tundu Lissu, dies - obituary
+- **UG** Police Deputy Commander Ecotu Agapitus Dies at Mulago Hospital - obituary
+- **UG** Ugandan comedian Kapere dies in Buddo - obituary
+- **UG** Uganda police probe comedian Kapere's sudden death - obituary
+- **ZM** Freddie Mwila Snr dies aged 80 - obituary
+- **BI** Imbonerakure truck crash in Kabanga leaves 31 dead, sources say 75 - routine-harm, reach 4
+- **BJ** Benin priest dies during All Saints' Day mass - routine-harm
+- **CM** Cameroon kidney patients deny 30 deaths report - routine-harm
+- **CV** Woman's death ends five-year homicide-free period in Praia - routine-harm
+- **EG** Egypt train crash kills seven, injures 125 - routine-harm
+- **ET** Ethiopian Orthodox Church reports 60 Christians killed in Oromia attacks - routine-harm
+- **KE** Autopsy reveals 86-year-old Kenyan woman died from stab wounds - routine-harm
+- **KE** Kenyan pathologists find over 20 wounds on murdered 86-year-old - routine-harm
+- **KE** Kenyan cult leader gets 200 years for 191 starvation deaths - routine-harm
+- **KE** Kenyan court convicts cult leader of 191 starvation deaths - routine-harm
+- **KE** Kenyan court convicts cult leader Paul Mackenzie of one hundred ninety-one murders - routine-harm
+- **LR** Liberia faces 323 more maternal deaths from funding cuts - routine-harm
+- **MA** Four killed in Casablanca-Agadir highway crash - routine-harm
+- **ML** Mali Attackers Kill 48 Civilians Near Menaka - routine-harm
+- **MU** Mauritius police arrest second murder suspect - routine-harm
+- **MW** Mourinho mourns Tenerife striker's death - routine-harm
+- **NA** Woman found dead in Otjiwarongo flat - routine-harm
+- **NE** Attack near Téra in Niger's Tillabéri region kills at least 37, sources say - routine-harm, reach 4
+- **NE** Niger road accidents kill 1245 in 2025 - routine-harm
+- **NG** Borno community urges Tinubu to rescue 78 abducted children - routine-harm
+- **SN** Senegal migrant boat wreck kills at least 35 - routine-harm
+- **SN** Senegal boat disaster kills 39 migrants - routine-harm
+- **SN** Migrant boat sinks off Senegal coast - routine-harm
+- **SN** Senegal pirogue capsizes off Lompoul, over 30 dead - routine-harm
+- **SS** Amnesty: South Sudan failed to protect Abiemnom residents - routine-harm, reach 4
+- **SS** Amnesty says South Sudan and UNMISS failed to prevent Abiemnom massacre - routine-harm, reach 4
+- **SS** Armed youth kill 26 in South Sudan barracks attack - routine-harm
+- **SZ** Eswatini runners mourn South African athlete's marathon death - routine-harm
+- **TD** Chad morgue registers over 300 deaths in October - routine-harm
+- **UG** Man kills wife, then lynched by mob in Kanungu - routine-harm
+- **ZA** Stellenbosch mother dies after son killed in crash - routine-harm

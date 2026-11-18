@@ -1,0 +1,1220 @@
+{
+    "note":  "Stories withdrawn as below the Wall Street Journal bar (scripts/audit-wsj-archive.ps1). build-static-pages.ps1 never builds these pages again.",
+    "withdrawn":  {
+                      "cce9c8b6348c115f426a":  {
+                                                   "code":  "bf",
+                                                   "headline":  "Man gets life for acid attack on partner in Dori",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "bf/man-gets-life-for-acid-attack-on-partner-in-dori-cce9c8"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "0f5d80abb30ec7b2c99e":  {
+                                                   "code":  "bf",
+                                                   "headline":  "Two buses collide, killing six in Burkina Faso",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 1)",
+                                                   "pages":  [
+                                                                 "bf/two-buses-collide-killing-six-in-burkina-faso-0f5d80"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "fbf01da65fd0f74ac587":  {
+                                                   "code":  "bi",
+                                                   "headline":  "Burundi agency director questioned over staff death",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "bi/burundi-agency-director-questioned-over-staff-death-fbf01d"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "6280a9952eb766ac17f7":  {
+                                                   "code":  "bi",
+                                                   "headline":  "Burundi death certificate questions agency premises",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "bi/burundi-death-certificate-questions-agency-premises-6280a9"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "8731d8c0e3c3b1ebb17d":  {
+                                                   "code":  "bi",
+                                                   "headline":  "Burundi man found hanged, neighbours suspect murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "bi/burundi-man-found-hanged-neighbours-suspect-murder-8731d8"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "page:bi/mother-suspected-of-killing-child-attempting-suicide-in-88c4f2":  {
+                                                                                                     "code":  "bi",
+                                                                                                     "headline":  "Mother Suspected of Killing Child, Attempting Suicide in Burundi",
+                                                                                                     "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                                                                     "pages":  [
+                                                                                                                   "bi/mother-suspected-of-killing-child-attempting-suicide-in-88c4f2"
+                                                                                                               ],
+                                                                                                     "withdrawn":  "2026-11-18"
+                                                                                                 },
+                      "8fa21625f63f70184ef2":  {
+                                                   "code":  "bi",
+                                                   "headline":  "Two bodies discovered in Gitega province",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 6)",
+                                                   "pages":  [
+                                                                 "bi/woman-and-infant-found-dead-in-gitega-8fa216"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "17044439aaa58679ee48":  {
+                                                   "code":  "bi",
+                                                   "headline":  "Woman sentenced to life for husband\u0027s murder in Karusi",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "bi/woman-sentenced-to-life-for-husband-s-murder-in-karusi-170444"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "16ab8c27faa9d21a98d6":  {
+                                                   "code":  "bj",
+                                                   "headline":  "Man killed with machete in Ouénou",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "bj/man-killed-with-machete-in-ouenou-16ab8c"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "page:cd/fire-kills-22-at-kinshasa-wedding-hall-ebd820":  {
+                                                                                    "code":  "cd",
+                                                                                    "headline":  "Fire Kills 22 at Kinshasa Wedding Hall",
+                                                                                    "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 22)",
+                                                                                    "pages":  [
+                                                                                                  "cd/fire-kills-22-at-kinshasa-wedding-hall-ebd820"
+                                                                                              ],
+                                                                                    "withdrawn":  "2026-11-18"
+                                                                                },
+                      "10264fa1fd8d44db5f81":  {
+                                                   "code":  "cf",
+                                                   "headline":  "Bangui court detains four teens over sex tape leak",
+                                                   "reason":  "tabloid or gossip subject",
+                                                   "pages":  [
+                                                                 "cf/bangui-court-detains-four-teens-over-sex-tape-leak-10264f"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "dd81500f11c5966af16e":  {
+                                                   "code":  "cg",
+                                                   "headline":  "Brazzaville court opens criminal session with murder cases",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "cg/brazzaville-court-opens-criminal-session-with-murder-cases-dd8150"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "176d78bff7bbfb92f899":  {
+                                                   "code":  "ci",
+                                                   "headline":  "Two men charged with murder near Korhogo",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "ci/two-men-charged-with-murder-near-korhogo-176d78"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "page:cv/bus-crash-kills-ten-on-fogo-island-a4101a":  {
+                                                                                "code":  "cv",
+                                                                                "headline":  "Bus Crash Kills Ten on Fogo Island",
+                                                                                "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                                                "pages":  [
+                                                                                              "cv/bus-crash-kills-ten-on-fogo-island-a4101a"
+                                                                                          ],
+                                                                                "withdrawn":  "2026-11-18"
+                                                                            },
+                      "68696c38995129da68fb":  {
+                                                   "code":  "cv",
+                                                   "headline":  "Driver Held After Schoolgirl Fatally Struck",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "cv/driver-held-after-schoolgirl-fatally-struck-68696c"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "875ece38629ec9e70437":  {
+                                                   "code":  "cv",
+                                                   "headline":  "Two trains collide in Spain",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "fb17f8177e7b1eff45c9":  {
+                                                   "code":  "dj",
+                                                   "headline":  "Djibouti condemns Jordan church attack",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "dj/djibouti-condemns-jordan-church-attack-fb17f8"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "c888e1fc3e2a84c46541":  {
+                                                   "code":  "dz",
+                                                   "headline":  "Pharmacist murdered in Constantine",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "dz/pharmacist-murdered-in-constantine-c888e1"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "2a808a496b2e5d9648f2":  {
+                                                   "code":  "eg",
+                                                   "headline":  "Bus crash kills three on Red Sea highway",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "eg/bus-crash-kills-three-on-red-sea-highway-2a808a"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "03e45f07930169e3e984":  {
+                                                   "code":  "eg",
+                                                   "headline":  "Egypt condemns Saudi airport attack, reaffirms solidarity",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "eg/egypt-condemns-saudi-airport-attack-reaffirms-solidarity-03e45f"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "6dcff443124f4f8c35ae":  {
+                                                   "code":  "ga",
+                                                   "headline":  "Gabon navy finds three bodies in Prospector 5 wreck",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ga/gabon-navy-finds-three-bodies-in-prospector-5-wreck-6dcff4"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "fe974ea760b7bd5cf462":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Accra shooting kills CEO Irene Atubiga and uncle",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/accra-shooting-kills-ceo-irene-atubiga-and-uncle-fe974e"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "77f2cfdfc130a5eb21d1":  {
+                                                   "code":  "gh",
+                                                   "headline":  "family demands justice for boy killed at festival",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/family-demands-justice-for-boy-killed-at-festival-77f2cf"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "28eb81bef97648a5753f":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Ghana Air Force evacuates injured immigration officer after Hamile blast",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/ghana-air-force-evacuates-injured-immigration-officer-after-28eb81"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "7d728df613f364cb72a8":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Ghana ambassador condoles family of teen shot in New York",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 15)",
+                                                   "pages":  [
+                                                                 "gh/ghana-ambassador-condoles-family-of-teen-shot-in-new-york-7d728d"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "09d0f79afc3c155f22be":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Ghana envoy expects US police to identify teen killer",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/ghana-envoy-expects-us-police-to-identify-teen-killer-09d0f7"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "2cf8dc957c4fc55ea217":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Ghanaian man stabbed to death in London",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/ghanaian-man-stabbed-to-death-in-london-2cf8dc"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "e4baaafd4a357706c6f4":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Ghanaian teenager killed in Toronto shooting",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/ghanaian-teenager-killed-in-toronto-shooting-e4baaa"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "e2317c5cd46743486a5d":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Police arrest three over Kasoa murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/police-arrest-three-over-kasoa-murder-e2317c"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "16c29773fecc6f410c3d":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Sakumono murder suspect arrested with pistol in Ashanti Region",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/sakumono-murder-suspect-arrested-with-pistol-in-ashanti-16c297"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "07a854f2391c0404aa95":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Teenager charged with murder over Ghanaian boy\u0027s death in New York",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "gh/teenager-charged-with-murder-over-ghanaian-boy-s-death-in-07a854"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "b45e3427139021ca0e2b":  {
+                                                   "code":  "gh",
+                                                   "headline":  "Tenerife striker De Miguel dies after collision",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "a370f3cc89e7fe38fbb9":  {
+                                                   "code":  "gm",
+                                                   "headline":  "Man jailed seven months for stabbing brother",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gm/man-jailed-seven-months-for-stabbing-brother-a370f3"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "37b5c9ce0cb9c2a07393":  {
+                                                   "code":  "gn",
+                                                   "headline":  "Boubacar Barry found dead after alleged kidnapping",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gn/boubacar-barry-found-dead-after-alleged-kidnapping-37b5c9"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "389d2194fb4e8d1c4f31":  {
+                                                   "code":  "gn",
+                                                   "headline":  "Brooklyn building collapse kills two Guineans, injures pregnant survivor",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "gn/brooklyn-building-collapse-kills-two-guineans-injures-389d21"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "13e37433e63706148663":  {
+                                                   "code":  "gn",
+                                                   "headline":  "Child drowns in construction site pit in Sonfonia",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gn/child-drowns-in-construction-site-pit-in-sonfonia-13e374"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "91b53d7380acfb688c7f":  {
+                                                   "code":  "gn",
+                                                   "headline":  "Dubreka arts institute official dies in road accident",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gn/dubreka-arts-institute-official-dies-in-road-accident-91b53d"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "4252b327e2747402eb09":  {
+                                                   "code":  "gn",
+                                                   "headline":  "Police inspector thanks public for support after mother\u0027s death",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gn/police-inspector-thanks-public-for-support-after-mother-s-4252b3"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "page:gn/truck-hits-and-kills-motorbike-taxi-driver-in-lambanyi-b3fa5e":  {
+                                                                                                    "code":  "gn",
+                                                                                                    "headline":  "Truck Hits and Kills Motorbike Taxi Driver in Lambanyi",
+                                                                                                    "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                                                                    "pages":  [
+                                                                                                                  "gn/truck-hits-and-kills-motorbike-taxi-driver-in-lambanyi-b3fa5e"
+                                                                                                              ],
+                                                                                                    "withdrawn":  "2026-11-18"
+                                                                                                },
+                      "71a96c048724b397a15e":  {
+                                                   "code":  "gn",
+                                                   "headline":  "Two-year-old boy drowns in well in Labé",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gn/two-year-old-boy-drowns-in-well-in-labe-71a96c"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "2bcccf7ecd012b1e0fa7":  {
+                                                   "code":  "gq",
+                                                   "headline":  "Equatorial Guinean goalkeeper involved in fatal clash",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gq/equatorial-guinean-goalkeeper-involved-in-fatal-clash-2bcccf"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "23f683c12608ff63a22f":  {
+                                                   "code":  "gq",
+                                                   "headline":  "fire kills six in malabo family home",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gq/fire-kills-six-in-malabo-family-23f683"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "a2bfebf2eba7b4f03803":  {
+                                                   "code":  "gq",
+                                                   "headline":  "Malian man dies after falling from Malabo Gendarmerie window",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "gq/malian-man-dies-after-falling-from-malabo-gendarmerie-window-a2bfeb"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "eecf5065ebb62d7bc8e7":  {
+                                                   "code":  "gq",
+                                                   "headline":  "Vehicle kills 17-year-old student in Luba",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "gq/vehicle-kills-17-year-old-student-in-luba-eecf50"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "a4733b0a77d1145ab059":  {
+                                                   "code":  "gw",
+                                                   "headline":  "11 charged with Olof Sambú murder in Guinea-Bissau",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "gw/guinea-bissau-charges-11-over-olof-sambu-death-a4733b"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "1741ed06b060a0ac7169":  {
+                                                   "code":  "gw",
+                                                   "headline":  "Guinea-Bissau prosecutor investigates vicar\u0027s death",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gw/guinea-bissau-prosecutor-investigates-vicar-s-death-1741ed"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "32b51af29625ba31d6e2":  {
+                                                   "code":  "gw",
+                                                   "headline":  "Lawyer urges faster probe into Olof Sambu lynching",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "gw/lawyer-urges-faster-inquiry-into-olof-sambu-lynching-32b51a"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "bd4c5348b2241221b740":  {
+                                                   "code":  "ke",
+                                                   "headline":  "College principal butchered in bedroom attack",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "ke/college-principal-butchered-in-bedroom-attack-bd4c53"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "0fe53747efce838df7d4":  {
+                                                   "code":  "ke",
+                                                   "headline":  "Six killed as building collapses near Nairobi",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 4, toll 0)",
+                                                   "pages":  [
+                                                                 "ke/six-killed-as-building-collapses-near-nairobi-0fe537"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "5740b5be0d3ca7a5438d":  {
+                                                   "code":  "ke",
+                                                   "headline":  "Six workers dead as eight-storey building collapses near Nairobi",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "ke/six-workers-dead-as-eight-storey-building-collapses-near-5740b5"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "88ced210d47fd7a28076":  {
+                                                   "code":  "km",
+                                                   "headline":  "Comorian man died one hour after TikTok live",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "km/comorian-man-died-one-hour-after-tiktok-live-88ced2"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "c66b7aa7763a203a40f5":  {
+                                                   "code":  "km",
+                                                   "headline":  "Comorian man found dead on Marseille highway",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "km/comorian-man-found-dead-on-marseille-highway-c66b7a"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "45c380c1b47582195bc1":  {
+                                                   "code":  "km",
+                                                   "headline":  "Comoros prisoner dies, another reportedly hospitalized",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "km/comoros-prisoner-dies-another-reportedly-hospitalized-45c380"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "f07eb51411e97e550a63":  {
+                                                   "code":  "km",
+                                                   "headline":  "Second convicted murderer dies in Naïcha case",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "km/second-convicted-murderer-dies-in-naicha-case-f07eb5"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "379c2dfd52b6f8e585d6":  {
+                                                   "code":  "km",
+                                                   "headline":  "Two Comoros murder convicts die within a week",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "km/two-comoros-murder-convicts-die-within-a-week-379c2d"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "7d796a52a794cc424f9f":  {
+                                                   "code":  "lr",
+                                                   "headline":  "Grebo leader urges calm after man found dead",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "lr/grebo-leader-urges-calm-after-man-found-dead-7d796a"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "654ad859a76317c47a03":  {
+                                                   "code":  "lr",
+                                                   "headline":  "Liberia charges seven people over attack on police officer in Sinkor",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "lr/seven-charged-over-assault-on-liberian-police-officer-654ad8"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "5c28fd9dbd33a9a810e1":  {
+                                                   "code":  "ls",
+                                                   "headline":  "Durban court views CCTV of alleged gunmen before AKA, Tibz killings",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ls/durban-court-views-cctv-of-alleged-gunmen-before-aka-tibz-5c28fd"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "9f5e6d6a249ba624b18c":  {
+                                                   "code":  "ls",
+                                                   "headline":  "Leribe man sentenced to one year for fatal shooting",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ls/leribe-man-sentenced-to-one-year-for-fatal-shooting-9f5e6d"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "849645ce476e3bd04b8e":  {
+                                                   "code":  "ls",
+                                                   "headline":  "two men sentenced for 2024 border murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ls/two-men-sentenced-for-2024-border-murder-849645"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "bd00190a93b06509155b":  {
+                                                   "code":  "ly",
+                                                   "headline":  "Libya\u0027s Health Ministry reports girl\u0027s death from toxic wild mushrooms",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 17)",
+                                                   "pages":  [
+                                                                 "ly/libya-s-health-ministry-reports-girl-s-death-from-toxic-bd0019"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "aa28f51b396999334402":  {
+                                                   "code":  "ma",
+                                                   "headline":  "Boy, 11, found dead as Ziz river levels rise",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 11)",
+                                                   "pages":  [
+                                                                 "ma/boy-11-found-dead-as-ziz-river-levels-rise-aa28f5"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "52499855b3542d3f075f":  {
+                                                   "code":  "ma",
+                                                   "headline":  "Morocco road accidents kill 23 in one week",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 23)",
+                                                   "pages":  [
+                                                                 "ma/morocco-road-accidents-kill-23-in-one-week-524998"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "06bb6bda5ee55b531dde":  {
+                                                   "code":  "ma",
+                                                   "headline":  "Morocco security chief orders promotion for injured officer",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ma/morocco-security-chief-orders-promotion-for-injured-officer-06bb6b"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "6a6ead2fb56d34556fae":  {
+                                                   "code":  "mg",
+                                                   "headline":  "Madagascar grandmother sentenced to life for murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "mg/madagascar-grandmother-sentenced-to-life-for-murder-6a6ead"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "bcdb75cc5a4fde112646":  {
+                                                   "code":  "mg",
+                                                   "headline":  "Photographer killed in Andraharo road accident",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "mg/photographer-killed-in-andraharo-road-accident-bcdb75"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "5452daace3129e4d8c13":  {
+                                                   "code":  "ml",
+                                                   "headline":  "armed attack kills one in Mali\u0027s Bandiagara",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 22)",
+                                                   "pages":  [
+                                                                 "ml/armed-attack-kills-one-in-mali-s-bandiagara-5452da"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "c1739c75508bb480e13f":  {
+                                                   "code":  "ml",
+                                                   "headline":  "Bamako families fear for missing relatives amid rising murders",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ml/bamako-families-fear-for-missing-relatives-amid-rising-c1739c"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "791825e092a16711f6c2":  {
+                                                   "code":  "ml",
+                                                   "headline":  "Mali police arrest suspects in three murders",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ml/mali-police-arrest-suspects-in-three-murders-791825"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "f55e4da06b16598746a6":  {
+                                                   "code":  "ml",
+                                                   "headline":  "Mali police arrest three suspected armed robbers in Bamako",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ml/mali-police-arrest-three-suspected-armed-robbers-in-bamako-f55e4d"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "page:mu/advocate-seeks-high-risk-framework-after-child-s-death-e0af35":  {
+                                                                                                    "code":  "mu",
+                                                                                                    "headline":  "Advocate Seeks High Risk Framework After Child\u0027s Death",
+                                                                                                    "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                                                                    "pages":  [
+                                                                                                                  "mu/advocate-seeks-high-risk-framework-after-child-s-death-e0af35"
+                                                                                                              ],
+                                                                                                    "withdrawn":  "2026-11-18"
+                                                                                                },
+                      "page:mu/bus-stations-record-19-injured-and-two-dead-in-two-years-a0ede9":  {
+                                                                                                      "code":  "mu",
+                                                                                                      "headline":  "Bus stations record 19 injured and two dead in two years",
+                                                                                                      "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 19)",
+                                                                                                      "pages":  [
+                                                                                                                    "mu/bus-stations-record-19-injured-and-two-dead-in-two-years-a0ede9"
+                                                                                                                ],
+                                                                                                      "withdrawn":  "2026-11-18"
+                                                                                                  },
+                      "ff54e013dc4f563f55c2":  {
+                                                   "code":  "mu",
+                                                   "headline":  "Driver hospitalised after Mont-Ida road crash",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "mu/driver-hospitalised-after-mont-ida-road-crash-ff54e0"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "2152868927a5c3824ad2":  {
+                                                   "code":  "mu",
+                                                   "headline":  "man stabbed in Roche-Bois",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "mu/man-stabbed-in-roche-bois-215286"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "a66382519f3c1243958a":  {
+                                                   "code":  "mu",
+                                                   "headline":  "Mauritius baby dies from intestinal tear",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "mu/mauritius-baby-dies-from-intestinal-tear-a66382"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "6e0525e6a259585e5fbe":  {
+                                                   "code":  "mu",
+                                                   "headline":  "Mauritius police arrest third suspect in murder probe",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "mu/mauritius-police-arrest-third-suspect-in-murder-probe-6e0525"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "afd1e7cb21376a29611d":  {
+                                                   "code":  "mu",
+                                                   "headline":  "Mauritius sergeant kept in detention over shooting",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "mu/mauritius-police-sergeant-detained-until-october-30-afd1e7"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "6d05230442c2c61788aa":  {
+                                                   "code":  "mu",
+                                                   "headline":  "Motorcyclist Dies in Poudre-d\u0027Or Collision",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 19)",
+                                                   "pages":  [
+                                                                 "mu/motorcyclist-dies-in-poudre-d-or-collision-6d0523"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "302dfb8e8930efff79b1":  {
+                                                   "code":  "mw",
+                                                   "headline":  "High Court acquits Egnat Katengeza of murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "mw/high-court-acquits-egnat-katengeza-of-murder-302dfb"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "b934d2996550faeb9eda":  {
+                                                   "code":  "mw",
+                                                   "headline":  "Man dies after 28-year court battle for unpaid salary",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "mw/man-dies-after-28-year-court-battle-for-unpaid-salary-b934d2"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "c84b9959d35de06c745b":  {
+                                                   "code":  "mw",
+                                                   "headline":  "Nachipanti victim speaks 17 years after family killings",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "mw/nachipanti-victim-speaks-17-years-after-family-killings-c84b99"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "43d56f4590ac4fa33838":  {
+                                                   "code":  "mz",
+                                                   "headline":  "Mozambican boy, 15, found brutally murdered",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 4, toll 0)",
+                                                   "pages":  [
+                                                                 "mz/mozambican-boy-15-brutally-murdered-friend-missing-43d56f"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "5c8a019b4d0dc5dab946":  {
+                                                   "code":  "mz",
+                                                   "headline":  "Mozambique police arrest sixth suspect in bishop\u0027s murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "mz/mozambique-police-arrest-sixth-suspect-in-bishop-s-murder-5c8a01"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "6865d56dd67a2b840e02":  {
+                                                   "code":  "na",
+                                                   "headline":  "Namibian man claims murder charges are false",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "na/namibian-man-claims-murder-charges-are-false-6865d5"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "09d06ca2b80853de43b9":  {
+                                                   "code":  "na",
+                                                   "headline":  "Swakopmund wall collapse kills casual worker at rest camp",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)",
+                                                   "pages":  [
+                                                                 "na/swakopmund-worker-killed-when-concrete-wall-collapses-09d06c"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "45726b91511f4a1e7294":  {
+                                                   "code":  "na",
+                                                   "headline":  "Truck crash in Windhoek kills passenger after brake failure",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)",
+                                                   "pages":  [
+                                                                 "na/truck-crash-in-windhoek-kills-passenger-after-brake-failure-45726b"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "802282e8dd7a5166ef03":  {
+                                                   "code":  "ng",
+                                                   "headline":  "Butcher stabs colleague to death in Ogun over sweeping chore",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ng/butcher-stabs-colleague-to-death-in-ogun-over-sweeping-chore-802282"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "f8cfe55a1815667dcfd4":  {
+                                                   "code":  "ng",
+                                                   "headline":  "Ex-Lagos civil servant found dead in UK home",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)",
+                                                   "pages":  [
+                                                                 "ng/ex-lagos-civil-servant-found-dead-in-uk-home-f8cfe5"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "95edc64e865c8e3fb62f":  {
+                                                   "code":  "ng",
+                                                   "headline":  "Gunmen demand N500m for abducted FUNAAB graduate, three others",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "ng/gunmen-demand-n500m-for-abducted-funaab-graduate-three-95edc6"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "8148489552830edb87a5":  {
+                                                   "code":  "ng",
+                                                   "headline":  "Lagos driver kills okada rider fleeing police",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ng/lagos-driver-kills-okada-rider-fleeing-police-814848"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "15ee83f59e0186a948bf":  {
+                                                   "code":  "ng",
+                                                   "headline":  "Osun building collapse kills three",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ng/osun-building-collapse-kills-three-15ee83"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "5c407561e19a369be272":  {
+                                                   "code":  "ng",
+                                                   "headline":  "Police rescue 11 kidnapped victims",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 11)",
+                                                   "pages":  [
+                                                                 "ng/police-rescue-11-kidnapped-victims-5c4075"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "43ccf41a9e281185353a":  {
+                                                   "code":  "ng",
+                                                   "headline":  "two trucks overturn in Lagos, kill mother and child",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ng/two-trucks-overturn-in-lagos-kill-mother-and-child-43ccf4"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "e4dbfea5806141251326":  {
+                                                   "code":  "sl",
+                                                   "headline":  "Socfin worker dies after falling from moving truck",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "sl/socfin-worker-dies-after-falling-from-moving-truck-e4dbfe"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "d14c066e194c465c97fd":  {
+                                                   "code":  "sn",
+                                                   "headline":  "Senegal seeks suspect\u0027s return from Mauritania",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "sn/senegal-seeks-suspect-s-return-from-mauritania-d14c06"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "63c2ac48454a5f168780":  {
+                                                   "code":  "ss",
+                                                   "headline":  "Doctor shot in revenge attack at Cueibet hospital",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ss/doctor-shot-in-revenge-attack-at-cueibet-hospital-63c2ac"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "7659056bdf7f59fc4799":  {
+                                                   "code":  "ss",
+                                                   "headline":  "ex-commissioner arrested after airstrip shooting",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ss/ex-commissioner-arrested-after-airstrip-shooting-765905"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "5f625efb125691b3c088":  {
+                                                   "code":  "ss",
+                                                   "headline":  "Nurse shot in suspected revenge attack at Cueibet hospital",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ss/nurse-shot-in-suspected-revenge-attack-at-cueibet-hospital-5f625e"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "d5a0eaa8902d1ad19c07":  {
+                                                   "code":  "ss",
+                                                   "headline":  "South Sudan murder trial adjourned after bail absconders",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ss/south-sudan-murder-trial-adjourned-after-bail-absconders-d5a0ea"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "47bdc967748b8e6c00de":  {
+                                                   "code":  "ss",
+                                                   "headline":  "Yambio infant needs surgery after baboon attack",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ss/yambio-infant-needs-surgery-after-baboon-attack-47bdc9"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "9351c4d20bf94733b24f":  {
+                                                   "code":  "st",
+                                                   "headline":  "Sao Tome president sends condolences for Spain train crash",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "st/sao-tome-president-sends-condolences-for-spain-train-crash-9351c4"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "547776b21b21044d5ddc":  {
+                                                   "code":  "sz",
+                                                   "headline":  "Bullet lodged in girl\u0027s foot after shooting incident",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "sz/bullet-lodged-in-girl-s-foot-after-shooting-incident-547776"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "f8dd7b13eee68d74f28e":  {
+                                                   "code":  "sz",
+                                                   "headline":  "Ex-deputy sheriff sentenced to 124 years for murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "sz/ex-deputy-sheriff-sentenced-to-124-years-for-murder-f8dd7b"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "9e6720905f24de6d2bca":  {
+                                                   "code":  "sz",
+                                                   "headline":  "Man sentenced for four murders",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "sz/man-sentenced-for-four-murders-9e6720"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "e67e562f7d6b27072044":  {
+                                                   "code":  "sz",
+                                                   "headline":  "Police probe death of missing guard found in Mfabantfu forest",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "sz/police-probe-death-of-missing-guard-found-in-mfabantfu-e67e56"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "63b2afd9a0f66de80c1b":  {
+                                                   "code":  "sz",
+                                                   "headline":  "Pupil, 14, drowns in Mbabane River after leaving school to swim",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "sz/pupil-14-drowns-in-mbabane-river-after-leaving-school-to-63b2af"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "58fcb54ad3f32cc04f82":  {
+                                                   "code":  "td",
+                                                   "headline":  "Road accident kills three in Chad\u0027s Mandoul",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "td/road-accident-kills-three-in-chad-s-mandoul-58fcb5"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "312bec7aee177b8af9a3":  {
+                                                   "code":  "td",
+                                                   "headline":  "three die in N\u0027Djamena road accident",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "td/three-die-in-n-djamena-road-accident-312bec"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "055dca91d1a1e7166204":  {
+                                                   "code":  "td",
+                                                   "headline":  "Vehicle crashes into home in N\u0027Djaména, killing one",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)",
+                                                   "pages":  [
+                                                                 "td/vehicle-crashes-into-home-in-n-djamena-killing-one-055dca"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "e8c337e50cd6dbd0a5f8":  {
+                                                   "code":  "tg",
+                                                   "headline":  "Two missing after pirogue accident on Lake Togo",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "tg/two-missing-after-pirogue-accident-on-lake-togo-e8c337"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "cafbac371025147c57b2":  {
+                                                   "code":  "tn",
+                                                   "headline":  "12 farm workers injured in tunisia road accident",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "tn/12-farm-workers-injured-in-tunisia-road-accident-cafbac"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "f22c7cb9b71d516dc649":  {
+                                                   "code":  "tn",
+                                                   "headline":  "Tunis court sentences neighbour to death for child murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "tn/tunis-court-sentences-neighbour-to-death-for-child-murder-f22c7c"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "106c1ae51429d126531f":  {
+                                                   "code":  "tn",
+                                                   "headline":  "Tunisia ministry supports children after mother\u0027s murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "tn/tunisia-ministry-supports-children-after-mother-s-murder-106c1a"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "c4200a4952cbcef5e310":  {
+                                                   "code":  "tn",
+                                                   "headline":  "Tunisian man admits killing pregnant wife in Montreal",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "tn/tunisian-man-admits-killing-pregnant-wife-in-montreal-c4200a"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "b394b04616c4aa247314":  {
+                                                   "code":  "tz",
+                                                   "headline":  "Bus and lorry crash kills 21 in Iringa",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 21)",
+                                                   "pages":  [
+                                                                 "tz/bus-and-lorry-crash-kills-21-in-iringa-b394b0"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "61f382314f9f0469a576":  {
+                                                   "code":  "ug",
+                                                   "headline":  "Deaf Link Uganda director shot dead in Kisoro lodge attack",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ug/deaf-link-uganda-director-shot-dead-in-kisoro-lodge-attack-61f382"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "a57c43e9a38a4da975a3":  {
+                                                   "code":  "ug",
+                                                   "headline":  "Uganda DPP disputes Shs129 million robbery claim",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ug/uganda-dpp-disputes-shs129-million-robbery-claim-a57c43"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "158cde224804e37ce675":  {
+                                                   "code":  "ug",
+                                                   "headline":  "Uganda: epilepsy drug mix-up kills child, hospitalises 16",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ug/uganda-child-dies-after-epilepsy-drug-mix-up-158cde"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "1a76bedcf2631f0f1d4a":  {
+                                                   "code":  "ug",
+                                                   "headline":  "URA operation bullet kills 13-year-old boy in Busia",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "ug/ura-operation-bullet-kills-13-year-old-boy-in-busia-1a76be"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "06c4f6da6dd1151fc53d":  {
+                                                   "code":  "za",
+                                                   "headline":  "17 killed in two South African mass shootings",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 4, toll 17)",
+                                                   "pages":  [
+                                                                 "za/17-killed-in-two-south-african-mass-shootings-06c4f6"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "5aca5b4cb315856e55b9":  {
+                                                   "code":  "za",
+                                                   "headline":  "Bail denied for man accused of killing TUT student",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "za/bail-denied-for-man-accused-of-killing-tut-student-5aca5b"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "6655b785b5db0bb20e6b":  {
+                                                   "code":  "za",
+                                                   "headline":  "Cape Town shooting leaves five dead",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "za/cape-town-shooting-leaves-five-dead-6655b7"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "14bbfb456d3bdbb95931":  {
+                                                   "code":  "za",
+                                                   "headline":  "Farm attack survivor Donovan Marx leaves hospital",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "za/four-men-accused-over-donovan-marx-farm-attack-drop-bail-bid-14bbfb"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "88f45be40a55748af88a":  {
+                                                   "code":  "za",
+                                                   "headline":  "foreign national beaten to death in Durban",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "za/foreign-national-beaten-to-death-in-durban-88f45b"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "8daad41bb58b056b27ef":  {
+                                                   "code":  "za",
+                                                   "headline":  "Johannesburg zoo investigates over 20 bird deaths at Zoo Lake",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 20)",
+                                                   "pages":  [
+                                                                 "za/johannesburg-zoo-investigates-over-20-bird-deaths-at-zoo-8daad4"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "68bba3f1d13824e27e6d":  {
+                                                   "code":  "za",
+                                                   "headline":  "Nine shot dead in Atteridgeville shack",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 4, toll 0)",
+                                                   "pages":  [
+                                                                 "za/nine-shot-dead-in-atteridgeville-shack-68bba3"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "782dea5088ae661bbc61":  {
+                                                   "code":  "za",
+                                                   "headline":  "South Africa minister condemns brutal farm attack",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "za/south-africa-minister-condemns-brutal-farm-attack-782dea"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "497cf493dedfe98e426a":  {
+                                                   "code":  "za",
+                                                   "headline":  "South Africa\u0027s Hyron Andrews died of natural causes",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "za/south-africa-s-hyron-andrews-died-of-natural-causes-497cf4"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "bc9c6fea78d0380f9433":  {
+                                                   "code":  "za",
+                                                   "headline":  "Swimmer killed by shark; East London beaches closed",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "za/swimmer-killed-by-shark-east-london-beaches-closed-bc9c6f"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "2e8a476b1d3b25f45d5a":  {
+                                                   "code":  "za",
+                                                   "headline":  "Swimmer killed in shark attack at Orient Beach",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "za/swimmer-killed-in-shark-attack-at-orient-beach-2e8a47"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "b36150cc725b165d4a44":  {
+                                                   "code":  "za",
+                                                   "headline":  "three cops convicted over nathaniel julies murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "za/three-cops-convicted-over-nathaniel-julies-murder-b36150"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "d25e7866013e214fb73b":  {
+                                                   "code":  "zm",
+                                                   "headline":  "Kalumbila district commissioner and driver killed in road crash",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)",
+                                                   "pages":  [
+                                                                 "zm/kalumbila-district-commissioner-and-driver-killed-in-road-d25e78"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "bc916667169eba0468c4":  {
+                                                   "code":  "zm",
+                                                   "headline":  "Man dies after sister pours hot water on him",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 0, toll 0)",
+                                                   "pages":  [
+                                                                 "zm/man-dies-after-sister-pours-hot-water-on-him-bc9166"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "067a8315fd991bbfb2a1":  {
+                                                   "code":  "zm",
+                                                   "headline":  "Police in Nchelenge arrest fisherman over Lake Mweru killing",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 2, toll 0)",
+                                                   "pages":  [
+                                                                 "zm/police-in-nchelenge-arrest-fisherman-over-lake-mweru-killing-067a83"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               },
+                      "c386840db2bb211d40dc":  {
+                                                   "code":  "zw",
+                                                   "headline":  "Former Chiredzi councillor remanded over murder",
+                                                   "reason":  "routine crime or casualty story below the Wall Street Journal bar (reach 3, toll 0)",
+                                                   "pages":  [
+                                                                 "zw/former-chiredzi-councillor-remanded-over-murder-c38684"
+                                                             ],
+                                                   "withdrawn":  "2026-11-18"
+                                               }
+                  }
+}

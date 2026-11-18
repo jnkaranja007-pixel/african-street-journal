@@ -391,6 +391,19 @@ $pagesOnDisk = New-Object System.Collections.Generic.List[object]
 # stories stayed on their country's "Earlier stories" list for 90 days (Paris v
 # Barcelona on Burundi's, a Lisbon protest on Namibia's, South Sudan on Sudan's).
 $withdrawn = 0
+# Stories withdrawn as below the Wall Street Journal bar (scripts/audit-wsj-archive.ps1,
+# 18 Nov 2026): their pages are taken down and never built again, by story id or address.
+$wsjWithdrawnIds = @{}
+$wsjWithdrawnPages = @{}
+$wsjWithdrawnPath = Join-Path $root 'data\wsj-withdrawn.json'
+if (Test-Path $wsjWithdrawnPath) {
+  $wsjDoc = [IO.File]::ReadAllText($wsjWithdrawnPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+  foreach ($w in $wsjDoc.withdrawn.PSObject.Properties) {
+    $wsjWithdrawnIds[[string]$w.Name] = $true
+    foreach ($pg in @($w.Value.pages)) { if ($pg) { $wsjWithdrawnPages[[string]$pg] = $true } }
+  }
+}
+$wsjWithdrawn = 0
 foreach ($c in $pageCodes) {
   $cDir = Join-Path $root $c
   if (-not (Test-Path $cDir)) { continue }
@@ -399,6 +412,11 @@ foreach ($c in $pageCodes) {
     $page = Join-Path $sub.FullName 'index.html'
     if (-not (Test-Path $page)) { continue }
     $head = Read-StoryPageHead $page
+    if ($wsjWithdrawnPages.ContainsKey("$c/$($sub.Name)") -or ($head.StoryId -and $wsjWithdrawnIds.ContainsKey([string]$head.StoryId))) {
+      [IO.Directory]::Delete($sub.FullName, $true)
+      $wsjWithdrawn++
+      continue
+    }
     if ($head.Headline -and -not $head.MovedTo -and $placeRegistry.$c) {
       if (-not $placeDesk) { $placeDesk = Get-NewsDeskTerms $placeRegistry $c $root }
       $placeIssue = Get-StoryPlaceIssue ([pscustomobject]@{ headline = $head.Headline; dek = $head.Dek; paragraphs = @($head.Opening) }) $placeDesk
@@ -969,7 +987,7 @@ foreach ($p in $superseded) {
   }
   if ($p.home -and $p.movedTo -ne $target) { Write-MovedStoryPage $p $target; $moved++ }
 }
-Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $archiveRebuilt kept pages rebuilt from the archive and $archivePatched patched, $moved older addresses redirected, $withdrawn withdrawn as off-country, $orphaned redirects to removed pages dropped" -ForegroundColor DarkGray
+Write-Host "[static] $storyBuilt story pages ($shareDrawn share images drawn), $($earlierUrls.Count) earlier pages kept, $swept swept past $StoryDays days, $archiveRebuilt kept pages rebuilt from the archive and $archivePatched patched, $moved older addresses redirected, $withdrawn withdrawn as off-country, $wsjWithdrawn withdrawn below the Wall Street Journal bar, $orphaned redirects to removed pages dropped" -ForegroundColor DarkGray
 
 # The same earlier stories for the app's country view (data/earlier/<cc>.json, a few KB,
 # loaded when a country opens): headline, page and day of the 30 newest that are not in

@@ -69,7 +69,9 @@ $script:NEWS_TOPIC_RULES = [ordered]@{
 # rose to the top of the paper. The owner asked for the Wall Street Journal's balance:
 # killings lead only when they change how a country is governed or how its economy runs.
 $script:NEWS_URGENT = @('war','coup','ceasefire','outbreak','cholera','ebola','mpox','flood','drought','cyclone',
-                        'wildfire','famine','evacuation','emergency','hostage','refugee')
+                        'dengue','yellow fever','diphtheria','measles','meningitis','anthrax','marburg','lassa','polio',
+                        'floods','flooding','landslide','landslides','storm','storms','heavy rains','extreme weather','weather',
+                        'wildfire','famine','evacuation','emergency','hostage','refugee','health crisis','epidemic','malaria')
 # Routine harm: crime, crashes and killings. A story built on these words, with no policy
 # or economic consequence in its headline or summary, is marked down (Get-NewsScore).
 # Phrases only where a single word would catch other news ('shot dead', not 'shot').
@@ -87,13 +89,34 @@ $script:NEWS_CONFLICT_ACTORS = @('jihadist','jihadists','jihadi','insurgent','in
                                  'militia','militias','boko haram','iswap','islamic state','al shabaab','shabaab','jnim',
                                  'al qaeda','m23','rapid support forces','rsf','adf','allied democratic forces','ambazonia',
                                  'ambazonian','separatist','separatists','junta','mutiny','mutineers','ceasefire','peace deal',
-                                 'peace talks','armed forces','army','troops','airstrike','airstrikes','drone strike','drone strikes')
+                                 'peace talks','armed forces','army','troops','armed group','armed groups','security forces',
+                                 'wagner','mercenaries','africa corps','spla','spla io','splm io','sspdf','factions',
+                                 'communal violence','communal fighting','communal clashes','intercommunal','ethnic violence',
+                                 'cattle raid','cattle raids','terrorist','terrorists','terrorism','drone attack','drone attacks',
+                                 'missile','missiles','airstrike','airstrikes','drone strike','drone strikes',
+                                 # The farmer-herder conflict, war's leftovers and party violence.
+                                 'pastoralist','pastoralists','herder','herders','landmine','landmines','unexploded','splm')
 # What turns a harm story into business or policy news: the economy, a law, money.
 $script:NEWS_HARM_EXEMPT = @('election','budget','tax','debt','inflation','interest rate','currency','law','bill','parliament',
                              'sanctions','treaty','fuel','food','power','electricity','unemployment','jobs','wage','policy',
                              'investment','trade','export','import','mine','mining','oil','gas','pipeline','port','rail',
                              'bank','business','market','company','tourism','insurance','aid','imf','world bank',
-                             'goal','target','strategy','regulation','reform','inquiry','ban')
+                             'goal','target','strategy','regulation','reform','inquiry','ban',
+                             # Governance through an African lens: the death penalty is law, a protest
+                             # is politics, an attack on reporters is press freedom.
+                             'death penalty','protest','journalist','press freedom',
+                             # Plurals and forms: these are matched on the plain text, word for word.
+                             'elections','taxes','debts','laws','bills','policies','investments','investor','investors',
+                             'exports','imports','mines','pipelines','ports','banks','markets','companies','targets',
+                             'reforms','bans','protests','protesters','journalists','economy','economic',
+                             'death warrant','death warrants','detainees','custody','torture','human rights','rights group',
+                             'rights commission','opposition','candidate','political','politics','unicef','unhcr',
+                             'united nations','peacekeeper','peacekeepers','humanitarian','road safety','speed camera',
+                             'speed cameras','statistics','data','halve','contest','championship','tournament',
+                             # An activist's disappearance is politics; a forensic cover-up of a vice
+                             # president's crash is a state story; freed hostages, a steel plant shut.
+                             'activist','activists','disappearance','vice president','forensic','military court',
+                             'freed','cost','costs','steel','factory','shutdown','school closures')
 $script:NEWS_PUBLIC = @('election','budget','tax','debt','inflation','interest rate','currency','court','law','bill','parliament',
                         'strike','protest','security','hospital','health','school','university',
                         'fuel','food','power','electricity','unemployment','jobs','wage','sanctions','treaty')
@@ -399,11 +422,21 @@ function Test-NewsCorroboration($Lead, $Member) {
   return ($opening.Containment -ge 0.30 -and ($titleShared -ge 1 -or $opening.Shared -ge 7))
 }
 
+# Each phrase's pattern is built once: the word lists are checked against every feed
+# item and, in the archive audit, 5,000 stories (it took 23 minutes rebuilding them).
+$script:NEWS_PHRASE_PATTERNS = @{}
 function Test-NewsPhrase([string]$NormalText, [string]$Phrase) {
-  $needle = ConvertTo-NewsText $Phrase
-  if (-not $needle) { return $false }
-  $parts = @($needle -split '\s+' | Where-Object { $_ })
-  $pattern = '(?<![\p{L}\p{N}])' + (($parts | ForEach-Object { [regex]::Escape($_) }) -join '\s+') + '(?![\p{L}\p{N}])'
+  $pattern = $script:NEWS_PHRASE_PATTERNS[$Phrase]
+  if ($null -eq $pattern) {
+    $needle = ConvertTo-NewsText $Phrase
+    $pattern = ''
+    if ($needle) {
+      $parts = @($needle -split '\s+' | Where-Object { $_ })
+      $pattern = '(?<![\p{L}\p{N}])' + (($parts | ForEach-Object { [regex]::Escape($_) }) -join '\s+') + '(?![\p{L}\p{N}])'
+    }
+    $script:NEWS_PHRASE_PATTERNS[$Phrase] = $pattern
+  }
+  if (-not $pattern) { return $false }
   return [regex]::IsMatch($NormalText, $pattern)
 }
 
@@ -544,9 +577,14 @@ function Get-EditorialScore($Item, [int]$OutletCount, [datetime]$Now) {
   # coup or disaster, or a policy or economic consequence.
   # In the headline, or twice in the summary: "the late founder, who died in 2023" in a
   # church succession story is background, not a casualty report.
-  $harm = (Get-NewsMatchCount (ConvertTo-CanonicalNewsText $Item.title) $script:NEWS_ROUTINE_HARM 1) -or
-    ((Get-NewsMatchCount $text $script:NEWS_ROUTINE_HARM 2) -ge 2)
-  if ($harm -and -not $urgent -and -not (Get-NewsMatchCount $text $script:NEWS_HARM_EXEMPT 1) -and
+  # Plain text: the canonical form reads "terrorism" as "attack", which made a terrorism
+  # designation or trial a casualty report.
+  $plainHarm = ConvertTo-NewsText ([string]$Item.title + ' ' + [string]$Item.summary)
+  $harm = (Get-NewsMatchCount (ConvertTo-NewsText ([string]$Item.title)) $script:NEWS_ROUTINE_HARM 1) -or
+    ((Get-NewsMatchCount $plainHarm $script:NEWS_ROUTINE_HARM 2) -ge 2)
+  # The exemptions are read on the plain text: the canonical form turns "investigation"
+  # into "investment", which made a murder inquiry business news.
+  if ($harm -and -not $urgent -and -not (Get-NewsMatchCount (ConvertTo-NewsText ([string]$Item.title + ' ' + [string]$Item.summary)) $script:NEWS_HARM_EXEMPT 1) -and
       -not (Get-NewsMatchCount (ConvertTo-NewsText ([string]$Item.title + ' ' + [string]$Item.summary)) $script:NEWS_CONFLICT_ACTORS 1)) {
     $breakdown.penalties -= 3.0
     $reasons.Add('routine crime or casualty report')
@@ -610,12 +648,14 @@ function Get-EditorialScore($Item, [int]$OutletCount, [datetime]$Now) {
 function Get-NewsMassToll([string]$Text) {
   $plain = ConvertTo-NewsText $Text
   if (-not $plain) { return 0 }
-  $num = '(?<n>\d{1,3}(?: \d{3})+|\d+)'
-  $death = '(?:killed|dead|died|deaths|bodies|slain|fatalities|lives)'
+  # Not an age or a span: "an 86-year-old who died", "five years after his death".
+  $num = '(?<n>\d{1,3}(?: \d{3})+|\d+)(?! (?:year|years|yr|day|days|week|weeks|month|months|hour|hours|minute|minutes|km|percent|per cent)\b)'
+  # Victims, not only the dead: a mass abduction ("78 abducted children") counts too.
+  $death = '(?:killed|dead|died|deaths|bodies|slain|fatalities|lives|abducted|kidnapped|hostages)'
   $best = 0
   foreach ($rx in @(
       ($num + ' (?:[a-z]+ ){0,3}?' + $death + '\b'),
-      ('\b(?:kills|killed|killing|claims|claimed|leaves|left|toll(?: rises| climbs)?(?: to| at)?) (?:at least |more than |over |nearly |about |some )?' + $num + '\b'))) {
+      ('\b(?:kill|kills|killed|killing|claims|claimed|leaves|left|toll(?: rises| climbs)?(?: to| at)?) (?:at least |more than |over |nearly |about |some )?' + $num + '\b'))) {
     foreach ($m in [regex]::Matches($plain, $rx)) {
       $digits = $m.Groups['n'].Value -replace ' ', ''
       $v = 0
@@ -624,6 +664,8 @@ function Get-NewsMassToll([string]$Text) {
       if ($v -gt $best) { $best = $v }
     }
   }
+  # Spelled-out hundreds: "one hundred ninety-one murders", "hundreds killed".
+  if ($best -lt 100 -and $plain -match '\b(?:hundred|hundreds|thousand|thousands)\b (?:[a-z]+ ){0,3}?(?:killed|dead|died|deaths|bodies|murders|abducted|kidnapped)\b') { $best = 100 }
   return $best
 }
 
@@ -633,8 +675,17 @@ function Get-NewsMassToll([string]$Text) {
 # judges that one again (Test-WsjBar in scripts/wsj-standards.ps1). Owner, 18 Nov 2026:
 # "delete stories that include death or killed ... unless it's super major".
 $script:NEWS_WSJ_MASS_TOLL = 25
+# An obituary of a public figure is not a casualty report; the Journal runs them.
+function Test-NewsObituary([string]$Title) {
+  $t = ConvertTo-NewsText $Title
+  if ($t -notmatch '\b(?:dies|died|death|dead|passes away|passed away)\b') { return $false }
+  if ($t -match '\b(?:kill|killed|kills|murder|murdered|shot|shooting|stab|stabbed|crash|accident|collision|attack|attacked|drown|drowns|drowned|fire|blast|explosion|collapse|bodies|found dead|suicide|falling|fell|hanged|beaten|lynched|probe into)\b') { return $false }
+  if ($t -match '\b(?:at|aged) (?:age )?\d{2,3}\b') { return $true }
+  return ($t -match '\b(?:former|minister|ambassador|president|chief|leader|legend|star|comedian|singer|musician|artist|footballer|coach|lawyer|bishop|archbishop|king|queen|senator|governor|general|commander|founder|veteran|icon|actor|actress|writer|author|journalist|figure|politician|businessman|tycoon|activist|legacy|mp)\b')
+}
 function Test-NewsBelowWsjBar($Item) {
   if (@($Item.rankReasons) -notcontains 'routine crime or casualty report') { return $false }
+  if (Test-NewsObituary ([string]$Item.title)) { return $false }
   return ((Get-NewsMassToll ([string]$Item.title + ' ' + [string]$Item.summary)) -lt $script:NEWS_WSJ_MASS_TOLL)
 }
 
