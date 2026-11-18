@@ -276,6 +276,7 @@
 (function () {
   'use strict';
   var LINKS = [
+    ['WhatsApp', 'https://whatsapp.com/channel/0029Vb9FDpiCRs1xMjnqBy3Q'],
     ['X', 'https://x.com/thestreetafrica'],
     ['Instagram', 'https://www.instagram.com/theafricanstreetjournal/'],
     ['YouTube', 'https://www.youtube.com/@theafricanstreetjournal']
@@ -284,7 +285,7 @@
     if (!document.getElementById('asj-follow-style')) {
       var st = document.createElement('style');
       st.id = 'asj-follow-style';
-      st.textContent = '.asj-info-menu .asj-follow{display:grid;grid-template-columns:repeat(3,max-content);align-items:center;gap:0;margin:4px 0 0;padding:12px 8px 0 16px;border-top:1px solid var(--c-2c2c2c,var(--rule,#2c2c2c))}' +
+      st.textContent = '.asj-info-menu .asj-follow{display:grid;grid-template-columns:repeat(2,max-content);align-items:center;gap:0;margin:4px 0 0;padding:12px 8px 0 16px;border-top:1px solid var(--c-2c2c2c,var(--rule,#2c2c2c))}' +
         '.asj-info-menu .asj-follow span{grid-column:1 / -1;margin:0 0 2px;color:var(--c-8f8a83,var(--text-dim,#8f8a83));font:700 10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}' +
         '.asj-info-menu .asj-follow a,.asj-info-menu .asj-follow a:visited{display:inline-flex;align-items:center;min-height:44px;padding:0 14px 0 0!important;letter-spacing:.06em!important;white-space:nowrap}';
       (document.head || document.documentElement).appendChild(st);

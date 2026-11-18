@@ -211,7 +211,7 @@ article .dek{margin:0 0 12px}
 @media (max-width:520px){.country-actions .open{flex:1 1 100%;justify-content:center}}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=71" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=139" defer></script>'
 # The paper's social accounts (data/social-config.js): a Follow line in every footer
 # once a handle is set, and sameAs on the publisher so search engines tie them to it.
 $socialWhatsapp = ''; $socialTelegram = ''; $socialBluesky = ''; $socialX = ''; $socialXHandle = ''; $socialInstagram = ''; $socialYoutube = ''

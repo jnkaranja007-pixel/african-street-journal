@@ -7439,8 +7439,10 @@ function renderFollowNudge(countryId) {
     return;
   }
   const tg = String(window.ASJ_SOCIAL?.telegram || '');
+  const wa = String(window.ASJ_SOCIAL?.whatsapp || '');
   el.innerHTML = '<p class="cv-follow-copy"><b>Back for ' + escapeHtml(name) + '?</b> Follow it, and its latest stories will lead your front page on this device.</p>' +
     '<div class="cv-follow-actions"><button type="button" class="cv-follow-go" data-follow>Follow ' + escapeHtml(name) + '</button>' +
+    (/^[A-Za-z0-9]{16,40}$/.test(wa) ? '<a href="https://whatsapp.com/channel/' + wa + '" target="_blank" rel="noopener">Get the paper on WhatsApp</a>' : '') +
     (/^[A-Za-z0-9_]{5,32}$/.test(tg) ? '<a href="https://t.me/' + tg + '" target="_blank" rel="noopener">Get the paper on Telegram</a>' : '') +
     countryFeedLink(countryId) +
     '<button type="button" class="cv-follow-later" data-later>Not now</button></div>';
