@@ -211,7 +211,7 @@ article .dek{margin:0 0 12px}
 @media (max-width:520px){.country-actions .open{flex:1 1 100%;justify-content:center}}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=139" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=140" defer></script>'
 # The paper's social accounts (data/social-config.js): a Follow line in every footer
 # once a handle is set, and sameAs on the publisher so search engines tie them to it.
 $socialWhatsapp = ''; $socialTelegram = ''; $socialBluesky = ''; $socialX = ''; $socialXHandle = ''; $socialInstagram = ''; $socialYoutube = ''
@@ -234,10 +234,10 @@ if (Test-Path $socialPath) {
 $followParts = @()
 # WhatsApp first: it is where most of the paper's readers already are.
 if ($socialWhatsapp) { $followParts += "<a href=""$socialWhatsapp"" rel=""me noopener"">WhatsApp</a>" }
+if ($socialTelegram) { $followParts += "<a href=""$socialTelegram"" rel=""me noopener"">Telegram</a>" }
 if ($socialX) { $followParts += "<a href=""$socialX"" rel=""me noopener"">X</a>" }
 if ($socialInstagram) { $followParts += "<a href=""$socialInstagram"" rel=""me noopener"">Instagram</a>" }
 if ($socialYoutube) { $followParts += "<a href=""$socialYoutube"" rel=""me noopener"">YouTube</a>" }
-if ($socialTelegram) { $followParts += "<a href=""$socialTelegram"" rel=""me noopener"">Telegram</a>" }
 if ($socialBluesky) { $followParts += "<a href=""$socialBluesky"" rel=""me noopener"">Bluesky</a>" }
 $followHtml = $followParts -join ' &middot; '
 if ($followParts.Count) { $siteLinks = "<span class=""follow""> &middot; Follow on $followHtml</span>" + $siteLinks }
@@ -1280,7 +1280,7 @@ if ($top.Count) {
   [void]$digestBody.Append((New-DigestBlock 'dg-wa' 'WhatsApp - groups, Status, Channel' ($waLines -join "`n") $top[0].url))
   $fbLines = @("Today on The African Street Journal ($digestDay):", '')
   foreach ($d in $top) { $fbLines += "$($d.country) - $($d.headline)"; $fbLines += $d.url; $fbLines += '' }
-  $fbLines += "Every country, every source: $BaseUrl/"
+  $fbLines += "All 55 countries, every source named and linked: $BaseUrl/"
   [void]$digestBody.Append((New-DigestBlock 'dg-fb' 'Facebook page or group' ($fbLines -join "`n") $top[0].url))
   $xText = "$($top[0].country): $($top[0].headline) $($top[0].url)"
   [void]$digestBody.Append("<section class=""dg""><h2 class=""section-label"">X - the lead story</h2><textarea id=""dg-x"" readonly rows=""3"">$(Esc $xText)</textarea><p class=""dg-actions""><button type=""button"" data-copy=""dg-x"">Copy</button><a href=""https://x.com/intent/post?text=$([Uri]::EscapeDataString($xText))"" target=""_blank"" rel=""noopener"">Post on X</a></p></section>")

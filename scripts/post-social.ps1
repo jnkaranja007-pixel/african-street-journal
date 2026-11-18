@@ -116,7 +116,7 @@ try {
   $tgLines.Add('')
   foreach ($p in $picked) { $tgLines.Add("<b>$(HtmlEsc $p.country)</b>: <a href=""$($p.url)"">$(HtmlEsc $p.headline)</a>") }
   $tgLines.Add('')
-  $tgLines.Add("Every country, every source: <a href=""$BaseUrl/"">africanstreetjournal.com</a>")
+  $tgLines.Add("All 55 countries, every source named and linked: <a href=""$BaseUrl/"">africanstreetjournal.com</a>")
   $tgText = $tgLines -join "`n"
   if ($DryRun) {
     Write-Host "--- Telegram (dry run) ---`n$tgText"

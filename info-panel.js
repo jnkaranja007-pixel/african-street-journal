@@ -277,6 +277,7 @@
   'use strict';
   var LINKS = [
     ['WhatsApp', 'https://whatsapp.com/channel/0029Vb9FDpiCRs1xMjnqBy3Q'],
+    ['Telegram', 'https://t.me/theafricanstreetjournal'],
     ['X', 'https://x.com/thestreetafrica'],
     ['Instagram', 'https://www.instagram.com/theafricanstreetjournal/'],
     ['YouTube', 'https://www.youtube.com/@theafricanstreetjournal']

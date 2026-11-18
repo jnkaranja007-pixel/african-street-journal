@@ -6,4 +6,4 @@
 //   x, instagram, youtube: the handle without the @
 //   whatsapp:  the WhatsApp Channel's id, the part after whatsapp.com/channel/
 // The About-menu Follow row lives in info-panel.js; keep its handles in step with these.
-window.ASJ_SOCIAL = { whatsapp: '0029Vb9FDpiCRs1xMjnqBy3Q', telegram: '', bluesky: '', x: 'thestreetafrica', instagram: 'theafricanstreetjournal', youtube: 'theafricanstreetjournal' };
+window.ASJ_SOCIAL = { whatsapp: '0029Vb9FDpiCRs1xMjnqBy3Q', telegram: 'theafricanstreetjournal', bluesky: '', x: 'thestreetafrica', instagram: 'theafricanstreetjournal', youtube: 'theafricanstreetjournal' };
