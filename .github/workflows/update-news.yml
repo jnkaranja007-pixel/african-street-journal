@@ -139,22 +139,32 @@ jobs:
           # Warn days before the money runs out, not the morning after. Never fails the run.
           if (-not $env:OPENROUTER_API_KEY) { Write-Host 'No OpenRouter key; skipping credit check.'; exit 0 }
           $h = @{ Authorization = "Bearer $env:OPENROUTER_API_KEY" }
+          # Two ceilings, and the desk stops at whichever comes first: the account's credit,
+          # and the key's own spending limit. On 18 Nov 2026 the key hit its $5 monthly
+          # limit (HTTP 403 "Key limit exceeded") while the account still had credit, and
+          # this check, which read only the account, said nothing.
           $remaining = $null
+          $limitNote = ''
           try {
             $c = (Invoke-RestMethod -Uri 'https://openrouter.ai/api/v1/credits' -Headers $h -TimeoutSec 20).data
             $remaining = [double]$c.total_credits - [double]$c.total_usage
-          } catch {
-            try {
-              $k = (Invoke-RestMethod -Uri 'https://openrouter.ai/api/v1/key' -Headers $h -TimeoutSec 20).data
-              if ($null -ne $k.limit_remaining) { $remaining = [double]$k.limit_remaining }
-            } catch { Write-Host "Credit check unavailable: $($_.Exception.Message)" }
-          }
+          } catch { Write-Host "Account credit check unavailable: $($_.Exception.Message)" }
+          try {
+            $k = (Invoke-RestMethod -Uri 'https://openrouter.ai/api/v1/key' -Headers $h -TimeoutSec 20).data
+            if ($null -ne $k.limit_remaining) {
+              Write-Host ("OpenRouter key limit remaining: `${0:N2} of `${1:N2}" -f [double]$k.limit_remaining, [double]$k.limit)
+              if ($null -eq $remaining -or [double]$k.limit_remaining -lt $remaining) {
+                $remaining = [double]$k.limit_remaining
+                $limitNote = " This is the API key's own spending limit (`$$('{0:N2}' -f [double]$k.limit)$(if ($k.limit_reset) { ', resets ' + $k.limit_reset })), not the account's credit: raise or remove it at https://openrouter.ai/settings/keys."
+              }
+            }
+          } catch { Write-Host "Key limit check unavailable: $($_.Exception.Message)" }
           if ($null -eq $remaining) { exit 0 }
           Write-Host ("OpenRouter credit remaining: `${0:N2}" -f $remaining)
           if ($remaining -lt 2) {
             $title = 'ASJ OpenRouter credit is low'
             $nights = [Math]::Floor($remaining / 0.14)
-            $body = "@jnkaranja007-pixel - OpenRouter credit is down to `$$('{0:N2}' -f $remaining), about $nights more nightly editions at ~`$0.13 each. Top up at https://openrouter.ai/settings/credits. (If GEMINI_API_KEY is set, the desk falls back to Google's free tier when credit runs out.)"
+            $body = "@jnkaranja007-pixel - OpenRouter credit is down to `$$('{0:N2}' -f $remaining), about $nights more nightly editions at ~`$0.13 each. Top up at https://openrouter.ai/settings/credits.$limitNote (If GEMINI_API_KEY is set, the desk falls back to Google's free tier when credit runs out.)"
             $existing = gh issue list --state open --search "$title in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq $title } | Select-Object -First 1
             if ($existing) { gh issue comment $existing.number --body $body } else { gh issue create --title $title --body $body }
           } else {
