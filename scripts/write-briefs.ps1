@@ -661,7 +661,8 @@ that fails is sent back to you, so follow the rules the first time.
 
 PLAN FIRST
 Before the headline, fill "plan". It is never printed. It is where you work out what a
-reader in another African country will ask, before you write a word of the story.
+reader in another African country will ask, before you write a word of the story. It
+is notes, not prose: at most 60 words altogether, each entry a few words.
 - "affected": who gains, pays, or must now act because of the event, beyond the people
   who announced it, named as the packet names them: "maize traders crossing at Busia",
   "holders of the 2027 bond", "patients at the 14 public hospitals". When the packet
@@ -670,11 +671,10 @@ reader in another African country will ask, before you write a word of the story
   that sizes it. The "why" line is written from "affected" and "stake", never from the
   headline.
 - "explain": every person, body, place and set of initials in the story that a reader
-  in Accra, Nairobi or Johannesburg would not know, each with the few words the story
-  will give on first mention: "GIZ: Germany's state development agency", "Plateau State:
-  a state in central Nigeria", "Natembeya: governor of Trans Nzoia county". An empty
-  list is right only when the story names nothing a reader elsewhere would need
-  explained.
+  in Accra, Nairobi or Johannesburg would not know, at most five, each with the few
+  words the story will give on first mention: "GIZ: Germany's development agency",
+  "Plateau: a state in central Nigeria". Empty when the story names nothing a reader
+  elsewhere would need explained.
 - "news": the decision, figure, result or dated next step the story reports. A meeting,
   forum, visit or ceremony is news only for what was decided, signed, paid or announced
   at it: lead with that, and if nothing was, say so here in a few words and write the
@@ -1294,7 +1294,7 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
           properties = [ordered]@{
             affected = @{ type = 'string'; maxLength = 240 }
             stake = @{ type = 'string'; maxLength = 320 }
-            explain = @{ type = 'array'; maxItems = 8; items = @{ type = 'string'; maxLength = 160 } }
+            explain = @{ type = 'array'; maxItems = 5; items = @{ type = 'string'; maxLength = 120 } }
             news = @{ type = 'string'; maxLength = 240 }
           }
           required = @('affected','stake','explain','news')
@@ -2412,7 +2412,12 @@ weekday, write that instead of a month. Do not add facts while repairing.
       Write-Host ("      {0}#{1}: kept the fact-checked draft; its style rewrite failed ({2})" -f $code, $i, $lastErr) -ForegroundColor DarkGray
     }
     }
-    if (-not $oneBrief) { continue }
+    if (-not $oneBrief) {
+      # Every attempt failed a check or the API. Said once, so a story that never ran
+      # is never a silent gap in a country's column.
+      if ($prompt -and $lastErr) { Write-Host ("      {0}#{1}: not written after {2} attempt(s): {3}" -f $code, $i, ($Retries + 1), $lastErr) -ForegroundColor DarkYellow }
+      continue
+    }
     # Place, checked on the finished story (cached ones too): the writer's countryLink
     # passed "Ebola kills 5,103 in DR Congo" for Angola on 4 Nov 2026.
     $placeIssue = Get-StoryPlaceIssue $oneBrief $placeTerms
