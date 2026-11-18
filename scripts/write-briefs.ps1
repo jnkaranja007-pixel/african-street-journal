@@ -600,6 +600,21 @@ diaspora. Many read on small data bundles: every sentence must tell them somethi
 new and true. Be plain, specific and useful. Never sound like a press release, and
 never send the reader away to understand the event.
 
+THE PAPER'S LINE
+- The model is The Wall Street Journal: a serious paper about money, markets,
+  business, policy and who governs, for readers who make decisions. Write every story
+  in that register, whatever it is about.
+- Crime, crashes and killings are reported plainly and briefly, never as spectacle.
+  Tell a violent event through what it changes: for the government, the economy,
+  aid, trade, travel, or the people forced from their homes. State a death toll once,
+  attributed, in plain words ("killed", "died"). No graphic detail: nothing about
+  wounds, bodies or how a person was killed beyond the plain fact.
+- A headline opens with a death toll only for a war, a disaster or an attack that
+  changes the country. Otherwise it leads with the actor and the consequence the
+  packet reports, never one it does not:
+  "Uganda orders inquiry into Karamoja food relief after hunger deaths", not
+  "Hunger kills 12 in Karamoja".
+
 Every draft is checked automatically before it is published: figures against the
 source, the house style below, the audience scores against their reasons. A draft
 that fails is sent back to you, so follow the rules the first time.
@@ -683,8 +698,9 @@ REACH
 - "reach": how much the event matters to a reader anywhere in Africa, a whole number
   from 1 to 5. Judge the event, not how well the packet is written.
   5 - a national turning point or an event felt beyond the country: an election
-      result, a change of government or a coup, a central bank rate decision, a major
-      disaster or attack, a large default or deal, a ruling that changes national law.
+      result, a change of government or a coup, a central bank rate decision, a war or
+      disaster that changes the country, a large default or deal, a ruling that changes
+      national law.
   4 - national consequences for many people: a new law, budget, tax or price change,
       a strike that shuts a sector, a major trial, an outbreak, a large company result.
   3 - national news with a concrete result for a group: a project opened, arrests, a
@@ -693,6 +709,9 @@ REACH
       minor appointment.
   1 - routine or ceremonial: visits, courtesy calls, speeches, workshops, trainings,
       seminars, award ceremonies, anniversaries, an official attending an event.
+  Crime, road crashes, a single killing and a local attack are 1 or 2, however many
+  died, unless the event changes national policy, the economy or who governs. A new
+  front in a war or an attack that shuts a city, a mine or a border can be 4 or 5.
   Most stories are 2 or 3. Give 5 rarely. The paper still runs every story; reach only
   decides which ones lead.
 
@@ -1465,7 +1484,10 @@ Put them in order for the top of the country's page: first the event that change
 for the most people in $CountryName (money in their pockets, prices, safety, health, rights,
 jobs, who governs them), last the one that changes least. Ceremonies, visits, meetings,
 launches of plans and prize-givings come below decisions, figures and events that already
-affect people. When two stories matter about as much, put the one more outlets reported first.
+affect people. The paper's model is The Wall Street Journal: crime reports, road crashes
+and killings go below business, economic and policy news unless they change how the
+country is governed or how its economy runs. When two stories matter about as much, put
+the one more outlets reported first.
 
 $($lines.ToArray() -join "`n")
 
@@ -1658,8 +1680,10 @@ function Invoke-FrontRanking($ByCountry, $CountryNames, [int]$Pick) {
 PICK THE FRONT PAGE. These are the top stories from each African country on The African
 Street Journal today. Choose the $want that matter most to readers across Africa and put
 them in order, most important first. Weigh what changes for the most people: money and
-prices, safety and conflict, health, rights, jobs, elections and who governs, and
-anything that reaches beyond one country's borders. Ceremonies, visits, meetings,
+prices, markets and companies, health, rights, jobs, elections and who governs, war, and
+anything that reaches beyond one country's borders. The paper's model is The Wall Street
+Journal: crime reports, road crashes and killings do not lead unless they change how a
+country is governed or how its economy runs. Ceremonies, visits, meetings,
 festivals, film and culture weeks, prize-givings and launches of plans come below
 decisions, figures and events that already affect people. A small country's big story
 outranks a big country's small one. When two matter about as much, put the one more

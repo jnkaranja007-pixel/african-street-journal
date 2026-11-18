@@ -257,6 +257,19 @@ $hardScore = Get-EditorialScore $hard 2 $now
 $fillerScore = Get-EditorialScore $filler 1 $now
 Assert-Desk 'corroborated material event outranks ceremonial opinion' ($hardScore.Score -gt ($fillerScore.Score + 8))
 
+# 18 Nov 2026: the Wall Street Journal balance. Routine crime and crash reports are
+# marked down; war, disaster and harm with a policy or economic consequence are not.
+$crash = Get-EditorialScore (New-TestItem 'Truck crash in Windhoek kills passenger after brake failure' 'Police said the driver survived and the passenger died at the scene.' 1) 1 $now
+$budget = Get-EditorialScore (New-TestItem 'Namibia raises fuel levy by 50 cents a litre' 'The finance ministry said the levy funds road maintenance from next month.' 1) 1 $now
+Assert-Desk 'a routine crash is marked down as a casualty report' ($crash.Reasons -contains 'routine crime or casualty report')
+Assert-Desk 'a fuel levy outranks a road crash from the same outlet' ($budget.Score -gt $crash.Score)
+$war = Get-EditorialScore (New-TestItem 'Ethiopia and Eritrea trade drone strikes in border war' 'Both armies reported attacks near Badme.' 1) 1 $now
+Assert-Desk 'an attack in a war is not marked down' (-not ($war.Reasons -contains 'routine crime or casualty report'))
+$roads = Get-EditorialScore (New-TestItem 'Eswatini sets 2030 goal to halve road deaths' 'The transport ministry published the target with new speed rules.' 1) 1 $now
+Assert-Desk 'a road-safety target is policy, not a casualty report' (-not ($roads.Reasons -contains 'routine crime or casualty report'))
+$mine = Get-EditorialScore (New-TestItem 'Gunmen attack Kibali gold mine convoy' 'The mining company suspended shipments after the attack.' 1) 1 $now
+Assert-Desk 'an attack that stops a mine is business news, not routine crime' (-not ($mine.Reasons -contains 'routine crime or casualty report'))
+
 $actionStory = New-TestItem 'Transit agency mobilises 300 buses for pilgrims' 'The service will run more than 500 trips during the festival.' 2
 $quoteStory = New-TestItem 'Official says the country must change its paradigm' 'The official spoke during the same festival.' 2
 Assert-Desk 'material action outranks an unsupported quote package' `

@@ -63,8 +63,27 @@ $script:NEWS_TOPIC_RULES = [ordered]@{
                   'charges','mayor','mayoral','municipal','candidate','refugee','detained','journalist')
 }
 
-$script:NEWS_URGENT = @('killed','dead','death','fatal','crash','attack','war','coup','outbreak','cholera','flood','drought','cyclone',
-                        'wildfire','famine','evacuation','emergency','collapse','capsize','hostage','refugee')
+# Events that change a country: war, a coup, an epidemic, a disaster. Until 18 Nov 2026
+# this also held 'killed', 'dead', 'death', 'fatal', 'crash' and 'attack', so every
+# casualty report scored as urgent and road crashes, single murders and mass shootings
+# rose to the top of the paper. The owner asked for the Wall Street Journal's balance:
+# killings lead only when they change how a country is governed or how its economy runs.
+$script:NEWS_URGENT = @('war','coup','ceasefire','outbreak','cholera','ebola','mpox','flood','drought','cyclone',
+                        'wildfire','famine','evacuation','emergency','hostage','refugee')
+# Routine harm: crime, crashes and killings. A story built on these words, with no policy
+# or economic consequence in its headline or summary, is marked down (Get-NewsScore).
+# Phrases only where a single word would catch other news ('shot dead', not 'shot').
+$script:NEWS_ROUTINE_HARM = @('killed','kills','kill','killing','killings','dead','death','deaths','died','dies','fatal','fatally',
+                              'murder','murdered','murders','stabbed','shot dead','shooting','shootings','gunmen','gunman',
+                              'bandits','robbery','robbers','lynched','lynching','bodies','corpse','massacre','beheaded',
+                              'crash','crashes','collision','rollover','accident','drowned','drowning','capsize','capsized',
+                              'attack','attacks','attacked','abducted','abduction','kidnapped','kidnapping','ransom','injured')
+# What turns a harm story into business or policy news: the economy, a law, money.
+$script:NEWS_HARM_EXEMPT = @('election','budget','tax','debt','inflation','interest rate','currency','law','bill','parliament',
+                             'sanctions','treaty','fuel','food','power','electricity','unemployment','jobs','wage','policy',
+                             'investment','trade','export','import','mine','mining','oil','gas','pipeline','port','rail',
+                             'bank','business','market','company','tourism','insurance','aid','imf','world bank',
+                             'goal','target','strategy','regulation','reform','inquiry','ban')
 $script:NEWS_PUBLIC = @('election','budget','tax','debt','inflation','interest rate','currency','court','law','bill','parliament',
                         'strike','protest','security','hospital','health','school','university',
                         'fuel','food','power','electricity','unemployment','jobs','wage','sanctions','treaty')
@@ -511,6 +530,13 @@ function Get-EditorialScore($Item, [int]$OutletCount, [datetime]$Now) {
   $public = Get-NewsMatchCount $text $script:NEWS_PUBLIC 2
   $economic = Get-NewsMatchCount $text $script:NEWS_ECONOMIC 2
   $breakdown.publicImpact = ([Math]::Min($urgent, 2) * 1.75) + ([Math]::Min($public, 2) * 1.35) + ([Math]::Min($economic, 2) * 0.85)
+  # Routine crime and crash reports: marked down unless the story also carries a war,
+  # coup or disaster, or a policy or economic consequence.
+  $harm = Get-NewsMatchCount $text $script:NEWS_ROUTINE_HARM 1
+  if ($harm -and -not $urgent -and -not (Get-NewsMatchCount $text $script:NEWS_HARM_EXEMPT 1)) {
+    $breakdown.penalties -= 3.0
+    $reasons.Add('routine crime or casualty report')
+  }
   if ($urgent -gt 0) { $reasons.Add('urgent public consequence') }
   elseif ($public -gt 0) { $reasons.Add('public-policy consequence') }
   elseif ($economic -gt 0) { $reasons.Add('economic consequence') }
