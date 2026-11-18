@@ -965,16 +965,18 @@ let oceanLayer = null;
 // The map is drawn on a canvas, so it reads the theme itself (styles.css --map-*).
 const mapLight = () => document.documentElement.getAttribute('data-theme') === 'light';
 const mapVar = (name, fallback) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+function ensureOceanLayer() {
+  if (oceanLayer) return;
+  oceanLayer = document.createElement('canvas');
+  oceanLayer.width = 1000 * dpr; oceanLayer.height = 1001 * dpr;
+  const off = oceanLayer.getContext('2d');
+  off.scale(dpr, dpr);
+  paintOcean(off);
+}
 function drawOcean(elapsed) {
   const alpha = Math.min(1, elapsed / 1.2);
   if (alpha === 0) return;
-  if (!oceanLayer) {
-    oceanLayer = document.createElement('canvas');
-    oceanLayer.width = 1000 * dpr; oceanLayer.height = 1001 * dpr;
-    const off = oceanLayer.getContext('2d');
-    off.scale(dpr, dpr);
-    paintOcean(off);
-  }
+  ensureOceanLayer();
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.drawImage(oceanLayer, 0, 0, 1000, 1001);
@@ -1177,7 +1179,6 @@ function pingCountry(id) {
   })();
 }
 
-let startTime = 0;
 let hoveredIdx = -1;
 let assemblyDone = false;
 let lastFocus = null;
@@ -1227,7 +1228,7 @@ function paintLakes(x, alpha) {
 }
 function buildBase() {
   const [c, x] = offscreen();
-  if (!oceanLayer) drawOcean(1.2);
+  ensureOceanLayer();
   x.drawImage(oceanLayer, 0, 0, 1000, 1001);
   if (!shadeLayer) shadeLayer = paintShade();
   x.drawImage(shadeLayer, 0, 0, 1000, 1001);
@@ -1332,17 +1333,47 @@ const MAP_STATIC = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   !!(navigator.connection && navigator.connection.saveData) ||
   (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
   (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
+/* The draw-in's own clock. A screen recording of a pull-to-refresh on an iPhone
+   (18 Nov 2026) showed three faults, all from the page doing other work while the map
+   flew in:
+   - the map vanished for a frame or two, several times: any relayout (Safari's toolbar
+     settling after the refresh, the top story filling in, a web font arriving) repainted
+     the animation at time 0, which is an empty map, and a new backing-store size wiped
+     the canvas and rebuilt all 55 country sprites mid-flight;
+   - countries appeared already halfway home: the clock was wall time, so a frame the
+     phone spent loading still moved every country on, and the motion jumped;
+   - the first frame was the slowest, because it also built the ocean and the sprites.
+   So: the layers are built before the clock starts; the clock advances at most 1/30 s
+   a frame, so a stall slows the motion for an instant instead of skipping it; every
+   repaint outside the animation loop draws the frame the animation is actually on; and
+   the backing store is only resized once the map has settled. */
+const ASSEMBLY_STEP = 1 / 30;
+let assemblyClock = 0;
+let assemblyLastFrame = 0;
+let assemblyStarted = false;
+let fitPending = false;
+function assemblyElapsed() { return assemblyDone ? 3.5 : assemblyClock; }
 function finishAssembly() {
   if (assemblyDone) return;
   assemblyDone = true;
   assemblySprites = null;
+  if (fitPending) { fitPending = false; fitMapResolution(); }
   render(3.5);
 }
 function frame(now) {
   if (assemblyDone) return;
-  if (!startTime) startTime = now;
-  const elapsed = (now - startTime) / 1000;
-  if (elapsed < 3.5) { render(elapsed); requestAnimationFrame(frame); }
+  if (!assemblyStarted) {
+    // Warm-up frame: paint the layers now, start counting on the next frame.
+    assemblyStarted = true;
+    ensureOceanLayer();
+    if (!assemblySprites) assemblySprites = paintAssemblySprites();
+    assemblyLastFrame = now;
+    requestAnimationFrame(frame);
+    return;
+  }
+  assemblyClock += Math.min(Math.max(0, (now - assemblyLastFrame) / 1000), ASSEMBLY_STEP);
+  assemblyLastFrame = now;
+  if (assemblyClock < 3.5) { render(assemblyClock); requestAnimationFrame(frame); }
   else finishAssembly();
 }
 // A link straight to a country or the Wire (#/ke, #/wire - most WhatsApp shares) opens
@@ -1353,8 +1384,10 @@ if (MAP_STATIC || OPENED_ON_ROUTE) finishAssembly();
 else requestAnimationFrame(frame);
 // Safety net: rAF is paused in background tabs and can be starved on slow phones,
 // which left the map half-assembled (missing countries, one shape stuck mid-flight).
-// Whatever happens to the animation, the finished map is on screen by 4.2 s.
-setTimeout(finishAssembly, 4200);
+// Whatever happens to the animation, the finished map is on screen by 6 s. Not 4.2:
+// the clock now slows through a stall instead of skipping it, so a phone busy loading
+// the page takes a little longer than 3.5 s, and cutting it short is a jump of its own.
+setTimeout(finishAssembly, 6000);
 document.addEventListener('visibilitychange', () => { if (document.hidden) finishAssembly(); });
 
 /* Phones: scale the MAINLAND (with Madagascar) to ~95% of the screen width instead of
@@ -1434,7 +1467,7 @@ function layoutPhoneMap() {
       if (t.side === 'below' && cy + 20 > b.y1 + 14 / s) t.side = 'above';
     }
   }
-  render(assemblyDone ? 3.5 : 0);
+  render(assemblyElapsed());
 }
 // The canvas is 1000 map units at the screen's pixel ratio, but a phone shows it about
 // 490px wide: at dpr 3 that is 3000x3003 pixels for the 1,470 the screen has. Every
@@ -1447,17 +1480,21 @@ function fitMapResolution() {
   if (!shown) return;
   const want = Math.min(SCREEN_DPR, Math.max(1, Math.ceil(shown * (window.devicePixelRatio || 1) / 1000 * 4) / 4));
   if (want === dpr) return;
+  // Mid-flight, a new backing store wipes the canvas and rebuilds every sprite: a blank
+  // frame and a dropped one. The CSS size has already changed, so the map is only a
+  // shade soft or sharp until it settles, when finishAssembly applies this.
+  if (assemblyStarted && !assemblyDone) { fitPending = true; return; }
   dpr = want;
   canvas.width = Math.round(1000 * dpr);
   canvas.height = Math.round(1001 * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   oceanLayer = shadeLayer = baseLayer = assemblySprites = null;
-  render(assemblyDone ? 3.5 : 0);
+  render(assemblyElapsed());
 }
 // A theme switch repaints the map from scratch: its layers are cached pictures.
 window.addEventListener('asj:themechange', () => {
   oceanLayer = shadeLayer = baseLayer = assemblySprites = null;
-  render(assemblyDone ? 3.5 : 0);
+  render(assemblyElapsed());
   if (activeCountryMap) drawCountryMap(activeCountryMap.countryId, activeCountryMap.countryPath);
 });
 function layoutHomeMap() {
