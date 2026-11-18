@@ -41,6 +41,12 @@
 param(
   [string[]]$Only,
   [int]$Days = 2,
+  # A daily edition is the last day and a half of news. On 18 Nov 2026 sixteen of the
+  # 231 stories were older than 36 hours when the desk ran, four of them on the front
+  # page or near it, and the site labelled them "2 days ago" under today's date. Items
+  # older than this are dropped once ranked; a country with nothing newer keeps only
+  # its single best older story, so a thin press never leaves a blank page.
+  [double]$MaxAgeHours = 36,
   # Six ranked candidates for five stories. Relevance and event uniqueness are hard
   # gates before selection, so the writer gets a tight desk rather than a noisy inbox.
   [int]$PerCountry = 6,
@@ -457,6 +463,7 @@ $editorialRejectedTotal = 0
 $countryLinkRejectedTotal = 0
 $placeRejectedTotal = 0
 $splitFromClusters = 0
+$staleDroppedTotal = 0
 
 foreach ($code in $codes) {
   $entry = $registry.$code
@@ -676,9 +683,25 @@ foreach ($code in $codes) {
   # two candidates judged to be the same event. A relaxed pass fills thin countries
   # without relaxing event uniqueness.
   $eligible = @($scored.ToArray() | Where-Object { $_.score -ge $MinCandidateScore })
+  # Today's news only (MaxAgeHours above). An item with no time is kept: the score
+  # already marks it down. With nothing recent, the country keeps one older story.
+  $countryLimit = $PerCountry
+  if ($MaxAgeHours -gt 0 -and $eligible.Count) {
+    $recent = @($eligible | Where-Object { $null -eq $_.ageHours -or [double]$_.ageHours -le $MaxAgeHours })
+    if ($recent.Count) {
+      if ($recent.Count -lt $eligible.Count) {
+        Write-Host ("      {0}: dropped {1} item(s) older than {2}h" -f $code, ($eligible.Count - $recent.Count), $MaxAgeHours) -ForegroundColor DarkGray
+        $staleDroppedTotal += $eligible.Count - $recent.Count
+      }
+      $eligible = $recent
+    } else {
+      Write-Host ("      {0}: nothing within {1}h; keeping one older story" -f $code, $MaxAgeHours) -ForegroundColor DarkGray
+      $countryLimit = 1
+    }
+  }
   # Keep two no-model-cost reserves until evidence enrichment has run. The published
   # assignment slate remains six, but a thin feed item cannot crowd out a writeable one.
-  $shortlistLimit = $PerCountry + 2
+  $shortlistLimit = $countryLimit + 2
   # Up to three passes: a finalist the place checks turn away (below) leaves its slot to
   # the next candidate, as a dropped draft does at the writer, without paying for a draft.
   $pool = $eligible
@@ -755,7 +778,7 @@ foreach ($code in $codes) {
     $selected = @($selected | Where-Object { -not $turnedAwayIds.Contains([string]$_.itemId) })
   }
 
-  $selected = @(Select-NewsWriteableCandidates $selected $PerCountry $MinEvidenceWords)
+  $selected = @(Select-NewsWriteableCandidates $selected $countryLimit $MinEvidenceWords)
   $evidenceReadyTotal += @($selected | Where-Object { [int]$_.evidenceWords -ge $MinEvidenceWords }).Count
 
   $ranked = @($selected | ForEach-Object {
@@ -814,6 +837,7 @@ $payload = [ordered]@{
   stats     = [ordered]@{
     durationSeconds = [Math]::Round($runTimer.Elapsed.TotalSeconds, 1)
     editorialRejected = $editorialRejectedTotal
+    staleDropped = $staleDroppedTotal
     countryLinkRejected = $countryLinkRejectedTotal
     placeRejected = $placeRejectedTotal
     splitFromClusters = $splitFromClusters
