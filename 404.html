@@ -13,6 +13,7 @@ body{margin:0;background:#131313;color:#e8e6e3;font:16px/1.6 system-ui,-apple-sy
 .wrap{max-width:560px}
 .masthead{font:600 14px/1 system-ui,-apple-system,'Segoe UI',sans-serif;color:#8a847b;margin-bottom:28px}
 .masthead a{color:#8a847b;text-decoration:none}
+.masthead .brand-lockup{font:700 20px/1.2 'Playfair Display',Georgia,serif;color:#f2f0ed}.brand-lockup em{font-style:italic;font-weight:400}.brand-lockup b{color:#4caf50}
 /* Same face as every other page title; Georgia only until the webfont arrives. */
 h1{font:700 clamp(28px,6vw,44px)/1.1 'Playfair Display',Georgia,'Times New Roman',serif;margin:0 0 14px;color:#f2f0ed}
 p{color:#a8a39d;margin:0 0 22px}
@@ -22,14 +23,14 @@ a.go{display:inline-block;font:600 15px/1 system-ui,-apple-system,'Segoe UI',san
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&display=swap">
 </head>
 <body>
 <div class="wrap">
-  <div class="masthead"><a href="/">The African Street Journal</a></div>
-  <h1 id="title">That page has moved on</h1>
-  <p id="copy">Stories keep a page of their own for a week. This one is older than that, but the desk is still here.</p>
-  <a class="go" id="go" href="/">Go to the front page &rarr;</a>
+  <div class="masthead"><a class="brand-lockup" href="/"><em>The</em> African Street <b>Journal</b></a></div>
+  <h1 id="title">We can&rsquo;t find that page</h1>
+  <p id="copy">The link may be out of date, or the page may have moved. Today&rsquo;s edition is one tap away.</p>
+  <a class="go" id="go" href="/">Go to today&rsquo;s edition &rarr;</a>
   <p class="links" style="margin-top:28px;font:400 14px/1.9 system-ui,-apple-system,'Segoe UI',sans-serif"><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/contact/">Contact</a><a href="/corrections/">Corrections</a></p>
 </div>
 <script>
@@ -43,9 +44,9 @@ a.go{display:inline-block;font:600 15px/1 system-ui,-apple-system,'Segoe UI',san
   if (!/^[a-z]{2}$/.test(cc)) return;
   var go = document.getElementById('go');
   go.href = '/' + cc + '/';
-  go.innerHTML = 'Go to the country desk &rarr;';
+  go.innerHTML = 'Go to the country page &rarr;';
   document.getElementById('copy').textContent =
-    'Stories keep a page of their own for a week. This one is older than that - the country desk has the current reporting.';
+    'That story is no longer online. Taking you to the latest coverage from this country.';
   // Give the reader a moment to see why, rather than bouncing them somewhere they
   // did not ask for.
   setTimeout(function () { location.replace('/' + cc + '/'); }, 2500);

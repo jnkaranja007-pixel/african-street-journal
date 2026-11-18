@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="max-image-preview:large">
 <title>The African Street Journal</title>
-<meta name="description" content="Original, source-cited reporting plus market, farm and diaspora signals for all 55 African countries.">
+<meta name="description" content="Daily news from all 55 African countries, every source named and linked, with markets, farming and diaspora data for each.">
 <meta name="theme-color" content="#131313">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:title" content="The African Street Journal">
-<meta property="og:description" content="Original, source-cited reporting plus market, farm and diaspora signals for all 55 African countries.">
+<meta property="og:description" content="Daily news from all 55 African countries, every source named and linked, with markets, farming and diaspora data for each.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://africanstreetjournal.com/">
@@ -21,7 +21,7 @@
 <meta name="twitter:image" content="https://africanstreetjournal.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The African Street Journal">
-<meta name="twitter:description" content="Original, source-cited stories and practical signals from all 55 African countries.">
+<meta name="twitter:description" content="Daily news from all 55 African countries, every source named and linked.">
 <link rel="canonical" href="https://africanstreetjournal.com/">
 <link rel="apple-touch-icon" href="/icon-512.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"NewsMediaOrganization","@id":"https://africanstreetjournal.com/#org","name":"The African Street Journal","email":"hello@africanstreetjournal.com","contactPoint":{"@type":"ContactPoint","contactType":"editorial","email":"hello@africanstreetjournal.com","availableLanguage":"en"},"url":"https://africanstreetjournal.com/","logo":{"@type":"ImageObject","url":"https://africanstreetjournal.com/icon-512.png"},"publishingPrinciples":"https://africanstreetjournal.com/about/","correctionsPolicy":"https://africanstreetjournal.com/corrections/","sameAs":["https://x.com/thestreetafrica","https://www.instagram.com/theafricanstreetjournal/","https://www.youtube.com/@theafricanstreetjournal"]},{"@type":"WebSite","name":"The African Street Journal","url":"https://africanstreetjournal.com/","publisher":{"@id":"https://africanstreetjournal.com/#org"},"inLanguage":"en"}]}</script>
@@ -71,7 +71,7 @@ function asjAnalytics() {
   }
 }
 </script>
-<script src="data/analytics-config.js?v=136" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=137" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 <!-- Data saver: with Save-Data on, or on 3G and slower, the decorative headline font
      (~60-90 KB on a first visit) is not fetched at all; headlines use Georgia. The same
      test sets window.ASJ_SAVE_DATA in app.js. -->
@@ -102,10 +102,10 @@ function asjAnalytics() {
      immediately and reflow to Playfair when it arrives. The noscript copy keeps the
      original behaviour for a reader with JavaScript off. -->
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=136" as="script">
-<link rel="preload" href="data/app-core.js?v=136" as="script">
-<link rel="preload" href="data/briefs.js?v=136" as="script">
-<link rel="stylesheet" href="styles.css?v=136">
+<link rel="preload" href="app.js?v=137" as="script">
+<link rel="preload" href="data/app-core.js?v=137" as="script">
+<link rel="preload" href="data/briefs.js?v=137" as="script">
+<link rel="stylesheet" href="styles.css?v=137">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
@@ -178,8 +178,8 @@ function asjAnalytics() {
 <div id="country-view" role="dialog" aria-modal="true" aria-labelledby="cv-name">
   <div class="cv-header">
     <button class="back-btn" id="back-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back</button>
-    <div class="cv-header-meta" aria-hidden="true">
-      <span>The African Street <b>Journal</b></span>
+    <div class="cv-header-meta">
+      <a class="brand-lockup" href="/" data-home aria-label="The African Street Journal home"><em>The</em> African Street <b>Journal</b></a>
     </div>
     <div class="cv-nav">
       <button class="cv-nav-btn" id="cv-prev" type="button" aria-label="Previous country"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -466,7 +466,7 @@ function asjAnalytics() {
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Back
     </button>
-    <span class="story-reader-brand">The African Street <b>Journal</b></span>
+    <a class="story-reader-brand brand-lockup" href="/" data-home aria-label="The African Street Journal home"><em>The</em> African Street <b>Journal</b></a>
     <span class="story-reader-actions"><a class="story-reader-share story-reader-wa" id="story-reader-wa" href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a><button class="story-reader-share" id="story-reader-share" type="button">Share</button></span>
   </header>
   <div class="story-reader-scroll">
@@ -494,22 +494,22 @@ function asjAnalytics() {
 
 <div class="asj-install" id="asj-install" role="region" aria-label="Add to home screen" hidden></div>
 
-<script src="data/app-core.js?v=136"></script>
+<script src="data/app-core.js?v=137"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
 <script>window.ASJ_ASSET_VERSION='133';</script>
-<script src="data/country-facts.js?v=136" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
-<script src="data/indices.js?v=136" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=136" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=136" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=136" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=136" onerror="window.ASJ_NEWSLETTER=null"></script>
-<script src="data/social-config.js?v=136" onerror="window.ASJ_SOCIAL=null"></script>
+<script src="data/country-facts.js?v=137" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
+<script src="data/indices.js?v=137" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=137" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=137" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=137" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=137" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script src="data/social-config.js?v=137" onerror="window.ASJ_SOCIAL=null"></script>
 
-<script src="app.js?v=136"></script>
-<script src="story-kit.js?v=136" defer></script>
-<script src="fx-trend.js?v=136" defer></script>
-<script src="country-sidebar.js?v=136" defer></script>
-<script src="/info-panel.js?v=136" defer></script>
+<script src="app.js?v=137"></script>
+<script src="story-kit.js?v=137" defer></script>
+<script src="fx-trend.js?v=137" defer></script>
+<script src="country-sidebar.js?v=137" defer></script>
+<script src="/info-panel.js?v=137" defer></script>
 </body>
 </html>

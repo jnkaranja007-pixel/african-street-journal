@@ -198,6 +198,11 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 /* 18 Nov 2026: the name in the masthead is set as the app sets its wordmark, and a
    country page opens with one clear button into the app and a quiet RSS link. */
 .masthead>a:first-child{font:700 19px/1.15 'Playfair Display',Georgia,'Times New Roman',serif!important;color:var(--c-f2f0ed)!important}
+/* The brand lockup, the same in the app's headers and on every generated page: Playfair,
+   "The" in light italic, "Journal" in green. It always links to the front page. */
+.brand-lockup em{font-style:italic;font-weight:400}
+.brand-lockup b{font-weight:700;color:var(--c-4caf50)}
+.masthead>a.brand-lockup:hover b,.masthead>a.brand-lockup:focus-visible b{text-decoration:underline;text-underline-offset:3px}
 .country-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin:18px 0 6px}
 .country-actions .open{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;margin:0!important;border:0;border-radius:8px;background:var(--c-2f6b3b);color:var(--c-f3efe8);text-decoration:none}
 .country-actions .open:hover,.country-actions .open:focus-visible{background:var(--c-2f5c33)}
@@ -505,7 +510,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
   $name = $meta.name
   $when = if ($dates -and $dates.PSObject.Properties[$code]) { Get-IsoDay $dates.$code } else { '' }
   $lead = ([string]$stories[0].headline)
-  $desc = "$name news: $lead. Original source-cited stories and country signals from The African Street Journal."
+  $desc = "$name news: $lead. Daily coverage of $name from The African Street Journal, every source named and linked."
   if ($desc.Length -gt 300) { $desc = $desc.Substring(0,297) + '...' }
 
   $body = New-Object System.Text.StringBuilder
@@ -619,11 +624,11 @@ $analytics
 <meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"$(JsonEsc $name)","item":"$canonical"}]}</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
 </head>
 <body>
 <div class="wrap">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
+<div class="masthead"><a class="brand-lockup" href="$BaseUrl/"><em>The</em> African Street <b>Journal</b></a>$infoMenu</div>
 <div class="meta">$(Esc $meta.region)$(if($meta.capital){" &middot; Capital $(Esc $meta.capital)"})</div>
 <h1>$(Esc $name)</h1>
 <div class="meta">$($stories.Count) stories$(if($when){" &middot; updated $when"})</div>
@@ -902,12 +907,12 @@ $analytics
 <meta name="twitter:image" content="$ogImage">
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">$crumbs</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
 <div class="wrap">
-  <header class="masthead"><a href="$BaseUrl/">The African Street Journal</a> <span aria-hidden="true">/</span> <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a>$infoMenu</header>
+  <header class="masthead"><a class="brand-lockup" href="$BaseUrl/"><em>The</em> African Street <b>Journal</b></a> <span aria-hidden="true">/</span> <a href="$BaseUrl/$($sp.code)/">$(Esc $sp.country)</a>$infoMenu</header>
   <main id="main">
   <article class="story">
   <header class="story-head">
@@ -937,7 +942,7 @@ $($srcHtml.ToString())
     <p><a class="open" href="$BaseUrl/$($sp.code)/">All $(Esc $sp.country) stories &rarr;</a> &nbsp; <a class="open" href="$appUrl">Open today's edition &rarr;</a></p>
   </nav>
   </main>
-  <footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
+  <footer>The African Street Journal &middot; every source named and linked$siteLinks</footer>
 </div>
 <script src="$BaseUrl/share.js" defer></script>
 </body>
@@ -1022,60 +1027,60 @@ foreach ($c in $pageCodes) {
 # About, Privacy, Contact, Corrections. Added 20 Oct 2026: a news site with none of
 # these reads as anonymous, and Google News expects them.
 $trustPages = [ordered]@{
-  about = @{ title = 'About'; desc = 'Why The African Street Journal exists, how its stories are made, and how to reach us.'; body = @"
-<p>The African Street Journal exists so that people across Africa and in the diaspora can keep up with current events in all 55 countries: in plain language, on any phone and on any connection.</p>
-<p>Most of the continent's news is spread across hundreds of outlets, and much of it is hard to find from outside the country it happened in. We use AI language models to read that reporting every day, pick out what matters most and summarise it, so that our people stay informed and knowledgeable about their continent. The journalists who did the reporting are always credited and linked.</p>
+  about = @{ title = 'About'; desc = 'What The African Street Journal is, how the desk works and how to reach us.'; body = @"
+<p>The African Street Journal covers all 55 African countries, every day. Stories are short, written in plain English and built to load on any phone, over any connection.</p>
+<p>Africa's news is reported by hundreds of local outlets, and most of it never travels beyond the country where it happened. Each morning we read that reporting, select what matters and publish a concise account of it, with the original outlet named and linked.</p>
 <h2>How the desk works</h2>
-<p>Every morning an automated desk reads public news feeds from outlets across Africa, groups reports of the same event, and ranks them for public importance: elections, budgets, courts, health, food, power, jobs, trade and security come first. Gossip, sponsored copy, opinion columns and tabloid items are filtered out.</p>
-<p>Each selected report is rewritten into a short original summary by an AI language model, working only from the facts in that report. Software then checks every story: figures must appear in the source, the story must name and link the outlet it came from, and anything that fails is dropped rather than published.</p>
-<p>Stories are summaries, not original reporting from the ground. The outlet that broke the story is always credited and linked; please read and support them.</p>
-<h2 id="low-data">Reading on a small data bundle</h2>
-<p>The <a href="$BaseUrl/countries/">text-only edition</a> lists the latest lead story from every country as plain text, with no maps or pictures. Story pages are mostly text too.</p>
-<p>If you use a news reader app such as Feedly, Inoreader or NetNewsWire, add <code>$BaseUrl/feed.xml</code> to it. The latest headlines then arrive in the app as they are published, using very little data. This kind of feed is called RSS. To follow one country only, add its feed instead: Kenya's is <code>$BaseUrl/ke/feed.xml</code>, and every country page links its own.</p>
-<h2>Get in touch</h2>
-<p>Email <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a> with questions, tips or complaints; the <a href="$BaseUrl/contact/">contact page</a> says what helps us act quickly. To report a mistake in a story, see <a href="$BaseUrl/corrections/">corrections</a>.</p>
+<p>An automated desk reads public news feeds from outlets across the continent, groups reports of the same event and ranks them by public consequence. Elections, budgets, courts, health, food, power, jobs, trade and security lead. Gossip, sponsored content, opinion and tabloid items are left out.</p>
+<p>AI language models write each story, using only the facts in the source report. Software checks every story before it runs: each figure must appear in the source, and the outlet must be named and linked. A story that fails is dropped, not published. A separate editor model then grades each story against our standards and holds back those that fall short.</p>
+<p>We summarise; we do not report from the ground. Credit for every story belongs to the journalists who broke it. Read them, and support them.</p>
+<h2 id="low-data">On a small data bundle</h2>
+<p>The <a href="$BaseUrl/countries/">text-only edition</a> carries the lead story from every country as plain text, with no maps or images. Story pages are mostly text as well.</p>
+<p>A news reader app such as Feedly, Inoreader or NetNewsWire can deliver our headlines as they are published, using very little data. Add <code>$BaseUrl/feed.xml</code> to the app; this is known as an RSS feed. To follow a single country, add its feed instead. Kenya's is <code>$BaseUrl/ke/feed.xml</code>, and every country page links to its own.</p>
+<h2>Contact</h2>
+<p>Write to <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a> with questions, tips or complaints. The <a href="$BaseUrl/contact/">contact page</a> explains what helps us act quickly. To report an error in a story, see <a href="$BaseUrl/corrections/">corrections</a>.</p>
 "@ }
-  privacy = @{ title = 'Privacy'; desc = 'What The African Street Journal collects about readers (very little) and why.'; body = @"
-<p>This site does not use cookies, does not ask you to sign in, and does not run advertising trackers.</p>
+  privacy = @{ title = 'Privacy'; desc = 'What The African Street Journal collects about its readers, and why. In short: very little.'; body = @"
+<p>We do not use cookies, we do not ask you to sign in, and we do not run advertising trackers.</p>
 <h2>Analytics</h2>
-<p>We count page views with <a href="https://www.cloudflare.com/web-analytics/" rel="noopener">Cloudflare Web Analytics</a>. It is cookieless: it does not set cookies or use local storage to identify you, and it does not build a profile of you across sites. It records things like the page viewed, the referring site, browser type and country, in aggregate.</p>
-<p>If your browser sends a Do Not Track signal, the analytics script is not loaded at all.</p>
+<p>We count visits with <a href="https://www.cloudflare.com/web-analytics/" rel="noopener">Cloudflare Web Analytics</a>. It sets no cookies, stores nothing on your device to identify you and builds no profile of you across sites. It reports totals only: pages viewed, referring sites, browsers and countries.</p>
+<p>If your browser sends a Do Not Track signal, the analytics script does not load.</p>
 <h2>Hosting</h2>
-<p>The site is served by GitHub Pages, and its domain name is handled by Cloudflare. Like any web host, they may keep short-lived server logs (such as IP addresses) for security and reliability. Typefaces are loaded from Google Fonts, which receives your IP address when it serves them. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>.</p>
-<h2>Offline reading</h2>
-<p>The site stores a copy of its own pages in your browser so it can open quickly and work offline. That copy stays on your device and is never sent to us.</p>
-<p>If a page hits a script error, the site notes the last few on your device too, so that "Report a problem" in the About menu can include them. They are only sent if you choose to send that email, and you can delete any of it before you do.</p>
-<p>Choices you make on the site, such as the countries you follow and a light or dark theme, are kept in your browser's local storage on this device. They are never sent to us.</p>
+<p>GitHub Pages serves the site, and Cloudflare manages its domain. Like any host, they may keep short-lived server logs, including IP addresses, for security and reliability. Our typefaces come from Google Fonts, which sees your IP address when it delivers them. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>.</p>
+<h2>On your device</h2>
+<p>The site keeps a copy of its pages in your browser so that it opens quickly and works offline. That copy never leaves your device.</p>
+<p>Your settings, such as the countries you follow and light or dark mode, are stored the same way and are never sent to us.</p>
+<p>If a page hits an error, the site records the last few on your device so that "Report a problem" in the About menu can include them. Nothing is sent unless you send that email yourself, and you can delete any of it first.</p>
 <h2>Email</h2>
-<p>If you email us, we use your message and address only to reply. We do not run a mailing list at the moment.</p>
-<p>For privacy questions, email <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a>.</p>
+<p>If you write to us, we use your address only to reply. We do not run a mailing list.</p>
+<p>Questions about privacy: <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a>.</p>
 "@ }
-  contact = @{ title = 'Contact'; desc = 'How to reach The African Street Journal with tips, corrections or questions.'; body = @"
+  contact = @{ title = 'Contact'; desc = 'How to reach The African Street Journal with tips, corrections and questions.'; body = @"
 <p class="contact-email">Email us at <a href="mailto:hello@africanstreetjournal.com">hello@africanstreetjournal.com</a></p>
-<p>We read every message. Good reasons to write:</p>
+<p>We read every message. Most concern one of these:</p>
 <ul>
-<li><b>Corrections:</b> include the story link. See the <a href="$BaseUrl/corrections/">corrections policy</a>.</li>
-<li><b>Outlets and publishers:</b> if you think we have summarised or credited your reporting wrongly, or you want your feed removed, tell us and we will act promptly.</li>
-<li><b>Partnerships:</b> newsrooms, data providers and organisations who want to work with us.</li>
-<li><b>Tips and suggestions:</b> sources we should be reading, countries we cover thinly, or features you would like.</li>
+<li><b>Corrections.</b> Send the link to the story and tell us what is wrong. Our <a href="$BaseUrl/corrections/">corrections policy</a> explains what happens next.</li>
+<li><b>Outlets and publishers.</b> If we have summarised or credited your reporting inaccurately, or you would like your feed removed, tell us. We will act promptly.</li>
+<li><b>Partnerships.</b> Newsrooms, data providers and organisations interested in working with us.</li>
+<li><b>Tips.</b> Sources we should be reading, countries where our coverage is thin, and features you would like to see.</li>
 </ul>
 $contactFollow
 "@ }
-  corrections = @{ title = 'Corrections'; desc = 'How The African Street Journal corrects mistakes.'; body = @"
-<p>We aim to be accurate. When we get something wrong, we fix it.</p>
+  corrections = @{ title = 'Corrections'; desc = 'How The African Street Journal corrects its mistakes.'; body = @"
+<p>When we get something wrong, we fix it quickly.</p>
 <ul>
-<li>Every story links to the outlet it was based on. If our summary does not match that source, the source wins and we correct or remove our story.</li>
-<li>Factual errors in a live story are corrected as soon as we confirm them, normally within one working day.</li>
-<li>If a story should not have run at all (for example a misattributed report, or an item that is not news), we take it down.</li>
-<li>Because stories are summaries generated with an AI model and checked automatically, mistakes are possible. Reader reports are an important part of catching them.</li>
+<li>Every story links to the report it is based on. Where our story and the source disagree, the source stands, and we correct or remove ours.</li>
+<li>We correct factual errors in published stories as soon as we confirm them, normally within one working day.</li>
+<li>A story that should not have run, such as a misattributed report or an item that is not news, is taken down.</li>
+<li>AI models write our stories and software checks them. Errors still get through, and readers catch many of them. Please tell us when you see one.</li>
 </ul>
-<p>To report an error, email <a href="mailto:hello@africanstreetjournal.com?subject=Correction">hello@africanstreetjournal.com</a> with the story link and what is wrong.</p>
+<p>To report an error, email <a href="mailto:hello@africanstreetjournal.com?subject=Correction">hello@africanstreetjournal.com</a> with the link to the story and what is wrong.</p>
 <p>For the figures on country pages, see <a href="$BaseUrl/methods/">how we check our figures</a>.</p>
 "@ }
   # Linked from every country page's figures (23 Oct 2026): where each number comes
   # from, and the second-source checks behind it.
   methods = @{ title = 'How we check our figures'; desc = 'Where the figures on The African Street Journal country pages come from, and how each is checked against a second source.'; body = @"
-<p>Every figure on a country page comes from a named public source, shown with its year. Where a second, independent source exists, we check one against the other, and we fix, hide or label anything that does not agree.</p>
+<p>Every figure on a country page comes from a named public source and carries its year. Where an independent second source exists, we check the two against each other, and we correct, hide or label any figure that does not agree.</p>
 <h2>What we show and where it comes from</h2>
 <ul>
 <li><b>Economy and farming figures:</b> the World Bank's World Development Indicators. We show the latest year reported, never present a figure more than seven years old as current, and give the median of the African countries that report the same figure.</li>
@@ -1087,10 +1092,10 @@ $contactFollow
 <li><b>Railways:</b> the OpenStreetMap route length of lines not marked disused, shown beside the CIA World Factbook's total for the whole network. Where track is mapped but no trains run (Libya, Chad, Niger), we say so.</li>
 <li><b>Maps and landmarks:</b> Natural Earth outlines, following African Union membership: Somaliland is shown as part of Somalia, and Western Sahara as its own territory. Landmark positions are checked against Wikidata and OpenStreetMap. The extra towns shown when a map is zoomed in come from Natural Earth and <a href="https://www.geonames.org/">GeoNames</a> (CC BY 4.0).</li>
 </ul>
-<h2>How the checks keep running</h2>
-<p>Most sources refresh automatically every month. A monthly audit repeats the cross-checks (railway lengths against the Factbook, city figures against each other, landmark positions) and flags anything that has drifted, and a daily check flags any source that has stopped updating.</p>
+<h2>Ongoing checks</h2>
+<p>Most sources refresh automatically each month. A monthly audit repeats the cross-checks (railway lengths against the Factbook, city figures against one another, landmark positions) and flags anything that has drifted. A daily check flags any source that has stopped updating.</p>
 <h2>Report an error</h2>
-<p>If a figure looks wrong, email <a href="mailto:hello@africanstreetjournal.com?subject=Data%20correction">hello@africanstreetjournal.com</a> with the country and the figure. We check it against its source and correct it.</p>
+<p>If a figure looks wrong, email <a href="mailto:hello@africanstreetjournal.com?subject=Data%20correction">hello@africanstreetjournal.com</a> with the country and the figure. We will check it against the source and correct it.</p>
 "@ }
 }
 foreach ($slug in $trustPages.Keys) {
@@ -1110,11 +1115,11 @@ foreach ($slug in $trustPages.Keys) {
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
 </head>
 <body>
 <div class="wrap page">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
+<div class="masthead"><a class="brand-lockup" href="$BaseUrl/"><em>The</em> African Street <b>Journal</b></a>$infoMenu</div>
 <h1>$($tp.title)</h1>
 $($tp.body)
 <footer>The African Street Journal$siteLinks</footer>
@@ -1185,16 +1190,16 @@ foreach ($ts in $topicOrder) {
 <script type="application/ld+json">$tLd</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"Topics","item":"$BaseUrl/topics/"},{"@type":"ListItem","position":3,"name":"$(JsonEsc $tName)","item":"$tUrl"}]}</script>
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
 </head>
 <body>
 <div class="wrap page">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a> <span aria-hidden="true">/</span> <a href="$BaseUrl/topics/">Topics</a>$infoMenu</div>
+<div class="masthead"><a class="brand-lockup" href="$BaseUrl/"><em>The</em> African Street <b>Journal</b></a> <span aria-hidden="true">/</span> <a href="$BaseUrl/topics/">Topics</a>$infoMenu</div>
 <h1>$(Esc $tName)</h1>
-<p class="meta">The newest $($tList.Count) $(Esc $tName) stories across Africa, newest first.</p>
+<p class="meta">The latest $($tList.Count) stories on $(Esc $tName) from across Africa.</p>
 <nav class="related" aria-label="$(Esc $tName) stories"><ul>$tItems</ul></nav>
 <nav class="related" aria-label="Other topics"><h2 class="section-label">Other topics</h2><ul>$tOthers</ul></nav>
-<footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
+<footer>The African Street Journal &middot; every source named and linked$siteLinks</footer>
 </div>
 </body>
 </html>
@@ -1219,15 +1224,15 @@ $tiHtml = @"
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
 </head>
 <body>
 <div class="wrap page">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
+<div class="masthead"><a class="brand-lockup" href="$BaseUrl/"><em>The</em> African Street <b>Journal</b></a>$infoMenu</div>
 <h1>Topics</h1>
-<p class="meta">Every story the desk has published in the last $StoryDays days, by subject.</p>
+<p class="meta">Every story we have published in the last $StoryDays days, by subject.</p>
 <nav class="related" aria-label="Topics"><ul>$($topicIndex.ToString())</ul></nav>
-<footer>The African Street Journal &middot; original reporting, every source cited$siteLinks</footer>
+<footer>The African Street Journal &middot; every source named and linked$siteLinks</footer>
 </div>
 </body>
 </html>
@@ -1299,14 +1304,14 @@ $digestHtml = @"
 <title>Today's posts | The African Street Journal</title>
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
 <style>.dg{margin:0 0 26px}.dg textarea{width:100%;box-sizing:border-box;background:#1b1b1b;color:#ece8e1;border:1px solid #333;border-radius:6px;padding:12px;font:15px/1.5 system-ui,sans-serif;resize:vertical}
 .dg-actions{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0}.dg-actions a,.dg-actions button{font:600 15px system-ui,sans-serif;padding:9px 14px;border-radius:6px;border:1px solid #3a3a3a;background:#222;color:#f3efe8;text-decoration:none;cursor:pointer}
 .dg-actions a:hover,.dg-actions button:hover{border-color:#5fbf6a}details{border-top:1px solid #262626;padding:10px 0}summary{cursor:pointer;font:600 16px system-ui,sans-serif}</style>
 </head>
 <body>
 <div class="wrap page">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a></div>
+<div class="masthead"><a class="brand-lockup" href="$BaseUrl/"><em>The</em> African Street <b>Journal</b></a></div>
 <h1>Today's posts</h1>
 <p class="meta">Written by the desk with this edition ($digestDay). Copy one, or send it straight to WhatsApp or Telegram and pick the group, Status or channel. Not listed in search.</p>
 $($digestBody.ToString())
@@ -1355,7 +1360,7 @@ $hubHtml = @"
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="max-image-preview:large">
 <title>News from all 55 African countries | The African Street Journal</title>
-<meta name="description" content="Today's source-cited news from every African country, from Algeria to Zimbabwe. One page per country, updated daily.">
+<meta name="description" content="Today's news from every African country, Algeria to Zimbabwe, with every source named and linked. One page per country, updated daily.">
 <link rel="canonical" href="$BaseUrl/countries/">
 <link rel="alternate" hreflang="en" href="$BaseUrl/countries/">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
@@ -1367,18 +1372,18 @@ $hubHtml = @"
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
 $analytics
 </head>
 <body>
 <div class="wrap page">
-<div class="masthead"><a href="$BaseUrl/">The African Street Journal</a>$infoMenu</div>
+<div class="masthead"><a class="brand-lockup" href="$BaseUrl/"><em>The</em> African Street <b>Journal</b></a>$infoMenu</div>
 <main id="main">
 <h1>Text-only edition</h1>
-<p class="hub-intro">The latest lead story from each of the 55 African countries, as plain text with no maps or pictures, for slow connections and small data bundles. Tap a headline to read it, or a country for all of its stories.</p>
+<p class="hub-intro">The lead story from each of Africa&rsquo;s 55 countries, in plain text with no maps or images. Built for slow connections and small data bundles. Tap a headline to read the story, or a country to see all of its coverage.</p>
 <ul class="country-hub">
 $($hubList.ToString())</ul>
-<p class="hub-note">Use a news reader app? Add <code>$BaseUrl/feed.xml</code> to get the latest headlines as they are published, or one country's feed (Kenya: <code>$BaseUrl/ke/feed.xml</code>) for that country alone. <a href="$BaseUrl/about/#low-data">How this works</a></p>
+<p class="hub-note">Prefer a news reader app? Add <code>$BaseUrl/feed.xml</code> for every headline as it is published, or a single country's feed, such as Kenya's <code>$BaseUrl/ke/feed.xml</code>. <a href="$BaseUrl/about/#low-data">How this works</a></p>
 </main>
 <footer>The African Street Journal$siteLinks</footer>
 </div>

@@ -2047,3 +2047,10 @@ html.ticker-js .ticker,.ticker{animation:none!important}
 #wire-view .wire-actions .wire-pick-menu[hidden]{display:none}
 #wire-view .wire-actions .wire-pick-menu .wire-pick-label{position:static;width:auto;height:auto;margin:0;overflow:visible;clip:auto;white-space:normal;font:500 13px/1.2 var(--sans);color:var(--text-muted)}
 #wire-view .wire-actions .wire-pick-menu select{width:100%}
+/* 19 Nov 2026: the brand lockup in the app's headers, matching the front page title and
+   every generated page. It links to the front page (app.js, data-home). */
+.cv-header-meta .brand-lockup,.story-reader-brand.brand-lockup{font:700 17px/1.1 var(--serif)!important;letter-spacing:0!important;text-transform:none!important;color:var(--text)!important;text-decoration:none;white-space:nowrap}
+.brand-lockup em{font-style:italic;font-weight:400;color:var(--text-muted)}
+.brand-lockup b{font-weight:700;color:var(--front-green)!important}
+.brand-lockup:hover b,.brand-lockup:focus-visible b{text-decoration:underline;text-underline-offset:3px}
+@media (max-width:640px){.story-reader-brand.brand-lockup{font-size:14px!important}}

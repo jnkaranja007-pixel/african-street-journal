@@ -3051,6 +3051,21 @@ function requestCloseStoryReader() {
 }
 document.getElementById('story-reader-back')?.addEventListener('click', requestCloseStoryReader);
 
+// The paper's name in a header goes to the front page (19 Nov 2026), as it does on every
+// other page of the site. Inside the app that means closing whatever is open over the
+// map, not reloading it. A modified click still opens the front page in a new tab.
+document.addEventListener('click', event => {
+  const link = event.target.closest('a[data-home]');
+  if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  closeStoryReader();
+  const wireView = document.getElementById('wire-view');
+  if (wireView?.classList.contains('open') && window.__wireClose) window.__wireClose();
+  if (countryView.classList.contains('open')) closeCountry();
+  history.replaceState(null, '', location.pathname);
+  window.scrollTo(0, 0);
+});
+
 // Back out of a story instead of out of the paper. On Android this is the primary
 // navigation gesture; before this it closed the site from the first story a reader
 // opened, which is the worst possible moment to lose them.

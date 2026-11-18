@@ -88,7 +88,7 @@
     var table = document.getElementById('mk-idx');
     var data = window.ASJ_INDICES && window.ASJ_INDICES.indices;
     if (!table) return;
-    if (!data) { table.querySelector('tbody').innerHTML = '<tr><td colspan="3" class="mk-loading">Market data could not be loaded. Try again later.</td></tr>'; return; }
+    if (!data) { table.querySelector('tbody').innerHTML = '<tr><td colspan="3" class="mk-loading">Market data is unavailable right now. Please try again shortly.</td></tr>'; return; }
     function num(v, cap) { return typeof v === 'number' && isFinite(v) && Math.abs(v) <= cap ? v : NaN; }
     var rows = Object.keys(data).map(function (k) { return data[k]; })
       .filter(function (r) { return r && isFinite(r.level) && r.level > 0; })
@@ -123,9 +123,9 @@
     var picker = document.getElementById('mk-period');
     var note = document.getElementById('mk-idx-note');
     var NOTES = {
-      day: 'Main index of each exchange at its last session, and its move that day.',
-      week: 'The move against the last session at least a week earlier. A dash means we do not have that session.',
-      ytd: 'The move since the last session of last year. A dash means we do not have that session yet.'
+      day: 'Each exchange2019s main index at its latest close, and the day2019s move.',
+      week: 'The change from the close a week earlier. A dash means we have no close for that date.',
+      ytd: 'The change since the final close of last year. A dash means we have not yet recorded that close.'
     };
     if (picker) {
       picker.hidden = false;
@@ -175,13 +175,13 @@
           '<span class="mk-val' + tone(x.m.day) + '">' + esc(signed(x.m.day)) + '</span></li>';
       }
       function col(title, list) { return list.length ? '<div class="mk-movers-col"><h3>' + title + '</h3><ul>' + list.map(li).join('') + '</ul></div>' : ''; }
-      box.innerHTML = '<p class="mk-movers-head">Biggest moves, ' + esc(day(newest)) + '</p>' + col('Up', up) + col('Down', down);
+      box.innerHTML = '<p class="mk-movers-head">Biggest movers, ' + esc(day(newest)) + '</p>' + col('Up', up) + col('Down', down);
       box.hidden = false;
     }());
     var src = document.getElementById('mk-idx-source');
     var fetched = window.ASJ_INDICES.fetchedAt ? day(window.ASJ_INDICES.fetchedAt) : '';
-    if (src) src.textContent = rows.length + ' indices. Source: ' + (window.ASJ_INDICES.source || 'exchange data') + (fetched ? ', checked ' + fetched : '') + '.' +
-      (stale ? ' ' + stale + ' have not reported a session for over a week; their last date is shown.' : '');
+    if (src) src.textContent = rows.length + ' indices. Sources: ' + (window.ASJ_INDICES.source || 'the exchanges') + '.' + (fetched ? ' Updated ' + fetched + '.' : '') +
+      (stale ? ' ' + stale + ' have not traded in more than a week; their latest close is shown.' : '');
   }());
 
   /* -- Currencies ---------------------------------------------------------------------- */
@@ -220,11 +220,11 @@
       var first = rows.map(function (x) { return x.tr && x.tr.since; }).filter(Boolean).sort()[0];
       if (note) {
         note.textContent = withChange.length
-          ? 'What one US dollar buys in each currency, and how that has changed since ' + ago + '. Up means the dollar buys more, so the local currency is weaker.'
-          : 'What one US dollar buys in each currency. We save the rate every day' + (first ? ' from ' + KIT.dayLabel(first) : '') + ', so the change column fills in as the days add up.';
+          ? 'What one US dollar buys in each currency, and the change from ' + ago + '. A rise means the dollar buys more: the local currency has weakened.'
+          : 'What one US dollar buys in each currency. We have recorded rates daily' + (first ? ' since ' + KIT.dayLabel(first) : '') + ', and the change column fills in as that record grows.';
       }
       var asOf = rows.map(function (x) { return x.tr && x.tr.nowDay; }).filter(Boolean).sort().pop();
-      if (src) src.innerHTML = rows.length + ' currencies used by the 55 countries. Reference rates from <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">ExchangeRate-API</a>' +
+      if (src) src.innerHTML = rows.length + ' currencies across the 55 countries. Reference rates: <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">ExchangeRate-API</a>' +
         (asOf ? ', ' + esc(KIT.dayLabel(asOf)) : live && live.time_last_update_utc ? ', ' + esc(day(new Date(live.time_last_update_utc).toISOString())) : '') + '.';
     }
     function liveRates() {
@@ -236,7 +236,7 @@
       var newest = h && Array.isArray(h.days) && h.days.length ? h.days[h.days.length - 1] : '';
       if (h && newest && ageDays(newest) < 4) { build(h, null); return; }
       liveRates().then(function (live) {
-        if (!live && !h) { table.querySelector('tbody').innerHTML = '<tr><td colspan="3" class="mk-loading">Exchange rates could not be loaded. Try again later.</td></tr>'; return; }
+        if (!live && !h) { table.querySelector('tbody').innerHTML = '<tr><td colspan="3" class="mk-loading">Exchange rates are unavailable right now. Please try again shortly.</td></tr>'; return; }
         build(live ? null : h, live);
       });
     });
