@@ -50,7 +50,9 @@ What happens next:
 - **Hold**: standards at 2 (soft news). The story is set aside and the next candidate
   in the country's queue is written to try for the slot. The soft story runs only if
   the country would otherwise be short.
-- **Revise**: context, headline, why or clarity at 2 or below. The writer gets one
+- **Revise**: context or headline at 2 or below: what a rewrite can fix from the
+  packet. A weak why or clarity grade is recorded and the story runs; in the first A/B,
+  rewrites for those were most of the editor's cost and were rarely kept. The writer gets one
   rewrite with the editor's fixes. The fixes may only use facts from the packet:
   where the reader needs something the packet does not give, the fix is to cut, never
   to invent. The rewrite then goes through every check again (facts, place, style,

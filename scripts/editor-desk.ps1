@@ -31,6 +31,17 @@ $script:EDITOR_MAX_DROPS_PER_COUNTRY = 2
 # soft story runs only if the country would otherwise be short. The independent judge of
 # the 18 Nov 2026 A/B named soft news as the last thing keeping standards near 3.
 $script:EDITOR_HOLD_AT = 2
+# Send back only for what a rewrite fixes. In the A/B of 18 Nov 2026 the editor sent 22
+# of 26 stories back, most for the why line, and kept 3 rewrites: each one a full writer
+# call and a second read, most of the editor's cost, for a why grade that moved from
+# 2.15 to 2.31. Names, initials and places a reader cannot place (context) and a
+# headline about the wrong thing are fixable from the packet; a why line the packet
+# gives nothing to build on is not. Weak why and clarity grades are recorded and the
+# story runs.
+$script:EDITOR_REVISE_ON = @('context','headline')
+# The editor reads this much of the packet: enough to check names and the main facts,
+# half the input of the first version.
+$script:EDITOR_PACKET_CHARS = 3000
 
 # True when the story is printable but soft, and a reserve should try for its slot.
 function Test-EditorHold($Grades) {
@@ -126,7 +137,7 @@ function Get-EditorStoryText($Story, [string]$CountryName) {
   ) -join "`n")
 }
 
-function Get-EditorPrompt($Story, [string]$CountryName, [string]$PacketText, [int]$MaxPacketChars = 6000) {
+function Get-EditorPrompt($Story, [string]$CountryName, [string]$PacketText, [int]$MaxPacketChars = $script:EDITOR_PACKET_CHARS) {
   $packet = [string]$PacketText
   if ($packet.Length -gt $MaxPacketChars) { $packet = $packet.Substring(0, $MaxPacketChars) + ' [...]' }
   return (@(
@@ -173,15 +184,15 @@ function Get-EditorMean($Grades) {
 #   drop   - the paper would not print it (standards or country at 1) and the country
 #            has other copy: the next candidate takes the slot. A country's only story is
 #            never dropped here; a stale page is worse than a weak story.
-#   revise - a craft grade (context, headline, why, clarity) at 2 or below: one rewrite
-#            with the editor's fixes, kept only if it passes every check again and the
-#            editor grades it higher.
-#   pass   - nothing at 2 or below.
+#   revise - context or headline at 2 or below (EDITOR_REVISE_ON): one rewrite with the
+#            editor's fixes, kept only if it passes every check again and the editor
+#            grades it higher.
+#   pass   - everything else; a weak why or clarity grade is recorded, not rewritten.
 function Get-EditorDecision($Grades, [bool]$CanDrop) {
   $fail = $script:EDITOR_FAIL_AT
   $cut = $script:EDITOR_DROP_AT
   if ($CanDrop -and ([int]$Grades['standards'] -le $cut -or [int]$Grades['country'] -le $cut)) { return 'drop' }
-  foreach ($c in @('context','headline','why','clarity')) {
+  foreach ($c in $script:EDITOR_REVISE_ON) {
     if ([int]$Grades[$c] -le $fail) { return 'revise' }
   }
   return 'pass'
