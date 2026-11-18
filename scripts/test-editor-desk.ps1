@@ -70,6 +70,9 @@ Assert-Editor 'a country''s only story is never dropped' ((Get-EditorDecision (N
 Assert-Editor 'a country''s only story is still revised' ((Get-EditorDecision (New-Grades -Standards 1 -Why 1) $false) -eq 'revise')
 Assert-Editor 'drop wins over revise' ((Get-EditorDecision (New-Grades -Standards 1 -Why 1) $true) -eq 'drop')
 Assert-Editor 'foreign news at 2 is kept' ((Get-EditorDecision (New-Grades -Country 2) $true) -eq 'pass')
+Assert-Editor 'soft news at standards 2 is held for a reserve' (Test-EditorHold (New-Grades -Standards 2))
+Assert-Editor 'acceptable copy at standards 3 is not held' (-not (Test-EditorHold (New-Grades -Standards 3)))
+Assert-Editor 'copy at standards 1 is dropped, not held' (-not (Test-EditorHold (New-Grades -Standards 1)))
 Assert-Editor 'the mean is the average of six' ([Math]::Abs((Get-EditorMean (New-Grades 1 2 3 4 5 3)) - 3.0) -lt 0.001)
 
 # --- the repair note -----------------------------------------------------------------------

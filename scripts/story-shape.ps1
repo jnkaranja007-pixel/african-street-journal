@@ -624,3 +624,62 @@ function Test-WhyRestatesDek($Brief, [double]$Share = 0.6, [double]$LeadShare = 
   if (-not $lead) { return $false }
   return ((Get-WhyToldShare $words ($top + ' ' + $lead)) -ge $LeadShare)
 }
+
+# Initials a reader in another African country cannot place. The independent judge of
+# the 18 Nov 2026 bake-off marked context down for "GIZ", "COP31" and "ITU Region D",
+# none of them spelled out. The writer's prompt already asks for every abbreviation to
+# be spelled out on first use; this is the countable half of that rule, so a story that
+# skips it is sent back by code rather than left to the editor. Only bare initials are
+# judged: a word in capitals with at least two letters, never spelled out in brackets
+# ("the Economic Community of West African States (ECOWAS)"), never followed by a gloss
+# ("GIZ, the German development agency", "GIZ (Germany's aid agency)") and not on the
+# short list below of names every reader of an African paper knows.
+$script:KNOWN_INITIALS = @(
+  'US','USA','UK','EU','UN','AU','AI','GDP','CEO','CFO','MP','PM','FC','TV','ID','HIV','AIDS','COVID','IMF',
+  'NATO','FIFA','CAF','AFCON','UEFA','WHO','BBC','CNN','AFP','OK','VAT','LNG','LPG','SMS','ICT','GMT','UTC',
+  'NGO','ATM','SIM','OPEC','BRICS','WTO','UNICEF','UNESCO','UNHCR','IT','DNA','PhD','SUV','GPS','MTN',
+  'ANC','ECOWAS','SADC','DRC','CAR','UAE','USSR','KM','KG','MW','GW','KWH','MWH','TB','ICU','COMESA','AFDB',
+  'AFRICOM','IPO','ETF','CBD','FX','IOC','NBA','NFL','OECD','G7','G20','EAC','AM','FM','VIP','PDF','QR',
+  'AS','DJ','GT','RAM','PET','USB','SME','TEU','OTC','PLC','MRI','CT','PIN','KYC','LED','EV','CFA','FCFA','CFAF','CO2'
+)
+# ISO codes of the currencies the paper prints; a figure in "KES 300" is a price, not a body.
+$script:CURRENCY_INITIALS = @(
+  'USD','EUR','GBP','CNY','JPY','CHF','ZAR','NGN','KES','GHS','EGP','MAD','DZD','TND','LYD','ETB','UGX','TZS',
+  'RWF','BIF','CDF','XAF','XOF','AOA','ZMW','MWK','MZN','BWP','NAD','LSL','SZL','ZWL','ZWG','MGA','MUR','SCR',
+  'KMF','DJF','ERN','SDG','SSP','SOS','GMD','GNF','SLE','SLL','LRD','CVE','STN','MRU','BTC'
+)
+function Get-UnexplainedInitials($Story) {
+  $parts = New-Object System.Collections.Generic.List[string]
+  foreach ($v in @($Story.headline, $Story.dek)) { if ($v) { $parts.Add([string]$v) } }
+  foreach ($p in @($Story.paragraphs)) { if ($p) { $parts.Add([string]$p) } }
+  if ($Story.why) { $parts.Add([string]$Story.why) }
+  $text = $parts.ToArray() -join "`n"
+  $seen = @{}
+  $out = New-Object System.Collections.Generic.List[string]
+  # Not inside a longer name, which says what it is: "TOL Gases", "EBO Bank", the outlet
+  # "Politico SL". Each token's every use is judged; one bare use is enough to flag it.
+  $bare = @{}
+  foreach ($m in [regex]::Matches($text, '(?<![\p{L}\p{N}&-])([A-Z][A-Z0-9&]{1,7})(s?)(?![\p{L}\p{N}&-])')) {
+    $before = $text.Substring([Math]::Max(0, $m.Index - 30), [Math]::Min(30, $m.Index))
+    $after = $text.Substring($m.Index + $m.Length, [Math]::Min(30, $text.Length - $m.Index - $m.Length))
+    if ($before -cmatch '\p{Lu}\p{Ll}+\s$' -or $after -cmatch '^\s\p{Lu}\p{Ll}') { continue }
+    $bare[$m.Groups[1].Value] = $true
+  }
+  foreach ($m in [regex]::Matches($text, '(?<![\p{L}\p{N}&-])([A-Z][A-Z0-9&]{1,7})(s?)(?![\p{L}\p{N}&-])')) {
+    $tok = $m.Groups[1].Value
+    if (-not $bare.ContainsKey($tok)) { continue }
+    if ($seen.ContainsKey($tok)) { continue }
+    $seen[$tok] = $true
+    if (([regex]::Matches($tok, '[A-Z]')).Count -lt 2) { continue }
+    if ($tok -cmatch '^[IVXLCDM]+$') { continue }
+    # A figure or a code, not a body: "CFA1,000", "FY2027", a bill number.
+    if (([regex]::Matches($tok, '\d')).Count -ge 3 -or $tok -cmatch '^(?:F?CFA|CFAF)\d+$') { continue }
+    if ($script:KNOWN_INITIALS -contains $tok -or $script:CURRENCY_INITIALS -contains $tok) { continue }
+    $q = [regex]::Escape($tok)
+    # Spelled out before it: "(ECOWAS)", "(IAJP/CO)".
+    if ([regex]::IsMatch($text, "\(\s*[A-Z0-9/&\s-]*(?<![A-Za-z0-9])$q(?![A-Za-z0-9])[A-Z0-9/&\s-]*\)")) { continue }
+    if ([regex]::IsMatch($text, "(?<![\p{L}\p{N}])${q}s?\s*(?:,\s*(?:the|a|an|which|whose)\b|\(|\s+(?:is|was|are|were)\s+(?:the|a|an)\b)")) { continue }
+    $out.Add($tok)
+  }
+  return $out.ToArray()
+}

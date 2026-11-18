@@ -26,6 +26,17 @@ $script:EDITOR_DROP_AT = 1
 # And never more than this many per country in a run: coverage of 55 countries is the
 # paper's promise, and an editor that disagrees with a whole column is miscalibrated.
 $script:EDITOR_MAX_DROPS_PER_COUNTRY = 2
+# Hold at or below this grade on standards: soft news (a forum, a visit, a ceremony)
+# is not cut, but a reserve candidate is written to try for its slot first, and the
+# soft story runs only if the country would otherwise be short. The independent judge of
+# the 18 Nov 2026 A/B named soft news as the last thing keeping standards near 3.
+$script:EDITOR_HOLD_AT = 2
+
+# True when the story is printable but soft, and a reserve should try for its slot.
+function Test-EditorHold($Grades) {
+  $s = [int]$Grades['standards']
+  return ($s -gt $script:EDITOR_DROP_AT -and $s -le $script:EDITOR_HOLD_AT)
+}
 
 function Get-EditorRubric([switch]$WithPacket) {
   $lines = New-Object System.Collections.Generic.List[string]

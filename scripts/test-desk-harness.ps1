@@ -66,7 +66,8 @@ $responder = {
   # The standards editor (scripts/editor-desk.ps1): it drops the council budget as soft
   # news, sends the telecom story back for its why line (and passes the rewrite), sends
   # the ambulance story back (whose rewrite invents a figure), and answers the cholera
-  # story with prose, which the desk must survive.
+  # story with prose, which the desk must survive. It grades the fertiliser story soft
+  # news (standards 2).
   if ($PromptText -match '^STORY' -and $PromptText -match 'SOURCE PACKET') {
     $g = [ordered]@{ context = 4; headline = 4; why = 4; clarity = 4; country = 4; standards = 4 }
     $fixes = @()
@@ -74,6 +75,9 @@ $responder = {
     elseif ($PromptText -match 'Headline: Fixtel switches on' -and $PromptText -notmatch 'served by 300 new masts') { $g.why = 2; $fixes = @('Say what the 300 masts the packet names change for the 2 million people.') }
     elseif ($PromptText -match 'Headline: Port Nova hospital receives') { $g.context = 2; $fixes = @('Say that the health ministry sent the ambulances, as the packet does.') }
     elseif ($PromptText -match 'Headline: Cholera has killed') { return 'The story reads well to me.' }
+    # Soft at 2: held while a reserve tries for the slot. The country has no reserve
+    # that fills it, so the fertiliser story runs after all.
+    elseif ($PromptText -match 'Headline: Ministry buys 50,000 tonnes') { $g.standards = 2 }
     $g['problems'] = @()
     $g['fixes'] = $fixes
     return ($g | ConvertTo-Json -Compress)
@@ -442,6 +446,7 @@ try {
   Assert-Harness 'an editor''s rewrite that invents a figure is refused; the checked story runs' ($edById['amb'] -and (& $text $edById['amb']) -notmatch '9,999')
   Assert-Harness 'an editor that answers with prose leaves the story as the checks passed it' ($edById['cholera'] -and [int]$edMetrics.editorErrors -eq 1)
   Assert-Harness 'metrics count the editor''s work' ([int]$edMetrics.editorRevised -eq 2 -and [int]$edMetrics.editorRewritesKept -eq 1 -and $edMetrics.editorModel -eq 'stand-in/editor' -and [int]$edMetrics.editorGradesFirst.stories -eq 5 -and [int]$edMetrics.editorGradesFinal.stories -eq 4) ("revised {0} kept {1} first {2} final {3}" -f $edMetrics.editorRevised, $edMetrics.editorRewritesKept, $edMetrics.editorGradesFirst.stories, $edMetrics.editorGradesFinal.stories)
+  Assert-Harness 'soft news is held for a reserve, and runs when the country would be short' ($edById.ContainsKey('fert') -and [int]$edMetrics.editorHeldSoft -eq 1 -and [int]$edMetrics.editorHeldSoftUsed -eq 1 -and (Get-Content $editorLogPath -Raw) -match 'held as soft news') ("held {0} used {1}" -f $edMetrics.editorHeldSoft, $edMetrics.editorHeldSoftUsed)
   Assert-Harness 'the final grades are higher than the first' ([double]$edMetrics.editorGradesFinal.why -gt [double]$edMetrics.editorGradesFirst.why) ("why {0} -> {1}" -f $edMetrics.editorGradesFirst.why, $edMetrics.editorGradesFinal.why)
   Assert-Harness 'the editor run spends nothing on the writer that the plain run did not, beyond the two rewrites' ([int]$edMetrics.apiCalls -le [int]$metrics.apiCalls + 2) ("calls {0} against {1}" -f $edMetrics.apiCalls, $metrics.apiCalls)
   Write-Host "[harness] OK - $passed checks"
