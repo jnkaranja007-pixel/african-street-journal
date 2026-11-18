@@ -1448,6 +1448,15 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
         $last = $_.Exception.Message.Split("`n")[0]
         $code = 0
         if ($last -match '^HTTP (\d+)') { $code = [int]$Matches[1] }
+        # A thinking model (DeepSeek V4 Flash, Qwen 3.8 Flash) that spent the whole
+        # budget reasoning and returned nothing gets reasoning turned off and more room,
+        # the rewrite request shape, once; it stays on that shape for the run.
+        if ($r.provider -eq 'openrouter' -and -not $r.compat -and $last -match '^EMPTY answer' -and $last -match 'finish_reason=length') {
+          $r.compat = $true
+          Write-Host "      [route] $($r.model) spent its budget thinking; reasoning off for the rest of the run" -ForegroundColor DarkYellow
+          $try--
+          continue
+        }
         # A model that answered with nothing answers the same way when asked again: the
         # next route takes the call.
         if ($last -match '^EMPTY answer') { break }
