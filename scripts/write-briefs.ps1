@@ -138,8 +138,14 @@ if ($Provider -eq 'gemini') {
   # Free tier is 15 requests a minute; one call every 4.5s stays under it.
   if ($DelayMs -lt 4500) { $DelayMs = 4500 }
 }
-$DEFAULT_MODEL = if ($Provider -eq 'gemini') { 'gemini-3.5-flash-lite' } else { 'google/gemini-2.5-flash-lite' }
-$DEFAULT_FALLBACKS = if ($Provider -eq 'gemini') { @() } else { @('google/gemini-3.1-flash-lite','deepseek/deepseek-v3.2') }
+# GPT-6 Luna since 18 Nov 2026, chosen by the model bake-off (bakeoff.yml) on 30
+# stories from one day's evidence, each model fixing its own drafts: still flawed after
+# the rewrite 12% (flash-lite 65%, Qwen 3.8 Flash 11%, DeepSeek V4 Flash 23%, Haiku 5.5
+# 16%), editor grade 3.32 (flash-lite 3.02), $0.017 for the lot (flash-lite $0.029,
+# because far fewer drafts go back). Qwen was as clean but twice as slow, so it is the
+# first fallback. The ASJ_MODEL / ASJ_FALLBACK_MODELS repository variables say the same.
+$DEFAULT_MODEL = if ($Provider -eq 'gemini') { 'gemini-3.5-flash-lite' } else { 'openai/gpt-6-luna' }
+$DEFAULT_FALLBACKS = if ($Provider -eq 'gemini') { @() } else { @('qwen/qwen3.8-flash','google/gemini-2.5-flash-lite') }
 if (-not $Model) { $Model = if ($env:ASJ_MODEL) { $env:ASJ_MODEL.Trim() } else { $DEFAULT_MODEL } }
 if (-not $FallbackModels) {
   $FallbackModels = if ($env:ASJ_FALLBACK_MODELS) { @($env:ASJ_FALLBACK_MODELS -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }) } else { $DEFAULT_FALLBACKS }
@@ -1682,7 +1688,16 @@ function Invoke-FrontRanking($ByCountry, $CountryNames, [int]$Pick) {
   foreach ($cc in $codesWithStories) {
     $list = @($ByCountry[$cc])
     $take = [Math]::Min(2, $list.Count)
-    for ($k = 0; $k -lt $take; $k++) { $cands.Add([pscustomobject]@{ code = [string]$cc; story = $list[$k]; hours = (Get-StoryAgeHours $list[$k]) }) }
+    for ($k = 0; $k -lt $take; $k++) {
+      # The Wall Street Journal does not put a crash or a crime on its front page. A
+      # routine-harm story that cleared the bar on its toll (scripts/wsj-standards.ps1)
+      # still runs in its country's column, but never among the top stories: on 17 Nov
+      # 2026 the front-page model put "Imbonerakure truck crash in Kabanga leaves 31
+      # dead" fifth. War, epidemics and disasters (class conflict) can still lead.
+      $hc = Get-WsjHarmClass ([string]$list[$k]['headline']) ([string]$list[$k]['dek'])
+      if ($hc -eq 'routine-harm') { continue }
+      $cands.Add([pscustomobject]@{ code = [string]$cc; story = $list[$k]; hours = (Get-StoryAgeHours $list[$k]) })
+    }
   }
   # A daily front page is today's news. On 12 Nov 2026 four of the twelve front stories
   # were 40 to 51 hours old, all of them reports the previous edition could have led

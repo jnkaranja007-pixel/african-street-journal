@@ -65,6 +65,7 @@ $lottery = [pscustomobject]@{ headline = 'Finance and tourism ministries review 
 Assert-Wsj 'a government lottery plan is policy' ((Test-WsjArchiveKeep $lottery).Keep)
 $tape = [pscustomobject]@{ headline = 'Court detains four teens over sex tape leak'; dek = 'The video spread on WhatsApp.'; paragraphs = @('x'); reach = 0 }
 Assert-Wsj 'a sex-tape story is withdrawn' (-not (Test-WsjArchiveKeep $tape).Keep)
+Assert-Wsj 'a 31-dead truck crash is routine harm, kept off the top stories' ((Get-WsjHarmClass 'Imbonerakure truck crash in Kabanga leaves 31 dead, sources say' 'The ruling party youth wing members were travelling at night.') -eq 'routine-harm')
 Assert-Wsj 'spelled-out hundreds are a mass toll' ((Get-NewsMassToll 'Cult leader convicted of one hundred ninety-one murders') -ge 100)
 $hyena = [pscustomobject]@{ headline = 'Spotted hyena returns to Egypt''s Red Sea Governorate'; dek = 'Villagers found mutilated sheep, signaling the return of a predator.'; paragraphs = @('x'); reach = 0 }
 Assert-Wsj 'a graphic word in a wildlife dek is not a graphic story' ((Test-WsjArchiveKeep $hyena).Keep)
