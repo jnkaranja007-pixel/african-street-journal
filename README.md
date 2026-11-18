@@ -74,7 +74,8 @@ powershell -File scripts/add-briefs.ps1 -InFile data/auto-briefs.json
 ```
 
 See **[GO-LIVE.md](GO-LIVE.md)** for how the nightly desk works, what it costs, and what to do
-when a feed rots.
+when a feed rots. See **[docs/desk-harness.md](docs/desk-harness.md)** for every gate a story
+passes before it is published, the numbers to watch, and how to test a change safely.
 
 ## Layout
 

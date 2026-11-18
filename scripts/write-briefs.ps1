@@ -65,6 +65,15 @@ param(
   # the writer's own model. A model that refuses the call is dropped for the run and the
   # rewrite goes to the writer's model instead.
   [string]$RewriteModel = '',
+  # The standards editor (scripts/editor-desk.ps1) reads every story beside its packet
+  # before it is published: it drops what the Journal would not print, when the country
+  # has other copy, and sends weak context, headlines and why lines back once with
+  # fixes taken from the packet. ASJ_EDITOR_MODEL overrides the model; 'none' turns the
+  # editor off. It fails open: an editor that errors, runs past its time budget or its
+  # call cap leaves the story as the checks passed it.
+  [string]$EditorModel = '',
+  [int]$EditorBudgetMinutes = 30,
+  [int]$EditorMaxCalls = 700,
   # Abort the whole run after this many API errors in a row, instead of grinding
   # through 55 countries x 3 attempts against a dead endpoint for half an hour.
   [int]$MaxConsecutiveApiErrors = 3,
@@ -120,6 +129,9 @@ $root    = Split-Path $PSScriptRoot -Parent
 . (Join-Path $PSScriptRoot 'news-ranking.ps1')
 # The Wall Street Journal bar and standards checks (Test-WsjBar, Get-WsjStandardsIssues).
 . (Join-Path $PSScriptRoot 'wsj-standards.ps1')
+# The standards editor's rubric, verdict parser and decision rule (Get-EditorDecision).
+. (Join-Path $PSScriptRoot 'editor-desk.ps1')
+$script:EDITOR_RUBRIC_DESK = Get-EditorRubric -WithPacket
 $placeRegistry = [IO.File]::ReadAllText((Join-Path $root 'data\sources.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json
 $inPath  =if ([IO.Path]::IsPathRooted($InFile))  { $InFile }  else { Join-Path $root $InFile }
 $outPath = if ([IO.Path]::IsPathRooted($OutFile)) { $OutFile } else { Join-Path $root $OutFile }
@@ -157,6 +169,9 @@ if ($Provider -eq 'gemini') { $Model = $Model -replace '^google/',''; $FallbackM
 $DEFAULT_REWRITE_MODEL = 'anthropic/claude-haiku-5.5'
 if (-not $RewriteModel) { $RewriteModel = if ($env:ASJ_REWRITE_MODEL) { $env:ASJ_REWRITE_MODEL.Trim() } else { $DEFAULT_REWRITE_MODEL } }
 if ($RewriteModel -eq 'none' -or $RewriteModel -eq $Model -or $Provider -ne 'openrouter') { $RewriteModel = '' }
+# Claude Haiku 5.5 grades; it already writes the rewrites and the weekly review.
+if (-not $EditorModel) { $EditorModel = if ($env:ASJ_EDITOR_MODEL) { $env:ASJ_EDITOR_MODEL.Trim() } else { 'anthropic/claude-haiku-5.5' } }
+if ($EditorModel -eq 'none' -or $Provider -ne 'openrouter') { $EditorModel = '' }
 $consecutiveApiErrors = 0
 $servedModels = @{}
 if (-not (Test-Path $inPath)) {
@@ -1387,6 +1402,18 @@ $script:rewriteRoute = $null
 if ($RewriteModel -and $Provider -eq 'openrouter' -and $env:OPENROUTER_API_KEY) {
   $script:rewriteRoute = @{ provider='openrouter'; model=$RewriteModel; url=$OpenRouterUrl; key=$env:OPENROUTER_API_KEY; dead=$false }
 }
+# The standards editor's route. compat: no temperature, reasoning off (Haiku 5.5 takes
+# no temperature and thinks into its token budget otherwise).
+$script:editorRoute = $null
+if ($EditorModel -and $env:OPENROUTER_API_KEY) {
+  $script:editorRoute = @{ provider='openrouter'; model=$EditorModel; url=$OpenRouterUrl; key=$env:OPENROUTER_API_KEY; dead=$false; compat=$true }
+}
+$script:editorCalls = 0
+$script:editorErrors = 0
+$script:editorErrorStreak = 0
+$script:editorClock = $null
+$script:editorGradeSums = @{ first = @{}; final = @{} }
+$script:editorGradeCounts = @{ first = 0; final = 0 }
 $script:rewriteCalls = 0
 $script:rewriteRouteErrors = 0
 $script:rewriteEmptyAnswers = 0
@@ -1681,6 +1708,97 @@ function Get-StoryAgeHours($Story) {
 # site falls back to the scores. One call per run, on the rewrite route.
 $script:frontCalls = 0
 $script:frontFailures = 0
+# --- the standards editor -----------------------------------------------------------
+# One call per story: the editor reads the story beside its packet and returns grades
+# and fixes (scripts/editor-desk.ps1). Returns $null when it cannot be used, and after
+# three failures in a row the editor is off for the run: the desk never waits on it.
+function Invoke-EditorReview($Story, $Item, [string]$CountryName) {
+  $route = $script:editorRoute
+  if (-not $route -or $route.dead -or -not $Story) { return $null }
+  $body = [ordered]@{
+    model = $route.model
+    messages = @(
+      @{ role = 'system'; content = $script:EDITOR_RUBRIC_DESK },
+      @{ role = 'user'; content = (Get-EditorPrompt $Story $CountryName (Get-ItemEvidenceText $Item)) }
+    )
+    max_tokens = 900
+    response_format = @{ type = 'json_object' }
+    reasoning = @{ enabled = $false }
+    usage = @{ include = $true }
+  }
+  $headers = @{ 'Authorization' = "Bearer $($route.key)"; 'Content-Type' = 'application/json'; 'HTTP-Referer' = 'https://africanstreetjournal.com'; 'X-Title' = 'ASJ standards editor' }
+  try {
+    $script:editorCalls++
+    $resp = Invoke-WebRequest -Uri $route.url -Method Post -Headers $headers -Body ([Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Depth 8 -Compress))) -TimeoutSec 60 -UseBasicParsing -ErrorAction Stop
+    $obj = [Text.Encoding]::UTF8.GetString($resp.RawContentStream.ToArray()) | ConvertFrom-Json
+    if ($obj.usage) {
+      $script:usagePrompt += [int]$obj.usage.prompt_tokens
+      $script:usageCompletion += [int]$obj.usage.completion_tokens
+      $script:usageTotal += [int]$obj.usage.total_tokens
+      if ($obj.usage.cost) { $script:usageCost += [double]$obj.usage.cost }
+    }
+    $edReply = ConvertFrom-EditorVerdict ([string]@($obj.choices)[0].message.content)
+    if (-not $edReply.Valid) { throw $edReply.Error }
+    $script:editorErrorStreak = 0
+    return $edReply
+  } catch {
+    $script:editorErrors++
+    $script:editorErrorStreak++
+    Write-Host ("      [editor] could not grade {0}: {1}" -f $CountryName, $_.Exception.Message.Split("`n")[0]) -ForegroundColor DarkYellow
+    if ($script:editorErrorStreak -ge 3) {
+      $route.dead = $true
+      Write-Host '      [editor] three failures in a row; stories go out as the checks passed them for the rest of the run' -ForegroundColor DarkYellow
+    }
+    return $null
+  }
+}
+
+function Add-EditorGrades([string]$Stage, $Grades) {
+  $script:editorGradeCounts[$Stage] = 1 + [int]$script:editorGradeCounts[$Stage]
+  foreach ($c in $script:EDITOR_CRITERIA) { $script:editorGradeSums[$Stage][$c] = [double]$script:editorGradeSums[$Stage][$c] + [int]$Grades[$c] }
+}
+
+function Get-EditorGradeAverages([string]$Stage) {
+  $out = [ordered]@{}
+  $cnt = [int]$script:editorGradeCounts[$Stage]
+  if (-not $cnt) { return $out }
+  $all = 0.0
+  foreach ($c in $script:EDITOR_CRITERIA) {
+    $avg = [double]$script:editorGradeSums[$Stage][$c] / $cnt
+    $out[$c] = [Math]::Round($avg, 2)
+    $all += $avg
+  }
+  $out['mean'] = [Math]::Round($all / $script:EDITOR_CRITERIA.Count, 2)
+  $out['stories'] = $cnt
+  return $out
+}
+
+# The editor's rewrite goes through every check a first draft does, in the same order,
+# so an edit can never publish what the desk would have refused. Returns the reason it
+# fails, or '' when it passes.
+function Get-EditedDraftIssue($Candidate, $Item, [int]$Index, $PlaceTerms) {
+  if (-not $Candidate) { return 'no story in the answer' }
+  $ci = -1
+  if ($null -eq $Candidate.item -or -not [int]::TryParse([string]$Candidate.item, [ref]$ci) -or $ci -ne $Index) { return "assignment item mismatch: expected $Index" }
+  $lens = @(Get-LensGroundingIssues $Candidate)
+  if ($lens.Count) { return 'lens grounding: ' + $lens[0] }
+  if ($Candidate.dek) { $Candidate.dek = Limit-DeskSentence (([string]$Candidate.dek).Trim()) 180 }
+  $contract = @(Get-DraftContractIssues $Candidate)
+  if ($contract.Count) { return 'story contract: ' + $contract[0] }
+  $evidence = Get-ItemEvidenceText $Item
+  $figures = @(Get-UngroundedNumbers (Get-DraftFactText $Candidate) $evidence)
+  if ($figures.Count) { return 'unsupported number: ' + (($figures | Select-Object -First 3) -join ', ') }
+  $months = @(Get-ItemUngroundedMonths (Get-DraftFactText $Candidate) $Item)
+  if ($months.Count) { return 'unsupported date: ' + (($months | Select-Object -First 3) -join ', ') }
+  if (([string]$Candidate.countryLink).Trim().ToLowerInvariant() -eq 'none') { return 'not about the country' }
+  [void](Repair-StoryCase $Candidate $evidence $root)
+  $place = Get-StoryPlaceIssue $Candidate $PlaceTerms
+  if ($place) { return $place }
+  $bar = Test-WsjBar $Candidate
+  if (-not $bar.Pass) { return $bar.Reason }
+  return ''
+}
+
 function Invoke-FrontRanking($ByCountry, $CountryNames, [int]$Pick) {
   $codesWithStories = @($ByCountry.Keys | Where-Object { @($ByCountry[$_]).Count -gt 0 })
   if ($codesWithStories.Count -lt 3) { return 0 }
@@ -1932,6 +2050,10 @@ $keptWhyGeneric = 0
 $deskLanguageRemoved = 0
 $weakAssignmentsSkipped = 0
 $deksRepaired = 0
+$editorDropped = 0
+$editorRevised = 0
+$editorImproved = 0
+$editorSkipped = 0
 # The day this edition is dated: what "will happen on 11 November" is judged against.
 $script:editionDay = (Get-Date).ToUniversalTime().Date
 $editionLabel = $script:editionDay.ToString('dddd, d MMMM yyyy', [Globalization.CultureInfo]::InvariantCulture)
@@ -1976,7 +2098,9 @@ foreach ($code in $codes) {
   # The meter has already done the assigning. Keep the sixth candidate at the ranking
   # boundary, but isolate each of the first five evidence packets in its own model call.
   # That makes cross-story fact leakage impossible and lets unchanged assignments hit cache.
-  $n    = [Math]::Min($MaxBriefs + 1, [Math]::Max(1, $items.Count))
+  # Two reserves, not one: the WSJ bar and the standards editor both drop stories, and
+  # a reserve is only written when an earlier story was dropped.
+  $n    = [Math]::Min($MaxBriefs + 2, [Math]::Max(1, $items.Count))
   $briefList = New-Object System.Collections.Generic.List[object]
   $storyCacheKeys = @{}
   $lastErr = ''
@@ -2002,6 +2126,8 @@ foreach ($code in $codes) {
                                     $MinStoryWords, $MaxStoryWords, $itemKey) -join "`n")
     $storyCacheKeys[[string]$i] = $storyCacheKey
     $oneBrief = $null
+    # Set when this item is written now; a cached story has no prompt to rewrite from.
+    $prompt = $null
     if (-not $NoCache -and $storyCache.ContainsKey($storyCacheKey)) {
       $cachedStories = @($storyCache[$storyCacheKey].stories)
       # The cache outlives a change to this script (the workflow restores the newest
@@ -2240,6 +2366,68 @@ weekday, write that instead of a month. Do not add facts while repairing.
       $wsjBarDropped++
       Write-Host ("      {0}#{1}: dropped, {2}: {3}" -f $code, $i, $wsjBar.Reason, ([string]$oneBrief.headline)) -ForegroundColor DarkYellow
       continue
+    }
+    # The standards editor (scripts/editor-desk.ps1): the last gate, on a story that has
+    # passed every fact, place, style and WSJ check. Drop, revise once, or pass.
+    if ($script:editorRoute -and -not $script:editorRoute.dead) {
+      if (-not $script:editorClock) { $script:editorClock = [Diagnostics.Stopwatch]::StartNew() }
+      if ($script:editorClock.Elapsed.TotalMinutes -ge $EditorBudgetMinutes -or $script:editorCalls -ge $EditorMaxCalls) {
+        $editorSkipped++
+      } else {
+        $edVerdict = Invoke-EditorReview $oneBrief $it $name
+        if ($edVerdict) {
+          Add-EditorGrades 'first' $edVerdict.Grades
+          $edFinal = $edVerdict
+          # A country's only story is never dropped: a stale page is worse.
+          $edCanDrop = ($briefList.Count -ge 1) -or (($i + 1) -lt $n)
+          $edDecision = Get-EditorDecision $edVerdict.Grades $edCanDrop
+          if ($edDecision -eq 'drop') {
+            $editorDropped++
+            Write-Host ("      {0}#{1}: dropped by the editor (standards {2}, country {3}): {4}" -f $code, $i, $edVerdict.Grades['standards'], $edVerdict.Grades['country'], ([string]$oneBrief.headline)) -ForegroundColor DarkYellow
+            continue
+          }
+          if ($edDecision -eq 'revise' -and $prompt) {
+            $editorRevised++
+            $edEdited = $null
+            $edWhyNot = ''
+            try {
+              $edResp = Invoke-OpenRouter ($prompt + (Get-EditorRepairNote $edVerdict $oneBrief)) 1 $i -Rewrite
+              $apiCalls++
+              $usagePrompt += $edResp.PromptTokens
+              $usageCompletion += $edResp.CompletionTokens
+              $usageTotal += $edResp.TotalTokens
+              $usageCost += $edResp.Cost
+              $edBlock = Get-JsonBlock $edResp.Content
+              if ($edBlock) {
+                $edReturned = @(Get-BriefArray ($edBlock | ConvertFrom-Json))
+                if ($edReturned.Count -eq 1) { $edEdited = $edReturned[0] }
+              }
+              $edWhyNot = Get-EditedDraftIssue $edEdited $it $i $placeTerms
+            } catch { $edWhyNot = $_.Exception.Message.Split("`n")[0] }
+            if (-not $edWhyNot) {
+              $edEvidence = Get-ItemEvidenceText $it
+              $edStyleBefore = @((Get-DraftStyleIssues $oneBrief $edEvidence).Issues).Count
+              $edStyleAfter = @((Get-DraftStyleIssues $edEdited $edEvidence).Issues).Count
+              if ($edStyleAfter -gt $edStyleBefore) { $edWhyNot = "more style problems ($edStyleAfter against $edStyleBefore)" }
+            }
+            if (-not $edWhyNot) {
+              # Kept only when the editor grades the rewrite higher than the draft.
+              $edAfter = Invoke-EditorReview $edEdited $it $name
+              if (-not $edAfter) { $edWhyNot = 'the editor could not grade the rewrite' }
+              elseif ((Get-EditorMean $edAfter.Grades) -le (Get-EditorMean $edVerdict.Grades)) {
+                $edWhyNot = ('graded {0:0.00} against {1:0.00}' -f (Get-EditorMean $edAfter.Grades), (Get-EditorMean $edVerdict.Grades))
+              } else {
+                $oneBrief = $edEdited
+                $edFinal = $edAfter
+                $editorImproved++
+                Write-Host ("      {0}#{1}: editor's rewrite kept, {2:0.00} -> {3:0.00}: {4}" -f $code, $i, (Get-EditorMean $edVerdict.Grades), (Get-EditorMean $edAfter.Grades), ([string]$oneBrief.headline)) -ForegroundColor DarkGray
+              }
+            }
+            if ($edWhyNot) { Write-Host ("      {0}#{1}: editor's rewrite not used ({2})" -f $code, $i, $edWhyNot) -ForegroundColor DarkGray }
+          }
+          Add-EditorGrades 'final' $edFinal.Grades
+        }
+      }
     }
     $briefList.Add($oneBrief)
     if ($i -ge $MaxBriefs) { $reserveCandidatesUsed++ }
@@ -2570,6 +2758,18 @@ $metrics = [ordered]@{
   # the edition against its targets (scripts/wsj-standards.ps1).
   wsjBarDropped = $wsjBarDropped
   editionMix = (Get-WsjEditionMix $result)
+  # The standards editor (scripts/editor-desk.ps1). Grades are averages, 1-5: "first"
+  # over every story it read, "final" over the stories it let through, after its
+  # rewrites. final minus first is what the editor added to the paper that day.
+  editorModel = $EditorModel
+  editorCalls = $script:editorCalls
+  editorErrors = $script:editorErrors
+  editorDropped = $editorDropped
+  editorRevised = $editorRevised
+  editorRewritesKept = $editorImproved
+  editorSkippedForBudget = $editorSkipped
+  editorGradesFirst = (Get-EditorGradeAverages 'first')
+  editorGradesFinal = (Get-EditorGradeAverages 'final')
   lensScoresCappedAsSpeculative = $lensCapped
   headlinesRecased = $caseRepaired
   draftsWithRelativeTime = $relativeTimeFlagged
@@ -2590,6 +2790,13 @@ $metrics = [ordered]@{
   reportedCostUsd = [Math]::Round($usageCost, 6)
 }
 [IO.File]::WriteAllText($metricsPath, ($metrics | ConvertTo-Json -Depth 4), (New-Object Text.UTF8Encoding($false)))
+if ($EditorModel) {
+  $edFirstOut = $metrics.editorGradesFirst
+  $edFinalOut = $metrics.editorGradesFinal
+  Write-Host ("[write] standards editor {0}: {1} calls, {2} errors; {3} dropped, {4} sent back, {5} rewrites kept, {6} not read (budget); grade {7} -> {8} (why {9} -> {10})" -f `
+    $EditorModel, $script:editorCalls, $script:editorErrors, $editorDropped, $editorRevised, $editorImproved, $editorSkipped,
+    $edFirstOut['mean'], $edFinalOut['mean'], $edFirstOut['why'], $edFinalOut['why']) -ForegroundColor DarkGray
+}
 $mixOut = $metrics.editionMix
 Write-Host ("[write] Wall Street Journal bar: {0} dropped; edition {1} stories, economy {2:P0}, security {3:P0}, routine harm {4:P0}, standards problems {5:P0}" -f `
   $wsjBarDropped, $mixOut.stories, $mixOut.economyShare, $mixOut.securityShare, $mixOut.routineHarmShare, $mixOut.standardsShare) -ForegroundColor DarkGray

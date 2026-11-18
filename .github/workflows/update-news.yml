@@ -56,7 +56,9 @@ concurrency:
 jobs:
   refresh:
     runs-on: windows-latest
-    timeout-minutes: 90
+    # 120, not 90: the standards editor adds up to 30 minutes (EditorBudgetMinutes in
+    # scripts/write-briefs.ps1) to a run that took 55 on 17 Nov 2026.
+    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -175,6 +177,10 @@ jobs:
           # it off and sends rewrites back to the writer's model:
           #   gh variable set ASJ_REWRITE_MODEL --body anthropic/claude-haiku-5.5
           ASJ_REWRITE_MODEL: ${{ vars.ASJ_REWRITE_MODEL }}
+          # The standards editor that reads every story before it is published
+          # (scripts/editor-desk.ps1); empty means the default, 'none' turns it off:
+          #   gh variable set ASJ_EDITOR_MODEL --body anthropic/claude-haiku-5.5
+          ASJ_EDITOR_MODEL: ${{ vars.ASJ_EDITOR_MODEL }}
           # Free alternative: create a key at https://aistudio.google.com/apikey, then
           #   gh secret set GEMINI_API_KEY ; gh variable set ASJ_PROVIDER --body gemini
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -331,6 +337,12 @@ jobs:
             @('Rewrite model', $m.rewriteModel),
             @('Rewrite calls / errors / empty answers', ('{0} / {1} / {2}' -f $m.rewriteCalls, $m.rewriteRouteErrors, $m.rewriteEmptyAnswers)),
             @('Off-country stories dropped', $m.offCountryDropped),
+            @('Below the WSJ bar, dropped', $m.wsjBarDropped),
+            @('Standards editor', $m.editorModel),
+            @('Editor: dropped / sent back / rewrites kept', ('{0} / {1} / {2}' -f $m.editorDropped, $m.editorRevised, $m.editorRewritesKept)),
+            @('Editor: calls / errors / not read (time budget)', ('{0} / {1} / {2}' -f $m.editorCalls, $m.editorErrors, $m.editorSkippedForBudget)),
+            @('Editor grade, first draft (mean, why, context, standards)', $(if ($m.editorGradesFirst.stories) { '{0} / {1} / {2} / {3}' -f $m.editorGradesFirst.mean, $m.editorGradesFirst.why, $m.editorGradesFirst.context, $m.editorGradesFirst.standards } else { '' })),
+            @('Editor grade, published (mean, why, context, standards)', $(if ($m.editorGradesFinal.stories) { '{0} / {1} / {2} / {3}' -f $m.editorGradesFinal.mean, $m.editorGradesFinal.why, $m.editorGradesFinal.context, $m.editorGradesFinal.standards } else { '' })),
             @('Reported cost (USD)', $m.reportedCostUsd),
             @('Written at', ('{0:HH:mm} UTC, {1:HH:mm} in Nairobi, {2:HH:mm} in Lagos' -f $now, $now.AddHours(3), $now.AddHours(1)))
           )
@@ -342,6 +354,8 @@ jobs:
           if ($asked -ge 10 -and ($fixed / [double]$asked) -lt 0.15) { $problems.Add("the style rewrites fixed $fixed of $asked stories") }
           if ([int]$m.rewriteEmptyAnswers -ge 5) { $problems.Add("the rewrite model answered with nothing $($m.rewriteEmptyAnswers) times") }
           if ([int]$m.rewriteRouteErrors -ge 3) { $problems.Add("the rewrite model refused or errored $($m.rewriteRouteErrors) times") }
+          if ($m.editorModel -and [int]$m.editorErrors -ge 3) { $problems.Add("the standards editor failed $($m.editorErrors) times and stopped reading stories") }
+          if ($m.editorModel -and [int]$m.editorSkippedForBudget -ge 20) { $problems.Add("the standards editor ran out of time and did not read $($m.editorSkippedForBudget) stories") }
           $title = 'ASJ style rewrites are not fixing stories'
           $existing = gh issue list --state open --search "$title in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq $title } | Select-Object -First 1
           if ($problems.Count) {

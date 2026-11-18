@@ -60,37 +60,11 @@ while ($sample.Count -lt $Count -and $pool.Count) {
   $pool.RemoveAt($pick)
 }
 
-$RUBRIC = @'
-You are the standards editor of The African Street Journal, a news site read across
-Africa and by the diaspora. Each story was written by the overnight desk from one
-outlet's report. Read it as a reader in another African country would, and grade it.
-Do not check facts against the world: judge only what is on the page.
-
-Grade each from 1 (fails) to 5 (good):
-- context: a reader outside the country can tell who each named person, party, body,
-  inquiry or case is. 1 when the story leans on names it never explains.
-- headline: the headline says what the story reports, and the story is about the
-  country it is filed under. 1 when the headline is about someone or something else.
-- why: the "Why it matters" line tells the reader something the story does not already
-  say (who pays or gains, a figure, what happens next). 1 when it repeats the story,
-  is generic ("affects the economy"), or is about a different event.
-- clarity: plain, specific and readable. 1 for padding, jargon or press-release voice.
-- country: the event happens in the country, or the country's people, government or
-  companies are directly involved. 1 when it is foreign news with a thin local link.
-- standards: would The Wall Street Journal, read through an African lens, print this?
-  5 for business, markets, policy, governance, or a war, coup or disaster told through
-  what it changes for Africans. 1 for a routine crime, crash or killing, tabloid words
-  ("horrific", "brutal", "tragedy"), graphic detail of injuries or bodies, a headline
-  that opens with a death toll, or Africa written as a place where things happen to
-  people rather than where people decide and act.
-
-"problems": up to three short sentences naming what a reader would trip on, most
-serious first. Empty when there is nothing.
-
-Return ONLY a JSON object:
-{"context":<1-5>,"headline":<1-5>,"why":<1-5>,"clarity":<1-5>,"country":<1-5>,"standards":<1-5>,"problems":["..."]}
-'@
-$CRITERIA = @('context','headline','why','clarity','country','standards')
+# One rubric for the desk editor and this review (scripts/editor-desk.ps1), so the
+# standard the desk enforces is the standard it is measured against.
+. (Join-Path $PSScriptRoot 'editor-desk.ps1')
+$RUBRIC = Get-EditorRubric
+$CRITERIA = $script:EDITOR_CRITERIA
 
 function Get-Review($Entry) {
   $s = $Entry.story

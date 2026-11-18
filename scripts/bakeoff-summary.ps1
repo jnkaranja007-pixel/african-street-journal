@@ -55,6 +55,9 @@ if (-not $rows.Count) {
   $first = @($rows | Where-Object { $_.Run } | Select-Object -First 1)
   if ($first.Count) {
     $lines.Add("Same evidence for every model (desk run $($first[0].Run.evidenceRun)), countries $($first[0].Run.countries). Each model rewrote its own drafts; no other model helped.")
+    $edName = if ($first[0].Run.editor -and $first[0].Run.editor -ne 'none') { $first[0].Run.editor } else { 'off' }
+    $refName = if ($first[0].Run.ref) { "$($first[0].Run.ref) at $(([string]$first[0].Run.sha).Substring(0, [Math]::Min(9, ([string]$first[0].Run.sha).Length)))" } else { 'unknown' }
+    $lines.Add("Code: $refName. Standards editor: $edName.")
     $lines.Add('')
   }
   $lines.Add('| Model | Stories | Drafts sent back | Still flawed | Copying source | Why line weak | Standards problems | Cost | Cost per story | Minutes |')
@@ -75,6 +78,20 @@ if (-not $rows.Count) {
     $lines.Add(('| {0} | {1} | {2} ({3}) | {4} ({5}) | {6} | {7} | {8} | ${9:0.0000} | {10} | {11} |' -f `
       $r.Model, $n, [int]$m.styleRewrites, (Format-Share $m.styleRewrites $n), [int]$m.styleKeptWithNotes, (Format-Share $m.styleKeptWithNotes $n),
       [int]$m.keptStillCopying, $weakWhy, $std, $cost, $per, $mins))
+  }
+  $edited = @($rows | Where-Object { $_.Metrics -and $_.Metrics.editorModel })
+  if ($edited.Count) {
+    $lines.Add('')
+    $lines.Add('The standards editor on each model''s copy: grades are its own, 1 to 5, first draft and published.')
+    $lines.Add('')
+    $lines.Add('| Model | Dropped | Sent back | Rewrites kept | Errors | Mean first -> published | Why first -> published | Context first -> published |')
+    $lines.Add('|---|---|---|---|---|---|---|---|')
+    foreach ($r in $edited) {
+      $m = $r.Metrics
+      $f = $m.editorGradesFirst
+      $p = $m.editorGradesFinal
+      $lines.Add(('| {0} | {1} | {2} | {3} | {4} | {5} -> {6} | {7} -> {8} | {9} -> {10} |' -f $r.Model, [int]$m.editorDropped, [int]$m.editorRevised, [int]$m.editorRewritesKept, [int]$m.editorErrors, $f.mean, $p.mean, $f.why, $p.why, $f.context, $p.context))
+    }
   }
   $graded = @($rows | Where-Object { $_.Grades.Count })
   if ($graded.Count) {

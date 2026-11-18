@@ -1,14 +1,22 @@
 name: Model bake-off
 
 # Run by hand only. Each model writes the same stories from the same day's evidence
-# (the desk-evidence artifact of the latest desk run), with no help from another
-# model: rewrites go back to the writer itself, so a model is judged on its own copy.
-# The desk's own fact and style checks score every draft, an editor model grades a
-# sample, and a table lands in the run summary. Nothing is committed or published.
+# (the desk-evidence artifact of a desk run), with no help from another model: rewrites
+# go back to the writer itself, so a model is judged on its own copy. The desk's own
+# fact and style checks score every draft, an independent judge grades a sample, and a
+# table lands in the run summary. Nothing is committed or published.
 #
-# Cost on 18 Nov 2026 prices: about 5 to 7 cents a model for 30 stories, plus about
-# 1.5 cents a model for the editor grades. The money comes from the same OpenRouter
-# credit as the desk.
+# It is also the desk's regression test. To prove a change to the harness before it
+# goes live, push it to a branch and run this twice on the same evidence_run, once
+# from main and once from the branch:
+#   gh workflow run bakeoff.yml --ref main   -f models=openai/gpt-6-luna -f evidence_run=<id>
+#   gh workflow run bakeoff.yml --ref <branch> -f models=openai/gpt-6-luna -f evidence_run=<id>
+# The judge is not the standards editor's model, so the desk is not marked by the
+# editor it was taught by.
+#
+# Cost on 18 Nov 2026 prices: about 2 to 6 cents a model for 30 stories, about 5 cents
+# more with the standards editor on, and about 9 cents a model for the judge's grades
+# (GPT-6.1 Terra). The money comes from the same OpenRouter credit as the desk.
 
 on:
   workflow_dispatch:
@@ -22,9 +30,17 @@ on:
         required: false
         default: 'ng,ke,za,gh,eg,sn'
       judge:
-        description: 'Model that grades a sample of each model''s stories, or none.'
+        description: 'Independent model that grades a sample of each model''s stories, or none.'
+        required: false
+        default: 'openai/gpt-6.1-terra'
+      editor:
+        description: 'Standards editor model on the desk (scripts/editor-desk.ps1), or none.'
         required: false
         default: 'anthropic/claude-haiku-5.5'
+      evidence_run:
+        description: 'Desk run id whose evidence to write from; empty means the latest.'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -68,8 +84,10 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
+          EVIDENCE_RUN_INPUT: ${{ github.event.inputs.evidence_run }}
         run: |
           $ids = @(gh run list --repo $env:GITHUB_REPOSITORY --workflow update-news.yml --status success -L 10 --json databaseId -q '.[].databaseId')
+          if ($env:EVIDENCE_RUN_INPUT) { $ids = @($env:EVIDENCE_RUN_INPUT.Trim()) }
           $got = $false
           foreach ($id in $ids) {
             Remove-Item -Recurse -Force evidence -ErrorAction SilentlyContinue
@@ -83,7 +101,7 @@ jobs:
               break
             }
           }
-          if (-not $got) { Write-Host '::error::no desk-evidence artifact with feed-items.json in the last 10 desk runs'; exit 1 }
+          if (-not $got) { Write-Host '::error::no desk-evidence artifact with feed-items.json in the desk run(s) asked for'; exit 1 }
           exit 0
 
       - name: Name the artifact
@@ -103,17 +121,19 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           MODEL: ${{ matrix.model }}
           COUNTRIES: ${{ github.event.inputs.countries }}
+          EDITOR: ${{ github.event.inputs.editor }}
         run: |
           New-Item -ItemType Directory -Force bake | Out-Null
           $only = if ($env:COUNTRIES) { $env:COUNTRIES.Trim() } else { 'ng,ke,za,gh,eg,sn' }
           $clock = [Diagnostics.Stopwatch]::StartNew()
           # The fallback list is the model itself, so OpenRouter never serves another one.
-          ./scripts/write-briefs.ps1 -Only $only -Model $env:MODEL -FallbackModels $env:MODEL -RewriteModel none `
+          $editor = if ($env:EDITOR) { $env:EDITOR.Trim() } else { 'none' }
+          ./scripts/write-briefs.ps1 -Only $only -Model $env:MODEL -FallbackModels $env:MODEL -RewriteModel none -EditorModel $editor `
             -NoCache -NoCountryRanking -NoFrontRanking -JsonMode `
             -OutFile bake/stories.json -MetricsFile bake/metrics.json *>&1 | Tee-Object -FilePath bake/write.log
           $code = $LASTEXITCODE
           $clock.Stop()
-          [ordered]@{ model = $env:MODEL; exitCode = $code; seconds = [int]$clock.Elapsed.TotalSeconds; evidenceRun = $env:EVIDENCE_RUN; countries = $only } |
+          [ordered]@{ model = $env:MODEL; exitCode = $code; seconds = [int]$clock.Elapsed.TotalSeconds; evidenceRun = $env:EVIDENCE_RUN; countries = $only; editor = $editor; ref = $env:GITHUB_REF_NAME; sha = $env:GITHUB_SHA } |
             ConvertTo-Json | Out-File -FilePath bake/run.json -Encoding utf8
           exit $code
 

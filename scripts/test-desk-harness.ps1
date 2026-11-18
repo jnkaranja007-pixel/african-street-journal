@@ -63,6 +63,21 @@ $feedPath = Join-Path $tmp 'feed.json'
 # under test differ.
 $responder = {
   param($PromptText)
+  # The standards editor (scripts/editor-desk.ps1): it drops the council budget as soft
+  # news, sends the telecom story back for its why line (and passes the rewrite), sends
+  # the ambulance story back (whose rewrite invents a figure), and answers the cholera
+  # story with prose, which the desk must survive.
+  if ($PromptText -match '^STORY' -and $PromptText -match 'SOURCE PACKET') {
+    $g = [ordered]@{ context = 4; headline = 4; why = 4; clarity = 4; country = 4; standards = 4 }
+    $fixes = @()
+    if ($PromptText -match 'Headline: Port Nova council adopts') { $g.standards = 2 }
+    elseif ($PromptText -match 'Headline: Fixtel switches on' -and $PromptText -notmatch 'served by 300 new masts') { $g.why = 2; $fixes = @('Say what the 300 masts the packet names change for the 2 million people.') }
+    elseif ($PromptText -match 'Headline: Port Nova hospital receives') { $g.context = 2; $fixes = @('Say that the health ministry sent the ambulances, as the packet does.') }
+    elseif ($PromptText -match 'Headline: Cholera has killed') { return 'The story reads well to me.' }
+    $g['problems'] = @()
+    $g['fixes'] = $fixes
+    return ($g | ConvertTo-Json -Compress)
+  }
   # The side-by-side ranking call (Invoke-CountryRanking): the stand-in editor orders by
   # this list, which is not the order the scores give, so the test sees it applied.
   if ($PromptText -match 'RANK THE STORIES') {
@@ -144,6 +159,7 @@ $responder = {
         'The company said 2 million people now have a mobile signal for the first time. Fixtel did not say how much the new masts cost to build.',
         'The telecoms regulator said it would inspect the coverage in December to check that the rural districts named by the company are served.')
       $why = 'About 2 million people in rural districts have a mobile signal for the first time.'
+      if ($PromptText -match 'REPAIR: The standards editor') { $why = 'About 2 million people in rural districts have a mobile signal for the first time, served by 300 new masts.' }
       $lens.investors = [ordered]@{ why = 'Investors could see higher returns if the company keeps growing its rural network.'; score = 70 }
     }
     'Hospital receives ambulances' {
@@ -262,8 +278,11 @@ $refuseLogPath = Join-Path $tmp 'writer-refused.log'
 $silentOutPath = Join-Path $tmp 'out-silent.json'
 $silentMetricsPath = Join-Path $tmp 'metrics-silent.json'
 $silentLogPath = Join-Path $tmp 'writer-silent.log'
+$editorOutPath = Join-Path $tmp 'out-editor.json'
+$editorMetricsPath = Join-Path $tmp 'metrics-editor.json'
+$editorLogPath = Join-Path $tmp 'writer-editor.log'
 $saved = @{}
-foreach ($k in 'ASJ_OPENROUTER_URL','OPENROUTER_API_KEY','GEMINI_API_KEY','ASJ_PROVIDER','ASJ_MODEL','ASJ_FALLBACK_MODELS','ASJ_REWRITE_MODEL') { $saved[$k] = [Environment]::GetEnvironmentVariable($k) }
+foreach ($k in 'ASJ_OPENROUTER_URL','OPENROUTER_API_KEY','GEMINI_API_KEY','ASJ_PROVIDER','ASJ_MODEL','ASJ_FALLBACK_MODELS','ASJ_REWRITE_MODEL','ASJ_EDITOR_MODEL') { $saved[$k] = [Environment]::GetEnvironmentVariable($k) }
 try {
   $env:ASJ_OPENROUTER_URL = "http://127.0.0.1:$port/"
   $env:OPENROUTER_API_KEY = 'stand-in-key'
@@ -272,6 +291,9 @@ try {
   $env:ASJ_MODEL = 'stand-in/model'
   $env:ASJ_FALLBACK_MODELS = 'stand-in/fallback'
   $env:ASJ_REWRITE_MODEL = 'stand-in/rewriter'
+  # The first three runs test the writer and its rewrites; the standards editor has a
+  # run of its own below.
+  $env:ASJ_EDITOR_MODEL = 'none'
   # The same engine as this test: pwsh in CI and on the desk.
   $exe = (Get-Process -Id $PID).Path
   # Six slots, so the seventh assignment is the reserve the desk reaches for.
@@ -293,6 +315,15 @@ try {
     -MetricsFile $silentMetricsPath -NoCache -JsonMode -DelayMs 0 -MaxBriefs 6 *> $silentLogPath
   $silentExit = $LASTEXITCODE
   $silentRequests = @($log.requests)[$beforeSilent..($log.requests.Count - 1)]
+  # And with the standards editor on.
+  $beforeEditor = $log.requests.Count
+  $env:ASJ_REWRITE_MODEL = 'stand-in/rewriter'
+  $env:ASJ_EDITOR_MODEL = 'stand-in/editor'
+  & $exe -NoProfile -ExecutionPolicy Bypass -File $writer -Only xx -InFile $feedPath -OutFile $editorOutPath `
+    -MetricsFile $editorMetricsPath -NoCache -JsonMode -DelayMs 0 -MaxBriefs 6 *> $editorLogPath
+  $editorExit = $LASTEXITCODE
+  $editorRequests = @($log.requests)[$beforeEditor..($log.requests.Count - 1)]
+  $editorPrompts = @($log.prompts)[$beforeEditor..($log.prompts.Count - 1)]
 } finally {
   foreach ($k in $saved.Keys) { [Environment]::SetEnvironmentVariable($k, $saved[$k]) }
   $listener.Stop()
@@ -392,6 +423,27 @@ try {
   Assert-Harness 'an empty answer is not asked for twice' (@($silentRequests | Where-Object { $_.style -and $_.model -eq 'stand-in/model' }).Count -eq 3)
   Assert-Harness 'the log says the answer was empty, and why' ((Get-Content $silentLogPath -Raw) -match 'answered with no content \(finish_reason=length, 1400 completion tokens')
   Assert-Harness 'the same six stories are published, rewrites and all' ($quiet.Count -eq 6 -and $quietMetrics.styleRewrites -eq 3 -and $quietMetrics.styleFixedByRewrite -eq $metrics.styleFixedByRewrite -and $quietMetrics.apiCalls -eq $metrics.apiCalls) ("stories {0} rewrites {1} fixed {2} calls {3}" -f $quiet.Count, $quietMetrics.styleRewrites, $quietMetrics.styleFixedByRewrite, $quietMetrics.apiCalls)
+
+  Write-Host '[harness] the standards editor' -ForegroundColor Cyan
+  $script:logPath = $editorLogPath
+  if ($editorExit -ne 0) { Get-Content $editorLogPath | Select-Object -Last 30 | ForEach-Object { Write-Host "    $_" } }
+  Assert-Harness 'writer exits cleanly' ($editorExit -eq 0) "exit $editorExit"
+  $edited = @(([IO.File]::ReadAllText($editorOutPath, [Text.Encoding]::UTF8) | ConvertFrom-Json).xx)
+  $edMetrics = [IO.File]::ReadAllText($editorMetricsPath, [Text.Encoding]::UTF8) | ConvertFrom-Json
+  $edById = @{}
+  foreach ($s in $edited) { $key = ($items | Where-Object { $s.headline -and ([string]$s.sources[0].url) -eq $_.url } | Select-Object -First 1).itemId; if ($key) { $edById[$key] = $s } }
+  $edCalls = @($editorRequests | Where-Object { $_.model -eq 'stand-in/editor' })
+  Assert-Harness 'the editor reads every story that passed the checks, and both rewrites' ($edCalls.Count -eq 7 -and [int]$edMetrics.editorCalls -eq 7) ("asked {0}, metrics {1}" -f $edCalls.Count, $edMetrics.editorCalls)
+  Assert-Harness 'the editor is asked with reasoning off and no temperature' (@($edCalls | Where-Object { -not $_.reasoningOff -or $_.temperature }).Count -eq 0)
+  Assert-Harness 'soft news is dropped when the country has other copy' (-not $edById.ContainsKey('budget') -and [int]$edMetrics.editorDropped -eq 1 -and $edited.Count -eq 5) ("stories {0}, dropped {1}" -f $edited.Count, $edMetrics.editorDropped)
+  Assert-Harness 'a weak why line is sent back and the better rewrite is published' ($edById['tele'] -and [string]$edById['tele'].why -match 'served by 300 new masts') ([string]$edById['tele'].why)
+  $edRepair = @($editorPrompts | Where-Object { $_ -match 'REPAIR: The standards editor' })
+  Assert-Harness 'the editor''s rewrite goes to the rewrite model with the fixes and the draft' ($edRepair.Count -eq 2 -and ($edRepair -join ' ') -match '300 masts the packet names' -and ($edRepair -join ' ') -match 'Previous draft:' -and @($editorRequests | Where-Object { $_.repair -and $_.model -eq 'stand-in/rewriter' -and -not $_.style -and -not $_.dateRepair }).Count -ge 2) ("repairs {0}" -f $edRepair.Count)
+  Assert-Harness 'an editor''s rewrite that invents a figure is refused; the checked story runs' ($edById['amb'] -and (& $text $edById['amb']) -notmatch '9,999')
+  Assert-Harness 'an editor that answers with prose leaves the story as the checks passed it' ($edById['cholera'] -and [int]$edMetrics.editorErrors -eq 1)
+  Assert-Harness 'metrics count the editor''s work' ([int]$edMetrics.editorRevised -eq 2 -and [int]$edMetrics.editorRewritesKept -eq 1 -and $edMetrics.editorModel -eq 'stand-in/editor' -and [int]$edMetrics.editorGradesFirst.stories -eq 5 -and [int]$edMetrics.editorGradesFinal.stories -eq 4) ("revised {0} kept {1} first {2} final {3}" -f $edMetrics.editorRevised, $edMetrics.editorRewritesKept, $edMetrics.editorGradesFirst.stories, $edMetrics.editorGradesFinal.stories)
+  Assert-Harness 'the final grades are higher than the first' ([double]$edMetrics.editorGradesFinal.why -gt [double]$edMetrics.editorGradesFirst.why) ("why {0} -> {1}" -f $edMetrics.editorGradesFirst.why, $edMetrics.editorGradesFinal.why)
+  Assert-Harness 'the editor run spends nothing on the writer that the plain run did not, beyond the two rewrites' ([int]$edMetrics.apiCalls -le [int]$metrics.apiCalls + 2) ("calls {0} against {1}" -f $edMetrics.apiCalls, $metrics.apiCalls)
   Write-Host "[harness] OK - $passed checks"
 } finally {
   Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
