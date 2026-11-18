@@ -683,3 +683,74 @@ function Get-UnexplainedInitials($Story) {
   }
   return $out.ToArray()
 }
+
+# Initials in the headline, explained in the story or not. A headline is read alone, on
+# the front page, in a share card and in a search result, so "BIDPA says Botswana budget
+# is only moderately geared toward jobs" tells a reader in Lagos nothing the story below
+# it later spells out. On 18 Nov 2026, 48 of 231 headlines led with initials like these.
+# They are not a reason on their own to send a story back (a rewrite is a full writer
+# call); when a story goes back for anything else, the repair note asks for them too.
+function Get-HeadlineInitials($Story) {
+  $h = [string]$Story.headline
+  $out = New-Object System.Collections.Generic.List[string]
+  foreach ($m in [regex]::Matches($h, '(?<![\p{L}\p{N}&-])([A-Z][A-Z0-9&]{1,7})(s?)(?![\p{L}\p{N}&-])')) {
+    $tok = $m.Groups[1].Value
+    $before = $h.Substring([Math]::Max(0, $m.Index - 30), [Math]::Min(30, $m.Index))
+    $after = $h.Substring($m.Index + $m.Length, [Math]::Min(30, $h.Length - $m.Index - $m.Length))
+    if ($before -cmatch '\p{Lu}\p{Ll}+\s$' -or $after -cmatch '^\s\p{Lu}\p{Ll}') { continue }
+    if (([regex]::Matches($tok, '[A-Z]')).Count -lt 2) { continue }
+    if ($tok -cmatch '^[IVXLCDM]+$') { continue }
+    if (([regex]::Matches($tok, '\d')).Count -ge 3 -or $tok -cmatch '^(?:F?CFA|CFAF)\d+$') { continue }
+    if ($script:KNOWN_INITIALS -contains $tok -or $script:CURRENCY_INITIALS -contains $tok) { continue }
+    if (-not $out.Contains($tok)) { $out.Add($tok) }
+  }
+  return $out.ToArray()
+}
+
+# House style for figures, applied to the published copy after every figure has been
+# checked against its source (write-briefs.ps1): it changes how a value is written,
+# never the value. On 18 Nov 2026 "Angola has 370 mil people living with HIV" ran as a
+# headline. Portuguese and Spanish "mil" is a thousand, so it was 370,000 people, read
+# by an English reader as 370 million in a country of 38 million; a Mozambique story
+# said "650 mil TEU" the same way. The same edition wrote Kenyan money three ways
+# (Sh5 trillion, Sh4.6bn, Kes 3.7 billion), percentages as "%", "per cent" and
+# "percent", and CFA francs as CFAF, FCFA, CFA and F CFA. The paper's forms:
+#   370,000 (not 370 mil)        1.5 billion (not 1,5 mil milhoes)
+#   12% (not 12 per cent)        4.6 billion, 2 million (not 4.6bn, 2mn)
+#   CFA550 million               KSh, USh, TSh: the shilling named by country, since a
+#   Afcon 2027 (not CAN 2027)    bare "Sh" is Kenyan, Ugandan, Tanzanian or Somali
+$script:MIL_THOUSAND_CODES = @('ao', 'mz', 'gw', 'cv', 'st', 'gq')
+$script:SHILLING_PREFIX = @{ ke = 'KSh'; ug = 'USh'; tz = 'TSh' }
+function ConvertTo-HouseFigures([string]$Text, [string]$Code) {
+  if (-not $Text) { return $Text }
+  $inv = [Globalization.CultureInfo]::InvariantCulture
+  $c = ([string]$Code).ToLowerInvariant()
+  $out = $Text
+  if ($script:MIL_THOUSAND_CODES -contains $c) {
+    $out = [regex]::Replace($out, '(?<![\d.,])(\d{1,3}(?:[.,]\d{1,2})?)\s+mil\s+milh\p{L}{1,3}\b', {
+      param($m) ($m.Groups[1].Value -replace ',', '.') + ' billion'
+    })
+    $out = [regex]::Replace($out, '(?<![\d.,])(\d{1,3}(?:[.,]\d{1,3})?)\s+mil\b(?!\s+(?:milh|mill))', {
+      param($m)
+      $n = $m.Groups[1].Value
+      # "1.200 mil" groups thousands (1.2 million); "1,5 mil" and "1.5 mil" are decimals.
+      if ($n -match '^\d{1,3}[.,]\d{3}$') { $value = [double]($n -replace '[.,]', '') }
+      else { $value = [double]::Parse(($n -replace ',', '.'), [Globalization.CultureInfo]::InvariantCulture) }
+      $value = $value * 1000.0
+      if ($value -ge 1000000.0) { return ([Math]::Round($value / 1000000.0, 2)).ToString([Globalization.CultureInfo]::InvariantCulture) + ' million' }
+      return ([Math]::Round($value)).ToString('N0', [Globalization.CultureInfo]::InvariantCulture)
+    })
+  }
+  $out = [regex]::Replace($out, '(\d)\s?(?:per cent|percent)\b', '$1%')
+  $out = [regex]::Replace($out, '(\d)\s?(?:bn|bln)\b', '$1 billion')
+  $out = [regex]::Replace($out, '(\d)\s?(?:mn|mln)\b', '$1 million')
+  $amount = '(\d[\d.,]*(?:\s(?:million|billion|trillion))?)'
+  $out = [regex]::Replace($out, '(?<![\p{L}\p{N}])(?:CFAF|FCFA|F\s?CFA|CFA)\s?(?=\d)', 'CFA')
+  $out = [regex]::Replace($out, $amount + '\s?(?:FCFA|F\s?CFA|CFAF|CFA\s+francs?|CFA)(?![\p{L}\p{N}])', 'CFA${1}')
+  if ($script:SHILLING_PREFIX.ContainsKey($c)) {
+    $letters = switch ($c) { 'ke' { 'KES|Kes|KShs?|Kshs?' } 'ug' { 'UGX|Ugx|UShs?|Ushs?' } 'tz' { 'TZS|Tzs|TShs?|Tshs?' } }
+    $out = [regex]::Replace($out, '(?<![\p{L}\p{N}])(?:' + $letters + '|Shs?)\.?\s?(?=\d)', $script:SHILLING_PREFIX[$c])
+  }
+  $out = [regex]::Replace($out, '(?<![\p{L}\p{N}])CAN\s(20\d{2})\b', 'Afcon $1')
+  return $out
+}
