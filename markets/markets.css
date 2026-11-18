@@ -57,3 +57,21 @@
   .mk-table tbody td.num .mk-spark{display:inline-block;margin:0 0 0 8px;vertical-align:middle}
   .mk-table tbody td.mk-loading{grid-column:1 / -1}
 }
+/* 18 Nov 2026: today's biggest moves, and the Day / Week / This year switch. */
+.mk-movers{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;margin:0 0 18px;padding:14px 16px;border:1px solid var(--c-2a2a2a);border-radius:10px;font:400 15px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif}
+.mk-movers[hidden]{display:none}
+.mk-movers-head{grid-column:1 / -1;margin:0 0 4px;font-weight:600;color:var(--c-cfcac3)}
+.mk-movers h3{margin:4px 0 6px;font:600 14px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--c-a8a39d)}
+.mk-movers ul{list-style:none;margin:0;padding:0}
+.mk-movers li{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:6px 0;border-top:1px solid var(--c-232323);max-width:none}
+.mk-movers li:first-child{border-top:0}
+.mk-mover-name{font-weight:600;color:var(--c-f2f0ed);min-width:0}
+.mk-mover-name .mk-sub{font-weight:400;font-size:14px;margin-top:1px}
+.mk-movers .mk-val{display:inline;white-space:nowrap;font-variant-numeric:tabular-nums}
+.mk-period{display:inline-flex;margin:0 0 12px;border:1px solid var(--c-2a2a2a);border-radius:8px;overflow:hidden}
+.mk-period[hidden]{display:none}
+.mk-period button{min-height:40px;padding:0 16px;border:0;border-left:1px solid var(--c-2a2a2a);background:none;color:var(--c-cfcac3);font:600 15px/1 system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer}
+.mk-period button:first-child{border-left:0}
+.mk-period button[aria-pressed="true"]{background:var(--c-1d3a24);color:var(--c-f3efe8)}
+.mk-period button:focus-visible{outline:2px solid var(--c-66bb6a);outline-offset:-2px}
+@media (max-width:560px){.mk-movers{gap:2px 14px;padding:12px 12px}.mk-movers li{padding:5px 0}.mk-mover-name{font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}

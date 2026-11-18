@@ -11,7 +11,7 @@
 
   It works in a dedicated git worktree, never the checkout you edit in: each run resets
   that worktree to origin/main, runs scripts/update-markets.ps1 and
-  scripts/update-indices.ps1, and pushes only data/markets.json and data/indices.js.
+  scripts/update-indices.ps1, and pushes only data/markets.json, data/indices.js and data/indices-history.json.
   It refuses to run from a normal checkout, because of that reset.
 .SETUP
   git worktree add --detach "..\asj-markets-refresh" origin/main      (once, from the repo)
@@ -51,7 +51,7 @@ foreach ($s in @('update-markets.ps1', 'update-indices.ps1')) {
   if ($LASTEXITCODE -ne 0) { Log "$s failed (exit $LASTEXITCODE)"; $failed += $s }
 }
 
-git add data/markets.json data/indices.js
+git add data/markets.json data/indices.js data/indices-history.json
 git diff --staged --quiet
 if ($LASTEXITCODE -eq 0) { Log 'markets unchanged'; if ($failed.Count -eq 2) { exit 1 }; exit 0 }
 git -c user.name='asj-markets-desktop' -c user.email='github-actions[bot]@users.noreply.github.com' `

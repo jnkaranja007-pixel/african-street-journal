@@ -243,13 +243,18 @@ function Get-UnixDay($Seconds) { [DateTimeOffset]::FromUnixTimeSeconds([long]$Se
 
 # 1a. TradingView's scanner: one JSON object per index. "time" is the opening time of the
 #     latest session (07:00-09:00 UTC for these exchanges), so its UTC date is the session.
+#     It also gives the week's and the year's move ("Perf.W", "Perf.YTD"), which our own
+#     history (data/indices-history.json, below) cannot give for a year it did not record
+#     from the first session.
+$tvPerf = @{}
 $TV = [ordered]@{ 'JSE:J203'='JSE'; 'NSENG:ASI'='NGX'; 'EGX:EGX30'='EGX'; 'CSEMA:MASI'='CSE'; 'BVMT:PX1'='BVMT' }
 foreach ($sym in $TV.Keys) {
-  $json = Get-Page ('https://scanner.tradingview.com/symbol?symbol=' + [uri]::EscapeDataString($sym) + '&fields=close,change,time') 2
+  $json = Get-Page ('https://scanner.tradingview.com/symbol?symbol=' + [uri]::EscapeDataString($sym) + '&fields=close,change,time,Perf.W,Perf.YTD') 2
   if (-not $json) { continue }
   try { $q = ($json | ConvertFrom-Json) } catch { Write-Host "::warning::[indices] tradingview ${sym}: answered, but not with JSON (has the feed changed?)"; continue }
   if ($null -eq $q.close -or $null -eq $q.time) { Write-Host "::warning::[indices] tradingview ${sym}: JSON without close or time (has the feed changed?)"; continue }
   Add-IndexRow $TV[$sym] ([double]$q.close) $q.change (Get-UnixDay $q.time) 'tradingview.com'
+  if ($rows.Contains($TV[$sym]) -and $rows[$TV[$sym]].source -eq 'tradingview.com') { $tvPerf[$TV[$sym]] = @{ w = $q.'Perf.W'; ytd = $q.'Perf.YTD' } }
 }
 
 # 1b. Yahoo Finance chart API, a second feed for the JSE.
@@ -596,8 +601,62 @@ if ($prev) {
     # pwsh's ConvertFrom-Json may hand the date back as [datetime]; take either.
     $d = $o.date; if ($d -is [datetime]) { $d = $d.ToString('yyyy-MM-dd') }
     $rows[$p.Name] = [ordered]@{ code=$o.code; label=$o.label; name=$o.name; level=$o.level; changePct=$o.changePct; date=[string]$d; countries=@($o.countries); source=$(if ($o.source) { $o.source } else { $prev.source }) }
+    if ($null -ne $o.weekPct) { $rows[$p.Name].weekPct = $o.weekPct }
+    if ($null -ne $o.ytdPct) { $rows[$p.Name].ytdPct = $o.ytdPct }
   }
 }
+
+# 4. History (18 Nov 2026): every session's closing level, per exchange, in
+#    data/indices-history.json, for the markets page's week and year-to-date columns and
+#    its sparklines. The week's move is the level against the last session at least seven
+#    days earlier (and no more than twelve, so a long gap gives no figure rather than a
+#    wrong one); TradingView's own figure is used for the five exchanges it covers. The
+#    year's move is against the last session of the previous year, which only exists once
+#    we have recorded it; until then TradingView's figure is used for its five, and the
+#    others show none.
+$histPath = Join-Path $root 'data/indices-history.json'
+$levelsByCode = @{}
+if (Test-Path $histPath) {
+  try {
+    $h = [IO.File]::ReadAllText($histPath) | ConvertFrom-Json
+    foreach ($p in $h.levels.PSObject.Properties) {
+      $series = New-Object 'System.Collections.Generic.SortedDictionary[string,double]'
+      foreach ($pt in @($p.Value)) {
+        $pd = $pt[0]; if ($pd -is [datetime]) { $pd = $pd.ToString('yyyy-MM-dd') }
+        if ([string]$pd -match '^\d{4}-\d{2}-\d{2}$' -and [double]$pt[1] -gt 0) { $series[[string]$pd] = [double]$pt[1] }
+      }
+      $levelsByCode[$p.Name] = $series
+    }
+  } catch { Write-Host "::warning::[indices] data/indices-history.json did not parse; starting it again: $($_.Exception.Message)" }
+}
+foreach ($code in @($rows.Keys)) {
+  $r = $rows[$code]
+  if (-not $levelsByCode.ContainsKey($code)) { $levelsByCode[$code] = New-Object 'System.Collections.Generic.SortedDictionary[string,double]' }
+  $series = $levelsByCode[$code]
+  $series[[string]$r.date] = [double]$r.level
+  $rowDay = [datetime]::ParseExact([string]$r.date, 'yyyy-MM-dd', $Inv)
+  $weekFrom = $rowDay.AddDays(-12).ToString('yyyy-MM-dd'); $weekTo = $rowDay.AddDays(-7).ToString('yyyy-MM-dd')
+  $yearFrom = "$($rowDay.Year - 1)-12-20"; $yearTo = "$($rowDay.Year - 1)-12-31"
+  $weekBase = $null; $yearBase = $null
+  foreach ($k in $series.Keys) {
+    if ($k -ge $weekFrom -and $k -le $weekTo) { $weekBase = $series[$k] }
+    if ($k -ge $yearFrom -and $k -le $yearTo) { $yearBase = $series[$k] }
+  }
+  # TradingView counts five sessions back; where it answered, its figure is the one used.
+  $week = if ($tvPerf.ContainsKey($code) -and $null -ne $tvPerf[$code].w) { $tvPerf[$code].w } elseif ($weekBase) { ([double]$r.level / $weekBase - 1.0) * 100.0 } else { $null }
+  $ytd = if ($tvPerf.ContainsKey($code) -and $null -ne $tvPerf[$code].ytd) { $tvPerf[$code].ytd } elseif ($yearBase) { ([double]$r.level / $yearBase - 1.0) * 100.0 } else { $null }
+  # A misread level or a feed glitch shows up here first: no benchmark moves this far.
+  if ($null -ne $week -and [Math]::Abs([double]$week) -le 30.0) { $r.weekPct = [Math]::Round([double]$week, 2) }
+  if ($null -ne $ytd -and [Math]::Abs([double]$ytd) -le 300.0) { $r.ytdPct = [Math]::Round([double]$ytd, 2) }
+}
+$histOut = [ordered]@{}
+foreach ($code in ($levelsByCode.Keys | Sort-Object)) {
+  $keys = @($levelsByCode[$code].Keys)
+  if ($keys.Count -gt 400) { $keys = $keys[($keys.Count - 400)..($keys.Count - 1)] }
+  $histOut[$code] = @(foreach ($k in $keys) { ,@($k, $levelsByCode[$code][$k]) })
+}
+$histJson = [ordered]@{ updated = [DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ'); note = 'Closing level of each exchange main index per session, from data/indices.js.'; levels = $histOut } | ConvertTo-Json -Depth 5 -Compress
+[IO.File]::WriteAllText($histPath, $histJson, [Text.UTF8Encoding]::new($false))
 
 $sources = @($rows.Values | ForEach-Object { $_.source } | Sort-Object -Unique)
 $payload = [ordered]@{ fetchedAt = [DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ'); source = ($sources -join ', '); sourceUrl = $src; indices = $rows }

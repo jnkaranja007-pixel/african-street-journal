@@ -28,7 +28,7 @@ s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.h
 </script>
 <script src="/data/analytics-config.js" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 <link rel="stylesheet" href="/static-pages.css?v=73">
-<link rel="stylesheet" href="/markets/markets.css?v=119">
+<link rel="stylesheet" href="/markets/markets.css?v=137">
 </head>
 <body>
 <div class="wrap page markets-page">
@@ -39,6 +39,8 @@ s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.h
 <section class="mk-section" aria-labelledby="mk-idx-title">
   <h2 id="mk-idx-title">Stock markets</h2>
   <p class="mk-note" id="mk-idx-note">Main index of each exchange at its last session.</p>
+  <div class="mk-movers" id="mk-movers" hidden></div>
+  <div class="mk-period" id="mk-period" role="group" aria-label="Show the move over" hidden><button type="button" data-period="day" aria-pressed="true">Day</button><button type="button" data-period="week" aria-pressed="false">Week</button><button type="button" data-period="ytd" aria-pressed="false">This year</button></div>
   <div class="mk-table-wrap"><table class="mk-table" id="mk-idx">
     <thead><tr>
       <th scope="col" aria-sort="none"><button type="button" data-sort="name">Market</button></th>
@@ -70,6 +72,6 @@ s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.h
 </div>
 <script src="/fx-trend.js?v=119"></script>
 <script src="/data/indices.js?v=119" onerror="window.ASJ_INDICES=null"></script>
-<script src="/markets/markets.js?v=136"></script>
+<script src="/markets/markets.js?v=137"></script>
 </body>
 </html>

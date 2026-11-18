@@ -80,6 +80,7 @@
       paint();
     });
     paint();
+    return paint;
   }
 
   /* -- Stock markets ------------------------------------------------------------------- */
@@ -88,28 +89,95 @@
     var data = window.ASJ_INDICES && window.ASJ_INDICES.indices;
     if (!table) return;
     if (!data) { table.querySelector('tbody').innerHTML = '<tr><td colspan="3" class="mk-loading">Market data could not be loaded. Try again later.</td></tr>'; return; }
+    function num(v, cap) { return typeof v === 'number' && isFinite(v) && Math.abs(v) <= cap ? v : NaN; }
     var rows = Object.keys(data).map(function (k) { return data[k]; })
       .filter(function (r) { return r && isFinite(r.level) && r.level > 0; })
       .map(function (r) {
         var cs = Array.isArray(r.countries) ? r.countries : [];
-        var pct = typeof r.changePct === 'number' && isFinite(r.changePct) && Math.abs(r.changePct) <= 50 ? r.changePct : NaN;
-        return { r: r, cs: cs, pct: pct, stale: ageDays(r.date) > 7,
-          sort: { name: r.name || r.label || r.code, level: r.level, move: pct } };
+        var m = { day: num(r.changePct, 50), week: num(r.weekPct, 30), ytd: num(r.ytdPct, 300) };
+        return { r: r, cs: cs, m: m, pct: m.day, points: null, stale: ageDays(r.date) > 7,
+          sort: { name: r.name || r.label || r.code, level: r.level, move: m.day } };
       });
     var stale = rows.filter(function (x) { return x.stale; }).length;
+    /* 18 Nov 2026: the move column shows the day, the week or the year to date. The week is
+       against the last session at least seven days earlier; the year against the last
+       session of the previous year, so a market with no figure shows a dash, not a guess. */
+    var PERIOD = { day: 'Day', week: 'Week', ytd: 'This year' };
+    var NONE = { day: 'No move', week: '–', ytd: '–' };
+    var period = 'day';
     function render(x) {
       var r = x.r, single = x.cs.length === 1;
       var where = single
         ? '<a href="/#/' + x.cs[0] + '/investors">' + esc(NAMES[x.cs[0]] || x.cs[0]) + '</a>'
         : esc(countriesText(x.cs));
+      var line = x.points && KIT ? KIT.spark(x.points, 72, 22) : '';
       return '<tr' + (x.stale ? ' class="is-stale"' : '') + '>' +
         '<th scope="row"><span class="mk-name">' + esc(r.name || r.label) + '</span><span class="mk-sub">' + where + '</span></th>' +
         '<td class="num"><span class="mk-val">' + esc(Number(r.level).toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 })) + '</span>' +
           '<span class="mk-sub">' + (x.stale ? 'Last traded ' : '') + esc(day(r.date)) + '</span></td>' +
-        '<td class="num"><span class="mk-val' + tone(x.pct) + '">' + (isFinite(x.pct) ? esc(signed(x.pct)) : '<span class="mk-none">No move</span>') + '</span></td>' +
+        '<td class="num"><span class="mk-val' + tone(x.pct) + '">' + (isFinite(x.pct) ? esc(signed(x.pct)) : '<span class="mk-none">' + NONE[period] + '</span>') + '</span>' +
+          (line ? '<span class="mk-spark" title="' + esc('Since ' + day(x.points[0].d)) + '">' + line + '</span>' : '') + '</td>' +
       '</tr>';
     }
-    sortable(table, rows, render, 'name', 'ascending');
+    var repaint = sortable(table, rows, render, 'name', 'ascending');
+    var picker = document.getElementById('mk-period');
+    var note = document.getElementById('mk-idx-note');
+    var NOTES = {
+      day: 'Main index of each exchange at its last session, and its move that day.',
+      week: 'The move against the last session at least a week earlier. A dash means we do not have that session.',
+      ytd: 'The move since the last session of last year. A dash means we do not have that session yet.'
+    };
+    if (picker) {
+      picker.hidden = false;
+      picker.addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-period]');
+        if (!b || b.dataset.period === period) return;
+        period = b.dataset.period;
+        picker.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        rows.forEach(function (x) { x.pct = x.m[period]; x.sort.move = x.pct; });
+        var head = table.querySelector('button[data-sort="move"]');
+        if (head) head.textContent = PERIOD[period];
+        if (note) note.textContent = NOTES[period];
+        repaint();
+      });
+    }
+    // Sparklines: each exchange's saved closing levels (data/indices-history.json).
+    if (KIT) {
+      fetch('/data/indices-history.json', { cache: 'no-cache' })
+        .then(function (res) { return res.ok ? res.json() : null; })
+        .then(function (h) {
+          if (!h || !h.levels) return;
+          var any = false;
+          rows.forEach(function (x) {
+            var s = h.levels[x.r.code];
+            if (!Array.isArray(s)) return;
+            var pts = s.filter(function (p) { return Array.isArray(p) && isFinite(p[1]) && p[1] > 0 && String(p[0]) <= String(x.r.date); })
+              .map(function (p) { return { d: String(p[0]), v: Number(p[1]) }; }).slice(-60);
+            if (pts.length >= 5) { x.points = pts; any = true; }
+          });
+          if (any) repaint();
+        }).catch(function () {});
+    }
+    // Today's movers: the biggest rises and falls among the exchanges that traded in the
+    // newest session, so a market shut for a week is not listed as today's news.
+    (function movers() {
+      var box = document.getElementById('mk-movers');
+      if (!box) return;
+      var newest = rows.map(function (x) { return String(x.r.date || ''); }).sort().pop();
+      var live = rows.filter(function (x) { return isFinite(x.m.day) && Math.abs(x.m.day) >= 0.005 && ageDays(x.r.date) - ageDays(newest) < 1.5; });
+      if (live.length < 3) return;
+      var up = live.filter(function (x) { return x.m.day > 0; }).sort(function (a, b) { return b.m.day - a.m.day; }).slice(0, 3);
+      var down = live.filter(function (x) { return x.m.day < 0; }).sort(function (a, b) { return a.m.day - b.m.day; }).slice(0, 3);
+      function li(x) {
+        // Named by country, as a reader looks for it; the index is in the tooltip.
+        var where = x.cs.length === 1 ? NAMES[x.cs[0]] || x.cs[0] : (x.r.label || x.r.code) + ' (' + x.cs.length + ' countries)';
+        return '<li title="' + esc(x.r.name || x.r.label) + '"><span class="mk-mover-name">' + esc(where) + '</span>' +
+          '<span class="mk-val' + tone(x.m.day) + '">' + esc(signed(x.m.day)) + '</span></li>';
+      }
+      function col(title, list) { return list.length ? '<div class="mk-movers-col"><h3>' + title + '</h3><ul>' + list.map(li).join('') + '</ul></div>' : ''; }
+      box.innerHTML = '<p class="mk-movers-head">Biggest moves, ' + esc(day(newest)) + '</p>' + col('Up', up) + col('Down', down);
+      box.hidden = false;
+    }());
     var src = document.getElementById('mk-idx-source');
     var fetched = window.ASJ_INDICES.fetchedAt ? day(window.ASJ_INDICES.fetchedAt) : '';
     if (src) src.textContent = rows.length + ' indices. Source: ' + (window.ASJ_INDICES.source || 'exchange data') + (fetched ? ', checked ' + fetched : '') + '.' +
