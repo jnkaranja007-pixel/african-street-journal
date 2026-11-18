@@ -556,6 +556,7 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   $overdue = @(Get-OverdueFutureDates ((@([string]$Brief.dek) + $paragraphs + @([string]$Brief.why)) -join "`n") $editionNow)
   $genericWhy = (-not $restatedWhy) -and (Test-WhyGeneric ([string]$Brief.why))
   $initials = @(Get-UnexplainedInitials $Brief)
+  $headInitials = @(Get-HeadlineInitials $Brief | Where-Object { $initials -notcontains $_ })
   # The Wall Street Journal standard (scripts/wsj-standards.ps1): loaded words, graphic
   # detail, a toll at the head of the headline, a story that only counts the dead.
   $wsj = Get-WsjStandardsIssues $Brief
@@ -572,7 +573,7 @@ function Get-DraftStyleIssues($Brief, [string]$EvidenceText) {
   if ($overdue.Count) { $issues.Add('future tense for a past date: ' + ($overdue -join ', ')) }
   if ($genericWhy) { $issues.Add('why line is generic') }
   if ($initials.Count) { $issues.Add('unexplained initials: ' + ($initials -join ', ')) }
-  return [pscustomobject]@{ Issues = $issues.ToArray(); Initials = $initials; Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied; DeskWords = $deskWords; Overdue = $overdue; GenericWhy = [bool]$genericWhy; Wsj = $wsj }
+  return [pscustomobject]@{ Issues = $issues.ToArray(); Initials = $initials; HeadlineInitials = $headInitials; Phrases = $phrases; Repeats = $repeats; SpeculativeWhy = [bool]$speculativeWhy; RestatedWhy = [bool]$restatedWhy; LowerProse = [bool]$lowerProse; RelativeTime = $relativeTime; Copied = $copied; DeskWords = $deskWords; Overdue = $overdue; GenericWhy = [bool]$genericWhy; Wsj = $wsj }
 }
 
 function Get-StyleRepairNote($Style, $Candidate) {
@@ -609,6 +610,9 @@ function Get-StyleRepairNote($Style, $Candidate) {
   }
   if (@($Style.Initials).Count) {
     [void]$lines.Add('- A reader in another country cannot place these initials: ' + ((@($Style.Initials) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '. On first use, spell each out with the initials in brackets, or say in a few words what the body is ("GIZ, Germany''s state development agency"), from the packet or, for a well-known international body, from general knowledge. If the packet does not say what it is, call it by its role in the event ("the state electricity company", "an opposition party") and drop the initials.')
+  }
+  if (@($Style.HeadlineInitials).Count) {
+    [void]$lines.Add('- The headline leans on initials a reader elsewhere in Africa cannot place: ' + ((@($Style.HeadlineInitials) | ForEach-Object { '"' + $_ + '"' }) -join ', ') + '. In the headline, name the body by its role or a short name ("Kenya''s electoral commission", not "IEBC"); the story may keep the initials once they are spelled out.')
   }
   if (@($Style.Copied).Count) {
     foreach ($c in @($Style.Copied | Select-Object -First 3)) {
@@ -724,6 +728,11 @@ HEADLINE, DEK AND WHY
   case: capitalise the first word and proper nouns only ("Kenya confirms ninth Ebola
   case", not "Kenya Confirms Ninth Ebola Case"). Use the most specific fact the packet
   has: a number, a named body, a place.
+- A headline is read alone, on the front page and in a share card, so it never leans on
+  initials a reader in another African country cannot place. Name the body by its role
+  or a short name instead: "Kenya's electoral commission", not "IEBC"; "Botswana's
+  policy institute", not "BIDPA". Initials known across Africa (AU, ECOWAS, IMF, UN,
+  MTN) may stand alone.
 - Dek: ONE complete sentence about the SAME event as the headline, giving its next most
   important fact: the scale, the cause, who is behind it or what it led to. Read the
   headline and the dek together: they must be the opening of one story. Headline
@@ -832,6 +841,8 @@ NUMBERS
   spell a source digit out as a word or convert it to a different magnitude.
 - When the source writes a number or time in words, translate it into English words.
   Never convert a written number into digits that do not appear in the evidence.
+- Portuguese and Spanish "mil" means thousand: "370 mil pessoas" is 370,000 people,
+  "1,5 mil milhoes" is 1.5 billion. Never leave "mil" in the English story.
 
 VOICE AND SOURCES
 - Paraphrase. Do not copy a source sentence, or any run of 12 words from it, and do
@@ -1025,6 +1036,24 @@ function Get-NumberKeys([string]$Text) {
     if (-not $key) { continue }
     if (-not ($keys[$key] -is [System.Collections.Generic.List[double]])) { $keys[$key] = New-Object System.Collections.Generic.List[double] }
     $keys[$key].AddRange((Get-NumberReadings ([regex]::Match($match.Value, '\d[\d.,]*').Value)))
+  }
+  # Portuguese and Spanish "mil" is a thousand (18 Nov 2026: "370 mil" ran as written):
+  # "370 mil" in a source also grounds 370,000 in the draft, "1.200 mil" 1.2 million and
+  # "1,5 mil milhoes" 1.5 billion, so a draft that translates the figure is not refused.
+  $inv = [Globalization.CultureInfo]::InvariantCulture
+  foreach ($match in [regex]::Matches($scanText, '(?<![\p{L}\p{N}])(\d{1,3}(?:[.,]\d{1,3})?)\s+mil\b(\s+milh\p{L}{1,3}\b)?', 'IgnoreCase')) {
+    foreach ($reading in (Get-NumberReadings $match.Groups[1].Value)) {
+      $forms = if ($match.Groups[2].Success) { @(@{ text = $reading.ToString($inv) + ' billion'; value = $reading }) }
+               else {
+                 $v = $reading * 1000.0
+                 @(@{ text = $v.ToString('0.###', $inv); value = $v }) + $(if ($v -ge 1000000.0) { @(@{ text = ($v / 1000000.0).ToString($inv) + ' million'; value = $v / 1000000.0 }) } else { @() })
+               }
+      foreach ($form in $forms) {
+        $key = ConvertTo-NumberKey $form.text
+        if (-not ($keys[$key] -is [System.Collections.Generic.List[double]])) { $keys[$key] = New-Object System.Collections.Generic.List[double] }
+        $keys[$key].Add([double]$form.value)
+      }
+    }
   }
   return $keys
 }
@@ -1883,7 +1912,11 @@ anything that reaches beyond one country's borders. The paper's model is The Wal
 Journal: crime reports, road crashes and killings do not lead unless they change how a
 country is governed or how its economy runs. Ceremonies, visits, meetings,
 festivals, film and culture weeks, prize-givings and launches of plans come below
-decisions, figures and events that already affect people. A small country's big story
+decisions, figures and events that already affect people. A signed accord, memorandum or
+partnership ranks by what it commits (money, goods, troops, a date), not by who signed
+it: a cooperation or framework agreement that commits none of these comes below a
+lender suspending a country's budget support, a central bank or court decision, or a
+market moving on a figure. A small country's big story
 outranks a big country's small one. When two matter about as much, put the one more
 outlets reported first. This is today's front page: between two that matter about as
 much, the newer report goes first, and an event more than a day old leads only when
@@ -2079,6 +2112,7 @@ $keptWhyRestating = 0
 $keptWhyGuessing = 0
 $keptWhyGeneric = 0
 $deskLanguageRemoved = 0
+$houseFiguresFixed = 0
 $weakAssignmentsSkipped = 0
 $deksRepaired = 0
 $editorDropped = 0
@@ -2643,6 +2677,15 @@ weekday, write that instead of a month. Do not add facts while repairing.
     $why = ConvertTo-NumeralStyle $why
     for ($p = 0; $p -lt $paragraphs.Count; $p++) { $paragraphs[$p] = ConvertTo-NumeralStyle $paragraphs[$p] }
     foreach ($lens in @($lensData.Keys)) { $lensData[$lens]['why'] = ConvertTo-NumeralStyle ([string]$lensData[$lens]['why']) }
+    # And the paper's one way of writing each figure (ConvertTo-HouseFigures, story-shape.ps1):
+    # 370,000 for Portuguese "370 mil", 12%, 4.6 billion, KSh/USh/TSh, CFA550 million.
+    $figuresBefore = $headline + $dek + $why + ($paragraphs.ToArray() -join '')
+    $headline = ConvertTo-HouseFigures $headline $code
+    $dek = ConvertTo-HouseFigures $dek $code
+    $why = ConvertTo-HouseFigures $why $code
+    for ($p = 0; $p -lt $paragraphs.Count; $p++) { $paragraphs[$p] = ConvertTo-HouseFigures $paragraphs[$p] $code }
+    foreach ($lens in @($lensData.Keys)) { $lensData[$lens]['why'] = ConvertTo-HouseFigures ([string]$lensData[$lens]['why']) $code }
+    if ($figuresBefore -cne ($headline + $dek + $why + ($paragraphs.ToArray() -join ''))) { $houseFiguresFixed++ }
     $body = $paragraphs.ToArray() -join "`n`n"
     $wordCount = Get-WordCount $body
 
@@ -2810,6 +2853,7 @@ $metrics = [ordered]@{
   keptWhyGuessing = $keptWhyGuessing
   keptWhyGeneric = $keptWhyGeneric
   deskLanguageRemoved = $deskLanguageRemoved
+  houseFiguresFixed = $houseFiguresFixed
   weakAssignmentsSkipped = $weakAssignmentsSkipped
   deksRepaired = $deksRepaired
   rewriteModel = $RewriteModel

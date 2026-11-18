@@ -496,5 +496,41 @@ foreach ($ok in @(
 }
 Write-Host 'PASS initials a reader cannot place are found; spelled-out, glossed, well-known and named ones are not'
 
-Write-Host '[story-contract] OK - 39 checks'
+# Initials in a headline count even when the story spells them out (Get-HeadlineInitials).
+$headInit = @(Get-HeadlineInitials ([pscustomobject]@{ headline = 'BIDPA says Botswana budget misses ECOWAS goals at CBK meeting, TOL Gases says' }))
+if (($headInit -join ',') -ne 'BIDPA,CBK') { throw "headline initials: '$($headInit -join ',')'" }
+$styleHead = Get-DraftStyleIssues ([pscustomobject]@{ headline = 'BIDPA says Botswana budget is weak'; dek = 'The Botswana Institute for Development Policy Analysis (BIDPA) said so on Monday.'; paragraphs = @('The Botswana Institute for Development Policy Analysis (BIDPA) said so.', 'It cited 27.6 per cent unemployment.', 'The budget is due in February.'); why = 'Job seekers wait longer for private hiring, the institute said.' }) 'BIDPA said 27.6 per cent unemployment.'
+if ((@($styleHead.HeadlineInitials) -join ',') -ne 'BIDPA') { throw 'explained headline initials were not kept for the repair note' }
+if (@($styleHead.Issues | Where-Object { $_ -like 'unexplained initials*' }).Count) { throw 'explained initials became an issue on their own' }
+if ((Get-StyleRepairNote $styleHead ([pscustomobject]@{})) -notmatch 'headline leans on initials') { throw 'the repair note does not ask for the headline initials' }
+Write-Host 'PASS headline initials are found even when spelled out below, and only ride along on a repair'
+
+# House figures (story-shape.ps1 ConvertTo-HouseFigures): how a value is written, never the value.
+foreach ($case in @(
+  @('ao', 'Angola has 370 mil people living with HIV', 'Angola has 370,000 people living with HIV'),
+  @('mz', 'from 225 mil to 650 mil TEU', 'from 225,000 to 650,000 TEU'),
+  @('ao', 'a 1,5 mil milhoes budget and 1.200 mil kwanzas', 'a 1.5 billion budget and 1.2 million kwanzas'),
+  @('ke', 'military logistics for 24 mil personnel', 'military logistics for 24 mil personnel'),
+  @('ke', 'Sh5 trillion, Sh4.6bn, Kes 3.7 billion, KSh50', 'KSh5 trillion, KSh4.6 billion, KSh3.7 billion, KSh50'),
+  @('ug', 'Shs161 billion and UGX 2,000', 'USh161 billion and USh2,000'),
+  @('tz', 'TSh 4 million prizes and Sh500', 'TSh4 million prizes and TSh500'),
+  @('ng', 'Sh500 and N4.5bn and 12mn barrels', 'Sh500 and N4.5 billion and 12 million barrels'),
+  @('gh', '3.4 per cent, 10.6 percent, 52%, two percentage points', '3.4%, 10.6%, 52%, two percentage points'),
+  @('bf', 'The 500 million FCFA gift, CFAF 550 million, 20 CFA francs, the CFA franc zone', 'The CFA500 million gift, CFA550 million, CFA20, the CFA franc zone'),
+  @('dz', 'Togo leads Algeria in CAN 2027 qualifier; CAN officials', 'Togo leads Algeria in Afcon 2027 qualifier; CAN officials')
+)) {
+  $got = ConvertTo-HouseFigures $case[1] $case[0]
+  if ($got -cne $case[2]) { throw "house figures ($($case[0])): '$($case[1])' became '$got', expected '$($case[2])'" }
+}
+Write-Host 'PASS house figures: Portuguese mil, one percent sign, spelled magnitudes, CFA and shillings by country'
+
+# A source's "370 mil" grounds 370,000 in the draft, and "1,5 mil milhoes" 1.5 billion.
+foreach ($ok in @(@('370,000 people', 'Angola tem 370 mil pessoas com VIH'), @('1.5 billion kwanzas', 'um orcamento de 1,5 mil milhoes de kwanzas'), @('1.2 million TEU', 'capacidade de 1.200 mil TEU'))) {
+  $got = @(Get-UngroundedNumbers $ok[0] $ok[1])
+  if ($got.Count) { throw "a translated mil figure was refused: '$($ok[0])' from '$($ok[1])' ($($got -join ','))" }
+}
+if (-not @(Get-UngroundedNumbers '370 million people' 'Angola tem 370 mil pessoas').Count) { throw '370 mil grounded 370 million' }
+Write-Host 'PASS a Portuguese thousand grounds its English figure, never a million'
+
+Write-Host '[story-contract] OK - 44 checks'
 exit 0
