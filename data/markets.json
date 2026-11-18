@@ -1,6 +1,6 @@
 {
     "ke":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  26.85,
@@ -80,7 +80,7 @@
                "name":  "Nairobi Securities Exchange"
            },
     "ng":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  62.7,
@@ -160,8 +160,20 @@
                "name":  "Nigerian Exchange Group"
            },
     "za":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
+                                 {
+                                     "cap":  2.7,
+                                     "t":  "BAC",
+                                     "name":  "Africa Bitcoin Corporation Ltd",
+                                     "change":  -10
+                                 },
+                                 {
+                                     "cap":  54.99,
+                                     "t":  "CNP",
+                                     "name":  "Canal+ SA",
+                                     "change":  9.96
+                                 },
                                  {
                                      "cap":  3.59,
                                      "t":  "AEG",
@@ -175,64 +187,52 @@
                                      "change":  6.57
                                  },
                                  {
-                                     "cap":  3.2,
-                                     "t":  "CGR",
-                                     "name":  "Calgro M3 Hldgs Ltd",
-                                     "change":  -6.16
+                                     "cap":  1.52,
+                                     "t":  "AXX",
+                                     "name":  "Araxi Ltd",
+                                     "change":  -5
                                  },
                                  {
-                                     "cap":  630.55,
-                                     "t":  "BHG",
-                                     "name":  "BHP Group",
-                                     "change":  -4.19
-                                 },
-                                 {
-                                     "cap":  6.5,
-                                     "t":  "ADR",
-                                     "name":  "Adcorp Holdings Limited",
-                                     "change":  3.67
-                                 },
-                                 {
-                                     "cap":  39.67,
-                                     "t":  "CML",
-                                     "name":  "Coronation Fund Mngrs Ld",
-                                     "change":  3.5
-                                 },
-                                 {
-                                     "cap":  798.71,
-                                     "t":  "AGL",
-                                     "name":  "Anglo American plc",
-                                     "change":  -3.28
-                                 },
-                                 {
-                                     "cap":  11.74,
-                                     "t":  "27FGSE",
-                                     "name":  "27four Global Shariah Equity AMETF",
-                                     "change":  -2.81
-                                 },
-                                 {
-                                     "cap":  10.73,
-                                     "t":  "COGEM",
-                                     "name":  "CGE Actively Managed ETF",
-                                     "change":  -2.45
-                                 },
-                                 {
-                                     "cap":  11.02,
-                                     "t":  "COOPTI",
-                                     "name":  "COG Actively Managed ETF",
-                                     "change":  -2.3
-                                 },
-                                 {
-                                     "cap":  33.56,
-                                     "t":  "AFT",
-                                     "name":  "Afrimat Limited",
-                                     "change":  -2.24
-                                 },
-                                 {
-                                     "cap":  13.95,
+                                     "cap":  13.75,
                                      "t":  "CAA",
                                      "name":  "CA Sales Holdings Ltd",
-                                     "change":  -2.24
+                                     "change":  -3.64
+                                 },
+                                 {
+                                     "cap":  1.28,
+                                     "t":  "ACL",
+                                     "name":  "ArcelorMittal SA Limited",
+                                     "change":  3.23
+                                 },
+                                 {
+                                     "cap":  33.25,
+                                     "t":  "AFT",
+                                     "name":  "Afrimat Limited",
+                                     "change":  -3.15
+                                 },
+                                 {
+                                     "cap":  637.44,
+                                     "t":  "BHG",
+                                     "name":  "BHP Group",
+                                     "change":  -3.15
+                                 },
+                                 {
+                                     "cap":  802.08,
+                                     "t":  "AGL",
+                                     "name":  "Anglo American plc",
+                                     "change":  -2.87
+                                 },
+                                 {
+                                     "cap":  39.36,
+                                     "t":  "CML",
+                                     "name":  "Coronation Fund Mngrs Ld",
+                                     "change":  2.69
+                                 },
+                                 {
+                                     "cap":  13.94,
+                                     "t":  "27FGMF",
+                                     "name":  "27four Global Multi-Factor AMETF",
+                                     "change":  -2.65
                                  }
                              ],
                "sourceUrl":  "https://afx.kwayisi.org/jse/",
@@ -240,7 +240,7 @@
                "name":  "Johannesburg Stock Exchange"
            },
     "gh":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  12.87,
@@ -320,78 +320,78 @@
                "name":  "Ghana Stock Exchange"
            },
     "ug":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
-                                     "cap":  24.31,
-                                     "t":  "NIC",
-                                     "name":  "National Insurance Corporation",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  455.76,
-                                     "t":  "NMG",
-                                     "name":  "Nation Media Group",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  2842.52,
-                                     "t":  "KCB",
-                                     "name":  "KCB Group",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  455,
-                                     "t":  "MTNU",
-                                     "name":  "MTN Uganda",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  145,
-                                     "t":  "NVL",
-                                     "name":  "New Vision Limited",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  8.4,
-                                     "t":  "UCL",
-                                     "name":  "Uganda Clays Limited",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  81.5,
+                                     "cap":  82.5,
                                      "t":  "UMEM",
                                      "name":  "Umeme Limited",
-                                     "change":  0
+                                     "change":  1.23
                                  },
                                  {
-                                     "cap":  173,
-                                     "t":  "QCIL",
-                                     "name":  "Quality Chemical Industries Ltd",
-                                     "change":  0
+                                     "cap":  529.54,
+                                     "t":  "CENT",
+                                     "name":  "Centum Investment",
+                                     "change":  0.74
+                                 },
+                                 {
+                                     "cap":  12935.45,
+                                     "t":  "JHL",
+                                     "name":  "Jubilee Holdings Limited",
+                                     "change":  0.69
+                                 },
+                                 {
+                                     "cap":  452.98,
+                                     "t":  "NMG",
+                                     "name":  "Nation Media Group",
+                                     "change":  -0.61
+                                 },
+                                 {
+                                     "cap":  347,
+                                     "t":  "DFCU",
+                                     "name":  "DFCU Limited",
+                                     "change":  0.58
+                                 },
+                                 {
+                                     "cap":  99.47,
+                                     "t":  "BOBU",
+                                     "name":  "Bank of Baroda Uganda",
+                                     "change":  -0.53
+                                 },
+                                 {
+                                     "cap":  175.45,
+                                     "t":  "KA",
+                                     "name":  "Kenya Airways",
+                                     "change":  0.44
+                                 },
+                                 {
+                                     "cap":  3190,
+                                     "t":  "EBL",
+                                     "name":  "Equity Bank Limited",
+                                     "change":  0.44
+                                 },
+                                 {
+                                     "cap":  8676.8,
+                                     "t":  "EABL",
+                                     "name":  "East African Breweries Limited",
+                                     "change":  0.26
+                                 },
+                                 {
+                                     "cap":  2839.1,
+                                     "t":  "KCB",
+                                     "name":  "KCB Group",
+                                     "change":  -0.12
+                                 },
+                                 {
+                                     "cap":  454.9,
+                                     "t":  "MTNU",
+                                     "name":  "MTN Uganda",
+                                     "change":  -0.02
                                  },
                                  {
                                      "cap":  103.34,
                                      "t":  "SBU",
                                      "name":  "Stanbic Bank Uganda",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  100,
-                                     "t":  "BOBU",
-                                     "name":  "Bank of Baroda Uganda",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  525.63,
-                                     "t":  "CENT",
-                                     "name":  "Centum Investment",
-                                     "change":  0
-                                 },
-                                 {
-                                     "cap":  180,
-                                     "t":  "AIRTEL",
-                                     "name":  "Airtel Uganda",
                                      "change":  0
                                  }
                              ],
@@ -400,7 +400,7 @@
                "name":  "Uganda Securities Exchange"
            },
     "zw":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  8.5,
@@ -480,7 +480,7 @@
                "name":  "Zimbabwe Stock Exchange"
            },
     "bw":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  92.45,
@@ -560,55 +560,43 @@
                "name":  "Botswana Stock Exchange"
            },
     "zm":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
-                                     "cap":  2.62,
+                                     "cap":  2.96,
                                      "t":  "ZFCO",
                                      "name":  "Zambia Forestry \u0026 Forest Industries Corp",
-                                     "change":  -11.49
+                                     "change":  12.98
                                  },
                                  {
-                                     "cap":  0.11,
-                                     "t":  "REIZ",
-                                     "name":  "Real Estate Investments Zambia",
-                                     "change":  -8.33
+                                     "cap":  6.9,
+                                     "t":  "ZABR",
+                                     "name":  "Zambian Breweries",
+                                     "change":  3.76
                                  },
                                  {
-                                     "cap":  2.15,
-                                     "t":  "PUMA",
-                                     "name":  "Puma Energy",
-                                     "change":  3.86
+                                     "cap":  0.65,
+                                     "t":  "CCAF",
+                                     "name":  "CEC Africa (CECA) Investments Ltd",
+                                     "change":  -1.52
                                  },
                                  {
-                                     "cap":  0.35,
-                                     "t":  "KLRE",
-                                     "name":  "Klapton Reinsurance",
-                                     "change":  -2.78
-                                 },
-                                 {
-                                     "cap":  8.6,
-                                     "t":  "ZNCO",
-                                     "name":  "Zambia National Commercial Bank",
-                                     "change":  -2.27
-                                 },
-                                 {
-                                     "cap":  1.18,
-                                     "t":  "SCBL",
-                                     "name":  "Standard Chartered Bank",
-                                     "change":  1.72
-                                 },
-                                 {
-                                     "cap":  14.85,
-                                     "t":  "CECZ",
-                                     "name":  "Copperbelt Energy Corporation",
-                                     "change":  -0.2
-                                 },
-                                 {
-                                     "cap":  67.9,
+                                     "cap":  67,
                                      "t":  "ZSUG",
                                      "name":  "Zambia Sugar",
-                                     "change":  0
+                                     "change":  -1.33
+                                 },
+                                 {
+                                     "cap":  8.51,
+                                     "t":  "ZNCO",
+                                     "name":  "Zambia National Commercial Bank",
+                                     "change":  -1.05
+                                 },
+                                 {
+                                     "cap":  14.88,
+                                     "t":  "CECZ",
+                                     "name":  "Copperbelt Energy Corporation",
+                                     "change":  0.2
                                  },
                                  {
                                      "cap":  350,
@@ -617,15 +605,27 @@
                                      "change":  0
                                  },
                                  {
-                                     "cap":  33.5,
-                                     "t":  "ZMFA",
-                                     "name":  "Zambia Metal Fabricators",
+                                     "cap":  148,
+                                     "t":  "ZCCM",
+                                     "name":  "ZCCM-Investment Holdings",
+                                     "change":  0
+                                 },
+                                 {
+                                     "cap":  1.18,
+                                     "t":  "SCBL",
+                                     "name":  "Standard Chartered Bank",
                                      "change":  0
                                  },
                                  {
                                      "cap":  2.74,
                                      "t":  "ZMRE",
                                      "name":  "Zambia Reinsurance",
+                                     "change":  0
+                                 },
+                                 {
+                                     "cap":  115,
+                                     "t":  "AECI",
+                                     "name":  "AECI Mining Explosives",
                                      "change":  0
                                  },
                                  {
@@ -640,7 +640,7 @@
                "name":  "Lusaka Securities Exchange"
            },
     "mw":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  300.97,
@@ -720,7 +720,7 @@
                "name":  "Malawi Stock Exchange"
            },
     "ci":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  2090,
@@ -800,7 +800,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "bj":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  2090,
@@ -880,7 +880,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "bf":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  2090,
@@ -960,7 +960,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "ml":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  2090,
@@ -1040,7 +1040,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "ne":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  2090,
@@ -1120,7 +1120,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "sn":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  2090,
@@ -1200,7 +1200,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "tg":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  2090,
@@ -1280,7 +1280,7 @@
                "name":  "Bourse Regionale des Valeurs Mobilieres"
            },
     "gw":  {
-               "asOf":  "2026-11-17",
+               "asOf":  "2026-11-18",
                "companies":  [
                                  {
                                      "cap":  2090,
