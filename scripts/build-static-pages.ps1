@@ -195,6 +195,15 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 .share-after{margin:30px 0 4px;padding-top:22px;border-top:1px solid var(--c-232323)}
 .story .share-label,.story .asj-kit-share-label{font:600 15px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;color:var(--c-cfcac3);margin:0 0 10px}
 .story-head{padding-bottom:18px;margin-bottom:22px}
+/* 18 Nov 2026: the name in the masthead is set as the app sets its wordmark, and a
+   country page opens with one clear button into the app and a quiet RSS link. */
+.masthead>a:first-child{font:700 19px/1.15 'Playfair Display',Georgia,'Times New Roman',serif!important;color:var(--c-f2f0ed)!important}
+.country-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin:18px 0 6px}
+.country-actions .open{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;margin:0!important;border:0;border-radius:8px;background:var(--c-2f6b3b);color:var(--c-f3efe8);text-decoration:none}
+.country-actions .open:hover,.country-actions .open:focus-visible{background:var(--c-2f5c33)}
+.country-actions .rss{font:500 14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--c-a8a39d);text-decoration:none;border-bottom:1px solid var(--c-3a3733)}
+article .dek{margin:0 0 12px}
+@media (max-width:520px){.country-actions .open{flex:1 1 100%;justify-content:center}}
 '@
 # Trust-page links, appended to every generated footer.
 $siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=71" defer></script>'
@@ -505,16 +514,18 @@ foreach ($prop in $byCountry.PSObject.Properties) {
     $storySlug = Get-StorySlug $b.headline $b.articleId
     $storyUrl = "$BaseUrl/$code/$storySlug/"
     [void]$storyPages.Add([pscustomobject]@{ code = $code; slug = $storySlug; brief = $b; when = $when; country = $name; key = $storyKey })
-    # Opened here and closed after "Read in ASJ". The opening tag was missing, so every
+    # Opened here and closed after "Read the story". The opening tag was missing, so every
     # country page closed 4-5 articles it never opened, and the spacing and dividers the
     # stylesheet gives each story never applied.
     [void]$body.Append("<article>`n")
     [void]$body.Append("<div class=""kicker"">$((@((Esc (Get-ShownTopic $b.topic)), $when) | Where-Object { $_ }) -join ' &middot; ')</div>`n")
     [void]$body.Append("<h2><a href=""$storyUrl"">$(Esc $b.headline)</a></h2>`n")
+    # Headline, dek and why line; the story itself is one tap away on its own page. Until
+    # 18 Nov 2026 every story ran here in full, so the Kenya page was 8,300px of prose on
+    # a phone and the same text sat at two addresses. The page Google sends most readers
+    # to is now an index of the country's news they can take in on one or two screens.
     if ($b.dek) { [void]$body.Append("<p class=""dek"">$(Esc $b.dek)</p>`n") }
-    $paragraphs = @($b.paragraphs | ForEach-Object { [string]$_ } | Where-Object { $_.Trim() })
-    if (-not $paragraphs.Count) { $paragraphs = @([string]$b.body) }
-    foreach ($paragraph in $paragraphs) { [void]$body.Append("<p>$(Esc $paragraph)</p>`n") }
+    elseif ($b.paragraphs) { [void]$body.Append("<p class=""dek"">$(Esc (@($b.paragraphs)[0]))</p>`n") }
     if (Test-ShowWhy $b) { [void]$body.Append("<p class=""why""><b>Why it matters</b>$(Esc $b.why)</p>`n") }
     $srcs = @($b.sources | Where-Object { $_ -and $_.url -and $_.url -match '^https?://' })
     if ($srcs.Count) {
@@ -522,7 +533,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
       foreach ($s in $srcs) { [void]$body.Append("<a href=""$(Esc $s.url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $s.name)</a>") }
       [void]$body.Append("</div>`n")
     }
-    [void]$body.Append("<a class=""read"" href=""$storyUrl"">Read in ASJ &rarr;</a>`n")
+    [void]$body.Append("<a class=""read"" href=""$storyUrl"">Read the story &rarr;</a>`n")
     [void]$body.Append("</article>`n")
     $storyIndex++
   }
@@ -604,7 +615,7 @@ $analytics
 <meta name="twitter:image" content="$(if(Test-Path (Join-Path $root "og/$code.jpg")){"$BaseUrl/og/$code.jpg"}else{"$BaseUrl/og-image.png"})">
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"$(JsonEsc $name)","item":"$canonical"}]}</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
 </head>
 <body>
 <div class="wrap">
@@ -612,8 +623,7 @@ $analytics
 <div class="meta">$(Esc $meta.region)$(if($meta.capital){" &middot; Capital $(Esc $meta.capital)"})</div>
 <h1>$(Esc $name)</h1>
 <div class="meta">$($stories.Count) stories$(if($when){" &middot; updated $when"})</div>
-<a class="open" href="$BaseUrl/#/$code">Open the interactive $(Esc $name) dossier &rarr;</a>
-<p class="meta">Follow $(Esc $name) only in a news reader app: <a href="$BaseUrl/$code/feed.xml">$BaseUrl/$code/feed.xml</a></p>
+<div class="country-actions"><a class="open" href="$BaseUrl/#/$code">Open the $(Esc $name) file &rarr;</a><a class="rss" href="$BaseUrl/$code/feed.xml" title="Add this address to a news reader app such as Feedly">Follow $(Esc $name) by RSS</a></div>
 $($body.ToString())
 $earlierHtml
 <nav class="morenav">
@@ -888,7 +898,7 @@ $analytics
 <meta name="twitter:image" content="$ogImage">
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">$crumbs</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
@@ -1096,7 +1106,7 @@ foreach ($slug in $trustPages.Keys) {
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
 </head>
 <body>
 <div class="wrap page">
@@ -1171,7 +1181,7 @@ foreach ($ts in $topicOrder) {
 <script type="application/ld+json">$tLd</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"Topics","item":"$BaseUrl/topics/"},{"@type":"ListItem","position":3,"name":"$(JsonEsc $tName)","item":"$tUrl"}]}</script>
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
 </head>
 <body>
 <div class="wrap page">
@@ -1205,7 +1215,7 @@ $tiHtml = @"
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
 </head>
 <body>
 <div class="wrap page">
@@ -1285,7 +1295,7 @@ $digestHtml = @"
 <title>Today's posts | The African Street Journal</title>
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
 <style>.dg{margin:0 0 26px}.dg textarea{width:100%;box-sizing:border-box;background:#1b1b1b;color:#ece8e1;border:1px solid #333;border-radius:6px;padding:12px;font:15px/1.5 system-ui,sans-serif;resize:vertical}
 .dg-actions{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0}.dg-actions a,.dg-actions button{font:600 15px system-ui,sans-serif;padding:9px 14px;border-radius:6px;border:1px solid #3a3a3a;background:#222;color:#f3efe8;text-decoration:none;cursor:pointer}
 .dg-actions a:hover,.dg-actions button:hover{border-color:#5fbf6a}details{border-top:1px solid #262626;padding:10px 0}summary{cursor:pointer;font:600 16px system-ui,sans-serif}</style>
@@ -1353,7 +1363,7 @@ $hubHtml = @"
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
-<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=72">
+<link rel="stylesheet" href="$BaseUrl/static-pages.css?v=73">
 $analytics
 </head>
 <body>

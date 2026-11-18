@@ -6679,6 +6679,7 @@ canvas.addEventListener('click', (e) => {
     renderTopics(); renderTrust(); renderResults();
   }
   editionSel?.addEventListener('change', () => {
+    setMobileActionsOpen(false);
     const day = editionSel.value;
     if (!day) { editionDate = null; editionBriefs = null; applyEdition(); return; }
     if (editionCache[day]) { editionDate = day; editionBriefs = editionCache[day]; applyEdition(); return; }
@@ -7935,16 +7936,25 @@ if (new URLSearchParams(location.search).has('sweep')) {
   window.ASJ_LOAD_FULL = () => { start(); return window.ASJ_FULL_READY; };
   if (window.ASJ_SAVE_DATA) return;
 
-  // After first paint, not during it. requestIdleCallback where it exists, a timeout
-  // where it does not - and never rAF, which does not run in a hidden tab, so a page
-  // restored into a background tab would sit with no prose until it was looked at.
-  if (document.readyState === 'complete') {
-    (window.requestIdleCallback || (f => setTimeout(f, 60)))(start, { timeout: 1500 });
-  } else {
-    window.addEventListener('load', () => {
-      (window.requestIdleCallback || (f => setTimeout(f, 60)))(start, { timeout: 1500 });
-    }, { once: true });
-  }
+  // 18 Nov 2026: fetched only once the reader shows intent, not on every visit. The
+  // prose is the second-largest file on the page (about 123 KB gzipped, new every day)
+  // and a visit that looks at the map and the top story and leaves never needs it - on a
+  // prepaid bundle that is most of the page's weight. Intent is the first touch, click,
+  // key or scroll anywhere, a route away from the home map, or arriving on a deep link:
+  // the fetch then starts while the tap is still turning into a view, so an opened story
+  // rarely waits. iPhones report no connection type, so the data-saver test above never
+  // caught them. After first paint, never during it, as before.
+  const kick = () => { (window.requestIdleCallback || (f => setTimeout(f, 60)))(start, { timeout: 400 }); off(); };
+  const events = ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll'];
+  const off = () => { for (const e of events) window.removeEventListener(e, kick, true); window.removeEventListener('hashchange', kick); };
+  const deepLink = /[?&]story=/.test(location.search) || (location.hash && location.hash !== '#' && location.hash !== '#/');
+  const arm = () => {
+    if (deepLink) { kick(); return; }
+    for (const e of events) window.addEventListener(e, kick, { capture: true, passive: true });
+    window.addEventListener('hashchange', kick);
+  };
+  if (document.readyState === 'complete') arm();
+  else window.addEventListener('load', arm, { once: true });
 }());
 
 // seam-v1: a deep link (#/ke) can render the News panel before the prose half of the

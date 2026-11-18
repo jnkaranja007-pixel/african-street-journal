@@ -71,7 +71,7 @@ function asjAnalytics() {
   }
 }
 </script>
-<script src="data/analytics-config.js?v=135" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
+<script src="data/analytics-config.js?v=136" async onload="asjAnalytics()" onerror="window.ASJ_ANALYTICS=null"></script>
 <!-- Data saver: with Save-Data on, or on 3G and slower, the decorative headline font
      (~60-90 KB on a first visit) is not fetched at all; headlines use Georgia. The same
      test sets window.ASJ_SAVE_DATA in app.js. -->
@@ -102,10 +102,10 @@ function asjAnalytics() {
      immediately and reflow to Playfair when it arrives. The noscript copy keeps the
      original behaviour for a reader with JavaScript off. -->
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
-<link rel="preload" href="app.js?v=135" as="script">
-<link rel="preload" href="data/app-core.js?v=135" as="script">
-<link rel="preload" href="data/briefs.js?v=135" as="script">
-<link rel="stylesheet" href="styles.css?v=135">
+<link rel="preload" href="app.js?v=136" as="script">
+<link rel="preload" href="data/app-core.js?v=136" as="script">
+<link rel="preload" href="data/briefs.js?v=136" as="script">
+<link rel="stylesheet" href="styles.css?v=136">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="/feed.xml">
 </head>
 <body>
@@ -428,10 +428,6 @@ function asjAnalytics() {
       <span class="wire-pick-label">Topic</span>
       <select id="wire-topic-select"></select>
     </label>
-    <label class="wire-pick" id="wire-edition-pick" hidden>
-      <span class="wire-pick-label">Edition</span>
-      <select class="wire-edition" id="wire-edition"></select>
-    </label>
     <div class="wire-more">
       <button class="wire-mobile-actions-toggle" id="wire-mobile-actions-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="wire-actions">
         <span class="wire-more-text">More</span><svg class="wire-more-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg><svg class="wire-more-dots" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
@@ -440,6 +436,13 @@ function asjAnalytics() {
         <button class="wire-action wire-compare-toggle" id="wire-compare-toggle" type="button" aria-expanded="false" aria-controls="wire-compare-body"><span>Compare countries</span><b id="wire-compare-summary"></b></button>
         <button class="wire-action" id="wire-copy" type="button">Copy today's headlines</button>
         <button class="wire-action" id="wire-share" type="button">Share the Wire</button>
+        <!-- Past editions live in this menu (18 Nov 2026): on a phone the picker took a
+             row of its own above the first headline, for something few readers use. The
+             header says "Edition" and the date whenever a past one is showing. -->
+        <label class="wire-pick wire-pick-menu" id="wire-edition-pick" hidden>
+          <span class="wire-pick-label">Past editions</span>
+          <select class="wire-edition" id="wire-edition"></select>
+        </label>
       </div>
     </div>
   </div>
@@ -491,22 +494,22 @@ function asjAnalytics() {
 
 <div class="asj-install" id="asj-install" role="region" aria-label="Add to home screen" hidden></div>
 
-<script src="data/app-core.js?v=135"></script>
+<script src="data/app-core.js?v=136"></script>
 <!-- One version for every asset. The deferred half is fetched by app.js rather than a
      script tag, so it needs the number too or a code change ships with stale prose. -->
 <script>window.ASJ_ASSET_VERSION='133';</script>
-<script src="data/country-facts.js?v=135" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
-<script src="data/indices.js?v=135" onerror="window.ASJ_INDICES=null"></script>
-<script src="data/briefs.js?v=135" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
-<script src="data/archive/index.js?v=135" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
-<script src="data/supabase-config.js?v=135" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
-<script src="data/newsletter-config.js?v=135" onerror="window.ASJ_NEWSLETTER=null"></script>
-<script src="data/social-config.js?v=135" onerror="window.ASJ_SOCIAL=null"></script>
+<script src="data/country-facts.js?v=136" onerror="window.ASJ_COUNTRY_FACTS=null"></script>
+<script src="data/indices.js?v=136" onerror="window.ASJ_INDICES=null"></script>
+<script src="data/briefs.js?v=136" onerror="window.UNITED_AFRICA_BRIEFS=null"></script>
+<script src="data/archive/index.js?v=136" onerror="window.UNITED_AFRICA_ARCHIVE_INDEX=[]"></script>
+<script src="data/supabase-config.js?v=136" onerror="window.ASJ_SUPABASE_CONFIG=null"></script>
+<script src="data/newsletter-config.js?v=136" onerror="window.ASJ_NEWSLETTER=null"></script>
+<script src="data/social-config.js?v=136" onerror="window.ASJ_SOCIAL=null"></script>
 
-<script src="app.js?v=135"></script>
-<script src="story-kit.js?v=135" defer></script>
-<script src="fx-trend.js?v=135" defer></script>
-<script src="country-sidebar.js?v=135" defer></script>
-<script src="/info-panel.js?v=135" defer></script>
+<script src="app.js?v=136"></script>
+<script src="story-kit.js?v=136" defer></script>
+<script src="fx-trend.js?v=136" defer></script>
+<script src="country-sidebar.js?v=136" defer></script>
+<script src="/info-panel.js?v=136" defer></script>
 </body>
 </html>

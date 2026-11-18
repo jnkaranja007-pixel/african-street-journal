@@ -2041,3 +2041,9 @@ html.cf-open, html.cf-open body{overflow:hidden}
 .ticker-wrap.is-dragging button{pointer-events:none}
 html.ticker-js .ticker,.ticker{animation:none!important}
 .ticker button{-webkit-user-drag:none}
+/* Past editions inside the More menu (18 Nov 2026), on every screen size: a labelled
+   picker under the three actions, its label visible here even on a phone. */
+#wire-view .wire-actions .wire-pick-menu{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin:4px 0 0;padding:10px 12px 6px;border-top:1px solid var(--rule)}
+#wire-view .wire-actions .wire-pick-menu[hidden]{display:none}
+#wire-view .wire-actions .wire-pick-menu .wire-pick-label{position:static;width:auto;height:auto;margin:0;overflow:visible;clip:auto;white-space:normal;font:500 13px/1.2 var(--sans);color:var(--text-muted)}
+#wire-view .wire-actions .wire-pick-menu select{width:100%}
