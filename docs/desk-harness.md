@@ -16,7 +16,7 @@ is major news. A road crash or a single murder is not.
 |---|---|---|---|---|
 | 1 | **Assignment** | Feed items with too little source text, weak single-outlet reports | Never assigned | `fetch-news.ps1`, `write-briefs.ps1` |
 | 2 | **Feed-stage WSJ bar** | Routine crime and casualty reports before any model is paid | Never assigned | `Test-NewsBelowWsjBar`, `news-ranking.ps1` |
-| 3 | **Writer** | Writes one story from one evidence packet, never seeing another story's facts. It first fills a plan that is never printed: who is affected, what the stake is, what a reader elsewhere needs explained, and what the news is | A draft | GPT-6 Luna (`ASJ_MODEL`) |
+| 3 | **Writer** | Writes one story from one evidence packet, never seeing another story's facts. It first notes the stake, never printed: who gains, pays or must act, and what changes for them. The why line is written from it | A draft | GPT-6 Luna (`ASJ_MODEL`) |
 | 4 | **Contract** | Wrong shape: not 3 paragraphs, 70 to 220 words, a missing dek or why line | Sent back | `Get-DraftContractIssues` |
 | 5 | **Facts** | A figure, month or date that is not in the source; a lens score with no grounded reason | Sent back | `Get-UngroundedNumbers`, `Get-ItemUngroundedMonths` |
 | 6 | **Place** | A story that is not about the country it is filed under | Dropped | `countryLink`, `Get-StoryPlaceIssue` |

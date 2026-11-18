@@ -659,26 +659,13 @@ Every draft is checked automatically before it is published: figures against the
 source, the house style below, the audience scores against their reasons. A draft
 that fails is sent back to you, so follow the rules the first time.
 
-PLAN FIRST
-Before the headline, fill "plan". It is never printed. It is where you work out what a
-reader in another African country will ask, before you write a word of the story. It
-is notes, not prose: at most 60 words altogether, each entry a few words.
-- "affected": who gains, pays, or must now act because of the event, beyond the people
-  who announced it, named as the packet names them: "maize traders crossing at Busia",
-  "holders of the 2027 bond", "patients at the 14 public hospitals". When the packet
-  names nobody beyond the actors, the actors and what they must now do.
-- "stake": what changes for them, and the figure, date or next step from the packet
-  that sizes it. The "why" line is written from "affected" and "stake", never from the
-  headline.
-- "explain": every person, body, place and set of initials in the story that a reader
-  in Accra, Nairobi or Johannesburg would not know, at most five, each with the few
-  words the story will give on first mention: "GIZ: Germany's development agency",
-  "Plateau: a state in central Nigeria". Empty when the story names nothing a reader
-  elsewhere would need explained.
-- "news": the decision, figure, result or dated next step the story reports. A meeting,
-  forum, visit or ceremony is news only for what was decided, signed, paid or announced
-  at it: lead with that, and if nothing was, say so here in a few words and write the
-  story tight around the little it has.
+STAKE FIRST
+Before the headline, fill "stake": a note of at most 25 words, never printed. Name who
+gains, pays or must now act because of the event, beyond the people who announced it,
+as the packet names them ("maize traders crossing at Busia", "holders of the 2027
+bond"), and what changes for them, with the figure, date or next step from the packet
+that sizes it. When the packet names nobody beyond the actors, the actors and what they
+must now do. The "why" line is written from this note, never from the headline.
 
 THE STORY
 - Paragraph 1: what happened. Who did what, where, when, and how much or how many.
@@ -696,6 +683,9 @@ THE STORY
   matters, what it "signals", "marks" or "underscores", or what it is "part of", is
   commentary. Cut it.
 - Never state the same fact twice, in the same words or different ones.
+- A meeting, forum, visit or ceremony is news only for what was decided, signed, paid
+  or announced at it: lead with that. If nothing was, write the story tight around the
+  little it has.
 - Readers are all over Africa and abroad, not only in this country. The first time the
   story names a person, party, body, inquiry or case that a reader elsewhere would not
   know, say in a few words who or what it is, from the packet: "Vusimuzi Matlala, a
@@ -745,7 +735,7 @@ HEADLINE, DEK AND WHY
   where you meant it to. Do not write toward the limit and stop mid-phrase: "...the
   certificate for six historic Comorian." is a failed dek, and so is any dek whose last
   word is a preposition, article or conjunction.
-- "why": one sentence, built from plan.affected and plan.stake, that gives the reader
+- "why": one sentence, built from the "stake" note, that gives the reader
   the stake: WHO is affected, HOW, and the figure, date or next step from the source
   that sizes it. Build it from the most
   concrete consequence the source reports, in this order of preference: what it costs
@@ -1286,20 +1276,12 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
         item = $itemSchema
         countryLink = @{ type = 'string'; enum = @('in-country','involves-country','none') }
         topic = @{ type = 'string'; enum = $VALID_TOPICS }
-        # Before the headline, so the writer has named who is affected, what it costs
-        # them and what needs explaining before it writes a word of the story. Never
-        # published: the final clean step builds each story from named fields only.
-        plan = [ordered]@{
-          type = 'object'
-          properties = [ordered]@{
-            affected = @{ type = 'string'; maxLength = 240 }
-            stake = @{ type = 'string'; maxLength = 320 }
-            explain = @{ type = 'array'; maxItems = 5; items = @{ type = 'string'; maxLength = 120 } }
-            news = @{ type = 'string'; maxLength = 240 }
-          }
-          required = @('affected','stake','explain','news')
-          additionalProperties = $false
-        }
+        # Before the headline, so the writer has named who is affected and what changes
+        # for them before it writes a word of the story. Never published: the final
+        # clean step builds each story from named fields only. One flat string, not an
+        # object: on 18 Nov 2026 a four-part plan object nearly doubled the writer's
+        # output tokens and broke the JSON of 3 of 29 drafts on the compat route.
+        stake = @{ type = 'string'; maxLength = 200 }
         headline = @{ type = 'string'; minLength = 12; maxLength = 100 }
         # 170, not 180. At 180 the model wrote to the ceiling and stopped mid-noun-phrase
         # on 51 of 249 deks; the desk then punctuated the fragment and shipped it. The
@@ -1317,7 +1299,7 @@ function Invoke-ModelOnce([string]$prompt, [int]$ExpectedStories, [int]$Expected
           additionalProperties = $false
         }
       }
-      required = @('item','countryLink','topic','plan','headline','dek','paragraphs','wordCount','why','reach','lenses')
+      required = @('item','countryLink','topic','stake','headline','dek','paragraphs','wordCount','why','reach','lenses')
       additionalProperties = $false
     }
     $body['response_format'] = [ordered]@{
@@ -2222,14 +2204,13 @@ $packet
 Write exactly one original on-site story from this assignment. Do not import a name,
 number, date, cause or context from any other event. Return ONLY a JSON object in this shape:
 
-{"stories":[{"item":$i,"countryLink":"<in-country|involves-country|none>","topic":"<one topic>","plan":{"affected":"...","stake":"...","explain":["..."],"news":"..."},"headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":<words>,"why":"...","reach":<1-5>,"lenses":{"farmers":{"why":"...","score":<0-100>},"investors":{"why":"...","score":<0-100>},"diaspora":{"why":"...","score":<0-100>}}}]}
+{"stories":[{"item":$i,"countryLink":"<in-country|involves-country|none>","topic":"<one topic>","stake":"...","headline":"...","dek":"...","paragraphs":["...","...","..."],"wordCount":<words>,"why":"...","reach":<1-5>,"lenses":{"farmers":{"why":"...","score":<0-100>},"investors":{"why":"...","score":<0-100>},"diaspora":{"why":"...","score":<0-100>}}}]}
 
 - "item" must be exactly $i.
 - "countryLink" says how this event relates to ${name}: in-country, involves-country, or none.
 - Fill every <...> slot from this story alone; none of them has a default.
 - "topic" must be exactly one of: $($VALID_TOPICS -join ', ').
-- "plan" comes before the headline, by the PLAN FIRST rules. The story then gives each
-  "explain" gloss on first mention, and the why line says "affected" and "stake".
+- "stake" comes before the headline, by the STAKE FIRST rule: at most 25 words.
 - "wordCount" counts only the three paragraph strings and must be $MinStoryWords-$MaxStoryWords.
 - "reach" is 1-5 by the REACH rules: how much the event matters, not how it is written.
 - Include all three lens objects. Write each lens "why" first: one specific sentence
