@@ -38,7 +38,7 @@ $script:EDITOR_HOLD_AT = 2
 # headline about the wrong thing are fixable from the packet; a why line the packet
 # gives nothing to build on is not. Weak why and clarity grades are recorded and the
 # story runs.
-$script:EDITOR_REVISE_ON = @('context','headline')
+$script:EDITOR_REVISE_ON = @()
 # The editor reads this much of the packet: enough to check names and the main facts,
 # half the input of the first version.
 $script:EDITOR_PACKET_CHARS = 3000
