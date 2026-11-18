@@ -16,9 +16,16 @@
 
 $script:EDITOR_CRITERIA = @('context','headline','why','clarity','country','standards')
 
-# Revise below this grade on the four craft criteria; drop below it on standards or
-# country when the country has other copy. A 2 is "a reader trips on it".
+# Revise at or below this grade on the four craft criteria. A 2 is "a reader trips on it".
 $script:EDITOR_FAIL_AT = 2
+# Drop at or below this grade on standards or country. Not 2: in the A/B bake-off of
+# 18 Nov 2026 a drop at 2 cut 16 of 30 stories, among them a stock-market report, two
+# seats Ghana won at the ITU and Ramaphosa's AI trip to Silicon Valley. A 2 is recorded
+# in the grades; only a 1 (nothing to report, crime, tabloid, foreign) is cut.
+$script:EDITOR_DROP_AT = 1
+# And never more than this many per country in a run: coverage of 55 countries is the
+# paper's promise, and an editor that disagrees with a whole column is miscalibrated.
+$script:EDITOR_MAX_DROPS_PER_COUNTRY = 2
 
 function Get-EditorRubric([switch]$WithPacket) {
   $lines = New-Object System.Collections.Generic.List[string]
@@ -38,21 +45,27 @@ its best. Be strict: most overnight copy is a 3, not a 5.
 - headline: the headline says what the story reports, in its main event, and reads like
   a news headline. 1 when it is about something else (a greeting, an opinion column's
   title, a side detail), or when headline and story tell two different events.
-- why: the "Why it matters" line tells the reader something the story does not already
-  say: who pays or gains, by how much, what happens next and when, or what a named body
-  must now do. 1 when it repeats the story, is generic ("affects the economy"), states an
-  aim ("aims to boost"), or is about a different event. 4 or 5 only when it names who is
-  affected and how, with a figure, date or concrete next step.
+- why: the "Why it matters" line gives the reader the stake: WHO is affected and HOW
+  (who pays or gains, what they can or must now do, what happens next and when). It may
+  use a fact the story already gives; what it must not do is tell the event again.
+  1 when it retells what happened ("Kenya and Italy signed a security deal"), is
+  generic ("affects the economy", "raises questions"), states an aim ("aims to boost"),
+  or is about a different event. 3 when it names who is affected and how. 4 or 5 when
+  it also sizes the stake with a figure, a date or a concrete next step.
 - clarity: plain, specific and readable, every sentence carrying a fact. 1 for padding,
   jargon, a list of names, or press-release voice.
 - country: the event happens in the country, or the country's people, government or
   companies are directly involved. 1 when it is foreign news with a thin local link.
 - standards: would The Wall Street Journal, read through an African lens, print this?
   5 for business, markets, policy, governance, rights, or a war, coup, epidemic or
-  disaster told through what it changes for Africans. 2 for soft news with no decision
-  or figure behind it: speeches at a forum, a ceremony, an anniversary, a courtesy
-  visit, a routine group-stage match result, an internal dispute of a private body with
-  no wider stake. 1 for a routine crime, crash or killing, tabloid words ("horrific",
+  disaster told through what it changes for Africans. 3 or more for market moves,
+  company news, prices, official data (health, trade, output), a government plan or
+  deadline, a seat won on an international body, a court ruling, a national team's
+  result: these are the paper's daily business, however small. 2 for soft news with no
+  decision or figure behind it: speeches at a forum, a ceremony, an anniversary, a
+  courtesy visit, an internal dispute of a private body with no wider stake. 1 for a
+  report with nothing to tell (no facts beyond a headline), a routine crime, crash or
+  killing, tabloid words ("horrific",
   "brutal", "tragedy"), graphic detail of injuries or bodies, a headline that opens with
   a death toll, or Africa written as a place where things happen to people rather than
   where people decide and act.
@@ -146,16 +159,17 @@ function Get-EditorMean($Grades) {
 }
 
 # What the desk does with a verdict:
-#   drop   - the paper would not print it (standards or country at 2 or below) and the
-#            country has other copy: the next candidate takes the slot. A country's only
-#            story is never dropped here; a stale page is worse than a weak story.
+#   drop   - the paper would not print it (standards or country at 1) and the country
+#            has other copy: the next candidate takes the slot. A country's only story is
+#            never dropped here; a stale page is worse than a weak story.
 #   revise - a craft grade (context, headline, why, clarity) at 2 or below: one rewrite
 #            with the editor's fixes, kept only if it passes every check again and the
 #            editor grades it higher.
 #   pass   - nothing at 2 or below.
 function Get-EditorDecision($Grades, [bool]$CanDrop) {
   $fail = $script:EDITOR_FAIL_AT
-  if ($CanDrop -and ([int]$Grades['standards'] -le $fail -or [int]$Grades['country'] -le $fail)) { return 'drop' }
+  $cut = $script:EDITOR_DROP_AT
+  if ($CanDrop -and ([int]$Grades['standards'] -le $cut -or [int]$Grades['country'] -le $cut)) { return 'drop' }
   foreach ($c in @('context','headline','why','clarity')) {
     if ([int]$Grades[$c] -le $fail) { return 'revise' }
   }
@@ -171,7 +185,7 @@ function Get-EditorRepairNote($Verdict, $Candidate) {
   if (-not $fixes.Count) { $fixes = @($Verdict.Problems) }
   foreach ($f in $fixes) { [void]$lines.Add('- ' + $f) }
   if ($weak -contains 'why') {
-    [void]$lines.Add('- The "why" line must say what the story does not: WHO is affected, HOW, and the figure, date or next step from the packet that sizes it. If the packet reports no wider effect, name the people directly involved and the one concrete thing that changes for them.')
+    [void]$lines.Add('- The "why" line gives the stake, never the event again: WHO is affected, HOW, and the figure, date or next step from the packet that sizes it. If the packet reports no wider effect, name the people directly involved and the one concrete thing that changes for them.')
   }
   if ($weak -contains 'context') {
     [void]$lines.Add('- On first mention, say in a few words who each person, body and place is, and spell out each abbreviation, from the packet (or, for a well-known international body, from general knowledge).')

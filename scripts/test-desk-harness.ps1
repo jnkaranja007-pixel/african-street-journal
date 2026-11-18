@@ -70,7 +70,7 @@ $responder = {
   if ($PromptText -match '^STORY' -and $PromptText -match 'SOURCE PACKET') {
     $g = [ordered]@{ context = 4; headline = 4; why = 4; clarity = 4; country = 4; standards = 4 }
     $fixes = @()
-    if ($PromptText -match 'Headline: Port Nova council adopts') { $g.standards = 2 }
+    if ($PromptText -match 'Headline: Port Nova council adopts') { $g.standards = 1 }
     elseif ($PromptText -match 'Headline: Fixtel switches on' -and $PromptText -notmatch 'served by 300 new masts') { $g.why = 2; $fixes = @('Say what the 300 masts the packet names change for the 2 million people.') }
     elseif ($PromptText -match 'Headline: Port Nova hospital receives') { $g.context = 2; $fixes = @('Say that the health ministry sent the ambulances, as the packet does.') }
     elseif ($PromptText -match 'Headline: Cholera has killed') { return 'The story reads well to me.' }

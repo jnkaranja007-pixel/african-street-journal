@@ -25,6 +25,8 @@ Assert-Editor 'the weekly rubric asks for no fixes' ($weekly -notmatch '"fixes"'
 Assert-Editor 'the desk rubric asks for fixes' ($desk -match '"fixes"')
 Assert-Editor 'fixes may only use packet facts' ($desk -match 'never ask the writer to supply it')
 Assert-Editor 'soft news is named in the standards grade' ($desk -match 'courtesy' -and $desk -match 'anniversary')
+Assert-Editor 'the paper''s daily business is named as not soft' ($desk -match 'market moves' -and $desk -match 'international body')
+Assert-Editor 'a why line may reuse a fact; it may not retell the event' ($desk -match 'may\s+use a fact the story already gives' -and $desk -match 'tell the event again')
 Assert-Editor 'the African lens is in the rubric' ($desk -match 'African lens')
 Assert-Editor 'the rubric is ASCII' (-not ($desk -match '[^\x09\x0A\x0D\x20-\x7E]'))
 
@@ -60,11 +62,14 @@ Assert-Editor 'a weak why line is revised' ((Get-EditorDecision (New-Grades -Why
 Assert-Editor 'missing context is revised' ((Get-EditorDecision (New-Grades -Context 1) $true) -eq 'revise')
 Assert-Editor 'a wrong headline is revised' ((Get-EditorDecision (New-Grades -Headline 2) $true) -eq 'revise')
 Assert-Editor 'padding is revised' ((Get-EditorDecision (New-Grades -Clarity 2) $true) -eq 'revise')
-Assert-Editor 'soft news is dropped when the country has other copy' ((Get-EditorDecision (New-Grades -Standards 2) $true) -eq 'drop')
+Assert-Editor 'copy with nothing to report is dropped when the country has other copy' ((Get-EditorDecision (New-Grades -Standards 1) $true) -eq 'drop')
+Assert-Editor 'a standards grade of 2 is kept: a market report or an ITU seat is the paper''s business' ((Get-EditorDecision (New-Grades -Standards 2) $true) -eq 'pass')
+Assert-Editor 'a country''s drops are capped' ($script:EDITOR_MAX_DROPS_PER_COUNTRY -eq 2)
 Assert-Editor 'foreign news is dropped when the country has other copy' ((Get-EditorDecision (New-Grades -Country 1) $true) -eq 'drop')
 Assert-Editor 'a country''s only story is never dropped' ((Get-EditorDecision (New-Grades -Standards 1) $false) -eq 'pass')
 Assert-Editor 'a country''s only story is still revised' ((Get-EditorDecision (New-Grades -Standards 1 -Why 1) $false) -eq 'revise')
-Assert-Editor 'drop wins over revise' ((Get-EditorDecision (New-Grades -Standards 2 -Why 1) $true) -eq 'drop')
+Assert-Editor 'drop wins over revise' ((Get-EditorDecision (New-Grades -Standards 1 -Why 1) $true) -eq 'drop')
+Assert-Editor 'foreign news at 2 is kept' ((Get-EditorDecision (New-Grades -Country 2) $true) -eq 'pass')
 Assert-Editor 'the mean is the average of six' ([Math]::Abs((Get-EditorMean (New-Grades 1 2 3 4 5 3)) - 3.0) -lt 0.001)
 
 # --- the repair note -----------------------------------------------------------------------

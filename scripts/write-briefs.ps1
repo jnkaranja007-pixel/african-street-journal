@@ -2102,6 +2102,7 @@ foreach ($code in $codes) {
   # a reserve is only written when an earlier story was dropped.
   $n    = [Math]::Min($MaxBriefs + 2, [Math]::Max(1, $items.Count))
   $briefList = New-Object System.Collections.Generic.List[object]
+  $edDropsHere = 0
   $storyCacheKeys = @{}
   $lastErr = ''
   for ($i = 0; $i -lt $n; $i++) {
@@ -2379,10 +2380,11 @@ weekday, write that instead of a month. Do not add facts while repairing.
           Add-EditorGrades 'first' $edVerdict.Grades
           $edFinal = $edVerdict
           # A country's only story is never dropped: a stale page is worse.
-          $edCanDrop = ($briefList.Count -ge 1) -or (($i + 1) -lt $n)
+          $edCanDrop = (($briefList.Count -ge 1) -or (($i + 1) -lt $n)) -and $edDropsHere -lt $script:EDITOR_MAX_DROPS_PER_COUNTRY
           $edDecision = Get-EditorDecision $edVerdict.Grades $edCanDrop
           if ($edDecision -eq 'drop') {
             $editorDropped++
+            $edDropsHere++
             Write-Host ("      {0}#{1}: dropped by the editor (standards {2}, country {3}): {4}" -f $code, $i, $edVerdict.Grades['standards'], $edVerdict.Grades['country'], ([string]$oneBrief.headline)) -ForegroundColor DarkYellow
             continue
           }

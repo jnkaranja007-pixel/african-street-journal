@@ -29,7 +29,12 @@ function Format-Share($Part, $Whole) {
 
 $CRITERIA = @('context','headline','why','clarity','country','standards')
 $rows = New-Object System.Collections.Generic.List[object]
-foreach ($folder in @(Get-ChildItem -Path $Dir -Directory -ErrorAction SilentlyContinue | Sort-Object Name)) {
+# download-artifact unpacks a lone artifact straight into the folder, with no
+# bake-<model> subfolder (a one-model run on 18 Nov 2026 reported "no model produced a
+# folder" for a run that had written 27 stories).
+$folders = @(Get-ChildItem -Path $Dir -Directory -ErrorAction SilentlyContinue | Sort-Object Name)
+if ((Test-Path (Join-Path $Dir 'run.json')) -or (Test-Path (Join-Path $Dir 'metrics.json'))) { $folders = @(Get-Item -LiteralPath $Dir) + $folders }
+foreach ($folder in $folders) {
   $run = Read-JsonFile (Join-Path $folder.FullName 'run.json')
   $m = Read-JsonFile (Join-Path $folder.FullName 'metrics.json')
   $model = if ($run -and $run.model) { [string]$run.model } else { $folder.Name -replace '^bake-', '' }
