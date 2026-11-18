@@ -81,7 +81,7 @@
     if (!tr) return null;
     var head = '$1 buys ' + fmt(tr.now) + ' ' + tr.ccy + ' ' + when(tr);
     if (tr.then === undefined) {
-      return { head: head + '.', sub: 'We save this rate every day from ' + dayLabel(tr.since) + '. The trend shows here as the days add up.' };
+      return { head: head + '.', sub: 'We have recorded this rate daily since ' + dayLabel(tr.since) + '. The trend appears here as that record grows.' };
     }
     var pct = Math.abs(tr.pct), dir = tr.pct > 0 ? 'more' : 'less';
     var sub = pct < 0.05 ? 'About the same as ' + tr.ago + '.'

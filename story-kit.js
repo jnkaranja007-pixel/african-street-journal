@@ -815,7 +815,7 @@
       '<div class="asj-kit-follow"><button type="button" aria-pressed="false"></button><span></span></div>' +
       '<div class="asj-kit-figs" hidden></div>' +
       '<div class="asj-kit-earlier" hidden></div>' +
-      '<a class="asj-kit-cta" href="' + esc(home) + '"><div><b>Read today’s edition</b><span>Every African country on one front page, every source cited.</span></div><i aria-hidden="true">→</i></a>';
+      '<a class="asj-kit-cta" href="' + esc(home) + '"><div><b>Read today’s edition</b><span>All 55 countries on one front page, every source named and linked.</span></div><i aria-hidden="true">→</i></a>';
     article.parentNode.insertBefore(land, article.nextSibling);
 
     var button = land.querySelector('.asj-kit-follow button'), note = land.querySelector('.asj-kit-follow span');
@@ -824,8 +824,8 @@
       button.setAttribute('aria-pressed', on ? 'true' : 'false');
       button.textContent = on ? 'Following ' + name + ' ✓' : '+ Follow ' + name;
       note.textContent = on
-        ? name + ' now leads your front page on this device. Tap again to stop.'
-        : 'Put ' + name + '’s stories at the top of your front page. No account, no email.';
+        ? name + ' now leads your front page on this device. Tap again to unfollow.'
+        : 'Put ' + name + '’s stories at the top of your front page. No account or email needed.';
     };
     button.addEventListener('click', function () {
       var list = watchlist(), at = list.indexOf(cc);

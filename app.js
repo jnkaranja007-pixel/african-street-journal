@@ -3149,7 +3149,7 @@ document.getElementById('story-reader-share')?.addEventListener('click', async e
     } catch {}
   }
   const ok = await copyPlainText(text + '\n\n' + shareUrl.href);
-  pulseButtonLabel(event.currentTarget, ok ? 'Copied' : 'Share Failed');
+  pulseButtonLabel(event.currentTarget, ok ? 'Copied' : 'Could not share');
 });
 document.addEventListener('keydown', event => {
   if (event.key !== 'Escape' || !storyReader?.classList.contains('open')) return;
@@ -3195,7 +3195,7 @@ function briefRowHtml(b, i, countryTag, countryCode, published, sourceRank = i) 
       (lensData.why ? '<p class="cv-brief-why"><b>' + escapeHtml(whyLabel) + '</b>' + escapeHtml(lensData.why) + '</p>' : '') +
       '<div class="cv-brief-actions">' +
         '<span>' + readMinutes + ' min read</span>' +
-        '<button class="cv-read-story" type="button" data-story-key="' + escapeHtml(storyKey) + '">Read on ASJ <span aria-hidden="true">→</span></button>' +
+        '<button class="cv-read-story" type="button" data-story-key="' + escapeHtml(storyKey) + '">Read the story <span aria-hidden="true">→</span></button>' +
       '</div>' +
     '</div>' +
   '</article>';
@@ -5738,7 +5738,7 @@ function renderDiasporaPanel(countryId, info) {
     (Number.isFinite(rate)
       ? '<div class="cv-dia-calc"><label for="cv-dia-amount">Sending</label><span>$</span><input id="cv-dia-amount" type="number" min="0" step="10" inputmode="decimal" aria-label="Amount in US dollars"><span aria-hidden="true">=</span><b id="cv-dia-converted">—</b></div>'
       : '') +
-    '<div class="cv-dia-note">Compare licensed transfer services before you send — this reference rate is not a provider quote. <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">Rates by Exchange Rate API</a>.</div>';
+    '<div class="cv-dia-note">This is a reference rate, not a quote from a transfer provider. Compare licensed services before you send money. <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">Rates by Exchange Rate API</a>.</div>';
   const amountEl = document.getElementById('cv-dia-amount');
   if (amountEl) {
     const savedAmount = parseFloat(localStorage.getItem('asj:send-amount'));
@@ -6591,9 +6591,9 @@ canvas.addEventListener('click', (e) => {
       // for farmers today, and a reader is owed that rather than left guessing.
       const lensName = STORY_LENS_LABELS[activeStoryLens];
       const emptyCopy = (activeStoryLens !== 'general' && !query.trim())
-        ? 'Nothing in today\'s edition has a direct effect on ' + escapeHtml(lensName.toLowerCase()) +
+        ? 'Nothing in today\'s edition directly affects ' + escapeHtml(lensName.toLowerCase()) +
           ' readers' + (activeTopic !== 'All' ? ' under ' + escapeHtml(activeTopic) : '') +
-          '. Choose All readers for the full edition.'
+          '. Switch to All readers for the full edition.'
         : 'No headlines match your search.';
       resultsEl.innerHTML = '<div class="wire-empty">' + emptyCopy + '</div>';
       return;
@@ -6747,7 +6747,7 @@ canvas.addEventListener('click', (e) => {
         try { await navigator.share({ title: title + ' | The African Street Journal', text: title + ' on The African Street Journal', url }); return; } catch (e) { if (e && e.name === 'AbortError') return; }
       }
       const ok = await copyPlainText(url);
-      say(ok ? 'Link copied. Paste it into WhatsApp or anywhere.' : url);
+      say(ok ? 'Link copied. Paste it into a WhatsApp chat, or anywhere else.' : url);
       return;
     }
     const story = event.target.closest('[data-story-key]');
@@ -6772,7 +6772,7 @@ canvas.addEventListener('click', (e) => {
       } catch {}
     }
     const ok = await copyPlainText(text);
-    pulseButtonLabel(event.currentTarget, ok ? 'Copied' : 'Share Failed');
+    pulseButtonLabel(event.currentTarget, ok ? 'Copied' : 'Could not share');
   });
   topicSelect?.addEventListener('change', () => {
     activeTopic = topicSelect.value || 'All';
@@ -7439,7 +7439,7 @@ function renderFollowNudge(countryId) {
     return;
   }
   const tg = String(window.ASJ_SOCIAL?.telegram || '');
-  el.innerHTML = '<p class="cv-follow-copy"><b>Back for ' + escapeHtml(name) + '?</b> Follow it, and its new stories wait for you at the top of the front page on this device.</p>' +
+  el.innerHTML = '<p class="cv-follow-copy"><b>Back for ' + escapeHtml(name) + '?</b> Follow it, and its latest stories will lead your front page on this device.</p>' +
     '<div class="cv-follow-actions"><button type="button" class="cv-follow-go" data-follow>Follow ' + escapeHtml(name) + '</button>' +
     (/^[A-Za-z0-9_]{5,32}$/.test(tg) ? '<a href="https://t.me/' + tg + '" target="_blank" rel="noopener">Get the paper on Telegram</a>' : '') +
     countryFeedLink(countryId) +
@@ -7448,8 +7448,8 @@ function renderFollowNudge(countryId) {
   el.onclick = e => {
     if (e.target.closest('[data-follow]')) {
       if (!getWatchlist().includes(countryId)) document.getElementById('cv-star')?.click();
-      el.innerHTML = '<p class="cv-follow-copy"><b>Following ' + escapeHtml(name) + '.</b> Its new stories are at the top of the front page now, on this device. ' +
-        'To get them anywhere else, add its feed to a news reader.</p><div class="cv-follow-actions">' + countryFeedLink(countryId) + '</div>';
+      el.innerHTML = '<p class="cv-follow-copy"><b>Following ' + escapeHtml(name) + '.</b> Its latest stories now lead your front page on this device. ' +
+        'To follow it on other devices, add its feed to a news reader.</p><div class="cv-follow-actions">' + countryFeedLink(countryId) + '</div>';
       el.hidden = false;
       setTimeout(() => { if (activeCountryMap?.countryId === countryId) el.hidden = true; }, 9000);
     } else if (e.target.closest('[data-later]')) {
@@ -7474,9 +7474,9 @@ function maybeShowInstallPrompt() {
   const el = document.getElementById('asj-install');
   if (!el) return;
   installPromptShown = true;
-  el.innerHTML = '<p><b>Keep the paper on your home screen.</b> ' +
-    (deferredInstallPrompt ? 'One tap opens it like an app, and it works on a weak signal.' : 'On iPhone: tap the Share button, then <b>Add to Home Screen</b>.') + '</p>' +
-    '<div class="asj-install-actions">' + (deferredInstallPrompt ? '<button type="button" data-install>Add it</button>' : '') +
+  el.innerHTML = '<p><b>Add the paper to your home screen.</b> ' +
+    (deferredInstallPrompt ? 'It opens in one tap, like an app, and works on a weak signal.' : 'On iPhone, tap Share, then <b>Add to Home Screen</b>.') + '</p>' +
+    '<div class="asj-install-actions">' + (deferredInstallPrompt ? '<button type="button" data-install>Add to home screen</button>' : '') +
     '<button type="button" data-later>' + (deferredInstallPrompt ? 'Not now' : 'OK') + '</button></div>';
   el.hidden = false;
   el.onclick = async e => {
@@ -7548,10 +7548,10 @@ document.getElementById('your-desk')?.addEventListener('submit', async e => {
   try {
     const result = await syncDeskSignup(email, audience);
     saveDeskSignup({ email, audience, synced: !!result.synced, duplicate: !!result.duplicate, watchlist: getWatchlist(), savedAt: new Date().toISOString() });
-    if (status) status.textContent = result.synced ? (result.duplicate ? 'Already saved.' : 'Desk saved.') : 'Saved on this device.';
+    if (status) status.textContent = result.synced ? (result.duplicate ? 'You\'re already on the list.' : 'You\'re on the list.') : 'Saved on this device.';
   } catch (err) {
     console.warn(err);
-    if (status) status.textContent = 'Saved here. Server sync needs Supabase access.';
+    if (status) status.textContent = 'Saved on this device. We could not reach our server; please try again later.';
   } finally {
     if (button) button.disabled = false;
   }
@@ -7867,9 +7867,9 @@ if (new URLSearchParams(location.search).has('sweep')) {
       try {
         const result = await syncDeskSignup(email, audience);
         saveDeskSignup({ email, audience, synced: !!result.synced, duplicate: !!result.duplicate, watchlist: getWatchlist(), savedAt: new Date().toISOString() });
-        form.innerHTML = '<p class="asj-signup-done">Thank you. The next edition lands before dawn.</p>';
+        form.innerHTML = '<p class="asj-signup-done">Thank you. Your first email arrives with the next edition, before dawn.</p>';
       } catch {
-        note.textContent = 'That did not go through. Try again in a moment.';
+        note.textContent = 'Something went wrong. Please try again in a moment.';
       }
     });
   }
