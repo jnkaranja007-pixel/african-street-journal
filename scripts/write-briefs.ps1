@@ -1440,7 +1440,7 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
           if ($wait -gt 0) { Start-Sleep -Milliseconds ([int]$wait) }
         }
         if ($r.provider -eq 'gemini') { $script:lastGeminiCall = Get-Date }
-        $out = Invoke-ModelOnce $prompt $ExpectedStories $ExpectedItem $r.provider $r.model $r.url $r.key
+        $out = Invoke-ModelOnce $prompt $ExpectedStories $ExpectedItem $r.provider $r.model $r.url $r.key -RewriteRoute:([bool]$r.compat)
         $k = "$($r.provider):$($r.model)"
         $script:routeCalls[$k] = 1 + [int]$script:routeCalls[$k]
         return $out
@@ -1451,6 +1451,17 @@ function Invoke-OpenRouter([string]$prompt, [int]$ExpectedStories = 1, [int]$Exp
         # A model that answered with nothing answers the same way when asked again: the
         # next route takes the call.
         if ($last -match '^EMPTY answer') { break }
+        # A model that takes no temperature or schema limits (Claude Haiku 5.5, GPT-6
+        # Luna: "No endpoints found that can handle the requested parameters") gets the
+        # request shape the rewrite route already uses - no temperature, reasoning off,
+        # no length limits in the schema - for this call and the rest of the run. Found
+        # by the model bake-off on 18 Nov 2026, where both refused every first draft.
+        if ($r.provider -eq 'openrouter' -and -not $r.compat -and ($code -eq 400 -or $code -eq 404) -and $last -match 'handle the requested parameters|temperature|not supported|unsupported') {
+          $r.compat = $true
+          Write-Host "      [route] $($r.model) refused the writer's parameters; using the rewrite request shape for the rest of the run" -ForegroundColor DarkYellow
+          $try--
+          continue
+        }
         if ($code -in 401,402,403) {
           # Account-level: no point trying another OpenRouter model on the same key.
           foreach ($x in $script:routes) { if ($x.provider -eq $r.provider) { $x.dead = $true } }
@@ -1521,7 +1532,7 @@ Return ONLY a JSON object: {"order":[<the story numbers, most important first>],
     max_tokens = 200
     response_format = @{ type = 'json_object' }
   }
-  if ($route -eq $script:rewriteRoute) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
+  if ($route -eq $script:rewriteRoute -or $route.compat) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
   if ($route.provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
   $headers = @{ 'Authorization' = "Bearer $($route.key)"; 'Content-Type' = 'application/json'; 'HTTP-Referer' = 'https://africanstreetjournal.com'; 'X-Title' = 'The African Street Journal' }
   if ($route.provider -eq 'gemini') { $headers.Remove('HTTP-Referer'); $headers.Remove('X-Title'); $headers['x-goog-api-key'] = $route.key }
@@ -1602,7 +1613,7 @@ Return ONLY a JSON object: {"dek":"<the sentence>"}
     max_tokens = 200
     response_format = @{ type = 'json_object' }
   }
-  if ($route -eq $script:rewriteRoute) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
+  if ($route -eq $script:rewriteRoute -or $route.compat) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
   if ($route.provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
   $headers = @{ 'Authorization' = "Bearer $($route.key)"; 'Content-Type' = 'application/json'; 'HTTP-Referer' = 'https://africanstreetjournal.com'; 'X-Title' = 'The African Street Journal' }
   if ($route.provider -eq 'gemini') { $headers.Remove('HTTP-Referer'); $headers.Remove('X-Title'); $headers['x-goog-api-key'] = $route.key }
@@ -1718,7 +1729,7 @@ Return ONLY a JSON object: {"order":[<the $want story numbers, most important fi
     max_tokens = 300
     response_format = @{ type = 'json_object' }
   }
-  if ($route -eq $script:rewriteRoute) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
+  if ($route -eq $script:rewriteRoute -or $route.compat) { $body['reasoning'] = @{ enabled = $false } } else { $body['temperature'] = 0 }
   if ($route.provider -eq 'openrouter') { $body['usage'] = @{ include = $true } }
   $headers = @{ 'Authorization' = "Bearer $($route.key)"; 'Content-Type' = 'application/json'; 'HTTP-Referer' = 'https://africanstreetjournal.com'; 'X-Title' = 'The African Street Journal' }
   if ($route.provider -eq 'gemini') { $headers.Remove('HTTP-Referer'); $headers.Remove('X-Title'); $headers['x-goog-api-key'] = $route.key }
