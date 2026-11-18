@@ -1,0 +1,173 @@
+name: Model bake-off
+
+# Run by hand only. Each model writes the same stories from the same day's evidence
+# (the desk-evidence artifact of the latest desk run), with no help from another
+# model: rewrites go back to the writer itself, so a model is judged on its own copy.
+# The desk's own fact and style checks score every draft, an editor model grades a
+# sample, and a table lands in the run summary. Nothing is committed or published.
+#
+# Cost on 18 Nov 2026 prices: about 5 to 7 cents a model for 30 stories, plus about
+# 1.5 cents a model for the editor grades. The money comes from the same OpenRouter
+# credit as the desk.
+
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: 'Comma-separated OpenRouter model slugs.'
+        required: false
+        default: 'google/gemini-2.5-flash-lite,deepseek/deepseek-v4-flash-0731,qwen/qwen3.8-flash,openai/gpt-6-luna,anthropic/claude-haiku-5.5'
+      countries:
+        description: 'Comma-separated country codes; five stories each.'
+        required: false
+        default: 'ng,ke,za,gh,eg,sn'
+      judge:
+        description: 'Model that grades a sample of each model''s stories, or none.'
+        required: false
+        default: 'anthropic/claude-haiku-5.5'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: bakeoff
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      models: ${{ steps.m.outputs.models }}
+    steps:
+      - id: m
+        shell: pwsh
+        env:
+          MODELS: ${{ github.event.inputs.models }}
+        run: |
+          $list = @($env:MODELS -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)
+          if (-not $list.Count) { Write-Host '::error::no models given'; exit 1 }
+          if ($list.Count -gt 8) { Write-Host '::error::at most 8 models a run'; exit 1 }
+          "models=$(ConvertTo-Json -InputObject $list -Compress)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          exit 0
+
+  write:
+    needs: plan
+    runs-on: windows-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        model: ${{ fromJSON(needs.plan.outputs.models) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Fetch the latest desk evidence
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ids = @(gh run list --repo $env:GITHUB_REPOSITORY --workflow update-news.yml --status success -L 10 --json databaseId -q '.[].databaseId')
+          $got = $false
+          foreach ($id in $ids) {
+            Remove-Item -Recurse -Force evidence -ErrorAction SilentlyContinue
+            gh run download $id --repo $env:GITHUB_REPOSITORY -n desk-evidence -D evidence 2>$null
+            $feed = Get-ChildItem -Recurse -Path evidence -Filter feed-items.json -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($feed) {
+              Copy-Item $feed.FullName data/feed-items.json -Force
+              Write-Host "Evidence from desk run $id"
+              "EVIDENCE_RUN=$id" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+              $got = $true
+              break
+            }
+          }
+          if (-not $got) { Write-Host '::error::no desk-evidence artifact with feed-items.json in the last 10 desk runs'; exit 1 }
+          exit 0
+
+      - name: Name the artifact
+        id: slug
+        shell: pwsh
+        env:
+          MODEL: ${{ matrix.model }}
+        run: |
+          $slug = ($env:MODEL -replace '[^A-Za-z0-9.]+', '-').Trim('-')
+          "slug=$slug" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          exit 0
+
+      - name: Write the stories
+        shell: pwsh
+        continue-on-error: true
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          MODEL: ${{ matrix.model }}
+          COUNTRIES: ${{ github.event.inputs.countries }}
+        run: |
+          New-Item -ItemType Directory -Force bake | Out-Null
+          $only = if ($env:COUNTRIES) { $env:COUNTRIES.Trim() } else { 'ng,ke,za,gh,eg,sn' }
+          $clock = [Diagnostics.Stopwatch]::StartNew()
+          # The fallback list is the model itself, so OpenRouter never serves another one.
+          ./scripts/write-briefs.ps1 -Only $only -Model $env:MODEL -FallbackModels $env:MODEL -RewriteModel none `
+            -NoCache -NoCountryRanking -NoFrontRanking -JsonMode `
+            -OutFile bake/stories.json -MetricsFile bake/metrics.json *>&1 | Tee-Object -FilePath bake/write.log
+          $code = $LASTEXITCODE
+          $clock.Stop()
+          [ordered]@{ model = $env:MODEL; exitCode = $code; seconds = [int]$clock.Elapsed.TotalSeconds; evidenceRun = $env:EVIDENCE_RUN; countries = $only } |
+            ConvertTo-Json | Out-File -FilePath bake/run.json -Encoding utf8
+          exit $code
+
+      - name: Grade a sample
+        shell: pwsh
+        continue-on-error: true
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          JUDGE: ${{ github.event.inputs.judge }}
+        run: |
+          if (-not $env:JUDGE -or $env:JUDGE -eq 'none') { Write-Host 'No judge.'; exit 0 }
+          if (-not (Test-Path bake/stories.json)) { Write-Host 'No stories to grade.'; exit 0 }
+          $stories = [IO.File]::ReadAllText((Resolve-Path bake/stories.json), [Text.Encoding]::UTF8) | ConvertFrom-Json
+          $state = [ordered]@{ generated = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ'); byCountry = $stories }
+          [IO.File]::WriteAllText((Join-Path (Resolve-Path bake) 'state.json'), ($state | ConvertTo-Json -Depth 12), (New-Object Text.UTF8Encoding($false)))
+          # The same seed for every model, so each is graded on the same draw.
+          ./scripts/review-stories.ps1 -Model $env:JUDGE -StateFile bake/state.json -Count 30 -Seed 1 -OutFile bake/review.md *>&1 | Tee-Object -FilePath bake/review.log
+          exit 0
+
+      - name: Save the drafts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: bake-${{ steps.slug.outputs.slug }}
+          path: bake/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  summary:
+    needs: write
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Collect the drafts
+        uses: actions/download-artifact@v5
+        with:
+          pattern: bake-*
+          path: bakes
+
+      - name: Compare
+        shell: pwsh
+        env:
+          JUDGE: ${{ github.event.inputs.judge }}
+        run: |
+          ./scripts/bakeoff-summary.ps1 -Dir bakes -Judge $env:JUDGE -OutFile bakeoff.md
+          Get-Content bakeoff.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          exit 0
+
+      - name: Save the table
+        uses: actions/upload-artifact@v6
+        with:
+          name: bakeoff-table
+          path: bakeoff.md
+          retention-days: 30
