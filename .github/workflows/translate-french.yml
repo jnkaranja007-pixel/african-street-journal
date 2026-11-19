@@ -1,0 +1,50 @@
+name: Translate stories into French (test)
+
+# Run by hand. Translates the live edition's stories with the free Gemini tier and
+# saves data/briefs-fr.json as an artifact for review. Commits nothing.
+on:
+  workflow_dispatch:
+    inputs:
+      max:
+        description: 'How many stories to translate.'
+        required: false
+        default: '30'
+      only:
+        description: 'Optional country codes, e.g. sn,ci,cm. Empty means all.'
+        required: false
+        default: ''
+      model:
+        description: 'Gemini model id.'
+        required: false
+        default: 'gemini-3.5-flash-lite'
+
+permissions:
+  contents: read
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Translate
+        shell: pwsh
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MAX: ${{ github.event.inputs.max }}
+          ONLY: ${{ github.event.inputs.only }}
+          MODEL: ${{ github.event.inputs.model }}
+        run: |
+          Remove-Item data/briefs-fr.json -ErrorAction SilentlyContinue
+          ./scripts/translate-briefs.ps1 -Max ([int]$env:MAX) -Only $env:ONLY -Model $env:MODEL -Minutes 50
+
+      - name: Save the translations
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: briefs-fr
+          path: data/briefs-fr.json
+          if-no-files-found: ignore
+          retention-days: 14
