@@ -38,6 +38,6 @@ jobs:
           if ($existing) { gh issue comment $existing.number --body $body } else { gh issue create --title $title --body $body }
           # Also ping the owner's phone (private chat with the bot), when that secret is set.
           if ($env:TELEGRAM_BOT_TOKEN -and $env:TELEGRAM_ALERT_CHAT_ID) {
-            try { Invoke-RestMethod -Uri "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/sendMessage" -Method Post -Body @{ chat_id = $env:TELEGRAM_ALERT_CHAT_ID; text = "ASJ: the live edition is $ageH hours old. The desk has not published since $gen." } -TimeoutSec 30 | Out-Null } catch { Write-Host "Owner alert failed: $($_.Exception.Message)" }
+            try { Invoke-RestMethod -Uri "https://api.telegram.org/bot$($env:TELEGRAM_BOT_TOKEN.Trim())/sendMessage" -Method Post -Body @{ chat_id = $env:TELEGRAM_ALERT_CHAT_ID.Trim(); text = "ASJ: the live edition is $ageH hours old. The desk has not published since $gen." } -TimeoutSec 30 | Out-Null } catch { Write-Host "Owner alert failed: $($_.Exception.Message)" }
           }
           exit 1

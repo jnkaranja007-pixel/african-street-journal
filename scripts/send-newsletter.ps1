@@ -32,7 +32,7 @@ $inv = [Globalization.CultureInfo]::InvariantCulture
 function ConvertTo-MdText([string]$s) { return ($s -replace '([\[\]\*_`])', '\$1').Trim() }
 
 try {
-  $key = [string]$env:BUTTONDOWN_API_KEY
+  $key = ([string]$env:BUTTONDOWN_API_KEY).Trim()
   if (-not $DryRun -and -not $key) { Write-Host 'Newsletter: BUTTONDOWN_API_KEY not set; nothing sent.'; exit 0 }
 
   $day = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd', $inv)

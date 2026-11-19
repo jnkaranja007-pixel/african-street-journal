@@ -51,10 +51,12 @@ function HtmlEsc([string]$s) { return $s.Replace('&', '&amp;').Replace('<', '&lt
 function Limit([string]$s, [int]$n) { if ($s.Length -le $n) { return $s }; return $s.Substring(0, $n - 3).TrimEnd() + '...' }
 
 try {
-  $tgToken = [string]$env:TELEGRAM_BOT_TOKEN
-  $tgChat = [string]$env:TELEGRAM_CHAT_ID
-  $bsHandle = [string]$env:BLUESKY_HANDLE
-  $bsPass = [string]$env:BLUESKY_APP_PASSWORD
+  # Trimmed: a pasted secret can end in a line break, which breaks the Telegram URL
+  # (the first live post, 19 Nov 2026, failed that way).
+  $tgToken = ([string]$env:TELEGRAM_BOT_TOKEN).Trim()
+  $tgChat = ([string]$env:TELEGRAM_CHAT_ID).Trim()
+  $bsHandle = ([string]$env:BLUESKY_HANDLE).Trim()
+  $bsPass = ([string]$env:BLUESKY_APP_PASSWORD).Trim()
   $useTelegram = [bool]($tgToken -and $tgChat)
   $useBluesky = [bool]($bsHandle -and $bsPass)
   if (-not $DryRun -and -not $useTelegram -and -not $useBluesky) {

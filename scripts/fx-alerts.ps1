@@ -122,7 +122,7 @@ try {
   $text = $lines -join "`n"
 
   if ($DryRun) { Write-Host "--- FX alert (dry run) ---`n$text"; exit 0 }
-  $tgToken = [string]$env:TELEGRAM_BOT_TOKEN; $tgChat = [string]$env:TELEGRAM_CHAT_ID
+  $tgToken = ([string]$env:TELEGRAM_BOT_TOKEN).Trim(); $tgChat = ([string]$env:TELEGRAM_CHAT_ID).Trim()
   if (-not ($tgToken -and $tgChat)) { Write-Host 'FX alerts: no Telegram secrets; nothing sent.'; exit 0 }
   $body = [ordered]@{ chat_id = $tgChat; text = $text; parse_mode = 'HTML'; link_preview_options = @{ is_disabled = $true } } | ConvertTo-Json -Compress
   $r = Invoke-RestMethod -Uri "https://api.telegram.org/bot$tgToken/sendMessage" -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -TimeoutSec 30

@@ -1,0 +1,45 @@
+name: Post to social now
+
+# Run by hand to send the latest edition's stories when the desk's own post failed (a
+# wrong secret, Telegram down). Same script, same log of what was already sent, so a
+# story that went out once is not sent again. Only stories from the last 24 hours count.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: asj-social
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Restore the social post log
+        uses: actions/cache/restore@v5
+        with:
+          path: data/social-posted.json
+          key: asj-social-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: asj-social-v1-
+
+      - name: Post new stories
+        shell: pwsh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+        run: ./scripts/post-social.ps1
+
+      - name: Save the social post log
+        if: hashFiles('data/social-posted.json') != ''
+        uses: actions/cache/save@v5
+        with:
+          path: data/social-posted.json
+          key: asj-social-v1-${{ github.run_id }}-${{ github.run_attempt }}

@@ -15,7 +15,7 @@
 #>
 param([Parameter(Mandatory = $true)][string]$Text)
 try {
-  $token = [string]$env:TELEGRAM_BOT_TOKEN; $chat = [string]$env:TELEGRAM_ALERT_CHAT_ID
+  $token = ([string]$env:TELEGRAM_BOT_TOKEN).Trim(); $chat = ([string]$env:TELEGRAM_ALERT_CHAT_ID).Trim()
   if (-not ($token -and $chat)) { Write-Host 'Owner alert: TELEGRAM_ALERT_CHAT_ID not set; skipped.'; exit 0 }
   $body = [ordered]@{ chat_id = $chat; text = $Text; link_preview_options = @{ is_disabled = $true } } | ConvertTo-Json -Compress
   $r = Invoke-RestMethod -Uri "https://api.telegram.org/bot$token/sendMessage" -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -TimeoutSec 30
