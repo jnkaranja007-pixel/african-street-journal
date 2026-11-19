@@ -1,0 +1,55 @@
+name: French edition
+
+# After each desk edition, translate the new stories into French with the free Gemini
+# tier (scripts/translate-briefs.ps1) and rebuild /fr/ (scripts/build-lang-pages.ps1).
+# Only new or changed stories are sent, so a run after a skipped desk attempt ends in
+# seconds. The English edition never waits for this: if Gemini is busy, the French
+# pages simply arrive with the next run.
+on:
+  workflow_run:
+    workflows: ["Update ASJ Desk"]
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: asj-translate
+  cancel-in-progress: false
+
+jobs:
+  french:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Translate new stories
+        shell: pwsh
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ASJ_TRANSLATE_MODEL: ${{ vars.ASJ_TRANSLATE_MODEL }}
+        run: ./scripts/translate-briefs.ps1 -Minutes 55
+
+      - name: Build the French pages
+        shell: pwsh
+        run: ./scripts/build-lang-pages.ps1 -Lang fr
+
+      - name: Publish
+        shell: bash
+        run: |
+          git config user.name 'asj-news-bot'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add --all -- fr data/briefs-fr.json data/pages-fr.json
+          if git diff --staged --quiet; then echo "No new French pages."; exit 0; fi
+          git commit -q -m "chore(asj-fr): French edition ($(date -u +%F))"
+          for i in 1 2 3; do
+            if git pull -q --rebase origin main && git push -q origin main; then echo "Pushed."; exit 0; fi
+            echo "Push failed (attempt $i); retrying"; sleep 15
+          done
+          echo "::error::Could not push the French edition"; exit 1

@@ -33,6 +33,20 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 
+# The French edition (scripts/build-lang-pages.ps1, after the desk): pages that have a
+# French twin name it with hreflang, so search engines show French readers that page.
+$frPages = New-Object System.Collections.Generic.HashSet[string]
+$hasFrench = Test-Path (Join-Path (Join-Path $root 'fr') 'index.html')
+if (Test-Path (Join-Path $root 'data\pages-fr.json')) {
+  try { foreach ($fp in @(([IO.File]::ReadAllText((Join-Path $root 'data\pages-fr.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json).pages)) { [void]$frPages.Add("$($fp.code)/$($fp.slug)") } } catch {}
+}
+function Get-FrenchAlternate([string]$Canonical) {
+  $path = $Canonical.Substring($BaseUrl.Length).Trim('/')
+  $isCountry = $path -match '^[a-z]{2}$'
+  if (($isCountry -and $hasFrench) -or $frPages.Contains($path)) { return "<link rel=""alternate"" hreflang=""fr"" href=""$BaseUrl/fr/$path/"">" }
+  return ''
+}
+
 # Get-IsoDay lives here so the page builder, the merge and the publication gate all
 # read a date stamp the same way. See the note in story-shape.ps1.
 . (Join-Path $PSScriptRoot 'story-shape.ps1')   # Get-IsoDay, Get-StorySlug, Import-PublishedEdition
@@ -211,7 +225,7 @@ article .dek{margin:0 0 12px}
 @media (max-width:520px){.country-actions .open{flex:1 1 100%;justify-content:center}}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=141" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=143" defer></script>'
 # The paper's social accounts (data/social-config.js): a Follow line in every footer
 # once a handle is set, and sameAs on the publisher so search engines tie them to it.
 $socialWhatsapp = ''; $socialTelegram = ''; $socialBluesky = ''; $socialX = ''; $socialXHandle = ''; $socialInstagram = ''; $socialYoutube = ''
@@ -601,6 +615,7 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <meta name="description" content="$(Esc $desc)">
 <link rel="canonical" href="$canonical">
 <link rel="alternate" hreflang="en" href="$canonical">
+$(Get-FrenchAlternate $canonical)
 <link rel="alternate" hreflang="x-default" href="$canonical">
 <link rel="alternate" type="application/rss+xml" title="$(Esc $name) - The African Street Journal" href="$BaseUrl/$code/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
@@ -881,6 +896,7 @@ foreach ($sp in $pagesToWrite) {
 <link rel="canonical" href="$storyCanonical">
 $(if ($b.articleId) { '<meta name="asj-story" content="' + (Esc ([string]$b.articleId)) + '">' })
 <link rel="alternate" hreflang="en" href="$storyCanonical">
+$(Get-FrenchAlternate $storyCanonical)
 <link rel="alternate" hreflang="x-default" href="$storyCanonical">
 <link rel="alternate" type="application/rss+xml" title="$(Esc $sp.country) - The African Street Journal" href="$BaseUrl/$($sp.code)/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
@@ -1497,7 +1513,7 @@ foreach ($e in $earlierUrls) {
 [IO.File]::WriteAllText((Join-Path $root 'static-pages.css'), $css, (New-Object Text.UTF8Encoding($false)))
 
 # --- robots -----------------------------------------------------------------
-$robots = "User-agent: *`nAllow: /`n`nSitemap: $BaseUrl/sitemap.xml`nSitemap: $BaseUrl/news-sitemap.xml`n"
+$robots = "User-agent: *`nAllow: /`n`nSitemap: $BaseUrl/sitemap.xml`nSitemap: $BaseUrl/news-sitemap.xml`n$(if ($hasFrench) { "Sitemap: $BaseUrl/fr/sitemap.xml`n" })"
 [IO.File]::WriteAllText((Join-Path $root 'robots.txt'), $robots, (New-Object Text.UTF8Encoding($false)))
 
 Write-Host "[static] built $built country pages, sitemap with $($urls.Count + $earlierUrls.Count) URLs, robots.txt" -ForegroundColor Green

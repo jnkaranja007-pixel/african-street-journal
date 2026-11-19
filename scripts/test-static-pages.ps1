@@ -55,8 +55,11 @@ Check 'a US-format stamp is rejected, not passed through' ($us -eq '') "got '$us
 
 Write-Host '[static-pages] published artefacts'
 
+# Two-letter folders are countries, except the language editions (fr/ has a
+# data/i18n/fr.json and is checked by its own builder).
+function Test-LanguageDir([string]$Name) { return (Test-Path (Join-Path (Join-Path (Join-Path $root 'data') 'i18n') "$Name.json")) }
 $pages = @(Get-ChildItem -Path $root -Directory |
-  Where-Object { $_.Name -match '^[a-z]{2}$' } |
+  Where-Object { $_.Name -match '^[a-z]{2}$' -and -not (Test-LanguageDir $_.Name) } |
   ForEach-Object { Join-Path $_.FullName 'index.html' } |
   Where-Object { Test-Path $_ })
 
@@ -117,7 +120,7 @@ if ($UnitOnly) {
   $byTail = @{}
   $twice = New-Object System.Collections.Generic.List[string]
   $badMoves = New-Object System.Collections.Generic.List[string]
-  foreach ($cd in Get-ChildItem -Path $root -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' }) {
+  foreach ($cd in Get-ChildItem -Path $root -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' -and -not (Test-LanguageDir $_.Name) }) {
     foreach ($sd in Get-ChildItem -Path $cd.FullName -Directory) {
       $f = Join-Path $sd.FullName 'index.html'
       if (-not (Test-Path $f)) { continue }

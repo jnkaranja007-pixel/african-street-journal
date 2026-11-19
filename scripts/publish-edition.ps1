@@ -61,7 +61,8 @@ function Add-EditionFiles {
   $absent  = @($script:EDITION_PATHS | Where-Object { -not (Test-Path $_) })
   if ($absent.Count) { Write-Host "[publish] not present this run, skipped: $($absent -join ', ')" }
   if ($present.Count) { git add --all -- @present }
-  Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' } |
+  # Language editions (fr/, with data/i18n/fr.json) are published by their own workflow.
+  Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' -and -not (Test-Path (Join-Path 'data/i18n' "$($_.Name).json")) } |
     ForEach-Object { git add --all -- "$($_.Name)" }
 }
 

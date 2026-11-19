@@ -52,7 +52,7 @@ Rules:
 - Keep every number exactly, with the same digits, in French form: 1,234.5 becomes 1 234,5; 12.5% becomes 12,5 %; "$250 million" becomes "250 millions de dollars"; "November 18" becomes "18 novembre". Keep currency names as the English gives them (FCFA, naira, Sh, rand). Keep the digits of large amounts as given: "$5 trillion" becomes "5 000 milliards de dollars" only if you must; prefer the English digits.
 - People, parties, companies and places keep their own names. Use the usual French names for countries and cities (Ivory Coast becomes Cote d'Ivoire with a circumflex on the o, South Africa becomes Afrique du Sud, Cape Town becomes Le Cap).
 - Expand an abbreviation the English explains, the way French press does (FMI, BCEAO, UA, CEDEAO for IMF, BCEAO, AU, ECOWAS).
-- Headlines in sentence case, as French papers write them, no final full stop.
+- Headlines in sentence case, as French papers write them, no final full stop, and about as short as the English: under 100 characters.
 - Same number of paragraphs, in the same order.
 
 Answer with JSON only: {"stories":[{"id":"...","headline":"...","dek":"...","why":"...","paragraphs":["...", "..."]}]}

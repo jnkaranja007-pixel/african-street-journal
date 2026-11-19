@@ -337,3 +337,56 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
 }());
+
+// Language editions (v143). On a French page, the menu items this file adds are given
+// in French. On an English page, the menu gains a link to the French edition: to the
+// same story or country in French when that page exists, otherwise to /fr/. A story page
+// with a French twin also says so under its byline.
+(function () {
+  var lang = (document.documentElement.getAttribute('lang') || 'en').slice(0, 2);
+  var FR = { 'Report a problem': 'Signaler un probl\u00e8me', 'Dark theme': 'Th\u00e8me sombre', 'Light theme': 'Th\u00e8me clair', 'Follow': 'Suivre' };
+  function relabel() {
+    Array.prototype.forEach.call(document.querySelectorAll('.asj-info-menu a, .asj-info-menu button, .asj-info-menu span'), function (el) {
+      if (el.children.length) return;
+      var t = (el.textContent || '').trim();
+      if (FR[t]) el.textContent = FR[t];
+    });
+  }
+  function frenchLink(href) {
+    Array.prototype.forEach.call(document.querySelectorAll('.asj-info-menu'), function (menu) {
+      var a = menu.querySelector('a.asj-lang-fr');
+      if (!a) {
+        a = document.createElement('a');
+        a.className = 'asj-lang-fr'; a.lang = 'fr'; a.hreflang = 'fr'; a.textContent = 'Fran\u00e7ais';
+        menu.insertBefore(a, menu.querySelector('.asj-report') || menu.querySelector('.asj-theme'));
+      }
+      a.href = href;
+    });
+  }
+  function start() {
+    if (lang === 'fr') {
+      relabel();
+      document.addEventListener('click', function (e) { if (e.target && e.target.closest && e.target.closest('.asj-theme')) setTimeout(relabel, 0); });
+      return;
+    }
+    if (lang !== 'en') return;
+    frenchLink('/fr/');
+    var path = location.pathname;
+    if (!/^\/[a-z]{2}\/([a-z0-9-]+\/)?$/.test(path) || path.indexOf('/fr/') === 0) return;
+    var c = navigator.connection;
+    if (c && c.saveData) return;
+    fetch('/fr' + path, { method: 'HEAD', credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) return;
+      frenchLink('/fr' + path);
+      var by = document.querySelector('article.story .byline');
+      if (by && !document.querySelector('.asj-lang-note')) {
+        var p = document.createElement('p');
+        p.className = 'meta asj-lang-note'; p.lang = 'fr';
+        var l = document.createElement('a'); l.href = '/fr' + path; l.hreflang = 'fr'; l.textContent = 'Lire en fran\u00e7ais \u2192';
+        p.appendChild(l); by.parentNode.insertBefore(p, by.nextSibling);
+      }
+    }).catch(function () {});
+  }
+  function later() { setTimeout(start, 0); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', later); else later();
+}());
