@@ -607,12 +607,10 @@ foreach ($prop in $byCountry.PSObject.Properties) {
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Non-blocking: a stylesheet link here stops first paint until a third-party round
-     trip finishes. display=swap is already in the URL, so text renders in Georgia and
-     reflows when Playfair arrives. -->
-<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
+<!-- Headline font, non-blocking (display=swap: Georgia first, Playfair when it arrives).
+     Data saver: with Save-Data on, or on 3G and slower, it is not fetched at all (~60-90 KB
+     on a first visit), the same rule as the app. -->
+<script>(function(){var c=navigator.connection;if(c&&(c.saveData||/^(slow-2g|2g|3g)$/.test(String(c.effectiveType||''))))return;var h=document.head,p=document.createElement('link');p.rel='preconnect';p.href='https://fonts.gstatic.com';p.crossOrigin='';h.appendChild(p);var l=document.createElement('link');l.rel='stylesheet';l.media='print';l.onload=function(){this.media='all';this.onload=null};l.href='https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap';h.appendChild(l)})()</script>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:title" content="$(Esc $name) news and country file">
@@ -625,6 +623,7 @@ $analytics
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"$(JsonEsc $name)","item":"$canonical"}]}</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
+<link rel="icon" href="$BaseUrl/favicon.ico" sizes="32x32"><link rel="icon" href="$BaseUrl/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="$BaseUrl/apple-touch-icon.png">
 </head>
 <body>
 <div class="wrap">
@@ -888,9 +887,10 @@ $(if ($b.articleId) { '<meta name="asj-story" content="' + (Esc ([string]$b.arti
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap">
+<!-- Headline font, non-blocking (display=swap: Georgia first, Playfair when it arrives).
+     Data saver: with Save-Data on, or on 3G and slower, it is not fetched at all (~60-90 KB
+     on a first visit), the same rule as the app. -->
+<script>(function(){var c=navigator.connection;if(c&&(c.saveData||/^(slow-2g|2g|3g)$/.test(String(c.effectiveType||''))))return;var h=document.head,p=document.createElement('link');p.rel='preconnect';p.href='https://fonts.gstatic.com';p.crossOrigin='';h.appendChild(p);var l=document.createElement('link');l.rel='stylesheet';l.media='print';l.onload=function(){this.media='all';this.onload=null};l.href='https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap';h.appendChild(l)})()</script>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
 <meta property="og:site_name" content="The African Street Journal">
 <meta property="og:type" content="article">
@@ -908,6 +908,7 @@ $analytics
 <script type="application/ld+json">$($ld.ToString())</script>
 <script type="application/ld+json">$crumbs</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
+<link rel="icon" href="$BaseUrl/favicon.ico" sizes="32x32"><link rel="icon" href="$BaseUrl/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="$BaseUrl/apple-touch-icon.png">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to story</a>
@@ -1116,6 +1117,7 @@ foreach ($slug in $trustPages.Keys) {
 <link rel="alternate" type="application/rss+xml" title="The African Street Journal" href="$BaseUrl/feed.xml">
 $analytics
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
+<link rel="icon" href="$BaseUrl/favicon.ico" sizes="32x32"><link rel="icon" href="$BaseUrl/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="$BaseUrl/apple-touch-icon.png">
 </head>
 <body>
 <div class="wrap page">
@@ -1191,6 +1193,7 @@ foreach ($ts in $topicOrder) {
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"The African Street Journal","item":"$BaseUrl/"},{"@type":"ListItem","position":2,"name":"Topics","item":"$BaseUrl/topics/"},{"@type":"ListItem","position":3,"name":"$(JsonEsc $tName)","item":"$tUrl"}]}</script>
 $analytics
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
+<link rel="icon" href="$BaseUrl/favicon.ico" sizes="32x32"><link rel="icon" href="$BaseUrl/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="$BaseUrl/apple-touch-icon.png">
 </head>
 <body>
 <div class="wrap page">
@@ -1225,6 +1228,7 @@ $tiHtml = @"
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 $analytics
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
+<link rel="icon" href="$BaseUrl/favicon.ico" sizes="32x32"><link rel="icon" href="$BaseUrl/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="$BaseUrl/apple-touch-icon.png">
 </head>
 <body>
 <div class="wrap page">
@@ -1276,7 +1280,12 @@ $digestBody = New-Object System.Text.StringBuilder
 if ($top.Count) {
   $waLines = @("*The African Street Journal* - $digestDay", '')
   foreach ($d in $top) { $waLines += "*$($d.country)*: $($d.headline)"; $waLines += $d.url; $waLines += '' }
-  $waLines += "All 55 countries, every story sourced: $BaseUrl/"
+  $waLines += "All 55 countries, every source named and linked: $BaseUrl/"
+  # The same post as plain text, for the owner's iPhone Shortcut (fetch, copy, open
+  # the channel): WhatsApp Channels have no posting API.
+  $waTextDir = Join-Path $root 'digest'
+  New-Item -ItemType Directory -Force -Path $waTextDir | Out-Null
+  [IO.File]::WriteAllText((Join-Path $waTextDir 'whatsapp.txt'), (($waLines -join "`n").TrimEnd() + "`n"), (New-Object Text.UTF8Encoding($false)))
   [void]$digestBody.Append((New-DigestBlock 'dg-wa' 'WhatsApp - groups, Status, Channel' ($waLines -join "`n") $top[0].url))
   $fbLines = @("Today on The African Street Journal ($digestDay):", '')
   foreach ($d in $top) { $fbLines += "$($d.country) - $($d.headline)"; $fbLines += $d.url; $fbLines += '' }
@@ -1305,6 +1314,7 @@ $digestHtml = @"
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
+<link rel="icon" href="$BaseUrl/favicon.ico" sizes="32x32"><link rel="icon" href="$BaseUrl/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="$BaseUrl/apple-touch-icon.png">
 <style>.dg{margin:0 0 26px}.dg textarea{width:100%;box-sizing:border-box;background:#1b1b1b;color:#ece8e1;border:1px solid #333;border-radius:6px;padding:12px;font:15px/1.5 system-ui,sans-serif;resize:vertical}
 .dg-actions{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0}.dg-actions a,.dg-actions button{font:600 15px system-ui,sans-serif;padding:9px 14px;border-radius:6px;border:1px solid #3a3a3a;background:#222;color:#f3efe8;text-decoration:none;cursor:pointer}
 .dg-actions a:hover,.dg-actions button:hover{border-color:#5fbf6a}details{border-top:1px solid #262626;padding:10px 0}summary{cursor:pointer;font:600 16px system-ui,sans-serif}</style>
@@ -1373,6 +1383,7 @@ $hubHtml = @"
 <meta name="theme-color" content="#131313">
 <script>(function(){var t;try{t=localStorage.getItem('asj:theme')}catch(e){}if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m&&t==='light')m.setAttribute('content','#f5f2eb')})()</script>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
+<link rel="icon" href="$BaseUrl/favicon.ico" sizes="32x32"><link rel="icon" href="$BaseUrl/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="$BaseUrl/apple-touch-icon.png">
 $analytics
 </head>
 <body>

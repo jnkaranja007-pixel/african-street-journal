@@ -135,6 +135,8 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
         run: |
           # Warn days before the money runs out, not the morning after. Never fails the run.
           if (-not $env:OPENROUTER_API_KEY) { Write-Host 'No OpenRouter key; skipping credit check.'; exit 0 }
@@ -167,6 +169,7 @@ jobs:
             $body = "@jnkaranja007-pixel - OpenRouter credit is down to `$$('{0:N2}' -f $remaining), about $nights more nightly editions at ~`$0.13 each. Top up at https://openrouter.ai/settings/credits.$limitNote (If GEMINI_API_KEY is set, the desk falls back to Google's free tier when credit runs out.)"
             $existing = gh issue list --state open --search "$title in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq $title } | Select-Object -First 1
             if ($existing) { gh issue comment $existing.number --body $body } else { gh issue create --title $title --body $body }
+            ./scripts/send-owner-alert.ps1 -Text ("ASJ: OpenRouter credit is down to `${0:N2}. Top up at https://openrouter.ai/settings/credits" -f $remaining)
           } else {
             $existing = gh issue list --state open --search "ASJ OpenRouter credit is low in:title" --json number,title --limit 5 | ConvertFrom-Json | Where-Object { $_.title -eq 'ASJ OpenRouter credit is low' } | Select-Object -First 1
             if ($existing) { gh issue close $existing.number --comment ("Credit is back to `${0:N2}. Closing." -f $remaining) }
@@ -428,7 +431,7 @@ jobs:
           key: asj-social-v1-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: asj-social-v1-
 
-      - name: Post new stories to Telegram and Bluesky
+      - name: Post new stories to Telegram, Bluesky and email
         if: steps.guard.outputs.stale == 'true'
         continue-on-error: true
         shell: pwsh
@@ -437,11 +440,17 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
         run: |
           # Each service switches on when its secrets are set (Settings > Secrets and
           # variables > Actions); with none set this logs one line and sends nothing.
           # Never fails the run.
           ./scripts/post-social.ps1
+          # A separate note when a free-floating African currency moved 2% or more
+          # against the dollar since the last reference rate (Telegram only).
+          ./scripts/fx-alerts.ps1
+          # The morning email (Buttondown), once BUTTONDOWN_API_KEY is set.
+          ./scripts/send-newsletter.ps1
 
       - name: Save the social post log
         if: steps.guard.outputs.stale == 'true' && hashFiles('data/social-posted.json') != ''
@@ -455,6 +464,8 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
         run: |
           # The desk ran out of OpenRouter credit on 6 September 2026 and failed every
           # run for fifteen days. Every one of those runs went red, and none of it
@@ -517,6 +528,7 @@ jobs:
             gh issue create --title $title --body $body
             Write-Host 'Opened a new issue'
           }
+          ./scripts/send-owner-alert.ps1 -Text "ASJ desk failed at $stamp. $reason $runUrl"
 
       - name: Close the alarm once the desk publishes
         if: success() && steps.guard.outputs.stale == 'true'

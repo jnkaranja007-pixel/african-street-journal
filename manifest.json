@@ -2,11 +2,11 @@
   "id": "./",
   "name": "The African Street Journal",
   "short_name": "ASJ",
-  "description": "Original daily stories, market context, farm signals and diaspora tools for all 55 African countries.",
+  "description": "Daily news from all 55 African countries, every source named and linked, with markets, farming and diaspora data for each.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f2eb",
+  "background_color": "#131313",
   "theme_color": "#f5f2eb",
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },

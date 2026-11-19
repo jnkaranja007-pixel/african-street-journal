@@ -435,6 +435,21 @@ $SITES = @(
        $num = { param($s) [double]::Parse(($s -replace ' ', '' -replace ',', '.'), $Inv) }
        return @{ level = (& $num $hit.Groups['c'].Value); pct = (& $num $hit.Groups['pct'].Value); date = ('{0:D4}-{1:D2}-{2:D2}' -f [int]$u.Groups['y'].Value, $mon, [int]$u.Groups['d'].Value) }
      } }
+  # Lusaka: luse.co.zm answers 403 to anything that is not a desktop browser, so Zambia
+  # was the one exchange only the owner's PC could refresh. Mansa Markets publishes a daily
+  # LuSE summary whose headline carries the index, its move and the session date: "LuSE
+  # Market Summary - LASI Index -0.57% at 24,404.88 on Wednesday, 18 November 2026"
+  # (probed 19 Nov 2026; robots.txt allows everything but /api/).
+  @{ code = 'LuSE'; site = 'mansamarkets.com'; url = 'https://www.mansamarkets.com/zambia'
+     name = 'LuSE All Share Index (LASI)'; labelRx = '\bLASI\b|All Share'; sameDay = $false
+     parse = {
+       param($page)
+       $hit = [regex]::Match($page, 'LASI Index (?<pct>[+-]?\d+(?:\.\d+)?)% at (?<lvl>\d[\d,]*\.\d+) on [A-Za-z]+,? (?<d>\d{1,2} [A-Za-z]+ \d{4})')
+       if (-not $hit.Success) { return $null }
+       $d = [datetime]::MinValue
+       if (-not [datetime]::TryParseExact($hit.Groups['d'].Value, 'd MMMM yyyy', $Inv, [Globalization.DateTimeStyles]::None, [ref]$d)) { return $null }
+       return @{ level = [double]::Parse(($hit.Groups['lvl'].Value -replace ',', ''), $Inv); pct = [double]::Parse($hit.Groups['pct'].Value, $Inv); date = $d.ToString('yyyy-MM-dd') }
+     } }
 )
 function Invoke-SiteLayer($List) {
 foreach ($site in $List) {
