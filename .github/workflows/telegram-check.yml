@@ -1,0 +1,45 @@
+name: Check Telegram setup
+
+# Run by hand after changing a Telegram secret. Sends nothing: it asks Telegram who the
+# bot is (getMe) and whether it can see the channel (getChat), and says which secret is
+# wrong. Never prints a token.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check the bot token and channel
+        shell: pwsh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
+        run: |
+          $t = [string]$env:TELEGRAM_BOT_TOKEN
+          if (-not $t) { Write-Host '::error::TELEGRAM_BOT_TOKEN is not set.'; exit 1 }
+          $shape = $t -match '^\d{5,}:[A-Za-z0-9_-]{30,}$'
+          Write-Host ("Token: {0} characters; shaped like a bot token (digits, colon, ~35 letters): {1}; spaces or line breaks inside: {2}; starts with 'bot': {3}" -f $t.Length, $shape, ($t -match '\s'), ($t -match '^bot'))
+          try {
+            $me = Invoke-RestMethod -Uri "https://api.telegram.org/bot$t/getMe" -TimeoutSec 20
+            Write-Host "getMe: OK, the token belongs to @$($me.result.username)"
+          } catch {
+            $code = [int]$_.Exception.Response.StatusCode
+            $why = if ($code -eq 404) { 'the token is malformed (Telegram does not recognise the address). Copy only the token from BotFather: /mybots > the bot > API Token.' } elseif ($code -eq 401) { 'the token was revoked or replaced in BotFather. Copy the current one.' } else { 'see the status code.' }
+            Write-Host "::error::getMe failed with HTTP $code - $why Then: gh secret set TELEGRAM_BOT_TOKEN"
+            exit 1
+          }
+          foreach ($pair in @(@('TELEGRAM_CHAT_ID', $env:TELEGRAM_CHAT_ID), @('TELEGRAM_ALERT_CHAT_ID', $env:TELEGRAM_ALERT_CHAT_ID))) {
+            if (-not $pair[1]) { Write-Host "$($pair[0]): not set"; continue }
+            try {
+              $c = Invoke-RestMethod -Uri "https://api.telegram.org/bot$t/getChat" -Method Post -Body @{ chat_id = $pair[1] } -TimeoutSec 20
+              Write-Host "$($pair[0]): OK, the bot can reach this chat (type $($c.result.type))"
+            } catch {
+              Write-Host "::warning::$($pair[0]): the bot cannot reach this chat (HTTP $([int]$_.Exception.Response.StatusCode)). For the channel, the bot must be an admin; for alerts, send /start to the bot first."
+            }
+          }
