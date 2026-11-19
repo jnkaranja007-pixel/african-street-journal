@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
     inputs:
       models:
-        description: 'Comma-separated OpenRouter model slugs.'
+        description: 'Comma-separated OpenRouter model slugs; gemini:<model> uses the free Google AI Studio key.'
         required: false
         default: 'google/gemini-2.5-flash-lite,deepseek/deepseek-v4-flash-0731,qwen/qwen3.8-flash,openai/gpt-6-luna,anthropic/claude-haiku-5.5'
       countries:
@@ -119,6 +119,7 @@ jobs:
         continue-on-error: true
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GEMINI_KEY_FOR_BAKE: ${{ secrets.GEMINI_API_KEY }}
           MODEL: ${{ matrix.model }}
           COUNTRIES: ${{ github.event.inputs.countries }}
           EDITOR: ${{ github.event.inputs.editor }}
@@ -126,9 +127,18 @@ jobs:
           New-Item -ItemType Directory -Force bake | Out-Null
           $only = if ($env:COUNTRIES) { $env:COUNTRIES.Trim() } else { 'ng,ke,za,gh,eg,sn' }
           $clock = [Diagnostics.Stopwatch]::StartNew()
+          # "gemini:<model>" writes through Google AI Studio's free tier (GEMINI_API_KEY)
+          # instead of OpenRouter. The key is handed over only for those entries: set for an
+          # OpenRouter model, write-briefs would add Gemini as a silent fallback.
+          $model = $env:MODEL.Trim()
+          if ($model -like 'gemini:*') {
+            if (-not $env:GEMINI_KEY_FOR_BAKE) { Write-Host '::error::GEMINI_API_KEY secret is not set'; exit 1 }
+            $env:ASJ_PROVIDER = 'gemini'; $env:GEMINI_API_KEY = $env:GEMINI_KEY_FOR_BAKE.Trim()
+            $model = $model.Substring(7)
+          }
           # The fallback list is the model itself, so OpenRouter never serves another one.
           $editor = if ($env:EDITOR) { $env:EDITOR.Trim() } else { 'none' }
-          ./scripts/write-briefs.ps1 -Only $only -Model $env:MODEL -FallbackModels $env:MODEL -RewriteModel none -EditorModel $editor `
+          ./scripts/write-briefs.ps1 -Only $only -Model $model -FallbackModels $model -RewriteModel none -EditorModel $editor `
             -NoCache -NoCountryRanking -NoFrontRanking -JsonMode `
             -OutFile bake/stories.json -MetricsFile bake/metrics.json *>&1 | Tee-Object -FilePath bake/write.log
           $code = $LASTEXITCODE
