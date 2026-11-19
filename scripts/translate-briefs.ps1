@@ -96,14 +96,27 @@ function Test-Translation($en, $fr) {
 function Invoke-Translate($items, [string]$key) {
   $payload = @($items | ForEach-Object { [ordered]@{ id = $_.id; headline = $_.b.headline; dek = $_.b.dek; why = $_.b.why; paragraphs = @($_.b.paragraphs) } })
   $user = "Translate these " + $payload.Count + " briefs into French.`n" + (ConvertTo-Json -InputObject @{ stories = $payload } -Depth 6 -Compress)
+  # A JSON schema, as the desk sends Gemini (json_object alone is refused with HTTP 400).
+  $item = [ordered]@{
+    type = 'object'; additionalProperties = $false
+    properties = [ordered]@{ id = @{ type = 'string' }; headline = @{ type = 'string' }; dek = @{ type = 'string' }; why = @{ type = 'string' }; paragraphs = @{ type = 'array'; items = @{ type = 'string' } } }
+    required = @('id', 'headline', 'dek', 'why', 'paragraphs')
+  }
   $body = [ordered]@{
-    model = $Model; temperature = 0.2; response_format = @{ type = 'json_object' }
+    model = $Model; temperature = 0.2
+    response_format = [ordered]@{ type = 'json_schema'; json_schema = [ordered]@{ name = 'asj_french_desk'; strict = $true
+      schema = [ordered]@{ type = 'object'; additionalProperties = $false; properties = @{ stories = @{ type = 'array'; items = $item } }; required = @('stories') } } }
     messages = @(@{ role = 'system'; content = $SYSTEM }, @{ role = 'user'; content = $user })
-  } | ConvertTo-Json -Depth 8 -Compress
+  } | ConvertTo-Json -Depth 12 -Compress
+  $headers = @{ Authorization = "Bearer $key"; 'x-goog-api-key' = $key }
   $wait = 8
   for ($try = 1; $try -le 5; $try++) {
     try {
-      $r = Invoke-RestMethod -Uri $url -Method Post -Headers @{ 'x-goog-api-key' = $key } -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -TimeoutSec 120
+      # Invoke-WebRequest and an explicit UTF-8 decode: Windows PowerShell's
+      # Invoke-RestMethod guesses the charset and mangles accents.
+      $resp = Invoke-WebRequest -Uri $url -Method Post -Headers $headers -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -TimeoutSec 120 -UseBasicParsing
+      $raw = if ($resp.RawContentStream) { [Text.Encoding]::UTF8.GetString($resp.RawContentStream.ToArray()) } else { [string]$resp.Content }
+      $r = $raw | ConvertFrom-Json
       $text = [string]$r.choices[0].message.content
       $text = $text -replace '^\s*```(?:json)?\s*', '' -replace '\s*```\s*$', ''
       return ($text | ConvertFrom-Json).stories
@@ -113,7 +126,9 @@ function Invoke-Translate($items, [string]$key) {
         Write-Host "[fr] HTTP $code on try $try; waiting ${wait}s"
         Start-Sleep -Seconds $wait; $wait = [Math]::Min(120, $wait * 2); continue
       }
-      Write-Host "[fr] request failed: HTTP $code $($_.Exception.Message)"
+      $detail = [string]$_.ErrorDetails.Message
+      if ($detail.Length -gt 400) { $detail = $detail.Substring(0, 400) }
+      Write-Host "[fr] request failed: HTTP $code $($_.Exception.Message) $detail"
       return $null
     }
   }
