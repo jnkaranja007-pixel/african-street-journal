@@ -105,3 +105,17 @@ article h2{font:650 clamp(20px,2.6vw,24px)/1.3 system-ui,-apple-system,'Segoe UI
 .share-after{margin:30px 0 4px;padding-top:22px;border-top:1px solid var(--c-232323)}
 .story .share-label,.story .asj-kit-share-label{font:600 15px/1.3 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0;color:var(--c-cfcac3);margin:0 0 10px}
 .story-head{padding-bottom:18px;margin-bottom:22px}
+/* 18 Nov 2026: the name in the masthead is set as the app sets its wordmark, and a
+   country page opens with one clear button into the app and a quiet RSS link. */
+.masthead>a:first-child{font:700 19px/1.15 'Playfair Display',Georgia,'Times New Roman',serif!important;color:var(--c-f2f0ed)!important}
+/* The brand lockup, the same in the app's headers and on every generated page: Playfair,
+   "The" in light italic, "Journal" in green. It always links to the front page. */
+.brand-lockup em{font-style:italic;font-weight:400}
+.brand-lockup b{font-weight:700;color:var(--c-4caf50)}
+.masthead>a.brand-lockup:hover b,.masthead>a.brand-lockup:focus-visible b{text-decoration:underline;text-underline-offset:3px}
+.country-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin:18px 0 6px}
+.country-actions .open{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;margin:0!important;border:0;border-radius:8px;background:var(--c-2f6b3b);color:var(--c-f3efe8);text-decoration:none}
+.country-actions .open:hover,.country-actions .open:focus-visible{background:var(--c-2f5c33)}
+.country-actions .rss{font:500 14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--c-a8a39d);text-decoration:none;border-bottom:1px solid var(--c-3a3733)}
+article .dek{margin:0 0 12px}
+@media (max-width:520px){.country-actions .open{flex:1 1 100%;justify-content:center}}
