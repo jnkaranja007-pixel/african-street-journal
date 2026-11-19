@@ -2,7 +2,7 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-18T12:16:46Z",
+ "updated": "2026-11-19T10:32:35Z",
  "items": {
   "bf/aes-ministers-review-second-year-roadmap-in-ouagadougou-d87e3d": {
    "s": 87,
@@ -19,6 +19,10 @@
   "cd/dr-congo-president-signs-referendum-law-7043dd": {
    "s": 82,
    "on": "2026-11-12"
+  },
+  "cd/dr-congo-s-mining-sector-gives-1-1-million-to-ebola-response-be8b16": {
+   "s": 56,
+   "on": "2026-11-19"
   },
   "cd/ebola-victims-bodies-sprayed-with-fuel-in-dr-congo-556996": {
    "s": 66,
@@ -80,6 +84,10 @@
    "s": 60,
    "on": "2026-11-16"
   },
+  "eg/egypt-directs-1-5-billion-imf-tranche-to-central-bank-fa31bd": {
+   "s": 86,
+   "on": "2026-11-19"
+  },
   "eg/egypt-lawmakers-summon-minister-after-fatal-train-crash-f6391e": {
    "s": 77,
    "on": "2026-11-12"
@@ -88,6 +96,14 @@
    "s": 58,
    "on": "2026-11-18"
   },
+  "eh/us-envoy-urges-ceasefire-as-un-peacekeepers-leave-western-8b45ed": {
+   "s": 75,
+   "on": "2026-11-19"
+  },
+  "er/eritrea-and-ethiopia-trade-artillery-fire-near-disputed-9ee5c1": {
+   "s": 89,
+   "on": "2026-11-19"
+  },
   "er/eritrea-and-ethiopia-trade-drone-and-artillery-strikes-ba8977": {
    "s": 87,
    "on": "2026-11-16"
@@ -95,6 +111,10 @@
   "er/ethiopia-accuses-eritrea-of-moving-troops-into-tigray-f865b2": {
    "s": 87,
    "on": "2026-11-12"
+  },
+  "et/ethiopian-airlines-investigates-shebamiles-customer-data-dd0012": {
+   "s": 70,
+   "on": "2026-11-19"
   },
   "et/ethiopian-army-takes-control-of-tigray-capital-mekelle-ff9336": {
    "s": 68,
@@ -124,6 +144,10 @@
    "s": 90,
    "on": "2026-11-15"
   },
+  "gm/poll-shows-barrow-ahead-by-a-narrow-margin-in-gambia-s-a1ab62": {
+   "s": 53,
+   "on": "2026-11-19"
+  },
   "gw/guinea-bissau-president-attends-simandou-mining-summit-f0161a": {
    "s": 75,
    "on": "2026-11-13"
@@ -135,6 +159,10 @@
   "ke/kenya-holds-fuel-pump-prices-with-sh4-6bn-subsidy-f6ea72": {
    "s": 88,
    "on": "2026-11-15"
+  },
+  "ke/kenya-uses-ksh4-6-billion-to-hold-diesel-price-at-ksh227-76-23c980": {
+   "s": 110,
+   "on": "2026-11-19"
   },
   "ke/kenyan-government-urges-1-5-million-flood-prone-residents-255ab1": {
    "s": 88,
@@ -200,6 +228,10 @@
    "s": 78,
    "on": "2026-11-12"
   },
+  "mz/mozambique-approves-exxonmobil-s-amended-rovuma-lng-plan-cf3f08": {
+   "s": 77,
+   "on": "2026-11-19"
+  },
   "mz/mozambique-police-urge-calm-as-ex-presidential-candidate-724005": {
    "s": 92,
    "on": "2026-11-17"
@@ -207,6 +239,10 @@
   "ne/niger-orders-mahamid-arabs-to-leave-by-31-december-2d66a4": {
    "s": 61,
    "on": "2026-11-18"
+  },
+  "ng/naira-firms-slightly-in-official-market-as-parallel-rate-a5acfb": {
+   "s": 99,
+   "on": "2026-11-19"
   },
   "ng/naira-slides-against-dollar-as-thursday-trading-opens-55b895": {
    "s": 111,
@@ -240,6 +276,10 @@
    "s": 92,
    "on": "2026-11-18"
   },
+  "sd/sudan-s-army-retakes-al-khuwai-and-pushes-toward-al-nahud-83b2de": {
+   "s": 74,
+   "on": "2026-11-19"
+  },
   "sd/sudanese-army-retakes-key-west-kordofan-town-from-rsf-bef732": {
    "s": 97,
    "on": "2026-11-14"
@@ -247,6 +287,10 @@
   "sd/un-food-chief-urges-end-to-sudan-war-amid-famine-crisis-61a3c6": {
    "s": 78,
    "on": "2026-11-14"
+  },
+  "sn/senegal-s-mps-reject-2027-budget-stopping-review-of-3de59c": {
+   "s": 78,
+   "on": "2026-11-19"
   },
   "sn/senegal-wins-right-to-host-2031-francophonie-games-ce1d7d": {
    "s": 77,
@@ -267,6 +311,10 @@
   "ss/south-sudan-begins-voter-registration-amid-logistical-strain-fbd1b0": {
    "s": 90,
    "on": "2026-11-15"
+  },
+  "ss/south-sudan-offers-14-oil-blocks-to-investors-06f693": {
+   "s": 69,
+   "on": "2026-11-19"
   },
   "ss/south-sudan-protests-exclusion-from-unisfa-mandate-drafting-5ed11a": {
    "s": 59,
