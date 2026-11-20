@@ -86,6 +86,15 @@ function Get-Numbers([string]$s) {
   return ,$set
 }
 
+function Test-NumberCrossed([string]$n, $other) {
+  if ($other.Contains($n) -or $other.Contains($n + '000') -or $other.Contains($n + '000000')) { return $true }
+  if ($n.Length -gt 3 -and $n.EndsWith('000') -and $other.Contains($n.Substring(0, $n.Length - 3))) { return $true }
+  if ($n.Length -gt 6 -and $n.EndsWith('000000') -and $other.Contains($n.Substring(0, $n.Length - 6))) { return $true }
+  if ($n -eq '00') { return $true }
+  if ($n.Length -le 2 -and [int]$n -le 12) { return $true }
+  return $false
+}
+
 function Test-Translation($en, $fr) {
   foreach ($f in 'headline', 'dek', 'why') {
     if ([string]$en.$f -and -not ([string]$fr.$f).Trim()) { return "empty $f" }
@@ -95,11 +104,19 @@ function Test-Translation($en, $fr) {
   if ($enParas.Count -ne $frParas.Count) { return "paragraphs $($enParas.Count) -> $($frParas.Count)" }
   $enText = ([string]$en.headline) + ' ' + ([string]$en.dek) + ' ' + ([string]$en.why) + ' ' + ($enParas -join ' ')
   $frText = ([string]$fr.headline) + ' ' + ([string]$fr.dek) + ' ' + ([string]$fr.why) + ' ' + ($frParas -join ' ')
+  $enNums = Get-Numbers $enText
   $frNums = Get-Numbers $frText
-  # "Sh5 trillion" can only become "5 000 milliards" in French or "5 mil milhoes" in Portuguese, so a number with three
-  # more zeros counts.
-  $missing = @((Get-Numbers $enText) | Where-Object { -not $frNums.Contains($_) -and -not $frNums.Contains($_ + '000') })
+  # Every number must cross over, and no new one may appear. Allowed, all seen in the
+  # first runs (20 Nov 2026), when the number check rejected 91 of 724 stories:
+  #  - three more zeros: "Sh5 trillion" can only be "5 000 milliards" in French;
+  #  - three or six fewer: "50,000" is "50 alf" (50 thousand) in Arabic, and
+  #    "250,000,000" can be "milioni 250" in Swahili;
+  #  - "11:00" is "11 h" in French, so a lone 00 may go;
+  #  - counts up to 12 may be written as words, either way ("three" / "3").
+  $missing = @($enNums | Where-Object { -not (Test-NumberCrossed $_ $frNums) })
   if ($missing.Count) { return "numbers missing: $($missing -join ', ')" }
+  $added = @($frNums | Where-Object { -not (Test-NumberCrossed $_ $enNums) })
+  if ($added.Count) { return "numbers not in the English: $($added -join ', ')" }
   $english = [regex]::Matches(" $frText ", '(?i)\s(the|and|with|which|said|after|from|would|will)\s').Count
   if ($english -ge 3) { return 'still reads as English' }
   if ($SCRIPT_CLASS) {

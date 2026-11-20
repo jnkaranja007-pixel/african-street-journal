@@ -19,8 +19,10 @@ on:
 permissions:
   contents: read
 
+# One queue per language: a shared group keeps only the newest pending run, so four
+# sheets asked for at once cancelled three of them (20 Nov 2026).
 concurrency:
-  group: asj-translate
+  group: asj-review-${{ github.event.inputs.lang }}
   cancel-in-progress: false
 
 jobs:
