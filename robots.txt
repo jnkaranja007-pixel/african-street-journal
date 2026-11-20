@@ -3,3 +3,7 @@ Allow: /
 
 Sitemap: https://africanstreetjournal.com/sitemap.xml
 Sitemap: https://africanstreetjournal.com/news-sitemap.xml
+Sitemap: https://africanstreetjournal.com/ar/sitemap.xml
+Sitemap: https://africanstreetjournal.com/fr/sitemap.xml
+Sitemap: https://africanstreetjournal.com/pt/sitemap.xml
+Sitemap: https://africanstreetjournal.com/sw/sitemap.xml
