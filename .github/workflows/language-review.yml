@@ -1,0 +1,52 @@
+name: Language review sheet
+
+# For a language still in review (data/i18n/<lang>.json says "status": "review"):
+# translate about ten of its country's newest stories with the free Gemini tier and lay
+# them out beside the English for a native speaker to judge. Nothing is committed or
+# published; the sheet is a run artifact.
+on:
+  workflow_dispatch:
+    inputs:
+      lang:
+        description: 'Language code (am, ha, so, zu)'
+        required: true
+        default: 'am'
+      count:
+        description: 'Stories to translate'
+        required: false
+        default: '10'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: asj-translate
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Translate and lay out
+        shell: pwsh
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ASJ_TRANSLATE_MODEL: ${{ vars.ASJ_TRANSLATE_MODEL }}
+          LANG_CODE: ${{ github.event.inputs.lang }}
+          COUNT: ${{ github.event.inputs.count }}
+        run: |
+          $l = $env:LANG_CODE.Trim()
+          if ($l -notmatch '^[a-z]{2,3}$' -or -not (Test-Path "data/i18n/$l.json")) { Write-Host "::error::no data/i18n/$l.json"; exit 1 }
+          New-Item -ItemType Directory -Force review | Out-Null
+          ./scripts/translate-briefs.ps1 -Lang $l -Max ([int]$env:COUNT) -Minutes 15 -OutFile "review/briefs-$l.json"
+          ./scripts/build-review-sheet.ps1 -Lang $l -InFile "review/briefs-$l.json" -OutFile "review/review-$l.html"
+
+      - name: Upload the sheet
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-${{ github.event.inputs.lang }}
+          path: review/

@@ -61,8 +61,15 @@ function Add-EditionFiles {
   $absent  = @($script:EDITION_PATHS | Where-Object { -not (Test-Path $_) })
   if ($absent.Count) { Write-Host "[publish] not present this run, skipped: $($absent -join ', ')" }
   if ($present.Count) { git add --all -- @present }
-  # Language editions (fr/, with data/i18n/fr.json) are published by their own workflow.
-  Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' -and -not (Test-Path (Join-Path 'data/i18n' "$($_.Name).json")) } |
+  # Language editions (fr/, the "path" of data/i18n/fr.json) are published by their own
+  # workflow. The folder is the file's path, not its name: so/ is Somalia, Somali is soomaali/.
+  $langDirs = @{}
+  foreach ($lf in @(Get-ChildItem -Path 'data/i18n' -Filter '*.json' -ErrorAction SilentlyContinue)) {
+    $seg = $lf.BaseName
+    try { $lp = [string](([IO.File]::ReadAllText($lf.FullName, [Text.Encoding]::UTF8) | ConvertFrom-Json).path); if ($lp) { $seg = $lp } } catch {}
+    $langDirs[$seg] = $true
+  }
+  Get-ChildItem -Directory | Where-Object { $_.Name -match '^[a-z]{2}$' -and -not $langDirs.ContainsKey($_.Name) } |
     ForEach-Object { git add --all -- "$($_.Name)" }
 }
 

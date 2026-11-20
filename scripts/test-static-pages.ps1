@@ -55,9 +55,16 @@ Check 'a US-format stamp is rejected, not passed through' ($us -eq '') "got '$us
 
 Write-Host '[static-pages] published artefacts'
 
-# Two-letter folders are countries, except the language editions (fr/ has a
-# data/i18n/fr.json and is checked by its own builder).
-function Test-LanguageDir([string]$Name) { return (Test-Path (Join-Path (Join-Path (Join-Path $root 'data') 'i18n') "$Name.json")) }
+# Two-letter folders are countries, except the language editions (fr/ is the "path" of
+# data/i18n/fr.json and is checked by its own builder). The folder is the file's "path",
+# not its name: Somali is so.json but lives in soomaali/, and so/ stays Somalia.
+$script:LANG_DIRS = @{}
+foreach ($lf in @(Get-ChildItem -Path (Join-Path (Join-Path $root 'data') 'i18n') -Filter '*.json' -ErrorAction SilentlyContinue)) {
+  $seg = $lf.BaseName
+  try { $p = [string](([IO.File]::ReadAllText($lf.FullName, [Text.Encoding]::UTF8) | ConvertFrom-Json).path); if ($p) { $seg = $p } } catch {}
+  $script:LANG_DIRS[$seg] = $true
+}
+function Test-LanguageDir([string]$Name) { return $script:LANG_DIRS.ContainsKey($Name) }
 $pages = @(Get-ChildItem -Path $root -Directory |
   Where-Object { $_.Name -match '^[a-z]{2}$' -and -not (Test-LanguageDir $_.Name) } |
   ForEach-Object { Join-Path $_.FullName 'index.html' } |

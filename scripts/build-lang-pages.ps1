@@ -36,6 +36,12 @@ function Write-Page([string]$Path, [string]$Html) {
 }
 
 $i18n = Read-Json (Join-Path $root "data\i18n\$Lang.json")
+if ([string]$i18n.status -eq 'review') {
+  # A language still being checked by a native speaker (scripts/build-review-sheet.ps1)
+  # gets no public pages.
+  Write-Host "[$Lang] in review; no pages built"
+  exit 0
+}
 $T = $i18n.ui
 $seg = [string]$i18n.path
 $langRoot = Join-Path $root $seg
