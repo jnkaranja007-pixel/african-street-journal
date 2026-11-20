@@ -1,8 +1,8 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Build the static pages of a translated edition (French first): /fr/, /fr/<cc>/,
-  /fr/<cc>/<slug>/ and /fr/sitemap.xml.
+  Build the static pages of a translated edition (French, Portuguese, Swahili, Arabic):
+  /<lang>/, /<lang>/<cc>/, /<lang>/<cc>/<slug>/ and /<lang>/sitemap.xml.
 .DESCRIPTION
   Reads the translations (data/briefs-<lang>.json, written by translate-briefs.ps1), the
   English edition they came from (data/briefs-state.json) and the edition's words and
@@ -49,7 +49,8 @@ function Get-CountryName([string]$code) { $n = [string]$i18n.countries.$code; if
 function Get-Topic([string]$t) { $n = [string]$i18n.topics.$t; if ($n) { return $n }; return $t }
 function Format-Day([string]$iso) {
   try { $d = [DateTimeOffset]::Parse($iso, $inv).UtcDateTime } catch { return '' }
-  return ('{0} {1} {2}' -f $d.Day, $i18n.months[$d.Month - 1], $d.Year)
+  $fmt = if ($i18n.dateFormat) { [string]$i18n.dateFormat } else { '{d} {m} {y}' }
+  return $fmt.Replace('{d}', [string]$d.Day).Replace('{m}', [string]$i18n.months[$d.Month - 1]).Replace('{y}', [string]$d.Year)
 }
 function Fill([string]$s, [string]$country) { return $s.Replace('{country}', $country) }
 
@@ -64,7 +65,25 @@ if (Get-Social 'instagram') { $follow.Add("<a href=""https://www.instagram.com/$
 if (Get-Social 'youtube') { $follow.Add("<a href=""https://www.youtube.com/@$(Get-Social 'youtube')"" rel=""me noopener"">YouTube</a>") }
 $followHtml = ''
 if ($follow.Count) { $followHtml = '<span class="follow"> &middot; ' + (Esc $T.follow) + ' ' + ($follow -join ' &middot; ') + '</span>' }
-$footer = '<footer>The African Street Journal &middot; ' + (Esc $T.footer) + $followHtml + '<script src="' + $BaseUrl + '/info-panel.js?v=143" defer></script></footer>'
+$footer = '<footer>The African Street Journal &middot; ' + (Esc $T.footer) + $followHtml + '<script src="' + $BaseUrl + '/info-panel.js?v=144" defer></script></footer>'
+
+# Right-to-left editions (Arabic): the shared stylesheet is written for left-to-right, so
+# mirror its few one-sided margins, open the menu the other way, and drop letter-spacing,
+# which breaks the joins between Arabic letters.
+$rtlCss = ''
+$arrow = '&rarr;'
+if ([string]$i18n.dir -eq 'rtl') {
+  $arrow = '&larr;'
+  $rtlCss = '<style>html[dir=rtl] *{letter-spacing:0!important;word-spacing:normal!important}' +
+    'html[dir=rtl] body,html[dir=rtl] h1,html[dir=rtl] h2,html[dir=rtl] p,html[dir=rtl] li,html[dir=rtl] .dek,html[dir=rtl] .rel-topic,html[dir=rtl] footer,html[dir=rtl] .src,html[dir=rtl] .meta{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Arabic","Noto Naskh Arabic",sans-serif;text-transform:none}' +
+    'html[dir=rtl] p,html[dir=rtl] li{line-height:1.8}' +
+    'html[dir=rtl] .why b{margin-right:0;margin-left:8px}html[dir=rtl] .src a{margin-right:0;margin-left:14px}' +
+    'html[dir=rtl] ul{padding-left:0;padding-right:20px}html[dir=rtl] .related ul{padding-right:0}' +
+    'html[dir=rtl] .asj-info--right .asj-info-menu{right:auto;left:0}html[dir=rtl] .brand-lockup{direction:ltr;unicode-bidi:isolate}' +
+    'html[dir=rtl] .asj-info-menu{text-align:right!important}html[dir=rtl] .asj-info .asj-info-menu>.asj-report::before{left:-200%;right:0}' +
+    'html[dir=rtl] .asj-info .asj-info-menu>a{text-align:right!important}html[dir=rtl] .asj-info .asj-info-menu .asj-follow span{margin-right:0;margin-left:auto}' +
+    'html[dir=rtl] .asj-info .asj-info-menu>.asj-follow,html[dir=rtl] .asj-info .asj-info-menu>.asj-langs{padding:8px 10px 0 2px!important}</style>'
+}
 
 $headCommon = @"
 <meta name="theme-color" content="#131313">
@@ -82,11 +101,12 @@ s.setAttribute('data-cf-beacon',JSON.stringify({token:c.cloudflare}));document.h
 <script>(function(){var c=navigator.connection;if(c&&(c.saveData||/^(slow-2g|2g|3g)$/.test(String(c.effectiveType||''))))return;var h=document.head,p=document.createElement('link');p.rel='preconnect';p.href='https://fonts.gstatic.com';p.crossOrigin='';h.appendChild(p);var l=document.createElement('link');l.rel='stylesheet';l.media='print';l.onload=function(){this.media='all';this.onload=null};l.href='https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap';h.appendChild(l)})()</script>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap"></noscript>
 <link rel="stylesheet" href="$BaseUrl/static-pages.css?v=74">
+$rtlCss
 <link rel="icon" href="$BaseUrl/favicon.ico" sizes="32x32"><link rel="icon" href="$BaseUrl/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="$BaseUrl/apple-touch-icon.png">
 "@
 
 function Get-Masthead([string]$crumbHtml, [string]$englishUrl) {
-  $menu = "<a href=""$BaseUrl/$seg/"">$(Esc $T.edition)</a><a href=""$BaseUrl/$seg/#pays"">$(Esc $T.menuCountries)</a><a href=""$englishUrl"" hreflang=""en"" lang=""en"">$(Esc $T.menuEnglish)</a><a href=""$BaseUrl/markets/"">$(Esc $T.menuMarkets)</a><a href=""$BaseUrl/about/"">$(Esc $T.menuAbout)</a><a href=""$BaseUrl/contact/"">$(Esc $T.menuContact)</a><a href=""$BaseUrl/corrections/"">$(Esc $T.menuCorrections)</a><a href=""$BaseUrl/privacy/"">$(Esc $T.menuPrivacy)</a>"
+  $menu = "<a href=""$BaseUrl/$seg/"">$(Esc $T.edition)</a><a href=""$BaseUrl/$seg/#all-countries"">$(Esc $T.menuCountries)</a><a href=""$englishUrl"" hreflang=""en"" lang=""en"">$(Esc $T.menuEnglish)</a><a href=""$BaseUrl/markets/"">$(Esc $T.menuMarkets)</a><a href=""$BaseUrl/about/"">$(Esc $T.menuAbout)</a><a href=""$BaseUrl/contact/"">$(Esc $T.menuContact)</a><a href=""$BaseUrl/corrections/"">$(Esc $T.menuCorrections)</a><a href=""$BaseUrl/privacy/"">$(Esc $T.menuPrivacy)</a>"
   return "<header class=""masthead""><a class=""brand-lockup"" href=""$BaseUrl/$seg/""><em>The</em> African Street <b>Journal</b></a>$crumbHtml<details class=""asj-info asj-info--right""><summary>$(Esc $T.menu)</summary><div class=""asj-info-menu"">$menu</div></details></header>"
 }
 
@@ -145,7 +165,8 @@ foreach ($f in $fresh) {
   $enUrl = "$BaseUrl/$($r.code)/$($r.slug)/"
   $paras = @($fr.paragraphs | ForEach-Object { "<p>$(Esc ([string]$_))</p>" }) -join "`n"
   $srcs = @($b.sources | Where-Object { $_.url -and $_.name })
-  $srcLinks = @($srcs | ForEach-Object { "<a href=""$(Esc $_.url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $_.name)</a>" })
+  # <bdi>: an English outlet name inside Arabic text keeps its place in the line.
+  $srcLinks = @($srcs | ForEach-Object { "<bdi><a href=""$(Esc $_.url)"" rel=""nofollow noopener"" target=""_blank"">$(Esc $_.name)</a></bdi>" })
   $byline = if ($srcLinks.Count -gt 1) { "$(Esc $T.sources) $(($srcLinks[0..($srcLinks.Count - 2)]) -join ', ') $(Esc $T.and) $($srcLinks[-1])" } elseif ($srcLinks.Count) { "$(Esc $T.source) $($srcLinks[0])" } else { '' }
   $words = (($fr.paragraphs -join ' ') -split '\s+').Count
   $mins = [Math]::Max(1, [int][Math]::Round($words / 200.0))
@@ -202,11 +223,11 @@ $headCommon
   <div class="meta">$(Esc $country) &middot; $(Esc (Get-Topic $r.topic))</div>
   <h1>$(Esc $r.headline)</h1>
   <p class="dek">$(Esc $r.dek)</p>
-  <p class="byline">$byline &middot; <time datetime="$($r.published)">$(Esc $day)</time> &middot; $mins $(Esc $T.readMin)</p>
+  <p class="byline">$byline &middot; <time datetime="$($r.published)">$(Esc $day)</time> &middot; <bdi>$(if ($T.readFormat) { Esc ([string]$T.readFormat).Replace('{n}', [string]$mins) } else { "$mins $(Esc $T.readMin)" })</bdi></p>
   </header>
 $paras
 <p class="why"><b>$(Esc $T.why)</b>$(Esc ([string]$fr.why))</p>
-<p class="meta"><a href="$enUrl" hreflang="en" lang="en">$(Esc $T.readEnglish) &rarr;</a> $(Esc $T.note)</p>
+<p class="meta"><a href="$enUrl" hreflang="en" lang="en">$(Esc $T.readEnglish) $arrow</a> $(Esc $T.note)</p>
   <div class="share-after">
   <p class="share-label">$(Esc $T.share)</p>
   <div class="share" data-url="$url" data-title="$(Esc $r.headline)">
@@ -223,7 +244,7 @@ $paras
   <nav class="related" aria-label="$(Esc (Fill $T.moreFrom $country))">
     $(if ($more.Count) { "<h2 class=""section-label"">$(Esc (Fill $T.moreFrom $country))</h2>$(Get-RelatedList $more)" })
     $(if ($latest.Count) { "<h2 class=""section-label"">$(Esc $T.latest)</h2>$(Get-RelatedList $latest -CountryLabel)" })
-    <p><a class="open" href="$BaseUrl/$seg/$($r.code)/">$(Esc (Fill $T.allCountry $country)) &rarr;</a></p>
+    <p><a class="open" href="$BaseUrl/$seg/$($r.code)/">$(Esc (Fill $T.allCountry $country)) $arrow</a></p>
   </nav>
   </main>
   $footer
@@ -295,7 +316,7 @@ $newest = if ($all.Count) { $all[0].published.Substring(0, 10) } else { '' }
 $lead = @($all | Where-Object { $_.frontRank -and $_.published.StartsWith($newest) } | Sort-Object { [int]$_.frontRank })
 $rest = @($all | Where-Object { $lead -notcontains $_ } | Select-Object -First ([Math]::Max(0, 60 - $lead.Count)))
 $countryLinks = @($codes | ForEach-Object { "<li><a href=""$BaseUrl/$seg/$_/"">$(Esc (Get-CountryName $_))</a></li>" }) -join ''
-$homeBody = "<h2 class=""section-label"">$(Esc $T.homeLatest)</h2>$(Get-StoryList (@($lead) + @($rest)) -CountryLabel)<h2 class=""section-label"" id=""pays"">$(Esc $T.homeCountries)</h2><nav class=""related""><ul class=""cols"">$countryLinks</ul></nav>"
+$homeBody = "<h2 class=""section-label"">$(Esc $T.homeLatest)</h2>$(Get-StoryList (@($lead) + @($rest)) -CountryLabel)<h2 class=""section-label"" id=""all-countries"">$(Esc $T.homeCountries)</h2><nav class=""related""><ul class=""cols"">$countryLinks</ul></nav>"
 Write-Page (Join-Path $langRoot 'index.html') (Get-ListPage $T.homeTitle $T.homeDek "$BaseUrl/$seg/" "$BaseUrl/" '' $homeBody)
 
 # --- sitemap with hreflang pairs, and the page list --------------------------------

@@ -338,54 +338,133 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
 }());
 
-// Language editions (v143). On a French page, the menu items this file adds are given
-// in French. On an English page, the menu gains a link to the French edition: to the
-// same story or country in French when that page exists, otherwise to /fr/. A story page
-// with a French twin also says so under its byline.
+// Language editions (v144): French, Portuguese, Swahili and Arabic, each built by
+// scripts/build-lang-pages.ps1 under /<code>/ with the English page's address.
+// - Every menu gains one "Languages" row linking the other editions: to this story's or
+//   country's twin when the page names one (hreflang), otherwise to that edition's
+//   country page or front page.
+// - An English story page offers its translation under the byline in the languages its
+//   country reads (French in Dakar, Swahili in Nairobi, Arabic in Cairo, Portuguese in
+//   Luanda) and in the reader's own browser language.
+// - On a translated page, the menu items this file adds are given in that language.
 (function () {
   var lang = (document.documentElement.getAttribute('lang') || 'en').slice(0, 2);
-  var FR = { 'Report a problem': 'Signaler un probl\u00e8me', 'Dark theme': 'Th\u00e8me sombre', 'Light theme': 'Th\u00e8me clair', 'Follow': 'Suivre' };
+  var EDITIONS = [
+    { code: 'fr', name: 'Fran\u00e7ais', read: 'Lire en fran\u00e7ais', dir: 'ltr',
+      countries: ['bf', 'bi', 'bj', 'cd', 'cf', 'cg', 'ci', 'cm', 'dj', 'dz', 'ga', 'gn', 'gq', 'km', 'ma', 'mg', 'ml', 'mr', 'mu', 'ne', 'rw', 'sc', 'sn', 'td', 'tg', 'tn'] },
+    { code: 'pt', name: 'Portugu\u00eas', read: 'Ler em portugu\u00eas', dir: 'ltr',
+      countries: ['ao', 'mz', 'gw', 'cv', 'st', 'gq'] },
+    { code: 'sw', name: 'Kiswahili', read: 'Soma kwa Kiswahili', dir: 'ltr',
+      countries: ['ke', 'tz', 'ug', 'rw', 'cd', 'bi'] },
+    { code: 'ar', name: '\u0627\u0644\u0639\u0631\u0628\u064a\u0629', read: '\u0627\u0642\u0631\u0623 \u0628\u0627\u0644\u0639\u0631\u0628\u064a\u0629', dir: 'rtl',
+      countries: ['eg', 'sd', 'ly', 'tn', 'dz', 'ma', 'mr', 'eh', 'so', 'dj', 'km', 'td', 'er'] }
+  ];
+  var WORDS = {
+    en: { languages: 'Languages' },
+    fr: { languages: 'Langues', 'Report a problem': 'Signaler un probl\u00e8me', 'Dark theme': 'Th\u00e8me sombre', 'Light theme': 'Th\u00e8me clair', 'Follow': 'Suivre' },
+    pt: { languages: 'L\u00ednguas', 'Report a problem': 'Reportar um problema', 'Dark theme': 'Tema escuro', 'Light theme': 'Tema claro', 'Follow': 'Seguir' },
+    sw: { languages: 'Lugha', 'Report a problem': 'Ripoti tatizo', 'Dark theme': 'Mandhari meusi', 'Light theme': 'Mandhari meupe', 'Follow': 'Tufuate' },
+    ar: { languages: '\u0627\u0644\u0644\u063a\u0627\u062a', 'Report a problem': '\u0627\u0644\u0625\u0628\u0644\u0627\u063a \u0639\u0646 \u0645\u0634\u0643\u0644\u0629', 'Dark theme': '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062f\u0627\u0643\u0646', 'Light theme': '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0641\u0627\u062a\u062d', 'Follow': '\u062a\u0627\u0628\u0639\u0646\u0627' }
+  };
+  var W = WORDS[lang] || WORDS.en;
+  var codes = EDITIONS.map(function (e) { return e.code; });
+  var RULE = 'var(--c-2c2c2c,var(--rule,#2c2c2c))';
+  var INK = 'var(--c-e8e6e3,var(--text,#e8e6e3))';
+  var MUTED = 'var(--c-8f8a83,var(--text-dim,#8f8a83))';
+  var HOVER_BG = 'var(--c-1f241f,var(--surface-raised,#1f241f))';
+  var GREEN = 'var(--c-66bb6a,var(--green-bright,#66bb6a))';
+  var SANS = "system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif";
+  var CSS =
+    '.asj-info .asj-info-menu>.asj-langs{grid-column:1 / -1;display:flex!important;flex-wrap:wrap;align-items:center;gap:2px;margin:6px 0 0!important;padding:8px 2px 0 10px!important;border-top:1px solid ' + RULE + '}' +
+    '.asj-info .asj-info-menu .asj-langs span{flex:1 0 100%;padding:2px 0 4px;color:' + MUTED + ';font:500 14px/1.2 ' + SANS + ';letter-spacing:0;text-transform:none}' +
+    '.asj-info .asj-info-menu .asj-langs a,.asj-info .asj-info-menu .asj-langs a:visited{display:inline-flex!important;align-items:center;min-height:38px;padding:0 9px!important;border-radius:8px;color:' + INK + '!important;font:500 15px/1 ' + SANS + '!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none}' +
+    '.asj-info .asj-info-menu .asj-langs a:hover,.asj-info .asj-info-menu .asj-langs a:focus-visible{background:' + HOVER_BG + ';color:' + GREEN + '!important;outline:none}' +
+    '.asj-lang-note a+a{margin-inline-start:14px}';
+
+  // Path after any language folder: "/fr/ke/slug/" and "/ke/slug/" are both "/ke/slug/".
+  var path = location.pathname;
+  if (lang !== 'en' && path.indexOf('/' + lang + '/') === 0) path = path.slice(lang.length + 1);
+  var m = /^\/([a-z]{2})\/([a-z0-9-]+\/)?$/.exec(path);
+  var country = m && codes.indexOf(m[1]) < 0 ? m[1] : '';
+
+  function twin(code) {
+    var l = document.querySelector('link[rel="alternate"][hreflang="' + code + '"]');
+    return l ? l.getAttribute('href') : '';
+  }
+  function target(e) {
+    return twin(e.code) || (country ? '/' + e.code + '/' + country + '/' : '/' + e.code + '/');
+  }
   function relabel() {
+    if (lang === 'en') return;
     Array.prototype.forEach.call(document.querySelectorAll('.asj-info-menu a, .asj-info-menu button, .asj-info-menu span'), function (el) {
       if (el.children.length) return;
       var t = (el.textContent || '').trim();
-      if (FR[t]) el.textContent = FR[t];
+      if (W[t]) el.textContent = W[t];
     });
   }
-  function frenchLink(href) {
+  function menuRow() {
+    if (!document.getElementById('asj-langs-style')) {
+      var st = document.createElement('style'); st.id = 'asj-langs-style'; st.textContent = CSS;
+      (document.head || document.documentElement).appendChild(st);
+    }
     Array.prototype.forEach.call(document.querySelectorAll('.asj-info-menu'), function (menu) {
-      var a = menu.querySelector('a.asj-lang-fr');
-      if (!a) {
-        a = document.createElement('a');
-        a.className = 'asj-lang-fr'; a.lang = 'fr'; a.hreflang = 'fr'; a.textContent = 'Fran\u00e7ais';
-        menu.insertBefore(a, menu.querySelector('.asj-report') || menu.querySelector('.asj-theme'));
+      Array.prototype.forEach.call(menu.querySelectorAll('a.asj-lang-fr'), function (old) { old.remove(); });
+      var row = menu.querySelector('.asj-langs');
+      if (!row) {
+        row = document.createElement('div'); row.className = 'asj-langs';
+        var label = document.createElement('span'); label.textContent = W.languages; row.appendChild(label);
+        EDITIONS.forEach(function (e) {
+          if (e.code === lang) return;
+          var a = document.createElement('a');
+          a.lang = e.code; a.hreflang = e.code; a.dir = e.dir; a.textContent = e.name;
+          a.setAttribute('data-lang', e.code);
+          row.appendChild(a);
+        });
+        menu.insertBefore(row, menu.querySelector('.asj-follow'));
       }
-      a.href = href;
+      Array.prototype.forEach.call(row.querySelectorAll('a[data-lang]'), function (a) {
+        var e = EDITIONS[codes.indexOf(a.getAttribute('data-lang'))];
+        a.href = target(e);
+      });
+    });
+  }
+  function note(e, href) {
+    var by = document.querySelector('article.story .byline');
+    if (!by) return;
+    var p = document.querySelector('.asj-lang-note');
+    if (!p) {
+      p = document.createElement('p'); p.className = 'meta asj-lang-note';
+      by.parentNode.insertBefore(p, by.nextSibling);
+    }
+    if (p.querySelector('[lang="' + e.code + '"]')) return;
+    var a = document.createElement('a');
+    a.href = href; a.lang = e.code; a.hreflang = e.code; a.dir = e.dir;
+    a.textContent = e.read + (e.dir === 'rtl' ? ' \u2190' : ' \u2192');
+    p.appendChild(a);
+  }
+  function offerTranslations() {
+    if (lang !== 'en' || !country || !m[2]) return;
+    var mine = (navigator.languages || [navigator.language || '']).map(function (l) { return String(l).slice(0, 2).toLowerCase(); });
+    var c = navigator.connection;
+    EDITIONS.forEach(function (e) {
+      if (e.countries.indexOf(country) < 0 && mine.indexOf(e.code) < 0) return;
+      var t = twin(e.code);
+      if (t) { note(e, t); return; }
+      // A story newer than this page's last build: ask whether its twin is out yet.
+      if (c && c.saveData) return;
+      var url = '/' + e.code + path;
+      fetch(url, { method: 'HEAD', credentials: 'same-origin' }).then(function (r) {
+        if (!r.ok) return;
+        note(e, url);
+        Array.prototype.forEach.call(document.querySelectorAll('.asj-langs a[data-lang="' + e.code + '"]'), function (a) { a.href = url; });
+      }).catch(function () {});
     });
   }
   function start() {
-    if (lang === 'fr') {
-      relabel();
-      document.addEventListener('click', function (e) { if (e.target && e.target.closest && e.target.closest('.asj-theme')) setTimeout(relabel, 0); });
-      return;
-    }
-    if (lang !== 'en') return;
-    frenchLink('/fr/');
-    var path = location.pathname;
-    if (!/^\/[a-z]{2}\/([a-z0-9-]+\/)?$/.test(path) || path.indexOf('/fr/') === 0) return;
-    var c = navigator.connection;
-    if (c && c.saveData) return;
-    fetch('/fr' + path, { method: 'HEAD', credentials: 'same-origin' }).then(function (r) {
-      if (!r.ok) return;
-      frenchLink('/fr' + path);
-      var by = document.querySelector('article.story .byline');
-      if (by && !document.querySelector('.asj-lang-note')) {
-        var p = document.createElement('p');
-        p.className = 'meta asj-lang-note'; p.lang = 'fr';
-        var l = document.createElement('a'); l.href = '/fr' + path; l.hreflang = 'fr'; l.textContent = 'Lire en fran\u00e7ais \u2192';
-        p.appendChild(l); by.parentNode.insertBefore(p, by.nextSibling);
-      }
-    }).catch(function () {});
+    menuRow();
+    relabel();
+    if (lang !== 'en') document.addEventListener('click', function (ev) { if (ev.target && ev.target.closest && ev.target.closest('.asj-theme')) setTimeout(relabel, 0); });
+    offerTranslations();
   }
   function later() { setTimeout(start, 0); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', later); else later();

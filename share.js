@@ -3,10 +3,12 @@
   var bar = document.querySelector('.share'); if (!bar) return;
   var url = bar.getAttribute('data-url') || location.href, title = bar.getAttribute('data-title') || document.title;
   var status = bar.querySelector('.share-status');
+  // The translated editions say it in their own language.
+  var COPIED = { fr: "Lien copi\u00e9", pt: "Liga\u00e7\u00e3o copiada", sw: "Kiungo kimenakiliwa", ar: "\u062a\u0645 \u0646\u0633\u062e \u0627\u0644\u0631\u0627\u0628\u0637" }[(document.documentElement.lang || "en").slice(0, 2)] || "Link copied";
   function say(t) { if (status) { status.textContent = t; setTimeout(function () { status.textContent = ''; }, 2400); } }
   var copy = bar.querySelector('.share-copy');
   if (copy) copy.addEventListener('click', function () {
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function () { say('Link copied'); }, function () { say(url); });
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function () { say(COPIED); }, function () { say(url); });
     else { window.prompt('Copy this link', url); }
   });
   var nat = bar.querySelector('.share-native');
@@ -24,7 +26,7 @@
   if (window.ASJ_STORY_KIT || !document.querySelector('article.story')) return;
   var me = document.currentScript, src = (me && me.src) || '';
   var s = document.createElement('script');
-  s.src = (src ? src.replace(/share\.js(\?.*)?$/, '') : '/') + 'story-kit.js?v=143';
+  s.src = (src ? src.replace(/share\.js(\?.*)?$/, '') : '/') + 'story-kit.js?v=144';
   s.async = true;
   document.head.appendChild(s);
 }());

@@ -1,15 +1,26 @@
-name: French edition
+name: Language editions
 
-# After each desk edition, translate the new stories into French with the free Gemini
-# tier (scripts/translate-briefs.ps1) and rebuild /fr/ (scripts/build-lang-pages.ps1).
-# Only new or changed stories are sent, so a run after a skipped desk attempt ends in
-# seconds. The English edition never waits for this: if Gemini is busy, the French
-# pages simply arrive with the next run.
+# After each desk edition, translate the new stories with the free Gemini tier
+# (scripts/translate-briefs.ps1) and rebuild each language's pages
+# (scripts/build-lang-pages.ps1): French /fr/, Portuguese /pt/, Swahili /sw/ and
+# Arabic /ar/. One language after another, because they share one key's rate limit.
+# Only new or changed stories are sent, so a normal run takes minutes; a new language's
+# first run catches up on the whole edition within its time budget and finishes the rest
+# on the next run. The English edition never waits for this.
 on:
   workflow_run:
     workflows: ["Update ASJ Desk"]
     types: [completed]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      languages:
+        description: 'Languages to run, space separated (default: all)'
+        required: false
+        default: 'fr pt sw ar'
+      minutes:
+        description: 'Translation time budget per language, minutes'
+        required: false
+        default: '22'
 
 permissions:
   contents: write
@@ -19,37 +30,47 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  french:
+  editions:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 110
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           ref: main
 
-      - name: Translate new stories
+      - name: Translate and build each language
         shell: pwsh
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ASJ_TRANSLATE_MODEL: ${{ vars.ASJ_TRANSLATE_MODEL }}
-        run: ./scripts/translate-briefs.ps1 -Minutes 55
-
-      - name: Build the French pages
-        shell: pwsh
-        run: ./scripts/build-lang-pages.ps1 -Lang fr
+          LANGS: ${{ github.event.inputs.languages || 'fr pt sw ar' }}
+          MINUTES: ${{ github.event.inputs.minutes || '22' }}
+        run: |
+          foreach ($l in ($env:LANGS -split '\s+' | Where-Object { $_ })) {
+            if (-not (Test-Path "data/i18n/$l.json")) { Write-Host "[$l] no data/i18n/$l.json; skipped"; continue }
+            # One language failing never costs the others their pages.
+            try {
+              ./scripts/translate-briefs.ps1 -Lang $l -Minutes ([int]$env:MINUTES)
+              ./scripts/build-lang-pages.ps1 -Lang $l
+            } catch { Write-Host "::warning::[$l] $($_.Exception.Message)" }
+          }
+          exit 0
 
       - name: Publish
         shell: bash
         run: |
           git config user.name 'asj-news-bot'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add --all -- fr data/briefs-fr.json data/pages-fr.json
-          if git diff --staged --quiet; then echo "No new French pages."; exit 0; fi
-          git commit -q -m "chore(asj-fr): French edition ($(date -u +%F))"
+          for l in fr pt sw ar; do
+            [ -d "$l" ] && git add --all -- "$l"
+            for f in "data/briefs-$l.json" "data/pages-$l.json"; do [ -f "$f" ] && git add -- "$f"; done
+          done
+          if git diff --staged --quiet; then echo "No new translated pages."; exit 0; fi
+          git commit -q -m "chore(asj-lang): language editions ($(date -u +%F))"
           for i in 1 2 3; do
             if git pull -q --rebase origin main && git push -q origin main; then echo "Pushed."; exit 0; fi
             echo "Push failed (attempt $i); retrying"; sleep 15
           done
-          echo "::error::Could not push the French edition"; exit 1
+          echo "::error::Could not push the language editions"; exit 1
