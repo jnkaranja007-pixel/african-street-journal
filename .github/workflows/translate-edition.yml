@@ -3,7 +3,8 @@ name: Language editions
 # After each desk edition, translate the new stories with the free Gemini tier
 # (scripts/translate-briefs.ps1) and rebuild each language's pages
 # (scripts/build-lang-pages.ps1): French /fr/, Portuguese /pt/, Swahili /sw/ and
-# Arabic /ar/. One language after another, because they share one key's rate limit.
+# Arabic /ar/, plus Amharic /am/, Hausa /ha/, Somali /soomaali/ and isiZulu /zu/ for
+# their own countries. One language after another, because they share one key's rate limit.
 # Only new or changed stories are sent, so a normal run takes minutes; a new language's
 # first run catches up on the whole edition within its time budget and finishes the rest
 # on the next run. The English edition never waits for this.
@@ -16,7 +17,7 @@ on:
       languages:
         description: 'Languages to run, space separated (default: all)'
         required: false
-        default: 'fr pt sw ar'
+        default: 'fr pt sw ar am ha so zu'
       minutes:
         description: 'Translation time budget per language, minutes'
         required: false
@@ -45,7 +46,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ASJ_TRANSLATE_MODEL: ${{ vars.ASJ_TRANSLATE_MODEL }}
-          LANGS: ${{ github.event.inputs.languages || 'fr pt sw ar' }}
+          LANGS: ${{ github.event.inputs.languages || 'fr pt sw ar am ha so zu' }}
           MINUTES: ${{ github.event.inputs.minutes || '22' }}
         run: |
           foreach ($l in ($env:LANGS -split '\s+' | Where-Object { $_ })) {
@@ -63,8 +64,9 @@ jobs:
         run: |
           git config user.name 'asj-news-bot'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          for l in fr pt sw ar; do
-            [ -d "$l" ] && git add --all -- "$l"
+          # Folders are each language's "path": Somali lives in soomaali/ because so/ is Somalia.
+          for d in fr pt sw ar am ha soomaali zu; do [ -d "$d" ] && git add --all -- "$d"; done
+          for l in fr pt sw ar am ha so zu; do
             for f in "data/briefs-$l.json" "data/pages-$l.json"; do [ -f "$f" ] && git add -- "$f"; done
           done
           if git diff --staged --quiet; then echo "No new translated pages."; exit 0; fi

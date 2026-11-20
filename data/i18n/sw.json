@@ -43,7 +43,14 @@
     "menuPrivacy": "Faragha",
     "menuEnglish": "English edition",
     "menu": "Menyu",
-    "titleSuffix": "The African Street Journal"
+    "titleSuffix": "The African Street Journal",
+    "fbTitle": "Tafsiri hii inasomeka vipi?",
+    "fbGood": "Nzuri",
+    "fbFix": "Marekebisho madogo",
+    "fbWrong": "Maana si sahihi",
+    "fbNote": "Nini kibadilishwe? (si lazima)",
+    "fbSend": "Tuma kwa barua pepe",
+    "fbThanks": "Asante! Programu yako ya barua pepe itafunguka: bonyeza Tuma."
   },
   "topics": {
     "Business": "Biashara",

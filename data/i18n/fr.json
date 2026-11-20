@@ -43,7 +43,14 @@
     "menuPrivacy": "Confidentialité",
     "menuEnglish": "English edition",
     "menu": "Menu",
-    "titleSuffix": "The African Street Journal"
+    "titleSuffix": "The African Street Journal",
+    "fbTitle": "Cette traduction vous semble-t-elle juste ?",
+    "fbGood": "Bonne",
+    "fbFix": "Petites corrections",
+    "fbWrong": "Sens erroné",
+    "fbNote": "Que faut-il changer ? (facultatif)",
+    "fbSend": "Envoyer par e-mail",
+    "fbThanks": "Merci ! Votre messagerie va s'ouvrir : appuyez sur Envoyer."
   },
   "topics": {
     "Business": "Économie",

@@ -40,19 +40,22 @@ $langEditions = New-Object System.Collections.Generic.List[object]
 foreach ($leFile in @(Get-ChildItem -Path (Join-Path $root 'data\i18n') -Filter '*.json' -ErrorAction SilentlyContinue | Sort-Object Name)) {
   $leCode = $leFile.BaseName
   $leSeg = $leCode
-  try { $leP = [string](([IO.File]::ReadAllText($leFile.FullName, [Text.Encoding]::UTF8) | ConvertFrom-Json).path); if ($leP) { $leSeg = $leP } } catch {}
+  $leScope = @()
+  try { $leJ = [IO.File]::ReadAllText($leFile.FullName, [Text.Encoding]::UTF8) | ConvertFrom-Json; if ($leJ.path) { $leSeg = [string]$leJ.path }; $leScope = @($leJ.scope | Where-Object { $_ }) } catch {}
   if (-not (Test-Path (Join-Path (Join-Path $root $leSeg) 'index.html'))) { continue }
   $leSet = New-Object System.Collections.Generic.HashSet[string]
   $leList = Join-Path $root "data\pages-$leCode.json"
   if (Test-Path $leList) {
     try { foreach ($fp in @(([IO.File]::ReadAllText($leList, [Text.Encoding]::UTF8) | ConvertFrom-Json).pages)) { [void]$leSet.Add("$($fp.code)/$($fp.slug)") } } catch {}
   }
-  $langEditions.Add([pscustomobject]@{ code = $leCode; seg = $leSeg; pages = $leSet })
+  $langEditions.Add([pscustomobject]@{ code = $leCode; seg = $leSeg; pages = $leSet; scope = $leScope })
 }
 function Get-LangAlternates([string]$Canonical) {
   $path = $Canonical.Substring($BaseUrl.Length).Trim('/')
   $isCountry = $path -match '^[a-z]{2}$'
   $leOut = foreach ($le in $langEditions) {
+    # A regional edition (Hausa, Somali...) has country pages only for its own countries.
+    if ($isCountry -and $le.scope.Count -and $le.scope -notcontains $path) { continue }
     if ($isCountry -or $le.pages.Contains($path)) { "<link rel=""alternate"" hreflang=""$($le.code)"" href=""$BaseUrl/$($le.seg)/$path/"">" }
   }
   return (@($leOut) -join "`n")
@@ -236,7 +239,7 @@ article .dek{margin:0 0 12px}
 @media (max-width:520px){.country-actions .open{flex:1 1 100%;justify-content:center}}
 '@
 # Trust-page links, appended to every generated footer.
-$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=144" defer></script>'
+$siteLinks = '<script src="'+$BaseUrl+'/info-panel.js?v=145" defer></script>'
 # The paper's social accounts (data/social-config.js): a Follow line in every footer
 # once a handle is set, and sameAs on the publisher so search engines tie them to it.
 $socialWhatsapp = ''; $socialTelegram = ''; $socialBluesky = ''; $socialX = ''; $socialXHandle = ''; $socialInstagram = ''; $socialYoutube = ''

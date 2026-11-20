@@ -338,61 +338,90 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
 }());
 
-// Language editions (v144): French, Portuguese, Swahili and Arabic, each built by
-// scripts/build-lang-pages.ps1 under /<code>/ with the English page's address.
+// Language editions (v145), each built by scripts/build-lang-pages.ps1 under its own
+// folder with the English page's address: French, Portuguese, Swahili and Arabic carry
+// the whole edition; Amharic, Hausa, Somali and isiZulu carry their own countries' stories.
 // - Every menu gains one "Languages" row linking the other editions: to this story's or
 //   country's twin when the page names one (hreflang), otherwise to that edition's
-//   country page or front page.
+//   country page or front page. A regional edition is offered only on its countries' pages.
 // - An English story page offers its translation under the byline in the languages its
-//   country reads (French in Dakar, Swahili in Nairobi, Arabic in Cairo, Portuguese in
+//   country reads (Swahili in Nairobi, Hausa in Kano, Arabic in Cairo, Portuguese in
 //   Luanda) and in the reader's own browser language.
-// - On a translated page, the menu items this file adds are given in that language.
+// - On a translated page, the menu items this file adds are given in that language, and
+//   the "how does this translation read?" box under the story becomes an email to the desk.
 (function () {
   var lang = (document.documentElement.getAttribute('lang') || 'en').slice(0, 2);
   var EDITIONS = [
-    { code: 'fr', name: 'Fran\u00e7ais', read: 'Lire en fran\u00e7ais', dir: 'ltr',
+    { code: 'fr', path: 'fr', name: 'Fran\u00e7ais', read: 'Lire en fran\u00e7ais', dir: 'ltr',
       countries: ['bf', 'bi', 'bj', 'cd', 'cf', 'cg', 'ci', 'cm', 'dj', 'dz', 'ga', 'gn', 'gq', 'km', 'ma', 'mg', 'ml', 'mr', 'mu', 'ne', 'rw', 'sc', 'sn', 'td', 'tg', 'tn'] },
-    { code: 'pt', name: 'Portugu\u00eas', read: 'Ler em portugu\u00eas', dir: 'ltr',
+    { code: 'pt', path: 'pt', name: 'Portugu\u00eas', read: 'Ler em portugu\u00eas', dir: 'ltr',
       countries: ['ao', 'mz', 'gw', 'cv', 'st', 'gq'] },
-    { code: 'sw', name: 'Kiswahili', read: 'Soma kwa Kiswahili', dir: 'ltr',
+    { code: 'sw', path: 'sw', name: 'Kiswahili', read: 'Soma kwa Kiswahili', dir: 'ltr',
       countries: ['ke', 'tz', 'ug', 'rw', 'cd', 'bi'] },
-    { code: 'ar', name: '\u0627\u0644\u0639\u0631\u0628\u064a\u0629', read: '\u0627\u0642\u0631\u0623 \u0628\u0627\u0644\u0639\u0631\u0628\u064a\u0629', dir: 'rtl',
-      countries: ['eg', 'sd', 'ly', 'tn', 'dz', 'ma', 'mr', 'eh', 'so', 'dj', 'km', 'td', 'er'] }
+    { code: 'ar', path: 'ar', name: '\u0627\u0644\u0639\u0631\u0628\u064a\u0629', read: '\u0627\u0642\u0631\u0623 \u0628\u0627\u0644\u0639\u0631\u0628\u064a\u0629', dir: 'rtl',
+      countries: ['eg', 'sd', 'ly', 'tn', 'dz', 'ma', 'mr', 'eh', 'so', 'dj', 'km', 'td', 'er'] },
+    { code: 'am', path: 'am', name: '\u12a0\u121b\u122d\u129b', read: '\u1260\u12a0\u121b\u122d\u129b \u12eb\u1295\u1265\u1261', dir: 'ltr', regional: true,
+      countries: ['et'] },
+    { code: 'ha', path: 'ha', name: 'Hausa', read: 'Karanta da Hausa', dir: 'ltr', regional: true,
+      countries: ['ng', 'ne'] },
+    { code: 'so', path: 'soomaali', name: 'Soomaali', read: 'Ku akhri Soomaali', dir: 'ltr', regional: true,
+      countries: ['so', 'dj'] },
+    { code: 'zu', path: 'zu', name: 'isiZulu', read: 'Funda ngesiZulu', dir: 'ltr', regional: true,
+      countries: ['za'] }
   ];
   var WORDS = {
     en: { languages: 'Languages' },
     fr: { languages: 'Langues', 'Report a problem': 'Signaler un probl\u00e8me', 'Dark theme': 'Th\u00e8me sombre', 'Light theme': 'Th\u00e8me clair', 'Follow': 'Suivre' },
     pt: { languages: 'L\u00ednguas', 'Report a problem': 'Reportar um problema', 'Dark theme': 'Tema escuro', 'Light theme': 'Tema claro', 'Follow': 'Seguir' },
     sw: { languages: 'Lugha', 'Report a problem': 'Ripoti tatizo', 'Dark theme': 'Mandhari meusi', 'Light theme': 'Mandhari meupe', 'Follow': 'Tufuate' },
-    ar: { languages: '\u0627\u0644\u0644\u063a\u0627\u062a', 'Report a problem': '\u0627\u0644\u0625\u0628\u0644\u0627\u063a \u0639\u0646 \u0645\u0634\u0643\u0644\u0629', 'Dark theme': '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062f\u0627\u0643\u0646', 'Light theme': '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0641\u0627\u062a\u062d', 'Follow': '\u062a\u0627\u0628\u0639\u0646\u0627' }
+    ar: { languages: '\u0627\u0644\u0644\u063a\u0627\u062a', 'Report a problem': '\u0627\u0644\u0625\u0628\u0644\u0627\u063a \u0639\u0646 \u0645\u0634\u0643\u0644\u0629', 'Dark theme': '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062f\u0627\u0643\u0646', 'Light theme': '\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0641\u0627\u062a\u062d', 'Follow': '\u062a\u0627\u0628\u0639\u0646\u0627' },
+    am: { languages: '\u124b\u1295\u124b\u12ce\u127d', 'Report a problem': '\u127d\u130d\u122d \u122a\u1356\u122d\u1275 \u12eb\u12f5\u122d\u1309', 'Dark theme': '\u1328\u1208\u121b \u1308\u133d\u1273', 'Light theme': '\u1265\u1229\u1205 \u1308\u133d\u1273', 'Follow': '\u12ed\u12a8\u1270\u1209\u1295' },
+    ha: { languages: 'Harsuna', 'Report a problem': 'Bayar da rahoton matsala', 'Dark theme': 'Jigo mai duhu', 'Light theme': 'Jigo mai haske', 'Follow': 'Bi mu' },
+    so: { languages: 'Luqadaha', 'Report a problem': 'Soo sheeg dhibaato', 'Dark theme': 'Muuqaal madow', 'Light theme': 'Muuqaal iftiin', 'Follow': 'Na raac' },
+    zu: { languages: 'Izilimi', 'Report a problem': 'Bika inkinga', 'Dark theme': 'Itimu emnyama', 'Light theme': 'Itimu ekhanyayo', 'Follow': 'Silandele' }
   };
   var W = WORDS[lang] || WORDS.en;
   var codes = EDITIONS.map(function (e) { return e.code; });
+  var paths = EDITIONS.map(function (e) { return e.path; });
   var RULE = 'var(--c-2c2c2c,var(--rule,#2c2c2c))';
   var INK = 'var(--c-e8e6e3,var(--text,#e8e6e3))';
   var MUTED = 'var(--c-8f8a83,var(--text-dim,#8f8a83))';
   var HOVER_BG = 'var(--c-1f241f,var(--surface-raised,#1f241f))';
   var GREEN = 'var(--c-66bb6a,var(--green-bright,#66bb6a))';
+  var SURFACE = 'var(--c-161616,var(--surface,#161616))';
   var SANS = "system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif";
   var CSS =
     '.asj-info .asj-info-menu>.asj-langs{grid-column:1 / -1;display:flex!important;flex-wrap:wrap;align-items:center;gap:2px;margin:6px 0 0!important;padding:8px 2px 0 10px!important;border-top:1px solid ' + RULE + '}' +
     '.asj-info .asj-info-menu .asj-langs span{flex:1 0 100%;padding:2px 0 4px;color:' + MUTED + ';font:500 14px/1.2 ' + SANS + ';letter-spacing:0;text-transform:none}' +
     '.asj-info .asj-info-menu .asj-langs a,.asj-info .asj-info-menu .asj-langs a:visited{display:inline-flex!important;align-items:center;min-height:38px;padding:0 9px!important;border-radius:8px;color:' + INK + '!important;font:500 15px/1 ' + SANS + '!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none}' +
     '.asj-info .asj-info-menu .asj-langs a:hover,.asj-info .asj-info-menu .asj-langs a:focus-visible{background:' + HOVER_BG + ';color:' + GREEN + '!important;outline:none}' +
-    '.asj-lang-note a+a{margin-inline-start:14px}';
+    '.asj-lang-note a+a{margin-inline-start:14px}' +
+    '.asj-fb{margin:28px 0 8px;padding:16px;border:1px solid ' + RULE + ';border-radius:10px}' +
+    '.asj-fb h2{margin:0 0 12px}' +
+    '.asj-fb-opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}' +
+    '.asj-fb button{font:500 15px/1.2 ' + SANS + ';min-height:42px;padding:10px 14px;border-radius:8px;border:1px solid ' + RULE + ';background:' + SURFACE + ';color:' + INK + ';cursor:pointer;letter-spacing:0;text-transform:none}' +
+    '.asj-fb-opts button[aria-pressed="true"]{border-color:' + GREEN + ';color:' + GREEN + ';box-shadow:inset 0 0 0 1px ' + GREEN + '}' +
+    '.asj-fb label{display:block;margin:0 0 6px;color:' + MUTED + ';font:400 14px/1.4 ' + SANS + '}' +
+    '.asj-fb textarea{display:block;width:100%;box-sizing:border-box;min-height:72px;margin-bottom:12px;padding:10px 12px;border-radius:8px;border:1px solid ' + RULE + ';background:' + SURFACE + ';color:' + INK + ';font:16px/1.5 ' + SANS + ';resize:vertical}' +
+    '.asj-fb .asj-fb-send{background:' + GREEN + ';border-color:' + GREEN + ';color:#0c0c0c;font-weight:600}' +
+    '.asj-fb .asj-fb-send[disabled]{opacity:.45;cursor:default}' +
+    '.asj-fb button:focus-visible,.asj-fb textarea:focus-visible{outline:2px solid ' + GREEN + ';outline-offset:2px}' +
+    '.asj-fb-status{margin:10px 0 0;color:' + GREEN + ';font:400 14px/1.4 ' + SANS + '}';
 
-  // Path after any language folder: "/fr/ke/slug/" and "/ke/slug/" are both "/ke/slug/".
+  // Path after any language folder: "/soomaali/so/slug/" and "/so/slug/" are both "/so/slug/".
+  var me = EDITIONS[codes.indexOf(lang)];
   var path = location.pathname;
-  if (lang !== 'en' && path.indexOf('/' + lang + '/') === 0) path = path.slice(lang.length + 1);
+  if (me && path.indexOf('/' + me.path + '/') === 0) path = path.slice(me.path.length + 1);
   var m = /^\/([a-z]{2})\/([a-z0-9-]+\/)?$/.exec(path);
-  var country = m && codes.indexOf(m[1]) < 0 ? m[1] : '';
+  var country = m && paths.indexOf(m[1]) < 0 ? m[1] : '';
 
+  function offered(e) { return e.code !== lang && (!e.regional || e.countries.indexOf(country) >= 0); }
   function twin(code) {
     var l = document.querySelector('link[rel="alternate"][hreflang="' + code + '"]');
     return l ? l.getAttribute('href') : '';
   }
   function target(e) {
-    return twin(e.code) || (country ? '/' + e.code + '/' + country + '/' : '/' + e.code + '/');
+    return twin(e.code) || (country ? '/' + e.path + '/' + country + '/' : '/' + e.path + '/');
   }
   function relabel() {
     if (lang === 'en') return;
@@ -402,11 +431,12 @@
       if (W[t]) el.textContent = W[t];
     });
   }
+  function style() {
+    if (document.getElementById('asj-langs-style')) return;
+    var st = document.createElement('style'); st.id = 'asj-langs-style'; st.textContent = CSS;
+    (document.head || document.documentElement).appendChild(st);
+  }
   function menuRow() {
-    if (!document.getElementById('asj-langs-style')) {
-      var st = document.createElement('style'); st.id = 'asj-langs-style'; st.textContent = CSS;
-      (document.head || document.documentElement).appendChild(st);
-    }
     Array.prototype.forEach.call(document.querySelectorAll('.asj-info-menu'), function (menu) {
       Array.prototype.forEach.call(menu.querySelectorAll('a.asj-lang-fr'), function (old) { old.remove(); });
       var row = menu.querySelector('.asj-langs');
@@ -414,7 +444,7 @@
         row = document.createElement('div'); row.className = 'asj-langs';
         var label = document.createElement('span'); label.textContent = W.languages; row.appendChild(label);
         EDITIONS.forEach(function (e) {
-          if (e.code === lang) return;
+          if (!offered(e)) return;
           var a = document.createElement('a');
           a.lang = e.code; a.hreflang = e.code; a.dir = e.dir; a.textContent = e.name;
           a.setAttribute('data-lang', e.code);
@@ -423,8 +453,7 @@
         menu.insertBefore(row, menu.querySelector('.asj-follow'));
       }
       Array.prototype.forEach.call(row.querySelectorAll('a[data-lang]'), function (a) {
-        var e = EDITIONS[codes.indexOf(a.getAttribute('data-lang'))];
-        a.href = target(e);
+        a.href = target(EDITIONS[codes.indexOf(a.getAttribute('data-lang'))]);
       });
     });
   }
@@ -447,12 +476,12 @@
     var mine = (navigator.languages || [navigator.language || '']).map(function (l) { return String(l).slice(0, 2).toLowerCase(); });
     var c = navigator.connection;
     EDITIONS.forEach(function (e) {
-      if (e.countries.indexOf(country) < 0 && mine.indexOf(e.code) < 0) return;
+      if (e.countries.indexOf(country) < 0 && (e.regional || mine.indexOf(e.code) < 0)) return;
       var t = twin(e.code);
       if (t) { note(e, t); return; }
       // A story newer than this page's last build: ask whether its twin is out yet.
       if (c && c.saveData) return;
-      var url = '/' + e.code + path;
+      var url = '/' + e.path + path;
       fetch(url, { method: 'HEAD', credentials: 'same-origin' }).then(function (r) {
         if (!r.ok) return;
         note(e, url);
@@ -460,11 +489,45 @@
       }).catch(function () {});
     });
   }
+  // The feedback box under a translated story: the reader's verdict and note go to the
+  // desk's inbox through their own mail app, in English, with both addresses.
+  function feedback() {
+    Array.prototype.forEach.call(document.querySelectorAll('.asj-fb'), function (box) {
+      var verdict = '';
+      var send = box.querySelector('.asj-fb-send');
+      var status = box.querySelector('.asj-fb-status');
+      var text = box.querySelector('textarea');
+      Array.prototype.forEach.call(box.querySelectorAll('.asj-fb-opts button'), function (b) {
+        b.addEventListener('click', function () {
+          verdict = b.getAttribute('data-v');
+          Array.prototype.forEach.call(box.querySelectorAll('.asj-fb-opts button'), function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+          send.disabled = false;
+        });
+      });
+      send.addEventListener('click', function () {
+        if (!verdict) return;
+        var name = box.getAttribute('data-langname') || lang;
+        var body = [
+          'Language: ' + name + ' (' + (box.getAttribute('data-lang') || lang) + ')',
+          'Verdict: ' + verdict,
+          'Translated page: ' + (box.getAttribute('data-url') || location.href),
+          'English original: ' + (box.getAttribute('data-en') || ''),
+          '',
+          'What should change:',
+          (text && text.value.trim()) || '(nothing written)'
+        ].join('\n');
+        location.href = 'mailto:hello@africanstreetjournal.com?subject=' + encodeURIComponent('Translation feedback (' + name + '): ' + verdict) + '&body=' + encodeURIComponent(body);
+        status.textContent = box.getAttribute('data-thanks') || 'Thank you.';
+      });
+    });
+  }
   function start() {
+    style();
     menuRow();
     relabel();
     if (lang !== 'en') document.addEventListener('click', function (ev) { if (ev.target && ev.target.closest && ev.target.closest('.asj-theme')) setTimeout(relabel, 0); });
     offerTranslations();
+    feedback();
   }
   function later() { setTimeout(start, 0); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', later); else later();

@@ -71,7 +71,7 @@ if (Get-Social 'instagram') { $follow.Add("<a href=""https://www.instagram.com/$
 if (Get-Social 'youtube') { $follow.Add("<a href=""https://www.youtube.com/@$(Get-Social 'youtube')"" rel=""me noopener"">YouTube</a>") }
 $followHtml = ''
 if ($follow.Count) { $followHtml = '<span class="follow"> &middot; ' + (Esc $T.follow) + ' ' + ($follow -join ' &middot; ') + '</span>' }
-$footer = '<footer>The African Street Journal &middot; ' + (Esc $T.footer) + $followHtml + '<script src="' + $BaseUrl + '/info-panel.js?v=144" defer></script></footer>'
+$footer = '<footer>The African Street Journal &middot; ' + (Esc $T.footer) + $followHtml + '<script src="' + $BaseUrl + '/info-panel.js?v=145" defer></script></footer>'
 
 # Right-to-left editions (Arabic): the shared stylesheet is written for left-to-right, so
 # mirror its few one-sided margins, open the menu the other way, and drop letter-spacing,
@@ -89,6 +89,22 @@ if ([string]$i18n.dir -eq 'rtl') {
     'html[dir=rtl] .asj-info-menu{text-align:right!important}html[dir=rtl] .asj-info .asj-info-menu>.asj-report::before{left:-200%;right:0}' +
     'html[dir=rtl] .asj-info .asj-info-menu>a{text-align:right!important}html[dir=rtl] .asj-info .asj-info-menu .asj-follow span{margin-right:0;margin-left:auto}' +
     'html[dir=rtl] .asj-info .asj-info-menu>.asj-follow,html[dir=rtl] .asj-info .asj-info-menu>.asj-langs{padding:8px 10px 0 2px!important}</style>'
+}
+# A script the shared fonts lack (Amharic's Ge'ez): name the system fonts that have it.
+if ($i18n.font) {
+  $rtlCss += '<style>body,h1,h2,p,li,.dek,.meta,.rel-topic,.why,footer,.asj-fb button,.asj-fb textarea{font-family:' + [string]$i18n.font + '!important;letter-spacing:0!important;text-transform:none!important}</style>'
+}
+
+# A language for one region's readers (Hausa, Somali...) covers only its "scope"
+# countries: their country pages, and only those in the country list.
+$scope = @($i18n.scope | Where-Object { $_ })
+
+# Under each story, readers say how the translation reads. The box is plain HTML;
+# info-panel.js turns the choice and the note into an email to the desk.
+function Get-FeedbackBox([string]$url, [string]$enUrl, [string]$headline) {
+  if (-not $T.fbSend) { return '' }
+  $opts = @(@('Good', $T.fbGood), @('Small fixes', $T.fbFix), @('Wrong meaning', $T.fbWrong) | ForEach-Object { "<button type=""button"" data-v=""$($_[0])"" aria-pressed=""false"">$(Esc $_[1])</button>" }) -join ''
+  return "<section class=""asj-fb"" data-lang=""$Lang"" data-langname=""$(Esc $i18n.englishName)"" data-url=""$url"" data-en=""$enUrl"" data-thanks=""$(Esc $T.fbThanks)"" aria-label=""$(Esc $T.fbTitle)""><h2 class=""section-label"">$(Esc $T.fbTitle)</h2><div class=""asj-fb-opts"" role=""group"">$opts</div><label for=""asj-fb-note"">$(Esc $T.fbNote)</label><textarea id=""asj-fb-note"" rows=""3""></textarea><button type=""button"" class=""asj-fb-send"" disabled>$(Esc $T.fbSend)</button><p class=""asj-fb-status"" role=""status"" aria-live=""polite""></p></section>"
 }
 
 $headCommon = @"
@@ -234,6 +250,7 @@ $headCommon
 $paras
 <p class="why"><b>$(Esc $T.why)</b>$(Esc ([string]$fr.why))</p>
 <p class="meta"><a href="$enUrl" hreflang="en" lang="en">$(Esc $T.readEnglish) $arrow</a> $(Esc $T.note)</p>
+$(Get-FeedbackBox $url $enUrl ([string]$b.headline))
   <div class="share-after">
   <p class="share-label">$(Esc $T.share)</p>
   <div class="share" data-url="$url" data-title="$(Esc $r.headline)">
@@ -308,7 +325,7 @@ function Get-StoryList($items, [switch]$CountryLabel) {
   return "<nav class=""related""><ul>$($li -join '')</ul></nav>"
 }
 
-$codes = @($state.byCountry.PSObject.Properties.Name | Sort-Object { Get-CountryName $_ })
+$codes = @($state.byCountry.PSObject.Properties.Name | Where-Object { -not $scope.Count -or $scope -contains $_ } | Sort-Object { Get-CountryName $_ })
 foreach ($code in $codes) {
   $country = Get-CountryName $code
   $items = if ($byCountry.ContainsKey($code)) { @($byCountry[$code] | Select-Object -First 60) } else { @() }

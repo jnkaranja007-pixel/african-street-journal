@@ -45,7 +45,14 @@
     "menuPrivacy": "الخصوصية",
     "menuEnglish": "English edition",
     "menu": "القائمة",
-    "titleSuffix": "The African Street Journal"
+    "titleSuffix": "The African Street Journal",
+    "fbTitle": "ما رأيك في هذه الترجمة؟",
+    "fbGood": "جيدة",
+    "fbFix": "تحتاج تصحيحات بسيطة",
+    "fbWrong": "المعنى خاطئ",
+    "fbNote": "ما الذي يجب تغييره؟ (اختياري)",
+    "fbSend": "أرسل بالبريد الإلكتروني",
+    "fbThanks": "شكرًا! سيُفتح بريدك الإلكتروني: اضغط إرسال."
   },
   "topics": {
     "Business": "اقتصاد",
