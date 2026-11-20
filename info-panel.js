@@ -338,7 +338,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
 }());
 
-// Language editions (v145), each built by scripts/build-lang-pages.ps1 under its own
+// Language editions (v146), each built by scripts/build-lang-pages.ps1 under its own
 // folder with the English page's address: French, Portuguese, Swahili and Arabic carry
 // the whole edition; Amharic, Hausa, Somali and isiZulu carry their own countries' stories.
 // - Every menu gains one "Languages" row linking the other editions: to this story's or
@@ -489,8 +489,10 @@
       }).catch(function () {});
     });
   }
-  // The feedback box under a translated story: the reader's verdict and note go to the
-  // desk's inbox through their own mail app, in English, with both addresses.
+  // The feedback box under a translated story: the reader's verdict and note go to a
+  // Jotform form that emails the desk, so no mail app is needed. If the post cannot
+  // leave the phone at all, the reader's own mail app opens instead.
+  var JOTFORM = '263235431994058';
   function feedback() {
     Array.prototype.forEach.call(document.querySelectorAll('.asj-fb'), function (box) {
       var verdict = '';
@@ -516,8 +518,26 @@
           'What should change:',
           (text && text.value.trim()) || '(nothing written)'
         ].join('\n');
-        location.href = 'mailto:hello@africanstreetjournal.com?subject=' + encodeURIComponent('Translation feedback (' + name + '): ' + verdict) + '&body=' + encodeURIComponent(body);
-        status.textContent = box.getAttribute('data-thanks') || 'Thank you.';
+        var subject = 'Translation feedback (' + name + '): ' + verdict;
+        var fd = new FormData();
+        fd.append('formID', JOTFORM);
+        fd.append('q2_q2_textbox0', name + ' (' + (box.getAttribute('data-lang') || lang) + ')');
+        fd.append('q3_q3_radio1', verdict);
+        fd.append('q4_q4_textbox2', box.getAttribute('data-url') || location.href);
+        fd.append('q5_q5_textbox3', box.getAttribute('data-en') || '');
+        fd.append('q6_q6_textarea4', (text && text.value.trim()) || '(nothing written)');
+        fd.append('website', '');
+        send.disabled = true;
+        status.textContent = '\u2026';
+        fetch('https://submit.jotform.com/submit/' + JOTFORM, { method: 'POST', mode: 'no-cors', body: fd })
+          .then(function () {
+            status.textContent = box.getAttribute('data-thanks') || 'Thank you.';
+            if (text) text.value = '';
+          })
+          .catch(function () {
+            send.disabled = false;
+            location.href = 'mailto:hello@africanstreetjournal.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+          });
       });
     });
   }

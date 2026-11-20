@@ -49,8 +49,8 @@
     "fbFix": "Pequenas correções",
     "fbWrong": "Sentido errado",
     "fbNote": "O que deve mudar? (opcional)",
-    "fbSend": "Enviar por e-mail",
-    "fbThanks": "Obrigado! O seu e-mail vai abrir: carregue em Enviar."
+    "fbSend": "Enviar",
+    "fbThanks": "Obrigado! A sua opinião foi enviada."
   },
   "topics": {
     "Business": "Economia",

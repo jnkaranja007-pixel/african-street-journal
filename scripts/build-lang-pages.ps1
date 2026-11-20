@@ -71,7 +71,7 @@ if (Get-Social 'instagram') { $follow.Add("<a href=""https://www.instagram.com/$
 if (Get-Social 'youtube') { $follow.Add("<a href=""https://www.youtube.com/@$(Get-Social 'youtube')"" rel=""me noopener"">YouTube</a>") }
 $followHtml = ''
 if ($follow.Count) { $followHtml = '<span class="follow"> &middot; ' + (Esc $T.follow) + ' ' + ($follow -join ' &middot; ') + '</span>' }
-$footer = '<footer>The African Street Journal &middot; ' + (Esc $T.footer) + $followHtml + '<script src="' + $BaseUrl + '/info-panel.js?v=145" defer></script></footer>'
+$footer = '<footer>The African Street Journal &middot; ' + (Esc $T.footer) + $followHtml + '<script src="' + $BaseUrl + '/info-panel.js?v=146" defer></script></footer>'
 
 # Right-to-left editions (Arabic): the shared stylesheet is written for left-to-right, so
 # mirror its few one-sided margins, open the menu the other way, and drop letter-spacing,
