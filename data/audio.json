@@ -2,12 +2,8 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-20T12:12:57Z",
+ "updated": "2026-11-21T09:42:08Z",
  "items": {
-  "bf/aes-ministers-review-second-year-roadmap-in-ouagadougou-d87e3d": {
-   "s": 87,
-   "on": "2026-11-12"
-  },
   "bi/imbonerakure-truck-crash-in-kabanga-leaves-31-dead-sources-6e03a0": {
    "s": 91,
    "on": "2026-11-17"
@@ -15,10 +11,6 @@
   "cd/butembo-civil-society-warns-ebola-strike-by-care-workers-6729f0": {
    "s": 55,
    "on": "2026-11-15"
-  },
-  "cd/dr-congo-president-signs-referendum-law-7043dd": {
-   "s": 82,
-   "on": "2026-11-12"
   },
   "cd/dr-congo-s-mining-sector-gives-1-1-million-to-ebola-response-be8b16": {
    "s": 56,
@@ -52,6 +44,10 @@
    "s": 67,
    "on": "2026-11-15"
   },
+  "ci/ecowas-ministers-weigh-host-for-eco-central-bank-in-abidjan-2838ed": {
+   "s": 90,
+   "on": "2026-11-21"
+  },
   "ci/ivory-coast-benin-and-togo-sign-pact-to-study-shared-gas-f5d44e": {
    "s": 54,
    "on": "2026-11-20"
@@ -72,10 +68,6 @@
    "s": 92,
    "on": "2026-11-13"
   },
-  "cm/cameroon-regulators-fine-telecoms-firms-18-6-billion-fcfa-5e9ee9": {
-   "s": 83,
-   "on": "2026-11-12"
-  },
   "cv/cape-verdeans-vote-for-sixth-president-ed434f": {
    "s": 71,
    "on": "2026-11-15"
@@ -92,9 +84,9 @@
    "s": 86,
    "on": "2026-11-19"
   },
-  "eg/egypt-lawmakers-summon-minister-after-fatal-train-crash-f6391e": {
-   "s": 77,
-   "on": "2026-11-12"
+  "eg/egypt-pays-38-2-billion-to-service-external-debt-as-7f1812": {
+   "s": 94,
+   "on": "2026-11-21"
   },
   "eh/polisario-front-calls-general-mobilisation-as-it-accuses-450111": {
    "s": 58,
@@ -112,9 +104,9 @@
    "s": 87,
    "on": "2026-11-16"
   },
-  "er/ethiopia-accuses-eritrea-of-moving-troops-into-tigray-f865b2": {
-   "s": 87,
-   "on": "2026-11-12"
+  "et/ethiopia-conflict-displaces-about-700-000-as-fighting-61c3d2": {
+   "s": 88,
+   "on": "2026-11-21"
   },
   "et/ethiopian-airlines-investigates-shebamiles-customer-data-dd0012": {
    "s": 70,
@@ -148,6 +140,10 @@
    "s": 90,
    "on": "2026-11-15"
   },
+  "gm/gambia-signs-agreements-for-52-megawatt-peak-solar-plant-in-b431a1": {
+   "s": 85,
+   "on": "2026-11-21"
+  },
   "gm/poll-shows-barrow-ahead-by-a-narrow-margin-in-gambia-s-a1ab62": {
    "s": 53,
    "on": "2026-11-19"
@@ -172,10 +168,6 @@
    "s": 88,
    "on": "2026-11-14"
   },
-  "ke/maraga-accuses-ruto-of-hypocrisy-over-ebola-quarantine-u-300507": {
-   "s": 94,
-   "on": "2026-11-12"
-  },
   "ke/mombasa-teacher-assault-not-linked-to-kcse-says-cs-02cec2": {
    "s": 91,
    "on": "2026-11-16"
@@ -195,10 +187,6 @@
   "ke/us-consortium-wins-tender-to-develop-kenya-s-mrima-hill-2a87ee": {
    "s": 81,
    "on": "2026-11-20"
-  },
-  "km/two-comoros-murder-convicts-die-within-a-week-379c2d": {
-   "s": 59,
-   "on": "2026-11-12"
   },
   "mg/madagascar-and-us-sign-military-logistics-accord-for-b7a644": {
    "s": 96,
@@ -224,6 +212,10 @@
    "s": 94,
    "on": "2026-11-13"
   },
+  "mw/donors-pledge-221-million-to-malawi-recovery-projects-63bf3b": {
+   "s": 87,
+   "on": "2026-11-21"
+  },
   "mw/malawi-protest-group-suspends-fuel-and-blackout-005bed": {
    "s": 60,
    "on": "2026-11-15"
@@ -232,9 +224,9 @@
    "s": 62,
    "on": "2026-11-14"
   },
-  "mz/insurgents-kill-22-in-cabo-delgado-farmland-770232": {
-   "s": 78,
-   "on": "2026-11-12"
+  "mw/world-bank-report-warns-malawi-firms-face-a-4-trillion-e6c785": {
+   "s": 88,
+   "on": "2026-11-21"
   },
   "mz/mozambique-approves-exxonmobil-s-amended-rovuma-lng-plan-cf3f08": {
    "s": 77,
@@ -252,13 +244,13 @@
    "s": 61,
    "on": "2026-11-18"
   },
+  "ng/dangote-lifts-daily-petrol-supply-to-31-89-million-litres-4e7175": {
+   "s": 62,
+   "on": "2026-11-21"
+  },
   "ng/naira-firms-slightly-in-official-market-as-parallel-rate-a5acfb": {
    "s": 99,
    "on": "2026-11-19"
-  },
-  "ng/naira-slides-against-dollar-as-thursday-trading-opens-55b895": {
-   "s": 111,
-   "on": "2026-11-12"
   },
   "ng/nigeria-faces-power-cuts-over-n639bn-unpaid-gas-debt-339f37": {
    "s": 50,
@@ -288,6 +280,10 @@
    "s": 92,
    "on": "2026-11-18"
   },
+  "sd/founding-alliance-claims-control-of-five-blue-nile-areas-1902ea": {
+   "s": 71,
+   "on": "2026-11-21"
+  },
   "sd/sudan-court-orders-hemedti-and-13-others-to-repay-396-2-b05039": {
    "s": 68,
    "on": "2026-11-20"
@@ -308,6 +304,10 @@
    "s": 58,
    "on": "2026-11-20"
   },
+  "sn/faye-puts-senegal-s-revised-2026-budget-into-force-by-decree-5787b2": {
+   "s": 80,
+   "on": "2026-11-21"
+  },
   "sn/senegal-s-mps-reject-2027-budget-stopping-review-of-3de59c": {
    "s": 78,
    "on": "2026-11-19"
@@ -315,10 +315,6 @@
   "sn/senegal-wins-right-to-host-2031-francophonie-games-ce1d7d": {
    "s": 77,
    "on": "2026-11-16"
-  },
-  "so/al-shabaab-attack-kills-eight-near-somalia-border-6d8572": {
-   "s": 76,
-   "on": "2026-11-12"
   },
   "so/somalia-orders-uae-ambassador-out-within-72-hours-recalls-ee3935": {
    "s": 86,
@@ -384,6 +380,10 @@
    "s": 95,
    "on": "2026-11-20"
   },
+  "ug/uganda-suspends-mass-gatherings-in-34-ebola-risk-border-f717b1": {
+   "s": 72,
+   "on": "2026-11-21"
+  },
   "za/17-killed-in-two-south-african-mass-shootings-06c4f6": {
    "s": 107,
    "on": "2026-11-17"
@@ -396,10 +396,6 @@
    "s": 90,
    "on": "2026-11-18"
   },
-  "za/cosatu-slams-ramaphosa-over-3-5-politician-salary-hike-b5c826": {
-   "s": 70,
-   "on": "2026-11-12"
-  },
   "za/hawks-arrest-tenth-suspect-in-alleged-russia-ukraine-688882": {
    "s": 81,
    "on": "2026-11-13"
@@ -407,10 +403,6 @@
   "za/south-africa-s-reserve-bank-holds-repo-rate-at-7-25-e4375d": {
    "s": 76,
    "on": "2026-11-20"
-  },
-  "za/south-africa-youth-unemployment-hits-47-3-c06d53": {
-   "s": 90,
-   "on": "2026-11-12"
   },
   "za/south-african-cities-impose-water-restrictions-as-el-nino-72b07d": {
    "s": 78,
@@ -424,9 +416,17 @@
    "s": 46,
    "on": "2026-11-17"
   },
+  "zm/zambia-s-high-court-upholds-kaunda-s-lima-seat-66b155": {
+   "s": 50,
+   "on": "2026-11-21"
+  },
   "zw/ncube-proposes-lower-imtt-rates-in-2027-budget-e75728": {
    "s": 77,
    "on": "2026-11-20"
+  },
+  "zw/zimbabwe-requires-large-buyers-to-source-15-of-inputs-081412": {
+   "s": 55,
+   "on": "2026-11-21"
   }
  }
 }
