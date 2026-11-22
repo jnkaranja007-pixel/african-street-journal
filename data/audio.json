@@ -2,7 +2,7 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-21T11:47:49Z",
+ "updated": "2026-11-22T09:52:10Z",
  "items": {
   "bi/imbonerakure-truck-crash-in-kabanga-leaves-31-dead-sources-6e03a0": {
    "s": 91,
@@ -36,10 +36,6 @@
    "s": 79,
    "on": "2026-11-14"
   },
-  "cf/central-african-opposition-gives-government-14-days-to-meet-1b88be": {
-   "s": 103,
-   "on": "2026-11-13"
-  },
   "cf/hundreds-march-in-bangui-against-fuel-price-rise-and-high-97c31e": {
    "s": 67,
    "on": "2026-11-15"
@@ -52,21 +48,17 @@
    "s": 54,
    "on": "2026-11-20"
   },
-  "ci/ivory-coast-frees-more-than-200-ppa-ci-militants-under-fdfa27": {
-   "s": 88,
-   "on": "2026-11-13"
-  },
-  "ci/ivory-coast-health-budget-to-rise-21-in-2027-00a84b": {
-   "s": 68,
-   "on": "2026-11-13"
-  },
   "ci/ivory-coast-loses-88-6-billion-to-illicit-financial-flows-66e111": {
    "s": 108,
    "on": "2026-11-16"
   },
-  "cm/cameroon-imports-jump-22-8-in-first-quarter-despite-curbs-425468": {
-   "s": 92,
-   "on": "2026-11-13"
+  "ci/west-african-ministers-weigh-host-for-new-central-bank-2838ed": {
+   "s": 95,
+   "on": "2026-11-22"
+  },
+  "cv/cape-verde-s-election-commission-proclaims-neves-re-elected-976fc1": {
+   "s": 81,
+   "on": "2026-11-22"
   },
   "cv/cape-verdeans-vote-for-sixth-president-ed434f": {
    "s": 71,
@@ -92,6 +84,14 @@
    "s": 58,
    "on": "2026-11-18"
   },
+  "eh/russia-vetoes-us-western-sahara-resolution-at-un-security-695c80": {
+   "s": 73,
+   "on": "2026-11-22"
+  },
+  "eh/un-mission-to-leave-western-sahara-by-31-january-without-bb564c": {
+   "s": 81,
+   "on": "2026-11-22"
+  },
   "eh/us-envoy-urges-ceasefire-as-un-peacekeepers-leave-western-8b45ed": {
    "s": 75,
    "on": "2026-11-19"
@@ -112,10 +112,6 @@
    "s": 70,
    "on": "2026-11-19"
   },
-  "et/ethiopian-army-takes-control-of-tigray-capital-mekelle-ff9336": {
-   "s": 68,
-   "on": "2026-11-13"
-  },
   "et/sudan-and-ethiopia-trade-accusations-over-armed-groups-36ac7b": {
    "s": 85,
    "on": "2026-11-16"
@@ -132,10 +128,6 @@
    "s": 85,
    "on": "2026-11-18"
   },
-  "gm/darbo-submits-presidential-nomination-papers-c4f5c1": {
-   "s": 108,
-   "on": "2026-11-13"
-  },
   "gm/gambia-election-nine-cleared-for-december-5-vote-f6d7c1": {
    "s": 90,
    "on": "2026-11-15"
@@ -148,13 +140,13 @@
    "s": 53,
    "on": "2026-11-19"
   },
-  "gw/guinea-bissau-president-attends-simandou-mining-summit-f0161a": {
-   "s": 75,
-   "on": "2026-11-13"
+  "gn/bel-air-mining-barge-collision-leaves-two-guinean-fishermen-768406": {
+   "s": 86,
+   "on": "2026-11-22"
   },
-  "ke/college-principal-butchered-in-bedroom-attack-bd4c53": {
-   "s": 93,
-   "on": "2026-11-13"
+  "ke/heifer-assessment-targets-year-round-feed-supply-for-kenya-1d0d4c": {
+   "s": 100,
+   "on": "2026-11-22"
   },
   "ke/kenya-holds-fuel-pump-prices-with-sh4-6bn-subsidy-f6ea72": {
    "s": 88,
@@ -188,6 +180,10 @@
    "s": 81,
    "on": "2026-11-20"
   },
+  "lr/liberia-offers-15-offshore-oil-blocks-to-investors-51e91e": {
+   "s": 78,
+   "on": "2026-11-22"
+  },
   "mg/madagascar-and-us-sign-military-logistics-accord-for-b7a644": {
    "s": 96,
    "on": "2026-11-18"
@@ -207,10 +203,6 @@
   "mu/mauritius-extends-police-commissioner-s-contract-for-one-71e9e5": {
    "s": 60,
    "on": "2026-11-17"
-  },
-  "mu/mauritius-raises-key-interest-rate-to-5-c54ef7": {
-   "s": 94,
-   "on": "2026-11-13"
   },
   "mw/donors-pledge-221-million-to-malawi-recovery-projects-63bf3b": {
    "s": 87,
@@ -252,10 +244,6 @@
    "s": 99,
    "on": "2026-11-19"
   },
-  "ng/nigeria-faces-power-cuts-over-n639bn-unpaid-gas-debt-339f37": {
-   "s": 50,
-   "on": "2026-11-13"
-  },
   "ng/nigeria-s-central-bank-to-decide-on-interest-rates-on-212bd1": {
    "s": 61,
    "on": "2026-11-15"
@@ -272,6 +260,10 @@
    "s": 49,
    "on": "2026-11-18"
   },
+  "ng/rights-group-sues-nigeria-s-data-regulator-and-electoral-c6b7f3": {
+   "s": 99,
+   "on": "2026-11-22"
+  },
   "rw/rwanda-to-host-eu-migrant-return-hub-74e3ec": {
    "s": 88,
    "on": "2026-11-17"
@@ -283,6 +275,10 @@
   "sd/founding-alliance-claims-control-of-five-blue-nile-areas-1902ea": {
    "s": 71,
    "on": "2026-11-21"
+  },
+  "sd/rebel-forces-push-within-about-40-kilometers-of-sudan-s-6deb21": {
+   "s": 78,
+   "on": "2026-11-22"
   },
   "sd/sudan-court-orders-hemedti-and-13-others-to-repay-396-2-b05039": {
    "s": 68,
@@ -356,9 +352,9 @@
    "s": 83,
    "on": "2026-11-14"
   },
-  "tz/samia-calls-for-fair-carbon-returns-as-cop31-faces-finance-2766df": {
-   "s": 87,
-   "on": "2026-11-13"
+  "tg/togo-adopts-2027-budget-with-921-milliards-fcfa-for-bdb742": {
+   "s": 107,
+   "on": "2026-11-22"
   },
   "tz/tanzania-targets-local-processing-of-30-of-cashew-harvest-254a44": {
    "s": 79,
@@ -375,6 +371,10 @@
   "ug/uganda-minister-urges-patience-as-drc-border-stays-shut-a46721": {
    "s": 109,
    "on": "2026-11-14"
+  },
+  "ug/uganda-signs-10-year-crude-marketing-deal-with-vitol-d3ab8a": {
+   "s": 81,
+   "on": "2026-11-22"
   },
   "ug/uganda-suspends-mass-gatherings-in-34-ebola-risk-border-5420d2": {
    "s": 95,
@@ -396,10 +396,6 @@
    "s": 90,
    "on": "2026-11-18"
   },
-  "za/hawks-arrest-tenth-suspect-in-alleged-russia-ukraine-688882": {
-   "s": 81,
-   "on": "2026-11-13"
-  },
   "za/south-africa-s-reserve-bank-holds-repo-rate-at-7-25-e4375d": {
    "s": 76,
    "on": "2026-11-20"
@@ -415,6 +411,10 @@
   "zm/court-sets-december-16-to-resume-esther-lungu-theft-trial-c7581c": {
    "s": 46,
    "on": "2026-11-17"
+  },
+  "zm/standard-poor-s-raises-zambia-s-sovereign-rating-to-b-dff5f4": {
+   "s": 64,
+   "on": "2026-11-22"
   },
   "zm/zambia-s-high-court-upholds-kaunda-s-lima-seat-66b155": {
    "s": 50,
