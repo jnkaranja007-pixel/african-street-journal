@@ -275,14 +275,14 @@
         "home": "https://matinlibre.com/",
         "feed": "https://matinlibre.com/feed/",
         "tier": 3,
-        "state": "ok"
+        "state": "missing"
       },
       {
         "name": "Le Matinal",
         "home": "https://lematinal.media/",
         "feed": "https://lematinal.media/feed/",
         "tier": 2,
-        "state": "missing"
+        "state": "blocked"
       },
       {
         "name": "Benin Web TV",
@@ -1203,7 +1203,7 @@
         "home": "https://www.voxcongo.com/",
         "feed": "https://www.voxcongo.com/feed/",
         "tier": 2,
-        "state": "blocked"
+        "state": "missing"
       },
       {
         "name": "Journal de Brazza",
@@ -1659,7 +1659,7 @@
         "feed": "https://www.dailynewsegypt.com/feed/",
         "tier": 2,
         "requireMatch": true,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Mada Masr",
@@ -2672,7 +2672,7 @@
         "home": "https://lestimes.com/",
         "feed": "https://lestimes.com/?feed=rss2",
         "tier": 1,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Sunday Express Lesotho",
@@ -2882,7 +2882,7 @@
         "home": "https://times.mw/",
         "feed": "https://times.mw/feed/",
         "tier": 2,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Farmers Review Africa",
@@ -3047,9 +3047,9 @@
       {
         "name": "Agence Mauritanienne d'Information",
         "home": "https://www.ami.mr/",
-        "feed": "https://www.ami.mr/feed",
+        "feed": "https://www.ami.mr/rss.xml",
         "tier": 2,
-        "state": "error"
+        "state": "ok"
       },
       {
         "name": "Le Calame",
@@ -4086,7 +4086,7 @@
         "home": "https://www.garoweonline.com/",
         "feed": "https://www.garoweonline.com/en/rss",
         "tier": 1,
-        "state": "missing"
+        "state": "blocked"
       },
       {
         "name": "Radio Dalsan",
@@ -4376,7 +4376,7 @@
         "home": "https://www.dabangasudan.org/en",
         "feed": "https://www.dabangasudan.org/en/all-news/rss",
         "tier": 1,
-        "state": "missing"
+        "state": "ok"
       },
       {
         "name": "Ayin Network",
@@ -4913,7 +4913,7 @@
         "home": "https://www.daily-mail.co.zm/",
         "feed": "https://www.daily-mail.co.zm/feed/",
         "tier": 2,
-        "state": "error"
+        "state": "missing"
       },
       {
         "name": "Mwebantu",
@@ -5052,7 +5052,7 @@
         "home": "https://bulawayo24.com/",
         "feed": "https://bulawayo24.com/rss",
         "tier": 2,
-        "state": "ok"
+        "state": "error"
       },
       {
         "name": "Zimbabwe Independent",
