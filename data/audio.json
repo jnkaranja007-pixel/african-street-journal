@@ -2,7 +2,7 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-22T12:00:52Z",
+ "updated": "2026-11-23T10:40:07Z",
  "items": {
   "bi/imbonerakure-truck-crash-in-kabanga-leaves-31-dead-sources-6e03a0": {
    "s": 91,
@@ -16,14 +16,6 @@
    "s": 56,
    "on": "2026-11-19"
   },
-  "cd/ebola-victims-bodies-sprayed-with-fuel-in-dr-congo-556996": {
-   "s": 66,
-   "on": "2026-11-14"
-  },
-  "cd/food-insecurity-hits-28-8-million-people-in-dr-congo-143f6f": {
-   "s": 62,
-   "on": "2026-11-14"
-  },
   "cd/oif-leader-stays-on-as-dr-congo-blocks-third-term-20cf40": {
    "s": 109,
    "on": "2026-11-17"
@@ -32,9 +24,13 @@
    "s": 57,
    "on": "2026-11-16"
   },
-  "cf/bangui-protesters-demand-lower-fuel-prices-d68ac1": {
-   "s": 79,
-   "on": "2026-11-14"
+  "cd/wapinda-youth-group-urges-stronger-ebola-response-as-327a78": {
+   "s": 80,
+   "on": "2026-11-23"
+  },
+  "cd/who-calls-for-immediate-safe-evacuation-of-ebola-response-9924c5": {
+   "s": 55,
+   "on": "2026-11-23"
   },
   "cf/hundreds-march-in-bangui-against-fuel-price-rise-and-high-97c31e": {
    "s": 67,
@@ -71,6 +67,10 @@
   "dj/djibouti-opens-al-shifa-hospital-in-djibouti-ville-to-cut-32e6e4": {
    "s": 60,
    "on": "2026-11-16"
+  },
+  "dz/algeria-orders-public-banks-to-deploy-180-000-payment-c68cea": {
+   "s": 76,
+   "on": "2026-11-23"
   },
   "eg/egypt-directs-1-5-billion-imf-tranche-to-central-bank-fa31bd": {
    "s": 86,
@@ -148,6 +148,10 @@
    "s": 100,
    "on": "2026-11-22"
   },
+  "ke/kenya-and-dr-congo-agree-to-restore-full-diplomatic-ties-ba66cb": {
+   "s": 84,
+   "on": "2026-11-23"
+  },
   "ke/kenya-holds-fuel-pump-prices-with-sh4-6bn-subsidy-f6ea72": {
    "s": 88,
    "on": "2026-11-15"
@@ -155,10 +159,6 @@
   "ke/kenya-uses-ksh4-6-billion-to-hold-diesel-price-at-ksh227-76-23c980": {
    "s": 110,
    "on": "2026-11-19"
-  },
-  "ke/kenyan-government-urges-1-5-million-flood-prone-residents-255ab1": {
-   "s": 88,
-   "on": "2026-11-14"
   },
   "ke/mombasa-teacher-assault-not-linked-to-kcse-says-cs-02cec2": {
    "s": 91,
@@ -184,9 +184,17 @@
    "s": 78,
    "on": "2026-11-22"
   },
+  "ly/libya-ranks-second-in-africa-with-146-7-tonnes-of-central-9dc51d": {
+   "s": 69,
+   "on": "2026-11-23"
+  },
   "mg/madagascar-and-us-sign-military-logistics-accord-for-b7a644": {
    "s": 96,
    "on": "2026-11-18"
+  },
+  "ml/algerian-army-reports-arms-cache-near-mali-border-e75aa5": {
+   "s": 53,
+   "on": "2026-11-23"
   },
   "mr/mauritania-orders-eu-fishing-boats-back-to-port-as-deal-86934c": {
    "s": 75,
@@ -211,10 +219,6 @@
   "mw/malawi-protest-group-suspends-fuel-and-blackout-005bed": {
    "s": 60,
    "on": "2026-11-15"
-  },
-  "mw/malawians-plan-nationwide-protests-over-fuel-power-and-1f674e": {
-   "s": 62,
-   "on": "2026-11-14"
   },
   "mw/world-bank-report-warns-malawi-firms-face-a-4-trillion-e6c785": {
    "s": 88,
@@ -260,6 +264,10 @@
    "s": 49,
    "on": "2026-11-18"
   },
+  "ng/nigerian-companies-generate-more-operating-cash-as-profits-3ec7e2": {
+   "s": 67,
+   "on": "2026-11-23"
+  },
   "ng/rights-group-sues-nigeria-s-data-regulator-and-electoral-c6b7f3": {
    "s": 99,
    "on": "2026-11-22"
@@ -271,6 +279,10 @@
   "sd/drone-strikes-drive-most-civilian-deaths-in-sudan-un-rights-f81f14": {
    "s": 92,
    "on": "2026-11-18"
+  },
+  "sd/drone-strikes-hit-homes-and-a-un-building-in-khartoum-and-e307d7": {
+   "s": 80,
+   "on": "2026-11-23"
   },
   "sd/founding-alliance-claims-control-of-five-blue-nile-areas-1902ea": {
    "s": 71,
@@ -288,14 +300,6 @@
    "s": 74,
    "on": "2026-11-19"
   },
-  "sd/sudanese-army-retakes-key-west-kordofan-town-from-rsf-bef732": {
-   "s": 97,
-   "on": "2026-11-14"
-  },
-  "sd/un-food-chief-urges-end-to-sudan-war-amid-famine-crisis-61a3c6": {
-   "s": 78,
-   "on": "2026-11-14"
-  },
   "sn/faye-enacts-senegal-s-rejected-2026-revised-budget-by-decree-70c8c6": {
    "s": 58,
    "on": "2026-11-20"
@@ -312,13 +316,13 @@
    "s": 77,
    "on": "2026-11-16"
   },
+  "so/six-somali-judges-take-presidential-term-dispute-to-east-013bfb": {
+   "s": 81,
+   "on": "2026-11-23"
+  },
   "so/somalia-orders-uae-ambassador-out-within-72-hours-recalls-ee3935": {
    "s": 86,
    "on": "2026-11-20"
-  },
-  "so/un-experts-call-somalia-s-chief-justice-dismissal-a-blatant-cd3826": {
-   "s": 110,
-   "on": "2026-11-14"
   },
   "so/world-bank-weighs-suspending-somalia-budget-support-after-40b729": {
    "s": 91,
@@ -327,6 +331,10 @@
   "ss/south-sudan-begins-voter-registration-amid-logistical-strain-fbd1b0": {
    "s": 90,
    "on": "2026-11-15"
+  },
+  "ss/south-sudan-central-bank-gives-unlicensed-forex-dealers-30-03f99b": {
+   "s": 70,
+   "on": "2026-11-23"
   },
   "ss/south-sudan-offers-14-oil-blocks-to-investors-06f693": {
    "s": 69,
@@ -339,18 +347,6 @@
   "ss/south-sudan-protests-exclusion-from-unisfa-mandate-drafting-5ed11a": {
    "s": 59,
    "on": "2026-11-18"
-  },
-  "ss/south-sudan-s-electoral-commission-moves-december-vote-to-f42b0f": {
-   "s": 89,
-   "on": "2026-11-14"
-  },
-  "st/mlstp-fails-to-form-government-after-election-win-d8cc8c": {
-   "s": 100,
-   "on": "2026-11-14"
-  },
-  "st/president-names-adi-leader-americo-ramos-prime-minister-d8a377": {
-   "s": 83,
-   "on": "2026-11-14"
   },
   "tg/togo-adopts-2027-budget-with-921-milliards-fcfa-for-bdb742": {
    "s": 107,
@@ -367,10 +363,6 @@
   "ug/uganda-drivers-urge-return-of-speed-cameras-as-road-deaths-a5e3d1": {
    "s": 106,
    "on": "2026-11-16"
-  },
-  "ug/uganda-minister-urges-patience-as-drc-border-stays-shut-a46721": {
-   "s": 109,
-   "on": "2026-11-14"
   },
   "ug/uganda-signs-10-year-crude-marketing-deal-with-vitol-d3ab8a": {
    "s": 81,
@@ -396,6 +388,10 @@
    "s": 90,
    "on": "2026-11-18"
   },
+  "za/johannesburg-council-to-elect-mayor-as-coalition-deal-gives-2c295b": {
+   "s": 78,
+   "on": "2026-11-23"
+  },
   "za/south-africa-s-reserve-bank-holds-repo-rate-at-7-25-e4375d": {
    "s": 76,
    "on": "2026-11-20"
@@ -419,6 +415,10 @@
   "zm/zambia-s-high-court-upholds-kaunda-s-lima-seat-66b155": {
    "s": 50,
    "on": "2026-11-21"
+  },
+  "zw/garwe-orders-councils-to-cut-mps-stand-prices-by-80-faa789": {
+   "s": 83,
+   "on": "2026-11-23"
   },
   "zw/ncube-proposes-lower-imtt-rates-in-2027-budget-e75728": {
    "s": 77,
