@@ -2,15 +2,15 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-23T13:41:40Z",
+ "updated": "2026-11-24T12:41:41Z",
  "items": {
   "bi/imbonerakure-truck-crash-in-kabanga-leaves-31-dead-sources-6e03a0": {
    "s": 91,
    "on": "2026-11-17"
   },
-  "cd/butembo-civil-society-warns-ebola-strike-by-care-workers-6729f0": {
-   "s": 55,
-   "on": "2026-11-15"
+  "cd/dr-congo-health-workers-extend-eight-week-strike-at-public-b5fc3e": {
+   "s": 63,
+   "on": "2026-11-24"
   },
   "cd/dr-congo-s-mining-sector-gives-1-1-million-to-ebola-response-be8b16": {
    "s": 56,
@@ -32,10 +32,6 @@
    "s": 55,
    "on": "2026-11-23"
   },
-  "cf/hundreds-march-in-bangui-against-fuel-price-rise-and-high-97c31e": {
-   "s": 67,
-   "on": "2026-11-15"
-  },
   "ci/ecowas-ministers-weigh-host-for-eco-central-bank-in-abidjan-2838ed": {
    "s": 90,
    "on": "2026-11-21"
@@ -56,10 +52,6 @@
    "s": 81,
    "on": "2026-11-22"
   },
-  "cv/cape-verdeans-vote-for-sixth-president-ed434f": {
-   "s": 71,
-   "on": "2026-11-15"
-  },
   "cv/neves-wins-cape-verde-presidential-vote-with-nearly-64-7fadb9": {
    "s": 77,
    "on": "2026-11-16"
@@ -71,6 +63,10 @@
   "dz/algeria-orders-public-banks-to-deploy-180-000-payment-c68cea": {
    "s": 76,
    "on": "2026-11-23"
+  },
+  "dz/algeria-orders-public-banks-to-install-180-000-payment-a67cf2": {
+   "s": 97,
+   "on": "2026-11-24"
   },
   "eg/egypt-directs-1-5-billion-imf-tranche-to-central-bank-fa31bd": {
    "s": 86,
@@ -116,6 +112,18 @@
    "s": 85,
    "on": "2026-11-16"
   },
+  "ga/fitch-keeps-gabon-s-sovereign-ratings-at-ccc-and-cc-d0d1a1": {
+   "s": 86,
+   "on": "2026-11-24"
+  },
+  "ga/gabon-orders-exxonmobil-talks-on-a-10-year-oil-contract-ef3ed1": {
+   "s": 76,
+   "on": "2026-11-24"
+  },
+  "gh/bank-of-ghana-cuts-policy-rate-to-11-as-banks-expect-0ad81b": {
+   "s": 82,
+   "on": "2026-11-24"
+  },
   "gh/cedi-s-year-to-date-fall-against-dollar-reaches-10-6-per-8d2a30": {
    "s": 70,
    "on": "2026-11-18"
@@ -124,13 +132,13 @@
    "s": 109,
    "on": "2026-11-17"
   },
+  "gh/tullow-cuts-2026-cash-flow-forecast-after-settling-ghana-732527": {
+   "s": 90,
+   "on": "2026-11-24"
+  },
   "gm/barrow-leads-ceprass-poll-with-37-9-before-gambia-election-10b502": {
    "s": 85,
    "on": "2026-11-18"
-  },
-  "gm/gambia-election-nine-cleared-for-december-5-vote-f6d7c1": {
-   "s": 90,
-   "on": "2026-11-15"
   },
   "gm/gambia-signs-agreements-for-52-megawatt-peak-solar-plant-in-b431a1": {
    "s": 85,
@@ -144,6 +152,10 @@
    "s": 86,
    "on": "2026-11-22"
   },
+  "gn/imf-approves-425-million-programme-for-guinea-159a87": {
+   "s": 81,
+   "on": "2026-11-24"
+  },
   "ke/heifer-assessment-targets-year-round-feed-supply-for-kenya-1d0d4c": {
    "s": 100,
    "on": "2026-11-22"
@@ -151,10 +163,6 @@
   "ke/kenya-and-dr-congo-agree-to-restore-full-diplomatic-ties-ba66cb": {
    "s": 84,
    "on": "2026-11-23"
-  },
-  "ke/kenya-holds-fuel-pump-prices-with-sh4-6bn-subsidy-f6ea72": {
-   "s": 88,
-   "on": "2026-11-15"
   },
   "ke/kenya-uses-ksh4-6-billion-to-hold-diesel-price-at-ksh227-76-23c980": {
    "s": 110,
@@ -171,10 +179,6 @@
   "ke/ruto-returns-to-parliament-with-sh5-trillion-plan-under-5d296d": {
    "s": 87,
    "on": "2026-11-18"
-  },
-  "ke/six-workers-dead-as-eight-storey-building-collapses-near-5740b5": {
-   "s": 85,
-   "on": "2026-11-15"
   },
   "ke/us-consortium-wins-tender-to-develop-kenya-s-mrima-hill-2a87ee": {
    "s": 81,
@@ -196,10 +200,6 @@
    "s": 53,
    "on": "2026-11-23"
   },
-  "mr/mauritania-orders-eu-fishing-boats-back-to-port-as-deal-86934c": {
-   "s": 75,
-   "on": "2026-11-15"
-  },
   "mr/mauritania-orders-eu-fishing-vessels-to-leave-its-waters-86934c": {
    "s": 67,
    "on": "2026-11-16"
@@ -212,13 +212,13 @@
    "s": 60,
    "on": "2026-11-17"
   },
+  "mu/mauritius-inflation-reaches-6-4-as-central-bank-raises-rate-db5ed6": {
+   "s": 87,
+   "on": "2026-11-24"
+  },
   "mw/donors-pledge-221-million-to-malawi-recovery-projects-63bf3b": {
    "s": 87,
    "on": "2026-11-21"
-  },
-  "mw/malawi-protest-group-suspends-fuel-and-blackout-005bed": {
-   "s": 60,
-   "on": "2026-11-15"
   },
   "mw/world-bank-report-warns-malawi-firms-face-a-4-trillion-e6c785": {
    "s": 88,
@@ -247,10 +247,6 @@
   "ng/naira-firms-slightly-in-official-market-as-parallel-rate-a5acfb": {
    "s": 99,
    "on": "2026-11-19"
-  },
-  "ng/nigeria-s-central-bank-to-decide-on-interest-rates-on-212bd1": {
-   "s": 61,
-   "on": "2026-11-15"
   },
   "ng/nigeria-s-headline-inflation-falls-to-14-06-in-october-ddfb22": {
    "s": 85,
@@ -308,6 +304,10 @@
    "s": 80,
    "on": "2026-11-21"
   },
+  "sn/senegal-s-bakeries-extend-strike-over-state-set-baguette-0108a4": {
+   "s": 63,
+   "on": "2026-11-24"
+  },
   "sn/senegal-s-mps-reject-2027-budget-stopping-review-of-3de59c": {
    "s": 78,
    "on": "2026-11-19"
@@ -328,10 +328,6 @@
    "s": 91,
    "on": "2026-11-17"
   },
-  "ss/south-sudan-begins-voter-registration-amid-logistical-strain-fbd1b0": {
-   "s": 90,
-   "on": "2026-11-15"
-  },
   "ss/south-sudan-central-bank-gives-unlicensed-forex-dealers-30-03f99b": {
    "s": 70,
    "on": "2026-11-23"
@@ -347,6 +343,10 @@
   "ss/south-sudan-protests-exclusion-from-unisfa-mandate-drafting-5ed11a": {
    "s": 59,
    "on": "2026-11-18"
+  },
+  "ss/south-sudan-rehabilitates-44-kilometre-road-linking-magwi-24dcd8": {
+   "s": 92,
+   "on": "2026-11-24"
   },
   "tg/togo-adopts-2027-budget-with-921-milliards-fcfa-for-bdb742": {
    "s": 107,
@@ -400,10 +400,6 @@
    "s": 78,
    "on": "2026-11-20"
   },
-  "za/south-african-weather-service-keeps-orange-level-5-storm-24a752": {
-   "s": 75,
-   "on": "2026-11-15"
-  },
   "zm/court-sets-december-16-to-resume-esther-lungu-theft-trial-c7581c": {
    "s": 46,
    "on": "2026-11-17"
@@ -427,6 +423,10 @@
   "zw/zimbabwe-requires-large-buyers-to-source-15-of-inputs-081412": {
    "s": 55,
    "on": "2026-11-21"
+  },
+  "zw/zimbabwe-weighs-commercial-loans-to-clear-8-3-billion-in-6e7e3c": {
+   "s": 82,
+   "on": "2026-11-24"
   }
  }
 }
