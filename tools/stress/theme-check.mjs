@@ -143,9 +143,15 @@ await browser.close();
 server.close();
 
 // Story pages keep their search and share tags. The desk publishes them, so a fresh
-// clone may hold none; then there is nothing to guard.
+// clone may hold none; then there is nothing to guard. Language editions (fr/, am/,
+// soomaali/ ...) are checked by their own builder, so their folders are skipped; the
+// folder is each data/i18n file's "path".
+const i18nDir = path.join(root, 'data', 'i18n');
+const langDirs = new Set((fs.existsSync(i18nDir) ? fs.readdirSync(i18nDir) : []).filter(f => f.endsWith('.json')).map(f => {
+  try { return JSON.parse(fs.readFileSync(path.join(i18nDir, f), 'utf8')).path || f.slice(0, -5); } catch { return f.slice(0, -5); }
+}));
 const pages = [];
-for (const cc of fs.readdirSync(root).filter(d => /^[a-z]{2}$/.test(d) && fs.statSync(path.join(root, d)).isDirectory())) {
+for (const cc of fs.readdirSync(root).filter(d => /^[a-z]{2}$/.test(d) && !langDirs.has(d) && fs.statSync(path.join(root, d)).isDirectory())) {
   for (const s of fs.readdirSync(path.join(root, cc))) {
     const f = path.join(root, cc, s, 'index.html');
     // A story whose headline was corrected keeps its old address as a redirect stub
