@@ -201,13 +201,21 @@ try {
   if ($DryRun) { exit 0 }
 
   $clock = [Diagnostics.Stopwatch]::StartNew()
-  $ok = 0; $rejected = 0; $calls = 0
+  $ok = 0; $rejected = 0; $calls = 0; $failsInRow = 0
   for ($i = 0; $i -lt $todo.Count; $i += $Batch) {
     if ($clock.Elapsed.TotalMinutes -ge $Minutes) { Write-Host "$tag time budget reached; the rest waits for the next run"; break }
     $chunk = @($todo[$i..([Math]::Min($todo.Count, $i + $Batch) - 1)])
     $calls++
     $got = Invoke-Translate $chunk $key
-    if (-not $got) { continue }
+    if (-not $got) {
+      # Each failed request has already waited out five retries (about four minutes). Two in a
+      # row means the model is down or overloaded (24 Nov 2026: HTTP 503 all day), so stop
+      # here and leave the time to the other languages instead of burning the whole budget.
+      $failsInRow++
+      if ($failsInRow -ge 2) { Write-Host "$tag two requests in a row failed; stopping this language for this run"; break }
+      continue
+    }
+    $failsInRow = 0
     foreach ($c in $chunk) {
       $fr = @($got | Where-Object { [string]$_.id -eq $c.id }) | Select-Object -First 1
       if (-not $fr) { $rejected++; Write-Host "$tag $($c.code)/$($c.id): missing from the answer"; continue }

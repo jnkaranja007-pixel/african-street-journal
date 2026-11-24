@@ -49,17 +49,27 @@ jobs:
           LANGS: ${{ github.event.inputs.languages || 'fr pt sw ar am ha so zu' }}
           MINUTES: ${{ github.event.inputs.minutes || '22' }}
         run: |
+          # The whole step shares one clock: eight languages at 22 minutes each would pass
+          # the job's 110-minute limit, and a job cancelled at the limit never reaches Publish
+          # (24 Nov 2026, two runs lost to HTTP 503 retries). Each language gets at most its
+          # budget and never more than what is left; pages are still built when none is left.
+          $clock = [Diagnostics.Stopwatch]::StartNew()
+          $total = 90
           foreach ($l in ($env:LANGS -split '\s+' | Where-Object { $_ })) {
             if (-not (Test-Path "data/i18n/$l.json")) { Write-Host "[$l] no data/i18n/$l.json; skipped"; continue }
+            $left = [int][Math]::Floor($total - $clock.Elapsed.TotalMinutes)
+            $budget = [Math]::Min([int]$env:MINUTES, $left)
             # One language failing never costs the others their pages.
             try {
-              ./scripts/translate-briefs.ps1 -Lang $l -Minutes ([int]$env:MINUTES)
+              if ($budget -ge 3) { ./scripts/translate-briefs.ps1 -Lang $l -Minutes $budget }
+              else { Write-Host "[$l] no time left for translation in this run; pages rebuilt from what is already translated" }
               ./scripts/build-lang-pages.ps1 -Lang $l
             } catch { Write-Host "::warning::[$l] $($_.Exception.Message)" }
           }
           exit 0
 
       - name: Publish
+        if: always()
         shell: bash
         run: |
           git config user.name 'asj-news-bot'
