@@ -2,7 +2,7 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-24T14:18:08Z",
+ "updated": "2026-11-25T11:28:02Z",
  "items": {
   "bi/imbonerakure-truck-crash-in-kabanga-leaves-31-dead-sources-6e03a0": {
    "s": 91,
@@ -20,10 +20,6 @@
    "s": 109,
    "on": "2026-11-17"
   },
-  "cd/us-sends-dr-congo-list-of-agencies-receiving-over-400-93563e": {
-   "s": 57,
-   "on": "2026-11-16"
-  },
   "cd/wapinda-youth-group-urges-stronger-ebola-response-as-327a78": {
    "s": 80,
    "on": "2026-11-23"
@@ -40,10 +36,6 @@
    "s": 54,
    "on": "2026-11-20"
   },
-  "ci/ivory-coast-loses-88-6-billion-to-illicit-financial-flows-66e111": {
-   "s": 108,
-   "on": "2026-11-16"
-  },
   "ci/west-african-ministers-weigh-host-for-new-central-bank-2838ed": {
    "s": 95,
    "on": "2026-11-22"
@@ -51,14 +43,6 @@
   "cv/cape-verde-s-election-commission-proclaims-neves-re-elected-976fc1": {
    "s": 81,
    "on": "2026-11-22"
-  },
-  "cv/neves-wins-cape-verde-presidential-vote-with-nearly-64-7fadb9": {
-   "s": 77,
-   "on": "2026-11-16"
-  },
-  "dj/djibouti-opens-al-shifa-hospital-in-djibouti-ville-to-cut-32e6e4": {
-   "s": 60,
-   "on": "2026-11-16"
   },
   "dz/algeria-orders-public-banks-to-deploy-180-000-payment-c68cea": {
    "s": 76,
@@ -96,9 +80,9 @@
    "s": 89,
    "on": "2026-11-19"
   },
-  "er/eritrea-and-ethiopia-trade-drone-and-artillery-strikes-ba8977": {
-   "s": 87,
-   "on": "2026-11-16"
+  "et/abiy-offers-to-host-inclusive-talks-on-sudan-war-fc8587": {
+   "s": 76,
+   "on": "2026-11-25"
   },
   "et/ethiopia-conflict-displaces-about-700-000-as-fighting-61c3d2": {
    "s": 88,
@@ -107,10 +91,6 @@
   "et/ethiopian-airlines-investigates-shebamiles-customer-data-dd0012": {
    "s": 70,
    "on": "2026-11-19"
-  },
-  "et/sudan-and-ethiopia-trade-accusations-over-armed-groups-36ac7b": {
-   "s": 85,
-   "on": "2026-11-16"
   },
   "ga/fitch-keeps-gabon-s-sovereign-ratings-at-ccc-and-cc-d0d1a1": {
    "s": 86,
@@ -152,6 +132,10 @@
    "s": 86,
    "on": "2026-11-22"
   },
+  "gn/guinea-court-clears-former-minister-zenab-drame-in-402c4e": {
+   "s": 74,
+   "on": "2026-11-25"
+  },
   "gn/imf-approves-425-million-programme-for-guinea-159a87": {
    "s": 81,
    "on": "2026-11-24"
@@ -160,6 +144,10 @@
    "s": 100,
    "on": "2026-11-22"
   },
+  "ke/high-court-summons-mombasa-police-chief-over-unexecuted-ae4f67": {
+   "s": 93,
+   "on": "2026-11-25"
+  },
   "ke/kenya-and-dr-congo-agree-to-restore-full-diplomatic-ties-ba66cb": {
    "s": 84,
    "on": "2026-11-23"
@@ -167,10 +155,6 @@
   "ke/kenya-uses-ksh4-6-billion-to-hold-diesel-price-at-ksh227-76-23c980": {
    "s": 110,
    "on": "2026-11-19"
-  },
-  "ke/mombasa-teacher-assault-not-linked-to-kcse-says-cs-02cec2": {
-   "s": 91,
-   "on": "2026-11-16"
   },
   "ke/natembeya-s-aide-in-intensive-care-after-night-attack-15b86e": {
    "s": 60,
@@ -183,6 +167,10 @@
   "ke/us-consortium-wins-tender-to-develop-kenya-s-mrima-hill-2a87ee": {
    "s": 81,
    "on": "2026-11-20"
+  },
+  "lr/boakai-to-sign-us-5-7-billion-bea-mountain-power-and-roads-6e358a": {
+   "s": 94,
+   "on": "2026-11-25"
   },
   "lr/liberia-offers-15-offshore-oil-blocks-to-investors-51e91e": {
    "s": 78,
@@ -200,9 +188,9 @@
    "s": 53,
    "on": "2026-11-23"
   },
-  "mr/mauritania-orders-eu-fishing-vessels-to-leave-its-waters-86934c": {
+  "mr/ghazouani-opens-gabou-gold-mine-a-230-million-dollar-862778": {
    "s": 67,
-   "on": "2026-11-16"
+   "on": "2026-11-25"
   },
   "mr/mauritania-weighs-border-risks-after-un-ends-minurso-mandate-19cbbb": {
    "s": 94,
@@ -236,6 +224,14 @@
    "s": 92,
    "on": "2026-11-17"
   },
+  "mz/mozambique-s-supreme-court-begins-hearing-36-witnesses-in-befd40": {
+   "s": 96,
+   "on": "2026-11-25"
+  },
+  "mz/supreme-court-allows-graca-machel-to-be-called-in-mondlane-c9511c": {
+   "s": 58,
+   "on": "2026-11-25"
+  },
   "ne/niger-orders-mahamid-arabs-to-leave-by-31-december-2d66a4": {
    "s": 61,
    "on": "2026-11-18"
@@ -251,10 +247,6 @@
   "ng/nigeria-s-headline-inflation-falls-to-14-06-in-october-ddfb22": {
    "s": 85,
    "on": "2026-11-17"
-  },
-  "ng/nigeria-s-power-minister-names-gas-grid-and-metering-c73fea": {
-   "s": 68,
-   "on": "2026-11-16"
   },
   "ng/nigeria-s-stocks-rise-about-60-as-inflation-falls-for-four-5a0cee": {
    "s": 49,
@@ -296,6 +288,10 @@
    "s": 74,
    "on": "2026-11-19"
   },
+  "sn/court-restores-senegal-as-afcon-2025-champions-142a21": {
+   "s": 64,
+   "on": "2026-11-25"
+  },
   "sn/faye-enacts-senegal-s-rejected-2026-revised-budget-by-decree-70c8c6": {
    "s": 58,
    "on": "2026-11-20"
@@ -312,9 +308,9 @@
    "s": 78,
    "on": "2026-11-19"
   },
-  "sn/senegal-wins-right-to-host-2031-francophonie-games-ce1d7d": {
-   "s": 77,
-   "on": "2026-11-16"
+  "sn/sports-tribunal-restores-senegal-s-1-0-africa-cup-final-win-dc0785": {
+   "s": 86,
+   "on": "2026-11-25"
   },
   "so/six-somali-judges-take-presidential-term-dispute-to-east-013bfb": {
    "s": 81,
@@ -360,10 +356,6 @@
    "s": 98,
    "on": "2026-11-17"
   },
-  "ug/uganda-drivers-urge-return-of-speed-cameras-as-road-deaths-a5e3d1": {
-   "s": 106,
-   "on": "2026-11-16"
-  },
   "ug/uganda-signs-10-year-crude-marketing-deal-with-vitol-d3ab8a": {
    "s": 81,
    "on": "2026-11-22"
@@ -380,9 +372,9 @@
    "s": 107,
    "on": "2026-11-17"
   },
-  "za/anc-factions-clash-over-election-results-and-gnu-d51353": {
-   "s": 94,
-   "on": "2026-11-16"
+  "za/anc-and-actionsa-prepare-18-party-johannesburg-coalition-4e96c8": {
+   "s": 102,
+   "on": "2026-11-25"
   },
   "za/astral-foods-holds-firm-on-pay-as-festive-chicken-strike-6606b9": {
    "s": 90,
@@ -399,6 +391,10 @@
   "za/south-african-cities-impose-water-restrictions-as-el-nino-72b07d": {
    "s": 78,
    "on": "2026-11-20"
+  },
+  "za/western-cape-high-court-sets-aside-phala-phala-impeachment-4f3f7f": {
+   "s": 93,
+   "on": "2026-11-25"
   },
   "zm/court-sets-december-16-to-resume-esther-lungu-theft-trial-c7581c": {
    "s": 46,
