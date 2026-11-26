@@ -2,12 +2,8 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-25T13:31:47Z",
+ "updated": "2026-11-26T11:05:44Z",
  "items": {
-  "bi/imbonerakure-truck-crash-in-kabanga-leaves-31-dead-sources-6e03a0": {
-   "s": 91,
-   "on": "2026-11-17"
-  },
   "cd/dr-congo-health-workers-extend-eight-week-strike-at-public-b5fc3e": {
    "s": 63,
    "on": "2026-11-24"
@@ -15,10 +11,6 @@
   "cd/dr-congo-s-mining-sector-gives-1-1-million-to-ebola-response-be8b16": {
    "s": 56,
    "on": "2026-11-19"
-  },
-  "cd/oif-leader-stays-on-as-dr-congo-blocks-third-term-20cf40": {
-   "s": 109,
-   "on": "2026-11-17"
   },
   "cd/wapinda-youth-group-urges-stronger-ebola-response-as-327a78": {
    "s": 80,
@@ -35,6 +27,10 @@
   "ci/ivory-coast-benin-and-togo-sign-pact-to-study-shared-gas-f5d44e": {
    "s": 54,
    "on": "2026-11-20"
+  },
+  "ci/ivory-coast-releases-234-detainees-for-lack-of-evidence-a0251c": {
+   "s": 81,
+   "on": "2026-11-26"
   },
   "ci/west-african-ministers-weigh-host-for-new-central-bank-2838ed": {
    "s": 95,
@@ -56,9 +52,17 @@
    "s": 86,
    "on": "2026-11-19"
   },
+  "eg/egypt-opens-prosecution-inquiry-after-fuel-tanker-fire-5f9141": {
+   "s": 88,
+   "on": "2026-11-26"
+  },
   "eg/egypt-pays-38-2-billion-to-service-external-debt-as-7f1812": {
    "s": 94,
    "on": "2026-11-21"
+  },
+  "eg/egypt-warns-it-will-act-under-1976-defence-pact-to-back-2050bb": {
+   "s": 78,
+   "on": "2026-11-26"
   },
   "eh/polisario-front-calls-general-mobilisation-as-it-accuses-450111": {
    "s": 58,
@@ -88,6 +92,10 @@
    "s": 88,
    "on": "2026-11-21"
   },
+  "et/ethiopia-offers-bondholders-880-million-in-new-debt-for-1-8f5e11": {
+   "s": 103,
+   "on": "2026-11-26"
+  },
   "et/ethiopian-airlines-investigates-shebamiles-customer-data-dd0012": {
    "s": 70,
    "on": "2026-11-19"
@@ -108,10 +116,6 @@
    "s": 70,
    "on": "2026-11-18"
   },
-  "gh/ghana-economy-ranks-eighth-in-africa-3ed344": {
-   "s": 109,
-   "on": "2026-11-17"
-  },
   "gh/tullow-cuts-2026-cash-flow-forecast-after-settling-ghana-732527": {
    "s": 90,
    "on": "2026-11-24"
@@ -131,6 +135,10 @@
   "gn/bel-air-mining-barge-collision-leaves-two-guinean-fishermen-768406": {
    "s": 86,
    "on": "2026-11-22"
+  },
+  "gn/guinea-approves-sovereign-fund-with-30-of-simandou-revenues-d85f10": {
+   "s": 75,
+   "on": "2026-11-26"
   },
   "gn/guinea-court-clears-former-minister-zenab-drame-in-402c4e": {
    "s": 74,
@@ -156,10 +164,6 @@
    "s": 110,
    "on": "2026-11-19"
   },
-  "ke/natembeya-s-aide-in-intensive-care-after-night-attack-15b86e": {
-   "s": 60,
-   "on": "2026-11-17"
-  },
   "ke/ruto-returns-to-parliament-with-sh5-trillion-plan-under-5d296d": {
    "s": 87,
    "on": "2026-11-18"
@@ -167,6 +171,14 @@
   "ke/us-consortium-wins-tender-to-develop-kenya-s-mrima-hill-2a87ee": {
    "s": 81,
    "on": "2026-11-20"
+  },
+  "lr/boakai-signs-us-5-7-billion-bea-mountain-infrastructure-deal-004e30": {
+   "s": 76,
+   "on": "2026-11-26"
+  },
+  "lr/boakai-signs-us-5-7-billion-bea-mountain-infrastructure-deal-fa0892": {
+   "s": 82,
+   "on": "2026-11-26"
   },
   "lr/boakai-to-sign-us-5-7-billion-bea-mountain-power-and-roads-6e358a": {
    "s": 94,
@@ -196,10 +208,6 @@
    "s": 94,
    "on": "2026-11-18"
   },
-  "mu/mauritius-extends-police-commissioner-s-contract-for-one-71e9e5": {
-   "s": 60,
-   "on": "2026-11-17"
-  },
   "mu/mauritius-inflation-reaches-6-4-as-central-bank-raises-rate-db5ed6": {
    "s": 87,
    "on": "2026-11-24"
@@ -219,10 +227,6 @@
   "mz/mozambique-approves-plan-change-for-exxonmobil-s-rovuma-lng-662e26": {
    "s": 75,
    "on": "2026-11-20"
-  },
-  "mz/mozambique-police-urge-calm-as-ex-presidential-candidate-724005": {
-   "s": 92,
-   "on": "2026-11-17"
   },
   "mz/mozambique-s-supreme-court-begins-hearing-36-witnesses-in-befd40": {
    "s": 96,
@@ -244,10 +248,6 @@
    "s": 99,
    "on": "2026-11-19"
   },
-  "ng/nigeria-s-headline-inflation-falls-to-14-06-in-october-ddfb22": {
-   "s": 85,
-   "on": "2026-11-17"
-  },
   "ng/nigeria-s-stocks-rise-about-60-as-inflation-falls-for-four-5a0cee": {
    "s": 49,
    "on": "2026-11-18"
@@ -260,9 +260,13 @@
    "s": 99,
    "on": "2026-11-22"
   },
-  "rw/rwanda-to-host-eu-migrant-return-hub-74e3ec": {
-   "s": 88,
-   "on": "2026-11-17"
+  "rw/rwanda-s-central-bank-raises-key-rate-to-9-5-16d8a2": {
+   "s": 78,
+   "on": "2026-11-26"
+  },
+  "sd/drone-attacks-kill-civilians-in-sudan-s-blue-nile-cities-199ab5": {
+   "s": 65,
+   "on": "2026-11-26"
   },
   "sd/drone-strikes-drive-most-civilian-deaths-in-sudan-un-rights-f81f14": {
    "s": 92,
@@ -308,6 +312,10 @@
    "s": 78,
    "on": "2026-11-19"
   },
+  "sn/senegal-s-parliament-rejects-decree-imposing-revised-2026-8be0b5": {
+   "s": 68,
+   "on": "2026-11-26"
+  },
   "sn/sports-tribunal-restores-senegal-s-1-0-africa-cup-final-win-dc0785": {
    "s": 86,
    "on": "2026-11-25"
@@ -319,10 +327,6 @@
   "so/somalia-orders-uae-ambassador-out-within-72-hours-recalls-ee3935": {
    "s": 86,
    "on": "2026-11-20"
-  },
-  "so/world-bank-weighs-suspending-somalia-budget-support-after-40b729": {
-   "s": 91,
-   "on": "2026-11-17"
   },
   "ss/south-sudan-central-bank-gives-unlicensed-forex-dealers-30-03f99b": {
    "s": 70,
@@ -348,13 +352,13 @@
    "s": 107,
    "on": "2026-11-22"
   },
+  "tz/tanzania-signs-175-million-in-french-loans-for-water-food-4b1de0": {
+   "s": 87,
+   "on": "2026-11-26"
+  },
   "tz/tanzania-targets-local-processing-of-30-of-cashew-harvest-254a44": {
    "s": 79,
    "on": "2026-11-20"
-  },
-  "ug/kampala-mayor-recounts-crash-that-cost-his-leg-as-road-b34bbf": {
-   "s": 98,
-   "on": "2026-11-17"
   },
   "ug/uganda-signs-10-year-crude-marketing-deal-with-vitol-d3ab8a": {
    "s": 81,
@@ -367,10 +371,6 @@
   "ug/uganda-suspends-mass-gatherings-in-34-ebola-risk-border-f717b1": {
    "s": 72,
    "on": "2026-11-21"
-  },
-  "za/17-killed-in-two-south-african-mass-shootings-06c4f6": {
-   "s": 107,
-   "on": "2026-11-17"
   },
   "za/anc-and-actionsa-prepare-18-party-johannesburg-coalition-4e96c8": {
    "s": 102,
@@ -396,9 +396,9 @@
    "s": 93,
    "on": "2026-11-25"
   },
-  "zm/court-sets-december-16-to-resume-esther-lungu-theft-trial-c7581c": {
-   "s": 46,
-   "on": "2026-11-17"
+  "za/western-cape-high-court-sets-aside-phala-phala-report-86d1f3": {
+   "s": 67,
+   "on": "2026-11-26"
   },
   "zm/standard-poor-s-raises-zambia-s-sovereign-rating-to-b-dff5f4": {
    "s": 64,
