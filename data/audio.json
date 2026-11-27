@@ -2,7 +2,7 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-26T13:11:10Z",
+ "updated": "2026-11-27T11:07:36Z",
  "items": {
   "cd/dr-congo-health-workers-extend-eight-week-strike-at-public-b5fc3e": {
    "s": 63,
@@ -64,10 +64,6 @@
    "s": 78,
    "on": "2026-11-26"
   },
-  "eh/polisario-front-calls-general-mobilisation-as-it-accuses-450111": {
-   "s": 58,
-   "on": "2026-11-18"
-  },
   "eh/russia-vetoes-us-western-sahara-resolution-at-un-security-695c80": {
    "s": 73,
    "on": "2026-11-22"
@@ -112,17 +108,13 @@
    "s": 82,
    "on": "2026-11-24"
   },
-  "gh/cedi-s-year-to-date-fall-against-dollar-reaches-10-6-per-8d2a30": {
-   "s": 70,
-   "on": "2026-11-18"
+  "gh/terkper-urges-ghana-to-resist-fresh-borrowing-after-debt-0b75bd": {
+   "s": 91,
+   "on": "2026-11-27"
   },
   "gh/tullow-cuts-2026-cash-flow-forecast-after-settling-ghana-732527": {
    "s": 90,
    "on": "2026-11-24"
-  },
-  "gm/barrow-leads-ceprass-poll-with-37-9-before-gambia-election-10b502": {
-   "s": 85,
-   "on": "2026-11-18"
   },
   "gm/gambia-signs-agreements-for-52-megawatt-peak-solar-plant-in-b431a1": {
    "s": 85,
@@ -148,6 +140,14 @@
    "s": 81,
    "on": "2026-11-24"
   },
+  "gw/guinea-bissau-delays-presidential-and-parliamentary-45480a": {
+   "s": 66,
+   "on": "2026-11-27"
+  },
+  "gw/guinea-bissau-sets-presidential-and-legislative-elections-8f0fea": {
+   "s": 82,
+   "on": "2026-11-27"
+  },
   "ke/heifer-assessment-targets-year-round-feed-supply-for-kenya-1d0d4c": {
    "s": 100,
    "on": "2026-11-22"
@@ -163,10 +163,6 @@
   "ke/kenya-uses-ksh4-6-billion-to-hold-diesel-price-at-ksh227-76-23c980": {
    "s": 110,
    "on": "2026-11-19"
-  },
-  "ke/ruto-returns-to-parliament-with-sh5-trillion-plan-under-5d296d": {
-   "s": 87,
-   "on": "2026-11-18"
   },
   "ke/us-consortium-wins-tender-to-develop-kenya-s-mrima-hill-2a87ee": {
    "s": 81,
@@ -192,9 +188,17 @@
    "s": 69,
    "on": "2026-11-23"
   },
-  "mg/madagascar-and-us-sign-military-logistics-accord-for-b7a644": {
-   "s": 96,
-   "on": "2026-11-18"
+  "ma/eu-caps-moroccan-hybrid-imports-at-23-954-vehicles-for-200-041282": {
+   "s": 89,
+   "on": "2026-11-27"
+  },
+  "ma/laprophan-raises-2-2-billion-dirhams-in-casablanca-listing-b58a97": {
+   "s": 65,
+   "on": "2026-11-27"
+  },
+  "mg/madagascar-elects-marco-tsaradia-as-assembly-president-with-c1d40d": {
+   "s": 71,
+   "on": "2026-11-27"
   },
   "ml/algerian-army-reports-arms-cache-near-mali-border-e75aa5": {
    "s": 53,
@@ -203,10 +207,6 @@
   "mr/ghazouani-opens-gabou-gold-mine-a-230-million-dollar-862778": {
    "s": 67,
    "on": "2026-11-25"
-  },
-  "mr/mauritania-weighs-border-risks-after-un-ends-minurso-mandate-19cbbb": {
-   "s": 94,
-   "on": "2026-11-18"
   },
   "mu/mauritius-inflation-reaches-6-4-as-central-bank-raises-rate-db5ed6": {
    "s": 87,
@@ -228,6 +228,10 @@
    "s": 75,
    "on": "2026-11-20"
   },
+  "mz/mozambique-parliament-approves-2025-state-account-over-b5a1fa": {
+   "s": 51,
+   "on": "2026-11-27"
+  },
   "mz/mozambique-s-supreme-court-begins-hearing-36-witnesses-in-befd40": {
    "s": 96,
    "on": "2026-11-25"
@@ -235,10 +239,6 @@
   "mz/supreme-court-allows-graca-machel-to-be-called-in-mondlane-c9511c": {
    "s": 58,
    "on": "2026-11-25"
-  },
-  "ne/niger-orders-mahamid-arabs-to-leave-by-31-december-2d66a4": {
-   "s": 61,
-   "on": "2026-11-18"
   },
   "ng/dangote-lifts-daily-petrol-supply-to-31-89-million-litres-4e7175": {
    "s": 62,
@@ -248,9 +248,9 @@
    "s": 99,
    "on": "2026-11-19"
   },
-  "ng/nigeria-s-stocks-rise-about-60-as-inflation-falls-for-four-5a0cee": {
-   "s": 49,
-   "on": "2026-11-18"
+  "ng/nigeria-s-central-bank-names-murtala-mohammed-acting-chief-2aff68": {
+   "s": 57,
+   "on": "2026-11-27"
   },
   "ng/nigerian-companies-generate-more-operating-cash-as-profits-3ec7e2": {
    "s": 67,
@@ -260,6 +260,10 @@
    "s": 99,
    "on": "2026-11-22"
   },
+  "rw/rwanda-s-central-bank-lifts-benchmark-rate-to-9-5-becabc": {
+   "s": 72,
+   "on": "2026-11-27"
+  },
   "rw/rwanda-s-central-bank-raises-key-rate-to-9-5-16d8a2": {
    "s": 78,
    "on": "2026-11-26"
@@ -267,10 +271,6 @@
   "sd/drone-attacks-kill-civilians-in-sudan-s-blue-nile-cities-199ab5": {
    "s": 65,
    "on": "2026-11-26"
-  },
-  "sd/drone-strikes-drive-most-civilian-deaths-in-sudan-un-rights-f81f14": {
-   "s": 92,
-   "on": "2026-11-18"
   },
   "sd/drone-strikes-hit-homes-and-a-un-building-in-khartoum-and-e307d7": {
    "s": 80,
@@ -291,6 +291,10 @@
   "sd/sudan-s-army-retakes-al-khuwai-and-pushes-toward-al-nahud-83b2de": {
    "s": 74,
    "on": "2026-11-19"
+  },
+  "sd/un-condemns-blue-nile-drone-strikes-that-killed-17-civilians-5368a1": {
+   "s": 91,
+   "on": "2026-11-27"
   },
   "sn/court-restores-senegal-as-afcon-2025-champions-142a21": {
    "s": 64,
@@ -328,6 +332,10 @@
    "s": 86,
    "on": "2026-11-20"
   },
+  "ss/kiir-ends-emergency-rule-in-four-south-sudan-states-c9e22c": {
+   "s": 79,
+   "on": "2026-11-27"
+  },
   "ss/south-sudan-central-bank-gives-unlicensed-forex-dealers-30-03f99b": {
    "s": 70,
    "on": "2026-11-23"
@@ -339,10 +347,6 @@
   "ss/south-sudan-opens-14-oil-blocks-to-investors-06f693": {
    "s": 56,
    "on": "2026-11-20"
-  },
-  "ss/south-sudan-protests-exclusion-from-unisfa-mandate-drafting-5ed11a": {
-   "s": 59,
-   "on": "2026-11-18"
   },
   "ss/south-sudan-rehabilitates-44-kilometre-road-linking-magwi-24dcd8": {
    "s": 92,
@@ -376,10 +380,6 @@
    "s": 102,
    "on": "2026-11-25"
   },
-  "za/astral-foods-holds-firm-on-pay-as-festive-chicken-strike-6606b9": {
-   "s": 90,
-   "on": "2026-11-18"
-  },
   "za/johannesburg-council-to-elect-mayor-as-coalition-deal-gives-2c295b": {
    "s": 78,
    "on": "2026-11-23"
@@ -391,6 +391,10 @@
   "za/south-african-cities-impose-water-restrictions-as-el-nino-72b07d": {
    "s": 78,
    "on": "2026-11-20"
+  },
+  "za/western-cape-court-voids-report-behind-ramaphosa-36db9e": {
+   "s": 81,
+   "on": "2026-11-27"
   },
   "za/western-cape-high-court-sets-aside-phala-phala-impeachment-4f3f7f": {
    "s": 93,
