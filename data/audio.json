@@ -2,15 +2,15 @@
  "_note": "Written by scripts/voice-stories.py. items: \"cc/slug\" -> s (seconds), on (front-page day).",
  "voice": "kokoro af_heart",
  "base": "/audio/",
- "updated": "2026-11-27T13:09:00Z",
+ "updated": "2026-11-28T10:27:43Z",
  "items": {
+  "cd/congo-and-uganda-agree-to-settle-security-row-through-b30bf7": {
+   "s": 92,
+   "on": "2026-11-28"
+  },
   "cd/dr-congo-health-workers-extend-eight-week-strike-at-public-b5fc3e": {
    "s": 63,
    "on": "2026-11-24"
-  },
-  "cd/dr-congo-s-mining-sector-gives-1-1-million-to-ebola-response-be8b16": {
-   "s": 56,
-   "on": "2026-11-19"
   },
   "cd/wapinda-youth-group-urges-stronger-ebola-response-as-327a78": {
    "s": 80,
@@ -36,6 +36,10 @@
    "s": 95,
    "on": "2026-11-22"
   },
+  "cm/cameroon-plans-cfa50-billion-more-in-annual-beverage-taxes-af0d44": {
+   "s": 86,
+   "on": "2026-11-28"
+  },
   "cv/cape-verde-s-election-commission-proclaims-neves-re-elected-976fc1": {
    "s": 81,
    "on": "2026-11-22"
@@ -47,10 +51,6 @@
   "dz/algeria-orders-public-banks-to-install-180-000-payment-a67cf2": {
    "s": 97,
    "on": "2026-11-24"
-  },
-  "eg/egypt-directs-1-5-billion-imf-tranche-to-central-bank-fa31bd": {
-   "s": 86,
-   "on": "2026-11-19"
   },
   "eg/egypt-opens-prosecution-inquiry-after-fuel-tanker-fire-5f9141": {
    "s": 88,
@@ -72,13 +72,9 @@
    "s": 81,
    "on": "2026-11-22"
   },
-  "eh/us-envoy-urges-ceasefire-as-un-peacekeepers-leave-western-8b45ed": {
-   "s": 75,
-   "on": "2026-11-19"
-  },
-  "er/eritrea-and-ethiopia-trade-artillery-fire-near-disputed-9ee5c1": {
-   "s": 89,
-   "on": "2026-11-19"
+  "er/abiy-says-eritrea-rejected-power-road-and-port-offers-as-37de08": {
+   "s": 87,
+   "on": "2026-11-28"
   },
   "et/abiy-offers-to-host-inclusive-talks-on-sudan-war-fc8587": {
    "s": 76,
@@ -91,10 +87,6 @@
   "et/ethiopia-offers-bondholders-880-million-in-new-debt-for-1-8f5e11": {
    "s": 103,
    "on": "2026-11-26"
-  },
-  "et/ethiopian-airlines-investigates-shebamiles-customer-data-dd0012": {
-   "s": 70,
-   "on": "2026-11-19"
   },
   "ga/fitch-keeps-gabon-s-sovereign-ratings-at-ccc-and-cc-d0d1a1": {
    "s": 86,
@@ -120,10 +112,6 @@
    "s": 85,
    "on": "2026-11-21"
   },
-  "gm/poll-shows-barrow-ahead-by-a-narrow-margin-in-gambia-s-a1ab62": {
-   "s": 53,
-   "on": "2026-11-19"
-  },
   "gn/bel-air-mining-barge-collision-leaves-two-guinean-fishermen-768406": {
    "s": 86,
    "on": "2026-11-22"
@@ -139,6 +127,10 @@
   "gn/imf-approves-425-million-programme-for-guinea-159a87": {
    "s": 81,
    "on": "2026-11-24"
+  },
+  "gn/imf-approves-425-million-programme-for-guinea-leaves-6ea0ab": {
+   "s": 87,
+   "on": "2026-11-28"
   },
   "gw/guinea-bissau-delays-presidential-and-parliamentary-45480a": {
    "s": 66,
@@ -159,10 +151,6 @@
   "ke/kenya-and-dr-congo-agree-to-restore-full-diplomatic-ties-ba66cb": {
    "s": 84,
    "on": "2026-11-23"
-  },
-  "ke/kenya-uses-ksh4-6-billion-to-hold-diesel-price-at-ksh227-76-23c980": {
-   "s": 110,
-   "on": "2026-11-19"
   },
   "ke/us-consortium-wins-tender-to-develop-kenya-s-mrima-hill-2a87ee": {
    "s": 81,
@@ -196,6 +184,10 @@
    "s": 65,
    "on": "2026-11-27"
   },
+  "ma/morocco-mobilises-nearly-22-billion-dirhams-for-defence-f4c2ea": {
+   "s": 84,
+   "on": "2026-11-28"
+  },
   "mg/madagascar-elects-marco-tsaradia-as-assembly-president-with-c1d40d": {
    "s": 71,
    "on": "2026-11-27"
@@ -220,10 +212,6 @@
    "s": 88,
    "on": "2026-11-21"
   },
-  "mz/mozambique-approves-exxonmobil-s-amended-rovuma-lng-plan-cf3f08": {
-   "s": 77,
-   "on": "2026-11-19"
-  },
   "mz/mozambique-approves-plan-change-for-exxonmobil-s-rovuma-lng-662e26": {
    "s": 75,
    "on": "2026-11-20"
@@ -244,10 +232,6 @@
    "s": 62,
    "on": "2026-11-21"
   },
-  "ng/naira-firms-slightly-in-official-market-as-parallel-rate-a5acfb": {
-   "s": 99,
-   "on": "2026-11-19"
-  },
   "ng/nigeria-s-central-bank-names-murtala-mohammed-acting-chief-2aff68": {
    "s": 57,
    "on": "2026-11-27"
@@ -259,6 +243,10 @@
   "ng/rights-group-sues-nigeria-s-data-regulator-and-electoral-c6b7f3": {
    "s": 99,
    "on": "2026-11-22"
+  },
+  "rw/five-eu-states-plan-rwanda-return-hub-for-rejected-asylum-fe71b3": {
+   "s": 56,
+   "on": "2026-11-28"
   },
   "rw/rwanda-s-central-bank-lifts-benchmark-rate-to-9-5-becabc": {
    "s": 72,
@@ -288,10 +276,6 @@
    "s": 68,
    "on": "2026-11-20"
   },
-  "sd/sudan-s-army-retakes-al-khuwai-and-pushes-toward-al-nahud-83b2de": {
-   "s": 74,
-   "on": "2026-11-19"
-  },
   "sd/un-condemns-blue-nile-drone-strikes-that-killed-17-civilians-5368a1": {
    "s": 91,
    "on": "2026-11-27"
@@ -312,13 +296,13 @@
    "s": 63,
    "on": "2026-11-24"
   },
-  "sn/senegal-s-mps-reject-2027-budget-stopping-review-of-3de59c": {
-   "s": 78,
-   "on": "2026-11-19"
-  },
   "sn/senegal-s-parliament-rejects-decree-imposing-revised-2026-8be0b5": {
    "s": 68,
    "on": "2026-11-26"
+  },
+  "sn/sonko-urges-senegal-s-president-to-dissolve-parliament-from-ec92b9": {
+   "s": 64,
+   "on": "2026-11-28"
   },
   "sn/sports-tribunal-restores-senegal-s-1-0-africa-cup-final-win-dc0785": {
    "s": 86,
@@ -340,10 +324,6 @@
    "s": 70,
    "on": "2026-11-23"
   },
-  "ss/south-sudan-offers-14-oil-blocks-to-investors-06f693": {
-   "s": 69,
-   "on": "2026-11-19"
-  },
   "ss/south-sudan-opens-14-oil-blocks-to-investors-06f693": {
    "s": 56,
    "on": "2026-11-20"
@@ -355,6 +335,10 @@
   "tg/togo-adopts-2027-budget-with-921-milliards-fcfa-for-bdb742": {
    "s": 107,
    "on": "2026-11-22"
+  },
+  "tz/tanzania-secures-4-7-billion-us-dollars-in-climate-48aeca": {
+   "s": 88,
+   "on": "2026-11-28"
   },
   "tz/tanzania-signs-175-million-in-french-loans-for-water-food-4b1de0": {
    "s": 87,
@@ -384,6 +368,14 @@
    "s": 78,
    "on": "2026-11-23"
   },
+  "za/johannesburg-raises-residential-water-tariffs-from-tuesday-bf71cc": {
+   "s": 95,
+   "on": "2026-11-28"
+  },
+  "za/mashaba-returns-as-johannesburg-mayor-beating-the-da-s-556f66": {
+   "s": 76,
+   "on": "2026-11-28"
+  },
   "za/south-africa-s-reserve-bank-holds-repo-rate-at-7-25-e4375d": {
    "s": 76,
    "on": "2026-11-20"
@@ -403,6 +395,10 @@
   "za/western-cape-high-court-sets-aside-phala-phala-report-86d1f3": {
    "s": 67,
    "on": "2026-11-26"
+  },
+  "zm/bank-of-zambia-holds-policy-rate-at-10-75-e0dd49": {
+   "s": 60,
+   "on": "2026-11-28"
   },
   "zm/standard-poor-s-raises-zambia-s-sovereign-rating-to-b-dff5f4": {
    "s": 64,
